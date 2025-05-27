@@ -1,44 +1,60 @@
-
 <?php
-// Tüm öğrencileri onaylama API'si
+// Tüm bekleyen kullanıcıları onaylayan API
 require_once '../config.php';
 
-// CORS başlıkları
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
-
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
-
+// POST istekleri için
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
-        // Kullanıcıyı doğrula
+        // Kullanıcı doğrulama
         $user = authorize();
-        
-        // Sadece yöneticiler toplu onaylama yapabilir
+
+        // Sadece yöneticiler onay yetkisine sahip
         if ($user['rutbe'] !== 'admin') {
-            errorResponse('Bu işlemi gerçekleştirme yetkiniz yok', 403);
+            errorResponse('Bu işlemi yapmaya yetkiniz yok', 403);
         }
 
         $conn = getConnection();
-        
-        // Tüm bekleyen öğrencileri onayla
-        $stmt = $conn->prepare("UPDATE ogrenciler SET aktif = 1 WHERE rutbe = 'ogrenci' AND aktif = 0");
-        $stmt->execute();
-        
-        $approvedCount = $stmt->rowCount();
 
-        successResponse(['onaylanan_sayisi' => $approvedCount], "Toplam $approvedCount öğrenci onaylandı");
+        // İşlemi transaction içinde yap
+        $conn->beginTransaction();
+
+        // Bekleyen kullanıcıları al
+        $stmt = $conn->prepare("SELECT * FROM kullanicilar WHERE aktif = 0 AND (rutbe IS NULL OR rutbe = '' OR rutbe = 'belirtilmemis')");
+        $stmt->execute();
+        $bekleyenKullanicilar = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $onaylananSayisi = count($bekleyenKullanicilar);
+
+        if ($onaylananSayisi > 0) {
+            // Tüm bekleyen kullanıcıları onayla
+            $stmt = $conn->prepare("UPDATE kullanicilar SET aktif = 1, rutbe = 'ogrenci' WHERE aktif = 0 AND (rutbe IS NULL OR rutbe = '' OR rutbe = 'belirtilmemis')");
+            $stmt->execute();
+
+            $conn->commit();
+
+            successResponse([
+                'message' => 'Tüm bekleyen kullanıcılar başarıyla onaylandı',
+                'count' => $onaylananSayisi
+            ]);
+        } else {
+            $conn->rollBack();
+            successResponse([
+                'message' => 'Onaylanacak bekleyen kullanıcı bulunamadı',
+                'count' => 0
+            ]);
+        }
 
     } catch (PDOException $e) {
+        if (isset($conn)) {
+            $conn->rollBack();
+        }
         errorResponse('Veritabanı hatası: ' . $e->getMessage(), 500);
     } catch (Exception $e) {
+        if (isset($conn)) {
+            $conn->rollBack();
+        }
         errorResponse('Beklenmeyen bir hata oluştu: ' . $e->getMessage(), 500);
     }
 } else {
-    errorResponse('Bu endpoint sadece POST metodunu destekler', 405);
+    errorResponse('Bu endpoint için sadece POST istekleri kabul edilir', 405);
 }
 ?>
