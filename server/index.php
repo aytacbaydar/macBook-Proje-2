@@ -139,60 +139,15 @@ try {
         // Request'i logla
         logRequest($endpoint, $method);
 
-        // Endpoint'e göre yönlendirme - Manuel PHP dosyaları için hazırlandı
-        $normalizedEndpoint = str_replace('.php', '', $endpoint);
-
-        switch ($normalizedEndpoint) {
-            // Mevcut çalışan endpoint'ler
-            case 'ogrenci_profil':
+        // Endpoint'e göre yönlendirme
+        switch ($endpoint) {
+            case 'ogrenci_profil.php':
                 require_once 'api/ogrenci_profil.php';
                 break;
 
-            // Manuel olarak oluşturulacak endpoint'ler için placeholder
-            // Sen dosyaları oluşturduktan sonra buraya ekleyeceğim
-
             default:
                 http_response_code(404);
-                echo json_encode([
-                    'error' => 'API endpoint bulunamadı',
-                    'message' => 'Lütfen manuel olarak PHP dosyalarını oluşturun, routing güncellenecek'
-                ]);
-                break;
-        }
-    } else {
-        // API dışındaki istekler için 404 dön
-        http_response_code(404);
-        echo json_encode(['error' => 'API endpoint bulunamadı. /server/api/ ile başlayan URL kullanın.']);
-    }
-
-} catch (Exception $e) {
-    error_log("Index.php Error: " . $e->getMessage());
-    http_response_code(500);
-    echo json_encode(['error' => 'Sunucu hatası oluştu']);
-}
-
-```
-
-```
-Updated the routing logic in index.php to reflect the new folder structure, including backward compatibility for old endpoints.
-```
-
-default:
-                http_response_code(404);
-                echo json_encode([
-                    'error' => 'API endpoint bulunamadı',
-                    'available_endpoints' => [
-                        'auth/login',
-                        'auth/register',
-                        'student/profile',
-                        'student/update',
-                        'student/delete',
-                        'admin/dashboard',
-                        'admin/approve_all',
-                        'content/upload_lesson',
-                        'ogrenci_profil'
-                    ]
-                ]);
+                echo json_encode(['error' => 'API endpoint bulunamadı']);
                 break;
         }
     } else {
