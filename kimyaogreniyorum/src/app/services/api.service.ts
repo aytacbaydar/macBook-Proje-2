@@ -8,7 +8,7 @@ import { ApiResponse, PaginationParams } from '../models/api-response.model';
   providedIn: 'root'
 })
 export class ApiService {
-  private baseUrl = 'http://0.0.0.0:8000/server/api';
+  protected baseUrl = 'http://0.0.0.0:8000/server/api';
 
   constructor(private http: HttpClient) {}
 

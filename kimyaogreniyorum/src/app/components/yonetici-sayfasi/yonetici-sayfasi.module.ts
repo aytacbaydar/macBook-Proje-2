@@ -1,15 +1,15 @@
-
 import { NgModule } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
-
-// Components
+import { DatePipe } from '@angular/common';
 import { YoneticiIndexSayfasiComponent } from './yonetici-index-sayfasi/yonetici-index-sayfasi.component';
 import { KonuAnlatimSayfalariComponent } from './konu-anlatim-sayfalari/konu-anlatim-sayfalari.component';
 import { MysqlSayfasiComponent } from './mysql-sayfasi/mysql-sayfasi.component';
 import { OgrenciListesiSayfasiComponent } from './ogrenci-isleri-sayfasi/ogrenci-listesi-sayfasi/ogrenci-listesi-sayfasi.component';
+import { OgrenciDetaySayfasiComponent } from './ogrenci-isleri-sayfasi/ogrenci-detay-sayfasi/ogrenci-detay-sayfasi.component';
+import { OgrenciGruplarComponent } from './ogrenci-isleri-sayfasi/ogrenci-gruplar/ogrenci-gruplar.component';
 
 // Routes
 const routes = [
@@ -43,7 +43,9 @@ const routes = [
     YoneticiIndexSayfasiComponent,
     KonuAnlatimSayfalariComponent,
     MysqlSayfasiComponent,
-    OgrenciListesiSayfasiComponent
+    OgrenciListesiSayfasiComponent,
+    OgrenciDetaySayfasiComponent,
+    OgrenciGruplarComponent
   ],
   imports: [
     CommonModule,

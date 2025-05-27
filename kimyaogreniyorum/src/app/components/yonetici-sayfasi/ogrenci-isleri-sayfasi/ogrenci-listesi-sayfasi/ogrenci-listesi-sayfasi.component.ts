@@ -260,7 +260,8 @@ export class OgrenciListesiSayfasiComponent implements OnInit, OnDestroy {
   }
 
   // CRUD işlemleri
-  deleteStudent(id: number): void {
+  deleteStudent(id: number | undefined): void {
+    if (!id) return;
     if (confirm('Bu öğrenciyi silmek istediğinizden emin misiniz?')) {
       this.studentService.deleteStudent(id).pipe(
         takeUntil(this.destroy$)
@@ -278,7 +279,8 @@ export class OgrenciListesiSayfasiComponent implements OnInit, OnDestroy {
     }
   }
 
-  deleteTeacher(id: number): void {
+  deleteTeacher(id: number | undefined): void {
+    if (!id) return;
     if (confirm('Bu öğretmeni silmek istediğinizden emin misiniz?')) {
       this.teacherService.deleteTeacher(id).pipe(
         takeUntil(this.destroy$)

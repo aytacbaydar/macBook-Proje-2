@@ -9,7 +9,7 @@ import { ApiResponse } from '../models/api-response.model';
   providedIn: 'root'
 })
 export class StudentService extends ApiService {
-  private baseUrl = 'http://0.0.0.0:8000/server/api';
+  protected override baseUrl = 'http://0.0.0.0:8000/server/api';
 
   // Öğrenci kayıt
   registerStudent(studentData: Partial<Student>): Observable<StudentResponse> {

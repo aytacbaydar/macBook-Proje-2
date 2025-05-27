@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
-import { Teacher, TeacherResponse } from '../models/teacher.model';
+import { Teacher } from '../models/teacher.model';
+import { ApiResponse } from '../models/api-response.model';
+import { TeacherResponse } from '../models/teacher.model';
 import { PaginationParams, PaginatedResponse } from '../models/api-response.model';
 
 @Injectable({
