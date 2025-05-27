@@ -1,548 +1,335 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-
-interface User {
-  id: number;
-  adi_soyadi: string;
-  email: string;
-  cep_telefonu?: string;
-  avatar?: string;
-  rutbe: string;
-  aktif: boolean;
-  created_at?: string;
-  // Öğrenci alanları
-  okulu?: string;
-  sinifi?: string;
-  grubu?: string;
-  ders_gunu?: string;
-  ders_saati?: string;
-  ucret?: string;
-  // Öğretmen alanları
-  brans?: string;
-}
+import { Subject, takeUntil, forkJoin } from 'rxjs';
+import { Student, Teacher } from '../../../../models';
+import { StudentService, TeacherService } from '../../../../services';
 
 @Component({
   selector: 'app-ogrenci-listesi-sayfasi',
-  standalone: false,
   templateUrl: './ogrenci-listesi-sayfasi.component.html',
-  styleUrl: './ogrenci-listesi-sayfasi.component.scss',
+  styleUrls: ['./ogrenci-listesi-sayfasi.component.scss']
 })
-export class OgrenciListesiSayfasiComponent implements OnInit {
-  students: User[] = [];
-  teachers: User[] = [];
-  newUsers: User[] = [];
-  isLoading = true;
-  activeTab: 'students' | 'teachers' | 'new' = 'students';
+export class OgrenciListesiSayfasiComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
 
-  // Arama ve pagination için değişkenler
-  searchQuery: string = '';
-  itemsPerPage: number = 10;
-  currentStudentPage: number = 1;
-  currentTeacherPage: number = 1;
-  currentNewUserPage: number = 1;
+  // Veri listeleri
+  students: Student[] = [];
+  teachers: Teacher[] = [];
+  newUsers: (Student | Teacher)[] = [];
 
-  // Math nesnesini template'te kullanabilmek için
-  Math = Math;
+  // Filtrelenmiş veriler
+  filteredStudents: Student[] = [];
+  filteredTeachers: Teacher[] = [];
+  filteredNewUsers: (Student | Teacher)[] = [];
 
-  constructor(private http: HttpClient, private router: Router) {}
+  // Sayfalama
+  currentStudentPage = 1;
+  currentTeacherPage = 1;
+  currentNewUsersPage = 1;
+  itemsPerPage = 10;
+  totalStudentCount = 0;
+  totalTeacherCount = 0;
+  totalNewUsersCount = 0;
+
+  // UI durumları
+  activeTab = 'students';
+  searchQuery = '';
+  isLoading = false;
+  error: string | null = null;
+
+  // Branş listesi
+  branches = [
+    'Kimya',
+    'Matematik',
+    'Fizik', 
+    'Biyoloji',
+    'Türkçe',
+    'İngilizce',
+    'Tarih',
+    'Coğrafya'
+  ];
+
+  constructor(
+    private studentService: StudentService,
+    private teacherService: TeacherService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadUsers();
   }
 
-  // Tab değiştirme
-  setActiveTab(tab: 'students' | 'teachers' | 'new'): void {
-    this.activeTab = tab;
-    // Tab değiştiğinde sayfayı sıfırla
-    if (tab === 'students') this.currentStudentPage = 1;
-    if (tab === 'teachers') this.currentTeacherPage = 1;
-    if (tab === 'new') this.currentNewUserPage = 1;
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  // Verileri yükleme
   loadUsers(): void {
     this.isLoading = true;
-    // LocalStorage veya sessionStorage'dan token'ı al
-    let token = '';
-    const userStr =
-      localStorage.getItem('user') || sessionStorage.getItem('user');
-    if (userStr) {
-      const user = JSON.parse(userStr);
-      token = user.token || '';
-    }
+    this.error = null;
 
-    // API'ye istek gönder - tüm kullanıcıları getirir
-    this.http
-      .get<any>('./server/api/ogrenciler_listesi.php', {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .subscribe({
-        next: (response) => {
-          if (response.success) {
-            // API yanıtından gelen veriyi al
-            const users = Array.isArray(response.data) ? response.data : [];
+    forkJoin({
+      students: this.studentService.getAllStudents(),
+      teachers: this.teacherService.getAllTeachers()
+    }).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: (response) => {
+        if (response.students.success && response.students.data) {
+          this.students = Array.isArray(response.students.data) 
+            ? response.students.data 
+            : [response.students.data];
+          this.totalStudentCount = this.students.length;
+        }
 
-            // Kullanıcıları rütbelerine göre filtrele
-            // Önemli Değişiklik: aktif durumuna bakmaksızın öğrencileri ve öğretmenleri listeliyoruz
-            this.students = users.filter(
-              (user: User) => user.rutbe === 'ogrenci'
-            );
+        if (response.teachers.success && response.teachers.data) {
+          this.teachers = Array.isArray(response.teachers.data) 
+            ? response.teachers.data 
+            : [response.teachers.data];
+          this.totalTeacherCount = this.teachers.length;
+        }
 
-            this.teachers = users.filter(
-              (user: User) => user.rutbe === 'ogretmen'
-            );
-
-            // Sadece yeni (daha önce onaylanmamış) kullanıcıları filtrele
-            this.newUsers = users.filter(
-              (user: User) =>
-                user.aktif === false &&
-                (user.rutbe === 'belirtilmemis' || user.rutbe === '')
-            );
-
-            console.log('Yüklenen kullanıcılar:', {
-              students: this.students.length,
-              teachers: this.teachers.length,
-              newUsers: this.newUsers.length,
-            });
-          } else {
-            console.error('API yanıtı başarısız:', response.error);
-          }
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('API hatası:', error);
-          this.isLoading = false;
-        },
-      });
-  }
-
-  // Arama işlemi
-  onSearch(): void {
-    // Sayfalamayı ilk sayfaya sıfırla
-    this.currentStudentPage = 1;
-    this.currentTeacherPage = 1;
-    this.currentNewUserPage = 1;
-    console.log('Arama yapılıyor:', this.searchQuery);
-  }
-
-  // Arama kutusunu temizle
-  clearSearch(): void {
-    this.searchQuery = '';
-    this.onSearch();
-  }
-
-  // Filtreleme fonksiyonları
-  filterItems(items: User[], query: string): User[] {
-    if (!query || query.trim() === '') return items;
-
-    const lowerCaseQuery = query.toLowerCase().trim();
-    return items.filter(
-      (item) =>
-        item.adi_soyadi.toLowerCase().includes(lowerCaseQuery) ||
-        item.email.toLowerCase().includes(lowerCaseQuery) ||
-        (item.cep_telefonu &&
-          item.cep_telefonu.toLowerCase().includes(lowerCaseQuery)) ||
-        (item.okulu && item.okulu.toLowerCase().includes(lowerCaseQuery)) ||
-        (item.sinifi && item.sinifi.toLowerCase().includes(lowerCaseQuery)) ||
-        (item.grubu && item.grubu.toLowerCase().includes(lowerCaseQuery)) ||
-        (item.brans && item.brans.toLowerCase().includes(lowerCaseQuery))
-    );
-  }
-
-  // Öğrenci Pagination metotları
-  get filteredStudents(): User[] {
-    return this.filterItems(this.students, this.searchQuery);
-  }
-
-  get totalStudentCount(): number {
-    return this.filteredStudents.length;
-  }
-
-  get totalStudentPages(): number {
-    return Math.ceil(this.totalStudentCount / this.itemsPerPage);
-  }
-
-  get paginatedStudents(): User[] {
-    const startIndex = (this.currentStudentPage - 1) * this.itemsPerPage;
-    return this.filteredStudents.slice(
-      startIndex,
-      startIndex + this.itemsPerPage
-    );
-  }
-
-  setStudentPage(page: number): void {
-    if (page < 1 || page > this.totalStudentPages) return;
-    this.currentStudentPage = page;
-  }
-
-  getStudentPageArray(): number[] {
-    return this.generatePageArray(
-      this.currentStudentPage,
-      this.totalStudentPages
-    );
-  }
-
-  // Öğretmen Pagination metotları
-  get filteredTeachers(): User[] {
-    return this.filterItems(this.teachers, this.searchQuery);
-  }
-
-  get totalTeacherCount(): number {
-    return this.filteredTeachers.length;
-  }
-
-  get totalTeacherPages(): number {
-    return Math.ceil(this.totalTeacherCount / this.itemsPerPage);
-  }
-
-  get paginatedTeachers(): User[] {
-    const startIndex = (this.currentTeacherPage - 1) * this.itemsPerPage;
-    return this.filteredTeachers.slice(
-      startIndex,
-      startIndex + this.itemsPerPage
-    );
-  }
-
-  setTeacherPage(page: number): void {
-    if (page < 1 || page > this.totalTeacherPages) return;
-    this.currentTeacherPage = page;
-  }
-
-  getTeacherPageArray(): number[] {
-    return this.generatePageArray(
-      this.currentTeacherPage,
-      this.totalTeacherPages
-    );
-  }
-
-  // Yeni Kullanıcı Pagination metotları
-  get filteredNewUsers(): User[] {
-    return this.filterItems(this.newUsers, this.searchQuery);
-  }
-
-  get totalNewUserCount(): number {
-    return this.filteredNewUsers.length;
-  }
-
-  get totalNewUserPages(): number {
-    return Math.ceil(this.totalNewUserCount / this.itemsPerPage);
-  }
-
-  get paginatedNewUsers(): User[] {
-    const startIndex = (this.currentNewUserPage - 1) * this.itemsPerPage;
-    return this.filteredNewUsers.slice(
-      startIndex,
-      startIndex + this.itemsPerPage
-    );
-  }
-
-  setNewUserPage(page: number): void {
-    if (page < 1 || page > this.totalNewUserPages) return;
-    this.currentNewUserPage = page;
-  }
-
-  getNewUserPageArray(): number[] {
-    return this.generatePageArray(
-      this.currentNewUserPage,
-      this.totalNewUserPages
-    );
-  }
-
-  // Sayfa numaralarını oluşturmak için yardımcı fonksiyon
-  private generatePageArray(currentPage: number, totalPages: number): number[] {
-    const pages: number[] = [];
-
-    if (totalPages <= 5) {
-      for (let i = 1; i <= totalPages; i++) pages.push(i);
-    } else {
-      if (currentPage <= 3) {
-        for (let i = 1; i <= 5; i++) pages.push(i);
-      } else if (currentPage >= totalPages - 2) {
-        for (let i = totalPages - 4; i <= totalPages; i++) pages.push(i);
-      } else {
-        for (let i = currentPage - 2; i <= currentPage + 2; i++) pages.push(i);
+        this.separateNewUsers();
+        this.applyFilters();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Kullanıcılar yüklenirken hata:', error);
+        this.error = 'Kullanıcılar yüklenirken bir hata oluştu. Lütfen tekrar deneyin.';
+        this.isLoading = false;
       }
-    }
-
-    return pages;
-  }
-
-  // Öğrenci silme işlemi
-  deleteStudent(id: number): void {
-    if (!confirm('Bu öğrenciyi silmek istediğinize emin misiniz?')) {
-      return;
-    }
-
-    // LocalStorage veya sessionStorage'dan token'ı al
-    let token = '';
-    const userStr =
-      localStorage.getItem('user') || sessionStorage.getItem('user');
-    if (userStr) {
-      const user = JSON.parse(userStr);
-      token = user.token || '';
-    }
-
-    this.http
-      .post<any>(
-        './server/api/ogrenci_sil.php',
-        { id },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      )
-      .subscribe({
-        next: (response) => {
-          if (response.success) {
-            alert('Öğrenci başarıyla silindi!');
-            // Listeyi yenile
-            this.loadUsers();
-          } else {
-            alert('Silme işlemi başarısız: ' + response.error);
-          }
-        },
-        error: (error) => {
-          console.error('API hatası:', error);
-          alert(
-            'Silme işlemi sırasında bir hata oluştu: ' +
-              (error.message || 'Bilinmeyen bir hata')
-          );
-        },
-      });
-  }
-
-  // Öğretmen silme
-  deleteTeacher(id: number): void {
-    if (!confirm('Bu öğretmeni silmek istediğinize emin misiniz?')) {
-      return;
-    }
-
-    // LocalStorage veya sessionStorage'dan token'ı al
-    let token = '';
-    const userStr =
-      localStorage.getItem('user') || sessionStorage.getItem('user');
-    if (userStr) {
-      const user = JSON.parse(userStr);
-      token = user.token || '';
-    }
-
-    this.http
-      .post<any>(
-        './server/api/ogrenci_sil.php',
-        { id },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      )
-      .subscribe({
-        next: (response) => {
-          if (response.success) {
-            alert('Öğretmen başarıyla silindi!');
-            // Listeyi yenile
-            this.loadUsers();
-          } else {
-            alert('Silme işlemi başarısız: ' + response.error);
-          }
-        },
-        error: (error) => {
-          console.error('API hatası:', error);
-          alert(
-            'Silme işlemi sırasında bir hata oluştu: ' +
-              (error.message || 'Bilinmeyen bir hata')
-          );
-        },
-      });
-  }
-
-  // Yeni kullanıcıyı onaylama
-  approveUser(userId: number) {
-    if (!confirm('Bu kullanıcıyı onaylamak istediğinizden emin misiniz?')) {
-      return;
-    }
-
-    // LocalStorage veya sessionStorage'dan token'ı al
-    let token = '';
-    const userStr =
-      localStorage.getItem('user') || sessionStorage.getItem('user');
-    if (userStr) {
-      const user = JSON.parse(userStr);
-      token = user.token || '';
-    }
-
-    // Kullanıcı verilerini hazırla
-    const userData = {
-      id: userId,
-      rutbe: 'ogrenci', // Onaylandığında öğrenci olarak ayarla
-      aktif: 1, // Aktif hesap olarak ayarla
-    };
-
-    this.http
-      .post<any>('./server/api/kullanici_guncelle.php', userData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      })
-      .subscribe({
-        next: (response) => {
-          if (response.success) {
-            alert('Kullanıcı başarıyla onaylandı!');
-            this.loadUsers(); // Kullanıcı listesini yeniden yükle
-          } else {
-            alert('Kullanıcı onaylanamadı: ' + response.error);
-          }
-        },
-        error: (error) => {
-          console.error('Onaylama hatası:', error);
-          alert(
-            'Onaylama işlemi sırasında bir hata oluştu: ' +
-              (error.message || 'Bilinmeyen bir hata')
-          );
-        },
-      });
-  }
-
-  // Yeni kullanıcıyı reddetme
-  rejectUser(userId: number) {
-    if (
-      !confirm(
-        'Bu kullanıcıyı reddetmek istediğinizden emin misiniz? Bu işlem kullanıcıyı silecektir.'
-      )
-    ) {
-      return;
-    }
-
-    // LocalStorage veya sessionStorage'dan token'ı al
-    let token = '';
-    const userStr =
-      localStorage.getItem('user') || sessionStorage.getItem('user');
-    if (userStr) {
-      const user = JSON.parse(userStr);
-      token = user.token || '';
-    }
-
-    this.http
-      .post<any>(
-        './server/api/ogrenci_sil.php',
-        { id: userId },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      )
-      .subscribe({
-        next: (response) => {
-          if (response.success) {
-            alert('Kullanıcı başarıyla reddedildi ve silindi!');
-            this.loadUsers(); // Kullanıcı listesini yeniden yükle
-          } else {
-            alert('Kullanıcı reddedilemedi: ' + response.error);
-          }
-        },
-        error: (error) => {
-          console.error('Reddetme hatası:', error);
-          alert(
-            'Reddetme işlemi sırasında bir hata oluştu: ' +
-              (error.message || 'Bilinmeyen bir hata')
-          );
-        },
-      });
-  }
-
-  // Tüm kullanıcıları onaylama metodu
-  approveAllUsers() {
-    if (
-      !confirm(
-        'Tüm bekleyen kullanıcıları onaylamak istediğinizden emin misiniz?'
-      )
-    ) {
-      return;
-    }
-
-    // LocalStorage veya sessionStorage'dan token'ı al
-    let token = '';
-    const userStr =
-      localStorage.getItem('user') || sessionStorage.getItem('user');
-    if (userStr) {
-      const user = JSON.parse(userStr);
-      token = user.token || '';
-    }
-
-    // API isteği
-    this.http
-      .post<any>(
-        './server/api/tum_ogrencileri_onayla.php',
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      )
-      .subscribe({
-        next: (response) => {
-          if (response.success) {
-            alert('Tüm kullanıcılar başarıyla onaylandı!');
-            this.loadUsers(); // Kullanıcı listesini yeniden yükle
-          } else {
-            alert('Kullanıcılar onaylanamadı: ' + response.error);
-          }
-        },
-        error: (error) => {
-          console.error('Onaylama hatası:', error);
-          alert(
-            'Onaylama işlemi sırasında bir hata oluştu: ' +
-              (error.message || 'Bilinmeyen bir hata')
-          );
-        },
-      });
-  }
-
-  // Tarih formatı için yardımcı fonksiyon
-  formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('tr-TR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
     });
   }
 
-  // İstatistik fonksiyonları
+  private separateNewUsers(): void {
+    // Yeni kullanıcılar: aktif olmayan ve rutbe = 'yeni' olanlar
+    const newStudents = this.students.filter(student => 
+      !student.aktif && student.rutbe === 'yeni'
+    );
+
+    const newTeachers = this.teachers.filter(teacher => 
+      !teacher.aktif && teacher.rutbe === 'yeni'
+    );
+
+    this.newUsers = [...newStudents, ...newTeachers];
+    this.totalNewUsersCount = this.newUsers.length;
+
+    // Aktif kullanıcıları filtrele
+    this.students = this.students.filter(student => 
+      student.aktif && student.rutbe !== 'yeni'
+    );
+
+    this.teachers = this.teachers.filter(teacher => 
+      teacher.aktif && teacher.rutbe !== 'yeni'
+    );
+  }
+
+  // Tab yönetimi
+  setActiveTab(tab: string): void {
+    this.activeTab = tab;
+    this.searchQuery = '';
+    this.applyFilters();
+  }
+
+  // Arama ve filtreleme
+  onSearch(): void {
+    this.applyFilters();
+  }
+
+  clearSearch(): void {
+    this.searchQuery = '';
+    this.applyFilters();
+  }
+
+  applyFilters(): void {
+    const query = this.searchQuery.toLowerCase().trim();
+
+    if (this.activeTab === 'students') {
+      this.filteredStudents = this.students.filter(student =>
+        student.adi_soyadi.toLowerCase().includes(query) ||
+        student.email.toLowerCase().includes(query) ||
+        (student.okulu && student.okulu.toLowerCase().includes(query)) ||
+        (student.brans && student.brans.toLowerCase().includes(query))
+      );
+      this.currentStudentPage = 1;
+    } else if (this.activeTab === 'teachers') {
+      this.filteredTeachers = this.teachers.filter(teacher =>
+        teacher.adi_soyadi.toLowerCase().includes(query) ||
+        teacher.email.toLowerCase().includes(query) ||
+        (teacher.brans && teacher.brans.toLowerCase().includes(query))
+      );
+      this.currentTeacherPage = 1;
+    } else if (this.activeTab === 'new') {
+      this.filteredNewUsers = this.newUsers.filter(user =>
+        user.adi_soyadi.toLowerCase().includes(query) ||
+        user.email.toLowerCase().includes(query) ||
+        (user.brans && user.brans.toLowerCase().includes(query))
+      );
+      this.currentNewUsersPage = 1;
+    }
+  }
+
+  // Sayfalama işlemleri
+  get paginatedStudents(): Student[] {
+    const start = (this.currentStudentPage - 1) * this.itemsPerPage;
+    return this.filteredStudents.slice(start, start + this.itemsPerPage);
+  }
+
+  get paginatedTeachers(): Teacher[] {
+    const start = (this.currentTeacherPage - 1) * this.itemsPerPage;
+    return this.filteredTeachers.slice(start, start + this.itemsPerPage);
+  }
+
+  get paginatedNewUsers(): (Student | Teacher)[] {
+    const start = (this.currentNewUsersPage - 1) * this.itemsPerPage;
+    return this.filteredNewUsers.slice(start, start + this.itemsPerPage);
+  }
+
+  setStudentPage(page: number): void {
+    this.currentStudentPage = page;
+  }
+
+  setTeacherPage(page: number): void {
+    this.currentTeacherPage = page;
+  }
+
+  setNewUsersPage(page: number): void {
+    this.currentNewUsersPage = page;
+  }
+
+  getStudentPageArray(): number[] {
+    const totalPages = Math.ceil(this.filteredStudents.length / this.itemsPerPage);
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
+  getTeacherPageArray(): number[] {
+    const totalPages = Math.ceil(this.filteredTeachers.length / this.itemsPerPage);
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
+  getNewUsersPageArray(): number[] {
+    const totalPages = Math.ceil(this.filteredNewUsers.length / this.itemsPerPage);
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
+  // İstatistikler
   getActiveStudents(): number {
-    return this.students.filter((student) => student.aktif).length;
+    return this.students.filter(student => student.aktif).length;
   }
 
   getInactiveStudents(): number {
-    return this.students.filter((student) => !student.aktif).length;
+    return this.students.filter(student => !student.aktif).length;
   }
 
   getActiveTeachers(): number {
-    return this.teachers.filter((teacher) => teacher.aktif).length;
+    return this.teachers.filter(teacher => teacher.aktif).length;
   }
 
   getInactiveTeachers(): number {
-    return this.teachers.filter((teacher) => !teacher.aktif).length;
+    return this.teachers.filter(teacher => !teacher.aktif).length;
   }
 
   getStudentsWaiting(): number {
-    return this.newUsers.filter(
-      (user) => user.rutbe === 'ogrenci' || user.rutbe === ''
+    return this.newUsers.filter(user => 
+      'sinifi' in user || 'okulu' in user // Student tipinde olup olmadığını kontrol et
     ).length;
   }
 
   getTeachersWaiting(): number {
-    return this.newUsers.filter((user) => user.rutbe === 'ogretmen').length;
+    return this.newUsers.filter(user => 
+      !('sinifi' in user || 'okulu' in user) // Teacher tipinde olup olmadığını kontrol et
+    ).length;
   }
+
+  // CRUD işlemleri
+  deleteStudent(id: number): void {
+    if (confirm('Bu öğrenciyi silmek istediğinizden emin misiniz?')) {
+      this.studentService.deleteStudent(id).pipe(
+        takeUntil(this.destroy$)
+      ).subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.loadUsers(); // Verileri yenile
+          }
+        },
+        error: (error) => {
+          console.error('Öğrenci silinirken hata:', error);
+          alert('Öğrenci silinirken bir hata oluştu.');
+        }
+      });
+    }
+  }
+
+  deleteTeacher(id: number): void {
+    if (confirm('Bu öğretmeni silmek istediğinizden emin misiniz?')) {
+      this.teacherService.deleteTeacher(id).pipe(
+        takeUntil(this.destroy$)
+      ).subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.loadUsers(); // Verileri yenile
+          }
+        },
+        error: (error) => {
+          console.error('Öğretmen silinirken hata:', error);
+          alert('Öğretmen silinirken bir hata oluştu.');
+        }
+      });
+    }
+  }
+
+  approveUser(user: Student | Teacher): void {
+    const isStudent = 'sinifi' in user || 'okulu' in user;
+
+    if (isStudent) {
+      this.studentService.approveStudent(user.id!).pipe(
+        takeUntil(this.destroy$)
+      ).subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.loadUsers();
+          }
+        },
+        error: (error) => {
+          console.error('Öğrenci onaylanırken hata:', error);
+        }
+      });
+    } else {
+      // Öğretmen onaylama işlemi burada yapılacak
+      // teacherService.approveTeacher() metodunu ekleyebilirsiniz
+    }
+  }
+
+  approveAllStudents(): void {
+    if (confirm('Tüm bekleyen öğrencileri onaylamak istediğinizden emin misiniz?')) {
+      this.studentService.approveAllStudents().pipe(
+        takeUntil(this.destroy$)
+      ).subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.loadUsers();
+          }
+        },
+        error: (error) => {
+          console.error('Öğrenciler onaylanırken hata:', error);
+        }
+      });
+    }
+  }
+
+  // Yardımcı fonksiyonlar
+  isStudent(user: Student | Teacher): user is Student {
+    return 'sinifi' in user || 'okulu' in user;
+  }
+
+  isTeacher(user: Student | Teacher): user is Teacher {
+    return !this.isStudent(user);
+  }
+
+  getBranchDisplayName(branch: string | undefined): string {
+    return branch || 'Belirtilmemiş';
+  }
+
+  // Math fonksiyonu template'de kullanmak için
+  Math = Math;
 }

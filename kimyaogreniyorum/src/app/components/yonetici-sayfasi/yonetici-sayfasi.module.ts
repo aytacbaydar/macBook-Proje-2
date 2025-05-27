@@ -14,6 +14,11 @@ import { MysqlSayfasiComponent } from './mysql-sayfasi/mysql-sayfasi.component';
 import { OgrenciGruplarComponent } from './ogrenci-isleri-sayfasi/ogrenci-gruplar/ogrenci-gruplar.component';
 import { OgrenciUcretlerComponent } from './ogrenci-isleri-sayfasi/ogrenci-ucretler/ogrenci-ucretler.component';
 import { GrupDetaySayfasiComponent } from './ogrenci-isleri-sayfasi/grup-detay-sayfasi/grup-detay-sayfasi.component';
+import { RouterModule } from '@angular/router';
+import { StudentService } from './student.service';
+import { TeacherService } from './teacher.service';
+import { AuthService } from './auth.service';
+import { YoneticiSayfasiRoutingModule } from './yonetici-sayfasi-routing.module';
 
 
 @NgModule({
@@ -30,11 +35,13 @@ import { GrupDetaySayfasiComponent } from './ogrenci-isleri-sayfasi/grup-detay-s
   ],
   imports: [
     CommonModule,
+    FormsModule,
     ReactiveFormsModule,
+    RouterModule,
+    YoneticiSayfasiRoutingModule,
     HttpClientModule,
     BrowserModule,
     AppRoutingModule,
-    FormsModule,
     NgIf,
     NgFor,
   ],
@@ -43,5 +50,10 @@ import { GrupDetaySayfasiComponent } from './ogrenci-isleri-sayfasi/grup-detay-s
     OgrenciDetaySayfasiComponent,
     YoneticiIndexSayfasiComponent
   ],
+  providers: [
+    StudentService,
+    TeacherService,
+    AuthService
+  ]
 })
 export class YoneticiSayfasiModule {}
