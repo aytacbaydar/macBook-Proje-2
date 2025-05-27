@@ -1,0 +1,1 @@
+The user wants to update the require path for config.php to reflect a new folder structure.
