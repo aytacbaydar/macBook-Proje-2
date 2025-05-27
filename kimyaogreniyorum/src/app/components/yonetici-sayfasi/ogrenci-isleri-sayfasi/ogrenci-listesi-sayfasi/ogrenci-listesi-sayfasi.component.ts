@@ -8,7 +8,7 @@ import { StudentService, TeacherService } from '../../../../services';
   selector: 'app-ogrenci-listesi-sayfasi',
   templateUrl: './ogrenci-listesi-sayfasi.component.html',
   styleUrls: ['./ogrenci-listesi-sayfasi.component.scss'],
-  
+  standalone: false
 })
 export class OgrenciListesiSayfasiComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
@@ -259,39 +259,6 @@ export class OgrenciListesiSayfasiComponent implements OnInit, OnDestroy {
     return this.newUsers.length;
   }
 
-  // Delete Functions
-  deleteStudent(id: number): void {
-    if (confirm('Bu öğrenciyi silmek istediğinizden emin misiniz?')) {
-      this.studentService.deleteStudent(id).subscribe({
-        next: (response) => {
-          if (response.success) {
-            this.loadUsers(); // Listeyi yenile
-          }
-        },
-        error: (error) => {
-          console.error('Öğrenci silinirken hata:', error);
-          this.error = 'Öğrenci silinirken hata oluştu.';
-        }
-      });
-    }
-  }
-
-  deleteTeacher(id: number): void {
-    if (confirm('Bu öğretmeni silmek istediğinizden emin misiniz?')) {
-      this.teacherService.deleteTeacher(id).subscribe({
-        next: (response) => {
-          if (response.success) {
-            this.loadUsers(); // Listeyi yenile
-          }
-        },
-        error: (error) => {
-          console.error('Öğretmen silinirken hata:', error);
-          this.error = 'Öğretmen silinirken hata oluştu.';
-        }
-      });
-    }
-  }
-
   // CRUD işlemleri
   deleteStudent(id: number): void {
     if (confirm('Bu öğrenciyi silmek istediğinizden emin misiniz?')) {
@@ -305,7 +272,7 @@ export class OgrenciListesiSayfasiComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           console.error('Öğrenci silinirken hata:', error);
-          alert('Öğrenci silinirken bir hata oluştu.');
+          this.error = 'Öğrenci silinirken bir hata oluştu.';
         }
       });
     }
@@ -323,7 +290,7 @@ export class OgrenciListesiSayfasiComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           console.error('Öğretmen silinirken hata:', error);
-          alert('Öğretmen silinirken bir hata oluştu.');
+          this.error = 'Öğretmen silinirken bir hata oluştu.';
         }
       });
     }
