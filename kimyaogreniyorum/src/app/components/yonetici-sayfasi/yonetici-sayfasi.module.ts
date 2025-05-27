@@ -15,9 +15,7 @@ import { OgrenciGruplarComponent } from './ogrenci-isleri-sayfasi/ogrenci-grupla
 import { OgrenciUcretlerComponent } from './ogrenci-isleri-sayfasi/ogrenci-ucretler/ogrenci-ucretler.component';
 import { GrupDetaySayfasiComponent } from './ogrenci-isleri-sayfasi/grup-detay-sayfasi/grup-detay-sayfasi.component';
 import { RouterModule } from '@angular/router';
-import { StudentService } from './student.service';
-import { TeacherService } from './teacher.service';
-import { AuthService } from './auth.service';
+import { StudentService, TeacherService, AuthService } from '../../services';
 import { YoneticiSayfasiRoutingModule } from './yonetici-sayfasi-routing.module';
 
 

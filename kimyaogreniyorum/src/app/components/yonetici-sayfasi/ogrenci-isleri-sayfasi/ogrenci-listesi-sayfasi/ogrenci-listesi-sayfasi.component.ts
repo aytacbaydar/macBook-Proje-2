@@ -29,7 +29,20 @@ export class OgrenciListesiSayfasiComponent implements OnInit, OnDestroy {
   itemsPerPage = 10;
   totalStudentCount = 0;
   totalTeacherCount = 0;
-  totalNewUsersCount = 0;
+  totalNewUsersCount: number = 0;
+
+  // Pagination için eksik property'ler
+  get totalStudentPages(): number {
+    return Math.ceil(this.filteredStudents.length / this.itemsPerPage);
+  }
+
+  get totalTeacherPages(): number {
+    return Math.ceil(this.filteredTeachers.length / this.itemsPerPage);
+  }
+
+  get totalNewUsersPages(): number {
+    return Math.ceil(this.filteredNewUsers.length / this.itemsPerPage);
+  }
 
   // UI durumları
   activeTab = 'students';
@@ -239,6 +252,43 @@ export class OgrenciListesiSayfasiComponent implements OnInit, OnDestroy {
     return this.newUsers.filter(user => 
       !('sinifi' in user || 'okulu' in user) // Teacher tipinde olup olmadığını kontrol et
     ).length;
+  }
+
+  getPendingUsers(): number {
+    return this.newUsers.length;
+  }
+
+  // Delete Functions
+  deleteStudent(id: number): void {
+    if (confirm('Bu öğrenciyi silmek istediğinizden emin misiniz?')) {
+      this.studentService.deleteStudent(id).subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.loadUsers(); // Listeyi yenile
+          }
+        },
+        error: (error) => {
+          console.error('Öğrenci silinirken hata:', error);
+          this.error = 'Öğrenci silinirken hata oluştu.';
+        }
+      });
+    }
+  }
+
+  deleteTeacher(id: number): void {
+    if (confirm('Bu öğretmeni silmek istediğinizden emin misiniz?')) {
+      this.teacherService.deleteTeacher(id).subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.loadUsers(); // Listeyi yenile
+          }
+        },
+        error: (error) => {
+          console.error('Öğretmen silinirken hata:', error);
+          this.error = 'Öğretmen silinirken hata oluştu.';
+        }
+      });
+    }
   }
 
   // CRUD işlemleri
