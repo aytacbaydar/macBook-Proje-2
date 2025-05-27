@@ -7,7 +7,8 @@ import { StudentService, TeacherService } from '../../../../services';
 @Component({
   selector: 'app-ogrenci-listesi-sayfasi',
   templateUrl: './ogrenci-listesi-sayfasi.component.html',
-  styleUrls: ['./ogrenci-listesi-sayfasi.component.scss']
+  styleUrls: ['./ogrenci-listesi-sayfasi.component.scss'],
+  
 })
 export class OgrenciListesiSayfasiComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
