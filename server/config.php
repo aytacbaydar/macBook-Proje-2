@@ -1,10 +1,11 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE");
-header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
-header("Content-Type: application/json; charset=UTF-8");
+// CORS headers - Angular için
+header('Access-Control-Allow-Origin: http://localhost:4200');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+header('Access-Control-Allow-Credentials: true');
 
-// Preflight OPTIONS request için
+// OPTIONS preflight request için
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
@@ -43,7 +44,7 @@ function authorize() {
 
     $auth = $_SERVER['HTTP_AUTHORIZATION'];
     $token = str_replace('Bearer ', '', $auth);
-    
+
     if (empty($token)) {
         http_response_code(401);
         echo json_encode(['error' => 'Geçersiz token']);
@@ -56,7 +57,7 @@ function authorize() {
         $stmt = $conn->prepare("SELECT id, adi_soyadi, email, rutbe FROM ogrenciler WHERE SHA2(CONCAT(id, email, sifre, 'SECRET_SALT'), 256) = :token AND aktif = TRUE");
         $stmt->bindParam(':token', $token);
         $stmt->execute();
-        
+
         if ($stmt->rowCount() > 0) {
             return $stmt->fetch(PDO::FETCH_ASSOC);
         } else {
@@ -114,13 +115,13 @@ function createJWT($userId, $email) {
         'iat' => time(),
         'exp' => time() + TOKEN_EXPIRY
     ]);
-    
+
     $headerEncoded = base64url_encode($header);
     $payloadEncoded = base64url_encode($payload);
-    
+
     $signature = hash_hmac('sha256', $headerEncoded . "." . $payloadEncoded, JWT_SECRET, true);
     $signatureEncoded = base64url_encode($signature);
-    
+
     return $headerEncoded . "." . $payloadEncoded . "." . $signatureEncoded;
 }
 
@@ -130,23 +131,23 @@ function verifyJWT($token) {
     if (count($parts) !== 3) {
         return false;
     }
-    
+
     $header = json_decode(base64url_decode($parts[0]), true);
     $payload = json_decode(base64url_decode($parts[1]), true);
     $signature = base64url_decode($parts[2]);
-    
+
     // Token süresi kontrolü
     if (isset($payload['exp']) && $payload['exp'] < time()) {
         return false;
     }
-    
+
     // İmza doğrulama
     $expectedSignature = hash_hmac('sha256', $parts[0] . "." . $parts[1], JWT_SECRET, true);
-    
+
     if (!hash_equals($signature, $expectedSignature)) {
         return false;
     }
-    
+
     return $payload;
 }
 
@@ -172,15 +173,15 @@ function verifyPassword($password, $hash) {
 // Başarı yanıtı
 function successResponse($data = null, $message = null) {
     $response = ['success' => true];
-    
+
     if ($data !== null) {
         $response['data'] = $data;
     }
-    
+
     if ($message !== null) {
         $response['message'] = $message;
     }
-    
+
     echo json_encode($response);
     exit();
 }

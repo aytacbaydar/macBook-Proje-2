@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
@@ -9,7 +8,7 @@ import { ApiResponse, PaginationParams } from '../models/api-response.model';
   providedIn: 'root'
 })
 export class ApiService {
-  private readonly baseUrl = 'http://localhost/server/api';
+  private baseUrl = 'http://0.0.0.0:8000/server/api';
 
   constructor(private http: HttpClient) {}
 
@@ -33,7 +32,7 @@ export class ApiService {
 
   protected get<T>(endpoint: string, params?: any): Observable<ApiResponse<T>> {
     let httpParams = new HttpParams();
-    
+
     if (params) {
       Object.keys(params).forEach(key => {
         if (params[key] !== null && params[key] !== undefined) {

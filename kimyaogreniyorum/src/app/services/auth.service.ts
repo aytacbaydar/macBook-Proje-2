@@ -1,5 +1,5 @@
-
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
@@ -24,8 +24,8 @@ export class AuthService extends ApiService {
   private currentUserSubject = new BehaviorSubject<AuthUser | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor() {
-    super();
+  constructor(http: HttpClient) {
+    super(http);
     this.loadUserFromStorage();
   }
 
@@ -44,7 +44,7 @@ export class AuthService extends ApiService {
 
   login(email: string, password: string, userType: 'student' | 'teacher'): Observable<AuthUser> {
     const endpoint = userType === 'student' ? 'ogrenci_girisi' : 'ogretmen_girisi';
-    
+
     return this.post<Student | Teacher>(endpoint, { email, sifre: password }).pipe(
       map(response => {
         if (response.success && response.data) {
@@ -58,13 +58,13 @@ export class AuthService extends ApiService {
             avatar: user.avatar,
             type: userType === 'student' ? 'student' : user.rutbe === 'yonetici' ? 'admin' : 'teacher'
           };
-          
+
           this.setCurrentUser(authUser);
-          
+
           if (response.token) {
             localStorage.setItem('token', response.token);
           }
-          
+
           return authUser;
         }
         throw new Error(response.message || 'Giriş başarısız');

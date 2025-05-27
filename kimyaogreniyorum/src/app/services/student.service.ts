@@ -1,9 +1,9 @@
-
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { Student, StudentResponse, StudentListResponse } from '../models/student.model';
 import { PaginationParams, PaginatedResponse } from '../models/api-response.model';
+import { ApiResponse } from '../models/api-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -40,23 +40,13 @@ export class StudentService extends ApiService {
     return this.delete<Student>(`ogrenci_sil/${id}`);
   }
 
-  // Öğrenci onaylama
-  approveStudent(id: number): Observable<StudentResponse> {
-    return this.put<Student>(`ogrenci_onayla/${id}`, { aktif: true });
-  }
-
-  // Tüm öğrencileri onayla
-  approveAllStudents(): Observable<StudentResponse> {
-    return this.post<Student>('tum_ogrencileri_onayla', {});
-  }
-
   // Aktif öğrenci sayısı
-  getActiveStudentsCount(): Observable<{count: number}> {
+  getActiveStudentsCount(): Observable<ApiResponse<{count: number}>> {
     return this.get<{count: number}>('aktif_ogrenci_sayisi');
   }
 
   // Bekleyen öğrenci sayısı
-  getPendingStudentsCount(): Observable<{count: number}> {
+  getPendingStudentsCount(): Observable<ApiResponse<{count: number}>> {
     return this.get<{count: number}>('bekleyen_ogrenci_sayisi');
   }
 
@@ -68,5 +58,20 @@ export class StudentService extends ApiService {
   // Gruplar için öğrencileri getir
   getStudentsByGroup(group: string): Observable<StudentListResponse> {
     return this.get<Student[]>('ogrenci_bilgileri', { grubu: group });
+  }
+  
+    // Okula göre öğrencileri getir
+  getStudentsBySchool(school: string): Observable<PaginatedResponse<Student>> {
+    return this.get<Student[]>(`ogrenci_okul/${school}`);
+  }
+
+  // Öğrenci onaylama
+  approveStudent(id: number): Observable<ApiResponse<Student>> {
+    return this.post<Student>(`${this.baseUrl}/ogrenci_onayla`, { id });
+  }
+
+  // Tüm öğrencileri onaylama
+  approveAllStudents(): Observable<ApiResponse<any>> {
+    return this.post<any>(`${this.baseUrl}/tum_ogrencileri_onayla`, {});
   }
 }

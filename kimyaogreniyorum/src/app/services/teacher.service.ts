@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
@@ -9,6 +8,7 @@ import { PaginationParams, PaginatedResponse } from '../models/api-response.mode
   providedIn: 'root'
 })
 export class TeacherService extends ApiService {
+  private baseUrl = 'http://localhost:8000/server/api';
 
   // Öğretmen kayıt
   registerTeacher(teacherData: Partial<Teacher>): Observable<TeacherResponse> {
@@ -22,22 +22,22 @@ export class TeacherService extends ApiService {
 
   // Tüm öğretmenleri getir
   getAllTeachers(params?: PaginationParams): Observable<PaginatedResponse<Teacher>> {
-    return this.get<Teacher[]>('ogretmen_bilgileri', params);
+    return this.get<Teacher[]>(`${this.baseUrl}/ogretmen_bilgileri`, params);
   }
 
   // Öğretmen detayını getir
   getTeacherById(id: number): Observable<TeacherResponse> {
-    return this.get<Teacher>(`ogretmen_profil/${id}`);
+    return this.get<Teacher>(`${this.baseUrl}/ogretmen_profil?id=${id}`);
   }
 
   // Öğretmen güncelle
   updateTeacher(id: number, teacherData: Partial<Teacher>): Observable<TeacherResponse> {
-    return this.put<Teacher>(`ogretmen_guncelle/${id}`, teacherData);
+    return this.put<Teacher>(`${this.baseUrl}/ogretmen_guncelle`, { id, ...teacherData });
   }
 
   // Öğretmen sil
   deleteTeacher(id: number): Observable<TeacherResponse> {
-    return this.delete<Teacher>(`ogretmen_sil/${id}`);
+    return this.delete<Teacher>(`${this.baseUrl}/ogretmen_sil?id=${id}`);
   }
 
   // Branşa göre öğretmenleri getir
@@ -48,5 +48,9 @@ export class TeacherService extends ApiService {
   // Yönetici bilgilerini getir
   getAdminInfo(): Observable<TeacherResponse> {
     return this.get<Teacher>('yonetici_bilgileri');
+  }
+
+  approveTeacher(id: number) {
+    return this.post<Teacher>(`${this.baseUrl}/ogretmen_onayla`, { id });
   }
 }
