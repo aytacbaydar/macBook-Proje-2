@@ -2,3 +2,32 @@ modules = ["nodejs-20", "web", "php-8.2"]
 
 [nix]
 channel = "stable-24_05"
+
+[workflows]
+runButton = "Angular Dev Server"
+
+[[workflows.workflow]]
+name = "Angular Dev Server"
+author = 99479
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd kimyaogreniyorum"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "ng serve --host 0.0.0.0 --port 4200"
+
+[[workflows.workflow]]
+name = "PHP Backend Server"
+author = 99479
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd server"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "php -S 0.0.0.0:8000"
