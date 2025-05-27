@@ -12,7 +12,7 @@ import { OgrenciDetaySayfasiComponent } from './ogrenci-isleri-sayfasi/ogrenci-d
 import { OgrenciGruplarComponent } from './ogrenci-isleri-sayfasi/ogrenci-gruplar/ogrenci-gruplar.component';
 
 // Routes
-const routes = [
+const routes: Routes = [
   {
     path: '',
     component: YoneticiIndexSayfasiComponent,
@@ -32,7 +32,7 @@ const routes = [
       {
         path: '',
         redirectTo: 'ogrenci-listesi-sayfasi',
-        pathMatch: 'full'
+        pathMatch: 'full' as const
       }
     ]
   }

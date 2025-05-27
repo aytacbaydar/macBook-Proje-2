@@ -585,7 +585,7 @@
                   <td>
                     <span class="badge bg-secondary">{{ getBranchDisplayName(user.brans) }}</span>
                   </td>
-                  <td class="text-muted">{{ user.kayit_tarihi | date:'dd/MM/yyyy' || '-' }}</td>
+                  <td class="text-muted">{{ user.kayit_tarihi ? (user.kayit_tarihi | date:'dd/MM/yyyy') : '-' }}</td>
                   <td>
                     <div class="btn-group">
                       <button class="btn btn-outline-success btn-sm" 
