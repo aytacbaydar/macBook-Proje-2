@@ -50,10 +50,10 @@ function authorize() {
         exit();
     }
 
-    // Token doğrulama
+    // Token doğrulama - SHA256 ile güvenli hale getirildi
     try {
         $conn = getConnection();
-        $stmt = $conn->prepare("SELECT id, adi_soyadi, email, rutbe FROM ogrenciler WHERE MD5(CONCAT(id, email, sifre)) = :token AND aktif = TRUE");
+        $stmt = $conn->prepare("SELECT id, adi_soyadi, email, rutbe FROM ogrenciler WHERE SHA2(CONCAT(id, email, sifre, 'SECRET_SALT'), 256) = :token AND aktif = TRUE");
         $stmt->bindParam(':token', $token);
         $stmt->execute();
         
@@ -66,7 +66,7 @@ function authorize() {
         }
     } catch (PDOException $e) {
         http_response_code(500);
-        echo json_encode(['error' => 'Veritabanı hatası: ' . $e->getMessage()]);
+        echo json_encode(['error' => 'Veritabanı hatası']);
         exit();
     }
 }
@@ -98,6 +98,75 @@ function errorResponse($message, $statusCode = 400) {
     http_response_code($statusCode);
     echo json_encode(['error' => $message]);
     exit();
+}
+
+// Güvenlik sabitleri
+define('JWT_SECRET', 'your-256-bit-secret-key-here'); // Değiştirin!
+define('PASSWORD_SALT', 'your-unique-salt-here'); // Değiştirin!
+define('TOKEN_EXPIRY', 3600); // 1 saat
+
+// JWT Token oluşturma
+function createJWT($userId, $email) {
+    $header = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
+    $payload = json_encode([
+        'user_id' => $userId,
+        'email' => $email,
+        'iat' => time(),
+        'exp' => time() + TOKEN_EXPIRY
+    ]);
+    
+    $headerEncoded = base64url_encode($header);
+    $payloadEncoded = base64url_encode($payload);
+    
+    $signature = hash_hmac('sha256', $headerEncoded . "." . $payloadEncoded, JWT_SECRET, true);
+    $signatureEncoded = base64url_encode($signature);
+    
+    return $headerEncoded . "." . $payloadEncoded . "." . $signatureEncoded;
+}
+
+// JWT Token doğrulama
+function verifyJWT($token) {
+    $parts = explode('.', $token);
+    if (count($parts) !== 3) {
+        return false;
+    }
+    
+    $header = json_decode(base64url_decode($parts[0]), true);
+    $payload = json_decode(base64url_decode($parts[1]), true);
+    $signature = base64url_decode($parts[2]);
+    
+    // Token süresi kontrolü
+    if (isset($payload['exp']) && $payload['exp'] < time()) {
+        return false;
+    }
+    
+    // İmza doğrulama
+    $expectedSignature = hash_hmac('sha256', $parts[0] . "." . $parts[1], JWT_SECRET, true);
+    
+    if (!hash_equals($signature, $expectedSignature)) {
+        return false;
+    }
+    
+    return $payload;
+}
+
+// Base64 URL encode/decode
+function base64url_encode($data) {
+    return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
+}
+
+function base64url_decode($data) {
+    return base64_decode(str_pad(strtr($data, '-_', '+/'), strlen($data) % 4, '=', STR_PAD_RIGHT));
+}
+
+// Güvenli şifre hashleme
+function hashPassword($password) {
+    return password_hash($password . PASSWORD_SALT, PASSWORD_ARGON2ID);
+}
+
+// Şifre doğrulama
+function verifyPassword($password, $hash) {
+    return password_verify($password . PASSWORD_SALT, $hash);
 }
 
 // Başarı yanıtı
