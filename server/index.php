@@ -139,114 +139,23 @@ try {
         // Request'i logla
         logRequest($endpoint, $method);
 
-        // Endpoint'e göre yönlendirme (organize edilmiş klasör yapısı)
+        // Endpoint'e göre yönlendirme - Manuel PHP dosyaları için hazırlandı
         $normalizedEndpoint = str_replace('.php', '', $endpoint);
 
         switch ($normalizedEndpoint) {
-            // AUTH Endpoints
-            case 'auth/login':
-            case 'ogrenci_girisi': // Backward compatibility
-                if ($method !== 'POST') {
-                    http_response_code(405);
-                    echo json_encode(['error' => 'Bu endpoint sadece POST metodunu destekler']);
-                    exit();
-                }
-                require_once 'api/auth/login.php';
-                break;
-
-            case 'auth/register':
-            case 'ogrenci_kayit': // Backward compatibility
-                if ($method !== 'POST') {
-                    http_response_code(405);
-                    echo json_encode(['error' => 'Bu endpoint sadece POST metodunu destekler']);
-                    exit();
-                }
-                require_once 'api/auth/register.php';
-                break;
-
-            // STUDENT Endpoints
-            case 'student/profile':
-            case 'ogrenci_bilgileri': // Backward compatibility
-                if ($method !== 'GET') {
-                    http_response_code(405);
-                    echo json_encode(['error' => 'Bu endpoint sadece GET metodunu destekler']);
-                    exit();
-                }
-                require_once 'api/student/profile.php';
-                break;
-
-            case 'student/update':
-            case 'ogrenci_guncelle': // Backward compatibility
-                if ($method !== 'PUT') {
-                    http_response_code(405);
-                    echo json_encode(['error' => 'Bu endpoint sadece PUT metodunu destekler']);
-                    exit();
-                }
-                require_once 'api/student/update.php';
-                break;
-
-            case 'student/delete':
-            case 'ogrenci_sil': // Backward compatibility
-                if ($method !== 'DELETE') {
-                    http_response_code(405);
-                    echo json_encode(['error' => 'Bu endpoint sadece DELETE metodunu destekler']);
-                    exit();
-                }
-                require_once 'api/student/delete.php';
-                break;
-
-            // ADMIN Endpoints
-            case 'admin/dashboard':
-            case 'yonetici_bilgileri': // Backward compatibility
-                if (!in_array($method, ['GET', 'POST', 'DELETE'])) {
-                    http_response_code(405);
-                    echo json_encode(['error' => 'Bu endpoint GET, POST ve DELETE metodlarını destekler']);
-                    exit();
-                }
-                require_once 'api/admin/dashboard.php';
-                break;
-
-            case 'admin/approve_all':
-            case 'tum_ogrencileri_onayla': // Backward compatibility
-                if ($method !== 'POST') {
-                    http_response_code(405);
-                    echo json_encode(['error' => 'Bu endpoint sadece POST metodunu destekler']);
-                    exit();
-                }
-                require_once 'api/admin/approve_all.php';
-                break;
-
-            // CONTENT Endpoints
-            case 'content/upload_lesson':
-            case 'konu_anlatim_kaydet': // Backward compatibility
-                if ($method !== 'POST') {
-                    http_response_code(405);
-                    echo json_encode(['error' => 'Bu endpoint sadece POST metodunu destekler']);
-                    exit();
-                }
-                require_once 'api/content/upload_lesson.php';
-                break;
-
-            // Legacy support
+            // Mevcut çalışan endpoint'ler
             case 'ogrenci_profil':
                 require_once 'api/ogrenci_profil.php';
                 break;
+
+            // Manuel olarak oluşturulacak endpoint'ler için placeholder
+            // Sen dosyaları oluşturduktan sonra buraya ekleyeceğim
 
             default:
                 http_response_code(404);
                 echo json_encode([
                     'error' => 'API endpoint bulunamadı',
-                    'available_endpoints' => [
-                        'auth/login',
-                        'auth/register',
-                        'student/profile',
-                        'student/update',
-                        'student/delete',
-                        'admin/dashboard',
-                        'admin/approve_all',
-                        'content/upload_lesson',
-                        'ogrenci_profil'
-                    ]
+                    'message' => 'Lütfen manuel olarak PHP dosyalarını oluşturun, routing güncellenecek'
                 ]);
                 break;
         }
