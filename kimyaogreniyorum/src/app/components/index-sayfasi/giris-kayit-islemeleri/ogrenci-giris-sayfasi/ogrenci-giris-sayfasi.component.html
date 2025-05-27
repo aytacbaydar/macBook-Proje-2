@@ -1,0 +1,72 @@
+<div class="login-container">
+    <div class="overlay"></div>
+
+    <div class="form-container">
+        <div class="form-header">
+            <h2>Öğrenci Girişi</h2>
+            <p>Hesap bilgilerinizle giriş yapınız</p>
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <div class="form-fields">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <div class="input-with-icon">
+                        <i class="bi bi-envelope"></i>
+                        <input type="email" id="email" formControlName="email" placeholder="Email adresinizi girin">
+                    </div>
+                    <div class="error-message" *ngIf="submitted && f['email'].errors">
+                        <span *ngIf="f['email'].errors['required']">Email alanı boş bırakılamaz</span>
+                        <span *ngIf="f['email'].errors['email']">Geçerli bir email adresi girin</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="sifre">Şifre</label>
+                    <div class="input-with-icon">
+                        <i class="bi bi-lock"></i>
+                        <input [type]="showPassword ? 'text' : 'password'" id="sifre" formControlName="sifre"
+                            placeholder="Şifrenizi girin">
+                        <button type="button" class="password-toggle" (click)="togglePassword()">
+                            <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                        </button>
+                    </div>
+                    <div class="error-message" *ngIf="submitted && f['sifre'].errors">
+                        <span *ngIf="f['sifre'].errors['required']">Şifre alanı boş bırakılamaz</span>
+                    </div>
+                </div>
+
+                <div class="remember-forgot">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember" formControlName="remember">
+                        <label for="remember">Beni Hatırla</label>
+                    </div>
+                    <a href="#" class="forgot-password">Şifremi Unuttum</a>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="primary-button" [disabled]="isSubmitting">
+                    <span *ngIf="!isSubmitting">Giriş Yap</span>
+                    <span *ngIf="isSubmitting">Giriş Yapılıyor...</span>
+                    <div class="spinner" *ngIf="isSubmitting"></div>
+                </button>
+                <button type="button" class="secondary-button" (click)="navigateToRegister()">
+                    Yeni Hesap Oluştur
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="toast" [class.visible]="showToast" [class.hidden]="!showToast">
+    <div class="toast-content">
+        <div class="toast-icon" [ngClass]="toastType">
+            <i [class]="toastType === 'success' ? 'bi bi-check-circle' : 'bi bi-x-circle'"></i>
+        </div>
+        <div class="toast-message">
+            <h4>{{ toastTitle }}</h4>
+            <p>{{ toastMessage }}</p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,120 @@
+<div class="konu-anlatim-container">
+  <div class="kontrol-paneli">
+    <div class="arac-grubu cizim-araclari">
+      <div class="renk-secici">
+        <span class="arac-grup-label">Renkler:</span>
+        <button (click)="hizliRenkSec('#FF0000')" class="renk-btn kirmizi" [class.aktif]="kalemRengi === '#FF0000'" title="Kırmızı"></button>
+        <button (click)="hizliRenkSec('#0000FF')" class="renk-btn mavi" [class.aktif]="kalemRengi === '#0000FF'" title="Mavi"></button>
+        <button (click)="hizliRenkSec('#00AA00')" class="renk-btn yesil" [class.aktif]="kalemRengi === '#00AA00'" title="Yeşil"></button>
+        <button (click)="hizliRenkSec('#000000')" class="renk-btn siyah" [class.aktif]="kalemRengi === '#000000'" title="Siyah"></button>
+        <input type="color" [(ngModel)]="kalemRengi" (change)="ayarlaKalemOzellikleri()" class="renk-input" title="Özel Renk Seç">
+      </div>
+
+      <div class="arac-grubu">
+        <span class="arac-grup-label">Araçlar:</span>
+        <button (click)="kalemModunuAc()" class="btn-modern" [class.aktif]="!silgiModu && !fosforluKalemModu && cizilebilir && !sekilModu">
+          <i class="ikon">✏️</i> Kalem
+        </button>
+        <button (click)="fosforluKalemModunuAc()" class="btn-modern fosforlu-btn" [class.aktif]="fosforluKalemModu">
+          <i class="ikon">🖌️</i> Fosforlu
+        </button>
+        <button (click)="silgiModunuAc()" class="btn-modern" [class.aktif]="silgiModu">
+          <i class="ikon">🧹</i> Silgi
+        </button>
+        <button (click)="toggleCizim()" class="btn-modern" [class.aktif]="!cizilebilir">
+          <i class="ikon">👆</i> El
+        </button>
+      </div>
+      
+      <div class="arac-grubu fosforlu-renkler" *ngIf="fosforluKalemModu">
+        <span class="arac-grup-label">Fosforlu Renkler:</span>
+        <button (click)="fosforluKalemModunuAc('sari')" class="fosforlu-renk-btn sari" [class.aktif]="secilenFosforluRenk === fosforluRenkler['sari']" title="Sarı"></button>
+        <button (click)="fosforluKalemModunuAc('yesil')" class="fosforlu-renk-btn yesil" [class.aktif]="secilenFosforluRenk === fosforluRenkler['yesil']" title="Yeşil"></button>
+        <button (click)="fosforluKalemModunuAc('pembe')" class="fosforlu-renk-btn pembe" [class.aktif]="secilenFosforluRenk === fosforluRenkler['pembe']" title="Pembe"></button>
+        <button (click)="fosforluKalemModunuAc('mavi')" class="fosforlu-renk-btn mavi" [class.aktif]="secilenFosforluRenk === fosforluRenkler['mavi']" title="Mavi"></button>
+        <button (click)="fosforluKalemModunuAc('turuncu')" class="fosforlu-renk-btn turuncu" [class.aktif]="secilenFosforluRenk === fosforluRenkler['turuncu']" title="Turuncu"></button>
+      </div>
+
+      <div class="arac-grubu">
+        <span class="arac-grup-label">Kalınlık:</span>
+        <select [(ngModel)]="kalemKalinligi" (change)="ayarlaKalemOzellikleri()" class="boyut-secici">
+          <option [value]="2">İnce (2px)</option>
+          <option [value]="4">Normal (4px)</option>
+          <option [value]="8">Kalın (8px)</option>
+          <option [value]="12">Çok Kalın (12px)</option>
+          <option [value]="16">Ekstra Kalın (16px)</option>
+        </select>
+      </div>
+
+      <div class="arac-grubu sekil-grubu">
+        <span class="arac-grup-label">Şekiller:</span>
+        <button (click)="sekilSec('cizgi')" class="sekil-btn" [class.aktif]="secilenSekil === 'cizgi'" title="Çizgi">
+          ╱
+        </button>
+        <button (click)="sekilSec('dikdortgen')" class="sekil-btn" [class.aktif]="secilenSekil === 'dikdortgen'" title="Dikdörtgen">
+          □
+        </button>
+        <button (click)="sekilSec('daire')" class="sekil-btn" [class.aktif]="secilenSekil === 'daire'" title="Daire">
+          ○
+        </button>
+        <button (click)="sekilSec('ok')" class="sekil-btn" [class.aktif]="secilenSekil === 'ok'" title="Ok">
+          →
+        </button>
+        <button (click)="sekilSec('ucgen')" class="sekil-btn" [class.aktif]="secilenSekil === 'ucgen'" title="Üçgen">
+          △
+        </button>
+      </div>
+    </div>
+
+    <div class="arac-grubu">
+      <button (click)="temizleSayfa()" class="btn-modern temizle">
+        <i class="ikon">🗑️</i> Temizle
+      </button>
+      <button (click)="sayfaEkle()" class="btn-modern">
+        <i class="ikon">➕</i> Yeni Sayfa
+      </button>
+      <button (click)="tamEkranModu()" class="btn-modern tam-ekran">
+        <i class="ikon">{{ isTamEkran ? '⤓' : '⤢' }}</i> {{ isTamEkran ? 'Tam Ekrandan Çık' : 'Tam Ekran' }}
+      </button>
+    </div>
+
+    <div class="arac-grubu kaydetme-bolumu">
+      <select [(ngModel)]="secilenGrup" class="grup-secici">
+        <option value="" disabled selected>Öğrenci Grubu Seçin</option>
+        <option *ngFor="let grup of ogrenciGruplari" [value]="grup">{{ grup }}</option>
+      </select>
+      <button (click)="veritabaninaKaydet()" [disabled]="!secilenGrup || kaydetmeIsleminde" class="btn-modern kaydet">
+        <i class="ikon">💾</i> {{ kaydetmeIsleminde ? 'İşleniyor, lütfen bekleyin...' : 'Veritabanına Kaydet' }}
+      </button>
+      <button (click)="indirPDF()" [disabled]="kaydetmeIsleminde" class="btn-modern indir">
+        <i class="ikon">📥</i> {{ kaydetmeIsleminde ? 'İşleniyor...' : 'PDF İndir' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="calisma-alani">
+    <div class="beyaz-tahta-container">
+      <div *ngFor="let sayfa of sayfalar; let i = index" [class.aktif-sayfa]="currentPage === i + 1" class="beyaz-tahta">
+        <canvas [id]="'canvas-' + (i + 1)" class="drawing-canvas"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="sayfa-navigasyon">
+    <div class="footer-content">
+      <button (click)="sayfaBas()" class="btn-modern btn-sayfa">
+        <i class="ikon">⏮️</i> İlk Sayfa
+      </button>
+      <button (click)="oncekiSayfa()" class="btn-modern btn-sayfa" [disabled]="currentPage <= 1">
+        <i class="ikon">◀️</i> Önceki
+      </button>
+      <span class="sayfa-bilgisi">Sayfa {{ currentPage }} / {{ totalPages }}</span>
+      <button (click)="sonrakiSayfa()" class="btn-modern btn-sayfa" [disabled]="currentPage >= totalPages">
+        <i class="ikon">▶️</i> Sonraki
+      </button>
+      <button (click)="sayfaSon()" class="btn-modern btn-sayfa">
+        <i class="ikon">⏭️</i> Son Sayfa
+      </button>
+    </div>
+  </div>
+</div>

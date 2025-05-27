@@ -1,0 +1,428 @@
+.konu-anlatim-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+}
+
+.kontrol-paneli {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  padding: 10px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.arac-grubu {
+  display: flex;
+  align-items: center;
+  margin: 5px 10px;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.renk-secici {
+  display: flex;
+  margin-right: 10px;
+  align-items: center;
+  gap: 5px;
+}
+
+.renk-input {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.renk-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin: 0 4px;
+  cursor: pointer;
+  border: 2px solid #ddd;
+}
+
+.renk-btn.aktif {
+  border-color: #666;
+  transform: scale(1.2);
+}
+
+.renk-btn.kirmizi {
+  background-color: #FF0000;
+}
+
+.renk-btn.mavi {
+  background-color: #0000FF;
+}
+
+.renk-btn.yesil {
+  background-color: #00AA00;
+}
+
+.renk-btn.siyah {
+  background-color: #000000;
+}
+
+// Fosforlu kalem stilleri
+.fosforlu-btn {
+  position: relative;
+}
+
+.fosforlu-btn.aktif {
+  background-color: #f0f0f0;
+}
+
+.fosforlu-btn.aktif:after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 3px;
+  background-color: #ffff00;
+  border-radius: 2px;
+}
+
+.fosforlu-renkler {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+.fosforlu-renk-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  margin: 0 4px;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.fosforlu-renk-btn.aktif {
+  border-color: #666;
+  transform: scale(1.1);
+}
+
+.fosforlu-renk-btn.sari {
+  background-color: rgba(255, 255, 0, 0.5);
+}
+
+.fosforlu-renk-btn.yesil {
+  background-color: rgba(0, 255, 0, 0.5);
+}
+
+.fosforlu-renk-btn.pembe {
+  background-color: rgba(255, 0, 255, 0.5);
+}
+
+.fosforlu-renk-btn.mavi {
+  background-color: rgba(0, 255, 255, 0.5);
+}
+
+.fosforlu-renk-btn.turuncu {
+  background-color: rgba(255, 165, 0, 0.5);
+}
+
+// Fosforlu kalem imleç stili
+body.fosforlu-kalem-aktif .drawing-canvas {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="yellow" stroke="black" stroke-width="1" d="M7,14l-5.5,5.5 0.7,0.7 5.5,-5.5 -0.7,-0.7z M22,2l-3,3c-1,-1 -2,-1 -3,0l-13,13c-0.5,0.5 -0.5,1.5 0,2l1,1c0.5,0.5 1.5,0.5 2,0l13,-13c1,-1 1,-2 0,-3l3,-3 -0.7,-0.7z"/></svg>') 0 24, auto;
+}
+
+.arac-grup-label {
+  font-weight: bold;
+  color: #495057;
+  font-size: 0.85rem;
+  margin-right: 5px;
+  white-space: nowrap;
+}
+
+.btn-modern {
+  padding: 8px 12px;
+  border: none;
+  background-color: #fff;
+  color: #333;
+  border-radius: 4px;
+  margin: 0 2px;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.btn-modern:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+.btn-modern.aktif {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-modern.temizle {
+  background-color: #f44336;
+  color: white;
+}
+
+.btn-modern.kaydet {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.btn-modern.indir {
+  background-color: #007bff;
+  color: white;
+}
+
+.sekme-butonlari {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 5px;
+}
+
+.sekme-btn {
+  padding: 6px 12px;
+  border: none;
+  background-color: #e9ecef;
+  color: #495057;
+  border-radius: 4px 4px 0 0;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sekme-btn.aktif {
+  background-color: #fff;
+  color: #007bff;
+  border-bottom: 2px solid #007bff;
+}
+
+.ikon {
+  margin-right: 5px;
+  font-style: normal;
+}
+
+.boyut-secici {
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-left: 5px;
+}
+
+.grup-secici {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-right: 10px;
+  min-width: 150px;
+}
+
+.calisma-alani {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.beyaz-tahta-container {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.beyaz-tahta {
+  background-color: #ffffff;
+  border: 1px solid #eaeaea;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  height: 1300px;
+  margin: 0 auto;
+  display: none;
+  position: relative;
+}
+
+.aktif-sayfa {
+  display: block;
+}
+
+.drawing-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.sayfa-navigasyon {
+  position: sticky;
+  bottom: 0;
+  background-color: #f8f9fa;
+  border-top: 1px solid #dee2e6;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.footer-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sayfa-bilgisi {
+  margin: 0 15px;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* İmleç stilleri */
+body.kalem-aktif .drawing-canvas {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23000000" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>') 0 24, auto;
+}
+
+body.silgi-aktif .drawing-canvas {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23000000" d="M15.14 3c-.51 0-1.02.2-1.41.59L2.59 14.73c-.78.77-.78 2.04 0 2.83L5.03 20h7.94l-1.72-1.72-4.47.01-1.41-1.41 8.84-8.84 1.42 1.41 1.72-1.72-5.47-5.47c-.39-.39-.9-.59-1.41-.59M21 19.5c0 .83-.67 1.5-1.5 1.5h-5.25l1.73-1.73 3.52-.01V19.5z"/></svg>') 0 24, auto;
+}
+
+body.el-imleci-aktif .drawing-canvas {
+  cursor: grab;
+}
+
+body.sekil-ciz-aktif .drawing-canvas {
+  cursor: crosshair;
+}
+
+/* Sekil çizim stilleri */
+.sekil-grubu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  align-items: center;
+}
+
+.sekil-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sekil-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.sekil-btn.aktif {
+  background-color: #e6f0ff;
+  border-color: #007bff;
+}
+
+@media (max-width: 768px) {
+  .kontrol-paneli, .sayfa-navigasyon {
+    padding: 5px;
+  }
+
+  .arac-grubu {
+    margin: 3px;
+  }
+
+  .btn-modern {
+    padding: 5px 8px;
+    font-size: 12px;
+  }
+
+  .sayfa-bilgisi {
+    font-size: 14px;
+    margin: 0 5px;
+  }
+}
+
+/* Resim yükleme stilleri */
+.yukleme-gostergesi {
+  color: #007bff;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Resim düzenleme için aktif nesne stilleri */
+.canvas-container {
+  .canvas-controls {
+    opacity: 0.8 !important;
+  }
+}
+
+/* Tam ekran butonu stilleri */
+.btn-modern.tam-ekran {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-modern.tam-ekran:hover {
+  background-color: #2980b9;
+}
+
+/* Tam ekran modu stilleri */
+body.tam-ekran-modu {
+  .kontrol-paneli {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: rgba(248, 249, 250, 0.95);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .calisma-alani {
+    padding-top: 70px;
+    height: calc(100vh - 130px);
+  }
+  
+  .sayfa-navigasyon {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: rgba(248, 249, 250, 0.95);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .beyaz-tahta {
+    max-height: calc(100vh - 150px);
+    overflow: auto;
+  }
+}

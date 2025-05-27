@@ -1,0 +1,20 @@
+modules = ["nodejs-20", "web", "php-8.2"]
+
+[nix]
+channel = "stable-24_05"
+
+[workflows]
+runButton = "Run Angular App"
+
+[[workflows.workflow]]
+name = "Run Angular App"
+author = 99479
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd kimyaogreniyorum && npm install && npm install -g @angular/cli && ng serve --host 0.0.0.0 --disable-host-check"
+
+[[ports]]
+localPort = 4200
+externalPort = 80

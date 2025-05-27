@@ -1,0 +1,112 @@
+<div class="registration-container">
+    <div class="overlay"></div>
+
+    <div class="form-container">
+        <div class="form-header">
+            <h2>Öğrenci Kayıt</h2>
+            <p>Lütfen tüm bilgilerinizi eksiksiz doldurunuz</p>
+        </div>
+
+        <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+            <div class="avatar-upload">
+                <div class="avatar-container" (click)="fileInput.click()" (dragenter)="handleDrag($event)"
+                    (dragover)="handleDrag($event)" (dragleave)="handleDrag($event)" (drop)="handleDrop($event)"
+                    [class.drag-active]="isDragActive">
+                    <div class="avatar-preview">
+                        <img *ngIf="previewUrl" [src]="previewUrl" alt="Avatar" class="avatar-image">
+                        <div *ngIf="!previewUrl" class="avatar-placeholder">
+                            <i class="bi bi-image"></i>
+                            <span>Avatar Seç</span>
+                            <span class="drag-text">veya sürükleyin</span>
+                        </div>
+                    </div>
+                    <input #fileInput type="file" hidden accept="image/jpeg,image/png,image/gif,image/webp"
+                        (change)="onFileChange($event)">
+                </div>
+                <div *ngIf="avatarError" class="error-message">{{ avatarError }}</div>
+                <p class="avatar-help-text">{{ previewUrl ? 'Değiştirmek için tıklayın' : 'Profil avatarınızı yükleyin'
+                    }}</p>
+            </div>
+
+            <div class="form-fields">
+                <div class="form-group">
+                    <label for="adi_soyadi">Adı Soyadı</label>
+                    <div class="input-with-icon">
+                        <i class="bi bi-person"></i>
+                        <input type="text" id="adi_soyadi" formControlName="adi_soyadi"
+                            placeholder="Ad ve soyadınızı girin">
+                    </div>
+                    <div class="error-message" *ngIf="submitted && f['adi_soyadi'].errors">
+                        <span *ngIf="f['adi_soyadi'].errors['required']">İsim alanı boş bırakılamaz</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="cep_telefonu">Cep Telefonu</label>
+                    <div class="input-with-icon">
+                        <i class="bi bi-phone"></i>
+                        <input type="text" id="cep_telefonu" formControlName="cep_telefonu"
+                            placeholder="Cep telefonunuzu girin">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <div class="input-with-icon">
+                        <i class="bi bi-envelope"></i>
+                        <input type="email" id="email" formControlName="email" placeholder="Email adresinizi girin">
+                    </div>
+                    <div class="error-message" *ngIf="submitted && f['email'].errors">
+                        <span *ngIf="f['email'].errors['required']">Email alanı boş bırakılamaz</span>
+                        <span *ngIf="f['email'].errors['email']">Geçerli bir email adresi girin</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="sifre">Şifre</label>
+                    <div class="input-with-icon">
+                        <i class="bi bi-lock"></i>
+                        <input [type]="showPassword ? 'text' : 'password'" id="sifre" formControlName="sifre"
+                            placeholder="Şifrenizi oluşturun">
+                        <button type="button" class="password-toggle" (click)="togglePassword()">
+                            <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                        </button>
+                    </div>
+                    <div class="error-message" *ngIf="submitted && f['sifre'].errors">
+                        <span *ngIf="f['sifre'].errors['required']">Şifre alanı boş bırakılamaz</span>
+                        <span *ngIf="f['sifre'].errors['minlength']">Şifre en az 6 karakter olmalıdır</span>
+                    </div>
+                    <div class="password-strength" *ngIf="registrationForm.get('sifre')?.value">
+                        <div class="strength-bar">
+                            <div class="strength-fill" [ngClass]="passwordStrength.cssClass"></div>
+                        </div>
+                        <span class="strength-label">{{ passwordStrength.label }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="primary-button" [disabled]="isSubmitting || !selectedFile">
+                    <span *ngIf="!isSubmitting">Öğrenci Kaydet</span>
+                    <span *ngIf="isSubmitting">Kaydediliyor...</span>
+                    <div class="spinner" *ngIf="isSubmitting"></div>
+                </button>
+                <button type="button" class="secondary-button" (click)="navigateToLogin()">
+                    Öğrenci Girişi
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="toast" [class.visible]="showToast" [class.hidden]="!showToast">
+    <div class="toast-content">
+        <div class="toast-icon" [ngClass]="toastType">
+            <i [class]="toastType === 'success' ? 'bi bi-check-circle' : 'bi bi-x-circle'"></i>
+        </div>
+        <div class="toast-message">
+            <h4>{{ toastTitle }}</h4>
+            <p>{{ toastMessage }}</p>
+        </div>
+    </div>
+</div>
