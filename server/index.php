@@ -142,10 +142,10 @@ try {
         // Endpoint'e göre yönlendirme
         switch ($endpoint) {
             case 'ogrenci_kayit.php':
-                require_once 'api/ogrenci_kayit.php';
+                require_once 'api/ogrenci_girisi/ogrenci_kayit.php';
                 break;
             case 'ogrenci_girisi.php':
-                require_once 'api/ogrenci_girisi.php';
+                require_once 'api/ogrenci_girisi/ogrenci_girisi.php';
                 break;
             case 'yonetici_bilgileri.php':
                 require_once 'api/yonetici_bilgileri.php';
