@@ -13,12 +13,12 @@ header('Referrer-Policy: strict-origin-when-cross-origin');
 $allowedEndpoints = [
     'ogrenci_kayit' => 'api/ogrenci_girisi/ogrenci_kayit.php',
     'ogrenci_girisi' => 'api/ogrenci_girisi/ogrenci_girisi.php',
-    'yonetici_bilgileri' => 'api/yonetici_bilgileri.php',
-    'ogrenci_bilgileri' => 'api/ogrenci_bilgileri.php',
-    'ogrenci_profil' => 'api/ogrenci_profil.php',
-    'ogrenci_guncelle' => 'api/ogrenci_guncelle.php',
+    'yonetici_bilgileri' => 'api/ogretmen/yonetici_bilgileri.php',
+    'ogrenci_bilgileri' => 'api/ogretmen/ogrenci_bilgileri.php',
+    'ogrenci_profil' => 'api/ogretmen/ogrenci_profil.php',
+    'ogrenci_guncelle' => 'api/ogretmen/ogrenci_guncelle.php',
     'tum_ogrencileri_onayla' => 'api/tum_ogrencileri_onayla.php',
-    'konu_anlatim_kaydet' => 'api/konu_anlatim_kaydet.php'
+    'konu_anlatim_kaydet' => 'api/ogretmen/konu_anlatim_kaydet.php'
 ];
 
 // Rate limiting basit kontrolü (session tabanlı)
