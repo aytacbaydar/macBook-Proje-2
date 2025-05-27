@@ -141,8 +141,32 @@ try {
 
         // Endpoint'e göre yönlendirme
         switch ($endpoint) {
+            case 'ogrenci_girisi.php':
+                require_once 'api/ogrenci_girisi.php';
+                break;
+            case 'ogrenci_kayit.php':
+                require_once 'api/ogrenci_kayit.php';
+                break;
+            case 'ogrenci_bilgileri.php':
+                require_once 'api/ogrenci_bilgileri.php';
+                break;
+            case 'yonetici_bilgileri.php':
+                require_once 'api/yonetici_bilgileri.php';
+                break;
             case 'ogrenci_profil.php':
                 require_once 'api/ogrenci_profil.php';
+                break;
+            case 'ogrenci_guncelle.php':
+                require_once 'api/ogrenci_guncelle.php';
+                break;
+            case 'tum_ogrencileri_onayla.php':
+                require_once 'api/tum_ogrencileri_onayla.php';
+                break;
+            case 'konu_anlatim_kaydet.php':
+                require_once 'api/konu_anlatim_kaydet.php';
+                break;
+            case 'ogrenciler_listesi.php':
+                require_once 'api/ogrenciler_listesi.php';
                 break;
 
             default:
