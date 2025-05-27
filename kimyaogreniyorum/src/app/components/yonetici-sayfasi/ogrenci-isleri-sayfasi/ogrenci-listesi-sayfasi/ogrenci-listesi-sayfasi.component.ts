@@ -313,8 +313,18 @@ export class OgrenciListesiSayfasiComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-      // Öğretmen onaylama işlemi burada yapılacak
-      // teacherService.approveTeacher() metodunu ekleyebilirsiniz
+      this.teacherService.approveTeacher(user.id!).pipe(
+        takeUntil(this.destroy$)
+      ).subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.loadUsers();
+          }
+        },
+        error: (error) => {
+          console.error('Öğretmen onaylanırken hata:', error);
+        }
+      });
     }
   }
 

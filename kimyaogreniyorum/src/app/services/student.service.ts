@@ -9,6 +9,7 @@ import { ApiResponse } from '../models/api-response.model';
   providedIn: 'root'
 })
 export class StudentService extends ApiService {
+  private baseUrl = 'http://0.0.0.0:8000/server/api';
 
   // Öğrenci kayıt
   registerStudent(studentData: Partial<Student>): Observable<StudentResponse> {
@@ -22,22 +23,22 @@ export class StudentService extends ApiService {
 
   // Tüm öğrencileri getir
   getAllStudents(params?: PaginationParams): Observable<PaginatedResponse<Student>> {
-    return this.get<Student[]>('ogrenci_bilgileri', params);
+    return this.get<Student[]>('ogretmen/ogrenciler_listesi', params);
   }
 
   // Öğrenci detayını getir
   getStudentById(id: number): Observable<StudentResponse> {
-    return this.get<Student>(`ogrenci_profil/${id}`);
+    return this.get<Student>(`ogretmen/ogrenci_profil?id=${id}`);
   }
 
   // Öğrenci güncelle
   updateStudent(id: number, studentData: Partial<Student>): Observable<StudentResponse> {
-    return this.put<Student>(`ogrenci_guncelle/${id}`, studentData);
+    return this.put<Student>(`ogretmen/ogrenci_guncelle`, { id, ...studentData });
   }
 
   // Öğrenci sil
   deleteStudent(id: number): Observable<StudentResponse> {
-    return this.delete<Student>(`ogrenci_sil/${id}`);
+    return this.delete<Student>(`ogretmen/ogrenci_sil?id=${id}`);
   }
 
   // Aktif öğrenci sayısı
@@ -67,11 +68,11 @@ export class StudentService extends ApiService {
 
   // Öğrenci onaylama
   approveStudent(id: number): Observable<ApiResponse<Student>> {
-    return this.post<Student>(`${this.baseUrl}/ogrenci_onayla`, { id });
+    return this.post<Student>(`tum_ogrencileri_onayla`, { id });
   }
 
   // Tüm öğrencileri onaylama
   approveAllStudents(): Observable<ApiResponse<any>> {
-    return this.post<any>(`${this.baseUrl}/tum_ogrencileri_onayla`, {});
+    return this.post<any>(`tum_ogrencileri_onayla`, {});
   }
 }

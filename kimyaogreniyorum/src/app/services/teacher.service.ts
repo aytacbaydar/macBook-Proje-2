@@ -50,7 +50,7 @@ export class TeacherService extends ApiService {
     return this.get<Teacher>('yonetici_bilgileri');
   }
 
-  approveTeacher(id: number) {
-    return this.post<Teacher>(`${this.baseUrl}/ogretmen_onayla`, { id });
+  approveTeacher(id: number): Observable<ApiResponse<Teacher>> {
+    return this.post<Teacher>(`ogretmen_onayla`, { id });
   }
 }
