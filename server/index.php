@@ -18,7 +18,9 @@ $allowedEndpoints = [
     'ogrenci_profil' => 'api/ogretmen/ogrenci_profil.php',
     'ogrenci_guncelle' => 'api/ogretmen/ogrenci_guncelle.php',
     'tum_ogrencileri_onayla' => 'api/tum_ogrencileri_onayla.php',
-    'konu_anlatim_kaydet' => 'api/ogretmen/konu_anlatim_kaydet.php'
+    'konu_anlatim_kaydet' => 'api/ogretmen/konu_anlatim_kaydet.php',
+    'ogretmen/ogrenciler_listesi' => 'api/ogretmen/ogrenciler_listesi.php',
+    'ogretmen/ogretmenler_listesi' => 'api/ogretmen/ogretmenler_listesi.php'
 ];
 
 // Rate limiting basit kontrolü (session tabanlı)

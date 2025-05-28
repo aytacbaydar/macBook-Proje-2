@@ -41,3 +41,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 else {
     errorResponse('Bu endpoint sadece GET metodunu desteklemektedir', 405);
 }
+<?php
+require_once '../../config.php';
+
+// OPTIONS isteğini yönet
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    try {
+        $conn = getConnection();
+        
+        // Tüm öğrencileri getir
+        $stmt = $conn->prepare("SELECT * FROM ogrenciler ORDER BY id DESC");
+        $stmt->execute();
+        $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        successResponse($students);
+        
+    } catch (Exception $e) {
+        error_log("Öğrenciler listesi hatası: " . $e->getMessage());
+        errorResponse('Öğrenciler yüklenirken hata oluştu', 500);
+    }
+} else {
+    errorResponse('Geçersiz HTTP metodu', 405);
+}
+?>
