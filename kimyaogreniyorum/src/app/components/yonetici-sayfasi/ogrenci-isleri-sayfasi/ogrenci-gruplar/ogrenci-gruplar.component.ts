@@ -1,25 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Student } from '../../../../models';
 import { StudentService } from '../../../../services';
-
-interface Student {
-  id: number;
-  adi_soyadi: string;
-  email: string;
-  cep_telefonu?: string;
-  okulu?: string;
-  sinifi?: string;
-  grubu?: string;
-  ders_gunu?: string;
-  ders_saati?: string;
-  ucret?: string;
-  aktif: boolean;
-  avatar?: string;
-  veli_adi?: string;
-  veli_cep?: string;
-}
+import { Student } from '../../../../models/student.model';
 
 interface Group {
   name: string;
@@ -46,6 +29,7 @@ export class OgrenciGruplarComponent implements OnInit {
     '#ef4444', '#8b5cf6', '#ec4899', '#84cc16',
     '#f97316', '#6366f1', '#14b8a6', '#eab308'
   ];
+  http: any;
 
   constructor(
     private studentService: StudentService,
@@ -63,8 +47,8 @@ export class OgrenciGruplarComponent implements OnInit {
     this.studentService.getAllStudents().subscribe({
       next: (response) => {
         if (response.success && response.data) {
-          this.groups = Array.isArray(response.data) ? response.data : [response.data];
-          this.organizeStudentsByGroups(this.groups);
+          const students: Student[] = Array.isArray(response.data) ? response.data : [response.data];
+          this.organizeStudentsByGroups(students);
         } else {
           this.error = 'Öğrenci verileri yüklenemedi';
         }
@@ -153,7 +137,7 @@ export class OgrenciGruplarComponent implements OnInit {
               alert('Öğrenci silinirken hata oluştu: ' + response.message);
             }
           },
-          error: (error) => {
+          error: (error: { message: string; }) => {
             alert('Sunucu hatası: ' + error.message);
           }
         });
