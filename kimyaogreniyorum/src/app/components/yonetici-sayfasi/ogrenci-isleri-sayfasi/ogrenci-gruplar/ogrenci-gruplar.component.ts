@@ -47,7 +47,10 @@ export class OgrenciGruplarComponent implements OnInit {
     '#f97316', '#6366f1', '#14b8a6', '#eab308'
   ];
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(
+    private studentService: StudentService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadStudents();
@@ -57,33 +60,22 @@ export class OgrenciGruplarComponent implements OnInit {
     this.isLoading = true;
     this.error = null;
 
-    // Token'ı al
-    let token = '';
-    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
-    if (userStr) {
-      const user = JSON.parse(userStr);
-      token = user.token || '';
-    }
-
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-
-    this.http.get<any>('./server/api/ogrenciler_listesi.php', { headers })
-      .subscribe({
-        next: (response) => {
-          if (response.success) {
-            this.organizeStudentsByGroups(response.data);
-          } else {
-            this.error = response.message || 'Öğrenci verileri yüklenirken hata oluştu.';
-          }
-          this.isLoading = false;
-        },
-        error: (error) => {
-          this.error = 'Sunucu hatası: ' + (error.error?.message || error.message);
-          this.isLoading = false;
+    this.studentService.getAllStudents().subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.groups = Array.isArray(response.data) ? response.data : [response.data];
+          this.organizeStudentsByGroups(this.groups);
+        } else {
+          this.error = 'Öğrenci verileri yüklenemedi';
         }
-      });
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Öğrenciler yüklenirken hata:', error);
+        this.error = 'Öğrenciler yüklenirken bir hata oluştu';
+        this.isLoading = false;
+      }
+    });
   }
 
   organizeStudentsByGroups(students: Student[]): void {
