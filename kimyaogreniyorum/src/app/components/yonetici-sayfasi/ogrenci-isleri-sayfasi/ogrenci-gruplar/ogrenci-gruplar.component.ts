@@ -1,7 +1,8 @@
-
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { Student } from '../../../../models';
+import { StudentService } from '../../../../services';
 
 interface Student {
   id: number;
@@ -38,7 +39,7 @@ export class OgrenciGruplarComponent implements OnInit {
   isLoading: boolean = true;
   error: string | null = null;
   searchQuery: string = '';
-  
+
   // Grup renkleri
   groupColors = [
     '#4f46e5', '#06b6d4', '#10b981', '#f59e0b', 
@@ -87,7 +88,7 @@ export class OgrenciGruplarComponent implements OnInit {
 
   organizeStudentsByGroups(students: Student[]): void {
     const groupMap = new Map<string, Student[]>();
-    
+
     // Öğrencileri gruplara ayır
     students.forEach(student => {
       const groupName = student.grubu || 'Grup Atanmamış';

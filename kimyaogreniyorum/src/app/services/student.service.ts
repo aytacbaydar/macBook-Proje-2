@@ -23,7 +23,7 @@ export class StudentService extends ApiService {
 
   // Tüm öğrencileri getir
   getAllStudents(params?: PaginationParams): Observable<PaginatedResponse<Student>> {
-    return this.get<Student[]>('ogretmen/ogrenciler_listesi', params);
+    return this.get<Student[]>('ogrenciler_listesi', params);
   }
 
   // Öğrenci detayını getir
