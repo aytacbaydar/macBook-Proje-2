@@ -1,0 +1,103 @@
+<header class="carousel-header">
+    <!-- Loading State -->
+    <div class="loading-overlay" *ngIf="isLoading">
+      <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <p>Yükleniyor...</p>
+      </div>
+    </div>
+  
+    <!-- Carousel Container -->
+    <div 
+      class="carousel-container"
+      (mouseenter)="onMouseEnter()"
+      (mouseleave)="onMouseLeave()"
+      (touchstart)="onTouchStart($event)"
+      (touchend)="onTouchEnd($event)">
+      
+      <!-- Background with Fragments -->
+      <div class="background-container">
+        <!-- Normal image when not transitioning -->
+        <img 
+          *ngIf="!isTransitioning"
+          [src]="currentSlideData.image"
+          [alt]="currentSlideData.alt"
+          class="background-image">
+        
+        <!-- Fragmented transition -->
+        <div *ngIf="isTransitioning" class="fragments-grid">
+          <div 
+            *ngFor="let fragmentIndex of fragments; trackBy: trackByFragment"
+            class="fragment"
+            [style.animation-delay]="getFragmentDelay(fragmentIndex) + 's'">
+            
+            <!-- Current image fragment -->
+            <div 
+              class="fragment-current"
+              [class.fragment-exit]="isTransitioning"
+              [style.background-image]="'url(' + currentSlideData.image + ')'"
+              [style.background-size]="getFragmentBackgroundSize()"
+              [style.background-position]="getFragmentBackgroundPosition(getFragmentRow(fragmentIndex), getFragmentCol(fragmentIndex))">
+            </div>
+            
+            <!-- Next image fragment -->
+            <div 
+              class="fragment-next"
+              [class.fragment-enter]="isTransitioning"
+              [style.background-image]="'url(' + nextSlideData.image + ')'"
+              [style.background-size]="getFragmentBackgroundSize()"
+              [style.background-position]="getFragmentBackgroundPosition(getFragmentRow(fragmentIndex), getFragmentCol(fragmentIndex))"
+              [style.animation-delay]="(getFragmentDelay(fragmentIndex) + 0.2) + 's'">
+            </div>
+          </div>
+        </div>
+        
+        <!-- Dark overlay -->
+        <div class="dark-overlay"></div>
+      </div>
+  
+      <!-- Content Overlay -->
+      <div class="content-overlay">
+        <div class="content-container" @slideContent>
+          <h1 class="title">{{ currentSlideData.title }}</h1>
+          <p class="subtitle">{{ currentSlideData.subtitle }}</p>
+          <button class="cta-button" type="button">
+            {{ currentSlideData.buttonText }}
+          </button>
+        </div>
+      </div>
+  
+      <!-- Navigation Arrows -->
+      <button 
+        class="nav-arrow nav-arrow-left"
+        (click)="previousSlide()"
+        [disabled]="isTransitioning"
+        type="button">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15,18 9,12 15,6"></polyline>
+        </svg>
+      </button>
+  
+      <button 
+        class="nav-arrow nav-arrow-right"
+        (click)="nextSlide()"
+        [disabled]="isTransitioning"
+        type="button">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9,18 15,12 9,6"></polyline>
+        </svg>
+      </button>
+  
+      <!-- Slide Indicators -->
+      <div class="indicators">
+        <button 
+          *ngFor="let slide of slides; let i = index"
+          class="indicator"
+          [class.indicator-active]="i === currentSlide"
+          (click)="goToSlide(i)"
+          [disabled]="isTransitioning"
+          type="button">
+        </button>
+      </div>
+    </div>
+  </header>
