@@ -7,19 +7,16 @@ import { AppRoutingModule } from '../../app-routing.module';
 import { OgrenciKayitSayfasiComponent } from './giris-kayit-islemeleri/ogrenci-kayit-sayfasi/ogrenci-kayit-sayfasi.component';
 import { OgrenciGirisSayfasiComponent } from './giris-kayit-islemeleri/ogrenci-giris-sayfasi/ogrenci-giris-sayfasi.component';
 import { OgrenciOnaySayfasiComponent } from './giris-kayit-islemeleri/ogrenci-onay-sayfasi/ogrenci-onay-sayfasi.component';
-import { IndexHeaderSayfasiComponent } from './template/index-header-sayfasi/index-header-sayfasi.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 
 @NgModule({
-  declarations: [OgrenciKayitSayfasiComponent, OgrenciGirisSayfasiComponent, OgrenciOnaySayfasiComponent, IndexHeaderSayfasiComponent],
+  declarations: [OgrenciKayitSayfasiComponent, OgrenciGirisSayfasiComponent, OgrenciOnaySayfasiComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     HttpClientModule,
     BrowserModule,
-    BrowserAnimationsModule,
     AppRoutingModule,
     FormsModule,
   ],

@@ -33,7 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sifre = $_POST['sifre'];
         $rutbe = isset($_POST['rutbe']) ? $_POST['rutbe'] : 'yeni';
         $aktif = isset($_POST['aktif']) && ($_POST['aktif'] === 'true' || $_POST['aktif'] === true) ? 1 : 0;
-        $brans = isset($_POST['brans']) ? $_POST['brans'] : ''; // Branş alanı eklendi
     } else {
         // JSON verileri kontrolü - eğer FormData değilse
         $input = file_get_contents("php://input");
@@ -46,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $sifre = $data['sifre']; 
                 $rutbe = isset($data['rutbe']) ? $data['rutbe'] : 'yeni';
                 $aktif = isset($data['aktif']) && $data['aktif'] === true ? 1 : 0;
-                $brans = isset($data['brans']) ? $data['brans'] : ''; // Branş alanı eklendi
             } else {
                 errorResponse('Geçersiz JSON verisi - Lütfen FormData formatında gönderin.');
             }
@@ -184,8 +182,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conn->beginTransaction();
         
         // Kullanıcıyı veritabanına kaydet
-        $stmt = $conn->prepare("INSERT INTO ogrenciler (adi_soyadi, email, cep_telefonu, sifre, rutbe, aktif, avatar, brans)
-                VALUES (:adi_soyadi, :email, :cep_telefonu, :sifre, :rutbe, :aktif, :avatar, :brans)");
+        $stmt = $conn->prepare("INSERT INTO ogrenciler (adi_soyadi, email, cep_telefonu, sifre, rutbe, aktif, avatar)
+                VALUES (:adi_soyadi, :email, :cep_telefonu, :sifre, :rutbe, :aktif, :avatar)");
         
         $stmt->bindParam(':adi_soyadi', $adi_soyadi);
         $stmt->bindParam(':email', $email);
@@ -194,7 +192,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindParam(':rutbe', $rutbe);
         $stmt->bindParam(':aktif', $aktif);
         $stmt->bindParam(':avatar', $avatar);
-        $stmt->bindParam(':brans', $brans);
         
         if (!$stmt->execute()) {
             $error = $stmt->errorInfo();
@@ -228,7 +225,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'rutbe' => $rutbe,
             'aktif' => $aktif,
             'avatar' => $avatar,
-            'brans' => $brans,
             'token' => $token
         ], 'Kullanıcı başarıyla kaydedildi!');
         
