@@ -18,6 +18,7 @@ interface Student {
   avatar?: string;
   veli_adi?: string;
   veli_cep?: string;
+  rutbe?: string;
 }
 
 interface Group {

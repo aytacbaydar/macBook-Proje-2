@@ -36,6 +36,9 @@ export class OgrenciListesiSayfasiComponent implements OnInit {
   error: string | null = null;
   searchQuery = '';
 
+  // Aktif sekme
+  activeTab: 'ogrenci' | 'ogretmen' | 'yeni' = 'ogrenci';
+
   // Pagination
   currentStudentPage = 1;
   currentTeacherPage = 1;
@@ -52,12 +55,12 @@ export class OgrenciListesiSayfasiComponent implements OnInit {
   }
 
   // Tab değiştirme
-  setActiveTab(tab: 'students' | 'teachers' | 'new'): void {
+  setActiveTab(tab: 'ogrenci' | 'ogretmen' | 'yeni'): void {
     this.activeTab = tab;
     // Tab değiştiğinde sayfayı sıfırla
-    if (tab === 'students') this.currentStudentPage = 1;
-    if (tab === 'teachers') this.currentTeacherPage = 1;
-    if (tab === 'new') this.currentNewUserPage = 1;
+    if (tab === 'ogrenci') this.currentStudentPage = 1;
+    if (tab === 'ogretmen') this.currentTeacherPage = 1;
+    if (tab === 'yeni') this.currentNewUserPage = 1;
   }
 
   // Verileri yükleme
