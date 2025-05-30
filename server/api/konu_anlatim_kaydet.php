@@ -312,11 +312,7 @@ try {
         errorResponse('Geçersiz token', 401);
     }
 
-    // Sadece öğretmen yetkili
-    if ($user['role'] !== 'ogretmen') {
-        errorResponse('Bu işlem için yetkiniz yok. Sadece öğretmenler konu anlatımı kaydedebilir.', 403);
-    }
-
+    // Giriş yapmış tüm kullanıcılar konu anlatımı kaydedebilir
     $ogretmenId = $user['id'];
 
     // Tablo kontrol et/oluştur
