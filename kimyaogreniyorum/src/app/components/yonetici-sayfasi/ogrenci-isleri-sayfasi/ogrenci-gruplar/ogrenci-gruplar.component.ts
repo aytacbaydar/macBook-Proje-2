@@ -88,8 +88,11 @@ export class OgrenciGruplarComponent implements OnInit {
   organizeStudentsByGroups(students: Student[]): void {
     const groupMap = new Map<string, Student[]>();
     
+    // Sadece öğrencileri filtrele (admin ve öğretmenleri hariç tut)
+    const actualStudents = students.filter(student => student.rutbe === 'ogrenci');
+    
     // Öğrencileri gruplara ayır
-    students.forEach(student => {
+    actualStudents.forEach(student => {
       const groupName = student.grubu || 'Grup Atanmamış';
       if (!groupMap.has(groupName)) {
         groupMap.set(groupName, []);
