@@ -1,7 +1,4 @@
 <?php
-// config.php'yi ilk olarak dahil et - errorResponse ve successResponse fonksiyonları için gerekli
-require_once '../config.php';
-
 // CORS ve Content-Type başlıkları - saf JSON yanıtı için
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
@@ -107,21 +104,18 @@ file_put_contents($log_file, $headers_log, FILE_APPEND);
 $errors = [];
 $validation_log = "Veri doğrulama başlıyor...\n";
 
-// PDF adı kontrolü - daha esnek
-if (!isset($_POST['pdf_adi']) || trim($_POST['pdf_adi']) === '') {
-    $errors[] = 'pdf_adi alanı eksik veya boş';
+// PDF adı kontrolü
+if (empty($_POST['pdf_adi'])) {
+    $errors[] = 'pdf_adi alanı eksik';
     $validation_log .= "pdf_adi alanı bulunamadı veya boş\n";
 } else {
     $validation_log .= "pdf_adi alanı mevcut: " . $_POST['pdf_adi'] . "\n";
 }
 
-// Öğrenci grubu kontrolü - daha esnek, zorunlu değil
-if (!isset($_POST['ogrenci_grubu'])) {
-    $_POST['ogrenci_grubu'] = 'Genel'; // Varsayılan grup
-    $validation_log .= "ogrenci_grubu alanı bulunamadı, varsayılan olarak 'Genel' atandı\n";
-} else if (trim($_POST['ogrenci_grubu']) === '') {
-    $_POST['ogrenci_grubu'] = 'Genel'; // Varsayılan grup
-    $validation_log .= "ogrenci_grubu alanı boş, varsayılan olarak 'Genel' atandı\n";
+// Öğrenci grubu kontrolü
+if (empty($_POST['ogrenci_grubu'])) {
+    $errors[] = 'ogrenci_grubu alanı eksik';
+    $validation_log .= "ogrenci_grubu alanı bulunamadı veya boş\n";
 } else {
     $validation_log .= "ogrenci_grubu alanı mevcut: " . $_POST['ogrenci_grubu'] . "\n";
 }
@@ -194,16 +188,7 @@ file_put_contents($log_file, $validation_log, FILE_APPEND);
 if (!empty($errors)) {
     // Hatayı logla
     file_put_contents($log_file, "Hatalar: " . print_r($errors, true) . "\n", FILE_APPEND);
-    
-    // Daha detaylı hata mesajı
-    $detailed_error = [
-        'main_error' => 'Validasyon hataları',
-        'errors' => $errors,
-        'received_post' => $_POST,
-        'received_files' => array_keys($_FILES)
-    ];
-    
-    errorResponse($detailed_error, 400);
+    errorResponse("Gerekli alanlar eksik: " . implode(', ', $errors));
 }
 
 // Verileri al
@@ -251,69 +236,12 @@ if (isset($_FILES['cizim_verisi']) && $_FILES['cizim_verisi']['error'] == 0) {
     }
 }
 
-// Kullanıcı kimlik doğrulama ve yetki kontrolü
-$headers = getallheaders();
-$token = null;
-
-// Authorization header'ı kontrol et
-if (isset($headers['Authorization'])) {
-    $authHeader = $headers['Authorization'];
-    if (preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
-        $token = $matches[1];
-    }
-}
-
-// Eğer Authorization header'da yoksa, POST verisinde kontrol et
-if (!$token && isset($_POST['token'])) {
-    $token = $_POST['token'];
-}
-
-// Debug için token durumunu logla
-file_put_contents($log_file, "Token durumu: " . ($token ? "Mevcut" : "Yok") . "\n", FILE_APPEND);
-file_put_contents($log_file, "Authorization header: " . (isset($headers['Authorization']) ? $headers['Authorization'] : "Yok") . "\n", FILE_APPEND);
-
-if (!$token) {
-    errorResponse([
-        'error' => 'Yetkilendirme token\'ı gerekli',
-        'debug' => [
-            'headers' => $headers,
-            'post_keys' => array_keys($_POST)
-        ]
-    ], 401);
-}
-
 // Veritabanı işlemlerini buraya ekleyebilirsiniz
 // MySQL tablosu ile uyumlu bir kayıt gerçekleştirme örneği:
 try {
     // Veritabanına bağlan
+    require_once '../config.php'; // config.php'yi bir kez dahil ediyoruz
     $conn = getConnection();
-
-    // Token'dan kullanıcı bilgilerini al - önce tabloyu kontrol edelim
-    $stmt = $conn->prepare("DESCRIBE ogrenciler");
-    $stmt->execute();
-    $columns = $stmt->fetchAll(PDO::FETCH_COLUMN);
-    
-    // Rol sütununu bul
-    $roleColumn = 'rutbe'; // varsayılan (ogrenciler tablosunda rutbe kullanılıyor)
-    if (in_array('rutbe', $columns)) {
-        $roleColumn = 'rutbe';
-    } elseif (in_array('role', $columns)) {
-        $roleColumn = 'role';
-    } elseif (in_array('user_type', $columns)) {
-        $roleColumn = 'user_type';
-    }
-    
-    $stmt = $conn->prepare("SELECT id, $roleColumn as role FROM ogrenciler WHERE token = :token AND aktif = 1");
-    $stmt->bindParam(':token', $token);
-    $stmt->execute();
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$user) {
-        errorResponse('Geçersiz token', 401);
-    }
-
-    // Giriş yapmış tüm kullanıcılar konu anlatımı kaydedebilir
-    $ogretmenId = $user['id'];
 
     // Tablo kontrol et/oluştur
     $tableSql = "
@@ -340,7 +268,7 @@ try {
             olusturma_zamani
         ) VALUES (
             :pdf_adi, :pdf_dosya_yolu, :sayfa_sayisi, 
-            :cizim_dosya_yolu, :ogrenci_grubu, :ogretmen_id, 
+            :cizim_dosya_yolu, :ogrenci_grubu, 1, 
             NOW()
         )
     ");
@@ -350,7 +278,6 @@ try {
     $stmt->bindParam(':sayfa_sayisi', $sayfaSayisi);
     $stmt->bindParam(':cizim_dosya_yolu', $cizimDosyaAdi);
     $stmt->bindParam(':ogrenci_grubu', $ogrenciGrubu);
-    $stmt->bindParam(':ogretmen_id', $ogretmenId);
 
     $stmt->execute();
     $kayitId = $conn->lastInsertId();
