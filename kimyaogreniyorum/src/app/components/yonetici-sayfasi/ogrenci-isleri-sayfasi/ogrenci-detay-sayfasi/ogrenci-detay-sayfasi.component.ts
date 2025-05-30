@@ -58,7 +58,7 @@ export class OgrenciDetaySayfasiComponent implements OnInit {
         email: ['', [Validators.required, Validators.email]],
         cep_telefonu: [''],
         aktif: [true],
-        rutbe: ['ogrenci'], // Varsayılan değer 'ogrenci'
+        rutbe: [''], // Varsayılan değer 'ogrenci'
         sifre: [''],
         sifre_tekrar: [''],
 
@@ -120,7 +120,7 @@ export class OgrenciDetaySayfasiComponent implements OnInit {
         next: (response) => {
           if (response.success) {
             this.student = response.data;
-
+            console.log('Öğrenci verileri:', this.student);
             // Form'u doldur
             this.editForm.patchValue({
               // Temel bilgiler
@@ -304,6 +304,7 @@ export class OgrenciDetaySayfasiComponent implements OnInit {
         cep_telefonu: formValues.cep_telefonu,
         aktif: formValues.aktif ? 1 : 0,
         rutbe: formValues.rutbe, // Rütbe değerini de ekledik
+        brans: formValues.brans,
       },
       detay_bilgiler: {
         okulu: formValues.okulu,
@@ -312,7 +313,6 @@ export class OgrenciDetaySayfasiComponent implements OnInit {
         ders_gunu: formValues.ders_gunu,
         ders_saati: formValues.ders_saati,
         ucret: formValues.ucret,
-        brans: formValues.brans,
         veli_adi: formValues.veli_adi,
         veli_cep: formValues.veli_cep,
       },
