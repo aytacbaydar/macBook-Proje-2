@@ -44,6 +44,10 @@ if (strpos($requestUri, $basePath) === 0) {
         case 'konu_anlatim_kaydet.php':
             require_once 'api/konu_anlatim_kaydet.php';
             break;
+        
+        case 'ogretmenler_listesi':
+            require_once 'api/ogretmenler_listesi.php';
+            break;
             
         default:
             http_response_code(404);

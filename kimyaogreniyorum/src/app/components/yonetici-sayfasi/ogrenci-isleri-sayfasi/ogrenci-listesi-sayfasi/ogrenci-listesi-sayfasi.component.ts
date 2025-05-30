@@ -20,6 +20,7 @@ interface User {
   ucret?: string;
   // Öğretmen alanları
   brans?: string;
+  ogretmeni?: string;
 }
 
 @Component({
@@ -43,7 +44,7 @@ export class OgrenciListesiSayfasiComponent implements OnInit {
   currentStudentPage = 1;
   currentTeacherPage = 1;
   currentNewUserPage = 1;
-  itemsPerPage = 10;
+  itemsPerPage = 5;
 
   // Math property for template
   Math = Math;

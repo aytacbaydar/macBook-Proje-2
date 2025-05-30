@@ -160,6 +160,7 @@
                   <th class="text-uppercase small fw-medium">Okul</th>
                   <th class="text-uppercase small fw-medium">Sınıf</th>
                   <th class="text-uppercase small fw-medium">Grup</th>
+                  <th class="text-uppercase small fw-medium">Öğretmeni</th>
                   <th class="text-uppercase small fw-medium">Ders Bilgileri</th>
                   <th class="text-uppercase small fw-medium">İşlemler</th>
                 </tr>
@@ -189,6 +190,7 @@
                       {{ student.grubu }}
                     </span>
                   </td>
+                  <td>{{ student.ogretmeni || 'Belirtilmemiş' }}</td>
                   <td>
                     <div class="d-flex flex-column gap-1 small">
                       <div *ngIf="student.ders_gunu" class="d-flex align-items-center text-muted">
