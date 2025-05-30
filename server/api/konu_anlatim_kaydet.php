@@ -260,8 +260,22 @@ try {
     // Veritabanına bağlan
     $conn = getConnection();
 
-    // Token'dan kullanıcı bilgilerini al
-    $stmt = $conn->prepare("SELECT id, rutbe FROM kullanicilar WHERE token = :token AND aktif = 1");
+    // Token'dan kullanıcı bilgilerini al - önce tabloyu kontrol edelim
+    $stmt = $conn->prepare("DESCRIBE kullanicilar");
+    $stmt->execute();
+    $columns = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    
+    // Rol sütununu bul
+    $roleColumn = 'rol'; // varsayılan
+    if (in_array('rutbe', $columns)) {
+        $roleColumn = 'rutbe';
+    } elseif (in_array('role', $columns)) {
+        $roleColumn = 'role';
+    } elseif (in_array('user_type', $columns)) {
+        $roleColumn = 'user_type';
+    }
+    
+    $stmt = $conn->prepare("SELECT id, $roleColumn as role FROM kullanicilar WHERE token = :token AND aktif = 1");
     $stmt->bindParam(':token', $token);
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -271,7 +285,7 @@ try {
     }
 
     // Sadece öğretmen ve admin yetkili
-    if (!in_array($user['rutbe'], ['ogretmen', 'admin'])) {
+    if (!in_array($user['role'], ['ogretmen', 'admin'])) {
         errorResponse('Bu işlem için yetkiniz yok', 403);
     }
 
