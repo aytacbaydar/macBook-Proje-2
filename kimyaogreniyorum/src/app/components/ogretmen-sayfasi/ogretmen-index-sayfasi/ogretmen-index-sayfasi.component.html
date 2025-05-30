@@ -1,86 +1,238 @@
-<div class="wrapper">
-  <!-- Sidebar -->
-  <div class="sidebar" [class.collapsed]="!isSidebarOpen">
+
+<div class="app-container">
+  <!-- Unified Sidebar -->
+  <aside class="unified-sidebar" [class.collapsed]="!isSidebarOpen" [class.mobile-hidden]="!isMobileSidebarOpen">
     <div class="sidebar-header">
       <div class="brand" [class.collapsed]="!isSidebarOpen">
-        <div class="brand-icon"><i class="fas fa-graduation-cap"></i></div>
-        <span class="brand-text" [class.d-none]="!isSidebarOpen">Öğretmen Panel</span>
+        <div class="brand-icon">
+          <i class="fas fa-graduation-cap"></i>
+        </div>
+        <span class="brand-text" *ngIf="isSidebarOpen">KimyaÖğreni</span>
       </div>
-      <button class="toggle-btn" (click)="toggleSidebar()">
-        <i class="fas" [ngClass]="isSidebarOpen ? 'fa-chevron-left' : 'fa-chevron-right'"></i>
+      <button class="sidebar-toggle d-none d-md-block" (click)="toggleSidebar()">
+        <i class="fas" [class.fa-chevron-left]="isSidebarOpen" [class.fa-chevron-right]="!isSidebarOpen"></i>
       </button>
     </div>
 
     <nav class="sidebar-nav">
-      <a routerLink="/" class="nav-item active" [attr.title]="!isSidebarOpen ? 'Dashboard' : null">
-        <i class="nav-icon fas fa-chart-line"></i>
-        <span class="nav-text" [class.d-none]="!isSidebarOpen">Dashboard</span>
-      </a>
+      <div class="nav-section">
+        <div class="nav-section-title" *ngIf="isSidebarOpen">Ana Menü</div>
+        <a class="nav-item active" routerLink="/ogretmen-ana-sayfasi">
+          <i class="nav-icon fas fa-home"></i>
+          <span class="nav-text" *ngIf="isSidebarOpen">Dashboard</span>
+        </a>
+        <a class="nav-item" routerLink="/ogretmen-ders-anlatma-tahtasi">
+          <i class="nav-icon fas fa-chalkboard-teacher"></i>
+          <span class="nav-text" *ngIf="isSidebarOpen">Ders Tahtası</span>
+        </a>
+        <a class="nav-item" routerLink="/ogretmen-gruplar-sayfasi">
+          <i class="nav-icon fas fa-users"></i>
+          <span class="nav-text" *ngIf="isSidebarOpen">Gruplar</span>
+        </a>
+      </div>
 
-      <a routerLink="ogrenci-listesi" class="nav-item" [attr.title]="!isSidebarOpen ? 'Öğrenciler' : null">
-        <i class="nav-icon fas fa-users"></i>
-        <span class="nav-text" [class.d-none]="!isSidebarOpen">Öğrenciler</span>
-      </a>
+      <div class="nav-section" *ngIf="isSidebarOpen">
+        <div class="nav-section-title">Öğrenci İşleri</div>
+        <a class="nav-item" routerLink="/ogretmen-ogrenci-listesi-sayfasi">
+          <i class="nav-icon fas fa-user-graduate"></i>
+          <span class="nav-text">Öğrenci Listesi</span>
+        </a>
+        <a class="nav-item" routerLink="/ogretmen-devamsizlik-sayfasi">
+          <i class="nav-icon fas fa-calendar-times"></i>
+          <span class="nav-text">Devamsızlık</span>
+        </a>
+        <a class="nav-item" routerLink="/ogretmen-notlar-sayfasi">
+          <i class="nav-icon fas fa-clipboard-list"></i>
+          <span class="nav-text">Notlar</span>
+        </a>
+      </div>
 
-      <a routerLink="ogrenci-gruplari" class="nav-item" [attr.title]="!isSidebarOpen ? 'Gruplar' : null">
-        <i class="nav-icon fas fa-user-friends"></i>
-        <span class="nav-text" [class.d-none]="!isSidebarOpen">Gruplar</span>
-      </a>
-
-      <a class="nav-item" [attr.title]="!isSidebarOpen ? 'Konular' : null">
-        <i class="nav-icon fas fa-book-open"></i>
-        <span class="nav-text" [class.d-none]="!isSidebarOpen">Konular</span>
-      </a>
-
-      <a class="nav-item" [attr.title]="!isSidebarOpen ? 'Sınavlar' : null">
-        <i class="nav-icon fas fa-clipboard-list"></i>
-        <span class="nav-text" [class.d-none]="!isSidebarOpen">Sınavlar</span>
-      </a>
-
-      <a class="nav-item" [attr.title]="!isSidebarOpen ? 'Ayarlar' : null">
-        <i class="nav-icon fas fa-cog"></i>
-        <span class="nav-text" [class.d-none]="!isSidebarOpen">Ayarlar</span>
-      </a>
+      <div class="nav-section" *ngIf="isSidebarOpen">
+        <div class="nav-section-title">Ayarlar</div>
+        <a class="nav-item" routerLink="/ogretmen-profil-sayfasi">
+          <i class="nav-icon fas fa-user-cog"></i>
+          <span class="nav-text">Profil</span>
+        </a>
+        <a class="nav-item" routerLink="/ogretmen-ayarlar-sayfasi">
+          <i class="nav-icon fas fa-cog"></i>
+          <span class="nav-text">Ayarlar</span>
+        </a>
+      </div>
     </nav>
-  </div>
+  </aside>
 
   <!-- Main Content -->
-  <div class="main-content" [class.collapsed]="!isSidebarOpen">
-    <!-- Header -->
-    <header class="header">
+  <main class="main-content" [class.sidebar-collapsed]="!isSidebarOpen">
+    <!-- Unified Header -->
+    <header class="unified-header">
       <div class="header-left">
-        <button class="mobile-menu-btn d-md-none" (click)="toggleSidebar()">
+        <button class="mobile-menu-btn" (click)="toggleMobileSidebar()">
           <i class="fas fa-bars"></i>
         </button>
         <h1 class="page-title">Dashboard</h1>
       </div>
 
       <div class="header-right">
-        <button class="notification-btn">
+        <button class="header-btn">
           <i class="fas fa-bell"></i>
-          <span class="notification-count">3</span>
+          <span class="notification-badge">3</span>
         </button>
 
         <div class="user-menu dropdown">
-          <button class="user-btn dropdown-toggle" data-bs-toggle="dropdown">
+          <button class="user-menu" data-bs-toggle="dropdown">
             <img [src]="teacherAvatar" alt="Avatar" class="user-avatar">
             <div class="user-info d-none d-md-block">
               <div class="user-name">{{ teacherName }}</div>
               <div class="user-role">Öğretmen</div>
             </div>
+            <i class="fas fa-chevron-down" style="font-size: 12px; color: var(--text-secondary);"></i>
           </button>
           <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="#profil"><i class="fas fa-user me-2"></i>Profil</a></li>
-            <li><a class="dropdown-item" href="#ayarlar"><i class="fas fa-cog me-2"></i>Ayarlar</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item text-danger" href="#cikis"><i class="fas fa-sign-out-alt me-2"></i>Çıkış</a></li>
+            <li><a class="dropdown-item" href="#profil"><i class="fas fa-user"></i>Profil</a></li>
+            <li><a class="dropdown-item" href="#ayarlar"><i class="fas fa-cog"></i>Ayarlar</a></li>
+            <li><div class="dropdown-divider"></div></li>
+            <li><a class="dropdown-item danger" href="#cikis"><i class="fas fa-sign-out-alt"></i>Çıkış</a></li>
           </ul>
         </div>
       </div>
     </header>
 
+    <!-- Content Area -->
+    <div class="content-area">
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon primary">
+            <i class="fas fa-user-graduate"></i>
+          </div>
+          <div class="stat-content">
+            <h3>127</h3>
+            <p>Toplam Öğrenci</p>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon secondary">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="stat-content">
+            <h3>8</h3>
+            <p>Aktif Grup</p>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon warning">
+            <i class="fas fa-book"></i>
+          </div>
+          <div class="stat-content">
+            <h3>24</h3>
+            <p>Ders Konusu</p>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon danger">
+            <i class="fas fa-clipboard-check"></i>
+          </div>
+          <div class="stat-content">
+            <h3>12</h3>
+            <p>Tamamlanan Sınav</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Content Grid -->
+      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--spacing-xl);">
+        <!-- Recent Activities -->
+        <div class="unified-card">
+          <div class="card-header">
+            <h2 class="card-title">Son Aktiviteler</h2>
+            <p class="card-subtitle">Bugünkü önemli olaylar</p>
+          </div>
+          <div class="card-body">
+            <div style="display: flex; flex-direction: column; gap: var(--spacing-lg);">
+              <div style="display: flex; align-items: flex-start; gap: var(--spacing-lg);">
+                <div class="stat-icon primary" style="width: 36px; height: 36px; font-size: 14px;">
+                  <i class="fas fa-user-plus"></i>
+                </div>
+                <div style="flex: 1;">
+                  <h4 style="font-size: var(--font-md); font-weight: 600; color: var(--text-primary); margin-bottom: var(--spacing-xs);">
+                    Yeni Öğrenci Kaydı
+                  </h4>
+                  <p style="font-size: var(--font-sm); color: var(--text-secondary); margin-bottom: var(--spacing-xs);">
+                    Ahmet Yılmaz kimya kursuna kayıt oldu
+                  </p>
+                  <span style="font-size: var(--font-xs); color: var(--text-muted);">2 saat önce</span>
+                </div>
+              </div>
+
+              <div style="display: flex; align-items: flex-start; gap: var(--spacing-lg);">
+                <div class="stat-icon secondary" style="width: 36px; height: 36px; font-size: 14px;">
+                  <i class="fas fa-clipboard-check"></i>
+                </div>
+                <div style="flex: 1;">
+                  <h4 style="font-size: var(--font-md); font-weight: 600; color: var(--text-primary); margin-bottom: var(--spacing-xs);">
+                    Sınav Tamamlandı
+                  </h4>
+                  <p style="font-size: var(--font-sm); color: var(--text-secondary); margin-bottom: var(--spacing-xs);">
+                    Organik Kimya sınavı başarıyla tamamlandı
+                  </p>
+                  <span style="font-size: var(--font-xs); color: var(--text-muted);">5 saat önce</span>
+                </div>
+              </div>
+
+              <div style="display: flex; align-items: flex-start; gap: var(--spacing-lg);">
+                <div class="stat-icon warning" style="width: 36px; height: 36px; font-size: 14px;">
+                  <i class="fas fa-book"></i>
+                </div>
+                <div style="flex: 1;">
+                  <h4 style="font-size: var(--font-md); font-weight: 600; color: var(--text-primary); margin-bottom: var(--spacing-xs);">
+                    Yeni Konu Eklendi
+                  </h4>
+                  <p style="font-size: var(--font-sm); color: var(--text-secondary); margin-bottom: var(--spacing-xs);">
+                    "Asitler ve Bazlar" konusu müfredata eklendi
+                  </p>
+                  <span style="font-size: var(--font-xs); color: var(--text-muted);">1 gün önce</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="unified-card">
+          <div class="card-header">
+            <h2 class="card-title">Hızlı İşlemler</h2>
+            <p class="card-subtitle">Sık kullanılan özellikler</p>
+          </div>
+          <div class="card-body">
+            <div style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+              <button class="btn btn-primary">
+                <i class="fas fa-plus"></i>
+                Yeni Öğrenci Ekle
+              </button>
+              
+              <button class="btn btn-secondary">
+                <i class="fas fa-chalkboard-teacher"></i>
+                Ders Başlat
+              </button>
+              
+              <button class="btn btn-secondary">
+                <i class="fas fa-clipboard-list"></i>
+                Sınav Oluştur
+              </button>
+              
+              <button class="btn btn-secondary">
+                <i class="fas fa-chart-bar"></i>
+                Raporları Görüntüle
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <router-outlet></router-outlet>
-
-  </div>
+    </div>
+  </main>
 </div>
