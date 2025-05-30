@@ -312,9 +312,9 @@ try {
         errorResponse('Geçersiz token', 401);
     }
 
-    // Sadece öğretmen ve admin yetkili
-    if (!in_array($user['role'], ['ogretmen', 'admin'])) {
-        errorResponse('Bu işlem için yetkiniz yok', 403);
+    // Sadece öğretmen yetkili
+    if ($user['role'] !== 'ogretmen') {
+        errorResponse('Bu işlem için yetkiniz yok. Sadece öğretmenler konu anlatımı kaydedebilir.', 403);
     }
 
     $ogretmenId = $user['id'];
