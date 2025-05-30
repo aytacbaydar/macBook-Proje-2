@@ -1,242 +1,207 @@
-
-<div class="d-flex" id="wrapper">
+<div class="wrapper">
   <!-- Sidebar -->
-  <div class="sidebar" id="sidebar-wrapper" [class.collapsed]="!isSidebarOpen">
+  <div class="sidebar" [class.collapsed]="!isSidebarOpen">
     <div class="sidebar-header">
-      <div class="sidebar-brand" [class.collapsed]="!isSidebarOpen">
-        <div class="brand-icon">👨‍🏫</div>
-        <h5 class="brand-text mb-0" [class.d-none]="!isSidebarOpen">Öğretmen Paneli</h5>
+      <div class="brand" [class.collapsed]="!isSidebarOpen">
+        <div class="brand-icon">📚</div>
+        <span class="brand-text" [class.d-none]="!isSidebarOpen">Öğretmen Panel</span>
       </div>
-      <button class="sidebar-toggle" (click)="toggleSidebar()">
+      <button class="toggle-btn" (click)="toggleSidebar()">
         <i class="bi" [ngClass]="isSidebarOpen ? 'bi-chevron-left' : 'bi-chevron-right'"></i>
       </button>
     </div>
-    
-    <div class="sidebar-menu">
-      <div class="menu-item active" [attr.title]="!isSidebarOpen ? 'Dashboard' : null">
-        <div class="menu-icon">📊</div>
-        <span class="menu-text" [class.d-none]="!isSidebarOpen">Dashboard</span>
-      </div>
-      
-      <div class="menu-item" [attr.title]="!isSidebarOpen ? 'Öğrenciler' : null">
-        <div class="menu-icon">👥</div>
-        <span class="menu-text" [class.d-none]="!isSidebarOpen">Öğrenciler</span>
-      </div>
-      
-      <div class="menu-item" [attr.title]="!isSidebarOpen ? 'Gruplar' : null">
-        <div class="menu-icon">👫</div>
-        <span class="menu-text" [class.d-none]="!isSidebarOpen">Gruplar</span>
-      </div>
-      
-      <div class="menu-item" [attr.title]="!isSidebarOpen ? 'Konular' : null">
-        <div class="menu-icon">📚</div>
-        <span class="menu-text" [class.d-none]="!isSidebarOpen">Konular</span>
-      </div>
-      
-      <div class="menu-item" [attr.title]="!isSidebarOpen ? 'Sınavlar' : null">
-        <div class="menu-icon">📝</div>
-        <span class="menu-text" [class.d-none]="!isSidebarOpen">Sınavlar</span>
-      </div>
-      
-      <div class="menu-item" [attr.title]="!isSidebarOpen ? 'Ayarlar' : null">
-        <div class="menu-icon">⚙️</div>
-        <span class="menu-text" [class.d-none]="!isSidebarOpen">Ayarlar</span>
-      </div>
-    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item active" [attr.title]="!isSidebarOpen ? 'Dashboard' : null">
+        <i class="nav-icon">📊</i>
+        <span class="nav-text" [class.d-none]="!isSidebarOpen">Dashboard</span>
+      </a>
+
+      <a class="nav-item" [attr.title]="!isSidebarOpen ? 'Öğrenciler' : null">
+        <i class="nav-icon">👥</i>
+        <span class="nav-text" [class.d-none]="!isSidebarOpen">Öğrenciler</span>
+      </a>
+
+      <a class="nav-item" [attr.title]="!isSidebarOpen ? 'Gruplar' : null">
+        <i class="nav-icon">👫</i>
+        <span class="nav-text" [class.d-none]="!isSidebarOpen">Gruplar</span>
+      </a>
+
+      <a class="nav-item" [attr.title]="!isSidebarOpen ? 'Konular' : null">
+        <i class="nav-icon">📖</i>
+        <span class="nav-text" [class.d-none]="!isSidebarOpen">Konular</span>
+      </a>
+
+      <a class="nav-item" [attr.title]="!isSidebarOpen ? 'Sınavlar' : null">
+        <i class="nav-icon">📝</i>
+        <span class="nav-text" [class.d-none]="!isSidebarOpen">Sınavlar</span>
+      </a>
+
+      <a class="nav-item" [attr.title]="!isSidebarOpen ? 'Ayarlar' : null">
+        <i class="nav-icon">⚙️</i>
+        <span class="nav-text" [class.d-none]="!isSidebarOpen">Ayarlar</span>
+      </a>
+    </nav>
   </div>
 
-  <!-- Page Content -->
-  <div id="page-content-wrapper" class="w-100">
-    <!-- Navbar -->
-    <nav class="navbar">
-      <div class="navbar-content">
-        <div class="navbar-left">
-          <button class="mobile-toggle d-md-none" (click)="toggleSidebar()">
-            <i class="bi bi-list"></i>
+  <!-- Main Content -->
+  <div class="main-content" [class.collapsed]="!isSidebarOpen">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <button class="mobile-menu-btn d-md-none" (click)="toggleSidebar()">
+          <i class="bi bi-list"></i>
+        </button>
+        <h1 class="page-title">Dashboard</h1>
+      </div>
+
+      <div class="header-right">
+        <button class="notification-btn">
+          <i class="bi bi-bell"></i>
+          <span class="notification-count">3</span>
+        </button>
+
+        <div class="user-menu dropdown">
+          <button class="user-btn dropdown-toggle" data-bs-toggle="dropdown">
+            <img [src]="teacherAvatar" alt="Avatar" class="user-avatar">
+            <div class="user-info d-none d-md-block">
+              <div class="user-name">{{ teacherName }}</div>
+              <div class="user-role">Öğretmen</div>
+            </div>
           </button>
-          <h4 class="page-title mb-0">📊 Dashboard</h4>
-        </div>
-
-        <div class="navbar-right">
-          <div class="notification-badge">
-            <i class="bi bi-bell"></i>
-            <span class="badge">3</span>
-          </div>
-          
-          <div class="user-menu dropdown ms-auto">
-            <div class="user-info dropdown-toggle" data-bs-toggle="dropdown">
-              <img [src]="teacherAvatar" alt="Avatar" class="user-avatar">
-              <div class="user-details d-none d-md-block">
-                <div class="user-name">{{ teacherName }}</div>
-                <div class="user-role">Öğretmen</div>
-              </div>
-            </div>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="#profil">👤 Profil</a></li>
-              <li><a class="dropdown-item" href="#ayarlar">⚙️ Ayarlar</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item text-danger" href="#cikis">🚪 Çıkış</a></li>
-            </ul>
-          </div>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="#profil">👤 Profil</a></li>
+            <li><a class="dropdown-item" href="#ayarlar">⚙️ Ayarlar</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" href="#cikis">🚪 Çıkış</a></li>
+          </ul>
         </div>
       </div>
-    </nav>
+    </header>
 
-    <!-- Dashboard Content -->
-    <div class="container-fluid p-4">
-      <div class="row">
-        <div class="col-12">
-          <h2 class="mb-4">Dashboard</h2>
-        </div>
-      </div>
-
+    <!-- Content -->
+    <main class="content">
       <!-- Statistics Cards -->
-      <div class="row g-3 mb-4">
-        <div class="col-lg-3 col-md-6 col-sm-6">
-          <div class="card border-primary border-start border-4 h-100">
-            <div class="card-body">
-              <div class="d-flex align-items-center">
-                <div class="icon-bg rounded-circle bg-primary-subtle p-3 me-3">
-                  <i class="bi bi-people-fill fs-4 text-primary"></i>
-                </div>
-                <div>
-                  <h6 class="text-muted mb-0 small">Toplam Öğrenci</h6>
-                  <h4 class="mb-0">{{ totalStudents }}</h4>
-                  <div class="small text-muted mt-1">
-                    <span class="text-success">{{ activeStudents }} Aktif</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon students">
+            <i class="bi bi-people-fill"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ totalStudents }}</h3>
+            <p>Toplam Öğrenci</p>
+            <span class="stat-sub">{{ activeStudents }} Aktif</span>
           </div>
         </div>
 
-        <div class="col-lg-3 col-md-6 col-sm-6">
-          <div class="card border-success border-start border-4 h-100">
-            <div class="card-body">
-              <div class="d-flex align-items-center">
-                <div class="icon-bg rounded-circle bg-success-subtle p-3 me-3">
-                  <i class="bi bi-collection fs-4 text-success"></i>
-                </div>
-                <div>
-                  <h6 class="text-muted mb-0 small">Gruplar</h6>
-                  <h4 class="mb-0">{{ totalGroups }}</h4>
-                  <div class="small text-muted mt-1">
-                    <span class="text-info">{{ activeGroups }} Aktif Grup</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <div class="stat-card">
+          <div class="stat-icon groups">
+            <i class="bi bi-collection"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ totalGroups }}</h3>
+            <p>Gruplar</p>
+            <span class="stat-sub">{{ activeGroups }} Aktif</span>
           </div>
         </div>
 
-        <div class="col-lg-3 col-md-6 col-sm-6">
-          <div class="card border-info border-start border-4 h-100">
-            <div class="card-body">
-              <div class="d-flex align-items-center">
-                <div class="icon-bg rounded-circle bg-info-subtle p-3 me-3">
-                  <i class="bi bi-book fs-4 text-info"></i>
-                </div>
-                <div>
-                  <h6 class="text-muted mb-0 small">Konular</h6>
-                  <h4 class="mb-0">{{ totalTopics }}</h4>
-                  <div class="small text-muted mt-1">
-                    <span class="text-warning">{{ completedTopics }} Tamamlandı</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <div class="stat-card">
+          <div class="stat-icon topics">
+            <i class="bi bi-book"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ totalTopics }}</h3>
+            <p>Konular</p>
+            <span class="stat-sub">{{ completedTopics }} Tamamlandı</span>
           </div>
         </div>
 
-        <div class="col-lg-3 col-md-6 col-sm-6">
-          <div class="card border-warning border-start border-4 h-100">
-            <div class="card-body">
-              <div class="d-flex align-items-center">
-                <div class="icon-bg rounded-circle bg-warning-subtle p-3 me-3">
-                  <i class="bi bi-clipboard-check fs-4 text-warning"></i>
-                </div>
-                <div>
-                  <h6 class="text-muted mb-0 small">Sınavlar</h6>
-                  <h4 class="mb-0">{{ totalExams }}</h4>
-                  <div class="small text-muted mt-1">
-                    <span class="text-danger">{{ pendingExams }} Değerlendirilecek</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <div class="stat-card">
+          <div class="stat-icon exams">
+            <i class="bi bi-clipboard-check"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ totalExams }}</h3>
+            <p>Sınavlar</p>
+            <span class="stat-sub">{{ pendingExams }} Beklemede</span>
           </div>
         </div>
       </div>
 
-      <!-- Recent Activities -->
-      <div class="row">
-        <div class="col-lg-8">
-          <div class="card">
-            <div class="card-header">
-              <h5 class="card-title mb-0">Son Aktiviteler</h5>
-            </div>
-            <div class="card-body">
-              <div class="list-group list-group-flush">
-                <div class="list-group-item d-flex align-items-center">
-                  <div class="icon-bg rounded-circle bg-primary-subtle p-2 me-3">
-                    <i class="bi bi-person-plus text-primary"></i>
-                  </div>
-                  <div class="flex-grow-1">
-                    <div class="fw-semibold">Yeni öğrenci kaydı</div>
-                    <div class="small text-muted">Ali Veli gruba eklendi</div>
-                  </div>
-                  <div class="small text-muted">2 saat önce</div>
+      <div class="content-grid">
+        <!-- Recent Activities -->
+        <div class="card">
+          <div class="card-header">
+            <h2>Son Aktiviteler</h2>
+          </div>
+          <div class="card-body">
+            <div class="activity-list">
+              <div class="activity-item">
+                <div class="activity-icon new-student">
+                  <i class="bi bi-person-plus"></i>
                 </div>
-                <div class="list-group-item d-flex align-items-center">
-                  <div class="icon-bg rounded-circle bg-success-subtle p-2 me-3">
-                    <i class="bi bi-clipboard-check text-success"></i>
-                  </div>
-                  <div class="flex-grow-1">
-                    <div class="fw-semibold">Sınav tamamlandı</div>
-                    <div class="small text-muted">Kimya-1 sınavı değerlendirildi</div>
-                  </div>
-                  <div class="small text-muted">5 saat önce</div>
+                <div class="activity-content">
+                  <h4>Yeni öğrenci kaydı</h4>
+                  <p>Ali Veli gruba eklendi</p>
+                  <span class="activity-time">2 saat önce</span>
                 </div>
-                <div class="list-group-item d-flex align-items-center">
-                  <div class="icon-bg rounded-circle bg-info-subtle p-2 me-3">
-                    <i class="bi bi-book text-info"></i>
-                  </div>
-                  <div class="flex-grow-1">
-                    <div class="fw-semibold">Yeni konu eklendi</div>
-                    <div class="small text-muted">Organik Kimya konusu güncellendi</div>
-                  </div>
-                  <div class="small text-muted">1 gün önce</div>
+              </div>
+
+              <div class="activity-item">
+                <div class="activity-icon exam-complete">
+                  <i class="bi bi-clipboard-check"></i>
+                </div>
+                <div class="activity-content">
+                  <h4>Sınav tamamlandı</h4>
+                  <p>Kimya-1 sınavı değerlendirildi</p>
+                  <span class="activity-time">5 saat önce</span>
+                </div>
+              </div>
+
+              <div class="activity-item">
+                <div class="activity-icon topic-added">
+                  <i class="bi bi-book"></i>
+                </div>
+                <div class="activity-content">
+                  <h4>Yeni konu eklendi</h4>
+                  <p>Organik Kimya konusu güncellendi</p>
+                  <span class="activity-time">1 gün önce</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="col-lg-4">
-          <div class="card">
-            <div class="card-header">
-              <h5 class="card-title mb-0">Hızlı İşlemler</h5>
-            </div>
-            <div class="card-body">
-              <div class="d-grid gap-2">
-                <button class="btn btn-primary">
-                  <i class="bi bi-person-plus me-2"></i>Yeni Öğrenci Ekle
-                </button>
-                <button class="btn btn-success">
-                  <i class="bi bi-collection-play me-2"></i>Yeni Grup Oluştur
-                </button>
-                <button class="btn btn-info">
-                  <i class="bi bi-book-half me-2"></i>Konu Ekle
-                </button>
-                <button class="btn btn-warning">
-                  <i class="bi bi-clipboard-plus me-2"></i>Sınav Oluştur
-                </button>
-              </div>
+        <!-- Quick Actions -->
+        <div class="card">
+          <div class="card-header">
+            <h2>Hızlı İşlemler</h2>
+          </div>
+          <div class="card-body">
+            <div class="quick-actions">
+              <button class="action-btn primary">
+                <i class="bi bi-person-plus"></i>
+                <span>Yeni Öğrenci</span>
+              </button>
+
+              <button class="action-btn success">
+                <i class="bi bi-collection-play"></i>
+                <span>Grup Oluştur</span>
+              </button>
+
+              <button class="action-btn info">
+                <i class="bi bi-book-half"></i>
+                <span>Konu Ekle</span>
+              </button>
+
+              <button class="action-btn warning">
+                <i class="bi bi-clipboard-plus"></i>
+                <span>Sınav Oluştur</span>
+              </button>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </main>
   </div>
 </div>
