@@ -1,4 +1,7 @@
 <?php
+// config.php'yi ilk olarak dahil et - errorResponse ve successResponse fonksiyonları için gerekli
+require_once '../config.php';
+
 // CORS ve Content-Type başlıkları - saf JSON yanıtı için
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
@@ -255,7 +258,6 @@ if (!$token) {
 // MySQL tablosu ile uyumlu bir kayıt gerçekleştirme örneği:
 try {
     // Veritabanına bağlan
-    require_once '../config.php'; // config.php'yi bir kez dahil ediyoruz
     $conn = getConnection();
 
     // Token'dan kullanıcı bilgilerini al
