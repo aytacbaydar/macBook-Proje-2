@@ -11,6 +11,10 @@
             <div>
               <h6 class="text-muted mb-0 small">Toplam Kullanıcı</h6>
               <h4 class="mb-0">{{ students.length + teachers.length + newUsers.length }}</h4>
+              <div class="small text-muted mt-1">
+                <span class="text-success">{{ getActiveStudents() + getActiveTeachers() }} Aktif</span> |
+                <span class="text-danger">{{ getInactiveStudents() + getInactiveTeachers() }} Pasif</span>
+              </div>
             </div>
           </div>
         </div>
