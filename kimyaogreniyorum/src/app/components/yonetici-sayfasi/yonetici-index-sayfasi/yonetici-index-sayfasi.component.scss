@@ -1,6 +1,18 @@
+// Import unified styles
+@import '../../../styles/unified-design.scss';
+
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  background: var(--background-primary);
+  font-family: var(--font-family);
+  color: var(--text-primary);
+  overflow-x: hidden;
+}
+
 /* Admin Page - Using Unified Design System */
 
-:host {
+::host {
   display: block;
   height: 100vh;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -879,21 +891,21 @@
 }
 
 // Özel scroll bar
-:::-webkit-scrollbar {
+::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
-:::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
 
-:::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background: #c1c1c1;
   border-radius: 10px;
 }
 
-:::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
 }
 

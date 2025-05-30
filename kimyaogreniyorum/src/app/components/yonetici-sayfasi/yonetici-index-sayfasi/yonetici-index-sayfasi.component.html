@@ -1,248 +1,104 @@
-<div class="admin-container">
-    <div class="sidebar" id="sidebar" [class.toggled]="!sidebarExpanded">
-        <div class="sidebar-brand">
-            <div class="admin-avatar-logo" *ngIf="!isLoading">
-                <img [src]="admin.avatar" alt="Admin Avatar" class="admin-avatar-img">
-            </div>
-            <button class="toggle-btn" id="sidebarToggle" (click)="toggleSidebar()">
-                <i class="bi" [ngClass]="sidebarExpanded ? 'bi-chevron-left' : 'bi-chevron-right'"></i>
-            </button>
+<div class="app-container">
+  <!-- Unified Sidebar -->
+  <aside class="unified-sidebar" [class.collapsed]="!sidebarExpanded" [class.mobile-hidden]="!sidebarExpanded">
+    <div class="sidebar-header">
+      <div class="brand" [class.collapsed]="!sidebarExpanded">
+        <div class="brand-icon">
+          <i class="fas fa-graduation-cap"></i>
         </div>
-
-        <div class="sidebar-menu">
-            <ul class="nav">
-                <li class="nav-item" routerLinkActive="active">
-                    <a class="nav-link" routerLink="/yonetici-sayfasi">
-                        <i class="bi bi-speedometer2"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                <li class="nav-item" [ngClass]="{'active': isStudentsOpen || (this.router.url.includes('/yonetici-sayfasi/ogrenci-liste-sayfasi') || this.router.url.includes('/yonetici-sayfasi/ogrenci-gruplar') || this.router.url.includes('/yonetici-sayfasi/ogrenci-ucretler'))}">
-                    <a class="nav-link dropdown-toggle" href="#submenuStudents" data-bs-toggle="collapse" 
-                       (click)="toggleStudents($event)" [attr.aria-expanded]="isStudentsOpen">
-                        <i class="bi bi-people"></i>
-                        <span>Öğrenciler</span>
-                        <i class="bi" [ngClass]="isStudentsOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
-                    </a>
-                    <div class="collapse submenu-container" [ngClass]="{'show': isStudentsOpen}" id="submenuStudents">
-                        <ul class="submenu">
-                            <li class="submenu-item" routerLinkActive="active">
-                                <a routerLink="/yonetici-sayfasi/ogrenci-liste-sayfasi" class="submenu-link">
-                                    <i class="bi bi-person-vcard"></i>
-                                    <span>Öğrenci Listesi</span>
-                                </a>
-                            </li>
-                            <li class="submenu-item" routerLinkActive="active">
-                                <a routerLink="/yonetici-sayfasi/ogrenci-gruplar" class="submenu-link">
-                                    <i class="bi bi-people-fill"></i>
-                                    <span>Gruplar</span>
-                                </a>
-                            </li>
-                            <li class="submenu-item" routerLinkActive="active">
-                                <a routerLink="/yonetici-sayfasi/ogrenci-ucretler" class="submenu-link">
-                                    <i class="bi bi-cash-coin"></i>
-                                    <span>Ücretler</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item" routerLinkActive="active">
-                    <a class="nav-link" routerLink="/yonetici-sayfasi/teachers">
-                        <i class="bi bi-person-video3"></i>
-                        <span>Öğretmenler</span>
-                    </a>
-                </li>
-                <li class="nav-item" routerLinkActive="active">
-                    <a class="nav-link" routerLink="/yonetici-sayfasi/konu-anlatım-sayfasi">
-                        <i class="bi bi-book"></i>
-                        <span>Dersler</span>
-                    </a>
-                </li>
-                <li class="nav-item" routerLinkActive="active">
-                    <a class="nav-link" routerLink="/yonetici-sayfasi/reports">
-                        <i class="bi bi-graph-up"></i>
-                        <span>Raporlar</span>
-                    </a>
-                </li>
-                
-                <li class="nav-item" [ngClass]="{'active': isSettingsOpen || (this.router.url.includes('/yonetici-sayfasi/settings') || this.router.url.includes('/yonetici-sayfasi/mysql-sayfasi'))}">
-                    <a class="nav-link dropdown-toggle" href="#submenu1" data-bs-toggle="collapse" 
-                       (click)="toggleSettings($event)" [attr.aria-expanded]="isSettingsOpen">
-                        <i class="bi bi-gear"></i>
-                        <span>Ayarlar</span>
-                        <i class="bi" [ngClass]="isSettingsOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
-                    </a>
-                    <div class="collapse submenu-container" [ngClass]="{'show': isSettingsOpen}" id="submenu1">
-                        <ul class="submenu">
-                            <li class="submenu-item" routerLinkActive="active">
-                                <a routerLink="/yonetici-sayfasi/mysql-sayfasi" class="submenu-link">
-                                    <i class="fas fa-database"></i>
-                                    <span>MySQL Araçları</span>
-                                </a>
-                            </li>
-                            <li class="submenu-item">
-                                <a href="#" class="submenu-link">
-                                    <i class="bi bi-sliders"></i>
-                                    <span>Sistem Ayarları</span>
-                                </a>
-                            </li>
-                            <li class="submenu-item">
-                                <a href="#" class="submenu-link">
-                                    <i class="bi bi-shield-lock"></i>
-                                    <span>Güvenlik</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-            </ul>
-        </div>
-
-        <div class="sidebar-footer">
-            <div class="system-status">
-                <div class="status-item">
-                    <i class="bi bi-hdd"></i>
-                    <span>Sunucu: <span class="text-success">Aktif</span></span>
-                </div>
-                <div class="status-item">
-                    <i class="bi bi-clock"></i>
-                    <span>{{ currentDate | date:'dd/MM/yyyy' }}</span>
-                </div>
-            </div>
-        </div>
+        <span class="brand-text" *ngIf="sidebarExpanded">KimyaÖğreni</span>
+      </div>
+      <button class="sidebar-toggle d-none d-md-block" (click)="toggleSidebar()">
+        <i class="fas" [class.fa-chevron-left]="sidebarExpanded" [class.fa-chevron-right]="!sidebarExpanded"></i>
+      </button>
     </div>
 
-    <div class="content-wrapper">
-        <div class="navbar">
-            <div class="navbar-left">
-                <button class="mobile-sidebar-toggle" (click)="toggleSidebar()">
-                    <i class="bi bi-list"></i>
-                </button>
-                <div class="breadcrumb-wrapper">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a routerLink="/yonetici-sayfasi">Ana Sayfa</a></li>
-                        <li class="breadcrumb-item active">{{ currentPage }}</li>
-                    </ol>
-                </div>
-            </div>
-            <div class="navbar-right">
-                <div class="search-box">
-                    <input type="text" placeholder="Ara...">
-                    <i class="bi bi-search"></i>
-                </div>
-                <div class="nav-item notification-dropdown">
-                    <div class="icon-container" (click)="toggleNotifications()">
-                        <i class="bi bi-bell"></i>
-                        <span class="badge">3</span>
-                    </div>
-                    <div class="dropdown-menu" [class.show]="showNotifications">
-                        <div class="dropdown-header">
-                            <h6>Bildirimler</h6>
-                            <a href="#">Tümünü Temizle</a>
-                        </div>
-                        <div class="dropdown-body">
-                            <a href="#" class="notification-item">
-                                <div class="icon bg-primary">
-                                    <i class="bi bi-person-plus"></i>
-                                </div>
-                                <div class="details">
-                                    <p>Yeni öğrenci kaydı</p>
-                                    <span>5 dakika önce</span>
-                                </div>
-                            </a>
-                            <a href="#" class="notification-item">
-                                <div class="icon bg-success">
-                                    <i class="bi bi-check-circle"></i>
-                                </div>
-                                <div class="details">
-                                    <p>Ders içeriği güncellendi</p>
-                                    <span>2 saat önce</span>
-                                </div>
-                            </a>
-                            <a href="#" class="notification-item">
-                                <div class="icon bg-warning">
-                                    <i class="bi bi-exclamation-triangle"></i>
-                                </div>
-                                <div class="details">
-                                    <p>Sistem bakımı planlı</p>
-                                    <span>3 gün önce</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="dropdown-footer">
-                            <a href="#">Tüm Bildirimleri Gör</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="nav-item message-dropdown">
-                    <div class="icon-container" (click)="toggleMessages()">
-                        <i class="bi bi-envelope"></i>
-                        <span class="badge">7</span>
-                    </div>
-                    <div class="dropdown-menu" [class.show]="showMessages">
-                        <div class="dropdown-header">
-                            <h6>Mesajlar</h6>
-                            <a href="#">Tümünü Temizle</a>
-                        </div>
-                        <div class="dropdown-body">
-                            <a href="#" class="message-item">
-                                <div class="sender-avatar">
-                                    <img src="https://ui-avatars.com/api/?name=Ahmet+Yılmaz&background=random" alt="Sender">
-                                </div>
-                                <div class="message-content">
-                                    <h6>Ahmet Yılmaz</h6>
-                                    <p>Ders hakkında sorum vardı...</p>
-                                    <span>15 dk önce</span>
-                                </div>
-                            </a>
-                            <a href="#" class="message-item">
-                                <div class="sender-avatar">
-                                    <img src="https://ui-avatars.com/api/?name=Zeynep+Demir&background=random" alt="Sender">
-                                </div>
-                                <div class="message-content">
-                                    <h6>Zeynep Demir</h6>
-                                    <p>Proje teslim tarihi nedir?</p>
-                                    <span>1 saat önce</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="dropdown-footer">
-                            <a href="#">Tüm Mesajları Gör</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="admin-profile" *ngIf="!isLoading">
-                    <div class="admin-info-header" (click)="toggleUserMenu()">
-                        <span class="admin-name">{{ admin.adi_soyadi }}</span>
-                        <div class="admin-avatar">
-                            <img [src]="admin.avatar" alt="Admin Avatar">
-                        </div>
-                        <i class="bi bi-chevron-down"></i>
-                    </div>
-                    <div class="user-dropdown" [class.show]="showUserMenu">
-                        <a href="#" class="dropdown-item">
-                            <i class="bi bi-person"></i> Profilim
-                        </a>
-                        <a href="#" class="dropdown-item">
-                            <i class="bi bi-gear"></i> Ayarlar
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a (click)="logout()" class="dropdown-item">
-                            <i class="bi bi-box-arrow-right"></i> Çıkış Yap
-                        </a>
-                    </div>
-                </div>
-                <div class="admin-profile" *ngIf="isLoading">
-                    <span class="admin-name">Yükleniyor...</span>
-                </div>
-            </div>
-        </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-title" *ngIf="sidebarExpanded">Ana Menü</div>
+        <a class="nav-item active" routerLink="/yonetici-sayfasi">
+          <i class="nav-icon fas fa-tachometer-alt"></i>
+          <span class="nav-text" *ngIf="sidebarExpanded">Dashboard</span>
+        </a>
+        <a class="nav-item" routerLink="/yonetici-sayfasi/konu-anlatim-sayfasi">
+          <i class="nav-icon fas fa-book"></i>
+          <span class="nav-text" *ngIf="sidebarExpanded">Dersler</span>
+        </a>
+        <a class="nav-item" routerLink="/yonetici-sayfasi/reports">
+          <i class="nav-icon fas fa-chart-line"></i>
+          <span class="nav-text" *ngIf="sidebarExpanded">Raporlar</span>
+        </a>
+      </div>
 
-        <div class="dashboard-content">
-            <router-outlet></router-outlet>
-        </div>
+      <div class="nav-section" *ngIf="sidebarExpanded">
+        <div class="nav-section-title">Kullanıcı Yönetimi</div>
+        <a class="nav-item" routerLink="/yonetici-sayfasi/ogrenci-liste-sayfasi">
+          <i class="nav-icon fas fa-user-graduate"></i>
+          <span class="nav-text">Öğrenci Listesi</span>
+        </a>
+        <a class="nav-item" routerLink="/yonetici-sayfasi/ogrenci-gruplar">
+          <i class="nav-icon fas fa-users"></i>
+          <span class="nav-text">Öğrenci Grupları</span>
+        </a>
+        <a class="nav-item" routerLink="/yonetici-sayfasi/teachers">
+          <i class="nav-icon fas fa-chalkboard-teacher"></i>
+          <span class="nav-text">Öğretmenler</span>
+        </a>
+        <a class="nav-item" routerLink="/yonetici-sayfasi/ogrenci-ucretler">
+          <i class="nav-icon fas fa-credit-card"></i>
+          <span class="nav-text">Ücretler</span>
+        </a>
+      </div>
 
-        <!-- Footer kaldırıldı -->
+      <div class="nav-section" *ngIf="sidebarExpanded">
+        <div class="nav-section-title">Sistem</div>
+        <a class="nav-item" routerLink="/yonetici-sayfasi/mysql-sayfasi">
+          <i class="nav-icon fas fa-database"></i>
+          <span class="nav-text">MySQL Araçları</span>
+        </a>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content" [class.sidebar-collapsed]="!sidebarExpanded">
+    <!-- Unified Header -->
+    <header class="unified-header">
+      <div class="header-left">
+        <button class="mobile-menu-btn" (click)="toggleSidebar()">
+          <i class="fas fa-bars"></i>
+        </button>
+        <h1 class="page-title">Yönetici Dashboard</h1>
+      </div>
+
+      <div class="header-right">
+        <button class="header-btn">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge" *ngIf="showNotifications">3</span>
+        </button>
+
+        <div class="user-menu dropdown" *ngIf="!isLoading">
+          <button class="user-menu" data-bs-toggle="dropdown">
+            <img [src]="admin.avatar" alt="Avatar" class="user-avatar">
+            <div class="user-info d-none d-md-block">
+              <div class="user-name">{{ admin.adi_soyadi }}</div>
+              <div class="user-role">Yönetici</div>
+            </div>
+            <i class="fas fa-chevron-down" style="font-size: 12px; color: var(--text-secondary);"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="#profil"><i class="fas fa-user"></i>Profil</a></li>
+            <li><a class="dropdown-item" href="#ayarlar"><i class="fas fa-cog"></i>Ayarlar</a></li>
+            <li><div class="dropdown-divider"></div></li>
+            <li><a class="dropdown-item danger" (click)="logout()"><i class="fas fa-sign-out-alt"></i>Çıkış</a></li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content Area -->
+    <div class="content-area">
+      <router-outlet></router-outlet>
     </div>
+  </main>
 </div>
