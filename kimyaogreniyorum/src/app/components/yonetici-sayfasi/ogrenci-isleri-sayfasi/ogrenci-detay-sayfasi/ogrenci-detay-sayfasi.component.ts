@@ -17,7 +17,22 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class OgrenciDetaySayfasiComponent implements OnInit {
   studentId: number = 1;
-  student: any = null;
+  student: any = {
+    id: '',
+    adi_soyadi: '',
+    email: '',
+    cep_telefonu: '',
+    rutbe: '',
+    aktif: true,
+    avatar: '',
+    okulu: '',
+    sinifi: '',
+    grubu: '',
+    ders_gunu: '',
+    ders_saati: '',
+    ucret: '',
+    brans: ''
+  };
   editForm!: FormGroup;
   isLoading: boolean = true;
   isSubmitting: boolean = false;

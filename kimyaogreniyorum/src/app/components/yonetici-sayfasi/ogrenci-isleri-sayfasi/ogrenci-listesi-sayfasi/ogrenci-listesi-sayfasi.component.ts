@@ -33,16 +33,16 @@ export class OgrenciListesiSayfasiComponent implements OnInit {
   teachers: User[] = [];
   newUsers: User[] = [];
   isLoading = true;
-  activeTab: 'students' | 'teachers' | 'new' = 'students';
+  error: string | null = null;
+  searchQuery = '';
 
-  // Arama ve pagination için değişkenler
-  searchQuery: string = '';
-  itemsPerPage: number = 5;
-  currentStudentPage: number = 1;
-  currentTeacherPage: number = 1;
-  currentNewUserPage: number = 1;
+  // Pagination
+  currentStudentPage = 1;
+  currentTeacherPage = 1;
+  currentNewUserPage = 1;
+  itemsPerPage = 10;
 
-  // Math nesnesini template'te kullanabilmek için
+  // Math property for template
   Math = Math;
 
   constructor(private http: HttpClient, private router: Router) {}
