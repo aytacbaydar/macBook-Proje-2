@@ -5,7 +5,7 @@
         <i class="bi bi-arrow-left"></i> Geri Dön
       </button>
     </header>
-  
+
     <!-- Yükleniyor Durumu -->
     <div class="loading-spinner" *ngIf="isLoading">
       <div class="spinner">
@@ -13,7 +13,7 @@
       </div>
       <p class="loading-text">Yükleniyor...</p>
     </div>
-  
+
     <!-- Hata Gösterimi -->
     <div class="alert alert-error" *ngIf="error">
       <div class="alert-icon">
@@ -24,7 +24,7 @@
         <p class="alert-message">{{ error }}</p>
       </div>
     </div>
-  
+
     <!-- Başarılı Gösterimi -->
     <div class="alert alert-success" *ngIf="success">
       <div class="alert-icon">
@@ -35,7 +35,7 @@
         <p class="alert-message">{{ success }}</p>
       </div>
     </div>
-  
+
     <!-- Form -->
     <div class="edit-form" *ngIf="!isLoading && student">
       <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
@@ -49,13 +49,13 @@
                 <span class="avatar-text">Fotoğraf Değiştir</span>
               </div>
             </div>
-            
+
             <input #fileInput type="file" hidden accept="image/jpeg,image/png,image/gif,image/webp" (change)="onFileChange($event)">
-            
+
             <div class="avatar-info">
               <h2 class="student-name">{{ student.adi_soyadi }}</h2>
               <p class="student-email">{{ student.email }}</p>
-              
+
               <div *ngIf="selectedFile" class="selected-file-info">
                 <span class="file-name">{{ selectedFile.name }}</span>
                 <span class="file-size">({{ (selectedFile.size / 1024).toFixed(1) }} KB)</span>
@@ -64,7 +64,7 @@
             </div>
           </div>
         </div>
-        
+
         <div class="form-grid">
           <!-- Form Bölümleri -->
           <div class="form-column">
@@ -74,7 +74,7 @@
                 <i class="bi bi-person card-icon"></i>
                 <h2 class="card-title">Temel Bilgiler</h2>
               </div>
-              
+
               <div class="card-body">
                 <div class="form-row">
                   <div class="form-field">
@@ -86,7 +86,7 @@
                       <small>Ad Soyad gereklidir</small>
                     </div>
                   </div>
-                  
+
                   <div class="form-field">
                     <div class="material-input-container" [class.focused]="isFocused('email')" [class.error]="isInvalid('email')">
                       <input id="email" type="email" class="material-input" formControlName="email" (focus)="onFocus('email')" (blur)="onBlur('email')">
@@ -97,7 +97,7 @@
                     </div>
                   </div>
                 </div>
-                
+
                 <div class="form-row">
                   <div class="form-field">
                     <div class="material-input-container" [class.focused]="isFocused('cep_telefonu')">
@@ -105,7 +105,7 @@
                       <label for="cep_telefonu" class="material-input-label" [class.raised]="isRaised('cep_telefonu')">Cep Telefonu</label>
                     </div>
                   </div>
-                  
+
                   <div class="form-field">
                     <div class="material-input-container rutbe-select" [class.focused]="isFocused('rutbe')">
                       <select id="rutbe" class="material-input material-select" formControlName="rutbe" (focus)="onFocus('rutbe')" (blur)="onBlur('rutbe')">
@@ -117,7 +117,7 @@
                     </div>
                   </div>
                 </div>
-                
+
                 <div class="form-row">
                   <div class="form-field">
                     <div class="material-input-container" [class.focused]="isFocused('aktif')">
@@ -128,7 +128,7 @@
                       <label for="aktif" class="material-input-label" [class.raised]="isRaised('aktif')">Hesap Durumu</label>
                     </div>
                   </div>
-                  
+
                   <div class="form-field">
                     <div class="material-input-container" [class.focused]="isFocused('sifre')">
                       <input id="sifre" type="password" class="material-input" formControlName="sifre" (focus)="onFocus('sifre')" (blur)="onBlur('sifre')">
@@ -136,7 +136,7 @@
                     </div>
                   </div>
                 </div>
-                
+
                 <div class="form-row">
                   <div class="form-field">
                     <div class="material-input-container" [class.focused]="isFocused('sifre_tekrar')" [class.error]="editForm.errors?.['passwordMismatch']">
@@ -150,14 +150,14 @@
                 </div>
               </div>
             </div>
-  
+
             <!-- Eğitim Bilgileri Kartı -->
             <div class="info-card">
               <div class="card-header">
                 <i class="bi bi-book card-icon"></i>
                 <h2 class="card-title">Eğitim Bilgileri</h2>
               </div>
-              
+
               <div class="card-body">
                 <div class="form-row">
                   <div class="form-field">
@@ -166,7 +166,7 @@
                       <label for="okulu" class="material-input-label" [class.raised]="isRaised('okulu')">Okul</label>
                     </div>
                   </div>
-                  
+
                   <div class="form-field">
                     <div class="material-input-container" [class.focused]="isFocused('sinifi')">
                       <input id="sinifi" type="text" class="material-input" formControlName="sinifi" (focus)="onFocus('sinifi')" (blur)="onBlur('sinifi')">
@@ -174,20 +174,26 @@
                     </div>
                   </div>
                 </div>
-                
+
                 <div class="form-row">
                   <div class="form-field">
                     <div class="material-input-container" [class.focused]="isFocused('grubu')">
-                      <select id="grubu" class="material-input material-select" formControlName="grubu" (focus)="onFocus('grubu')" (blur)="onBlur('grubu')">
-                        <option value="">Seçiniz</option>
-                        <option value="A">A Grubu</option>
-                        <option value="B">B Grubu</option>
-                        <option value="C">C Grubu</option>
-                      </select>
+                      <input id="grubu" type="text" class="material-input" formControlName="grubu" (focus)="onFocus('grubu')" (blur)="onBlur('grubu')">
                       <label for="grubu" class="material-input-label" [class.raised]="isRaised('grubu')">Grup</label>
                     </div>
                   </div>
-                  
+
+                  <div class="form-field">
+                    <!-- Branş (Sadece öğretmenler için) -->
+                    <div  *ngIf="editForm.get('rutbe')?.value === 'ogretmen'" class="material-input-container" [class.focused]="isFocused('brans')">
+                      <input id="brans" type="text" class="material-input" formControlName="brans" (focus)="onFocus('brans')" (blur)="onBlur('brans')">
+                      <label for="brans" class="material-input-label" [class.raised]="isRaised('brans')">Branş</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+
                   <div class="form-field">
                     <div class="material-input-container" [class.focused]="isFocused('ders_gunu')">
                       <select id="ders_gunu" class="material-input material-select" formControlName="ders_gunu" (focus)="onFocus('ders_gunu')" (blur)="onBlur('ders_gunu')">
@@ -203,16 +209,17 @@
                       <label for="ders_gunu" class="material-input-label" [class.raised]="isRaised('ders_gunu')">Ders Günü</label>
                     </div>
                   </div>
-                </div>
-                
-                <div class="form-row">
+
                   <div class="form-field">
                     <div class="material-input-container" [class.focused]="isFocused('ders_saati')">
                       <input id="ders_saati" type="text" class="material-input" formControlName="ders_saati" (focus)="onFocus('ders_saati')" (blur)="onBlur('ders_saati')">
                       <label for="ders_saati" class="material-input-label" [class.raised]="isRaised('ders_saati')">Ders Saati</label>
                     </div>
                   </div>
-                  
+                </div>
+
+                <div class="form-row">
+
                   <div class="form-field">
                     <div class="material-input-container" [class.focused]="isFocused('ucret')">
                       <input id="ucret" type="number" class="material-input" formControlName="ucret" (focus)="onFocus('ucret')" (blur)="onBlur('ucret')">
@@ -222,14 +229,14 @@
                 </div>
               </div>
             </div>
-  
+
             <!-- Veli Bilgileri Kartı -->
             <div class="info-card">
               <div class="card-header">
                 <i class="bi bi-people card-icon"></i>
                 <h2 class="card-title">Veli Bilgileri</h2>
               </div>
-              
+
               <div class="card-body">
                 <div class="form-row">
                   <div class="form-field">
@@ -238,7 +245,7 @@
                       <label for="veli_adi" class="material-input-label" [class.raised]="isRaised('veli_adi')">Veli Adı</label>
                     </div>
                   </div>
-                  
+
                   <div class="form-field">
                     <div class="material-input-container" [class.focused]="isFocused('veli_cep')">
                       <input id="veli_cep" type="text" class="material-input" formControlName="veli_cep" (focus)="onFocus('veli_cep')" (blur)="onBlur('veli_cep')">
@@ -248,7 +255,7 @@
                 </div>
               </div>
             </div>
-  
+
             <!-- Form Aksiyonları -->
             <div class="form-actions">
               <button type="button" class="button button-secondary" (click)="navigateBack()">İptal</button>

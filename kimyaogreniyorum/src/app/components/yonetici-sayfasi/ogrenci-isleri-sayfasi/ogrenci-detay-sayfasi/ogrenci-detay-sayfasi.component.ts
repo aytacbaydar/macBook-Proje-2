@@ -69,6 +69,7 @@ export class OgrenciDetaySayfasiComponent implements OnInit {
         ders_gunu: [''],
         ders_saati: [''],
         ucret: [''],
+        brans: [''], // Öğretmen branşı için eklendi
 
         // Veli bilgileri
         veli_adi: [''],
@@ -136,6 +137,7 @@ export class OgrenciDetaySayfasiComponent implements OnInit {
               ders_gunu: this.student.ders_gunu || '',
               ders_saati: this.student.ders_saati || '',
               ucret: this.student.ucret || '',
+              brans: this.student.brans || '',
 
               // Veli bilgileri
               veli_adi: this.student.veli_adi || '',
@@ -310,6 +312,7 @@ export class OgrenciDetaySayfasiComponent implements OnInit {
         ders_gunu: formValues.ders_gunu,
         ders_saati: formValues.ders_saati,
         ucret: formValues.ucret,
+        brans: formValues.brans,
         veli_adi: formValues.veli_adi,
         veli_cep: formValues.veli_cep,
       },
