@@ -29,7 +29,7 @@ interface User {
   styleUrls: ['./ogretmen-index-sayfasi.component.scss'],
   standalone: false,
 })
-export class OgretmenIndexSayfasiComponent  implements OnInit {
+export class OgretmenIndexSayfasiComponent implements OnInit {
   students: User[] = [];
   newUsers: User[] = [];
   isLoading = true;
@@ -65,13 +65,14 @@ export class OgretmenIndexSayfasiComponent  implements OnInit {
   // Verileri yükleme
   loadUsers(): void {
     this.isLoading = true;
-    // LocalStorage veya sessionStorage'dan token'ı al
+    // LocalStorage veya sessionStorage'dan token'ı ve giriş yapan kullanıcı bilgilerini al
     let token = '';
+    let loggedInUser: any = null;
     const userStr =
       localStorage.getItem('user') || sessionStorage.getItem('user');
     if (userStr) {
-      const user = JSON.parse(userStr);
-      token = user.token || '';
+      loggedInUser = JSON.parse(userStr);
+      token = loggedInUser.token || '';
     }
 
     // API'ye istek gönder - tüm kullanıcıları getirir
@@ -85,16 +86,18 @@ export class OgretmenIndexSayfasiComponent  implements OnInit {
             // API yanıtından gelen veriyi al
             const users = Array.isArray(response.data) ? response.data : [];
 
-            // Kullanıcıları rütbelerine göre filtrele
-            // Önemli Değişiklik: aktif durumuna bakmaksızın öğrencileri ve öğretmenleri listeliyoruz
+            // Giriş yapan öğretmenin adi_soyadi'sını al
+            const loggedInTeacherName = loggedInUser?.adi_soyadi || '';
+
+            // Kullanıcıları rütbelerine göre filtrele - sadece giriş yapan öğretmenin öğrencilerini getir
             this.students = users.filter(
-              (user: User) => user.rutbe === 'ogrenci' && user.ogretmeni === user.ogretmeni
+              (user: User) =>
+                user.rutbe === 'ogrenci' &&
+                user.ogretmeni === loggedInTeacherName
             );
 
             // Sadece yeni (daha önce onaylanmamış) kullanıcıları filtrele
-            this.newUsers = users.filter(
-              (user: User) => user.rutbe === 'yeni'
-            );
+            this.newUsers = users.filter((user: User) => user.rutbe === 'yeni');
 
             console.log('Yüklenen kullanıcılar:', {
               students: this.students.length,
@@ -177,7 +180,6 @@ export class OgretmenIndexSayfasiComponent  implements OnInit {
       this.totalStudentPages
     );
   }
-
 
   // Yeni Kullanıcı Pagination metotları
   get filteredNewUsers(): User[] {

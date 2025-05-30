@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user = authorize();
 
         // Sadece yöneticiler başka kullanıcıları düzenleyebilir
-        if ($user['rutbe'] !== 'admin') {
+        if ($user['rutbe'] !== 'admin'&& $user['rutbe'] !== 'ogretmen') {
             errorResponse('Bu işlem için yetkiniz yok', 403);
         }
 
