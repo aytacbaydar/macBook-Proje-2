@@ -236,12 +236,44 @@ if (isset($_FILES['cizim_verisi']) && $_FILES['cizim_verisi']['error'] == 0) {
     }
 }
 
+// Kullanıcı kimlik doğrulama ve yetki kontrolü
+$headers = getallheaders();
+$token = null;
+
+if (isset($headers['Authorization'])) {
+    $authHeader = $headers['Authorization'];
+    if (preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
+        $token = $matches[1];
+    }
+}
+
+if (!$token) {
+    errorResponse('Yetkilendirme token\'ı gerekli', 401);
+}
+
 // Veritabanı işlemlerini buraya ekleyebilirsiniz
 // MySQL tablosu ile uyumlu bir kayıt gerçekleştirme örneği:
 try {
     // Veritabanına bağlan
     require_once '../config.php'; // config.php'yi bir kez dahil ediyoruz
     $conn = getConnection();
+
+    // Token'dan kullanıcı bilgilerini al
+    $stmt = $conn->prepare("SELECT id, rutbe FROM kullanicilar WHERE token = :token AND aktif = 1");
+    $stmt->bindParam(':token', $token);
+    $stmt->execute();
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user) {
+        errorResponse('Geçersiz token', 401);
+    }
+
+    // Sadece öğretmen ve admin yetkili
+    if (!in_array($user['rutbe'], ['ogretmen', 'admin'])) {
+        errorResponse('Bu işlem için yetkiniz yok', 403);
+    }
+
+    $ogretmenId = $user['id'];
 
     // Tablo kontrol et/oluştur
     $tableSql = "
@@ -268,7 +300,7 @@ try {
             olusturma_zamani
         ) VALUES (
             :pdf_adi, :pdf_dosya_yolu, :sayfa_sayisi, 
-            :cizim_dosya_yolu, :ogrenci_grubu, 1, 
+            :cizim_dosya_yolu, :ogrenci_grubu, :ogretmen_id, 
             NOW()
         )
     ");
@@ -278,6 +310,7 @@ try {
     $stmt->bindParam(':sayfa_sayisi', $sayfaSayisi);
     $stmt->bindParam(':cizim_dosya_yolu', $cizimDosyaAdi);
     $stmt->bindParam(':ogrenci_grubu', $ogrenciGrubu);
+    $stmt->bindParam(':ogretmen_id', $ogretmenId);
 
     $stmt->execute();
     $kayitId = $conn->lastInsertId();

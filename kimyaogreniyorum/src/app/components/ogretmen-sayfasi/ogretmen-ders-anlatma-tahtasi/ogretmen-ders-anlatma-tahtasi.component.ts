@@ -1194,11 +1194,24 @@ export class OgretmenDersAnlatmaTahtasiComponent
 
         console.log('ADIM 12.1: İstek başlatılıyor...');
 
+        // Authorization header'ını ekle
+        let token = '';
+        const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+        if (userStr) {
+          const user = JSON.parse(userStr);
+          token = user.token || '';
+        }
+
         // Basitleştirilmiş, daha güvenilir bir HTTP istek yöntemi kullanıyoruz
         this.http
           .post(apiUrl, formData, {
             reportProgress: true,
             observe: 'events',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Cache-Control': 'no-cache',
+              'Pragma': 'no-cache',
+            },
             // Yanıt tipini açıkça belirtmiyoruz (responseType: 'json'),
             // bu JSON parsing hatasını önleyecek
           })
