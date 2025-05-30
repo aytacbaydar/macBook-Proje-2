@@ -1,28 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-
-interface Student {
-  id: number;
-  adi_soyadi: string;
-  email: string;
-  cep_telefonu: string;
-  rutbe: string;
-  aktif: boolean;
-  avatar: string;
-  brans: string;
-  ogretmeni: number;
-  created_at: string;
-  okulu: string;
-  sinifi: string;
-  grubu: string;
-  ders_gunu: string;
-  ders_saati: string;
-  ucret: number;
-  veli_adi: string;
-  veli_cep: string;
-  ogretmen_adi: string;
-}
 
 @Component({
   selector: 'app-ogretmen-index-sayfasi',
@@ -30,82 +7,167 @@ interface Student {
   styleUrls: ['./ogretmen-index-sayfasi.component.scss']
 })
 export class OgretmenIndexSayfasiComponent implements OnInit {
-  students: Student[] = [];
+  students: any[] = [];
+  filteredStudents: any[] = [];
+  paginatedStudents: any[] = [];
   loading = false;
-  error: string | null = null;
+  error = '';
 
   // Pagination
-  currentPage = 1;
+  currentStudentPage = 1;
   itemsPerPage = 10;
-  totalCount = 0;
+  totalStudentCount = 0;
 
-  constructor(private router: Router, private http: HttpClient) { }
+  // Filtering
+  searchTerm = '';
+  selectedGroup = '';
+  selectedStatus = '';
+  selectedGrade = '';
+
+  // Available filter options
+  groups: string[] = [];
+  grades: string[] = [];
+
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
     this.loadMyStudents();
   }
 
-  loadMyStudents(): void {
+  loadMyStudents() {
     this.loading = true;
-    this.error = null;
+    this.error = '';
 
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem('token');
+
     if (!token) {
-      this.router.navigate(['/']);
+      this.error = 'Oturum bulunamadı';
+      this.loading = false;
       return;
     }
 
-    const headers = {
-      'Authorization': `Bearer ${token}`
-    };
-
-    this.http.get<any>('https://www.kimyaogreniyorum.com/server/api/ogretmen_ogrencileri.php', { headers })
-      .subscribe({
-        next: (response) => {
-          if (response.success) {
-            this.students = response.data;
-            this.totalCount = this.students.length;
-          } else {
-            this.error = response.message || 'Öğrenciler yüklenirken hata oluştu';
-          }
-          this.loading = false;
-        },
-        error: (error) => {
-          console.error('Öğrenciler yüklenirken hata:', error);
-          this.error = 'Öğrenciler yüklenirken hata oluştu';
-          this.loading = false;
+    this.http.get<any>('https://www.kimyaogreniyorum.com/server/api/ogretmen_ogrencileri.php', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    }).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.students = response.data.students || [];
+          this.totalStudentCount = this.students.length;
+          this.extractFilterOptions();
+          this.applyFilters();
+        } else {
+          this.error = response.message || 'Öğrenciler yüklenirken hata oluştu';
         }
-      });
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Öğrenciler yüklenirken hata:', error);
+        this.error = 'Öğrenciler yüklenirken hata oluştu';
+        this.loading = false;
+      }
+    });
   }
 
-  get paginatedStudents(): Student[] {
-    const start = (this.currentPage - 1) * this.itemsPerPage;
-    const end = start + this.itemsPerPage;
-    return this.students.slice(start, end);
+  extractFilterOptions() {
+    // Extract unique groups
+    this.groups = [...new Set(this.students
+      .map(s => s.grubu)
+      .filter(g => g && g.trim() !== '')
+    )].sort();
+
+    // Extract unique grades
+    this.grades = [...new Set(this.students
+      .map(s => s.sinifi)
+      .filter(g => g && g.trim() !== '')
+    )].sort();
   }
 
-  get totalPages(): number {
-    return Math.ceil(this.totalCount / this.itemsPerPage);
+  applyFilters() {
+    this.filteredStudents = this.students.filter(student => {
+      const matchesSearch = !this.searchTerm || 
+        student.adi_soyadi?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        student.email?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        student.cep_telefonu?.includes(this.searchTerm);
+
+      const matchesGroup = !this.selectedGroup || student.grubu === this.selectedGroup;
+      const matchesGrade = !this.selectedGrade || student.sinifi === this.selectedGrade;
+
+      const matchesStatus = !this.selectedStatus || 
+        (this.selectedStatus === 'aktif' && student.aktif) ||
+        (this.selectedStatus === 'pasif' && !student.aktif);
+
+      return matchesSearch && matchesGroup && matchesGrade && matchesStatus;
+    });
+
+    this.totalStudentCount = this.filteredStudents.length;
+    this.setStudentPage(1);
   }
 
-  setPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages) {
-      this.currentPage = page;
+  setStudentPage(page: number) {
+    if (page < 1 || page > this.getStudentTotalPages()) return;
+
+    this.currentStudentPage = page;
+    const startIndex = (page - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedStudents = this.filteredStudents.slice(startIndex, endIndex);
+  }
+
+  getStudentTotalPages(): number {
+    return Math.ceil(this.totalStudentCount / this.itemsPerPage);
+  }
+
+  getStudentPageArray(): number[] {
+    const totalPages = this.getStudentTotalPages();
+    const pages: number[] = [];
+    const maxPagesToShow = 5;
+
+    let startPage = Math.max(1, this.currentStudentPage - Math.floor(maxPagesToShow / 2));
+    let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+
+    if (endPage - startPage + 1 < maxPagesToShow) {
+      startPage = Math.max(1, endPage - maxPagesToShow + 1);
     }
-  }
 
-  getPageArray(): number[] {
-    const pages = [];
-    for (let i = 1; i <= this.totalPages; i++) {
+    for (let i = startPage; i <= endPage; i++) {
       pages.push(i);
     }
+
     return pages;
   }
 
-  logout(): void {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userRole');
-    localStorage.removeItem('userName');
-    this.router.navigate(['/']);
+  onSearchChange() {
+    this.applyFilters();
   }
+
+  onGroupChange() {
+    this.applyFilters();
+  }
+
+  onGradeChange() {
+    this.applyFilters();
+  }
+
+  onStatusChange() {
+    this.applyFilters();
+  }
+
+  clearFilters() {
+    this.searchTerm = '';
+    this.selectedGroup = '';
+    this.selectedGrade = '';
+    this.selectedStatus = '';
+    this.applyFilters();
+  }
+
+  getActiveStudents(): number {
+    return this.students.filter(student => student.aktif).length;
+  }
+
+  getInactiveStudents(): number {
+    return this.students.filter(student => !student.aktif).length;
+  }
+
+  Math = Math;
 }
