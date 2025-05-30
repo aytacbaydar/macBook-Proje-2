@@ -14,6 +14,7 @@ import { GrupDetaySayfasiComponent } from './components/yonetici-sayfasi/ogrenci
 import { OgretmenIndexSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-index-sayfasi/ogretmen-index-sayfasi.component';
 import { OgretmenDersAnlatmaTahtasiComponent } from './components/ogretmen-sayfasi/ogretmen-ders-anlatma-tahtasi/ogretmen-ders-anlatma-tahtasi.component';
 import { OgretmenOgrenciListesiSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component';
+import { OgretmenAnaSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-ana-sayfasi/ogretmen-ana-sayfasi.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/giris-sayfasi', pathMatch: 'full' },
@@ -64,6 +65,10 @@ const routes: Routes = [
     children: [
       {
         path: '',
+        component: OgretmenAnaSayfasiComponent,
+      },
+      {
+        path: 'ogrenci-listesi',
         component: OgretmenOgrenciListesiSayfasiComponent,
       },
     ],

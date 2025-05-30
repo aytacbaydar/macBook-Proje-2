@@ -17,7 +17,7 @@
         <span class="nav-text" [class.d-none]="!isSidebarOpen">Dashboard</span>
       </a>
 
-      <a class="nav-item" [attr.title]="!isSidebarOpen ? 'Öğrenciler' : null">
+      <a routerLink="ogrenci-listesi" class="nav-item" [attr.title]="!isSidebarOpen ? 'Öğrenciler' : null">
         <i class="nav-icon fas fa-users"></i>
         <span class="nav-text" [class.d-none]="!isSidebarOpen">Öğrenciler</span>
       </a>
@@ -79,129 +79,8 @@
       </div>
     </header>
 
-    <!-- Content -->
-    <main class="content">
-      <!-- Statistics Cards -->
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon students">
-            <i class="fas fa-user-graduate"></i>
-          </div>
-          <div class="stat-content">
-            <h3>{{ totalStudents }}</h3>
-            <p>Toplam Öğrenci</p>
-            <span class="stat-sub">{{ activeStudents }} Aktif</span>
-          </div>
-        </div>
 
-        <div class="stat-card">
-          <div class="stat-icon groups">
-            <i class="fas fa-users"></i>
-          </div>
-          <div class="stat-content">
-            <h3>{{ totalGroups }}</h3>
-            <p>Gruplar</p>
-            <span class="stat-sub">{{ activeGroups }} Aktif</span>
-          </div>
-        </div>
+      <router-outlet></router-outlet>
 
-        <div class="stat-card">
-          <div class="stat-icon topics">
-            <i class="fas fa-book"></i>
-          </div>
-          <div class="stat-content">
-            <h3>{{ totalTopics }}</h3>
-            <p>Konular</p>
-            <span class="stat-sub">{{ completedTopics }} Tamamlandı</span>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon exams">
-            <i class="fas fa-clipboard-check"></i>
-          </div>
-          <div class="stat-content">
-            <h3>{{ totalExams }}</h3>
-            <p>Sınavlar</p>
-            <span class="stat-sub">{{ pendingExams }} Beklemede</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="content-grid">
-        <!-- Recent Activities -->
-        <div class="card">
-          <div class="card-header">
-            <h2>Son Aktiviteler</h2>
-          </div>
-          <div class="card-body">
-            <div class="activity-list">
-              <div class="activity-item">
-                <div class="activity-icon new-student">
-                  <i class="fas fa-user-plus"></i>
-                </div>
-                <div class="activity-content">
-                  <h4>Yeni öğrenci kaydı</h4>
-                  <p>Ali Veli gruba eklendi</p>
-                  <span class="activity-time">2 saat önce</span>
-                </div>
-              </div>
-
-              <div class="activity-item">
-                <div class="activity-icon exam-complete">
-                  <i class="fas fa-clipboard-check"></i>
-                </div>
-                <div class="activity-content">
-                  <h4>Sınav tamamlandı</h4>
-                  <p>Kimya-1 sınavı değerlendirildi</p>
-                  <span class="activity-time">5 saat önce</span>
-                </div>
-              </div>
-
-              <div class="activity-item">
-                <div class="activity-icon topic-added">
-                  <i class="fas fa-book-open"></i>
-                </div>
-                <div class="activity-content">
-                  <h4>Yeni konu eklendi</h4>
-                  <p>Organik Kimya konusu güncellendi</p>
-                  <span class="activity-time">1 gün önce</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="card">
-          <div class="card-header">
-            <h2>Hızlı İşlemler</h2>
-          </div>
-          <div class="card-body">
-            <div class="quick-actions">
-              <button class="action-btn primary">
-                <i class="fas fa-user-plus"></i>
-                <span>Yeni Öğrenci</span>
-              </button>
-
-              <button class="action-btn success">
-                <i class="fas fa-users"></i>
-                <span>Grup Oluştur</span>
-              </button>
-
-              <button class="action-btn info">
-                <i class="fas fa-plus-circle"></i>
-                <span>Konu Ekle</span>
-              </button>
-
-              <button class="action-btn warning">
-                <i class="fas fa-clipboard-list"></i>
-                <span>Sınav Oluştur</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
   </div>
 </div>

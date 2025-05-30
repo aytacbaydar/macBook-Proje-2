@@ -7,12 +7,14 @@ import { OgretmenDersAnlatmaTahtasiComponent } from './ogretmen-ders-anlatma-tah
 import { OgretmenIndexSayfasiComponent } from './ogretmen-index-sayfasi/ogretmen-index-sayfasi.component';
 import { RouterModule } from '@angular/router';
 import { OgretmenOgrenciListesiSayfasiComponent } from './ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component';
+import { OgretmenAnaSayfasiComponent } from './ogretmen-ana-sayfasi/ogretmen-ana-sayfasi.component';
 
 @NgModule({
   declarations: [
     OgretmenDersAnlatmaTahtasiComponent,
     OgretmenIndexSayfasiComponent,
     OgretmenOgrenciListesiSayfasiComponent,
+    OgretmenAnaSayfasiComponent,
   ],
   imports: [
     CommonModule,
