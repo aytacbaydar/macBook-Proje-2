@@ -14,6 +14,7 @@ import { MysqlSayfasiComponent } from './mysql-sayfasi/mysql-sayfasi.component';
 import { OgrenciGruplarComponent } from './ogrenci-isleri-sayfasi/ogrenci-gruplar/ogrenci-gruplar.component';
 import { OgrenciUcretlerComponent } from './ogrenci-isleri-sayfasi/ogrenci-ucretler/ogrenci-ucretler.component';
 import { GrupDetaySayfasiComponent } from './ogrenci-isleri-sayfasi/grup-detay-sayfasi/grup-detay-sayfasi.component';
+import { OgrenciOgretmenYenikayitListesiComponent } from './ogrenci-isleri-sayfasi/ogrenci-listesi-sayfasi/ogrenci-ogretmen-yenikayit-listesi/ogrenci-ogretmen-yenikayit-listesi.component';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { GrupDetaySayfasiComponent } from './ogrenci-isleri-sayfasi/grup-detay-s
     MysqlSayfasiComponent,
     OgrenciGruplarComponent,
     OgrenciUcretlerComponent,
-    GrupDetaySayfasiComponent
+    GrupDetaySayfasiComponent,
+    OgrenciOgretmenYenikayitListesiComponent
   ],
   imports: [
     CommonModule,

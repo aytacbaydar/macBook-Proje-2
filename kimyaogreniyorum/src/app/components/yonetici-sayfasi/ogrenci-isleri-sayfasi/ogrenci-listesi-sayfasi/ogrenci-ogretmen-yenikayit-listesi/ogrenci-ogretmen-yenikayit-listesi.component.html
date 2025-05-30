@@ -1,0 +1,67 @@
+<!-- user-table.component.html -->
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Avatar</th>
+        <th>Adı Soyadı</th>
+        <th>Email</th>
+        <th>Telefon</th>
+        <th>Okul</th>
+        <th>Sınıf</th>
+        <th>Grubu</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of paginatedUsers; let i = index">
+        <td>{{ (page - 1) * itemsPerPage + i + 1 }}</td>
+        <td>
+          <img
+            *ngIf="user.avatar"
+            [src]="'./server/avatar/' + user.avatar"
+            class="rounded-circle"
+            width="40"
+            height="40"
+            onerror="this.src='assets/img/avatar-default.png'"
+          />
+        </td>
+        <td>{{ user.uye_adi_soyadi }}</td>
+        <td>{{ user.uye_mail }}</td>
+        <td>{{ user.uye_cep }}</td>
+        <td>{{ user.okulu }}</td>
+        <td>{{ user.sinifi }}</td>
+        <td>{{ user.grubu }}</td>
+      </tr>
+      <tr *ngIf="paginatedUsers.length === 0">
+        <td colspan="8" class="text-center text-muted">Kayıtlı kullanıcı bulunamadı.</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <nav *ngIf="totalPages > 1">
+    <ul class="pagination justify-content-center">
+      <li
+        class="page-item"
+        [class.disabled]="page === 1"
+        (click)="setPage(page - 1)"
+      >
+        <a class="page-link">«</a>
+      </li>
+      <li
+        class="page-item"
+        *ngFor="let p of getPageArray()"
+        [class.active]="p === page"
+        (click)="setPage(p)"
+      >
+        <a class="page-link">{{ p }}</a>
+      </li>
+      <li
+        class="page-item"
+        [class.disabled]="page === totalPages"
+        (click)="setPage(page + 1)"
+      >
+        <a class="page-link">»</a>
+      </li>
+    </ul>
+  </nav>
+  

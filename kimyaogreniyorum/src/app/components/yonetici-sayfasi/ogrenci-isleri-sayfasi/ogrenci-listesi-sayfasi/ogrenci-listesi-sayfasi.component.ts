@@ -37,7 +37,7 @@ export class OgrenciListesiSayfasiComponent implements OnInit {
 
   // Arama ve pagination için değişkenler
   searchQuery: string = '';
-  itemsPerPage: number = 10;
+  itemsPerPage: number = 5;
   currentStudentPage: number = 1;
   currentTeacherPage: number = 1;
   currentNewUserPage: number = 1;
@@ -95,9 +95,7 @@ export class OgrenciListesiSayfasiComponent implements OnInit {
 
             // Sadece yeni (daha önce onaylanmamış) kullanıcıları filtrele
             this.newUsers = users.filter(
-              (user: User) =>
-                user.aktif === false &&
-                (user.rutbe === 'belirtilmemis' || user.rutbe === '')
+              (user: User) => user.rutbe === 'yeni'
             );
 
             console.log('Yüklenen kullanıcılar:', {

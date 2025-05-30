@@ -40,27 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-// errorResponse ve successResponse fonksiyonlarını tanımla
-function errorResponse($message, $statusCode = 400) {
-    http_response_code($statusCode);
-    echo json_encode(['success' => false, 'error' => $message]);
-    exit();
-}
-
-function successResponse($data = null, $message = null) {
-    $response = ['success' => true];
-    
-    if ($data !== null) {
-        $response['data'] = $data;
-    }
-    
-    if ($message !== null) {
-        $response['message'] = $message;
-    }
-    
-    echo json_encode($response);
-    exit();
-}
+// Not: errorResponse ve successResponse fonksiyonları config.php'den geliyor
+// Bu dosyada tekrar tanımlamıyoruz
 
 // POST isteği kontrol et
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -244,28 +225,14 @@ if (!move_uploaded_file($_FILES['pdf_dosyasi']['tmp_name'], $pdfYolu)) {
     errorResponse('PDF dosyası kaydedilemedi');
 }
 
-// Çizim dosyasını kaydet (canvas'tan base64 verisi geliyorsa)
+// Çizim dosyasını kaydet (varsa)
 $cizimDosyaAdi = null;
-if (isset($_POST['cizim_verisi']) && !empty($_POST['cizim_verisi'])) {
+if (isset($_FILES['cizim_verisi']) && $_FILES['cizim_verisi']['error'] == 0) {
     $cizimDosyaAdi = 'cizim_' . $benzersizId . '_' . $tarih . '.png';
     $cizimYolu = $cizimDirectory . $cizimDosyaAdi;
-    
-    // Base64 verisini decode et
-    $cizimData = $_POST['cizim_verisi'];
-    
-    // "data:image/png;base64," kısmını kaldır
-    if (strpos($cizimData, 'data:image/png;base64,') === 0) {
-        $cizimData = substr($cizimData, strlen('data:image/png;base64,'));
-    }
-    
-    $decodedData = base64_decode($cizimData);
-    
-    if ($decodedData !== false) {
-        if (!file_put_contents($cizimYolu, $decodedData)) {
-            errorResponse('Çizim dosyası kaydedilemedi');
-        }
-    } else {
-        errorResponse('Çizim verisi decode edilemedi');
+
+    if (!move_uploaded_file($_FILES['cizim_verisi']['tmp_name'], $cizimYolu)) {
+        errorResponse('Çizim dosyası kaydedilemedi');
     }
 }
 
@@ -274,43 +241,22 @@ if (isset($_POST['cizim_verisi']) && !empty($_POST['cizim_verisi'])) {
 try {
     // Veritabanına bağlan
     require_once '../config.php'; // config.php'yi bir kez dahil ediyoruz
-    
-    // Veritabanı bağlantı fonksiyonunu tanımla
-    function getConnection() {
-        $host = 'db.cfufhfkrxdqkjwgfungo.supabase.co';
-        $port = '5432';
-        $dbname = 'postgres';
-        $username = 'postgres';
-        $password = '123456789xX.';
-        
-        try {
-            $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
-            $pdo = new PDO($dsn, $username, $password, [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_EMULATE_PREPARES => false,
-            ]);
-            return $pdo;
-        } catch (PDOException $e) {
-            throw new Exception('Veritabanı bağlantı hatası: ' . $e->getMessage());
-        }
-    }
-    
     $conn = getConnection();
 
     // Tablo kontrol et/oluştur
     $tableSql = "
-    CREATE TABLE IF NOT EXISTS konu_anlatim_kayitlari (
-      id SERIAL PRIMARY KEY,
-      pdf_adi VARCHAR(255) NOT NULL,
-      pdf_dosya_yolu VARCHAR(255) NOT NULL,
-      sayfa_sayisi INTEGER NOT NULL DEFAULT 1,
-      cizim_dosya_yolu VARCHAR(255) DEFAULT NULL,
-      ogrenci_grubu VARCHAR(100) NOT NULL,
-      ogretmen_id INTEGER NOT NULL DEFAULT 1,
-      olusturma_zamani TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      guncelleme_zamani TIMESTAMP DEFAULT NULL
-    );
+    CREATE TABLE IF NOT EXISTS `konu_anlatim_kayitlari` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `pdf_adi` varchar(255) NOT NULL,
+      `pdf_dosya_yolu` varchar(255) NOT NULL,
+      `sayfa_sayisi` int(11) NOT NULL DEFAULT 1,
+      `cizim_dosya_yolu` varchar(255) DEFAULT NULL,
+      `ogrenci_grubu` varchar(100) NOT NULL,
+      `ogretmen_id` int(11) NOT NULL DEFAULT 1,
+      `olusturma_zamani` datetime NOT NULL,
+      `guncelleme_zamani` datetime DEFAULT NULL,
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     ";
     $conn->exec($tableSql);
 
@@ -323,7 +269,7 @@ try {
         ) VALUES (
             :pdf_adi, :pdf_dosya_yolu, :sayfa_sayisi, 
             :cizim_dosya_yolu, :ogrenci_grubu, 1, 
-            CURRENT_TIMESTAMP
+            NOW()
         )
     ");
 
