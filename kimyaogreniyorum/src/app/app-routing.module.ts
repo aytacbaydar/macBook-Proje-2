@@ -11,6 +11,8 @@ import { MysqlSayfasiComponent } from './components/yonetici-sayfasi/mysql-sayfa
 import { OgrenciGruplarComponent } from './components/yonetici-sayfasi/ogrenci-isleri-sayfasi/ogrenci-gruplar/ogrenci-gruplar.component';
 import { OgrenciUcretlerComponent } from './components/yonetici-sayfasi/ogrenci-isleri-sayfasi/ogrenci-ucretler/ogrenci-ucretler.component';
 import { GrupDetaySayfasiComponent } from './components/yonetici-sayfasi/ogrenci-isleri-sayfasi/grup-detay-sayfasi/grup-detay-sayfasi.component';
+import { OgretmenIndexSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-index-sayfasi/ogretmen-index-sayfasi.component';
+import { OgretmenDersAnlatmaTahtasiComponent } from './components/ogretmen-sayfasi/ogretmen-ders-anlatma-tahtasi/ogretmen-ders-anlatma-tahtasi.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/giris-sayfasi', pathMatch: 'full' },
@@ -45,18 +47,30 @@ const routes: Routes = [
       },
       {
         path: 'ogrenci-ucretler',
-        component: OgrenciUcretlerComponent
+        component: OgrenciUcretlerComponent,
       },
       {
         path: 'grup-detay/:grupAdi',
-        component: GrupDetaySayfasiComponent
-      }
+        component: GrupDetaySayfasiComponent,
+      },
+    ],
+  },
+
+  //öğretmenler sayfaları
+  {
+    path: 'ogretmen-sayfasi',
+    component: OgretmenIndexSayfasiComponent,
+    children: [
+      {
+        path: '',
+        component: OgretmenDersAnlatmaTahtasiComponent,
+      },
     ],
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

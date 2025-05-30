@@ -74,7 +74,7 @@ function authorize() {
 // Admin yetkisini kontrol
 function authorizeAdmin() {
     $user = authorize();
-    if ($user['rutbe'] !== 'admin') {
+    if ($user['rutbe'] !== 'admin' && $user['rutbe'] !== 'ogretmen') {
         http_response_code(403);
         echo json_encode(['error' => 'Bu işlem için yönetici yetkileri gerekiyor']);
         exit();

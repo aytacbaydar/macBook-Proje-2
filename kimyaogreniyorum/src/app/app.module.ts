@@ -11,6 +11,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { YoneticiSayfasiModule } from './components/yonetici-sayfasi/yonetici-sayfasi.module';
+import { OgretmenSayfasiModule } from './components/ogretmen-sayfasi/ogretmen-sayfasi.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -31,6 +32,7 @@ import { YoneticiSayfasiModule } from './components/yonetici-sayfasi/yonetici-sa
 
     IndexSayfasiModule,
     YoneticiSayfasiModule,
+    OgretmenSayfasiModule
   ],
   providers: [],
   bootstrap: [AppComponent],
