@@ -1,4 +1,3 @@
-
 <?php
 // Öğrenci bilgileri API'si
 require_once '../config.php';
@@ -19,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         
         // Öğrenci temel bilgilerini getir
         $stmt = $conn->prepare("
-            SELECT id, adi_soyadi, email, cep_telefonu, rutbe, aktif, avatar, created_at, okulu, sinifi, grubu, ders_gunu, ders_saati, ucret
+            SELECT id, adi_soyadi, email, cep_telefonu, rutbe, aktif, avatar, created_at
             FROM ogrenciler
             WHERE id = :id
         ");
@@ -43,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $studentDetails = $stmt->fetch(PDO::FETCH_ASSOC);
         
         // Sonuçları birleştir
-        $result = array_merge($student, $studentDetails ?: []);
+        $result = array_merge($student, $studentDetails);
         
         successResponse($result);
         
@@ -57,4 +56,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 else {
     errorResponse('Bu endpoint sadece GET metodunu desteklemektedir', 405);
 }
-?>
