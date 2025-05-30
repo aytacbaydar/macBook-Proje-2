@@ -1,0 +1,151 @@
+<div class="groups-container">
+    <!-- Header Section -->
+    <div class="page-header">
+        <div class="header-content">
+            <div class="header-text">
+                <h1 class="page-title">
+                    <i class="bi bi-people-fill me-2"></i>
+                    Öğrenci Grupları
+                </h1>
+                <p class="page-description">Öğrencilerinizi gruplarına göre yönetin</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-icon bg-primary">
+                        <i class="bi bi-collection"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ groups.length }}</div>
+                        <div class="stat-label">Toplam Grup</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon bg-success">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ getTotalStudents() }}</div>
+                        <div class="stat-label">Toplam Öğrenci</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon bg-info">
+                        <i class="bi bi-person-check"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ getActiveStudents() }}</div>
+                        <div class="stat-label">Aktif Öğrenci</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Section -->
+    <div class="search-section">
+        <div class="search-container">
+            <div class="search-input-wrapper">
+                <i class="bi bi-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Grup veya öğrenci ara..."
+                    [(ngModel)]="searchQuery">
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Gruplar yükleniyor...</p>
+        </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error && !isLoading" class="error-container">
+        <div class="error-card">
+            <i class="bi bi-exclamation-triangle error-icon"></i>
+            <h3>Hata Oluştu</h3>
+            <p>{{ error }}</p>
+            <button class="retry-button" (click)="loadStudents()">
+                <i class="bi bi-arrow-clockwise me-1"></i>
+                Tekrar Dene
+            </button>
+        </div>
+    </div>
+
+    <!-- Groups Grid -->
+    <div *ngIf="!isLoading && !error" class="groups-grid">
+        <div class="group-card" *ngFor="let group of filteredGroups" (click)="viewGroupDetail(group.name)"
+            style="cursor: pointer;">
+            <!-- Group Header -->
+            <div class="group-header" [style.background-color]="group.color">
+                <div class="group-title">
+                    <i class="bi bi-collection-fill me-2"></i>
+                    {{ group.name }}
+                </div>
+                <div class="group-count">
+                    <span class="count-badge">{{ group.students.length }}</span>
+                    <span class="count-text">öğrenci</span>
+                </div>
+            </div>
+
+            <!-- Students List -->
+            <div class="students-container">
+                <div *ngIf="group.students.length === 0" class="empty-group">
+                    <i class="bi bi-person-x"></i>
+                    <p>Bu grupta öğrenci bulunamadı</p>
+                </div>
+
+                <div *ngFor="let student of group.students" class="student-item">
+                    <div class="student-avatar">
+                        <img [src]="student.avatar || 'assets/images/default-avatar.png'" [alt]="student.adi_soyadi"
+                            class="avatar-img">
+                        <div class="status-indicator" [class.active]="student.aktif" [class.inactive]="!student.aktif">
+                        </div>
+                    </div>
+
+                    <div class="student-info">
+                        <div class="student-name">{{ student.adi_soyadi }}</div>
+                        <div class="student-details">
+                            <span *ngIf="student.sinifi" class="detail-item">
+                                <i class="bi bi-mortarboard me-1"></i>
+                                {{ student.sinifi }}
+                            </span>
+                            <span *ngIf="student.okulu" class="detail-item">
+                                <i class="bi bi-building me-1"></i>
+                                {{ student.okulu }}
+                            </span>
+                        </div>
+                        <div class="student-contact">
+                            <span class="email">{{ student.email }}</span>
+                            <span *ngIf="student.cep_telefonu" class="phone">{{ student.cep_telefonu }}</span>
+                        </div>
+                    </div>
+
+                    <div class="student-actions">
+                        <a [routerLink]="['/yonetici-sayfasi/ogrenci-detay-sayfasi', student.id]"
+                            class="action-btn edit-btn" title="Düzenle">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <button (click)="deleteStudent(student.id)" class="action-btn delete-btn" title="Sil">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && !error && filteredGroups.length === 0" class="empty-state">
+        <div class="empty-illustration">
+            <i class="bi bi-collection"></i>
+        </div>
+        <h3>Grup Bulunamadı</h3>
+        <p>Henüz hiç grup oluşturulmamış veya arama kriterinize uygun grup bulunmuyor.</p>
+    </div>
+    </div>

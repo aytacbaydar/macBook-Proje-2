@@ -12,7 +12,7 @@
     </div>
 
     <nav class="sidebar-nav">
-      <a class="nav-item active" [attr.title]="!isSidebarOpen ? 'Dashboard' : null">
+      <a routerLink="/" class="nav-item active" [attr.title]="!isSidebarOpen ? 'Dashboard' : null">
         <i class="nav-icon fas fa-chart-line"></i>
         <span class="nav-text" [class.d-none]="!isSidebarOpen">Dashboard</span>
       </a>
@@ -22,7 +22,7 @@
         <span class="nav-text" [class.d-none]="!isSidebarOpen">Öğrenciler</span>
       </a>
 
-      <a class="nav-item" [attr.title]="!isSidebarOpen ? 'Gruplar' : null">
+      <a routerLink="ogrenci-gruplari" class="nav-item" [attr.title]="!isSidebarOpen ? 'Gruplar' : null">
         <i class="nav-icon fas fa-user-friends"></i>
         <span class="nav-text" [class.d-none]="!isSidebarOpen">Gruplar</span>
       </a>
