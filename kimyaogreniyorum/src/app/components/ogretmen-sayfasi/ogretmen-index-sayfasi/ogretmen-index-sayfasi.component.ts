@@ -77,13 +77,17 @@ export class OgretmenIndexSayfasiComponent implements OnInit {
 
   toggleSidebar(): void {
     this.isSidebarOpen = !this.isSidebarOpen;
+    // Kullanıcının tercihini kaydet
+    localStorage.setItem('sidebarOpen', JSON.stringify(this.isSidebarOpen));
   }
 
   private checkScreenSize(): void {
     if (window.innerWidth < 768) {
       this.isSidebarOpen = false;
     } else {
-      this.isSidebarOpen = true;
+      // Desktop'ta kullanıcının son tercihini localStorage'dan al
+      const savedState = localStorage.getItem('sidebarOpen');
+      this.isSidebarOpen = savedState ? JSON.parse(savedState) : true;
     }
   }
 }

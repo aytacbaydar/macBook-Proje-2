@@ -1,51 +1,81 @@
 
 <div class="d-flex" id="wrapper">
   <!-- Sidebar -->
-  <div class="bg-primary text-white" id="sidebar-wrapper" [class.toggled]="!isSidebarOpen">
-    <div class="sidebar-heading border-bottom bg-primary text-white p-3">
-      <h5 class="mb-0">Öğretmen Paneli</h5>
+  <div class="sidebar" id="sidebar-wrapper" [class.collapsed]="!isSidebarOpen">
+    <div class="sidebar-header">
+      <div class="sidebar-brand" [class.collapsed]="!isSidebarOpen">
+        <div class="brand-icon">👨‍🏫</div>
+        <h5 class="brand-text mb-0" [class.d-none]="!isSidebarOpen">Öğretmen Paneli</h5>
+      </div>
+      <button class="sidebar-toggle" (click)="toggleSidebar()">
+        <i class="bi" [ngClass]="isSidebarOpen ? 'bi-chevron-left' : 'bi-chevron-right'"></i>
+      </button>
     </div>
-    <div class="list-group list-group-flush">
-      <a class="list-group-item list-group-item-action bg-primary text-white border-0 active" href="#dashboard">
-        <i class="bi bi-speedometer2 me-2"></i>Dashboard
-      </a>
-      <a class="list-group-item list-group-item-action bg-primary text-white border-0" href="#ogrenciler">
-        <i class="bi bi-people me-2"></i>Öğrenciler
-      </a>
-      <a class="list-group-item list-group-item-action bg-primary text-white border-0" href="#gruplar">
-        <i class="bi bi-collection me-2"></i>Gruplar
-      </a>
-      <a class="list-group-item list-group-item-action bg-primary text-white border-0" href="#konular">
-        <i class="bi bi-book me-2"></i>Konular
-      </a>
-      <a class="list-group-item list-group-item-action bg-primary text-white border-0" href="#sinavlar">
-        <i class="bi bi-clipboard-check me-2"></i>Sınavlar
-      </a>
+    
+    <div class="sidebar-menu">
+      <div class="menu-item active" [attr.title]="!isSidebarOpen ? 'Dashboard' : null">
+        <div class="menu-icon">📊</div>
+        <span class="menu-text" [class.d-none]="!isSidebarOpen">Dashboard</span>
+      </div>
+      
+      <div class="menu-item" [attr.title]="!isSidebarOpen ? 'Öğrenciler' : null">
+        <div class="menu-icon">👥</div>
+        <span class="menu-text" [class.d-none]="!isSidebarOpen">Öğrenciler</span>
+      </div>
+      
+      <div class="menu-item" [attr.title]="!isSidebarOpen ? 'Gruplar' : null">
+        <div class="menu-icon">👫</div>
+        <span class="menu-text" [class.d-none]="!isSidebarOpen">Gruplar</span>
+      </div>
+      
+      <div class="menu-item" [attr.title]="!isSidebarOpen ? 'Konular' : null">
+        <div class="menu-icon">📚</div>
+        <span class="menu-text" [class.d-none]="!isSidebarOpen">Konular</span>
+      </div>
+      
+      <div class="menu-item" [attr.title]="!isSidebarOpen ? 'Sınavlar' : null">
+        <div class="menu-icon">📝</div>
+        <span class="menu-text" [class.d-none]="!isSidebarOpen">Sınavlar</span>
+      </div>
+      
+      <div class="menu-item" [attr.title]="!isSidebarOpen ? 'Ayarlar' : null">
+        <div class="menu-icon">⚙️</div>
+        <span class="menu-text" [class.d-none]="!isSidebarOpen">Ayarlar</span>
+      </div>
     </div>
   </div>
 
   <!-- Page Content -->
   <div id="page-content-wrapper" class="w-100">
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-      <div class="container-fluid">
-        <button class="btn btn-outline-primary" (click)="toggleSidebar()">
-          <i class="bi bi-list"></i>
-        </button>
+    <nav class="navbar">
+      <div class="navbar-content">
+        <div class="navbar-left">
+          <button class="mobile-toggle d-md-none" (click)="toggleSidebar()">
+            <i class="bi bi-list"></i>
+          </button>
+          <h4 class="page-title mb-0">📊 Dashboard</h4>
+        </div>
 
-        <div class="navbar-nav ms-auto d-flex flex-row align-items-center">
-          <!-- Teacher Info -->
-          <div class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" 
-               role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <img [src]="teacherAvatar" alt="Avatar" class="rounded-circle me-2" width="32" height="32">
-              <span class="d-none d-md-inline">{{ teacherName }}</span>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="#profil"><i class="bi bi-person me-2"></i>Profil</a></li>
-              <li><a class="dropdown-item" href="#ayarlar"><i class="bi bi-gear me-2"></i>Ayarlar</a></li>
+        <div class="navbar-right">
+          <div class="notification-badge">
+            <i class="bi bi-bell"></i>
+            <span class="badge">3</span>
+          </div>
+          
+          <div class="user-menu dropdown">
+            <div class="user-info dropdown-toggle" data-bs-toggle="dropdown">
+              <img [src]="teacherAvatar" alt="Avatar" class="user-avatar">
+              <div class="user-details d-none d-md-block">
+                <div class="user-name">{{ teacherName }}</div>
+                <div class="user-role">Öğretmen</div>
+              </div>
+            </div>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#profil">👤 Profil</a></li>
+              <li><a class="dropdown-item" href="#ayarlar">⚙️ Ayarlar</a></li>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="#cikis"><i class="bi bi-box-arrow-right me-2"></i>Çıkış</a></li>
+              <li><a class="dropdown-item text-danger" href="#cikis">🚪 Çıkış</a></li>
             </ul>
           </div>
         </div>
