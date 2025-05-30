@@ -1,0 +1,168 @@
+
+#wrapper {
+  min-height: 100vh;
+}
+
+#sidebar-wrapper {
+  min-height: 100vh;
+  width: 250px;
+  margin-left: -250px;
+  transition: margin 0.25s ease-out;
+}
+
+#sidebar-wrapper.toggled {
+  margin-left: 0;
+}
+
+#page-content-wrapper {
+  transition: margin 0.25s ease-out;
+}
+
+.sidebar-heading {
+  font-size: 1.2rem;
+}
+
+.list-group-item {
+  border: none !important;
+  padding: 15px 20px;
+  transition: all 0.3s ease;
+}
+
+.list-group-item:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  padding-left: 25px;
+}
+
+.list-group-item.active {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.icon-bg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+}
+
+.card {
+  border: none;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.navbar {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  #sidebar-wrapper {
+    margin-left: -250px;
+  }
+  
+  #sidebar-wrapper.toggled {
+    margin-left: 0;
+    position: fixed;
+    z-index: 1000;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  
+  #page-content-wrapper {
+    padding: 0;
+  }
+  
+  .container-fluid {
+    padding: 15px;
+  }
+  
+  .card-body {
+    padding: 15px;
+  }
+  
+  .icon-bg {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .icon-bg i {
+    font-size: 1.2rem !important;
+  }
+}
+
+@media (min-width: 768px) {
+  #sidebar-wrapper {
+    margin-left: 0;
+  }
+  
+  #page-content-wrapper {
+    margin-left: 250px;
+  }
+  
+  #wrapper.toggled #sidebar-wrapper {
+    margin-left: -250px;
+  }
+  
+  #wrapper.toggled #page-content-wrapper {
+    margin-left: 0;
+  }
+}
+
+/* Animation for stats cards */
+.card-body h4 {
+  font-weight: 700;
+  color: #333;
+}
+
+.card-body h6 {
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Quick actions buttons */
+.btn {
+  border-radius: 8px;
+  font-weight: 500;
+  padding: 12px 16px;
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+/* Activity list styling */
+.list-group-item {
+  border: none !important;
+  padding: 15px 0;
+  border-bottom: 1px solid #f0f0f0 !important;
+}
+
+.list-group-item:last-child {
+  border-bottom: none !important;
+}
+
+/* Custom scrollbar for sidebar */
+#sidebar-wrapper::-webkit-scrollbar {
+  width: 6px;
+}
+
+#sidebar-wrapper::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+#sidebar-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+#sidebar-wrapper::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}

@@ -1,0 +1,212 @@
+
+<div class="d-flex" id="wrapper">
+  <!-- Sidebar -->
+  <div class="bg-primary text-white" id="sidebar-wrapper" [class.toggled]="!isSidebarOpen">
+    <div class="sidebar-heading border-bottom bg-primary text-white p-3">
+      <h5 class="mb-0">Öğretmen Paneli</h5>
+    </div>
+    <div class="list-group list-group-flush">
+      <a class="list-group-item list-group-item-action bg-primary text-white border-0 active" href="#dashboard">
+        <i class="bi bi-speedometer2 me-2"></i>Dashboard
+      </a>
+      <a class="list-group-item list-group-item-action bg-primary text-white border-0" href="#ogrenciler">
+        <i class="bi bi-people me-2"></i>Öğrenciler
+      </a>
+      <a class="list-group-item list-group-item-action bg-primary text-white border-0" href="#gruplar">
+        <i class="bi bi-collection me-2"></i>Gruplar
+      </a>
+      <a class="list-group-item list-group-item-action bg-primary text-white border-0" href="#konular">
+        <i class="bi bi-book me-2"></i>Konular
+      </a>
+      <a class="list-group-item list-group-item-action bg-primary text-white border-0" href="#sinavlar">
+        <i class="bi bi-clipboard-check me-2"></i>Sınavlar
+      </a>
+    </div>
+  </div>
+
+  <!-- Page Content -->
+  <div id="page-content-wrapper" class="w-100">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+      <div class="container-fluid">
+        <button class="btn btn-outline-primary" (click)="toggleSidebar()">
+          <i class="bi bi-list"></i>
+        </button>
+
+        <div class="navbar-nav ms-auto d-flex flex-row align-items-center">
+          <!-- Teacher Info -->
+          <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" 
+               role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <img [src]="teacherAvatar" alt="Avatar" class="rounded-circle me-2" width="32" height="32">
+              <span class="d-none d-md-inline">{{ teacherName }}</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="#profil"><i class="bi bi-person me-2"></i>Profil</a></li>
+              <li><a class="dropdown-item" href="#ayarlar"><i class="bi bi-gear me-2"></i>Ayarlar</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#cikis"><i class="bi bi-box-arrow-right me-2"></i>Çıkış</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <div class="container-fluid p-4">
+      <div class="row">
+        <div class="col-12">
+          <h2 class="mb-4">Dashboard</h2>
+        </div>
+      </div>
+
+      <!-- Statistics Cards -->
+      <div class="row g-3 mb-4">
+        <div class="col-lg-3 col-md-6 col-sm-6">
+          <div class="card border-primary border-start border-4 h-100">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="icon-bg rounded-circle bg-primary-subtle p-3 me-3">
+                  <i class="bi bi-people-fill fs-4 text-primary"></i>
+                </div>
+                <div>
+                  <h6 class="text-muted mb-0 small">Toplam Öğrenci</h6>
+                  <h4 class="mb-0">{{ totalStudents }}</h4>
+                  <div class="small text-muted mt-1">
+                    <span class="text-success">{{ activeStudents }} Aktif</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-6">
+          <div class="card border-success border-start border-4 h-100">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="icon-bg rounded-circle bg-success-subtle p-3 me-3">
+                  <i class="bi bi-collection fs-4 text-success"></i>
+                </div>
+                <div>
+                  <h6 class="text-muted mb-0 small">Gruplar</h6>
+                  <h4 class="mb-0">{{ totalGroups }}</h4>
+                  <div class="small text-muted mt-1">
+                    <span class="text-info">{{ activeGroups }} Aktif Grup</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-6">
+          <div class="card border-info border-start border-4 h-100">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="icon-bg rounded-circle bg-info-subtle p-3 me-3">
+                  <i class="bi bi-book fs-4 text-info"></i>
+                </div>
+                <div>
+                  <h6 class="text-muted mb-0 small">Konular</h6>
+                  <h4 class="mb-0">{{ totalTopics }}</h4>
+                  <div class="small text-muted mt-1">
+                    <span class="text-warning">{{ completedTopics }} Tamamlandı</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-6">
+          <div class="card border-warning border-start border-4 h-100">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="icon-bg rounded-circle bg-warning-subtle p-3 me-3">
+                  <i class="bi bi-clipboard-check fs-4 text-warning"></i>
+                </div>
+                <div>
+                  <h6 class="text-muted mb-0 small">Sınavlar</h6>
+                  <h4 class="mb-0">{{ totalExams }}</h4>
+                  <div class="small text-muted mt-1">
+                    <span class="text-danger">{{ pendingExams }} Değerlendirilecek</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activities -->
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title mb-0">Son Aktiviteler</h5>
+            </div>
+            <div class="card-body">
+              <div class="list-group list-group-flush">
+                <div class="list-group-item d-flex align-items-center">
+                  <div class="icon-bg rounded-circle bg-primary-subtle p-2 me-3">
+                    <i class="bi bi-person-plus text-primary"></i>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="fw-semibold">Yeni öğrenci kaydı</div>
+                    <div class="small text-muted">Ali Veli gruba eklendi</div>
+                  </div>
+                  <div class="small text-muted">2 saat önce</div>
+                </div>
+                <div class="list-group-item d-flex align-items-center">
+                  <div class="icon-bg rounded-circle bg-success-subtle p-2 me-3">
+                    <i class="bi bi-clipboard-check text-success"></i>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="fw-semibold">Sınav tamamlandı</div>
+                    <div class="small text-muted">Kimya-1 sınavı değerlendirildi</div>
+                  </div>
+                  <div class="small text-muted">5 saat önce</div>
+                </div>
+                <div class="list-group-item d-flex align-items-center">
+                  <div class="icon-bg rounded-circle bg-info-subtle p-2 me-3">
+                    <i class="bi bi-book text-info"></i>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="fw-semibold">Yeni konu eklendi</div>
+                    <div class="small text-muted">Organik Kimya konusu güncellendi</div>
+                  </div>
+                  <div class="small text-muted">1 gün önce</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title mb-0">Hızlı İşlemler</h5>
+            </div>
+            <div class="card-body">
+              <div class="d-grid gap-2">
+                <button class="btn btn-primary">
+                  <i class="bi bi-person-plus me-2"></i>Yeni Öğrenci Ekle
+                </button>
+                <button class="btn btn-success">
+                  <i class="bi bi-collection-play me-2"></i>Yeni Grup Oluştur
+                </button>
+                <button class="btn btn-info">
+                  <i class="bi bi-book-half me-2"></i>Konu Ekle
+                </button>
+                <button class="btn btn-warning">
+                  <i class="bi bi-clipboard-plus me-2"></i>Sınav Oluştur
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
