@@ -28,7 +28,7 @@ import { OgrenciOgretmenYenikayitListesiComponent } from './ogrenci-isleri-sayfa
     OgrenciGruplarComponent,
     OgrenciUcretlerComponent,
     GrupDetaySayfasiComponent,
-    OgrenciOgretmenYenikayitListesiComponent
+    OgrenciOgretmenYenikayitListesiComponent,
   ],
   imports: [
     CommonModule,
@@ -43,7 +43,8 @@ import { OgrenciOgretmenYenikayitListesiComponent } from './ogrenci-isleri-sayfa
   exports: [
     OgrenciListesiSayfasiComponent,
     OgrenciDetaySayfasiComponent,
-    YoneticiIndexSayfasiComponent
+    YoneticiIndexSayfasiComponent,
+    KonuAnlatimSayfalariComponent,
   ],
 })
 export class YoneticiSayfasiModule {}
