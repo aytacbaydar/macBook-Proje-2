@@ -1,0 +1,115 @@
+▲ [WARNING] Deprecation [plugin angular-sass]
+
+    src/app/components/yonetici-sayfasi/ogrenci-isleri-sayfasi/ogrenci-detay-sayfasi/ogrenci-detay-sayfasi.component.scss:67:24:
+      67 │       background-color: darken($secondary-color, 5%);
+         ╵                         ^
+
+
+  Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+  Use color.adjust instead.
+
+  More info and automated migrator: https://sass-lang.com/d/import
+
+
+▲ [WARNING] Deprecation [plugin angular-sass]
+
+    src/app/components/yonetici-sayfasi/ogrenci-isleri-sayfasi/ogrenci-detay-sayfasi/ogrenci-detay-sayfasi.component.scss:67:24:
+      67 │       background-color: darken($secondary-color, 5%);
+         ╵                         ^
+
+
+  darken() is deprecated. Suggestions:
+
+  color.scale($color, $lightness: -5.1515151515%)
+  color.adjust($color, $lightness: -5%)
+
+  More info: https://sass-lang.com/d/color-functions
+
+
+▲ [WARNING] Deprecation [plugin angular-sass]
+
+    src/app/components/yonetici-sayfasi/ogrenci-isleri-sayfasi/ogrenci-detay-sayfasi/ogrenci-detay-sayfasi.component.scss:520:24:
+      520 │       background-color: darken($primary-color, 5%);
+          ╵                         ^
+
+
+  Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+  Use color.adjust instead.
+
+  More info and automated migrator: https://sass-lang.com/d/import
+
+
+▲ [WARNING] Deprecation [plugin angular-sass]
+
+    src/app/components/yonetici-sayfasi/ogrenci-isleri-sayfasi/ogrenci-detay-sayfasi/ogrenci-detay-sayfasi.component.scss:520:24:
+      520 │       background-color: darken($primary-color, 5%);
+          ╵                         ^
+
+
+  darken() is deprecated. Suggestions:
+
+  color.scale($color, $lightness: -8.5%)
+  color.adjust($color, $lightness: -5%)
+
+  More info: https://sass-lang.com/d/color-functions
+
+
+▲ [WARNING] Deprecation [plugin angular-sass]
+
+    src/app/components/yonetici-sayfasi/ogrenci-isleri-sayfasi/ogrenci-detay-sayfasi/ogrenci-detay-sayfasi.component.scss:533:24:
+      533 │       background-color: darken($secondary-color, 5%);
+          ╵                         ^
+
+
+  Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+  Use color.adjust instead.
+
+  More info and automated migrator: https://sass-lang.com/d/import
+
+
+▲ [WARNING] Deprecation [plugin angular-sass]
+
+    src/app/components/yonetici-sayfasi/ogrenci-isleri-sayfasi/ogrenci-detay-sayfasi/ogrenci-detay-sayfasi.component.scss:533:24:
+      533 │       background-color: darken($secondary-color, 5%);
+          ╵                         ^
+
+
+  darken() is deprecated. Suggestions:
+
+  color.scale($color, $lightness: -5.1515151515%)
+  color.adjust($color, $lightness: -5%)
+
+  More info: https://sass-lang.com/d/color-functions
+
+
+X [ERROR] Expected identifier.
+    ╷
+882 │ :::-webkit-scrollbar {
+    │   ^
+    ╵
+  src\app\components\yonetici-sayfasi\yonetici-index-sayfasi\yonetici-index-sayfasi.component.scss 882:3  root stylesheet [plugin angular-sass]
+
+
+X [ERROR] NG1: Property 'isMobileSidebarOpen' does not exist on type 'OgretmenIndexSayfasiComponent'. Did you mean 'isSidebarOpen'? [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-index-sayfasi/ogretmen-index-sayfasi.component.html:4:92:
+      4 │ ...sed]="!isSidebarOpen" [class.mobile-hidden]="!isMobileSidebarOpen">
+        ╵                                                  ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenIndexSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-index-sayfasi/ogretmen-index-sayfasi.component.ts:5:15:
+      5 │   templateUrl: './ogretmen-index-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG1: Property 'toggleMobileSidebar' does not exist on type 'OgretmenIndexSayfasiComponent'. Did you mean 'toggleSidebar'? [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-index-sayfasi/ogretmen-index-sayfasi.component.html:69:49:
+      69 │ ...  <button class="mobile-menu-btn" (click)="toggleMobileSidebar()">
+         ╵                                               ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenIndexSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-index-sayfasi/ogretmen-index-sayfasi.component.ts:5:15:
+      5 │   templateUrl: './ogretmen-index-sayfasi.component.html',
