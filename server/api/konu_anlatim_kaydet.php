@@ -261,12 +261,12 @@ try {
     $conn = getConnection();
 
     // Token'dan kullanıcı bilgilerini al - önce tabloyu kontrol edelim
-    $stmt = $conn->prepare("DESCRIBE kullanicilar");
+    $stmt = $conn->prepare("DESCRIBE ogrenciler");
     $stmt->execute();
     $columns = $stmt->fetchAll(PDO::FETCH_COLUMN);
     
     // Rol sütununu bul
-    $roleColumn = 'rol'; // varsayılan
+    $roleColumn = 'rutbe'; // varsayılan (ogrenciler tablosunda rutbe kullanılıyor)
     if (in_array('rutbe', $columns)) {
         $roleColumn = 'rutbe';
     } elseif (in_array('role', $columns)) {
@@ -275,7 +275,7 @@ try {
         $roleColumn = 'user_type';
     }
     
-    $stmt = $conn->prepare("SELECT id, $roleColumn as role FROM kullanicilar WHERE token = :token AND aktif = 1");
+    $stmt = $conn->prepare("SELECT id, $roleColumn as role FROM ogrenciler WHERE token = :token AND aktif = 1");
     $stmt->bindParam(':token', $token);
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
