@@ -1,193 +1,740 @@
-<div class="container-fluid">
-  <div class="row">
-    <!-- Sidebar -->
-    <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
-      <div class="position-sticky pt-3">
-        <div class="sidebar-header mb-4">
-          <h5 class="fw-bold text-primary">Öğretmen Paneli</h5>
-        </div>
-
-        <div class="sidebar-menu">
-          <ul class="nav flex-column">
-            <li class="nav-item">
-              <a class="nav-link active" href="#">
-                <i class="bi bi-house"></i>
-                Ana Sayfa
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" routerLink="/ogretmen-sayfasi/ders-anlatma-tahtasi">
-                <i class="bi bi-easel"></i>
-                Ders Anlatım Tahtası
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#" (click)="logout()">
-                <i class="bi bi-box-arrow-right"></i>
-                Çıkış Yap
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-
-    <!-- Main content -->
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-      
-
-<div class="container-fluid py-4">
-  <div class="row">
-    <div class="col-12">
-      <!-- Header -->
-      <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
-        <div>
-          <h4 class="fw-bold text-dark mb-1">Öğrencilerim</h4>
-          <p class="text-muted mb-0">Toplam {{ ogrencilerim.length }} öğrenci</p>
-        </div>
-        <div class="d-flex gap-2">
-          <button class="btn btn-outline-secondary" (click)="loadOgrencilerim()">
-            <i class="bi bi-arrow-clockwise me-1"></i>
-            Yenile
-          </button>
-          <button class="btn btn-danger" (click)="logout()">
-            <i class="bi bi-box-arrow-right me-1"></i>
-            Çıkış Yap
-          </button>
-        </div>
-      </div>
-
-      <!-- Loading State -->
-      <div *ngIf="loading" class="text-center py-5">
-        <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Yükleniyor...</span>
-        </div>
-        <p class="mt-2 text-muted">Öğrenciler yükleniyor...</p>
-      </div>
-
-      <!-- Error State -->
-      <div *ngIf="error && !loading" class="alert alert-danger" role="alert">
-        <i class="bi bi-exclamation-triangle me-2"></i>
-        {{ error }}
-      </div>
-
-      <!-- Students List -->
-      <div *ngIf="!loading && !error && ogrencilerim.length > 0">
-        <!-- Desktop Table -->
-        <div class="card shadow-sm border-0 d-none d-md-block">
-          <div class="table-responsive">
-            <table class="table table-hover mb-0">
-              <thead class="table-light">
-                <tr>
-                  <th scope="col" class="fw-semibold">#</th>
-                  <th scope="col" class="fw-semibold">Öğrenci Adı</th>
-                  <th scope="col" class="fw-semibold">E-posta</th>
-                  <th scope="col" class="fw-semibold">Telefon</th>
-                  <th scope="col" class="fw-semibold">Ders Günü</th>
-                  <th scope="col" class="fw-semibold">Ders Saati</th>
-                  <th scope="col" class="fw-semibold">Ücret</th>
-                  <th scope="col" class="fw-semibold">Kayıt Tarihi</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let ogrenci of ogrencilerim; let i = index">
-                  <td class="align-middle">{{ i + 1 }}</td>
-                  <td class="align-middle">
-                    <div class="d-flex align-items-center">
-                      <div class="avatar-sm bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2">
-                        {{ ogrenci.ogrenci_adi_soyadi?.charAt(0)?.toUpperCase() || 'Ö' }}
-                      </div>
-                      <span class="fw-medium">{{ ogrenci.ogrenci_adi_soyadi }}</span>
-                    </div>
-                  </td>
-                  <td class="align-middle">{{ ogrenci.email }}</td>
-                  <td class="align-middle">{{ ogrenci.cep_telefonu || 'Belirtilmemiş' }}</td>
-                  <td class="align-middle">{{ ogrenci.ders_gunu || 'Belirtilmemiş' }}</td>
-                  <td class="align-middle">{{ ogrenci.ders_saati || 'Belirtilmemiş' }}</td>
-                  <td class="align-middle">
-                    <span class="badge bg-success">{{ ogrenci.ucret || 'Belirtilmemiş' }} ₺</span>
-                  </td>
-                  <td class="align-middle">{{ formatDate(ogrenci.created_at) }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Mobile Cards -->
-        <div class="d-md-none">
-          <div *ngFor="let ogrenci of ogrencilerim; let i = index" class="card mb-3 shadow-sm border-0">
-            <div class="card-body">
-              <div class="d-flex align-items-center mb-3">
-                <div class="avatar-sm bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3">
-                  {{ ogrenci.ogrenci_adi_soyadi?.charAt(0)?.toUpperCase() || 'Ö' }}
-                </div>
-                <div>
-                  <h6 class="card-title mb-1 fw-semibold">{{ ogrenci.ogrenci_adi_soyadi }}</h6>
-                  <small class="text-muted">#{{ i + 1 }}</small>
-                </div>
-              </div>
-
-              <div class="row g-2">
-                <div class="col-6">
-                  <small class="text-muted d-block">E-posta</small>
-                  <span class="fw-medium">{{ ogrenci.email }}</span>
-                </div>
-                <div class="col-6">
-                  <small class="text-muted d-block">Telefon</small>
-                  <span class="fw-medium">{{ ogrenci.cep_telefonu || 'Belirtilmemiş' }}</span>
-                </div>
-                <div class="col-6">
-                  <small class="text-muted d-block">Ders Günü</small>
-                  <span class="fw-medium">{{ ogrenci.ders_gunu || 'Belirtilmemiş' }}</span>
-                </div>
-                <div class="col-6">
-                  <small class="text-muted d-block">Ders Saati</small>
-                  <span class="fw-medium">{{ ogrenci.ders_saati || 'Belirtilmemiş' }}</span>
-                </div>
-                <div class="col-6">
-                  <small class="text-muted d-block">Ücret</small>
-                  <span class="badge bg-success">{{ ogrenci.ucret || 'Belirtilmemiş' }} ₺</span>
-                </div>
-                <div class="col-6">
-                  <small class="text-muted d-block">Kayıt Tarihi</small>
-                  <span class="fw-medium">{{ formatDate(ogrenci.created_at) }}</span>
-                </div>
+<div class="container-fluid p-2 p-md-3">
+  <!-- Bilgi Kartları -->
+  <div class="row g-2 mb-3">
+    <div class="col-md-3 col-sm-6">
+      <div class="card h-100 border-primary border-start border-4 rounded-lg">
+        <div class="card-body p-3">
+          <div class="d-flex align-items-center">
+            <div class="icon-bg rounded-circle bg-primary-subtle p-2 me-3">
+              <i class="bi bi-people-fill fs-4 text-primary"></i>
+            </div>
+            <div>
+              <h6 class="text-muted mb-0 small">Toplam Kullanıcı</h6>
+              <h4 class="mb-0">{{ students.length + teachers.length + newUsers.length }}</h4>
+              <div class="small text-muted mt-1">
+                <span class="text-success">{{ getActiveStudents() + getActiveTeachers() }} Aktif</span> |
+                <span class="text-danger">{{ getInactiveStudents() + getInactiveTeachers() }} Pasif</span>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- Empty State -->
-      <div *ngIf="!loading && !error && ogrencilerim.length === 0" class="text-center py-5">
-        <div class="d-flex flex-column align-items-center">
-          <div class="bg-light rounded-circle p-4 mb-3">
-            <i class="bi bi-people fs-1 text-muted"></i>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="card h-100 border-success border-start border-4 rounded-lg">
+        <div class="card-body p-3">
+          <div class="d-flex align-items-center">
+            <div class="icon-bg rounded-circle bg-success-subtle p-2 me-3">
+              <i class="bi bi-mortarboard fs-4 text-success"></i>
+            </div>
+            <div>
+              <h6 class="text-muted mb-0 small">Öğrenciler</h6>
+              <h4 class="mb-0">{{ students.length }}</h4>
+              <div class="small text-muted mt-1">
+                <span class="text-success">{{ getActiveStudents() }} Aktif</span> |
+                <span class="text-danger">{{ getInactiveStudents() }} Pasif</span>
+              </div>
+            </div>
           </div>
-          <h5 class="text-muted">Henüz öğrenciniz bulunmuyor</h5>
-          <p class="text-muted">Size atanan öğrenciler burada görünecektir.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="card h-100 border-info border-start border-4 rounded-lg">
+        <div class="card-body p-3">
+          <div class="d-flex align-items-center">
+            <div class="icon-bg rounded-circle bg-info-subtle p-2 me-3">
+              <i class="bi bi-person-badge fs-4 text-info"></i>
+            </div>
+            <div>
+              <h6 class="text-muted mb-0 small">Öğretmenler</h6>
+              <h4 class="mb-0">{{ teachers.length }}</h4>
+              <div class="small text-muted mt-1">
+                <span class="text-success">{{ getActiveTeachers() }} Aktif</span> |
+                <span class="text-danger">{{ getInactiveTeachers() }} Pasif</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="card h-100 border-danger border-start border-4 rounded-lg">
+        <div class="card-body p-3">
+          <div class="d-flex align-items-center">
+            <div class="icon-bg rounded-circle bg-danger-subtle p-2 me-3">
+              <i class="bi bi-clock-history fs-4 text-danger"></i>
+            </div>
+            <div>
+              <h6 class="text-muted mb-0 small">Onay Bekleyen</h6>
+              <h4 class="mb-0">{{ newUsers.length }}</h4>
+              <div class="small text-muted mt-1">
+                <span class="text-primary">{{ getStudentsWaiting() }} Öğrenci</span> |
+                <span class="text-success">{{ getTeachersWaiting() }} Öğretmen</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card rounded-lg shadow mb-3">
+    <!-- Header -->
+    <div class="card-header bg-primary text-white p-3">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+        <h4 class="mb-0 fw-semibold">Kullanıcı Yönetimi</h4>
+        <div class="d-flex mt-3 mt-md-0 w-100 w-md-auto">
+          <div class="input-group me-2">
+            <span class="input-group-text bg-white">
+              <i class="bi bi-search text-muted small"></i>
+            </span>
+            <input type="text" class="form-control" placeholder="Kullanıcı ara..." [(ngModel)]="searchQuery"
+              (keyup.enter)="onSearch()">
+            <button *ngIf="searchQuery" class="btn btn-outline-secondary border-0" type="button"
+              (click)="clearSearch()">
+              <i class="bi bi-x"></i>
+            </button>
+          </div>
+          <button class="btn btn-light d-flex align-items-center" (click)="loadUsers()">
+            <i class="bi bi-arrow-clockwise me-1"></i>
+            Yenile
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="card-body p-0">
+      <ul class="nav nav-tabs nav-fill sticky-top bg-white border-bottom">
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center py-2" [class.active]="activeTab === 'ogrenci'"
+            (click)="setActiveTab('ogrenci')">
+            <i class="bi bi-mortarboard me-2"></i>
+            Öğrenciler
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center py-2" [class.active]="activeTab === 'ogretmen'"
+            (click)="setActiveTab('ogretmen')">
+            <i class="bi bi-person me-2"></i>
+            Öğretmenler
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center py-2" [class.active]="activeTab === 'yeni'"
+            (click)="setActiveTab('yeni')">
+            <i class="bi bi-person-plus me-2"></i>
+            Yeni Kullanıcılar
+            <span *ngIf="newUsers.length > 0" class="badge bg-danger ms-2 rounded-pill">{{ newUsers.length }}</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- Tab Content -->
+      <div class="p-2 p-md-3">
+        <!-- Öğrenciler Tab -->
+        <div *ngIf="activeTab === 'ogrenci'" class="fade-in">
+          <div
+            class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3">
+            <div>
+              <h5 class="fw-medium text-dark">Öğrenci Listesi</h5>
+              <p class="text-muted small mt-1">Toplam {{ totalStudentCount }} öğrenci</p>
+            </div>
+            <a class="btn btn-primary d-flex align-items-center shadow-sm"
+              routerLink="/yonetici-sayfasi/ogrenci-detay-sayfasi/new">
+              <i class="bi bi-plus-circle me-1"></i>
+              Yeni Öğrenci
+            </a>
+          </div>
+
+          <!-- Desktop Table - Responsive -->
+          <div class="table-responsive d-none d-md-block rounded border">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="bg-light">
+                <tr>
+                  <th class="text-uppercase small fw-medium">Durum</th>
+                  <th class="text-uppercase small fw-medium">ID</th>
+                  <th class="text-uppercase small fw-medium">Avatar</th>
+                  <th class="text-uppercase small fw-medium">Ad Soyad</th>
+                  <th class="text-uppercase small fw-medium">Email</th>
+                  <th class="text-uppercase small fw-medium">Telefon</th>
+                  <th class="text-uppercase small fw-medium">Okul</th>
+                  <th class="text-uppercase small fw-medium">Sınıf</th>
+                  <th class="text-uppercase small fw-medium">Grup</th>
+                  <th class="text-uppercase small fw-medium">Öğretmeni</th>
+                  <th class="text-uppercase small fw-medium">Ders Bilgileri</th>
+                  <th class="text-uppercase small fw-medium">İşlemler</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let student of paginatedStudents">
+                  <td>
+                    <span *ngIf="student.aktif" class="badge bg-success rounded-pill">
+                      Aktif
+                    </span>
+                    <span *ngIf="!student.aktif" class="badge bg-danger rounded-pill">
+                      Pasif
+                    </span>
+                  </td>
+                  <td>{{ student.id }}</td>
+                  <td>
+                    <img
+                      [src]="student.avatar || 'https://ui-avatars.com/api/?name=' + student.adi_soyadi + '&background=random'"
+                      class="rounded-circle border border-2 border-light shadow-sm" width="40" height="40" alt="Avatar">
+                  </td>
+                  <td class="fw-medium">{{ student.adi_soyadi }}</td>
+                  <td>{{ student.email }}</td>
+                  <td>{{ student.cep_telefonu || 'Belirtilmemiş' }}</td>
+                  <td>{{ student.okulu || 'Belirtilmemiş' }}</td>
+                  <td>{{ student.sinifi || 'Belirtilmemiş' }}</td>
+                  <td>
+                    <span *ngIf="student.grubu" class="badge bg-primary-subtle text-primary rounded-pill">
+                      {{ student.grubu }}
+                    </span>
+                  </td>
+                  <td>{{ student.ogretmeni || 'Belirtilmemiş' }}</td>
+                  <td>
+                    <div class="d-flex flex-column gap-1 small">
+                      <div *ngIf="student.ders_gunu" class="d-flex align-items-center text-muted">
+                        <i class="bi bi-calendar me-1"></i> {{ student.ders_gunu }}
+                      </div>
+                      <div *ngIf="student.ders_saati" class="d-flex align-items-center text-muted">
+                        <i class="bi bi-clock me-1"></i> {{ student.ders_saati }}
+                      </div>
+                      <div *ngIf="student.ucret" class="d-flex align-items-center text-muted">
+                        <i class="bi bi-credit-card me-1"></i> {{ student.ucret }}
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="btn-group">
+                      <a [routerLink]="['/yonetici-sayfasi/ogrenci-detay-sayfasi', student.id]"
+                        class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-pencil me-1"></i>
+                        Düzenle
+                      </a>
+                      <button (click)="deleteStudent(student.id)" class="btn btn-outline-danger btn-sm">
+                        <i class="bi bi-trash me-1"></i>
+                        Sil
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr *ngIf="students.length === 0">
+                  <td colspan="11" class="text-center py-4 text-muted">
+                    <div class="d-flex flex-column align-items-center">
+                      <div class="bg-light rounded-circle p-3 mb-2">
+                        <i class="bi bi-mortarboard fs-5 text-muted"></i>
+                      </div>
+                      <p>Henüz öğrenci bulunamadı.</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Mobile Cards -->
+          <div class="d-md-none">
+            <div *ngFor="let student of paginatedStudents" class="card mb-2 shadow-sm border">
+              <div class="card-body p-3">
+                <div class="d-flex">
+                  <img
+                    [src]="student.avatar || 'https://ui-avatars.com/api/?name=' + student.adi_soyadi + '&background=random'"
+                    class="rounded-circle border border-2 border-light shadow-sm" width="50" height="50" alt="Avatar">
+                  <div class="ms-3">
+                    <div class="d-flex align-items-center">
+                      <h6 class="fw-medium mb-0">{{ student.adi_soyadi }}</h6>
+                      <span *ngIf="student.aktif" class="badge bg-success rounded-pill ms-2">Aktif</span>
+                      <span *ngIf="!student.aktif" class="badge bg-danger rounded-pill ms-2">Pasif</span>
+                    </div>
+                    <p class="text-muted small mb-1">{{ student.email }}</p>
+                    <span *ngIf="student.grubu" class="badge bg-primary-subtle text-primary rounded-pill">
+                      {{ student.grubu }}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="row mt-2 g-2">
+                  <div class="col-6">
+                    <div class="bg-light rounded p-2">
+                      <div class="text-muted small fw-medium mb-1">Telefon</div>
+                      <div>{{ student.cep_telefonu || 'Belirtilmemiş' }}</div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="bg-light rounded p-2">
+                      <div class="text-muted small fw-medium mb-1">Okul</div>
+                      <div class="text-truncate">{{ student.okulu || 'Belirtilmemiş' }}</div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="bg-light rounded p-2">
+                      <div class="text-muted small fw-medium mb-1">Sınıf</div>
+                      <div>{{ student.sinifi || 'Belirtilmemiş' }}</div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="bg-light rounded p-2">
+                      <div class="text-muted small fw-medium mb-1">Ders Bilgileri</div>
+                      <div class="small">
+                        <div *ngIf="student.ders_gunu" class="d-flex align-items-center">
+                          <i class="bi bi-calendar me-1"></i> {{ student.ders_gunu }}
+                        </div>
+                        <div *ngIf="student.ders_saati" class="d-flex align-items-center">
+                          <i class="bi bi-clock me-1"></i> {{ student.ders_saati }}
+                        </div>
+                        <div *ngIf="student.ucret" class="d-flex align-items-center">
+                          <i class="bi bi-credit-card me-1"></i> {{ student.ucret }}
+                        </div>
+                        <span *ngIf="!student.ders_gunu && !student.ders_saati && !student.ucret" class="text-muted">
+                          Belirtilmemiş
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-2 border-top pt-2">
+                  <a [routerLink]="['/yonetici-sayfasi/ogrenci-detay-sayfasi', student.id]"
+                    class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-pencil me-1"></i>
+                    Düzenle
+                  </a>
+                  <button (click)="deleteStudent(student.id)" class="btn btn-outline-danger btn-sm">
+                    <i class="bi bi-trash me-1"></i>
+                    Sil
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="students.length === 0" class="card shadow-sm text-center p-4 text-muted">
+              <div class="d-flex flex-column align-items-center">
+                <div class="bg-light rounded-circle p-3 mb-2">
+                  <i class="bi bi-mortarboard fs-5 text-muted"></i>
+                </div>
+                <p>Henüz öğrenci bulunamadı.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <div *ngIf="students.length > 0" class="mt-3">
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="text-muted small">
+                Toplam <span class="fw-medium">{{ totalStudentCount }}</span> öğrenci,
+                <span class="fw-medium">{{ (currentStudentPage - 1) * itemsPerPage + 1 }}-{{
+                  Math.min((currentStudentPage * itemsPerPage), totalStudentCount) }}</span> arası gösteriliyor
+
+                <div class="d-inline-block ms-3">
+                  <span class="text-muted small me-2">Göster:</span>
+                  <select class="form-select form-select-sm d-inline-block w-auto" [(ngModel)]="itemsPerPage"
+                    (change)="setStudentPage(1)">
+                    <option [value]="5">5</option>
+                    <option [value]="10">10</option>
+                    <option [value]="15">15</option>
+                  </select>
+                </div>
+              </div>
+              <nav aria-label="Page navigation">
+                <ul class="pagination pagination-sm mb-0">
+                  <li class="page-item" [class.disabled]="currentStudentPage === 1">
+                    <button class="page-link" (click)="setStudentPage(currentStudentPage - 1)" aria-label="Previous">
+                      <span aria-hidden="true">&laquo;</span>
+                    </button>
+                  </li>
+                  <li class="page-item" *ngFor="let page of getStudentPageArray()"
+                    [class.active]="currentStudentPage === page">
+                    <button class="page-link" (click)="setStudentPage(page)">{{ page }}</button>
+                  </li>
+                  <li class="page-item" [class.disabled]="currentStudentPage === totalStudentPages">
+                    <button class="page-link" (click)="setStudentPage(currentStudentPage + 1)" aria-label="Next">
+                      <span aria-hidden="true">&raquo;</span>
+                    </button>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+        <!-- Öğretmenler Tab -->
+        <div *ngIf="activeTab === 'ogretmen'" class="fade-in">
+          <div
+            class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3">
+            <div>
+              <h5 class="fw-medium text-dark">Öğretmen Listesi</h5>
+              <p class="text-muted small mt-1">Toplam {{ totalTeacherCount }} öğretmen</p>
+            </div>
+            <a class="btn btn-primary d-flex align-items-center shadow-sm"
+              routerLink="/yonetici-sayfasi/ogretmen-detay-sayfasi/new">
+              <i class="bi bi-plus-circle me-1"></i>
+              Yeni Öğretmen
+            </a>
+          </div>
+
+          <!-- Desktop Table - Responsive -->
+          <div class="table-responsive d-none d-md-block rounded border">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="bg-light">
+                <tr>
+                  <th class="text-uppercase small fw-medium">Durum</th>
+                  <th class="text-uppercase small fw-medium">ID</th>
+                  <th class="text-uppercase small fw-medium">Avatar</th>
+                  <th class="text-uppercase small fw-medium">Ad Soyad</th>
+                  <th class="text-uppercase small fw-medium">Email</th>
+                  <th class="text-uppercase small fw-medium">Telefon</th>
+                  <th class="text-uppercase small fw-medium">Branş</th>
+                  <th class="text-uppercase small fw-medium">İşlemler</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let teacher of paginatedTeachers">
+                  <td>
+                    <span *ngIf="teacher.aktif" class="badge bg-success rounded-pill">
+                      Aktif
+                    </span>
+                    <span *ngIf="!teacher.aktif" class="badge bg-danger rounded-pill">
+                      Pasif
+                    </span>
+                  </td>
+                  <td>{{ teacher.id }}</td>
+                  <td>
+                    <img
+                      [src]="teacher.avatar || 'https://ui-avatars.com/api/?name=' + teacher.adi_soyadi + '&background=random'"
+                      class="rounded-circle border border-2 border-light shadow-sm" width="40" height="40" alt="Avatar">
+                  </td>
+                  <td class="fw-medium">{{ teacher.adi_soyadi }}</td>
+                  <td>{{ teacher.email }}</td>
+                  <td>{{ teacher.cep_telefonu || 'Belirtilmemiş' }}</td>
+                  <td>
+                    <span *ngIf="teacher.brans" class="badge bg-info-subtle text-info rounded-pill">
+                      {{ teacher.brans }}
+                    </span>
+                    <span *ngIf="!teacher.brans" class="text-muted small">
+                      Belirtilmemiş
+                    </span>
+                  </td>
+                  <td>
+                    <div class="btn-group">
+                      <a [routerLink]="['/yonetici-sayfasi/ogrenci-detay-sayfasi', teacher.id]"
+                        class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-pencil me-1"></i>
+                        Düzenle
+                      </a>
+                      <button (click)="deleteTeacher(teacher.id)" class="btn btn-outline-danger btn-sm">
+                        <i class="bi bi-trash me-1"></i>
+                        Sil
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr *ngIf="teachers.length === 0">
+                  <td colspan="8" class="text-center py-4 text-muted">
+                    <div class="d-flex flex-column align-items-center">
+                      <div class="bg-light rounded-circle p-3 mb-2">
+                        <i class="bi bi-person fs-5 text-muted"></i>
+                      </div>
+                      <p>Henüz öğretmen bulunamadı.</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Mobile Cards -->
+          <div class="d-md-none">
+            <div *ngFor="let teacher of paginatedTeachers" class="card mb-2 shadow-sm border">
+              <div class="card-body p-3">
+                <div class="d-flex">
+                  <img
+                    [src]="teacher.avatar || 'https://ui-avatars.com/api/?name=' + teacher.adi_soyadi + '&background=random'"
+                    class="rounded-circle border border-2 border-light shadow-sm" width="50" height="50" alt="Avatar">
+                  <div class="ms-3">
+                    <div class="d-flex align-items-center">
+                      <h6 class="fw-medium mb-0">{{ teacher.adi_soyadi }}</h6>
+                      <span *ngIf="teacher.aktif" class="badge bg-success rounded-pill ms-2">Aktif</span>
+                      <span *ngIf="!teacher.aktif" class="badge bg-danger rounded-pill ms-2">Pasif</span>
+                    </div>
+                    <p class="text-muted small mb-1">{{ teacher.email }}</p>
+                    <span *ngIf="teacher.brans" class="badge bg-info-subtle text-info rounded-pill">
+                      {{ teacher.brans }}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="row mt-2 g-2">
+                  <div class="col-6">
+                    <div class="bg-light rounded p-2">
+                      <div class="text-muted small fw-medium mb-1">Telefon</div>
+                      <div>{{ teacher.cep_telefonu || 'Belirtilmemiş' }}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-2 border-top pt-2">
+                  <a [routerLink]="['/yonetici-sayfasi/ogretmen-detay-sayfasi', teacher.id]"
+                    class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-pencil me-1"></i>
+                    Düzenle
+                  </a>
+                  <button (click)="deleteTeacher(teacher.id)" class="btn btn-outline-danger btn-sm">
+                    <i class="bi bi-trash me-1"></i>
+                    Sil
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="teachers.length === 0" class="card shadow-sm text-center p-4 text-muted">
+              <div class="d-flex flex-column align-items-center">
+                <div class="bg-light rounded-circle p-3 mb-2">
+                  <i class="bi bi-person fs-5 text-muted"></i>
+                </div>
+                <p>Henüz öğretmen bulunamadı.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <div *ngIf="teachers.length > 0" class="mt-3">
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="text-muted small">
+                Toplam <span class="fw-medium">{{ totalTeacherCount }}</span> öğretmen,
+                <span class="fw-medium">{{ (currentTeacherPage - 1) * itemsPerPage + 1 }}-{{
+                  Math.min((currentTeacherPage * itemsPerPage), totalTeacherCount) }}</span> arası gösteriliyor
+
+                <div class="d-inline-block ms-3">
+                  <span class="text-muted small me-2">Göster:</span>
+                  <select class="form-select form-select-sm d-inline-block w-auto" [(ngModel)]="itemsPerPage"
+                    (change)="setTeacherPage(1)">
+                    <option [value]="5">5</option>
+                    <option [value]="10">10</option>
+                    <option [value]="15">15</option>
+                  </select>
+                </div>
+              </div>
+              <nav aria-label="Page navigation">
+                <ul class="pagination pagination-sm mb-0">
+                  <li class="page-item" [class.disabled]="currentTeacherPage === 1">
+                    <button class="page-link" (click)="setTeacherPage(currentTeacherPage - 1)" aria-label="Previous">
+                      <span aria-hidden="true">&laquo;</span>
+                    </button>
+                  </li>
+                  <li class="page-item" *ngFor="let page of getTeacherPageArray()"
+                    [class.active]="currentTeacherPage === page">
+                    <button class="page-link" (click)="setTeacherPage(page)">{{ page }}</button>
+                  </li>
+                  <li class="page-item" [class.disabled]="currentTeacherPage === totalTeacherPages">
+                    <button class="page-link" (click)="setTeacherPage(currentTeacherPage + 1)" aria-label="Next">
+                      <span aria-hidden="true">&raquo;</span>
+                    </button>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+        <!-- Yeni Kullanıcılar Tab -->
+        <div *ngIf="activeTab === 'yeni'" class="fade-in">
+          <div
+            class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3">
+            <div>
+              <h5 class="fw-medium text-dark">Onay Bekleyen Kullanıcılar</h5>
+              <p class="text-muted small mt-1">
+                <span class="d-inline-block bg-danger rounded-circle me-1" style="width: 8px; height: 8px;"></span>
+                {{ newUsers.length }} kullanıcı onay bekliyor
+              </p>
+            </div>
+            <button *ngIf="newUsers.length > 0" class="btn btn-success d-flex align-items-center shadow-sm"
+              (click)="approveAllUsers()">
+              <i class="bi bi-check-circle me-1"></i>
+              Tümünü Onayla
+            </button>
+          </div>
+
+          <!-- Desktop Table - Responsive -->
+          <div class="table-responsive d-none d-md-block rounded border">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="bg-light">
+                <tr>
+                  <th class="text-uppercase small fw-medium">ID</th>
+                  <th class="text-uppercase small fw-medium">Avatar</th>
+                  <th class="text-uppercase small fw-medium">Ad Soyad</th>
+                  <th class="text-uppercase small fw-medium">Email</th>
+                  <th class="text-uppercase small fw-medium">Telefon</th>
+                  <th class="text-uppercase small fw-medium">Rütbe</th>
+                  <th class="text-uppercase small fw-medium">Kayıt Tarihi</th>
+                  <th class="text-uppercase small fw-medium">İşlemler</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let user of paginatedNewUsers">
+                  <td>{{ user.id }}</td>
+                  <td>
+                    <img
+                      [src]="user.avatar || 'https://ui-avatars.com/api/?name=' + user.adi_soyadi + '&background=random'"
+                      class="rounded-circle border border-2 border-light shadow-sm" width="40" height="40" alt="Avatar">
+                  </td>
+                  <td class="fw-medium">{{ user.adi_soyadi }}</td>
+                  <td>{{ user.email }}</td>
+                  <td>{{ user.cep_telefonu || 'Belirtilmemiş' }}</td>
+                  <td>
+                    <span *ngIf="user.rutbe === 'ogrenci'" class="badge bg-primary-subtle text-primary rounded-pill">
+                      Öğrenci
+                    </span>
+                    <span *ngIf="user.rutbe === 'ogretmen'" class="badge bg-success-subtle text-success rounded-pill">
+                      Öğretmen
+                    </span>
+                    <span *ngIf="user.rutbe === 'admin'" class="badge bg-danger-subtle text-danger rounded-pill">
+                      Admin
+                    </span>
+                    <span *ngIf="!user.rutbe || user.rutbe === 'belirtilmemis'"
+                      class="badge bg-secondary-subtle text-secondary rounded-pill">
+                      Belirtilmemiş
+                    </span>
+                  </td>
+                  <td>
+                    <span *ngIf="user.created_at" class="text-muted small">
+                      {{ formatDate(user.created_at) }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="btn-group">
+                      <button (click)="approveUser(user.id)" class="btn btn-outline-success btn-sm">
+                        <i class="bi bi-check-circle me-1"></i>
+                        Onayla
+                      </button>
+                      <button (click)="rejectUser(user.id)" class="btn btn-outline-danger btn-sm">
+                        <i class="bi bi-x-circle me-1"></i>
+                        Reddet
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr *ngIf="newUsers.length === 0">
+                  <td colspan="8" class="text-center py-4 text-muted">
+                    <div class="d-flex flex-column align-items-center">
+                      <div class="bg-light rounded-circle p-3 mb-2">
+                        <i class="bi bi-person-plus fs-5 text-muted"></i>
+                      </div>
+                      <p>Onay bekleyen kullanıcı bulunmamaktadır.</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Mobile Cards -->
+          <div class="d-md-none">
+            <div *ngFor="let user of paginatedNewUsers" class="card mb-2 shadow-sm border">
+              <div class="card-body p-3">
+                <div class="d-flex">
+                  <img
+                    [src]="user.avatar || 'https://ui-avatars.com/api/?name=' + user.adi_soyadi + '&background=random'"
+                    class="rounded-circle border border-2 border-light shadow-sm" width="50" height="50" alt="Avatar">
+                  <div class="ms-3">
+                    <h6 class="fw-medium mb-0">{{ user.adi_soyadi }}</h6>
+                    <p class="text-muted small mb-1">{{ user.email }}</p>
+                    <span *ngIf="user.rutbe === 'ogrenci'" class="badge bg-primary-subtle text-primary rounded-pill">
+                      Öğrenci
+                    </span>
+                    <span *ngIf="user.rutbe === 'ogretmen'" class="badge bg-success-subtle text-success rounded-pill">
+                      Öğretmen
+                    </span>
+                    <span *ngIf="user.rutbe === 'admin'" class="badge bg-danger-subtle text-danger rounded-pill">
+                      Admin
+                    </span>
+                    <span *ngIf="!user.rutbe || user.rutbe === 'belirtilmemis'"
+                      class="badge bg-secondary-subtle text-secondary rounded-pill">
+                      Belirtilmemiş
+                    </span>
+                  </div>
+                </div>
+
+                <div class="row mt-2 g-2">
+                  <div class="col-6">
+                    <div class="bg-light rounded p-2">
+                      <div class="text-muted small fw-medium mb-1">Telefon</div>
+                      <div>{{ user.cep_telefonu || 'Belirtilmemiş' }}</div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="bg-light rounded p-2">
+                      <div class="text-muted small fw-medium mb-1">Kayıt Tarihi</div>
+                      <div class="small">{{ user.created_at ? formatDate(user.created_at) : 'Belirtilmemiş' }}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-2 border-top pt-2">
+                  <button (click)="approveUser(user.id)" class="btn btn-outline-success btn-sm">
+                    <i class="bi bi-check-circle me-1"></i>
+                    Onayla
+                  </button>
+                  <button (click)="rejectUser(user.id)" class="btn btn-outline-danger btn-sm">
+                    <i class="bi bi-x-circle me-1"></i>
+                    Reddet
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="newUsers.length === 0" class="card shadow-sm text-center p-4 text-muted">
+              <div class="d-flex flex-column align-items-center">
+                <div class="bg-light rounded-circle p-3 mb-2">
+                  <i class="bi bi-person-plus fs-5 text-muted"></i>
+                </div>
+                <p>Onay bekleyen kullanıcı bulunmamaktadır.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <div *ngIf="newUsers.length > 0" class="mt-3">
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="text-muted small">
+                Toplam <span class="fw-medium">{{ totalNewUserCount }}</span> bekleyen kullanıcı,
+                <span class="fw-medium">{{ (currentNewUserPage - 1) * itemsPerPage + 1 }}-{{
+                  Math.min((currentNewUserPage * itemsPerPage), totalNewUserCount) }}</span> arası gösteriliyor
+
+                <div class="d-inline-block ms-3">
+                  <span class="text-muted small me-2">Göster:</span>
+                  <select class="form-select form-select-sm d-inline-block w-auto" [(ngModel)]="itemsPerPage"
+                    (change)="setNewUserPage(1)">
+                    <option [value]="5">5</option>
+                    <option [value]="10">10</option>
+                    <option [value]="15">15</option>
+                  </select>
+                </div>
+              </div>
+              <nav aria-label="Page navigation">
+                <ul class="pagination pagination-sm mb-0">
+                  <li class="page-item" [class.disabled]="currentNewUserPage === 1">
+                    <button class="page-link" (click)="setNewUserPage(currentNewUserPage - 1)" aria-label="Previous">
+                      <span aria-hidden="true">&laquo;</span>
+                    </button>
+                  </li>
+                  <li class="page-item" *ngFor="let page of getNewUserPageArray()"
+                    [class.active]="currentNewUserPage === page">
+                    <button class="page-link" (click)="setNewUserPage(page)">{{ page }}</button>
+                  </li>
+                  <li class="page-item" [class.disabled]="currentNewUserPage === totalNewUserPages">
+                    <button class="page-link" (click)="setNewUserPage(currentNewUserPage + 1)" aria-label="Next">
+                      <span aria-hidden="true">&raquo;</span>
+                    </button>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-</main>
-  </div>
-</div>
-
-<style>
-.avatar-sm {
-  width: 40px;
-  height: 40px;
-  font-size: 0.875rem;
-}
-
-.card {
-  transition: transform 0.2s ease-in-out;
-}
-
-.card:hover {
-  transform: translateY(-2px);
-}
-</style>
