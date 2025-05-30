@@ -23,7 +23,7 @@ try {
         $updateFields = [];
         $params = [];
 
-        $allowed = ['adi_soyadi', 'cep_telefonu', 'avatar'];
+        $allowed = ['adi_soyadi', 'cep_telefonu', 'avatar', 'brans'];
         if ($user['rutbe'] === 'admin') {
             $allowed = array_merge($allowed, ['rutbe', 'aktif', 'email']);
         }
@@ -100,7 +100,7 @@ try {
 
     // 3. GÜNCELLENEN VERİYİ GETİR
     $stmt = $conn->prepare("
-        SELECT o.id, o.adi_soyadi, o.email, o.cep_telefonu, o.rutbe, o.aktif, o.avatar,
+        SELECT o.id, o.adi_soyadi, o.email, o.cep_telefonu, o.rutbe, o.aktif, o.avatar, o.brans,
                ob.okulu, ob.sinifi, ob.grubu, ob.ders_gunu, ob.ders_saati, ob.ucret,
                ob.veli_adi, ob.veli_cep
         FROM ogrenciler o

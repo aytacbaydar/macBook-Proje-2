@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Güncel kullanıcı verilerini getir
             $stmt = $conn->prepare("
-                SELECT id, adi_soyadi, email, cep_telefonu, rutbe, aktif, avatar, created_at 
+                SELECT id, adi_soyadi, email, cep_telefonu, rutbe, aktif, brans, avatar, created_at 
                 FROM ogrenciler 
                 WHERE id = :id
             ");

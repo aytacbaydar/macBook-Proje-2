@@ -128,7 +128,7 @@ export class OgrenciDetaySayfasiComponent implements OnInit {
               email: this.student.email || '',
               cep_telefonu: this.student.cep_telefonu || '',
               aktif: this.student.aktif === 1 || this.student.aktif === true,
-              rutbe: this.student.rutbe || 'ogrenci', // Rütbe alanı eklendi
+              rutbe: this.student.rutbe || '', // Rütbe alanı eklendi
 
               // Eğitim bilgileri
               okulu: this.student.okulu || '',
