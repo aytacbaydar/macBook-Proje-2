@@ -48,43 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $params[':aktif'] = $data['aktif'] ? 1 : 0;
         }
 
-        // Branş güncelleme (öğretmenler için)
-        if (isset($data['brans'])) {
-            $updateFields[] = "brans = :brans";
-            $params[':brans'] = $data['brans'];
-        }
-
-        // Eğitim bilgileri
-        if (isset($data['okulu'])) {
-            $updateFields[] = "okulu = :okulu";
-            $params[':okulu'] = $data['okulu'];
-        }
-
-        if (isset($data['sinifi'])) {
-            $updateFields[] = "sinifi = :sinifi";
-            $params[':sinifi'] = $data['sinifi'];
-        }
-
-        if (isset($data['grubu'])) {
-            $updateFields[] = "grubu = :grubu";
-            $params[':grubu'] = $data['grubu'];
-        }
-
-        if (isset($data['ders_gunu'])) {
-            $updateFields[] = "ders_gunu = :ders_gunu";
-            $params[':ders_gunu'] = $data['ders_gunu'];
-        }
-
-        if (isset($data['ders_saati'])) {
-            $updateFields[] = "ders_saati = :ders_saati";
-            $params[':ders_saati'] = $data['ders_saati'];
-        }
-
-        if (isset($data['ucret'])) {
-            $updateFields[] = "ucret = :ucret";
-            $params[':ucret'] = $data['ucret'];
-        }
-
         // Güncelleme sorgusu
         if (!empty($updateFields)) {
             $sql = "UPDATE ogrenciler SET " . implode(', ', $updateFields) . " WHERE id = :id";
