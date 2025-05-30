@@ -21,6 +21,7 @@ export class OgrenciKayitSayfasiComponent implements OnInit {
   submitted: boolean = false;
   isSubmitting: boolean = false;
   avatarError: string = '';
+  teachers: any[] = [];
 
   showToast: boolean = false;
   toastTitle: string = '';
@@ -46,6 +47,7 @@ export class OgrenciKayitSayfasiComponent implements OnInit {
       sifre: ['', [Validators.required, Validators.minLength(6)]],
       rutbe: ['yeni'],
       aktiflik_durumu: [false],
+      ogretmeni: ['', [Validators.required]]
     });
     // Listen to password changes for strength calculation
     this.registrationForm.get('sifre')?.valueChanges.subscribe((password) => {
@@ -55,6 +57,8 @@ export class OgrenciKayitSayfasiComponent implements OnInit {
         this.resetPasswordStrength();
       }
     });
+    // Öğretmenleri yükle
+    this.loadTeachers();
   }
   // Getter for easy form field access
   get f() {
@@ -162,6 +166,39 @@ export class OgrenciKayitSayfasiComponent implements OnInit {
     };
   }
 
+  loadTeachers(): void {
+    this.http.get<any>('./server/api/ogretmenler_listesi.php')
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.teachers = response.data;
+          } else {
+            this.toast.error(
+              'Hata',
+              response.message || 'Öğretmenler yüklenemedi',
+              {
+                timeOut: 3000,
+                progressBar: true,
+                closeButton: true,
+              }
+            );
+          }
+        },
+        error: (error) => {
+          console.error('Öğretmenler yüklenirken hata:', error);
+          this.toast.error(
+            'Hata',
+            error.message || 'Öğretmenler yüklenirken hata oluştu',
+            {
+              timeOut: 3000,
+              progressBar: true,
+              closeButton: true,
+            }
+          );
+        }
+      });
+  }
+
   onSubmit(): void {
     this.submitted = true;
 
@@ -185,6 +222,9 @@ export class OgrenciKayitSayfasiComponent implements OnInit {
 
     // Add avatar file
     formData.append('avatar', this.selectedFile);
+
+    formData.append('ogretmeni', this.registrationForm.get('ogretmeni')?.value);
+
 
     // Send to server
     this.http.post<any>('./server/api/ogrenci_kayit.php', formData).subscribe({
