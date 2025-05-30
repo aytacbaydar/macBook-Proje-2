@@ -25,8 +25,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
         $conn = getConnection();
         
-        // Sadece aktif öğretmenleri getir
-        $stmt = $conn->prepare("SELECT id, ogrt_adi_soyadi FROM ogretmenler WHERE aktif = 1 ORDER BY ogrt_adi_soyadi ASC");
+        // Önce tablo yapısını kontrol et
+        $stmt = $conn->prepare("DESCRIBE ogretmenler");
+        $stmt->execute();
+        $columns = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        
+        // aktif sütunu varsa filtrele, yoksa tüm öğretmenleri getir
+        if (in_array('aktif', $columns)) {
+            $stmt = $conn->prepare("SELECT id, ogrt_adi_soyadi FROM ogretmenler WHERE aktif = 1 ORDER BY ogrt_adi_soyadi ASC");
+        } else {
+            $stmt = $conn->prepare("SELECT id, ogrt_adi_soyadi FROM ogretmenler ORDER BY ogrt_adi_soyadi ASC");
+        }
         $stmt->execute();
         $teachers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
