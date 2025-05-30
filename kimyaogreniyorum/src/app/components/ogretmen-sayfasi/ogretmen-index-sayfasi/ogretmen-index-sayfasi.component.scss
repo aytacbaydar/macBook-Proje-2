@@ -53,6 +53,9 @@
 .brand-icon {
   font-size: 24px;
   color: #3b82f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .brand-text {
@@ -113,6 +116,9 @@
   font-size: 18px;
   min-width: 20px;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .nav-text {
