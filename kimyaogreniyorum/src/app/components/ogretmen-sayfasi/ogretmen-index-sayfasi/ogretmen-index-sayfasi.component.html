@@ -1,1 +1,268 @@
-<router-outlet />
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar -->
+    <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+      <div class="position-sticky pt-3">
+        <div class="sidebar-header mb-4">
+          <h5 class="fw-bold text-primary">Öğretmen Paneli</h5>
+        </div>
+        
+        <div class="sidebar-menu">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link active" href="#">
+                <i class="bi bi-house"></i>
+                Ana Sayfa
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/ogretmen-sayfasi/ders-anlatma-tahtasi">
+                <i class="bi bi-easel"></i>
+                Ders Anlatım Tahtası
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" (click)="logout()">
+                <i class="bi bi-box-arrow-right"></i>
+                Çıkış Yap
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main content -->
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Öğretmen Dashboard</h1>
+      </div>
+
+      <!-- Dashboard Stats -->
+      <div class="row mb-4">
+        <div class="col-md-6 col-lg-3 mb-3">
+          <div class="card bg-primary text-white">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <h6 class="card-title mb-1">Toplam Öğrencim</h6>
+                  <h3 class="mb-0">{{ totalCount }}</h3>
+                </div>
+                <i class="bi bi-people fs-1"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3 mb-3">
+          <div class="card bg-success text-white">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <h6 class="card-title mb-1">Aktif Öğrenci</h6>
+                  <h3 class="mb-0">{{ students.filter(s => s.aktif).length }}</h3>
+                </div>
+                <i class="bi bi-person-check fs-1"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3 mb-3">
+          <div class="card bg-warning text-white">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <h6 class="card-title mb-1">Pasif Öğrenci</h6>
+                  <h3 class="mb-0">{{ students.filter(s => !s.aktif).length }}</h3>
+                </div>
+                <i class="bi bi-person-x fs-1"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3 mb-3">
+          <div class="card bg-info text-white">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <h6 class="card-title mb-1">Bu Ay Kayıt</h6>
+                  <h3 class="mb-0">{{ students.filter(s => new Date(s.created_at).getMonth() === new Date().getMonth()).length }}</h3>
+                </div>
+                <i class="bi bi-calendar-plus fs-1"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Student List -->
+      <div class="card shadow-sm">
+        <div class="card-header bg-white">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Öğrencilerim</h5>
+            <span class="badge bg-primary">{{ totalCount }} öğrenci</span>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <!-- Loading State -->
+          <div *ngIf="loading" class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Yükleniyor...</span>
+            </div>
+            <p class="mt-2 text-muted">Öğrenciler yükleniyor...</p>
+          </div>
+
+          <!-- Error State -->
+          <div *ngIf="error && !loading" class="alert alert-danger" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            {{ error }}
+            <button class="btn btn-sm btn-outline-danger ms-2" (click)="loadMyStudents()">
+              Tekrar Dene
+            </button>
+          </div>
+
+          <!-- Students Table -->
+          <div *ngIf="!loading && !error">
+            <!-- Desktop Table -->
+            <div class="table-responsive d-none d-md-block">
+              <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                  <tr>
+                    <th class="text-uppercase small fw-medium">Durum</th>
+                    <th class="text-uppercase small fw-medium">Avatar</th>
+                    <th class="text-uppercase small fw-medium">Ad Soyad</th>
+                    <th class="text-uppercase small fw-medium">Email</th>
+                    <th class="text-uppercase small fw-medium">Telefon</th>
+                    <th class="text-uppercase small fw-medium">Okul</th>
+                    <th class="text-uppercase small fw-medium">Sınıf</th>
+                    <th class="text-uppercase small fw-medium">Grup</th>
+                    <th class="text-uppercase small fw-medium">Ders Bilgileri</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let student of paginatedStudents">
+                    <td>
+                      <span *ngIf="student.aktif" class="badge bg-success rounded-pill">Aktif</span>
+                      <span *ngIf="!student.aktif" class="badge bg-danger rounded-pill">Pasif</span>
+                    </td>
+                    <td>
+                      <img [src]="student.avatar || 'https://ui-avatars.com/api/?name=' + student.adi_soyadi + '&background=random'" 
+                           class="rounded-circle border border-2 border-light shadow-sm" width="40" height="40" alt="Avatar">
+                    </td>
+                    <td class="fw-medium">{{ student.adi_soyadi }}</td>
+                    <td>{{ student.email }}</td>
+                    <td>{{ student.cep_telefonu || 'Belirtilmemiş' }}</td>
+                    <td>{{ student.okulu || 'Belirtilmemiş' }}</td>
+                    <td>{{ student.sinifi || 'Belirtilmemiş' }}</td>
+                    <td>{{ student.grubu || 'Belirtilmemiş' }}</td>
+                    <td>
+                      <div class="small">
+                        <div *ngIf="student.ders_gunu"><strong>Gün:</strong> {{ student.ders_gunu }}</div>
+                        <div *ngIf="student.ders_saati"><strong>Saat:</strong> {{ student.ders_saati }}</div>
+                        <div *ngIf="student.ucret"><strong>Ücret:</strong> {{ student.ucret }}₺</div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr *ngIf="students.length === 0">
+                    <td colspan="9" class="text-center py-4 text-muted">
+                      <div class="d-flex flex-column align-items-center">
+                        <div class="bg-light rounded-circle p-3 mb-2">
+                          <i class="bi bi-mortarboard fs-5 text-muted"></i>
+                        </div>
+                        <p>Henüz size atanmış öğrenci bulunmuyor.</p>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Mobile Cards -->
+            <div class="d-md-none">
+              <div *ngFor="let student of paginatedStudents" class="card mb-2 shadow-sm border">
+                <div class="card-body p-3">
+                  <div class="d-flex">
+                    <img [src]="student.avatar || 'https://ui-avatars.com/api/?name=' + student.adi_soyadi + '&background=random'" 
+                         class="rounded-circle border border-2 border-light shadow-sm" width="50" height="50" alt="Avatar">
+                    <div class="ms-3 flex-grow-1">
+                      <div class="d-flex align-items-center">
+                        <h6 class="fw-medium mb-0">{{ student.adi_soyadi }}</h6>
+                        <span *ngIf="student.aktif" class="badge bg-success rounded-pill ms-2">Aktif</span>
+                        <span *ngIf="!student.aktif" class="badge bg-danger rounded-pill ms-2">Pasif</span>
+                      </div>
+                      <p class="text-muted small mb-1">{{ student.email }}</p>
+                      <p class="text-muted small mb-0">{{ student.okulu }} - {{ student.sinifi }}</p>
+                    </div>
+                  </div>
+                  
+                  <div class="row mt-2 g-2">
+                    <div class="col-6">
+                      <div class="bg-light rounded p-2">
+                        <div class="text-muted small fw-medium mb-1">Telefon</div>
+                        <div>{{ student.cep_telefonu || 'Belirtilmemiş' }}</div>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="bg-light rounded p-2">
+                        <div class="text-muted small fw-medium mb-1">Grup</div>
+                        <div>{{ student.grubu || 'Belirtilmemiş' }}</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div *ngIf="student.ders_gunu || student.ders_saati || student.ucret" class="mt-2 p-2 bg-info-subtle rounded">
+                    <div class="small">
+                      <div *ngIf="student.ders_gunu"><strong>Ders Günü:</strong> {{ student.ders_gunu }}</div>
+                      <div *ngIf="student.ders_saati"><strong>Ders Saati:</strong> {{ student.ders_saati }}</div>
+                      <div *ngIf="student.ucret"><strong>Ücret:</strong> {{ student.ucret }}₺</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="students.length === 0" class="card shadow-sm text-center p-4 text-muted">
+                <div class="d-flex flex-column align-items-center">
+                  <div class="bg-light rounded-circle p-3 mb-2">
+                    <i class="bi bi-mortarboard fs-5 text-muted"></i>
+                  </div>
+                  <p>Henüz size atanmış öğrenci bulunmuyor.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pagination -->
+            <div *ngIf="students.length > 0 && totalPages > 1" class="mt-3">
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="text-muted small">
+                  Toplam <span class="fw-medium">{{ totalCount }}</span> öğrenci, 
+                  <span class="fw-medium">{{ (currentPage - 1) * itemsPerPage + 1 }}-{{ Math.min((currentPage * itemsPerPage), totalCount) }}</span> arası gösteriliyor
+                </div>
+                <nav aria-label="Page navigation">
+                  <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item" [class.disabled]="currentPage === 1">
+                      <button class="page-link" (click)="setPage(currentPage - 1)" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                      </button>
+                    </li>
+                    <li class="page-item" *ngFor="let page of getPageArray()" [class.active]="currentPage === page">
+                      <button class="page-link" (click)="setPage(page)">{{ page }}</button>
+                    </li>
+                    <li class="page-item" [class.disabled]="currentPage === totalPages">
+                      <button class="page-link" (click)="setPage(currentPage + 1)" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                      </button>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
