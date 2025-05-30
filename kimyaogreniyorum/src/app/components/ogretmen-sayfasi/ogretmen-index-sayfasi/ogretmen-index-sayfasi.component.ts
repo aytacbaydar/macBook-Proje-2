@@ -31,14 +31,13 @@ interface User {
 })
 export class OgretmenIndexSayfasiComponent  implements OnInit {
   students: User[] = [];
-  teachers: User[] = [];
   newUsers: User[] = [];
   isLoading = true;
   error: string | null = null;
   searchQuery = '';
 
   // Aktif sekme
-  activeTab: 'ogrenci' | 'ogretmen' | 'yeni' = 'ogrenci';
+  activeTab: 'ogrenci' | 'yeni' = 'ogrenci';
 
   // Pagination
   currentStudentPage = 1;
@@ -56,11 +55,10 @@ export class OgretmenIndexSayfasiComponent  implements OnInit {
   }
 
   // Tab değiştirme
-  setActiveTab(tab: 'ogrenci' | 'ogretmen' | 'yeni'): void {
+  setActiveTab(tab: 'ogrenci' | 'yeni'): void {
     this.activeTab = tab;
     // Tab değiştiğinde sayfayı sıfırla
     if (tab === 'ogrenci') this.currentStudentPage = 1;
-    if (tab === 'ogretmen') this.currentTeacherPage = 1;
     if (tab === 'yeni') this.currentNewUserPage = 1;
   }
 
@@ -90,11 +88,7 @@ export class OgretmenIndexSayfasiComponent  implements OnInit {
             // Kullanıcıları rütbelerine göre filtrele
             // Önemli Değişiklik: aktif durumuna bakmaksızın öğrencileri ve öğretmenleri listeliyoruz
             this.students = users.filter(
-              (user: User) => user.rutbe === 'ogrenci'
-            );
-
-            this.teachers = users.filter(
-              (user: User) => user.rutbe === 'ogretmen'
+              (user: User) => user.rutbe === 'ogrenci' && user.ogretmeni === user.ogretmeni
             );
 
             // Sadece yeni (daha önce onaylanmamış) kullanıcıları filtrele
@@ -104,7 +98,6 @@ export class OgretmenIndexSayfasiComponent  implements OnInit {
 
             console.log('Yüklenen kullanıcılar:', {
               students: this.students.length,
-              teachers: this.teachers.length,
               newUsers: this.newUsers.length,
             });
           } else {
@@ -185,38 +178,6 @@ export class OgretmenIndexSayfasiComponent  implements OnInit {
     );
   }
 
-  // Öğretmen Pagination metotları
-  get filteredTeachers(): User[] {
-    return this.filterItems(this.teachers, this.searchQuery);
-  }
-
-  get totalTeacherCount(): number {
-    return this.filteredTeachers.length;
-  }
-
-  get totalTeacherPages(): number {
-    return Math.ceil(this.totalTeacherCount / this.itemsPerPage);
-  }
-
-  get paginatedTeachers(): User[] {
-    const startIndex = (this.currentTeacherPage - 1) * this.itemsPerPage;
-    return this.filteredTeachers.slice(
-      startIndex,
-      startIndex + this.itemsPerPage
-    );
-  }
-
-  setTeacherPage(page: number): void {
-    if (page < 1 || page > this.totalTeacherPages) return;
-    this.currentTeacherPage = page;
-  }
-
-  getTeacherPageArray(): number[] {
-    return this.generatePageArray(
-      this.currentTeacherPage,
-      this.totalTeacherPages
-    );
-  }
 
   // Yeni Kullanıcı Pagination metotları
   get filteredNewUsers(): User[] {
@@ -300,52 +261,6 @@ export class OgretmenIndexSayfasiComponent  implements OnInit {
         next: (response) => {
           if (response.success) {
             alert('Öğrenci başarıyla silindi!');
-            // Listeyi yenile
-            this.loadUsers();
-          } else {
-            alert('Silme işlemi başarısız: ' + response.error);
-          }
-        },
-        error: (error) => {
-          console.error('API hatası:', error);
-          alert(
-            'Silme işlemi sırasında bir hata oluştu: ' +
-              (error.message || 'Bilinmeyen bir hata')
-          );
-        },
-      });
-  }
-
-  // Öğretmen silme
-  deleteTeacher(id: number): void {
-    if (!confirm('Bu öğretmeni silmek istediğinize emin misiniz?')) {
-      return;
-    }
-
-    // LocalStorage veya sessionStorage'dan token'ı al
-    let token = '';
-    const userStr =
-      localStorage.getItem('user') || sessionStorage.getItem('user');
-    if (userStr) {
-      const user = JSON.parse(userStr);
-      token = user.token || '';
-    }
-
-    this.http
-      .post<any>(
-        './server/api/ogrenci_sil.php',
-        { id },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      )
-      .subscribe({
-        next: (response) => {
-          if (response.success) {
-            alert('Öğretmen başarıyla silindi!');
             // Listeyi yenile
             this.loadUsers();
           } else {
@@ -528,14 +443,6 @@ export class OgretmenIndexSayfasiComponent  implements OnInit {
 
   getInactiveStudents(): number {
     return this.students.filter((student) => !student.aktif).length;
-  }
-
-  getActiveTeachers(): number {
-    return this.teachers.filter((teacher) => teacher.aktif).length;
-  }
-
-  getInactiveTeachers(): number {
-    return this.teachers.filter((teacher) => !teacher.aktif).length;
   }
 
   getStudentsWaiting(): number {
