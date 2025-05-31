@@ -1,14 +1,3 @@
-import { Component } from '@angular/core';
-
-@Component({
-  selector: 'app-ogretmen-devamsizlik-sayfasi',
-  standalone: false,
-  templateUrl: './ogretmen-devamsizlik-sayfasi.component.html',
-  styleUrl: './ogretmen-devamsizlik-sayfasi.component.scss'
-})
-export class OgretmenDevamsizlikSayfasiComponent {
-
-}
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';

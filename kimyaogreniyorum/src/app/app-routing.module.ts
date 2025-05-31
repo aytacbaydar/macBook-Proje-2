@@ -1,7 +1,4 @@
-The code adds a new route for the attendance page under the teacher's section.
-```
 
-```replit_final_file
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { OgrenciGirisSayfasiComponent } from './components/index-sayfasi/giris-kayit-islemeleri/ogrenci-giris-sayfasi/ogrenci-giris-sayfasi.component';
