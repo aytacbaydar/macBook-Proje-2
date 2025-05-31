@@ -269,6 +269,56 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     return new Date(date).toLocaleDateString('tr-TR');
   }
 
+  // Hızlı tarih filtreleri
+  setDateRangeLastWeek() {
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 7);
+    
+    this.startDate = startDate.toISOString().split('T')[0];
+    this.endDate = endDate.toISOString().split('T')[0];
+    this.loadHistoricalAttendanceByDateRange();
+  }
+
+  setDateRangeLastMonth() {
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 30);
+    
+    this.startDate = startDate.toISOString().split('T')[0];
+    this.endDate = endDate.toISOString().split('T')[0];
+    this.loadHistoricalAttendanceByDateRange();
+  }
+
+  setDateRangeThisMonth() {
+    const now = new Date();
+    const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+    const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    
+    this.startDate = startDate.toISOString().split('T')[0];
+    this.endDate = endDate.toISOString().split('T')[0];
+    this.loadHistoricalAttendanceByDateRange();
+  }
+
+  // Aylık özet istatistikleri
+  getTotalPresentInPeriod(): number {
+    return this.groupedAttendanceByDate.reduce((total, day) => total + day.katilan_sayisi, 0);
+  }
+
+  getTotalAbsentInPeriod(): number {
+    return this.groupedAttendanceByDate.reduce((total, day) => total + day.katilmayan_sayisi, 0);
+  }
+
+  getAverageAttendanceRate(): number {
+    if (this.groupedAttendanceByDate.length === 0) return 0;
+    
+    const totalPresent = this.getTotalPresentInPeriod();
+    const totalAbsent = this.getTotalAbsentInPeriod();
+    const total = totalPresent + totalAbsent;
+    
+    return total > 0 ? Math.round((totalPresent / total) * 100) : 0;
+  }
+
   private initializeAttendanceRecords() {
     this.attendanceRecords.clear();
     this.groupStudents.forEach(student => {

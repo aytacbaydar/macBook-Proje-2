@@ -269,12 +269,65 @@
                     <label>Bitiş Tarihi:</label>
                     <input type="date" class="form-control" [(ngModel)]="endDate">
                 </div>
+                <div class="quick-filters">
+                    <button class="btn btn-outline-primary btn-sm" (click)="setDateRangeLastWeek()">
+                        Son 1 Hafta
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm" (click)="setDateRangeLastMonth()">
+                        Son 1 Ay
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm" (click)="setDateRangeThisMonth()">
+                        Bu Ay
+                    </button>
+                </div>
                 <button class="btn btn-secondary" (click)="loadHistoricalAttendanceByDateRange()" 
                         [disabled]="!startDate || !endDate">
                     <i class="bi bi-search me-1"></i>
                     Filtrele
                 </button>
             </div>
+
+            <!-- Aylık Özet -->
+            <div class="monthly-summary" *ngIf="groupedAttendanceByDate.length > 0">
+                <div class="summary-cards">
+                    <div class="summary-card">
+                        <div class="summary-icon bg-primary">
+                            <i class="bi bi-calendar-event"></i>
+                        </div>
+                        <div class="summary-content">
+                            <div class="summary-number">{{ groupedAttendanceByDate.length }}</div>
+                            <div class="summary-label">Toplam Ders</div>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-icon bg-success">
+                            <i class="bi bi-person-check"></i>
+                        </div>
+                        <div class="summary-content">
+                            <div class="summary-number">{{ getTotalPresentInPeriod() }}</div>
+                            <div class="summary-label">Toplam Katılan</div>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-icon bg-danger">
+                            <i class="bi bi-person-x"></i>
+                        </div>
+                        <div class="summary-content">
+                            <div class="summary-number">{{ getTotalAbsentInPeriod() }}</div>
+                            <div class="summary-label">Toplam Katılmayan</div>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-icon bg-info">
+                            <i class="bi bi-percent"></i>
+                        </div>
+                        <div class="summary-content">
+                            <div class="summary-number">{{ getAverageAttendanceRate() }}%</div>
+                            <div class="summary-label">Ortalama Katılım</div>
+                        </div>
+                    </div>
+                </div>
+            </div></div>
         </div>
 
         <div class="historical-data" *ngIf="groupedAttendanceByDate.length > 0">
