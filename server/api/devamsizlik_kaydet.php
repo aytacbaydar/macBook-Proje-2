@@ -53,15 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $conn = getConnection();
 
-        // Mevcut tabloyu kaldır (foreign key constraint hatası varsa)
-        try {
-            $conn->exec("DROP TABLE IF EXISTS devamsizlik_kayitlari");
-            error_log("Mevcut devamsizlik_kayitlari tablosu kaldırıldı");
-        } catch (PDOException $e) {
-            error_log("Tablo kaldırma hatası (önemli değil): " . $e->getMessage());
-        }
-
-        // Devamsızlık tablosunu oluştur
+        // Devamsızlık tablosunu oluştur (sadece yoksa)
         $createTableSql = "
             CREATE TABLE IF NOT EXISTS devamsizlik_kayitlari (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -74,9 +66,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 yontem ENUM('manual', 'qr') DEFAULT 'manual',
                 olusturma_zamani TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 guncelleme_zamani TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                FOREIGN KEY (ogrenci_id) REFERENCES ogrenciler(id) ON DELETE CASCADE,
-                FOREIGN KEY (ogretmen_id) REFERENCES ogrenciler(id) ON DELETE CASCADE,
-                UNIQUE KEY unique_attendance (ogrenci_id, tarih, grup)
+                INDEX idx_ogrenci_id (ogrenci_id),
+                INDEX idx_ogretmen_id (ogretmen_id),
+                INDEX idx_grup_tarih (grup, tarih),
+                UNIQUE KEY unique_attendance (ogrenci_id, tarih, grup, ogretmen_id)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         ";
         $conn->exec($createTableSql);
@@ -123,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $yontem = isset($record['yontem']) ? $record['yontem'] : 'manual';
 
-                // Insert veya Update yap
+                // Sadece aynı öğretmen kendi kayıtlarını güncelleyebilir
                 $stmt = $conn->prepare("
                     INSERT INTO devamsizlik_kayitlari 
                     (ogrenci_id, ogretmen_id, grup, tarih, durum, zaman, yontem)
