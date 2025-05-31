@@ -41,6 +41,11 @@ try {
     // Token oluştur
     $token = md5($user['id'] . $user['email'] . $user['sifre']);
     
+    // Debug için log ekle
+    error_log("Login - User ID: " . $user['id'] . ", Email: " . $user['email']);
+    error_log("Login - Generated Token: " . $token);
+    error_log("Login - Aktif durumu: " . $user['aktif']);
+    
     // Kullanıcı bilgilerini döndür (şifre hariç)
     unset($user['sifre']);
     $user['token'] = $token;

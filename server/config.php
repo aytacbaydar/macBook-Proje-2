@@ -53,15 +53,39 @@ function authorize() {
     // Token doğrulama
     try {
         $conn = getConnection();
-        $stmt = $conn->prepare("SELECT id, adi_soyadi, email, rutbe FROM ogrenciler WHERE MD5(CONCAT(id, email, sifre)) = :token AND aktif = TRUE");
+        
+        // Debug için önce fusun@gmail.com kullanıcısını kontrol et
+        $debugStmt = $conn->prepare("SELECT id, adi_soyadi, email, rutbe, aktif, sifre FROM ogrenciler WHERE email = 'fusun@gmail.com'");
+        $debugStmt->execute();
+        $debugUser = $debugStmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($debugUser) {
+            $expectedToken = md5($debugUser['id'] . $debugUser['email'] . $debugUser['sifre']);
+            error_log("Debug - fusun@gmail.com için beklenen token: " . $expectedToken);
+            error_log("Debug - Gelen token: " . $token);
+            error_log("Debug - Aktif durumu: " . $debugUser['aktif']);
+            error_log("Debug - Rütbe: " . $debugUser['rutbe']);
+        }
+        
+        // Orijinal token doğrulama
+        $stmt = $conn->prepare("SELECT id, adi_soyadi, email, rutbe FROM ogrenciler WHERE MD5(CONCAT(id, email, sifre)) = :token AND aktif = 1");
         $stmt->bindParam(':token', $token);
         $stmt->execute();
         
         if ($stmt->rowCount() > 0) {
             return $stmt->fetch(PDO::FETCH_ASSOC);
         } else {
+            // Aktif durumu farklı değerler de deneyebilir
+            $stmt2 = $conn->prepare("SELECT id, adi_soyadi, email, rutbe FROM ogrenciler WHERE MD5(CONCAT(id, email, sifre)) = :token AND (aktif = 1 OR aktif = '1' OR aktif = TRUE OR aktif = 'true')");
+            $stmt2->bindParam(':token', $token);
+            $stmt2->execute();
+            
+            if ($stmt2->rowCount() > 0) {
+                return $stmt2->fetch(PDO::FETCH_ASSOC);
+            }
+            
             http_response_code(401);
-            echo json_encode(['error' => 'Geçersiz token veya hesap aktif değil']);
+            echo json_encode(['error' => 'Geçersiz token veya hesap aktif değil', 'debug_token' => $token]);
             exit();
         }
     } catch (PDOException $e) {
