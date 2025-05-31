@@ -127,7 +127,7 @@
                             {{ getAttendanceStatusText(student.id) }}
                         </span>
                     </div>
-                    
+
                     <div class="attendance-buttons">
                         <button class="btn btn-sm btn-success" 
                                 [class.active]="getAttendanceStatus(student.id) === 'present'"
@@ -160,7 +160,7 @@
             <i class="bi bi-collection"></i>
         </div>
         <h3>Grup Seçin</h3>
-        <p>Devamsızlık takibi için önce bir grup seçiniz.</p>
+        <p>Devamsızlık takibi için yukarıdan bir grup seçin</p>
     </div>
 
     <div *ngIf="selectedGroup && groupStudents.length === 0" class="empty-state">

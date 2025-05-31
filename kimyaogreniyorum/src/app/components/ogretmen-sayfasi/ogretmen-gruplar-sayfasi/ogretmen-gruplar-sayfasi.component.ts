@@ -195,4 +195,11 @@ export class OgretmenGruplarSayfasiComponent implements OnInit {
     const encodedGroupName = encodeURIComponent(groupName);
     this.router.navigate(['/yonetici-sayfasi/grup-detay', encodedGroupName]);
   }
+
+  goToAttendance(groupName: string): void {
+    const encodedGroupName = encodeURIComponent(groupName);
+    this.router.navigate(['/ogretmen-sayfasi/devamsizlik'], { 
+      queryParams: { grup: encodedGroupName }
+    });
+  }
 }

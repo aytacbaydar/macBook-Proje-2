@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
 interface Student {
@@ -70,10 +71,18 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
 
   constructor(
     private http: HttpClient,
+    private route: ActivatedRoute,
     private toastr: ToastrService
   ) {}
 
   ngOnInit() {
+    // URL parametresinden grup bilgisini al
+    this.route.queryParams.subscribe(params => {
+      if (params['grup']) {
+        this.selectedGroup = decodeURIComponent(params['grup']);
+      }
+    });
+    
     this.loadGroups();
   }
 
@@ -82,7 +91,14 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
   }
 
   private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('auth_token');
+    // Token'ı al - gruplar sayfasındaki gibi
+    let token = '';
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      token = user.token || '';
+    }
+
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
@@ -101,16 +117,17 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
           const loggedInUser = this.getLoggedInUser();
           const loggedInTeacherName = loggedInUser?.adi_soyadi || '';
 
-          // Öğretmenin öğrencilerini filtrele
-          const teacherStudents = (response.data || []).filter((student: any) => 
-            student.rutbe === 'ogrenci' && student.ogretmeni === loggedInTeacherName
+          // Sadece öğrencileri filtrele (admin ve öğretmenleri hariç tut)
+          const actualStudents = response.data.filter(
+            (student: any) =>
+              student.rutbe === 'ogrenci' && student.ogretmeni === loggedInTeacherName
           );
 
           // Öğrencileri gruplara ayır
           const groupMap = new Map<string, Student[]>();
 
-          teacherStudents.forEach((student: Student) => {
-            const groupName = student.grubu || 'Genel';
+          actualStudents.forEach((student: Student) => {
+            const groupName = student.grubu || 'Grup Atanmamış';
             if (!groupMap.has(groupName)) {
               groupMap.set(groupName, []);
             }
@@ -123,6 +140,11 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
             students,
             color: this.getGroupColor(name)
           }));
+
+          // Eğer URL'den grup parametresi geldiyse otomatik seç
+          if (this.selectedGroup) {
+            this.onGroupChange();
+          }
         }
         this.isLoading = false;
       },
