@@ -77,9 +77,9 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // URL parametresinden grup bilgisini al
-    this.route.queryParams.subscribe(params => {
-      if (params['grup']) {
-        this.selectedGroup = decodeURIComponent(params['grup']);
+    this.route.params.subscribe(params => {
+      if (params['grupAdi']) {
+        this.selectedGroup = decodeURIComponent(params['grupAdi']);
       }
     });
     

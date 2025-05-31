@@ -75,7 +75,7 @@ const routes: Routes = [
         component: OgretmenOgrenciListesiSayfasiComponent,
       },
       {
-        path: 'ogretmen-devamsizlik-sayfasi',
+        path: 'devamsizlik/:grupAdi',
         component: OgretmenDevamsizlikSayfasiComponent,
       },
       {
