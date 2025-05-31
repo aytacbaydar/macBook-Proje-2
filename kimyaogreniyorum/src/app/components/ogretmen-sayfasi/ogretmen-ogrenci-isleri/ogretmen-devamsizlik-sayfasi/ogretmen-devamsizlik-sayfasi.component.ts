@@ -102,15 +102,22 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
 
   loadGroups() {
     this.isLoading = true;
-    
-    this.http.get<any>(`${this.apiBaseUrl}/ogretmen_ogrencileri`, {
+
+    this.http.get<any>('./server/api/ogrenciler_listesi.php', {
       headers: this.getAuthHeaders()
     }).subscribe({
       next: (response) => {
         if (response.success && response.data) {
+          // Giriş yapan öğretmenin öğrencilerini filtrele
+          const loggedInUser = this.getLoggedInUser();
+          const loggedInTeacherName = loggedInUser?.adi_soyadi || '';
+
+          this.groups = (response.data || []).filter((student: any) => 
+            student.rutbe === 'ogrenci' && student.ogretmeni === loggedInTeacherName
+          );
           // Group students by 'grubu' field
           const groupMap = new Map<string, Student[]>();
-          
+
           response.data.forEach((student: Student) => {
             const groupName = student.grubu || 'Genel';
             if (!groupMap.has(groupName)) {
@@ -134,6 +141,14 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       }
     });
+  }
+
+  private getLoggedInUser(): any {
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (userStr) {
+      return JSON.parse(userStr);
+    }
+    return null;
   }
 
   onGroupChange() {
@@ -165,8 +180,8 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     if (!this.selectedGroup || !this.selectedDate) return;
 
     this.isLoading = true;
-    
-    this.http.get<any>(`${this.apiBaseUrl}/devamsizlik_kayitlari`, {
+
+    this.http.get<any>(`./server/api/devamsizlik_kayitlari.php?group=${encodeURIComponent(this.selectedGroup)}&tarih=${this.selectedDate}`, {
       headers: this.getAuthHeaders(),
       params: {
         grup: this.selectedGroup,
@@ -209,9 +224,9 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       this.mediaStream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'environment' }
       });
-      
+
       this.isQRScannerActive = true;
-      
+
       // Wait for view to update
       setTimeout(() => {
         if (this.videoElement) {
@@ -220,7 +235,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
           this.startQRCodeDetection();
         }
       }, 100);
-      
+
     } catch (error) {
       console.error('Kamera erişim hatası:', error);
       this.toastr.error('Kameraya erişim sağlanamadı', 'Hata');
@@ -232,12 +247,12 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       this.mediaStream.getTracks().forEach(track => track.stop());
       this.mediaStream = null;
     }
-    
+
     if (this.qrScanInterval) {
       clearInterval(this.qrScanInterval);
       this.qrScanInterval = null;
     }
-    
+
     this.isQRScannerActive = false;
   }
 
@@ -265,7 +280,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     // Simulate QR code detection
     // In real implementation, use jsQR library here
     const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-    
+
     // Mock QR code data - in real app this would come from jsQR
     const mockQRData = this.generateMockQRData();
     if (mockQRData) {
@@ -289,7 +304,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     if (match) {
       const studentId = parseInt(match[1]);
       const student = this.groupStudents.find(s => s.id === studentId);
-      
+
       if (student) {
         this.markAttendance(studentId, 'present', 'qr');
         this.toastr.success(`${student.adi_soyadi} QR kod ile katıldı olarak işaretlendi`, 'Başarılı');
@@ -346,7 +361,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     if (!this.selectedGroup || !this.hasChanges) return;
 
     this.isLoading = true;
-    
+
     const attendanceData = Array.from(this.attendanceRecords.values())
       .filter(record => record.status !== 'pending')
       .map(record => ({
@@ -358,7 +373,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
         yontem: record.method
       }));
 
-    this.http.post<any>(`${this.apiBaseUrl}/devamsizlik_kaydet`, {
+    this.http.post<any>("./server/api/devamsizlik_kaydet.php", {
       records: attendanceData
     }, {
       headers: this.getAuthHeaders()
