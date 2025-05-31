@@ -47,10 +47,15 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
   groupStudents: Student[] = [];
   attendanceRecords: Map<number, AttendanceRecord> = new Map();
   pastWeekAttendance: any[] = [];
+  historicalAttendance: any[] = [];
+  groupedAttendanceByDate: any[] = [];
 
   // UI state
   selectedGroup: string = '';
   selectedDate: string = new Date().toISOString().split('T')[0];
+  viewHistoricalData: boolean = false;
+  startDate: string = '';
+  endDate: string = '';
   isQRScannerActive: boolean = false;
   isLoading: boolean = false;
   hasChanges: boolean = false;
@@ -172,12 +177,96 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       this.initializeAttendanceRecords();
       this.loadAttendanceData();
       this.loadPastWeekAttendance();
+      this.loadHistoricalAttendance();
     } else {
       this.groupStudents = [];
       this.attendanceRecords.clear();
       this.pastWeekAttendance = [];
+      this.historicalAttendance = [];
+      this.groupedAttendanceByDate = [];
     }
     this.hasChanges = false;
+  }
+
+  loadHistoricalAttendance() {
+    if (!this.selectedGroup) return;
+
+    // Son 30 gün için tarih aralığı belirle
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 30);
+
+    const formattedStartDate = startDate.toISOString().split('T')[0];
+    const formattedEndDate = endDate.toISOString().split('T')[0];
+
+    this.http.get<any>(`./server/api/devamsizlik_kayitlari.php`, {
+      headers: this.getAuthHeaders(),
+      params: {
+        grup: this.selectedGroup,
+        baslangic_tarih: formattedStartDate,
+        bitis_tarih: formattedEndDate
+      }
+    }).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.historicalAttendance = response.data.kayitlar || [];
+          this.groupedAttendanceByDate = response.data.tarihlere_gore || [];
+        } else {
+          this.historicalAttendance = [];
+          this.groupedAttendanceByDate = [];
+        }
+      },
+      error: (error) => {
+        console.error('Geçmiş devamsızlık verileri yüklenirken hata:', error);
+        this.historicalAttendance = [];
+        this.groupedAttendanceByDate = [];
+      }
+    });
+  }
+
+  loadHistoricalAttendanceByDateRange() {
+    if (!this.selectedGroup || !this.startDate || !this.endDate) return;
+
+    this.http.get<any>(`./server/api/devamsizlik_kayitlari.php`, {
+      headers: this.getAuthHeaders(),
+      params: {
+        grup: this.selectedGroup,
+        baslangic_tarih: this.startDate,
+        bitis_tarih: this.endDate
+      }
+    }).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.historicalAttendance = response.data.kayitlar || [];
+          this.groupedAttendanceByDate = response.data.tarihlere_gore || [];
+        } else {
+          this.historicalAttendance = [];
+          this.groupedAttendanceByDate = [];
+        }
+      },
+      error: (error) => {
+        console.error('Tarih aralığına göre devamsızlık verileri yüklenirken hata:', error);
+        this.historicalAttendance = [];
+        this.groupedAttendanceByDate = [];
+      }
+    });
+  }
+
+  toggleHistoricalView() {
+    this.viewHistoricalData = !this.viewHistoricalData;
+    if (this.viewHistoricalData) {
+      this.loadHistoricalAttendance();
+    }
+  }
+
+  getDayName(date: string): string {
+    const days = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
+    const day = new Date(date).getDay();
+    return days[day];
+  }
+
+  formatDate(date: string): string {
+    return new Date(date).toLocaleDateString('tr-TR');
   }
 
   private initializeAttendanceRecords() {

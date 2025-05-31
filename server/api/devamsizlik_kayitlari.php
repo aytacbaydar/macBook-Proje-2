@@ -35,7 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         
         // Parametreleri al
         $grup = $_GET['group'] ?? $_GET['grup'] ?? '';
-        $tarih = $_GET['tarih'] ?? date('Y-m-d');
+        $tarih = $_GET['tarih'] ?? '';
+        $baslangic_tarih = $_GET['baslangic_tarih'] ?? '';
+        $bitis_tarih = $_GET['bitis_tarih'] ?? '';
         
         if (empty($grup)) {
             errorResponse('Grup parametresi gerekli', 400);
@@ -61,24 +63,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         ";
         $conn->exec($createTableSql);
         
-        // Devamsızlık kayıtlarını getir
-        $stmt = $conn->prepare("
-            SELECT dk.*, o.adi_soyadi, o.email
+        // SQL sorgusu oluştur
+        $sql = "
+            SELECT dk.*, o.adi_soyadi, o.email, o.avatar
             FROM devamsizlik_kayitlari dk
             LEFT JOIN ogrenciler o ON dk.ogrenci_id = o.id
             WHERE dk.ogretmen_id = :ogretmen_id 
-            AND dk.grup = :grup 
-            AND dk.tarih = :tarih
-            ORDER BY o.adi_soyadi ASC
-        ");
-        $stmt->bindParam(':ogretmen_id', $user['id']);
-        $stmt->bindParam(':grup', $grup);
-        $stmt->bindParam(':tarih', $tarih);
+            AND dk.grup = :grup
+        ";
+        
+        $params = [
+            ':ogretmen_id' => $user['id'],
+            ':grup' => $grup
+        ];
+        
+        // Tarih filtresi ekle
+        if (!empty($tarih)) {
+            $sql .= " AND dk.tarih = :tarih";
+            $params[':tarih'] = $tarih;
+        } elseif (!empty($baslangic_tarih) && !empty($bitis_tarih)) {
+            $sql .= " AND dk.tarih BETWEEN :baslangic_tarih AND :bitis_tarih";
+            $params[':baslangic_tarih'] = $baslangic_tarih;
+            $params[':bitis_tarih'] = $bitis_tarih;
+        }
+        
+        $sql .= " ORDER BY dk.tarih DESC, o.adi_soyadi ASC";
+        
+        $stmt = $conn->prepare($sql);
+        foreach ($params as $key => $value) {
+            $stmt->bindValue($key, $value);
+        }
         $stmt->execute();
         
         $records = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        successResponse($records, 'Devamsızlık kayıtları başarıyla getirildi');
+        // Tarihlere göre grupla
+        $groupedByDate = [];
+        foreach ($records as $record) {
+            $date = $record['tarih'];
+            if (!isset($groupedByDate[$date])) {
+                $groupedByDate[$date] = [
+                    'tarih' => $date,
+                    'gun_adi' => date('l', strtotime($date)),
+                    'katilan_sayisi' => 0,
+                    'katilmayan_sayisi' => 0,
+                    'ogrenciler' => []
+                ];
+            }
+            
+            $groupedByDate[$date]['ogrenciler'][] = $record;
+            
+            if ($record['durum'] === 'present') {
+                $groupedByDate[$date]['katilan_sayisi']++;
+            } else {
+                $groupedByDate[$date]['katilmayan_sayisi']++;
+            }
+        }
+        
+        successResponse([
+            'kayitlar' => $records,
+            'tarihlere_gore' => array_values($groupedByDate),
+            'toplam_kayit' => count($records)
+        ], 'Devamsızlık kayıtları başarıyla getirildi');
         
     } catch (PDOException $e) {
         error_log("Veritabanı hatası: " . $e->getMessage());
