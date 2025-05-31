@@ -1,1 +1,181 @@
 <p>ogretmen-devamsizlik-sayfasi works!</p>
+<div class="attendance-container">
+    <!-- Header Section -->
+    <div class="page-header">
+        <div class="header-content">
+            <div class="header-text">
+                <h1 class="page-title">
+                    <i class="bi bi-calendar-check me-2"></i>
+                    Devamsızlık Takibi
+                </h1>
+                <p class="page-description">Öğrenci devamsızlığını manuel veya QR kod ile takip edin</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-icon bg-primary">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ totalStudents }}</div>
+                        <div class="stat-label">Toplam Öğrenci</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon bg-success">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ presentStudents }}</div>
+                        <div class="stat-label">Katılan</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon bg-danger">
+                        <i class="bi bi-x-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ absentStudents }}</div>
+                        <div class="stat-label">Katılmayan</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controls Section -->
+    <div class="controls-section">
+        <div class="control-group">
+            <label class="control-label">Grup Seçin:</label>
+            <select class="form-select" [(ngModel)]="selectedGroup" (change)="onGroupChange()">
+                <option value="">Grup seçiniz...</option>
+                <option *ngFor="let group of groups" [value]="group.name">{{ group.name }}</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">Tarih:</label>
+            <input type="date" class="form-control" [(ngModel)]="selectedDate" (change)="loadAttendanceData()">
+        </div>
+
+        <div class="control-group">
+            <button class="btn btn-primary" (click)="toggleQRScanner()" [disabled]="!selectedGroup">
+                <i class="bi bi-qr-code-scan me-1"></i>
+                {{ isQRScannerActive ? 'QR Tarayıcıyı Kapat' : 'QR Kod Tarayıcı' }}
+            </button>
+        </div>
+    </div>
+
+    <!-- QR Scanner Section -->
+    <div *ngIf="isQRScannerActive" class="qr-scanner-section">
+        <div class="scanner-container">
+            <video #videoElement class="scanner-video" autoplay playsinline></video>
+            <canvas #canvasElement style="display: none;"></canvas>
+            <div class="scanner-overlay">
+                <div class="scanner-frame"></div>
+                <p class="scanner-text">QR kodu kameranın önüne tutun</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attendance List -->
+    <div *ngIf="selectedGroup && groupStudents.length > 0" class="attendance-section">
+        <div class="section-header">
+            <h3>{{ selectedGroup }} Grubu - Yoklama</h3>
+            <div class="attendance-actions">
+                <button class="btn btn-success" (click)="markAllPresent()">
+                    <i class="bi bi-check-all me-1"></i>
+                    Hepsini Katıldı İşaretle
+                </button>
+                <button class="btn btn-warning" (click)="markAllAbsent()">
+                    <i class="bi bi-x-lg me-1"></i>
+                    Hepsini Katılmadı İşaretle
+                </button>
+                <button class="btn btn-primary" (click)="saveAttendance()" [disabled]="!hasChanges">
+                    <i class="bi bi-save me-1"></i>
+                    Yoklamayı Kaydet
+                </button>
+            </div>
+        </div>
+
+        <div class="students-attendance-list">
+            <div class="attendance-item" *ngFor="let student of groupStudents">
+                <div class="student-info">
+                    <div class="student-avatar">
+                        <img [src]="student.avatar || 'assets/images/default-avatar.png'" 
+                             [alt]="student.adi_soyadi" class="avatar-img">
+                    </div>
+                    <div class="student-details">
+                        <div class="student-name">{{ student.adi_soyadi }}</div>
+                        <div class="student-meta">
+                            <span class="student-class">{{ student.sinifi }}</span>
+                            <span class="student-email">{{ student.email }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="attendance-controls">
+                    <div class="attendance-status">
+                        <span class="status-label">Durum:</span>
+                        <span class="status-badge" 
+                              [class.present]="getAttendanceStatus(student.id) === 'present'"
+                              [class.absent]="getAttendanceStatus(student.id) === 'absent'"
+                              [class.pending]="getAttendanceStatus(student.id) === 'pending'">
+                            {{ getAttendanceStatusText(student.id) }}
+                        </span>
+                    </div>
+                    
+                    <div class="attendance-buttons">
+                        <button class="btn btn-sm btn-success" 
+                                [class.active]="getAttendanceStatus(student.id) === 'present'"
+                                (click)="markAttendance(student.id, 'present')">
+                            <i class="bi bi-check-lg"></i>
+                            Katıldı
+                        </button>
+                        <button class="btn btn-sm btn-danger" 
+                                [class.active]="getAttendanceStatus(student.id) === 'absent'"
+                                (click)="markAttendance(student.id, 'absent')">
+                            <i class="bi bi-x-lg"></i>
+                            Katılmadı
+                        </button>
+                    </div>
+
+                    <div class="attendance-time" *ngIf="getAttendanceTime(student.id)">
+                        <small class="text-muted">
+                            <i class="bi bi-clock me-1"></i>
+                            {{ getAttendanceTime(student.id) | date:'HH:mm' }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty States -->
+    <div *ngIf="!selectedGroup" class="empty-state">
+        <div class="empty-illustration">
+            <i class="bi bi-collection"></i>
+        </div>
+        <h3>Grup Seçin</h3>
+        <p>Devamsızlık takibi için önce bir grup seçiniz.</p>
+    </div>
+
+    <div *ngIf="selectedGroup && groupStudents.length === 0" class="empty-state">
+        <div class="empty-illustration">
+            <i class="bi bi-person-x"></i>
+        </div>
+        <h3>Bu Grupta Öğrenci Yok</h3>
+        <p>Seçilen grupta henüz öğrenci bulunmuyor.</p>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Yükleniyor...</p>
+        </div>
+    </div>
+</div>
