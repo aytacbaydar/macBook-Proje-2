@@ -97,17 +97,19 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     }).subscribe({
       next: (response) => {
         if (response.success && response.data) {
-          // Giriş yapan öğretmenin öğrencilerini filtrele
+          // Giriş yapan öğretmenin bilgilerini al
           const loggedInUser = this.getLoggedInUser();
           const loggedInTeacherName = loggedInUser?.adi_soyadi || '';
 
-          this.groups = (response.data || []).filter((student: any) => 
+          // Öğretmenin öğrencilerini filtrele
+          const teacherStudents = (response.data || []).filter((student: any) => 
             student.rutbe === 'ogrenci' && student.ogretmeni === loggedInTeacherName
           );
-          // Group students by 'grubu' field
+
+          // Öğrencileri gruplara ayır
           const groupMap = new Map<string, Student[]>();
 
-          response.data.forEach((student: Student) => {
+          teacherStudents.forEach((student: Student) => {
             const groupName = student.grubu || 'Genel';
             if (!groupMap.has(groupName)) {
               groupMap.set(groupName, []);
@@ -115,7 +117,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
             groupMap.get(groupName)?.push(student);
           });
 
-          // Convert to groups array
+          // Grup objelerini oluştur
           this.groups = Array.from(groupMap.entries()).map(([name, students]) => ({
             name,
             students,
