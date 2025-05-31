@@ -82,7 +82,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
         this.selectedGroup = decodeURIComponent(params['grupAdi']);
       }
     });
-    
+
     this.loadGroups();
   }
 
