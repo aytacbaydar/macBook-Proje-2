@@ -75,17 +75,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     continue;
                 }
                 
-                // Öğrencinin bu öğretmene ait olduğunu kontrol et
+                // Öğrencinin varlığını kontrol et
                 $studentCheckStmt = $conn->prepare("
                     SELECT id FROM ogrenciler 
-                    WHERE id = :ogrenci_id AND ogretmeni = :ogretmen_id
+                    WHERE id = :ogrenci_id
                 ");
                 $studentCheckStmt->bindParam(':ogrenci_id', $record['ogrenci_id']);
-                $studentCheckStmt->bindParam(':ogretmen_id', $user['id']);
                 $studentCheckStmt->execute();
                 
                 if ($studentCheckStmt->rowCount() === 0) {
-                    $errors[] = "Öğrenci ID {$record['ogrenci_id']} size ait değil";
+                    $errors[] = "Öğrenci ID {$record['ogrenci_id']} bulunamadı";
                     continue;
                 }
                 
