@@ -29,9 +29,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Debug: User bilgilerini logla
         error_log("=== DEVAMSIZLIK KAYDET DEBUG ===");
         error_log("User bilgileri: " . print_r($user, true));
-        error_log("User ID: " . ($user['id'] ?? 'YOK'));
+        error_log("User ID (ogretmen_id): " . ($user['id'] ?? 'YOK'));
         error_log("User Rütbe: " . ($user['rutbe'] ?? 'YOK'));
         error_log("User Adı: " . ($user['adi_soyadi'] ?? 'YOK'));
+        error_log("User ID Türü: " . gettype($user['id'] ?? null));
+        error_log("User ID Boş mu: " . (empty($user['id']) ? 'EVET' : 'HAYIR'));
         error_log("================================");
         
         // Sadece öğretmenler devamsızlık kaydı yapabilir
