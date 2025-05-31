@@ -66,6 +66,11 @@ export class OgretmenGruplarSayfasiComponent implements OnInit {
     if (userStr) {
       loggedInUser = JSON.parse(userStr);
       token = loggedInUser.token || '';
+      console.log('Gruplar sayfası - User bilgileri:', {
+        id: loggedInUser.id,
+        name: loggedInUser.adi_soyadi,
+        userRole: loggedInUser.rutbe
+      });
     }
 
     const headers = new HttpHeaders({

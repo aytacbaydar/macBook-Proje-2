@@ -1,4 +1,3 @@
-
 <?php
 // Hataları dosyaya logla
 ini_set('display_errors', 0);
@@ -25,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         // Kullanıcıyı doğrula
         $user = authorize();
-        
+
         // Debug: User bilgilerini logla
         error_log("=== DEVAMSIZLIK KAYDET DEBUG ===");
         error_log("User bilgileri: " . print_r($user, true));
@@ -35,25 +34,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         error_log("User ID Türü: " . gettype($user['id'] ?? null));
         error_log("User ID Boş mu: " . (empty($user['id']) ? 'EVET' : 'HAYIR'));
         error_log("================================");
-        
+
         // Sadece öğretmenler devamsızlık kaydı yapabilir
         if ($user['rutbe'] !== 'ogretmen') {
             errorResponse('Bu işlem için yetkiniz yok. Sadece öğretmenler devamsızlık kaydı yapabilir.', 403);
         }
-        
+
         // JSON verisini al
         $input = json_decode(file_get_contents('php://input'), true);
-        
+
         // Debug: Input verilerini logla
         error_log("Input verisi: " . print_r($input, true));
         error_log("Records sayısı: " . (isset($input['records']) ? count($input['records']) : 'YOK'));
-        
+
         if (!isset($input['records']) || !is_array($input['records'])) {
             errorResponse('Geçersiz veri formatı. Records dizisi gerekli.', 400);
         }
-        
+
         $conn = getConnection();
-        
+
         // Devamsızlık tablosunu oluştur (yoksa)
         $createTableSql = "
             CREATE TABLE IF NOT EXISTS devamsizlik_kayitlari (
@@ -68,18 +67,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 olusturma_zamani TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 guncelleme_zamani TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 FOREIGN KEY (ogrenci_id) REFERENCES ogrenciler(id) ON DELETE CASCADE,
-                FOREIGN KEY (ogretmen_id) REFERENCES ogretmenler(id) ON DELETE CASCADE,
+                -- FOREIGN KEY (ogretmen_id) REFERENCES ogretmenler(id) ON DELETE CASCADE,
                 UNIQUE KEY unique_attendance (ogrenci_id, tarih, grup)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         ";
         $conn->exec($createTableSql);
-        
+
         // Transaction başlat
         $conn->beginTransaction();
-        
+
         $savedCount = 0;
         $errors = [];
-        
+
         foreach ($input['records'] as $index => $record) {
             try {
                 // Debug: Her record için bilgi logla
@@ -88,14 +87,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 error_log("Grup: " . ($record['grup'] ?? 'YOK'));
                 error_log("Tarih: " . ($record['tarih'] ?? 'YOK'));
                 error_log("Durum: " . ($record['durum'] ?? 'YOK'));
-                
+
                 // Gerekli alanları kontrol et
                 if (!isset($record['ogrenci_id']) || !isset($record['grup']) || 
                     !isset($record['tarih']) || !isset($record['durum'])) {
                     $errors[] = "Eksik veri: ogrenci_id, grup, tarih ve durum gerekli";
                     continue;
                 }
-                
+
                 // Öğrencinin varlığını kontrol et
                 $studentCheckStmt = $conn->prepare("
                     SELECT id FROM ogrenciler 
@@ -103,19 +102,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ");
                 $studentCheckStmt->bindParam(':ogrenci_id', $record['ogrenci_id']);
                 $studentCheckStmt->execute();
-                
+
                 if ($studentCheckStmt->rowCount() === 0) {
                     $errors[] = "Öğrenci ID {$record['ogrenci_id']} bulunamadı";
                     continue;
                 }
-                
+
                 // Zaman formatını düzenle
                 $zaman = isset($record['zaman']) ? 
                     date('Y-m-d H:i:s', strtotime($record['zaman'])) : 
                     date('Y-m-d H:i:s');
-                
+
                 $yontem = isset($record['yontem']) ? $record['yontem'] : 'manual';
-                
+
                 // Insert veya Update yap
                 $stmt = $conn->prepare("
                     INSERT INTO devamsizlik_kayitlari 
@@ -127,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     yontem = VALUES(yontem),
                     guncelleme_zamani = CURRENT_TIMESTAMP
                 ");
-                
+
                 $stmt->bindParam(':ogrenci_id', $record['ogrenci_id']);
                 $stmt->bindParam(':ogretmen_id', $user['id']);
                 $stmt->bindParam(':grup', $record['grup']);
@@ -135,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->bindParam(':durum', $record['durum']);
                 $stmt->bindParam(':zaman', $zaman);
                 $stmt->bindParam(':yontem', $yontem);
-                
+
                 // Debug: SQL parametrelerini logla
                 error_log("SQL Parametreleri:");
                 error_log("- ogrenci_id: " . $record['ogrenci_id']);
@@ -145,16 +144,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 error_log("- durum: " . $record['durum']);
                 error_log("- zaman: " . $zaman);
                 error_log("- yontem: " . $yontem);
-                
+
                 $stmt->execute();
                 error_log("Kayıt başarılı - Öğrenci ID: " . $record['ogrenci_id']);
                 $savedCount++;
-                
+
             } catch (PDOException $e) {
                 $errors[] = "Kayıt hatası (öğrenci ID: {$record['ogrenci_id']}): " . $e->getMessage();
             }
         }
-        
+
         if (empty($errors)) {
             $conn->commit();
             successResponse([
@@ -165,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $conn->rollBack();
             errorResponse('Kayıt sırasında hatalar oluştu: ' . implode(', ', $errors), 400);
         }
-        
+
     } catch (PDOException $e) {
         if (isset($conn)) {
             $conn->rollBack();
