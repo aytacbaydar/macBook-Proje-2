@@ -26,6 +26,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Kullanıcıyı doğrula
         $user = authorize();
         
+        // Debug: User bilgilerini logla
+        error_log("=== DEVAMSIZLIK KAYDET DEBUG ===");
+        error_log("User bilgileri: " . print_r($user, true));
+        error_log("User ID: " . ($user['id'] ?? 'YOK'));
+        error_log("User Rütbe: " . ($user['rutbe'] ?? 'YOK'));
+        error_log("User Adı: " . ($user['adi_soyadi'] ?? 'YOK'));
+        error_log("================================");
+        
         // Sadece öğretmenler devamsızlık kaydı yapabilir
         if ($user['rutbe'] !== 'ogretmen') {
             errorResponse('Bu işlem için yetkiniz yok. Sadece öğretmenler devamsızlık kaydı yapabilir.', 403);
@@ -33,6 +41,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         // JSON verisini al
         $input = json_decode(file_get_contents('php://input'), true);
+        
+        // Debug: Input verilerini logla
+        error_log("Input verisi: " . print_r($input, true));
+        error_log("Records sayısı: " . (isset($input['records']) ? count($input['records']) : 'YOK'));
         
         if (!isset($input['records']) || !is_array($input['records'])) {
             errorResponse('Geçersiz veri formatı. Records dizisi gerekli.', 400);
@@ -66,8 +78,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $savedCount = 0;
         $errors = [];
         
-        foreach ($input['records'] as $record) {
+        foreach ($input['records'] as $index => $record) {
             try {
+                // Debug: Her record için bilgi logla
+                error_log("Record $index işleniyor: " . print_r($record, true));
+                error_log("Öğrenci ID: " . ($record['ogrenci_id'] ?? 'YOK'));
+                error_log("Grup: " . ($record['grup'] ?? 'YOK'));
+                error_log("Tarih: " . ($record['tarih'] ?? 'YOK'));
+                error_log("Durum: " . ($record['durum'] ?? 'YOK'));
+                
                 // Gerekli alanları kontrol et
                 if (!isset($record['ogrenci_id']) || !isset($record['grup']) || 
                     !isset($record['tarih']) || !isset($record['durum'])) {
@@ -115,7 +134,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->bindParam(':zaman', $zaman);
                 $stmt->bindParam(':yontem', $yontem);
                 
+                // Debug: SQL parametrelerini logla
+                error_log("SQL Parametreleri:");
+                error_log("- ogrenci_id: " . $record['ogrenci_id']);
+                error_log("- ogretmen_id: " . $user['id']);
+                error_log("- grup: " . $record['grup']);
+                error_log("- tarih: " . $record['tarih']);
+                error_log("- durum: " . $record['durum']);
+                error_log("- zaman: " . $zaman);
+                error_log("- yontem: " . $yontem);
+                
                 $stmt->execute();
+                error_log("Kayıt başarılı - Öğrenci ID: " . $record['ogrenci_id']);
                 $savedCount++;
                 
             } catch (PDOException $e) {
