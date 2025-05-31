@@ -1,7 +1,7 @@
 
 <div class="app-container">
   <!-- Unified Sidebar -->
-  <aside class="unified-sidebar" [class.collapsed]="!isSidebarOpen" [class.mobile-hidden]="!isSidebarOpen">
+  <aside class="unified-sidebar" [class.collapsed]="!isSidebarOpen" [class.mobile-hidden]="!isMobileSidebarOpen">
     <div class="sidebar-header">
       <div class="brand" [class.collapsed]="!isSidebarOpen">
         <div class="brand-icon">
@@ -9,7 +9,7 @@
         </div>
         <span class="brand-text" *ngIf="isSidebarOpen">KimyaÖğreni</span>
       </div>
-      <button class="sidebar-toggle d-none d-md-block" (click)="toggleSidebar()">
+      <button class="sidebar-toggle" (click)="toggleSidebar()">
         <i class="fas" [class.fa-chevron-left]="isSidebarOpen" [class.fa-chevron-right]="!isSidebarOpen"></i>
       </button>
     </div>
@@ -66,7 +66,7 @@
     <!-- Unified Header -->
     <header class="unified-header">
       <div class="header-left">
-        <button class="mobile-menu-btn" (click)="toggleSidebar()">
+        <button class="mobile-menu-btn" (click)="toggleMobileSidebar()">
           <i class="fas fa-bars"></i>
         </button>
         <h1 class="page-title">Dashboard</h1>
