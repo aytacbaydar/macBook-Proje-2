@@ -46,6 +46,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
   groups: Group[] = [];
   groupStudents: Student[] = [];
   attendanceRecords: Map<number, AttendanceRecord> = new Map();
+  pastWeekAttendance: any[] = [];
 
   // UI state
   selectedGroup: string = '';
@@ -170,9 +171,11 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       this.groupStudents = selectedGroupData ? selectedGroupData.students : [];
       this.initializeAttendanceRecords();
       this.loadAttendanceData();
+      this.loadPastWeekAttendance();
     } else {
       this.groupStudents = [];
       this.attendanceRecords.clear();
+      this.pastWeekAttendance = [];
     }
     this.hasChanges = false;
   }
@@ -406,6 +409,69 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       }
     });
+  }
+
+  loadPastWeekAttendance() {
+    if (!this.selectedGroup) return;
+
+    // Geçen haftanın tarihini hesapla
+    const pastWeekDate = new Date();
+    pastWeekDate.setDate(pastWeekDate.getDate() - 7);
+    const formattedPastWeekDate = pastWeekDate.toISOString().split('T')[0];
+
+    this.http.get<any>(`./server/api/devamsizlik_kayitlari.php?group=${encodeURIComponent(this.selectedGroup)}&tarih=${formattedPastWeekDate}`, {
+      headers: this.getAuthHeaders(),
+      params: {
+        grup: this.selectedGroup,
+        tarih: formattedPastWeekDate
+      }
+    }).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.pastWeekAttendance = response.data.map((record: any) => {
+            const student = this.groupStudents.find(s => s.id === record.ogrenci_id);
+            return {
+              ...record,
+              student: student,
+              adi_soyadi: student?.adi_soyadi || 'Bilinmeyen Öğrenci',
+              avatar: student?.avatar
+            };
+          });
+        } else {
+          this.pastWeekAttendance = [];
+        }
+      },
+      error: (error) => {
+        console.error('Geçen hafta devamsızlık verileri yüklenirken hata:', error);
+        this.pastWeekAttendance = [];
+      }
+    });
+  }
+
+  getPastWeekDate(): Date {
+    const pastWeekDate = new Date();
+    pastWeekDate.setDate(pastWeekDate.getDate() - 7);
+    return pastWeekDate;
+  }
+
+  getPastWeekPresentCount(): number {
+    return this.pastWeekAttendance.filter(record => record.durum === 'present').length;
+  }
+
+  getPastWeekAbsentCount(): number {
+    return this.pastWeekAttendance.filter(record => record.durum === 'absent').length;
+  }
+
+  getPastWeekPresentStudents(): any[] {
+    return this.pastWeekAttendance.filter(record => record.durum === 'present');
+  }
+
+  getPastWeekAbsentStudents(): any[] {
+    return this.pastWeekAttendance.filter(record => record.durum === 'absent');
+  }
+
+  getDefaultAvatar(name: string): string {
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=4f46e5&color=fff&size=40&font-size=0.6&rounded=true`;
   }
 
   private getGroupColor(groupName: string): string {
