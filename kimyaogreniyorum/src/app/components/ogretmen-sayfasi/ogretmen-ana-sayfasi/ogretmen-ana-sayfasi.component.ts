@@ -57,6 +57,7 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
         }
 
         console.log('Öğretmen bilgileri yüklendi:', {
+          id: user.id,
           name: this.teacherName,
           avatar: this.teacherAvatar,
           userRole: user.rutbe,
