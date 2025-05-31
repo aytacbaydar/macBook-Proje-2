@@ -53,7 +53,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $conn = getConnection();
 
-        // Devamsızlık tablosunu oluştur (yoksa)
+        // Mevcut tabloyu kaldır (foreign key constraint hatası varsa)
+        try {
+            $conn->exec("DROP TABLE IF EXISTS devamsizlik_kayitlari");
+            error_log("Mevcut devamsizlik_kayitlari tablosu kaldırıldı");
+        } catch (PDOException $e) {
+            error_log("Tablo kaldırma hatası (önemli değil): " . $e->getMessage());
+        }
+
+        // Devamsızlık tablosunu oluştur
         $createTableSql = "
             CREATE TABLE IF NOT EXISTS devamsizlik_kayitlari (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -67,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 olusturma_zamani TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 guncelleme_zamani TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 FOREIGN KEY (ogrenci_id) REFERENCES ogrenciler(id) ON DELETE CASCADE,
-                -- FOREIGN KEY (ogretmen_id) REFERENCES ogretmenler(id) ON DELETE CASCADE,
+                FOREIGN KEY (ogretmen_id) REFERENCES ogrenciler(id) ON DELETE CASCADE,
                 UNIQUE KEY unique_attendance (ogrenci_id, tarih, grup)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         ";
