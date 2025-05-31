@@ -15,8 +15,8 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
   teacherAvatar: string = '';
 
   // Dashboard statistics
-  totalStudents: number = 45;
-  activeStudents: number = 42;
+  totalStudents: number = 127;
+  activeStudents: number = 95;
   totalGroups: number = 8;
   activeGroups: number = 6;
   totalTopics: number = 24;

@@ -1,124 +1,367 @@
-<!-- Content -->
-<main class="content">
-    <!-- Statistics Cards -->
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-icon students">
-                <i class="fas fa-user-graduate"></i>
-            </div>
-            <div class="stat-content">
-                <h3>{{ totalStudents }}</h3>
-                <p>Toplam Öğrenci</p>
-                <span class="stat-sub">{{ activeStudents }} Aktif</span>
-            </div>
-        </div>
 
-        <div class="stat-card">
-            <div class="stat-icon groups">
-                <i class="fas fa-users"></i>
-            </div>
-            <div class="stat-content">
-                <h3>{{ totalGroups }}</h3>
-                <p>Gruplar</p>
-                <span class="stat-sub">{{ activeGroups }} Aktif</span>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon topics">
-                <i class="fas fa-book"></i>
-            </div>
-            <div class="stat-content">
-                <h3>{{ totalTopics }}</h3>
-                <p>Konular</p>
-                <span class="stat-sub">{{ completedTopics }} Tamamlandı</span>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon exams">
-                <i class="fas fa-clipboard-check"></i>
-            </div>
-            <div class="stat-content">
-                <h3>{{ totalExams }}</h3>
-                <p>Sınavlar</p>
-                <span class="stat-sub">{{ pendingExams }} Beklemede</span>
-            </div>
-        </div>
+<div class="dashboard-container">
+  <!-- Header Stats -->
+  <div class="stats-overview">
+    <div class="stat-card primary">
+      <div class="stat-icon">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ totalStudents }}</h3>
+        <p>Toplam Öğrenci</p>
+        <span class="trend up">
+          <i class="fas fa-arrow-up"></i>
+          +12%
+        </span>
+      </div>
     </div>
 
-    <div class="content-grid">
-        <!-- Recent Activities -->
-        <div class="card">
-            <div class="card-header">
-                <h2>Son Aktiviteler</h2>
-            </div>
-            <div class="card-body">
-                <div class="activity-list">
-                    <div class="activity-item">
-                        <div class="activity-icon new-student">
-                            <i class="fas fa-user-plus"></i>
-                        </div>
-                        <div class="activity-content">
-                            <h4>Yeni öğrenci kaydı</h4>
-                            <p>Ali Veli gruba eklendi</p>
-                            <span class="activity-time">2 saat önce</span>
-                        </div>
-                    </div>
-
-                    <div class="activity-item">
-                        <div class="activity-icon exam-complete">
-                            <i class="fas fa-clipboard-check"></i>
-                        </div>
-                        <div class="activity-content">
-                            <h4>Sınav tamamlandı</h4>
-                            <p>Kimya-1 sınavı değerlendirildi</p>
-                            <span class="activity-time">5 saat önce</span>
-                        </div>
-                    </div>
-
-                    <div class="activity-item">
-                        <div class="activity-icon topic-added">
-                            <i class="fas fa-book-open"></i>
-                        </div>
-                        <div class="activity-content">
-                            <h4>Yeni konu eklendi</h4>
-                            <p>Organik Kimya konusu güncellendi</p>
-                            <span class="activity-time">1 gün önce</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="card">
-            <div class="card-header">
-                <h2>Hızlı İşlemler</h2>
-            </div>
-            <div class="card-body">
-                <div class="quick-actions">
-                    <button class="action-btn primary">
-                        <i class="fas fa-user-plus"></i>
-                        <span>Yeni Öğrenci</span>
-                    </button>
-
-                    <button class="action-btn success">
-                        <i class="fas fa-users"></i>
-                        <span>Grup Oluştur</span>
-                    </button>
-
-                    <button class="action-btn info">
-                        <i class="fas fa-plus-circle"></i>
-                        <span>Konu Ekle</span>
-                    </button>
-
-                    <button class="action-btn warning">
-                        <i class="fas fa-clipboard-list"></i>
-                        <span>Sınav Oluştur</span>
-                    </button>
-                </div>
-            </div>
-        </div>
+    <div class="stat-card success">
+      <div class="stat-icon">
+        <i class="fas fa-user-graduate"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ activeStudents }}</h3>
+        <p>Aktif Öğrenci</p>
+        <span class="trend up">
+          <i class="fas fa-arrow-up"></i>
+          +8%
+        </span>
+      </div>
     </div>
-    </main>
+
+    <div class="stat-card warning">
+      <div class="stat-icon">
+        <i class="fas fa-chalkboard-teacher"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ totalGroups }}</h3>
+        <p>Aktif Grup</p>
+        <span class="trend stable">
+          <i class="fas fa-minus"></i>
+          0%
+        </span>
+      </div>
+    </div>
+
+    <div class="stat-card info">
+      <div class="stat-icon">
+        <i class="fas fa-chart-line"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ completedTopics }}</h3>
+        <p>Tamamlanan Ders</p>
+        <span class="trend up">
+          <i class="fas fa-arrow-up"></i>
+          +15%
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Dashboard Grid -->
+  <div class="dashboard-grid">
+    <!-- Quick Actions -->
+    <div class="dashboard-card quick-actions">
+      <div class="card-header">
+        <h3>Hızlı İşlemler</h3>
+        <div class="card-actions">
+          <button class="btn-icon">
+            <i class="fas fa-ellipsis-h"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="action-grid">
+          <a href="/ogretmen-ders-anlatma-tahtasi" class="action-item">
+            <div class="action-icon primary">
+              <i class="fas fa-chalkboard"></i>
+            </div>
+            <span>Ders Başlat</span>
+          </a>
+          
+          <a href="/ogretmen-gruplar-sayfasi" class="action-item">
+            <div class="action-icon success">
+              <i class="fas fa-users"></i>
+            </div>
+            <span>Grup Yönetimi</span>
+          </a>
+          
+          <a href="/ogretmen-ogrenci-listesi" class="action-item">
+            <div class="action-icon warning">
+              <i class="fas fa-user-plus"></i>
+            </div>
+            <span>Öğrenci Ekle</span>
+          </a>
+          
+          <a href="/ogretmen-raporlar" class="action-item">
+            <div class="action-icon info">
+              <i class="fas fa-chart-bar"></i>
+            </div>
+            <span>Raporlar</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activities -->
+    <div class="dashboard-card activities">
+      <div class="card-header">
+        <h3>Son Aktiviteler</h3>
+        <div class="card-actions">
+          <span class="badge">Bugün</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="activity-list">
+          <div class="activity-item">
+            <div class="activity-avatar primary">
+              <i class="fas fa-user"></i>
+            </div>
+            <div class="activity-content">
+              <p><strong>Ahmet Yılmaz</strong> gruba katıldı</p>
+              <span class="time">2 saat önce</span>
+            </div>
+          </div>
+          
+          <div class="activity-item">
+            <div class="activity-avatar success">
+              <i class="fas fa-check"></i>
+            </div>
+            <div class="activity-content">
+              <p><strong>Asit-Baz Konusu</strong> tamamlandı</p>
+              <span class="time">4 saat önce</span>
+            </div>
+          </div>
+          
+          <div class="activity-item">
+            <div class="activity-avatar warning">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="activity-content">
+              <p><strong>Grup B</strong> dersi başladı</p>
+              <span class="time">6 saat önce</span>
+            </div>
+          </div>
+          
+          <div class="activity-item">
+            <div class="activity-avatar info">
+              <i class="fas fa-file-alt"></i>
+            </div>
+            <div class="activity-content">
+              <p><strong>Yeni sınav</strong> oluşturuldu</p>
+              <span class="time">1 gün önce</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="activity-footer">
+          <a href="#" class="view-all">Tümünü Gör</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Performance Chart -->
+    <div class="dashboard-card chart-card">
+      <div class="card-header">
+        <h3>Haftalık Performans</h3>
+        <div class="card-actions">
+          <select class="period-select">
+            <option>Bu Hafta</option>
+            <option>Bu Ay</option>
+            <option>Bu Yıl</option>
+          </select>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="chart-placeholder">
+          <div class="chart-bars">
+            <div class="bar" style="height: 60%"><span>P</span></div>
+            <div class="bar" style="height: 80%"><span>S</span></div>
+            <div class="bar" style="height: 45%"><span>Ç</span></div>
+            <div class="bar" style="height: 90%"><span>P</span></div>
+            <div class="bar" style="height: 70%"><span>C</span></div>
+            <div class="bar" style="height: 85%"><span>C</span></div>
+            <div class="bar" style="height: 65%"><span>P</span></div>
+          </div>
+          <div class="chart-legend">
+            <div class="legend-item">
+              <span class="dot primary"></span>
+              <span>Ders Sayısı</span>
+            </div>
+            <div class="legend-item">
+              <span class="dot success"></span>
+              <span>Katılım</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upcoming Classes -->
+    <div class="dashboard-card upcoming-classes">
+      <div class="card-header">
+        <h3>Yaklaşan Dersler</h3>
+        <div class="card-actions">
+          <a href="#" class="btn-primary btn-sm">Yeni Ekle</a>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="class-list">
+          <div class="class-item">
+            <div class="class-time">
+              <span class="time">14:00</span>
+              <span class="duration">1.5 saat</span>
+            </div>
+            <div class="class-info">
+              <h4>Asit ve Bazlar</h4>
+              <p>Grup A • 12 Öğrenci</p>
+            </div>
+            <div class="class-status active">
+              <i class="fas fa-play"></i>
+            </div>
+          </div>
+          
+          <div class="class-item">
+            <div class="class-time">
+              <span class="time">16:30</span>
+              <span class="duration">2 saat</span>
+            </div>
+            <div class="class-info">
+              <h4>Organik Kimya</h4>
+              <p>Grup C • 8 Öğrenci</p>
+            </div>
+            <div class="class-status pending">
+              <i class="fas fa-clock"></i>
+            </div>
+          </div>
+          
+          <div class="class-item">
+            <div class="class-time">
+              <span class="time">19:00</span>
+              <span class="duration">1 saat</span>
+            </div>
+            <div class="class-info">
+              <h4>Kimyasal Denge</h4>
+              <p>Grup B • 15 Öğrenci</p>
+            </div>
+            <div class="class-status pending">
+              <i class="fas fa-clock"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Students Progress -->
+    <div class="dashboard-card student-progress">
+      <div class="card-header">
+        <h3>Öğrenci İlerlemesi</h3>
+        <div class="card-actions">
+          <a href="#" class="view-all">Detaylar</a>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="progress-list">
+          <div class="progress-item">
+            <div class="student-info">
+              <div class="student-avatar">
+                <img src="https://ui-avatars.com/api/?name=Ahmet+Yilmaz&background=6366f1&color=fff" alt="AY">
+              </div>
+              <div class="student-details">
+                <h4>Ahmet Yılmaz</h4>
+                <p>Organik Kimya</p>
+              </div>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 85%"></div>
+              <span class="progress-text">85%</span>
+            </div>
+          </div>
+          
+          <div class="progress-item">
+            <div class="student-info">
+              <div class="student-avatar">
+                <img src="https://ui-avatars.com/api/?name=Fatma+Kaya&background=10b981&color=fff" alt="FK">
+              </div>
+              <div class="student-details">
+                <h4>Fatma Kaya</h4>
+                <p>Asit-Baz</p>
+              </div>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 92%"></div>
+              <span class="progress-text">92%</span>
+            </div>
+          </div>
+          
+          <div class="progress-item">
+            <div class="student-info">
+              <div class="student-avatar">
+                <img src="https://ui-avatars.com/api/?name=Mehmet+Demir&background=f59e0b&color=fff" alt="MD">
+              </div>
+              <div class="student-details">
+                <h4>Mehmet Demir</h4>
+                <p>Kimyasal Denge</p>
+              </div>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 78%"></div>
+              <span class="progress-text">78%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="dashboard-card quick-stats">
+      <div class="card-header">
+        <h3>Özet İstatistikler</h3>
+      </div>
+      <div class="card-body">
+        <div class="stats-mini">
+          <div class="mini-stat">
+            <div class="mini-icon primary">
+              <i class="fas fa-book"></i>
+            </div>
+            <div class="mini-content">
+              <h4>24</h4>
+              <p>Toplam Ders</p>
+            </div>
+          </div>
+          
+          <div class="mini-stat">
+            <div class="mini-icon success">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="mini-content">
+              <h4>18</h4>
+              <p>Tamamlanan</p>
+            </div>
+          </div>
+          
+          <div class="mini-stat">
+            <div class="mini-icon warning">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="mini-content">
+              <h4>6</h4>
+              <p>Bekleyen</p>
+            </div>
+          </div>
+          
+          <div class="mini-stat">
+            <div class="mini-icon info">
+              <i class="fas fa-star"></i>
+            </div>
+            <div class="mini-content">
+              <h4>4.8</h4>
+              <p>Ortalama</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

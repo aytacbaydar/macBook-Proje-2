@@ -152,6 +152,28 @@
   overflow: visible;
 }
 
+.unified-sidebar.collapsed .sidebar-header {
+  justify-content: center;
+  padding: 20px 10px;
+  position: relative;
+}
+
+.unified-sidebar.collapsed .brand {
+  display: none;
+}
+
+.unified-sidebar.collapsed .sidebar-toggle {
+  position: absolute;
+  right: -15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--color-primary);
+  color: white;
+  border: 2px solid white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1001;
+}
+
 .sidebar-header {
   display: flex;
   align-items: center;
@@ -780,10 +802,21 @@
 }
 
 /* ========== RESPONSIVE ========== */
+@media (max-width: 1200px) {
+  .content-area {
+    padding: var(--spacing-xl);
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
+
 @media (max-width: 768px) {
   .unified-sidebar {
     transform: translateX(-100%);
     z-index: 1050;
+    width: 280px;
   }
 
   .unified-sidebar.collapsed {
@@ -793,7 +826,7 @@
 
   .unified-sidebar:not(.mobile-hidden) {
     transform: translateX(0);
-    width: var(--sidebar-width);
+    width: 280px;
   }
 
   .main-content {
@@ -802,12 +835,56 @@
   }
 
   .main-content.sidebar-collapsed {
-    margin-left: 60px;
+    margin-left: 0;
     width: 100%;
   }
 
   .mobile-menu-btn {
     display: block !important;
+  }
+  
+  .unified-header {
+    padding: 0 var(--spacing-lg);
+  }
+  
+  .content-area {
+    padding: var(--spacing-lg);
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--spacing-lg);
+  }
+  
+  .stat-card {
+    padding: var(--spacing-lg);
+  }
+  
+  .page-title {
+    font-size: var(--font-lg);
+  }
+  
+  .user-info {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-area {
+    padding: var(--spacing-md);
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+  
+  .unified-header {
+    padding: 0 var(--spacing-md);
+  }
+  
+  .page-title {
+    font-size: var(--font-md);
   }
 }
 
