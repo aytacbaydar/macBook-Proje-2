@@ -53,6 +53,10 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, OnDestr
   mediaStream: MediaStream | null = null;
   scanInterval: any = null;
 
+  // Template'de kullanılacak global nesneler
+  Math = Math;
+  Date = Date;
+
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
@@ -148,7 +152,7 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, OnDestr
     });
   }
 
-  private loadClassroomStatus(): void {
+  loadClassroomStatus(): void {
     if (!this.selectedGroup) return;
 
     this.http.get<any>(`./server/api/sinif_durumu.php`, {
