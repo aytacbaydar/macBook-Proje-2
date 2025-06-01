@@ -518,21 +518,105 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
   }
 
   exportClassroomReport(): void {
-    const presentList = this.groupStudents
-      .filter((student) => this.isStudentPresent(student.id))
-      .map((student) => {
-        const entry = this.classroomEntries.get(student.id);
-        return {
-          name: student.adi_soyadi,
-          entryTime: entry?.entry_time?.toLocaleTimeString(),
-          exitTime: entry?.exit_time?.toLocaleTimeString() || 'Hala sınıfta',
-        };
-      });
+    this.generatePDFReport();
+  }
 
-    console.log('Sınıf raporu:', presentList);
-    alert(
-      `Sınıf raporu konsola yazdırıldı. Bulunan ${presentList.length} öğrenci.`
-    );
+  generatePDFReport(): void {
+    import('jspdf').then((jsPDFModule) => {
+      const { jsPDF } = jsPDFModule.default;
+      import('jspdf-autotable').then(() => {
+        const doc = new jsPDF();
+        
+        // PDF başlığı
+        doc.setFontSize(16);
+        doc.text('Sınıf Giriş-Çıkış Raporu', 14, 20);
+        
+        // Rapor bilgileri
+        doc.setFontSize(12);
+        doc.text(`Grup: ${this.selectedGroup}`, 14, 35);
+        doc.text(`Tarih: ${this.selectedDate}`, 14, 45);
+        doc.text(`Rapor Oluşturma Zamanı: ${new Date().toLocaleString('tr-TR')}`, 14, 55);
+        
+        // Özet bilgiler
+        doc.text(`Toplam Öğrenci: ${this.groupStudents.length}`, 14, 70);
+        doc.text(`Sınıfta Olan: ${this.getPresentCount()}`, 14, 80);
+        doc.text(`Henüz Gelmemiş: ${this.getAbsentCount()}`, 14, 90);
+        doc.text(`Katılım Oranı: ${this.getAttendancePercentage()}%`, 14, 100);
+        
+        // Tüm öğrencilerin giriş-çıkış detayları
+        this.loadDailyAttendanceReport().then((dailyData) => {
+          const reportData = this.groupStudents.map((student) => {
+            const studentEntries = dailyData.filter(entry => entry.student_id === student.id);
+            const currentEntry = this.classroomEntries.get(student.id);
+            const isPresent = this.isStudentPresent(student.id);
+            
+            // Öğrencinin tüm giriş-çıkış hareketlerini listele
+            let movements = 'Henüz giriş yapmamış';
+            if (studentEntries.length > 0) {
+              movements = studentEntries.map(entry => {
+                const time = new Date(entry.zaman).toLocaleTimeString('tr-TR');
+                const action = entry.action === 'entry' ? 'Giriş' : 'Çıkış';
+                return `${action}: ${time}`;
+              }).join(', ');
+            }
+            
+            return [
+              student.adi_soyadi,
+              isPresent ? 'Sınıfta' : 'Sınıfta Değil',
+              movements,
+              studentEntries.length.toString()
+            ];
+          });
+          
+          // Tablo oluştur
+          (doc as any).autoTable({
+            head: [['Öğrenci Adı', 'Durum', 'Giriş-Çıkış Hareketleri', 'Hareket Sayısı']],
+            body: reportData,
+            startY: 115,
+            styles: { fontSize: 8 },
+            headStyles: { fillColor: [71, 70, 229] },
+            columnStyles: {
+              0: { cellWidth: 40 },
+              1: { cellWidth: 25 },
+              2: { cellWidth: 80 },
+              3: { cellWidth: 25 }
+            }
+          });
+          
+          // PDF'i kaydet
+          const fileName = `Sinif_Raporu_${this.selectedGroup}_${this.selectedDate}.pdf`;
+          doc.save(fileName);
+          
+          this.toastr.success(`PDF rapor oluşturuldu: ${fileName}`, 'Rapor Hazır');
+        }).catch((error) => {
+          console.error('Rapor verisi yüklenirken hata:', error);
+          this.toastr.error('Rapor oluşturulurken hata oluştu', 'Hata');
+        });
+      });
+    });
+  }
+
+  loadDailyAttendanceReport(): Promise<any[]> {
+    return new Promise((resolve, reject) => {
+      this.http.get<any>(`./server/api/sinif_gunluk_rapor.php`, {
+        headers: this.getAuthHeaders(),
+        params: {
+          grup: this.selectedGroup,
+          tarih: this.selectedDate,
+        },
+      }).subscribe({
+        next: (response) => {
+          if (response && response.success) {
+            resolve(response.data || []);
+          } else {
+            reject(new Error(response.message || 'Veri yüklenemedi'));
+          }
+        },
+        error: (error) => {
+          reject(error);
+        }
+      });
+    });
   }
 
   private getAuthHeaders(): HttpHeaders {
@@ -644,10 +728,7 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
     }
   }
 
-  // Test için ses çalma fonksiyonu
-  testSpeech(): void {
-    this.speakMessage('Test mesajı. Ses çalışıyor mu?');
-  }
+  
 
   // Eski QR kod kayıtlarını temizle (5 saniyeden eski olanları)
   private cleanupOldQRRecords(): void {
