@@ -3,6 +3,9 @@
 // QR kod giriş/çıkış API'si
 require_once '../config.php';
 
+// Türkiye saat dilimini ayarla
+date_default_timezone_set('Europe/Istanbul');
+
 // CORS başlıkları
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
