@@ -101,11 +101,17 @@ try {
     
     // O tarihteki giriş-çıkış kayıtlarını al
     $attendanceQuery = "
-        SELECT student_id, action, entry_time as zaman, qr_method
+        SELECT student_id, qr_method as action, 
+               CASE 
+                   WHEN entry_time IS NOT NULL THEN entry_time
+                   WHEN exit_time IS NOT NULL THEN exit_time
+                   ELSE created_at
+               END as zaman,
+               qr_method
         FROM sinif_durumu 
         WHERE grup = :grup 
-        AND DATE(entry_time) = :tarih
-        ORDER BY student_id, entry_time
+        AND (DATE(entry_time) = :tarih OR DATE(exit_time) = :tarih)
+        ORDER BY student_id, zaman
     ";
     
     $stmt = $conn->prepare($attendanceQuery);
@@ -154,10 +160,12 @@ try {
     successResponse($reportData, 'Günlük rapor başarıyla yüklendi');
     
 } catch (PDOException $e) {
-    error_log("Database error: " . $e->getMessage());
+    error_log("Database error in sinif_gunluk_rapor.php: " . $e->getMessage());
+    error_log("Stack trace: " . $e->getTraceAsString());
     errorResponse('Veritabanı hatası: ' . $e->getMessage(), 500);
 } catch (Exception $e) {
-    error_log("General error: " . $e->getMessage());
+    error_log("General error in sinif_gunluk_rapor.php: " . $e->getMessage());
+    error_log("Stack trace: " . $e->getTraceAsString());
     errorResponse('Sunucu hatası: ' . $e->getMessage(), 500);
 }
 ?>
