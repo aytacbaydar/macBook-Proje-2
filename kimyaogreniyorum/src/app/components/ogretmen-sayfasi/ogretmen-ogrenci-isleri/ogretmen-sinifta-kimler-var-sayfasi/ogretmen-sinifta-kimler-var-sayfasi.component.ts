@@ -517,107 +517,64 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
     )}&background=4f46e5&color=fff&size=50&font-size=0.6&rounded=true`;
   }
 
+  // Rapor verileri
+  dailyReportData: any[] = [];
+  isLoadingReport: boolean = false;
+
   exportClassroomReport(): void {
-    this.generatePDFReport();
+    this.loadTableReport();
   }
 
-  generatePDFReport(): void {
-    import('jspdf').then((jsPDFModule) => {
-      const jsPDF = jsPDFModule.default;
-      import('jspdf-autotable').then(() => {
-        const doc = new jsPDF();
-        
-        // PDF başlığı
-        doc.setFontSize(16);
-        doc.text('Sınıf Giriş-Çıkış Raporu', 14, 20);
-        
-        // Rapor bilgileri
-        doc.setFontSize(12);
-        doc.text(`Grup: ${this.selectedGroup}`, 14, 35);
-        doc.text(`Tarih: ${this.selectedDate}`, 14, 45);
-        doc.text(`Rapor Oluşturma Zamanı: ${new Date().toLocaleString('tr-TR')}`, 14, 55);
-        
-        // Özet bilgiler
-        doc.text(`Toplam Öğrenci: ${this.groupStudents.length}`, 14, 70);
-        doc.text(`Sınıfta Olan: ${this.getPresentCount()}`, 14, 80);
-        doc.text(`Henüz Gelmemiş: ${this.getAbsentCount()}`, 14, 90);
-        doc.text(`Katılım Oranı: ${this.getAttendancePercentage()}%`, 14, 100);
-        
-        // Tüm öğrencilerin giriş-çıkış detayları
-        this.loadDailyAttendanceReport().then((dailyData) => {
-          const reportData = this.groupStudents.map((student) => {
-            const studentEntries = dailyData.filter(entry => entry.student_id === student.id);
-            const currentEntry = this.classroomEntries.get(student.id);
-            const isPresent = this.isStudentPresent(student.id);
-            
-            // Öğrencinin tüm giriş-çıkış hareketlerini listele
-            let movements = 'Henüz giriş yapmamış';
-            if (studentEntries.length > 0) {
-              movements = studentEntries.map(entry => {
-                const time = new Date(entry.zaman).toLocaleTimeString('tr-TR');
-                const action = entry.action === 'entry' ? 'Giriş' : 'Çıkış';
-                return `${action}: ${time}`;
-              }).join(', ');
-            }
-            
-            return [
-              student.adi_soyadi,
-              isPresent ? 'Sınıfta' : 'Sınıfta Değil',
-              movements,
-              studentEntries.length.toString()
-            ];
-          });
-          
-          // Tablo oluştur
-          (doc as any).autoTable({
-            head: [['Öğrenci Adı', 'Durum', 'Giriş-Çıkış Hareketleri', 'Hareket Sayısı']],
-            body: reportData,
-            startY: 115,
-            styles: { fontSize: 8 },
-            headStyles: { fillColor: [71, 70, 229] },
-            columnStyles: {
-              0: { cellWidth: 40 },
-              1: { cellWidth: 25 },
-              2: { cellWidth: 80 },
-              3: { cellWidth: 25 }
-            }
-          });
-          
-          // PDF'i kaydet
-          const fileName = `Sinif_Raporu_${this.selectedGroup}_${this.selectedDate}.pdf`;
-          doc.save(fileName);
-          
-          this.toastr.success(`PDF rapor oluşturuldu: ${fileName}`, 'Rapor Hazır');
-        }).catch((error) => {
-          console.error('Rapor verisi yüklenirken hata:', error);
-          this.toastr.error('Rapor oluşturulurken hata oluştu', 'Hata');
-        });
-      });
-    });
-  }
+  loadTableReport(): void {
+    if (!this.selectedGroup || !this.selectedDate) {
+      this.toastr.warning('Lütfen grup ve tarih seçiniz', 'Uyarı');
+      return;
+    }
 
-  loadDailyAttendanceReport(): Promise<any[]> {
-    return new Promise((resolve, reject) => {
-      this.http.get<any>(`./server/api/sinif_gunluk_rapor.php`, {
-        headers: this.getAuthHeaders(),
-        params: {
-          grup: this.selectedGroup,
-          tarih: this.selectedDate,
-        },
-      }).subscribe({
-        next: (response) => {
-          if (response && response.success) {
-            resolve(response.data || []);
-          } else {
-            reject(new Error(response.message || 'Veri yüklenemedi'));
-          }
-        },
-        error: (error) => {
-          reject(error);
+    this.isLoadingReport = true;
+    this.dailyReportData = [];
+
+    // Alfabetik sıralanmış öğrenci listesi
+    const sortedStudents = [...this.groupStudents].sort((a, b) => 
+      a.adi_soyadi.localeCompare(b.adi_soyadi, 'tr', { sensitivity: 'base' })
+    );
+
+    // Her öğrenci için rapor verisi hazırla
+    sortedStudents.forEach((student) => {
+      const isPresent = this.isStudentPresent(student.id);
+      const entryInfo = this.classroomEntries.get(student.id);
+      
+      let entryTime = '-';
+      let exitTime = '-';
+      let totalMovements = 0;
+      
+      if (entryInfo) {
+        if (entryInfo.entry_time) {
+          entryTime = entryInfo.entry_time.toLocaleTimeString('tr-TR');
+          totalMovements++;
         }
+        if (entryInfo.exit_time) {
+          exitTime = entryInfo.exit_time.toLocaleTimeString('tr-TR');
+          totalMovements++;
+        }
+      }
+
+      this.dailyReportData.push({
+        student_name: student.adi_soyadi,
+        student_email: student.email,
+        is_present: isPresent,
+        entry_time: entryTime,
+        exit_time: exitTime,
+        movement_count: totalMovements,
+        status: isPresent ? 'Sınıfta' : 'Sınıfta Değil'
       });
     });
+
+    this.isLoadingReport = false;
+    this.toastr.success('Rapor yüklendi', 'Başarılı');
   }
+
+  
 
   private getAuthHeaders(): HttpHeaders {
     let token = '';
