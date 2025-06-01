@@ -10,7 +10,28 @@ try {
     $data = getJsonData();
     $studentId = isset($data['id']) ? intval($data['id']) : $user['id'];
 
-    if ($user['rutbe'] !== 'admin' && $studentId !== $user['id']) {
+    // Yetki kontrolü: Admin, kendi profili veya öğretmenin kendi öğrencisi
+    $hasPermission = false;
+    
+    if ($user['rutbe'] === 'admin') {
+        $hasPermission = true;
+    } elseif ($studentId === $user['id']) {
+        $hasPermission = true;
+    } elseif ($user['rutbe'] === 'ogretmen') {
+        // Öğretmenin bu öğrenciyi düzenleme yetkisi var mı kontrol et
+        $conn = getConnection();
+        $stmt = $conn->prepare("SELECT ogretmeni FROM ogrenci_bilgileri ob 
+                               JOIN ogrenciler o ON ob.ogrenci_id = o.id 
+                               WHERE o.id = :student_id");
+        $stmt->execute([':student_id' => $studentId]);
+        $studentTeacher = $stmt->fetchColumn();
+        
+        if ($studentTeacher === $user['adi_soyadi']) {
+            $hasPermission = true;
+        }
+    }
+    
+    if (!$hasPermission) {
         errorResponse('Bu bilgileri güncelleme yetkiniz yok', 403);
     }
 
