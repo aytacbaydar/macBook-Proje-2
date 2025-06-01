@@ -455,8 +455,8 @@
 
 /* Modern Section Header */
 .modern-section-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: #f8f9fa;
+  color: #2c3e50;
   padding: 2rem;
   position: relative;
   overflow: hidden;
@@ -1067,6 +1067,7 @@
   }
 
   .attendance-buttons .btn {
+```text
     flex: 1;    justify-content: center;
   }
 }

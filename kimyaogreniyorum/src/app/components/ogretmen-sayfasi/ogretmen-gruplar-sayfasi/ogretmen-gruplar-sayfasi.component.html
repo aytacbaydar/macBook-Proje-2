@@ -1,162 +1,170 @@
-<div class="groups-container">
-    <!-- Header Section -->
-    <div class="page-header">
+
+<div class="attendance-container">
+    <!-- Modern Header Section -->
+    <div class="modern-page-header">
         <div class="header-content">
             <div class="header-text">
-                <h1 class="page-title">
+                <h1 class="modern-page-title">
                     <i class="bi bi-people-fill me-2"></i>
                     Öğrenci Grupları
                 </h1>
-                <p class="page-description">Öğrencilerinizi gruplarına göre yönetin</p>
+                <p class="modern-page-description">Öğrencilerinizi gruplarına göre yönetin ve devamsızlık takibi yapın</p>
             </div>
 
-            <!-- Stats Cards -->
-            <div class="stats-row">
-                <div class="stat-card">
+            <!-- Modern Stats Cards -->
+            <div class="modern-stats-grid">
+                <div class="modern-stat-card">
                     <div class="stat-icon bg-primary">
                         <i class="bi bi-collection"></i>
                     </div>
                     <div class="stat-content">
                         <div class="stat-number">{{ groups.length }}</div>
                         <div class="stat-label">Toplam Grup</div>
+                        <div class="stat-description">Aktif gruplar</div>
                     </div>
                 </div>
 
-                <div class="stat-card">
+                <div class="modern-stat-card">
                     <div class="stat-icon bg-success">
                         <i class="bi bi-people"></i>
                     </div>
                     <div class="stat-content">
                         <div class="stat-number">{{ getTotalStudents() }}</div>
                         <div class="stat-label">Toplam Öğrenci</div>
+                        <div class="stat-description">Tüm gruplarda</div>
                     </div>
                 </div>
 
-                <div class="stat-card">
+                <div class="modern-stat-card">
                     <div class="stat-icon bg-info">
                         <i class="bi bi-person-check"></i>
                     </div>
                     <div class="stat-content">
                         <div class="stat-number">{{ getActiveStudents() }}</div>
                         <div class="stat-label">Aktif Öğrenci</div>
+                        <div class="stat-description">Derse devam eden</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Search Section -->
-    <div class="search-section">
-        <div class="search-container">
-            <div class="search-input-wrapper">
-                <i class="bi bi-search search-icon"></i>
-                <input type="text" class="search-input" placeholder="Grup veya öğrenci ara..."
-                    [(ngModel)]="searchQuery">
+    <!-- Modern Search Section -->
+    <div class="modern-controls-section">
+        <div class="controls-header">
+            <h3><i class="bi bi-search"></i> Arama ve Filtreler</h3>
+        </div>
+        <div class="controls-content">
+            <div class="search-wrapper">
+                <div class="search-input-group">
+                    <i class="bi bi-search search-icon"></i>
+                    <input type="text" class="modern-search-input" placeholder="Grup veya öğrenci adı ara..."
+                        [(ngModel)]="searchQuery">
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Loading State -->
-    <div *ngIf="isLoading" class="loading-container">
-        <div class="loading-spinner">
+    <div *ngIf="isLoading" class="modern-loading-container">
+        <div class="modern-loading-spinner">
             <div class="spinner"></div>
             <p>Gruplar yükleniyor...</p>
         </div>
     </div>
 
     <!-- Error State -->
-    <div *ngIf="error && !isLoading" class="error-container">
-        <div class="error-card">
+    <div *ngIf="error && !isLoading" class="modern-error-container">
+        <div class="modern-error-card">
             <i class="bi bi-exclamation-triangle error-icon"></i>
             <h3>Hata Oluştu</h3>
             <p>{{ error }}</p>
-            <button class="retry-button" (click)="loadStudents()">
+            <button class="modern-retry-button" (click)="loadStudents()">
                 <i class="bi bi-arrow-clockwise me-1"></i>
                 Tekrar Dene
             </button>
         </div>
     </div>
 
-    <!-- Groups Grid -->
-    <div *ngIf="!isLoading && !error" class="groups-grid">
-        <div class="group-card" *ngFor="let group of filteredGroups" (click)="viewGroupDetail(group.name)"
-            style="cursor: pointer;">
-            <!-- Group Header -->
-            <div class="group-header" [style.background-color]="group.color">
-                <div class="group-title">
-                    <i class="bi bi-collection-fill me-2"></i>
-                    {{ group.name }}
-                </div>
-                <div class="group-count">
-                    <span class="count-badge">{{ group.students.length }}</span>
-                    <span class="count-text">öğrenci</span>
-                </div>
-            </div>
+    <!-- Modern Groups Grid -->
+    <div *ngIf="!isLoading && !error && filteredGroups.length > 0" class="modern-groups-section">
+        <div class="section-header">
+            <h3><i class="bi bi-collection-fill"></i> Gruplar</h3>
+        </div>
 
-            <!-- Students List -->
-            <div class="students-container">
-                <div *ngIf="group.students.length === 0" class="empty-group">
-                    <i class="bi bi-person-x"></i>
-                    <p>Bu grupta öğrenci bulunamadı</p>
-                </div>
-
-                <div *ngFor="let student of group.students" class="student-item">
-                    <div class="student-avatar">
-                        <img [src]="student.avatar || 'assets/images/default-avatar.png'" [alt]="student.adi_soyadi"
-                            class="avatar-img">
-                        <div class="status-indicator" [class.active]="student.aktif" [class.inactive]="!student.aktif">
-                        </div>
-                    </div>
-
-                    <div class="student-info">
-                        <div class="student-name">{{ student.adi_soyadi }}</div>
-                        <div class="student-details">
-                            <span *ngIf="student.sinifi" class="detail-item">
-                                <i class="bi bi-mortarboard me-1"></i>
-                                {{ student.sinifi }}
-                            </span>
-                            <span *ngIf="student.okulu" class="detail-item">
-                                <i class="bi bi-building me-1"></i>
-                                {{ student.okulu }}
+        <div class="modern-groups-grid">
+            <div class="modern-group-card" *ngFor="let group of filteredGroups">
+                <!-- Group Header -->
+                <div class="modern-group-header" [style.background-color]="group.color">
+                    <div class="group-title-section">
+                        <h4 class="group-name">
+                            <i class="bi bi-collection-fill me-2"></i>
+                            {{ group.name }}
+                        </h4>
+                        <div class="group-meta">
+                            <span class="student-count">
+                                <i class="bi bi-people me-1"></i>
+                                {{ group.students.length }} öğrenci
                             </span>
                         </div>
-                        <div class="student-contact">
-                            <span class="email">{{ student.email }}</span>
-                            <span *ngIf="student.cep_telefonu" class="phone">{{ student.cep_telefonu }}</span>
-                        </div>
-                    </div>
-
-                    <div class="student-actions">
-                        <button class="action-btn edit-btn" title="Düzenle">
-                            <i class="bi bi-pencil"></i>
-                        </button>
-                        <button class="action-btn delete-btn" (click)="deleteStudent(student.id)" title="Sil">
-                            <i class="bi bi-trash"></i>
-                        </button>
                     </div>
                 </div>
-            </div>
 
-            <!-- Group Actions -->
-            <div class="group-actions">
-                <button class="btn btn-outline-primary btn-sm" (click)="viewGroupDetail(group.name); $event.stopPropagation();">
-                    <i class="bi bi-eye me-1"></i>
-                    Detaylar
-                </button>
-                <button class="btn btn-outline-success btn-sm" (click)="goToAttendance(group.name); $event.stopPropagation();">
-                    <i class="bi bi-calendar-check me-1"></i>
-                    Devamsızlık
-                </button>
+                <!-- Students Section -->
+                <div class="modern-students-section">
+                    <div *ngIf="group.students.length === 0" class="empty-group-state">
+                        <i class="bi bi-person-x"></i>
+                        <p>Bu grupta öğrenci bulunamadı</p>
+                    </div>
+
+                    <div class="modern-students-list" *ngIf="group.students.length > 0">
+                        <div class="modern-student-item" *ngFor="let student of group.students.slice(0, 3)">
+                            <div class="student-avatar-section">
+                                <img [src]="student.avatar || 'assets/images/default-avatar.png'" 
+                                     [alt]="student.adi_soyadi" class="modern-avatar">
+                                <div class="status-indicator" [class.active]="student.aktif" [class.inactive]="!student.aktif"></div>
+                            </div>
+                            
+                            <div class="student-info-section">
+                                <div class="student-name">{{ student.adi_soyadi }}</div>
+                                <div class="student-meta">
+                                    <span *ngIf="student.sinifi" class="meta-item">
+                                        <i class="bi bi-mortarboard me-1"></i>{{ student.sinifi }}
+                                    </span>
+                                    <span *ngIf="student.okulu" class="meta-item">
+                                        <i class="bi bi-building me-1"></i>{{ student.okulu }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="group.students.length > 3" class="more-students-indicator">
+                            <span class="more-text">+{{ group.students.length - 3 }} öğrenci daha</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="modern-group-actions">
+                    <button class="modern-btn primary" (click)="viewGroupDetail(group.name)">
+                        <i class="bi bi-eye me-1"></i>
+                        Detaylar
+                    </button>
+                    <button class="modern-btn success" (click)="goToAttendance(group.name)">
+                        <i class="bi bi-calendar-check me-1"></i>
+                        Devamsızlık
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Empty State -->
-    <div *ngIf="!isLoading && !error && filteredGroups.length === 0" class="empty-state">
+    <div *ngIf="!isLoading && !error && filteredGroups.length === 0" class="modern-empty-state">
         <div class="empty-illustration">
             <i class="bi bi-collection"></i>
         </div>
         <h3>Grup Bulunamadı</h3>
         <p>Henüz hiç grup oluşturulmamış veya arama kriterinize uygun grup bulunmuyor.</p>
     </div>
-    </div>
+</div>
