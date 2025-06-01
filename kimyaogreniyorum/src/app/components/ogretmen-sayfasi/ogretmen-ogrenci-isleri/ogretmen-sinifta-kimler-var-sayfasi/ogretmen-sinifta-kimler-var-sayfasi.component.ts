@@ -523,7 +523,7 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
 
   generatePDFReport(): void {
     import('jspdf').then((jsPDFModule) => {
-      const { jsPDF } = jsPDFModule.default;
+      const jsPDF = jsPDFModule.default;
       import('jspdf-autotable').then(() => {
         const doc = new jsPDF();
         
