@@ -252,78 +252,102 @@
 
     <!-- Historical Attendance View -->
     <div *ngIf="viewHistoricalData && selectedGroup" class="historical-attendance-section">
-        <div class="section-header">
-            <h3>
-                <i class="bi bi-calendar-range me-2"></i>
-                {{ selectedGroup }} Grubu - Geçmiş Devamsızlık Kayıtları
-            </h3>
+        <div class="modern-section-header">
+            <div class="header-content">
+                <h3 class="section-title">
+                    <i class="bi bi-calendar-range"></i>
+                    {{ selectedGroup }} Grubu - Geçmiş Devamsızlık Kayıtları
+                </h3>
+                <p class="section-subtitle">Seçilen tarih aralığındaki devamsızlık kayıtlarını görüntüleyin</p>
+            </div>
+        </div>
 
-            <!-- Date Range Filter -->
-            <div class="date-range-filter">
-                <div class="date-input-group">
-                    <label>Başlangıç Tarihi:</label>
-                    <input type="date" class="form-control" [(ngModel)]="startDate">
+        <!-- Modern Filter Controls -->
+        <div class="modern-filter-section">
+            <div class="filter-header">
+                <h4><i class="bi bi-funnel"></i> Filtreler</h4>
+            </div>
+
+            <div class="filter-controls">
+                <div class="date-range-inputs">
+                    <div class="date-input-wrapper">
+                        <label class="modern-label">Başlangıç Tarihi</label>
+                        <input type="date" class="modern-input" [(ngModel)]="startDate" placeholder="Başlangıç">
+                    </div>
+                    <div class="date-separator">-</div>
+                    <div class="date-input-wrapper">
+                        <label class="modern-label">Bitiş Tarihi</label>
+                        <input type="date" class="modern-input" [(ngModel)]="endDate" placeholder="Bitiş">
+                    </div>
                 </div>
-                <div class="date-input-group">
-                    <label>Bitiş Tarihi:</label>
-                    <input type="date" class="form-control" [(ngModel)]="endDate">
-                </div>
-                <div class="quick-filters">
-                    <button class="btn btn-outline-primary btn-sm" (click)="setDateRangeLastWeek()">
+
+                <div class="quick-filter-buttons">
+                    <button class="quick-filter-btn" (click)="setDateRangeLastWeek()">
+                        <i class="bi bi-calendar-week"></i>
                         Son 1 Hafta
                     </button>
-                    <button class="btn btn-outline-primary btn-sm" (click)="setDateRangeLastMonth()">
+                    <button class="quick-filter-btn" (click)="setDateRangeLastMonth()">
+                        <i class="bi bi-calendar-month"></i>
                         Son 1 Ay
                     </button>
-                    <button class="btn btn-outline-primary btn-sm" (click)="setDateRangeThisMonth()">
+                    <button class="quick-filter-btn" (click)="setDateRangeThisMonth()">
+                        <i class="bi bi-calendar3"></i>
                         Bu Ay
                     </button>
                 </div>
-                <button class="btn btn-secondary" (click)="loadHistoricalAttendanceByDateRange()" 
+
+                <button class="apply-filter-btn" (click)="loadHistoricalAttendanceByDateRange()" 
                         [disabled]="!startDate || !endDate">
-                    <i class="bi bi-search me-1"></i>
+                    <i class="bi bi-search"></i>
                     Filtrele
                 </button>
             </div>
+        </div>
 
-            <!-- Aylık Özet -->
-            <div class="monthly-summary" *ngIf="groupedAttendanceByDate.length > 0">
-                <div class="summary-cards">
-                    <div class="summary-card">
-                        <div class="summary-icon bg-primary">
-                            <i class="bi bi-calendar-event"></i>
-                        </div>
-                        <div class="summary-content">
-                            <div class="summary-number">{{ groupedAttendanceByDate.length }}</div>
-                            <div class="summary-label">Toplam Ders</div>
-                        </div>
+        <!-- Modern Statistics Cards -->
+        <div class="modern-stats-section" *ngIf="groupedAttendanceByDate.length > 0">
+            <div class="stats-grid">
+                <div class="modern-stat-card lessons">
+                    <div class="stat-icon">
+                        <i class="bi bi-calendar-event"></i>
                     </div>
-                    <div class="summary-card">
-                        <div class="summary-icon bg-success">
-                            <i class="bi bi-person-check"></i>
-                        </div>
-                        <div class="summary-content">
-                            <div class="summary-number">{{ getTotalPresentInPeriod() }}</div>
-                            <div class="summary-label">Toplam Katılan</div>
-                        </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ groupedAttendanceByDate.length }}</div>
+                        <div class="stat-label">Toplam Ders</div>
+                        <div class="stat-description">Seçilen dönemdeki ders sayısı</div>
                     </div>
-                    <div class="summary-card">
-                        <div class="summary-icon bg-danger">
-                            <i class="bi bi-person-x"></i>
-                        </div>
-                        <div class="summary-content">
-                            <div class="summary-number">{{ getTotalAbsentInPeriod() }}</div>
-                            <div class="summary-label">Toplam Katılmayan</div>
-                        </div>
+                </div>
+
+                <div class="modern-stat-card attendance">
+                    <div class="stat-icon">
+                        <i class="bi bi-check-circle-fill"></i>
                     </div>
-                    <div class="summary-card">
-                        <div class="summary-icon bg-info">
-                            <i class="bi bi-percent"></i>
-                        </div>
-                        <div class="summary-content">
-                            <div class="summary-number">{{ getAverageAttendanceRate() }}%</div>
-                            <div class="summary-label">Ortalama Katılım</div>
-                        </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ getTotalPresentInPeriod() }}</div>
+                        <div class="stat-label">Toplam Katılım</div>
+                        <div class="stat-description">Derse katılan öğrenci sayısı</div>
+                    </div>
+                </div>
+
+                <div class="modern-stat-card absence">
+                    <div class="stat-icon">
+                        <i class="bi bi-x-circle-fill"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ getTotalAbsentInPeriod() }}</div>
+                        <div class="stat-label">Toplam Devamsızlık</div>
+                        <div class="stat-description">Derse katılmayan öğrenci sayısı</div>
+                    </div>
+                </div>
+
+                <div class="modern-stat-card percentage">
+                    <div class="stat-icon">
+                        <i class="bi bi-percent"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ getAttendancePercentage() }}%</div>
+                        <div class="stat-label">Katılım Oranı</div>
+                        <div class="stat-description">Genel katılım yüzdesi</div>
                     </div>
                 </div>
             </div>

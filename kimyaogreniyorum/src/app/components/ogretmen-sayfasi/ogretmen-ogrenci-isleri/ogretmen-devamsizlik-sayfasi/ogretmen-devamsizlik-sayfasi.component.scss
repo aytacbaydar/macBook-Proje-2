@@ -1,4 +1,3 @@
-
 :host {
   display: block;
   padding: var(--spacing-lg);
@@ -444,15 +443,297 @@
   color: #d97706;
 }
 
-/* Historical Data */
+/* Modern Geçmiş Devamsızlık Bölümü */
 .historical-attendance-section {
+  margin-top: 2rem;
   background: var(--background-secondary);
-  border-radius: var(--border-radius-lg);
-  border: 1px solid var(--border-primary);
+  border-radius: 16px;
   overflow: hidden;
-  margin-bottom: var(--spacing-xl);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-primary);
 }
 
+/* Modern Section Header */
+.modern-section-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.modern-section-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 100%;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="white" opacity="0.1"/></svg>') repeat;
+  animation: float 20s infinite linear;
+}
+
+@keyframes float {
+  0% { transform: translateX(0) translateY(0); }
+  100% { transform: translateX(-50px) translateY(-50px); }
+}
+
+.header-content {
+  position: relative;
+  z-index: 2;
+}
+
+.section-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.section-title i {
+  font-size: 1.5rem;
+}
+
+.section-subtitle {
+  margin: 0;
+  opacity: 0.9;
+  font-size: 1rem;
+}
+
+/* Modern Filter Section */
+.modern-filter-section {
+  padding: 1.5rem 2rem;
+  background: var(--background-primary);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.filter-header {
+  margin-bottom: 1.5rem;
+}
+
+.filter-header h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: end;
+}
+
+.date-range-inputs {
+  display: flex;
+  align-items: end;
+  gap: 1rem;
+  flex: 1;
+  min-width: 300px;
+}
+
+.date-input-wrapper {
+  flex: 1;
+}
+
+.modern-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.modern-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--border-primary);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  background: var(--background-secondary);
+}
+
+.modern-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.1);
+}
+
+.date-separator {
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 0 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.quick-filter-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.quick-filter-btn {
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--border-primary);
+  border-radius: 8px;
+  background: var(--background-secondary);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.quick-filter-btn:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.apply-filter-btn {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.apply-filter-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(var(--color-primary-rgb), 0.3);
+}
+
+.apply-filter-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Modern Statistics Section */
+.modern-stats-section {
+  padding: 2rem;
+  background: var(--background-primary);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.modern-stat-card {
+  background: var(--background-secondary);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid var(--border-primary);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.modern-stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  transition: all 0.3s ease;
+}
+
+.modern-stat-card.lessons::before {
+  background: linear-gradient(90deg, #4f46e5, #7c3aed);
+}
+
+.modern-stat-card.attendance::before {
+  background: linear-gradient(90deg, #10b981, #059669);
+}
+
+.modern-stat-card.absence::before {
+  background: linear-gradient(90deg, #ef4444, #dc2626);
+}
+
+.modern-stat-card.percentage::before {
+  background: linear-gradient(90deg, #f59e0b, #d97706);
+}
+
+.modern-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.modern-stat-card:hover::before {
+  height: 6px;
+}
+
+.modern-stat-card .stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.modern-stat-card.lessons .stat-icon {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+}
+
+.modern-stat-card.attendance .stat-icon {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.modern-stat-card.absence .stat-icon {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.modern-stat-card.percentage .stat-icon {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.stat-description {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* Date Range Filter */
 .date-range-filter {
   display: flex;
   gap: var(--spacing-lg);
@@ -707,7 +988,7 @@
   opacity: 0.5;
 }
 
-/* Mobile Responsive */
+/* Responsive Design */
 @media (max-width: 768px) {
   :host {
     padding: var(--spacing-md);
@@ -786,7 +1067,6 @@
   }
 
   .attendance-buttons .btn {
-    flex: 1;
-    justify-content: center;
+    flex: 1;    justify-content: center;
   }
 }

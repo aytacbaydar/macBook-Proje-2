@@ -309,6 +309,15 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     return this.groupedAttendanceByDate.reduce((total, day) => total + day.katilmayan_sayisi, 0);
   }
 
+  getAttendancePercentage(): number {
+    const totalPresent = this.getTotalPresentInPeriod();
+    const totalAbsent = this.getTotalAbsentInPeriod();
+    const total = totalPresent + totalAbsent;
+    
+    if (total === 0) return 0;
+    return Math.round((totalPresent / total) * 100);
+  }
+
   getAverageAttendanceRate(): number {
     if (this.groupedAttendanceByDate.length === 0) return 0;
     
