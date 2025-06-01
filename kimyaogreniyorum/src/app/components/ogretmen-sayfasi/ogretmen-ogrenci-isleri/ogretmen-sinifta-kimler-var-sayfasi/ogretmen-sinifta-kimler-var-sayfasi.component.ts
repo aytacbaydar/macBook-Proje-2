@@ -1,7 +1,5 @@
-
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
 
 interface Student {
   id: number;
@@ -40,53 +38,29 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, OnDestr
   @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
   @ViewChild('canvasElement') canvasElement!: ElementRef<HTMLCanvasElement>;
 
-  // Data properties
-  selectedGroup: string = '';
   groups: string[] = [];
+  selectedGroup: string = '';
+  selectedDate: string = new Date().toISOString().split('T')[0];
   groupStudents: Student[] = [];
-  presentStudents: Set<number> = new Set();
-  classroomEntries: Map<number, ClassroomEntry> = new Map();
-  
+  presentStudents = new Set<number>();
+  classroomEntries = new Map<number, ClassroomEntry>();
+  searchQuery: string = '';
+  isLoading: boolean = false;
+  error: string | null = null;
+
   // QR Scanner properties
   isQRScannerActive: boolean = false;
-  private mediaStream: MediaStream | null = null;
-  private qrScanInterval: any;
-  private refreshInterval: any;
+  mediaStream: MediaStream | null = null;
+  scanInterval: any = null;
 
-  // UI state
-  isLoading: boolean = false;
-  selectedDate: string = new Date().toISOString().split('T')[0];
-  searchQuery: string = '';
-
-  constructor(
-    private http: HttpClient,
-    private route: ActivatedRoute
-  ) {}
+  constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     this.loadGroups();
-    
-    // URL'den grup parametresi varsa al
-    this.route.params.subscribe(params => {
-      if (params['group']) {
-        this.selectedGroup = decodeURIComponent(params['group']);
-        this.loadGroupStudents();
-      }
-    });
-
-    // Her 30 saniyede bir sınıf durumunu güncelle
-    this.refreshInterval = setInterval(() => {
-      if (this.selectedGroup) {
-        this.loadClassroomStatus();
-      }
-    }, 30000);
   }
 
   ngOnDestroy(): void {
     this.stopQRScanner();
-    if (this.refreshInterval) {
-      clearInterval(this.refreshInterval);
-    }
   }
 
   private getAuthHeaders(): HttpHeaders {
@@ -97,35 +71,30 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, OnDestr
       token = user.token || '';
     }
     return new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
+      'Authorization': `Bearer ${token}`
     });
   }
 
-  loadGroups(): void {
+  private loadGroups(): void {
     this.isLoading = true;
-    
-    this.http.get<any>('./server/api/ogrenciler_listesi.php', { 
-      headers: this.getAuthHeaders() 
+
+    let loggedInUser: any = null;
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (userStr) {
+      loggedInUser = JSON.parse(userStr);
+    }
+
+    this.http.get<any>('./server/api/ogrenciler_listesi.php', {
+      headers: this.getAuthHeaders()
     }).subscribe({
       next: (response) => {
         if (response && response.success && response.data) {
-          // Giriş yapan öğretmenin bilgilerini al
-          let loggedInUser: any = null;
-          const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
-          if (userStr) {
-            loggedInUser = JSON.parse(userStr);
-          }
-
           const loggedInTeacherName = loggedInUser?.adi_soyadi || '';
-          
-          // Sadece öğrencileri filtrele ve giriş yapan öğretmenin öğrencilerini al
           const teacherStudents = response.data.filter(
             (student: any) =>
               student.rutbe === 'ogrenci' && student.ogretmeni === loggedInTeacherName
           );
 
-          // Öğrencilerden benzersiz grupları çıkar
           const gruplar = new Set<string>();
           teacherStudents.forEach((ogrenci: any) => {
             if (ogrenci.grubu && typeof ogrenci.grubu === 'string' && ogrenci.grubu.trim() !== '') {
@@ -139,8 +108,8 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, OnDestr
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Grup verileri yüklenirken hata:', error);
-        this.groups = [];
+        console.error('Gruplar yüklenirken hata:', error);
+        this.error = 'Gruplar yüklenirken hata oluştu';
         this.isLoading = false;
       }
     });
@@ -157,46 +126,29 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, OnDestr
     }
   }
 
-  loadGroupStudents(): void {
+  private loadGroupStudents(): void {
     if (!this.selectedGroup) return;
 
-    this.isLoading = true;
-    
-    this.http.get<any>('./server/api/ogrenciler_listesi.php', { 
-      headers: this.getAuthHeaders() 
+    this.http.get<any>('./server/api/ogrenciler_listesi.php', {
+      headers: this.getAuthHeaders()
     }).subscribe({
       next: (response) => {
         if (response && response.success && response.data) {
-          // Giriş yapan öğretmenin bilgilerini al
-          let loggedInUser: any = null;
-          const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
-          if (userStr) {
-            loggedInUser = JSON.parse(userStr);
-          }
-
-          const loggedInTeacherName = loggedInUser?.adi_soyadi || '';
-          
-          // Seçilen gruptaki öğrencileri filtrele
           this.groupStudents = response.data.filter(
-            (student: any) =>
+            (student: any) => 
               student.rutbe === 'ogrenci' && 
-              student.ogretmeni === loggedInTeacherName &&
               student.grubu === this.selectedGroup
           );
-
-          console.log(`${this.selectedGroup} grubundaki öğrenciler:`, this.groupStudents);
-          this.loadClassroomStatus();
+          console.log('Grup öğrencileri yüklendi:', this.groupStudents.length);
         }
-        this.isLoading = false;
       },
       error: (error) => {
-        console.error('Öğrenci verileri yüklenirken hata:', error);
-        this.isLoading = false;
+        console.error('Grup öğrencileri yüklenirken hata:', error);
       }
     });
   }
 
-  loadClassroomStatus(): void {
+  private loadClassroomStatus(): void {
     if (!this.selectedGroup) return;
 
     this.http.get<any>(`./server/api/sinif_durumu.php`, {
@@ -215,7 +167,7 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, OnDestr
             if (entry.is_present) {
               this.presentStudents.add(entry.student_id);
             }
-            
+
             this.classroomEntries.set(entry.student_id, {
               student_id: entry.student_id,
               entry_time: new Date(entry.entry_time),
@@ -237,6 +189,10 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, OnDestr
     });
   }
 
+  refreshClassroomStatus(): void {
+    this.loadClassroomStatus();
+  }
+
   toggleQRScanner(): void {
     if (this.isQRScannerActive) {
       this.stopQRScanner();
@@ -251,18 +207,18 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, OnDestr
         video: { facingMode: 'environment' }
       });
 
-      if (this.videoElement?.nativeElement) {
+      if (this.videoElement) {
         this.videoElement.nativeElement.srcObject = this.mediaStream;
         this.isQRScannerActive = true;
-        
-        // QR kod tarama işlemini başlat
-        this.qrScanInterval = setInterval(() => {
-          this.scanQRCode();
+
+        // Mock QR scanning (gerçek implementasyon için jsQR kütüphanesi kullanılabilir)
+        this.scanInterval = setInterval(() => {
+          this.scanForQRCode();
         }, 1000);
       }
     } catch (error) {
       console.error('Kamera erişim hatası:', error);
-      alert('Kameraya erişim izni gerekli');
+      alert('Kamera erişimi reddedildi veya mevcut değil');
     }
   }
 
@@ -272,37 +228,26 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, OnDestr
       this.mediaStream = null;
     }
 
-    if (this.qrScanInterval) {
-      clearInterval(this.qrScanInterval);
-      this.qrScanInterval = null;
+    if (this.scanInterval) {
+      clearInterval(this.scanInterval);
+      this.scanInterval = null;
     }
 
     this.isQRScannerActive = false;
   }
 
-  private scanQRCode(): void {
-    if (!this.videoElement?.nativeElement || !this.canvasElement?.nativeElement) return;
-
-    const video = this.videoElement.nativeElement;
-    const canvas = this.canvasElement.nativeElement;
-    const context = canvas.getContext('2d');
-
-    if (!context || video.readyState !== video.HAVE_ENOUGH_DATA) return;
-
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    // Mock QR code detection - gerçek uygulamada jsQR library kullanılır
-    const mockQRData = this.generateMockQRData();
-    if (mockQRData) {
-      this.processQRCode(mockQRData);
+  private scanForQRCode(): void {
+    // Mock QR kod taraması - gerçek implementasyon için jsQR kullanılması gerekir
+    if (Math.random() < 0.05) { // %5 şansla mock QR kod
+      const mockQRData = this.generateMockQRData();
+      if (mockQRData) {
+        this.processQRCode(mockQRData);
+      }
     }
   }
 
   private generateMockQRData(): string | null {
-    // Mock function - gerçek QR detection için jsQR kullanılacak
-    if (Math.random() < 0.1) { // %10 şansla QR kod simüle et
+    if (Math.random() < 0.1) {
       const randomStudent = this.groupStudents[Math.floor(Math.random() * this.groupStudents.length)];
       const action = Math.random() < 0.5 ? 'entry' : 'exit';
       return `student_${randomStudent.id}_${action}`;
@@ -330,7 +275,7 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, OnDestr
     if (!student) return;
 
     const currentTime = new Date();
-    
+
     const classroomData = {
       student_id: studentId,
       grup: this.selectedGroup,
@@ -380,7 +325,7 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, OnDestr
 
     const isCurrentlyPresent = this.presentStudents.has(studentId);
     const action = isCurrentlyPresent ? 'exit' : 'entry';
-    
+
     if (confirm(`${student.adi_soyadi} için ${isCurrentlyPresent ? 'çıkış' : 'giriş'} işlemini manuel olarak kaydetmek istediğinizden emin misiniz?`)) {
       this.handleStudentQRAction(studentId, action);
     }
@@ -437,11 +382,6 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, OnDestr
       });
 
     console.log('Sınıf raporu:', presentList);
-    // Excel export veya başka format için işlemler burada yapılabilir
     alert(`Sınıf raporu konsola yazdırıldı. Toplam ${presentList.length} öğrenci sınıfta.`);
-  }
-
-  refreshClassroomStatus(): void {
-    this.loadClassroomStatus();
   }
 }
