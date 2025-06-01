@@ -193,97 +193,88 @@
     <i class="bi bi-arrow-up text-muted fs-1 mb-3"></i>
     <p class="text-muted">Sınıf durumunu görmek için yukarıdan bir grup seçin</p>
   </div>
-    </div>
-     <!-- Günlük Rapor Tablosu -->
-  <div class="container-fluid mt-4" *ngIf="selectedGroup && selectedDate">
-    <div class="card shadow-sm">
-      <div class="card-header bg-primary text-white">
-        <div class="d-flex justify-content-between align-items-center">
-          <h6 class="mb-0">
-            <i class="bi bi-table me-2"></i>
-            Günlük Giriş-Çıkış Raporu - {{ selectedGroup }} ({{ selectedDate }})
-          </h6>
-          <button 
-            class="btn btn-light btn-sm" 
-            (click)="loadTableReport()"
-            [disabled]="isLoadingReport">
-            <i class="bi bi-arrow-clockwise me-1"></i>
-            {{ isLoadingReport ? 'Yükleniyor...' : 'Raporu Yenile' }}
-          </button>
-        </div>
-      </div>
-      <div class="card-body p-0">
-        <!-- Özet Bilgiler -->
-        <div class="row g-0 border-bottom">
-          <div class="col-md-3 bg-light border-end p-3 text-center">
-            <div class="fw-bold text-primary">{{ groupStudents.length }}</div>
-            <small class="text-muted">Toplam Öğrenci</small>
-          </div>
-          <div class="col-md-3 bg-light border-end p-3 text-center">
-            <div class="fw-bold text-success">{{ getPresentCount() }}</div>
-            <small class="text-muted">Sınıfta Olan</small>
-          </div>
-          <div class="col-md-3 bg-light border-end p-3 text-center">
-            <div class="fw-bold text-warning">{{ getAbsentCount() }}</div>
-            <small class="text-muted">Henüz Gelmemiş</small>
-          </div>
-          <div class="col-md-3 bg-light p-3 text-center">
-            <div class="fw-bold text-info">{{ getAttendancePercentage() }}%</div>
-            <small class="text-muted">Katılım Oranı</small>
-          </div>
-        </div>
+</div>
+  </div>
 
-        <!-- Rapor Tablosu -->
-        <div class="table-responsive" *ngIf="dailyReportData.length > 0; else noReportData">
-          <table class="table table-hover mb-0">
-            <thead class="table-light">
-              <tr>
-                <th class="text-uppercase small fw-medium">Sıra</th>
-                <th class="text-uppercase small fw-medium">Öğrenci Adı</th>
-                <th class="text-uppercase small fw-medium">E-posta</th>
-                <th class="text-uppercase small fw-medium">Durum</th>
-                <th class="text-uppercase small fw-medium">Giriş Saati</th>
-                <th class="text-uppercase small fw-medium">Çıkış Saati</th>
-                <th class="text-uppercase small fw-medium">Hareket Sayısı</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let report of dailyReportData; let i = index">
-                <td class="fw-medium">{{ i + 1 }}</td>
-                <td class="fw-medium">{{ report.student_name }}</td>
-                <td class="text-muted">{{ report.student_email }}</td>
-                <td>
-                  <span [class]="report.is_present ? 'badge bg-success' : 'badge bg-secondary'">
-                    {{ report.status }}
-                  </span>
-                </td>
-                <td>
-                  <span [class]="report.entry_time !== '-' ? 'text-success fw-medium' : 'text-muted'">
+  <!-- Günlük Rapor Tablosu -->
+  <div class="card border-0 shadow-sm mb-4" *ngIf="dailyReportData.length > 0; else noReportData">
+          <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
+            <div>
+              <h5 class="card-title mb-0">
+                <i class="bi bi-table me-2 text-primary"></i>
+                Günlük Giriş-Çıkış Raporu - {{ selectedGroup }} ({{ selectedDate }})
+              </h5>
+              <p class="text-muted small mb-0">Öğrencilerin günlük devam durumu ve giriş-çıkış saatleri</p>
+            </div>
+            <div>
+              <button 
+                class="btn btn-outline-primary btn-sm me-2" 
+                (click)="exportToPDF()"
+                [disabled]="!dailyReportData.length">
+                <i class="bi bi-file-earmark-pdf me-1"></i>
+                PDF İndir
+              </button>
+              <span class="badge bg-light text-dark">{{ dailyReportData.length }} öğrenci</span>
+            </div>
+          </div>
+
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th class="text-uppercase small fw-medium border-0 px-3">Sıra</th>
+                    <th class="text-uppercase small fw-medium border-0">Öğrenci Adı</th>
+                    <th class="text-uppercase small fw-medium border-0">E-posta</th>
+                    <th class="text-uppercase small fw-medium border-0 text-center">Durum</th>
+                    <th class="text-uppercase small fw-medium border-0 text-center">Giriş Saati</th>
+                    <th class="text-uppercase small fw-medium border-0 text-center">Çıkış Saati</th>
+                    <th class="text-uppercase small fw-medium border-0 text-center">Hareket Sayısı</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let report of dailyReportData; let i = index" class="border-bottom border-light">
+                    <td class="fw-medium text-muted px-3">{{ i + 1 }}</td>
+                    <td class="fw-semibold">{{ report.student_name }}</td>
+                    <td class="text-muted small">{{ report.student_email }}</td>
+                    <td class="text-center">
+                      <span [class]="report.is_present ? 'badge bg-success-subtle text-success' : 'badge bg-secondary-subtle text-secondary'">
+                        <i [class]="report.is_present ? 'bi bi-check-circle me-1' : 'bi bi-x-circle me-1'"></i>
+                        {{ report.status }}
+                      </span>
+                    </td>
+                    <td class="text-center">
+                      <span [class]="report.entry_time !== '-' ? 'text-success fw-medium' : 'text-muted'">
                     {{ report.entry_time }}
                   </span>
                 </td>
-                <td>
+                <td class="text-center">
                   <span [class]="report.exit_time !== '-' ? 'text-danger fw-medium' : 'text-muted'">
                     {{ report.exit_time }}
                   </span>
                 </td>
-                <td>
-                  <span class="badge bg-info">{{ report.movement_count }}</span>
+                <td class="text-center">
+                  <span class="badge bg-info-subtle text-info">{{ report.movement_count }}</span>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <ng-template #noReportData>
-          <div class="text-center p-5 text-muted">
-            <i class="bi bi-table fs-1 d-block mb-3"></i>
-            <h6>Rapor Verisi Yok</h6>
-            <p class="small">Raporu görüntülemek için yukarıdaki "Raporu Yenile" butonuna tıklayın.</p>
-          </div>
-        </ng-template>
+        <div *ngIf="dailyReportData.length === 0" class="text-center p-4">
+          <i class="bi bi-exclamation-triangle text-warning fs-3"></i>
+          <p class="mb-0">Bu tarih için henüz bir kayıt bulunamadı.</p>
+        </div>
       </div>
     </div>
+
+    <ng-template #noReportData>
+      <div class="card border-0 shadow-sm">
+        <div class="card-body text-center p-5">
+          <i class="bi bi-table text-muted fs-1 d-block mb-3"></i>
+          <h6 class="text-muted">Rapor Verisi Yok</h6>
+          <p class="text-muted small">Raporu görüntülemek için yukarıdaki "Raporu Yenile" butonuna tıklayın.</p>
+        </div>
+      </div>
+    </ng-template>
   </div>
-  </div>
-</div>
