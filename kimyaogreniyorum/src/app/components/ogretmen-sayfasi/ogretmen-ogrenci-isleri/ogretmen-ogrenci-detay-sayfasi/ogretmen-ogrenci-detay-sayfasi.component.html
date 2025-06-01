@@ -1,0 +1,271 @@
+<div class="edit-container">
+    <header class="page-header">
+      <h1>Öğrenci Düzenle</h1>
+      <button class="back-button" (click)="navigateBack()">
+        <i class="bi bi-arrow-left"></i> Geri Dön
+      </button>
+    </header>
+
+    <!-- Yükleniyor Durumu -->
+    <div class="loading-spinner" *ngIf="isLoading">
+      <div class="spinner">
+        <span class="visually-hidden">Yükleniyor...</span>
+      </div>
+      <p class="loading-text">Yükleniyor...</p>
+    </div>
+
+    <!-- Hata Gösterimi -->
+    <div class="alert alert-error" *ngIf="error">
+      <div class="alert-icon">
+        <i class="bi bi-exclamation-triangle"></i>
+      </div>
+      <div class="alert-content">
+        <h3 class="alert-title">Hata</h3>
+        <p class="alert-message">{{ error }}</p>
+      </div>
+    </div>
+
+    <!-- Başarılı Gösterimi -->
+    <div class="alert alert-success" *ngIf="success">
+      <div class="alert-icon">
+        <i class="bi bi-check-circle"></i>
+      </div>
+      <div class="alert-content">
+        <h3 class="alert-title">Başarılı</h3>
+        <p class="alert-message">{{ success }}</p>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="edit-form" *ngIf="!isLoading && student">
+      <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+        <!-- Profil Bölümü - Her zaman üstte sabitlenmiş -->
+        <div class="profile-header">
+          <div class="avatar-upload">
+            <div class="avatar-container" (click)="fileInput.click()">
+              <img [src]="student.avatar || 'assets/images/default-avatar.png'" alt="Avatar" class="avatar-image">
+              <div class="avatar-overlay">
+                <i class="bi bi-camera"></i>
+                <span class="avatar-text">Fotoğraf Değiştir</span>
+              </div>
+            </div>
+
+            <input #fileInput type="file" hidden accept="image/jpeg,image/png,image/gif,image/webp" (change)="onFileChange($event)">
+
+            <div class="avatar-info">
+              <h2 class="student-name">{{ student.adi_soyadi }}</h2>
+              <p class="student-email">{{ student.email }}</p>
+
+              <div *ngIf="selectedFile" class="selected-file-info">
+                <span class="file-name">{{ selectedFile.name }}</span>
+                <span class="file-size">({{ (selectedFile.size / 1024).toFixed(1) }} KB)</span>
+                <small class="file-notice">Kaydet butonuna basınca yüklenecektir</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <!-- Form Bölümleri -->
+          <div class="form-column">
+            <!-- Temel Bilgiler Kartı -->
+            <div class="info-card">
+              <div class="card-header">
+                <i class="bi bi-person card-icon"></i>
+                <h2 class="card-title">Temel Bilgiler</h2>
+              </div>
+
+              <div class="card-body">
+                <div class="form-row">
+                  <div class="form-field">
+                    <div class="material-input-container" [class.focused]="isFocused('adi_soyadi')" [class.error]="isInvalid('adi_soyadi')">
+                      <input id="adi_soyadi" type="text" class="material-input" formControlName="adi_soyadi" (focus)="onFocus('adi_soyadi')" (blur)="onBlur('adi_soyadi')">
+                      <label for="adi_soyadi" class="material-input-label" [class.raised]="isRaised('adi_soyadi')">Adı Soyadı</label>
+                    </div>
+                    <div *ngIf="editForm.get('adi_soyadi')?.invalid && editForm.get('adi_soyadi')?.touched" class="error-message">
+                      <small>Ad Soyad gereklidir</small>
+                    </div>
+                  </div>
+
+                  <div class="form-field">
+                    <div class="material-input-container" [class.focused]="isFocused('email')" [class.error]="isInvalid('email')">
+                      <input id="email" type="email" class="material-input" formControlName="email" (focus)="onFocus('email')" (blur)="onBlur('email')">
+                      <label for="email" class="material-input-label" [class.raised]="isRaised('email')">Email</label>
+                    </div>
+                    <div *ngIf="editForm.get('email')?.invalid && editForm.get('email')?.touched" class="error-message">
+                      <small>Geçerli bir email adresi gereklidir</small>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-field">
+                    <div class="material-input-container" [class.focused]="isFocused('cep_telefonu')">
+                      <input id="cep_telefonu" type="text" class="material-input" formControlName="cep_telefonu" (focus)="onFocus('cep_telefonu')" (blur)="onBlur('cep_telefonu')">
+                      <label for="cep_telefonu" class="material-input-label" [class.raised]="isRaised('cep_telefonu')">Cep Telefonu</label>
+                    </div>
+                  </div>
+
+                  <div class="form-field">
+                    <div class="material-input-container rutbe-select" [class.focused]="isFocused('rutbe')">
+                      <select id="rutbe" class="material-input material-select" formControlName="rutbe" (focus)="onFocus('rutbe')" (blur)="onBlur('rutbe')">
+                        <option value="ogrenci">Öğrenci</option>
+                        <option value="ogretmen">Öğretmen</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                      <label for="rutbe" class="material-input-label" [class.raised]="isRaised('rutbe')">Rütbe</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-field">
+                    <div class="material-input-container" [class.focused]="isFocused('aktif')">
+                      <select id="aktif" class="material-input material-select" formControlName="aktif" (focus)="onFocus('aktif')" (blur)="onBlur('aktif')">
+                        <option [ngValue]="true">Aktif</option>
+                        <option [ngValue]="false">Pasif</option>
+                      </select>
+                      <label for="aktif" class="material-input-label" [class.raised]="isRaised('aktif')">Hesap Durumu</label>
+                    </div>
+                  </div>
+
+                  <div class="form-field">
+                    <div class="material-input-container" [class.focused]="isFocused('sifre')">
+                      <input id="sifre" type="password" class="material-input" formControlName="sifre" (focus)="onFocus('sifre')" (blur)="onBlur('sifre')">
+                      <label for="sifre" class="material-input-label" [class.raised]="isRaised('sifre')">Yeni Şifre (Boş bırakılabilir)</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-field">
+                    <div class="material-input-container" [class.focused]="isFocused('sifre_tekrar')" [class.error]="editForm.errors?.['passwordMismatch']">
+                      <input id="sifre_tekrar" type="password" class="material-input" formControlName="sifre_tekrar" (focus)="onFocus('sifre_tekrar')" (blur)="onBlur('sifre_tekrar')">
+                      <label for="sifre_tekrar" class="material-input-label" [class.raised]="isRaised('sifre_tekrar')">Şifre Tekrar</label>
+                    </div>
+                    <div *ngIf="editForm.errors?.['passwordMismatch']" class="error-message">
+                      <small>Şifreler eşleşmiyor</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Eğitim Bilgileri Kartı -->
+            <div class="info-card">
+              <div class="card-header">
+                <i class="bi bi-book card-icon"></i>
+                <h2 class="card-title">Eğitim Bilgileri</h2>
+              </div>
+
+              <div class="card-body">
+                <div class="form-row">
+                  <div class="form-field">
+                    <div class="material-input-container" [class.focused]="isFocused('okulu')">
+                      <input id="okulu" type="text" class="material-input" formControlName="okulu" (focus)="onFocus('okulu')" (blur)="onBlur('okulu')">
+                      <label for="okulu" class="material-input-label" [class.raised]="isRaised('okulu')">Okul</label>
+                    </div>
+                  </div>
+
+                  <div class="form-field">
+                    <div class="material-input-container" [class.focused]="isFocused('sinifi')">
+                      <input id="sinifi" type="text" class="material-input" formControlName="sinifi" (focus)="onFocus('sinifi')" (blur)="onBlur('sinifi')">
+                      <label for="sinifi" class="material-input-label" [class.raised]="isRaised('sinifi')">Sınıf</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-field">
+                    <div class="material-input-container" [class.focused]="isFocused('grubu')">
+                      <input id="grubu" type="text" class="material-input" formControlName="grubu" (focus)="onFocus('grubu')" (blur)="onBlur('grubu')">
+                      <label for="grubu" class="material-input-label" [class.raised]="isRaised('grubu')">Grup</label>
+                    </div>
+                  </div>
+
+                  <div class="form-field">
+                    <!-- Branş (Sadece öğretmenler için) -->
+                    <div  *ngIf="editForm.get('rutbe')?.value === 'ogretmen'" class="material-input-container" [class.focused]="isFocused('brans')">
+                      <input id="brans" type="text" class="material-input" formControlName="brans" (focus)="onFocus('brans')" (blur)="onBlur('brans')">
+                      <label for="brans" class="material-input-label" [class.raised]="isRaised('brans')">Branş</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+
+                  <div class="form-field">
+                    <div class="material-input-container" [class.focused]="isFocused('ders_gunu')">
+                      <select id="ders_gunu" class="material-input material-select" formControlName="ders_gunu" (focus)="onFocus('ders_gunu')" (blur)="onBlur('ders_gunu')">
+                        <option value="">Seçiniz</option>
+                        <option value="Pazartesi">Pazartesi</option>
+                        <option value="Salı">Salı</option>
+                        <option value="Çarşamba">Çarşamba</option>
+                        <option value="Perşembe">Perşembe</option>
+                        <option value="Cuma">Cuma</option>
+                        <option value="Cumartesi">Cumartesi</option>
+                        <option value="Pazar">Pazar</option>
+                      </select>
+                      <label for="ders_gunu" class="material-input-label" [class.raised]="isRaised('ders_gunu')">Ders Günü</label>
+                    </div>
+                  </div>
+
+                  <div class="form-field">
+                    <div class="material-input-container" [class.focused]="isFocused('ders_saati')">
+                      <input id="ders_saati" type="text" class="material-input" formControlName="ders_saati" (focus)="onFocus('ders_saati')" (blur)="onBlur('ders_saati')">
+                      <label for="ders_saati" class="material-input-label" [class.raised]="isRaised('ders_saati')">Ders Saati</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+
+                  <div class="form-field">
+                    <div class="material-input-container" [class.focused]="isFocused('ucret')">
+                      <input id="ucret" type="number" class="material-input" formControlName="ucret" (focus)="onFocus('ucret')" (blur)="onBlur('ucret')">
+                      <label for="ucret" class="material-input-label" [class.raised]="isRaised('ucret')">Aylık Ücret</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Veli Bilgileri Kartı -->
+            <div class="info-card">
+              <div class="card-header">
+                <i class="bi bi-people card-icon"></i>
+                <h2 class="card-title">Veli Bilgileri</h2>
+              </div>
+
+              <div class="card-body">
+                <div class="form-row">
+                  <div class="form-field">
+                    <div class="material-input-container" [class.focused]="isFocused('veli_adi')">
+                      <input id="veli_adi" type="text" class="material-input" formControlName="veli_adi" (focus)="onFocus('veli_adi')" (blur)="onBlur('veli_adi')">
+                      <label for="veli_adi" class="material-input-label" [class.raised]="isRaised('veli_adi')">Veli Adı</label>
+                    </div>
+                  </div>
+
+                  <div class="form-field">
+                    <div class="material-input-container" [class.focused]="isFocused('veli_cep')">
+                      <input id="veli_cep" type="text" class="material-input" formControlName="veli_cep" (focus)="onFocus('veli_cep')" (blur)="onBlur('veli_cep')">
+                      <label for="veli_cep" class="material-input-label" [class.raised]="isRaised('veli_cep')">Veli Telefon</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Form Aksiyonları -->
+            <div class="form-actions">
+              <button type="button" class="button button-secondary" (click)="navigateBack()">İptal</button>
+              <button type="submit" class="button button-primary" [disabled]="editForm.invalid || isSubmitting">
+                <span *ngIf="isSubmitting" class="spinner-small"></span>
+                Kaydet
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
