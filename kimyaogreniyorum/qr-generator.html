@@ -51,6 +51,8 @@
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             border: 2px solid #e9ecef;
+            flex: 1;
+            min-width: 250px;
         }
         
         .qr-card.entry {
@@ -106,6 +108,22 @@
             background: #3730a3;
         }
         
+        .regenerate-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            width: 100%;
+        }
+        
+        .regenerate-btn:hover {
+            background: #1e7e34;
+        }
+        
         .instructions {
             background: #e3f2fd;
             padding: 20px;
@@ -127,6 +145,19 @@
         .instructions li {
             margin-bottom: 8px;
         }
+        
+        @media print {
+            body {
+                background: white !important;
+                -webkit-print-color-adjust: exact;
+            }
+            .container {
+                box-shadow: none !important;
+            }
+            .print-btn, .regenerate-btn {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -137,7 +168,7 @@
             <h2>👩‍🎓 Öğrenci Bilgileri</h2>
             <p><strong>Ad Soyad:</strong> Elif Elif</p>
             <p><strong>E-mail:</strong> elish263624@gmail.com</p>
-            <p><strong>Öğrenci ID:</strong> <span id="studentId">-</span></p>
+            <p><strong>Öğrenci ID:</strong> <span id="studentId">35</span></p>
             <p><strong>Oluşturulma Tarihi:</strong> <span id="currentDate">-</span></p>
         </div>
         
@@ -155,6 +186,10 @@
             </div>
         </div>
         
+        <button class="regenerate-btn" onclick="generateQRCodes()">
+            🔄 Yeni QR Kodları Oluştur
+        </button>
+        
         <button class="print-btn" onclick="window.print()">
             🖨️ QR Kodları Yazdır
         </button>
@@ -167,6 +202,7 @@
                 <li>QR kodları her kullanımda geçerlidir</li>
                 <li>Kodları temiz ve net tutun</li>
                 <li>Telefonda fotoğraf çekerek de kullanabilirsiniz</li>
+                <li>Yeni QR kodları oluşturmak için "Yeni QR Kodları Oluştur" butonuna basın</li>
             </ul>
         </div>
     </div>
@@ -180,8 +216,11 @@
         };
 
         // Tarih bilgisini göster
-        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('tr-TR');
-        document.getElementById('studentId').textContent = studentData.id;
+        function updateDateTime() {
+            const now = new Date();
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('tr-TR') + ' ' + now.toLocaleTimeString('tr-TR');
+            document.getElementById('studentId').textContent = studentData.id;
+        }
 
         // QR kod verilerini oluştur
         function generateQRData(action) {
@@ -191,8 +230,13 @@
 
         // QR kodları oluştur
         function generateQRCodes() {
+            console.log('QR kodları oluşturuluyor...');
+            
             const entryData = generateQRData('entry');
             const exitData = generateQRData('exit');
+
+            console.log('Entry QR Data:', entryData);
+            console.log('Exit QR Data:', exitData);
 
             // Giriş QR kodu
             QRCode.toCanvas(document.getElementById('entryQR'), entryData, {
@@ -203,7 +247,11 @@
                     light: '#FFFFFF'
                 }
             }, function (error) {
-                if (error) console.error('Giriş QR kodu oluşturulamadı:', error);
+                if (error) {
+                    console.error('Giriş QR kodu oluşturulamadı:', error);
+                } else {
+                    console.log('Giriş QR kodu oluşturuldu');
+                }
             });
 
             // Çıkış QR kodu
@@ -215,36 +263,38 @@
                     light: '#FFFFFF'
                 }
             }, function (error) {
-                if (error) console.error('Çıkış QR kodu oluşturulamadı:', error);
+                if (error) {
+                    console.error('Çıkış QR kodu oluşturulamadı:', error);
+                } else {
+                    console.log('Çıkış QR kodu oluşturuldu');
+                }
             });
 
             // QR kod verilerini göster
             document.getElementById('entryData').textContent = entryData;
             document.getElementById('exitData').textContent = exitData;
+            
+            console.log('QR kodları başarıyla oluşturuldu!');
         }
 
-        // Sayfa yüklendiğinde QR kodları oluştur
-        window.onload = function() {
-            generateQRCodes();
-        };
+        // Sayfa yüklendiğinde çalışacak fonksiyon
+        window.addEventListener('load', function() {
+            console.log('Sayfa yüklendi, QR kodları oluşturuluyor...');
+            updateDateTime();
+            
+            // QRCode kütüphanesinin yüklenmesini bekle
+            setTimeout(function() {
+                if (typeof QRCode !== 'undefined') {
+                    generateQRCodes();
+                } else {
+                    console.error('QRCode kütüphanesi yüklenemedi!');
+                    alert('QR kod kütüphanesi yüklenemedi. Sayfayı yenileyin.');
+                }
+            }, 500);
+        });
 
-        // Yazdırma için stil
-        const style = document.createElement('style');
-        style.textContent = `
-            @media print {
-                body {
-                    background: white !important;
-                    -webkit-print-color-adjust: exact;
-                }
-                .container {
-                    box-shadow: none !important;
-                }
-                .print-btn {
-                    display: none !important;
-                }
-            }
-        `;
-        document.head.appendChild(style);
+        // Her 1 saniyede bir zamanı güncelle
+        setInterval(updateDateTime, 1000);
     </script>
 </body>
 </html>
