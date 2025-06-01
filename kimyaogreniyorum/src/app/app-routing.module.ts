@@ -1,4 +1,3 @@
-
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { OgrenciGirisSayfasiComponent } from './components/index-sayfasi/giris-kayit-islemeleri/ogrenci-giris-sayfasi/ogrenci-giris-sayfasi.component';
@@ -20,6 +19,7 @@ import { OgretmenGruplarSayfasiComponent } from './components/ogretmen-sayfasi/o
 import { OgretmenDevamsizlikSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-devamsizlik-sayfasi/ogretmen-devamsizlik-sayfasi.component';
 import { OgretmenGruplarDetaySayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component';
 import { OgretmenOgrenciDetaySayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-detay-sayfasi/ogretmen-ogrenci-detay-sayfasi.component';
+import { OgretmenSiniftaKimlerVarSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/giris-sayfasi', pathMatch: 'full' },
@@ -79,6 +79,14 @@ const routes: Routes = [
       {
         path: 'ogretmen-ogrenci-detay-sayfasi/:id',
         component: OgretmenOgrenciDetaySayfasiComponent,
+      },
+      {
+        path: 'ogretmen-sinifta-kimler-var', 
+        component: OgretmenSiniftaKimlerVarSayfasiComponent 
+      },
+      {
+        path: 'ogretmen-sinifta-kimler-var/:group', 
+        component: OgretmenSiniftaKimlerVarSayfasiComponent 
       },
       {
         path: 'devamsizlik/:grupAdi',

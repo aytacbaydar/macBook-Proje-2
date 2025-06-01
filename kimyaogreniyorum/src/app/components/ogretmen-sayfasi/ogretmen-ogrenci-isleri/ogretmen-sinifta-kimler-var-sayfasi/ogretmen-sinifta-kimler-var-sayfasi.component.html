@@ -1,1 +1,193 @@
 <p>ogretmen-sinifta-kimler-var-sayfasi works!</p>
+<div class="attendance-checker-container">
+  <!-- Header Section -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-text">
+        <h1 class="page-title">
+          <i class="bi bi-people-fill me-2"></i>
+          Sınıfta Kimler Var?
+        </h1>
+        <p class="page-description">QR kod okutarak öğrencilerin sınıfa girişini takip edin</p>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-icon bg-primary">
+            <i class="bi bi-people"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{ groupStudents.length }}</div>
+            <div class="stat-label">Toplam Öğrenci</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon bg-success">
+            <i class="bi bi-check-circle"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{ getPresentCount() }}</div>
+            <div class="stat-label">Sınıfta Olan</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon bg-warning">
+            <i class="bi bi-question-circle"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{ getAbsentCount() }}</div>
+            <div class="stat-label">Henüz Gelmemiş</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon bg-info">
+            <i class="bi bi-percent"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{ groupStudents.length > 0 ? Math.round((getPresentCount() / groupStudents.length) * 100) : 0 }}%</div>
+            <div class="stat-label">Katılım Oranı</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls Section -->
+  <div class="controls-section">
+    <div class="control-group">
+      <label class="control-label">Grup Seçin:</label>
+      <select class="form-select" [(ngModel)]="selectedGroup" (change)="onGroupChange()">
+        <option value="">Grup seçiniz...</option>
+        <option *ngFor="let group of groups" [value]="group">{{ group }}</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">Tarih:</label>
+      <input type="date" class="form-control" [(ngModel)]="selectedDate" readonly>
+    </div>
+
+    <div class="control-group">
+      <button class="btn btn-primary" (click)="toggleQRScanner()" [disabled]="!selectedGroup">
+        <i class="bi bi-qr-code-scan me-1"></i>
+        {{ isQRScannerActive ? 'QR Tarayıcıyı Kapat' : 'QR Kod Tarayıcı' }}
+      </button>
+    </div>
+
+    <div class="control-group" *ngIf="selectedGroup && groupStudents.length > 0">
+      <button class="btn btn-info" (click)="exportAttendanceList()">
+        <i class="bi bi-download me-1"></i>
+        Listeyi Dışa Aktar
+      </button>
+    </div>
+  </div>
+
+  <!-- QR Scanner Section -->
+  <div *ngIf="isQRScannerActive" class="qr-scanner-section">
+    <div class="scanner-container">
+      <video #videoElement class="scanner-video" autoplay playsinline></video>
+      <canvas #canvasElement style="display: none;"></canvas>
+      <div class="scanner-overlay">
+        <div class="scanner-frame"></div>
+        <p class="scanner-text">Öğrenci QR kodunu kameranın önüne tutun</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Students List -->
+  <div *ngIf="selectedGroup && groupStudents.length > 0" class="students-section">
+    <div class="section-header">
+      <h3>{{ selectedGroup }} - Öğrenci Listesi</h3>
+      <div class="list-actions">
+        <div class="search-box">
+          <i class="bi bi-search"></i>
+          <input type="text" placeholder="Öğrenci ara..." class="form-control">
+        </div>
+      </div>
+    </div>
+
+    <div class="students-grid">
+      <div class="student-card" *ngFor="let student of groupStudents" 
+           [class.present]="isStudentPresent(student.id)"
+           [class.absent]="!isStudentPresent(student.id)">
+        
+        <div class="student-info">
+          <div class="student-avatar">
+            <img [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)" 
+                 [alt]="student.adi_soyadi" class="avatar-img">
+            <div class="status-indicator" 
+                 [class.present]="isStudentPresent(student.id)"
+                 [class.absent]="!isStudentPresent(student.id)">
+              <i class="bi" 
+                 [class.bi-check-circle-fill]="isStudentPresent(student.id)"
+                 [class.bi-clock-fill]="!isStudentPresent(student.id)"></i>
+            </div>
+          </div>
+          
+          <div class="student-details">
+            <div class="student-name">{{ student.adi_soyadi }}</div>
+            <div class="student-email">{{ student.email }}</div>
+            <div class="student-status" 
+                 [class.text-success]="isStudentPresent(student.id)"
+                 [class.text-warning]="!isStudentPresent(student.id)">
+              {{ isStudentPresent(student.id) ? 'Sınıfta' : 'Henüz Gelmedi' }}
+            </div>
+            <div class="scan-time" *ngIf="getStudentScanTime(student.id)">
+              <small class="text-muted">
+                <i class="bi bi-clock me-1"></i>
+                Giriş: {{ getStudentScanTime(student.id) | date:'HH:mm:ss' }}
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <div class="student-actions">
+          <button class="btn btn-sm btn-success" 
+                  [class.active]="isStudentPresent(student.id)"
+                  (click)="markStudentPresent(student.id)"
+                  [disabled]="isStudentPresent(student.id)">
+            <i class="bi bi-check-lg"></i>
+            Sınıfta
+          </button>
+          <button class="btn btn-sm btn-warning" 
+                  [class.active]="!isStudentPresent(student.id)"
+                  (click)="markStudentAbsent(student.id)"
+                  [disabled]="!isStudentPresent(student.id)">
+            <i class="bi bi-x-lg"></i>
+            Çıkart
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="selectedGroup && groupStudents.length === 0 && !isLoading" class="empty-state">
+    <div class="empty-icon">
+      <i class="bi bi-people"></i>
+    </div>
+    <h3>Bu grupta öğrenci bulunamadı</h3>
+    <p>Seçilen grupta kayıtlı öğrenci bulunmuyor.</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Yükleniyor...</span>
+    </div>
+    <p>Öğrenciler yükleniyor...</p>
+  </div>
+
+  <!-- No Group Selected -->
+  <div *ngIf="!selectedGroup" class="no-selection">
+    <div class="empty-icon">
+      <i class="bi bi-arrow-up"></i>
+    </div>
+    <h3>Grup Seçin</h3>
+    <p>Öğrencileri görüntülemek için yukarıdan bir grup seçin.</p>
+  </div>
+</div>
