@@ -55,6 +55,9 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
     this.setTodayDate();
     this.updateCurrentTime();
     setInterval(() => this.updateCurrentTime(), 1000);
+    
+    // Eski QR kod kayıtlarını her 10 saniyede bir temizle
+    setInterval(() => this.cleanupOldQRRecords(), 10000);
   }
 
   ngAfterViewInit(): void {
@@ -255,6 +258,10 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
       this.scanInterval = null;
     }
     this.isQRScannerActive = false;
+    
+    // QR kod geçmişini temizle
+    this.recentlyProcessedQR.clear();
+    
     this.toastr.info('QR kod tarayıcı durduruldu', 'Bilgi');
   }
 
@@ -300,6 +307,18 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
 
   private processQRCodeForClassroom(qrData: string): void {
     console.log('QR Kod okundu:', qrData);
+
+    // Aynı QR kodun son 3 saniye içinde işlenip işlenmediğini kontrol et
+    const now = Date.now();
+    const lastProcessed = this.recentlyProcessedQR.get(qrData);
+    
+    if (lastProcessed && (now - lastProcessed) < 3000) {
+      console.log('QR kod son 3 saniye içinde işlendi, tekrar işlenmeyecek:', qrData);
+      return;
+    }
+
+    // Bu QR kodun işlendiğini kaydet
+    this.recentlyProcessedQR.set(qrData, now);
 
     // QR kod formatını parse et: studentId_action_timestamp
     const parts = qrData.split('_');
@@ -628,5 +647,17 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
   // Test için ses çalma fonksiyonu
   testSpeech(): void {
     this.speakMessage('Test mesajı. Ses çalışıyor mu?');
+  }
+
+  // Eski QR kod kayıtlarını temizle (5 saniyeden eski olanları)
+  private cleanupOldQRRecords(): void {
+    const now = Date.now();
+    const maxAge = 5000; // 5 saniye
+
+    for (const [qrData, timestamp] of this.recentlyProcessedQR.entries()) {
+      if (now - timestamp > maxAge) {
+        this.recentlyProcessedQR.delete(qrData);
+      }
+    }
   }
 }
