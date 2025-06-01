@@ -9,6 +9,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $user = authorize();
         $studentId = isset($_GET['id']) ? intval($_GET['id']) : $user['id'];
         
+        $conn = getConnection();
+        
         // Yetkilendirme kontrolü
         if ($user['rutbe'] === 'admin') {
             // Admin tüm öğrencileri görebilir
@@ -36,8 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         } else {
             errorResponse('Geçersiz kullanıcı türü', 403);
         }
-        
-        $conn = getConnection();
         
         // Öğrenci temel bilgilerini getir
         $stmt = $conn->prepare("
