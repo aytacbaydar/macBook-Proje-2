@@ -1,5 +1,5 @@
 
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 interface Student {
@@ -24,7 +24,7 @@ interface ClassroomEntry {
   templateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
   styleUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.scss'
 })
-export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit {
+export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, AfterViewInit {
 
   @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
   @ViewChild('canvasElement') canvasElement!: ElementRef<HTMLCanvasElement>;
@@ -48,6 +48,10 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit {
     this.setTodayDate();
     this.updateCurrentTime();
     setInterval(() => this.updateCurrentTime(), 1000);
+  }
+
+  ngAfterViewInit(): void {
+    // ViewChild elementleri kullanıma hazır
   }
 
   updateCurrentTime(): void {
@@ -166,12 +170,17 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit {
         return;
       }
 
-      // Kamera izinlerini kontrol et
-      const permission = await navigator.permissions.query({ name: 'camera' as PermissionName });
-      
-      if (permission.state === 'denied') {
-        alert('Kamera erişimi reddedildi. Lütfen tarayıcı ayarlarından kamera iznini açın.');
-        return;
+      // Kamera izinlerini kontrol et (tarayıcı desteği varsa)
+      try {
+        if ('permissions' in navigator && 'query' in navigator.permissions) {
+          const permission = await navigator.permissions.query({ name: 'camera' as PermissionName });
+          if (permission.state === 'denied') {
+            alert('Kamera erişimi reddedildi. Lütfen tarayıcı ayarlarından kamera iznini açın.');
+            return;
+          }
+        }
+      } catch (permissionError) {
+        console.log('Permission API desteklenmiyor, direkt kamera erişimi denenecek');
       }
 
       // Kamera akışını başlat - önce arka kamera, sonra ön kamera denenir
@@ -201,12 +210,31 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit {
       }
 
       this.mediaStream = stream;
+      
+      // Video elementi kontrol et ve hazırla
       if (this.videoElement?.nativeElement) {
-        this.videoElement.nativeElement.srcObject = stream;
-        await this.videoElement.nativeElement.play();
-        this.isQRScannerActive = true;
-        this.startScanning();
-        alert('QR kod tarayıcı başlatıldı. QR kodu kameraya gösterin.');
+        const video = this.videoElement.nativeElement;
+        video.srcObject = stream;
+        
+        // Video yüklenene kadar bekle
+        video.addEventListener('loadedmetadata', async () => {
+          try {
+            await video.play();
+            this.isQRScannerActive = true;
+            this.startScanning();
+            alert('QR kod tarayıcı başlatıldı. QR kodu kameraya gösterin.');
+          } catch (playError) {
+            console.error('Video oynatma hatası:', playError);
+            alert('Video başlatılamadı: ' + playError.message);
+          }
+        });
+        
+        video.addEventListener('error', (error) => {
+          console.error('Video element hatası:', error);
+          alert('Video element hatası oluştu');
+        });
+      } else {
+        alert('Video elementi bulunamadı. Sayfa yenilenerek tekrar deneyin.');
       }
     } catch (error: any) {
       console.error('Kamera erişim hatası:', error);
