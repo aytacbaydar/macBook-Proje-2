@@ -43,6 +43,7 @@ export class OgretmenQrGeneratorComponent implements OnInit, AfterViewInit {
 
   generateQRData(action: string): string {
     const timestamp = Date.now();
+    // Format: studentId_action_timestamp_grup
     return `${this.studentData.id}_${action}_${timestamp}`;
   }
 

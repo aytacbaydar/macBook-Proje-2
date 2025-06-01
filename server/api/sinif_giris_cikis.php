@@ -48,9 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 qr_method ENUM('entry', 'exit') NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                FOREIGN KEY (student_id) REFERENCES ogrenciler(id) ON DELETE CASCADE,
-                INDEX idx_student_date (student_id, DATE(entry_time)),
-                INDEX idx_grup_date (grup, DATE(entry_time))
+                INDEX idx_student_id (student_id),
+                INDEX idx_grup (grup),
+                INDEX idx_entry_time (entry_time)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
         ";
         $conn->exec($createTableSQL);
