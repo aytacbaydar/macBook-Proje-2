@@ -1,5 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import * as QRCode from 'qrcode';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-ogretmen-qr-generator',
@@ -100,5 +102,53 @@ export class OgretmenQrGeneratorComponent implements OnInit, AfterViewInit {
   regenerateQRCodes(): void {
     this.loadError = '';
     this.generateQRCodes();
+  }
+
+  async downloadAsPDF(): Promise<void> {
+    try {
+      const element = document.querySelector('.qr-generator-container') as HTMLElement;
+      if (!element) {
+        console.error('QR Generator container bulunamadı');
+        return;
+      }
+
+      // HTML'i canvas'a çevir
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true
+      });
+
+      // PDF oluştur
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgData = canvas.toDataURL('image/png');
+      
+      const imgWidth = 210; // A4 genişliği (mm)
+      const pageHeight = 295; // A4 yüksekliği (mm)
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+
+      let position = 0;
+
+      // İlk sayfayı ekle
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      // Eğer içerik birden fazla sayfaya yayılıyorsa
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      // PDF'i indir
+      const fileName = `QR_Kodlari_${this.studentData.name.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+      pdf.save(fileName);
+
+    } catch (error) {
+      console.error('PDF oluşturma hatası:', error);
+      this.loadError = 'PDF oluşturulamadı: ' + error;
+    }
   }
 }

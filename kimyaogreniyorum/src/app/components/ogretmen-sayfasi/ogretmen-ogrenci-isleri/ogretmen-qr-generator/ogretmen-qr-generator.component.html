@@ -2,10 +2,20 @@
 <div class="qr-generator-container">
   <div class="header">
     <h2>QR Kod Generator</h2>
-    <p class="student-info">
-      <strong>Öğrenci:</strong> {{ studentData.name }} ({{ studentData.email }})
-    </p>
-    <p class="current-time">{{ currentDate }}</p>
+    <div class="student-stats">
+      <div class="stat-item">
+        <i class="bi bi-person-circle"></i>
+        <span><strong>Öğrenci:</strong> {{ studentData.name }} ({{ studentData.email }})</span>
+      </div>
+      <div class="stat-item">
+        <i class="bi bi-people-fill"></i>
+        <span><strong>Öğrenci ID:</strong> {{ studentData.id }}</span>
+      </div>
+      <div class="stat-item">
+        <i class="bi bi-clock"></i>
+        <span><strong>Oluşturulma:</strong> {{ currentDate }}</span>
+      </div>
+    </div>
   </div>
 
   <!-- Hata mesajı -->
@@ -41,6 +51,10 @@
     <button class="btn btn-success" (click)="printQRCodes()" *ngIf="!loadError">
       <i class="bi bi-printer"></i>
       Yazdır
+    </button>
+    <button class="btn btn-danger" (click)="downloadAsPDF()" *ngIf="!loadError">
+      <i class="bi bi-file-earmark-pdf"></i>
+      PDF İndir
     </button>
   </div>
 </div>

@@ -1,4 +1,3 @@
-
 .qr-generator-container {
   max-width: 800px;
   margin: 0 auto;
@@ -9,18 +8,18 @@
 .header {
   text-align: center;
   margin-bottom: 30px;
-  
+
   h2 {
     color: #333;
     margin-bottom: 10px;
   }
-  
+
   .student-info {
     font-size: 18px;
     color: #666;
     margin-bottom: 10px;
   }
-  
+
   .current-time {
     font-size: 14px;
     color: #888;
@@ -33,13 +32,13 @@
   margin-bottom: 20px;
   display: flex;
   align-items: center;
-  
+
   &.alert-danger {
     background-color: #f8d7da;
     border: 1px solid #f5c6cb;
     color: #721c24;
   }
-  
+
   i {
     margin-right: 10px;
   }
@@ -60,19 +59,19 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
   min-width: 280px;
-  
+
   h3 {
     margin-bottom: 15px;
     font-size: 18px;
   }
-  
+
   canvas {
     display: block;
     margin: 0 auto 15px;
     border: 2px solid #eee;
     border-radius: 8px;
   }
-  
+
   .qr-data {
     font-family: monospace;
     font-size: 12px;
@@ -82,18 +81,18 @@
     padding: 8px;
     border-radius: 4px;
   }
-  
+
   &.entry-card {
     border-top: 4px solid #28a745;
-    
+
     h3 {
       color: #28a745;
     }
   }
-  
+
   &.exit-card {
     border-top: 4px solid #dc3545;
-    
+
     h3 {
       color: #dc3545;
     }
@@ -106,7 +105,7 @@
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  
+
   .btn {
     padding: 10px 20px;
     border: none;
@@ -116,34 +115,34 @@
     display: inline-flex;
     align-items: center;
     text-decoration: none;
-    
+
     i {
       margin-right: 8px;
     }
-    
+
     &.btn-primary {
       background-color: #007bff;
       color: white;
-      
+
       &:hover {
         background-color: #0056b3;
       }
     }
-    
+
     &.btn-success {
       background-color: #28a745;
       color: white;
-      
+
       &:hover {
         background-color: #1e7e34;
       }
     }
-    
+
     &.btn-outline-danger {
       background-color: transparent;
       color: #dc3545;
       border: 1px solid #dc3545;
-      
+
       &:hover {
         background-color: #dc3545;
         color: white;
@@ -157,7 +156,7 @@
     flex-direction: column;
     align-items: center;
   }
-  
+
   .qr-code-card {
     min-width: 250px;
   }
@@ -167,13 +166,46 @@
   .controls {
     display: none;
   }
-  
+
   .header .current-time {
     display: block;
   }
-  
+
   .qr-generator-container {
     margin: 0;
     padding: 10px;
   }
+}
+
+.qr-generator-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.student-stats {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px 0;
+  border-left: 4px solid #4f46e5;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  margin: 8px 0;
+  font-size: 1.1em;
+  color: #666;
+}
+
+.stat-item i {
+  margin-right: 10px;
+  color: #4f46e5;
+  font-size: 1.2em;
 }
