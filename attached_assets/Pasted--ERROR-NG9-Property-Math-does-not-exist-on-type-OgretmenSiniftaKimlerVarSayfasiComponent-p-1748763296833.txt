@@ -1,0 +1,427 @@
+✘ [ERROR] NG9: Property 'Math' does not exist on type 'OgretmenSiniftaKimlerVarSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:51:67:
+      51 │ ...{{ groupStudents.length > 0 ? Math.round((getPresentCount() / g...
+         ╵                                  ~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG1: Property 'loadClassroomStatus' is private and only accessible within class 'OgretmenSiniftaKimlerVarSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:71:83:
+      71 │ ...trol" [(ngModel)]="selectedDate" (change)="loadClassroomStatus()">
+         ╵                                               ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:123:8:
+      123 │         Son güncellenme: {{ new Date().toLocaleTimeString() }}
+          ╵         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'new' does not exist on type 'OgretmenSiniftaKimlerVarSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:123:28:
+      123 │         Son güncellenme: {{ new Date().toLocaleTimeString() }}
+          ╵                            ~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:134:28:
+      134 │                [(ngModel)]="searchQuery">
+          ╵                             ~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:134:28:
+      134 │                [(ngModel)]="searchQuery">
+          ╵                             ~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:141:11:
+      141 │            *ngFor="let student of filteredStudents"
+          ╵            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:142:28:
+      142 │            [class.present]="isStudentPresent(student.id)"
+          ╵                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:143:27:
+      143 │            [class.absent]="!isStudentPresent(student.id)">
+          ╵                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:147:24:
+      147 │ ...mg [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)"
+          ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:148:24:
+      148 │                  [alt]="student.adi_soyadi">
+          ╵                         ~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:152:38:
+      152 │             <div class="student-name">{{ student.adi_soyadi }}</div>
+          ╵                                       ~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:154:42:
+      154 │ ...          <span class="student-class">{{ student.sinifi }}</span>
+          ╵                                          ~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:155:42:
+      155 │               <span class="student-email">{{ student.email }}</span>
+          ╵                                           ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:161:33:
+      161 │                  [class.online]="isStudentPresent(student.id)"
+          ╵                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:162:34:
+      162 │                  [class.offline]="!isStudentPresent(student.id)">
+          ╵                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:164:41:
+      164 │ ...            [class.bi-circle-fill]="isStudentPresent(student.id)"
+          ╵                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:165:36:
+      165 │ ...           [class.bi-circle]="!isStudentPresent(student.id)"></i>
+          ╵                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:166:14:
+      166 │ ...          {{ isStudentPresent(student.id) ? 'Sınıfta' : 'Yok...
+          ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:171:37:
+      171 │ ...-details" *ngIf="isStudentPresent(student.id) || getStudentExi...
+          ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:173:36:
+      173 │ ... <div class="entry-time" *ngIf="getStudentEntryTime(student.id)">
+          ╵                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:176:39:
+      176 │ ...me-value">{{ getStudentEntryTime(student.id) | date:'HH:mm:ss'...
+          ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:179:35:
+      179 │ ...   <div class="exit-time" *ngIf="getStudentExitTime(student.id)">
+          ╵                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:182:39:
+      182 │ ...me-value">{{ getStudentExitTime(student.id) | date:'HH:mm:ss' ...
+          ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:189:38:
+      189 │                   [class.btn-danger]="isStudentPresent(student.id)"
+          ╵                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:190:39:
+      190 │ ...              [class.btn-success]="!isStudentPresent(student.id)"
+          ╵                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:191:27:
+      191 │                   (click)="manualToggleStudentPresence(student.id)">
+          ╵                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:193:42:
+      193 │ ...         [class.bi-box-arrow-left]="isStudentPresent(student.id)"
+          ╵                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:194:46:
+      194 │ ...class.bi-box-arrow-in-right]="!isStudentPresent(student.id)"></i>
+          ╵                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:195:12:
+      195 │             {{ isStudentPresent(student.id) ? 'Manuel Çıkış' ...
+          ╵             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:202:9:
+      202 │     <div *ngIf="filteredStudents.length === 0 && groupStudents.le...
+          ╵          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:209:7:
+      209 │   <div *ngIf="!selectedGroup" class="no-group-selected">
+          ╵        ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ Son güncellenme: {{ new Date().toLocaleTimeString() }} ] in /Users/aytacbaydar/Documents/WebSayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html@122:8 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.html:218:7:
+      218 │   <div *ngIf="isLoading" class="loading-section">
+          ╵        ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSiniftaKimlerVarSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts:34:15:
+      34 │ ...mplateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
