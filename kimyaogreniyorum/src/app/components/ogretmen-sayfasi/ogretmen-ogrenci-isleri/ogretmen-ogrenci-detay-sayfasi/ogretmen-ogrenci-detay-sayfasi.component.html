@@ -216,6 +216,13 @@
                       <label for="ders_saati" class="material-input-label" [class.raised]="isRaised('ders_saati')">Ders Saati</label>
                     </div>
                   </div>
+
+                  <div class="form-field">
+                    <div class="material-input-container" [class.focused]="isFocused('ders_adi')">
+                      <input id="ders_adi" type="text" class="material-input" formControlName="ders_adi" (focus)="onFocus('ders_adi')" (blur)="onBlur('ders_adi')">
+                      <label for="ders_adi" class="material-input-label" [class.raised]="isRaised('ders_adi')">Ders Adı</label>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="form-row">

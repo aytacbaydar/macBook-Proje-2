@@ -28,6 +28,7 @@ export class OgretmenOgrenciDetaySayfasiComponent implements OnInit {
     okulu: '',
     sinifi: '',
     grubu: '',
+    ders_adi: '',
     ders_gunu: '',
     ders_saati: '',
     ucret: '',
@@ -81,6 +82,7 @@ export class OgretmenOgrenciDetaySayfasiComponent implements OnInit {
         okulu: [''],
         sinifi: [''],
         grubu: [''],
+        ders_adi: [''],
         ders_gunu: [''],
         ders_saati: [''],
         ucret: [''],
@@ -149,6 +151,7 @@ export class OgretmenOgrenciDetaySayfasiComponent implements OnInit {
               okulu: this.student.okulu || '',
               sinifi: this.student.sinifi || '',
               grubu: this.student.grubu || '',
+              ders_adi: this.student.ders_adi || '',
               ders_gunu: this.student.ders_gunu || '',
               ders_saati: this.student.ders_saati || '',
               ucret: this.student.ucret || '',
@@ -222,6 +225,7 @@ export class OgretmenOgrenciDetaySayfasiComponent implements OnInit {
             okulu: this.editForm.get('okulu')?.value,
             sinifi: this.editForm.get('sinifi')?.value,
             grubu: this.editForm.get('grubu')?.value,
+            ders_adi: this.editForm.get('ders_adi')?.value,
             ders_gunu: this.editForm.get('ders_gunu')?.value,
             ders_saati: this.editForm.get('ders_saati')?.value,
             ucret: this.editForm.get('ucret')?.value,
@@ -284,7 +288,7 @@ export class OgretmenOgrenciDetaySayfasiComponent implements OnInit {
       .catch((error) => {
         this.isSubmitting = false;
         this.error = 'Avatar yükleme hatası: ' + error;
-      }); = null;
+      });
     this.success = null;
 
     // LocalStorage veya sessionStorage'dan token'ı al
@@ -405,6 +409,7 @@ export class OgretmenOgrenciDetaySayfasiComponent implements OnInit {
         okulu: formValues.okulu,
         sinifi: formValues.sinifi,
         grubu: formValues.grubu,
+        ders_adi: formValues.ders_adi,
         ders_gunu: formValues.ders_gunu,
         ders_saati: formValues.ders_saati,
         ucret: formValues.ucret,

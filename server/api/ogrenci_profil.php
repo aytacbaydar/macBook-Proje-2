@@ -25,7 +25,7 @@ try {
 
         $allowed = ['adi_soyadi', 'cep_telefonu', 'avatar'];
         if ($user['rutbe'] === 'admin') {
-            $allowed = array_merge($allowed, ['rutbe', 'aktif', 'email', 'brans']);
+            $allowed = array_merge($allowed, ['rutbe', 'aktif', 'email', 'brans', 'ogretmeni']);
         }
 
         foreach ($allowed as $field) {
@@ -59,7 +59,7 @@ try {
         $updateFields = [];
         $params = [];
 
-        $ogrenci_detay_bilgi = ['okulu', 'sinifi', 'grubu', 'ders_gunu', 'ders_saati', 'ucret', 'veli_adi', 'veli_cep'];
+        $ogrenci_detay_bilgi = ['okulu', 'sinifi', 'grubu', 'ders_adi', 'ders_gunu', 'ders_saati', 'ucret', 'veli_adi', 'veli_cep'];
 
         foreach ($ogrenci_detay_bilgi as $field) {
             if (isset($detay[$field])) {
@@ -100,8 +100,8 @@ try {
 
     // 3. GÜNCELLENEN VERİYİ GETİR
     $stmt = $conn->prepare("
-        SELECT o.id, o.adi_soyadi, o.email, o.cep_telefonu, o.rutbe, o.aktif, o.avatar, o.brans,
-               ob.okulu, ob.sinifi, ob.grubu, ob.ders_gunu, ob.ders_saati, ob.ucret,
+        SELECT o.id, o.adi_soyadi, o.email, o.cep_telefonu, o.rutbe, o.aktif, o.avatar, o.ogretmeni, o.brans,
+               ob.okulu, ob.sinifi, ob.grubu, ob.ders_adi, ob.ders_gunu, ob.ders_saati, ob.ucret,
                ob.veli_adi, ob.veli_cep
         FROM ogrenciler o
         LEFT JOIN ogrenci_bilgileri ob ON o.id = ob.ogrenci_id
