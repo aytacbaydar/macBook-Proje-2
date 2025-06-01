@@ -541,4 +541,62 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, AfterVi
         }
       });
   }
+
+  private speakMessage(message: string): void {
+    if ('speechSynthesis' in window) {
+      // Önceki konuşmaları durdur
+      speechSynthesis.cancel();
+
+      // Seslerin yüklenmesini bekle
+      const speakWhenReady = () => {
+        const utterance = new SpeechSynthesisUtterance(message);
+
+        // Türkçe ses ayarları
+        utterance.lang = 'tr-TR';
+        utterance.rate = 0.9; // Konuşma hızı
+        utterance.pitch = 1.0; // Ses tonu
+        utterance.volume = 1.0; // Ses seviyesi
+
+        // Mevcut sesleri al
+        const voices = speechSynthesis.getVoices();
+        console.log('Mevcut sesler:', voices.map(v => `${v.name} (${v.lang})`));
+
+        // Türkçe ses ara
+        const turkishVoice = voices.find(voice => 
+          voice.lang.toLowerCase().includes('tr') || 
+          voice.name.toLowerCase().includes('turkish') ||
+          voice.name.toLowerCase().includes('türk')
+        );
+
+        if (turkishVoice) {
+          utterance.voice = turkishVoice;
+          console.log('Türkçe ses bulundu:', turkishVoice.name);
+        } else {
+          console.log('Türkçe ses bulunamadı, varsayılan ses kullanılıyor');
+        }
+
+        // Ses çalma olaylarını dinle
+        utterance.onstart = () => console.log('Ses çalmaya başladı');
+        utterance.onend = () => console.log('Ses çalma tamamlandı');
+        utterance.onerror = (event) => console.error('Ses hatası:', event.error);
+
+        speechSynthesis.speak(utterance);
+      };
+
+      // Sesler henüz yüklenmediyse bekle
+      const voices = speechSynthesis.getVoices();
+      if (voices.length === 0) {
+        speechSynthesis.addEventListener('voiceschanged', speakWhenReady, { once: true });
+      } else {
+        speakWhenReady();
+      }
+    } else {
+      console.error('Bu tarayıcı Text-to-Speech desteklemiyor');
+    }
+  }
+
+  // Test için ses çalma fonksiyonu
+  testSpeech(): void {
+    this.speakMessage('Test mesajı. Ses çalışıyor mu?');
+  }
 }
