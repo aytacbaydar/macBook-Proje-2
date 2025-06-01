@@ -221,6 +221,7 @@ export class OgretmenOgrenciDetaySayfasiComponent implements OnInit {
             email: this.editForm.get('email')?.value,
             cep_telefonu: this.editForm.get('cep_telefonu')?.value,
             avatar: avatarPath,
+            sifre: '', // sifre özelliği eklendi
           },
           detay_bilgiler: {
             okulu: this.editForm.get('okulu')?.value,
