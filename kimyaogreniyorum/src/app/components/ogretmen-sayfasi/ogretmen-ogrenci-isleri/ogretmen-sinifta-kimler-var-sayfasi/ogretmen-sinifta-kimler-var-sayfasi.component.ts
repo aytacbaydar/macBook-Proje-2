@@ -256,10 +256,10 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, AfterVi
 
     // Gerçek QR kod tespiti jsQR ile
     const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-    
+
     try {
       const qrCode = jsQR(imageData.data, imageData.width, imageData.height);
-      
+
       if (qrCode && qrCode.data) {
         console.log('QR Kod tespit edildi:', qrCode.data);
         this.processQRCodeForClassroom(qrCode.data);
@@ -447,5 +447,98 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, AfterVi
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
+  }
+
+  processQRData(data: string): void {
+    try {
+      // QR kod formatı: studentId_action_timestamp
+      const parts = data.split('_');
+
+      if (parts.length !== 3) {
+        console.error('Geçersiz QR kod formatı:', data);
+        return;
+      }
+
+      const studentId = parseInt(parts[0]);
+      const action = parts[1]; // 'entry' veya 'exit'
+      const timestamp = parseInt(parts[2]);
+
+      // Öğrenci bilgisini bul
+      const student = this.groupStudents.find(s => s.id === studentId);
+      if (!student) {
+        console.error('Öğrenci bulunamadı:', studentId);
+        return;
+      }
+
+      // API'ye gönder
+      this.processAttendance(studentId, action, student.adi_soyadi);
+
+    } catch (error) {
+      console.error('QR kod işlenirken hata:', error);
+    }
+  }
+
+  // Sesli mesaj çalma fonksiyonu
+  private playVoiceMessage(message: string): void {
+    if ('speechSynthesis' in window) {
+      // Önceki konuşmayı durdur
+      speechSynthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(message);
+
+      // Türkçe ses ayarları
+      utterance.lang = 'tr-TR';
+      utterance.rate = 0.8; // Konuşma hızı
+      utterance.pitch = 1.0; // Ses tonu
+      utterance.volume = 0.8; // Ses seviyesi
+
+      // Türkçe ses varsa kullan
+      const voices = speechSynthesis.getVoices();
+      const turkishVoice = voices.find(voice => 
+        voice.lang.includes('tr') || voice.lang.includes('TR')
+      );
+
+      if (turkishVoice) {
+        utterance.voice = turkishVoice;
+      }
+
+      speechSynthesis.speak(utterance);
+    }
+  }
+
+  processAttendance(studentId: number, action: string, studentName: string): void {
+    const requestData = {
+      student_id: studentId,
+      action: action,
+      grup: this.selectedGroup
+    };
+
+    this.http.post<any>('./server/api/sinif_giris_cikis.php', requestData)
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            // Başarılı işlem mesajı ve sesli uyarı
+            if (action === 'entry') {
+              const message = `${studentName} sınıfa giriş yaptı. İyi dersler!`;
+              console.log(message);
+              this.playVoiceMessage(`${studentName}, iyi dersler!`);
+            } else {
+              const message = `${studentName} sınıftan çıkış yaptı. İyi günler!`;
+              console.log(message);
+              this.playVoiceMessage(`${studentName}, iyi günler!`);
+            }
+
+            // Listeyi güncelle
+            this.loadClassStatus();
+          } else {
+            console.error('QR işlem hatası:', response.error);
+            this.playVoiceMessage('İşlem başarısız!');
+          }
+        },
+        error: (error) => {
+          console.error('QR işlem hatası:', error);
+          this.playVoiceMessage('Bağlantı hatası!');
+        }
+      });
   }
 }

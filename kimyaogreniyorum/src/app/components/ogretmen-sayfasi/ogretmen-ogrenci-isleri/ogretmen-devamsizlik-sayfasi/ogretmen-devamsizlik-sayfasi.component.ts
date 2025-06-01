@@ -462,20 +462,90 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     return null;
   }
 
-  private processQRCode(qrData: string) {
-    // Parse QR code data
-    const match = qrData.match(/student_(\d+)/);
-    if (match) {
-      const studentId = parseInt(match[1]);
-      const student = this.groupStudents.find(s => s.id === studentId);
+  processQRCode(data: string): void {
+    try {
+      // QR kod formatı: student_studentId
+      const parts = data.split('_');
 
-      if (student) {
-        this.markAttendance(studentId, 'present', 'qr');
-        this.toastr.success(`${student.adi_soyadi} QR kod ile katıldı olarak işaretlendi`, 'Başarılı');
-      } else {
-        this.toastr.warning('QR kodundaki öğrenci bu grupta bulunamadı', 'Uyarı');
+      if (parts.length < 2) {
+        console.error('Geçersiz QR kod formatı:', data);
+        return;
       }
+
+      const studentId = parseInt(parts[1]);
+
+      // Öğrenci bilgisini bul
+      const student = this.groupStudents.find(s => s.id === studentId);
+      if (!student) {
+        console.error('Öğrenci bulunamadı:', studentId);
+        return;
+      }
+
+      // Devamsızlık kaydı yap
+      this.markAbsent(studentId, student.adi_soyadi);
+
+    } catch (error) {
+      console.error('QR kod işlenirken hata:', error);
     }
+  }
+
+  // Sesli mesaj çalma fonksiyonu
+  private playVoiceMessage(message: string): void {
+    if ('speechSynthesis' in window) {
+      // Önceki konuşmayı durdur
+      speechSynthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(message);
+
+      // Türkçe ses ayarları
+      utterance.lang = 'tr-TR';
+      utterance.rate = 0.8; // Konuşma hızı
+      utterance.pitch = 1.0; // Ses tonu
+      utterance.volume = 0.8; // Ses seviyesi
+
+      // Türkçe ses varsa kullan
+      const voices = speechSynthesis.getVoices();
+      const turkishVoice = voices.find(voice => 
+        voice.lang.includes('tr') || voice.lang.includes('TR')
+      );
+
+      if (turkishVoice) {
+        utterance.voice = turkishVoice;
+      }
+
+      speechSynthesis.speak(utterance);
+    }
+  }
+
+  markAbsent(studentId: number, studentName: string): void {
+    const today = new Date().toISOString().split('T')[0];
+
+    const requestData = {
+      student_id: studentId,
+      grup: this.selectedGroup,
+      tarih: today,
+      durum: 'devamsiz'
+    };
+
+    this.http.post<any>('./server/api/devamsizlik_kaydet.php', requestData)
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            const message = `${studentName} devamsız olarak kaydedildi`;
+            console.log(message);
+            this.playVoiceMessage(`${studentName} devamsız kaydedildi`);
+            // UI'ı güncelle - öğrenciyi devamsız listesine ekle
+            this.loadAbsentStudents();
+          } else {
+            console.error('Devamsızlık kaydı hatası:', response.error);
+            this.playVoiceMessage('Kayıt başarısız!');
+          }
+        },
+        error: (error) => {
+          console.error('Devamsızlık kaydı hatası:', error);
+          this.playVoiceMessage('Bağlantı hatası!');
+        }
+      });
   }
 
   markAttendance(studentId: number, status: 'present' | 'absent', method: 'manual' | 'qr' = 'manual') {
