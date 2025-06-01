@@ -1,4 +1,3 @@
-
 <div class="classroom-tracker-container">
   <!-- Header Section -->
   <div class="page-header">
@@ -48,7 +47,7 @@
             <i class="bi bi-percent"></i>
           </div>
           <div class="stat-content">
-            <div class="stat-number">{{ groupStudents.length > 0 ? Math.round((getPresentCount() / groupStudents.length) * 100) : 0 }}%</div>
+            <div class="stat-number">{{ getAttendancePercentage() }}%</div>
             <div class="stat-label">Katılım Oranı</div>
           </div>
         </div>
@@ -120,39 +119,23 @@
       <h3>{{ selectedGroup }} - Anlık Sınıf Durumu</h3>
       <div class="last-update">
         <i class="bi bi-clock me-1"></i>
-        Son güncellenme: {{ new Date().toLocaleTimeString() }}
+        Son güncellenme: {{ currentTime }}
       </div>
     </div>
 
-    <!-- Search Box -->
-    <div class="search-section">
-      <div class="search-box">
-        <i class="bi bi-search"></i>
-        <input type="text" 
-               placeholder="Öğrenci ara..." 
-               class="form-control"
-               [(ngModel)]="searchQuery">
-      </div>
-    </div>
-
-    <!-- Students Grid -->
     <div class="students-grid">
-      <div class="student-card" 
-           *ngFor="let student of filteredStudents" 
+      <div *ngFor="let student of groupStudents" class="student-card"
            [class.present]="isStudentPresent(student.id)"
            [class.absent]="!isStudentPresent(student.id)">
-        
+
         <div class="student-header">
-          <div class="student-avatar">
-            <img [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)" 
-                 [alt]="student.adi_soyadi">
-          </div>
-          
           <div class="student-info">
-            <div class="student-name">{{ student.adi_soyadi }}</div>
-            <div class="student-meta">
-              <span class="student-class">{{ student.sinifi }}</span>
-              <span class="student-email">{{ student.email }}</span>
+            <img [src]="getStudentAvatar(student.adi_soyadi)" 
+                 [alt]="student.adi_soyadi" 
+                 class="student-avatar">
+            <div class="student-name">
+              <h4>{{ student.adi_soyadi }}</h4>
+              <p>{{ student.email }}</p>
             </div>
           </div>
 
@@ -175,7 +158,7 @@
               <span class="time-label">Giriş:</span>
               <span class="time-value">{{ getStudentEntryTime(student.id) | date:'HH:mm:ss' }}</span>
             </div>
-            
+
             <div class="exit-time" *ngIf="getStudentExitTime(student.id)">
               <i class="bi bi-box-arrow-left text-danger me-1"></i>
               <span class="time-label">Çıkış:</span>
@@ -192,33 +175,20 @@
             <i class="bi" 
                [class.bi-box-arrow-left]="isStudentPresent(student.id)"
                [class.bi-box-arrow-in-right]="!isStudentPresent(student.id)"></i>
-            {{ isStudentPresent(student.id) ? 'Manuel Çıkış' : 'Manuel Giriş' }}
+            {{ isStudentPresent(student.id) ? 'Çıkış Yap' : 'Giriş Yap' }}
           </button>
         </div>
       </div>
     </div>
 
-    <!-- No Students Message -->
-    <div *ngIf="filteredStudents.length === 0 && groupStudents.length > 0" class="no-results">
-      <i class="bi bi-search"></i>
-      <p>Arama kriterinize uygun öğrenci bulunamadı.</p>
+    <div *ngIf="groupStudents.length === 0" class="no-students">
+      <i class="bi bi-people text-muted fs-1 mb-3"></i>
+      <p class="text-muted">Bu grupta henüz öğrenci bulunmuyor</p>
     </div>
   </div>
 
-  <!-- No Group Selected -->
   <div *ngIf="!selectedGroup" class="no-group-selected">
-    <div class="no-group-content">
-      <i class="bi bi-people-fill"></i>
-      <h3>Grup Seçin</h3>
-      <p>Sınıf takibi için önce bir grup seçmeniz gerekiyor.</p>
-    </div>
-  </div>
-
-  <!-- Loading -->
-  <div *ngIf="isLoading" class="loading-section">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Yükleniyor...</span>
-    </div>
-    <p>Veriler yükleniyor...</p>
+    <i class="bi bi-arrow-up text-muted fs-1 mb-3"></i>
+    <p class="text-muted">Sınıf durumunu görmek için yukarıdan bir grup seçin</p>
   </div>
 </div>
