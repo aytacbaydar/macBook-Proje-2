@@ -494,12 +494,6 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
     return this.groupStudents.length - this.presentStudents.size;
   }
 
-  getAttendancePercentage(): number {
-    if (this.groupStudents.length === 0) return 0;
-    return Math.round(
-      (this.getPresentCount() / this.groupStudents.length) * 100
-    );
-  }
 
   isStudentPresent(studentId: number): boolean {
     return this.presentStudents.has(studentId);
