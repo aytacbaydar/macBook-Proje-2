@@ -20,6 +20,7 @@ import { OgretmenDevamsizlikSayfasiComponent } from './components/ogretmen-sayfa
 import { OgretmenGruplarDetaySayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component';
 import { OgretmenOgrenciDetaySayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-detay-sayfasi/ogretmen-ogrenci-detay-sayfasi.component';
 import { OgretmenSiniftaKimlerVarSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component';
+import { OgretmenQrGeneratorComponent } from './components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-qr-generator/ogretmen-qr-generator.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/giris-sayfasi', pathMatch: 'full' },
@@ -46,6 +47,12 @@ const routes: Routes = [
       },
       {
         path: 'mysql-sayfasi',
+
+        {
+          path: 'qr-generator',
+          component: OgretmenQrGeneratorComponent
+        },
+
         component: MysqlSayfasiComponent,
       },
       {

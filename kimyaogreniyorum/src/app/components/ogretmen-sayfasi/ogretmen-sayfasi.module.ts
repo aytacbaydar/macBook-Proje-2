@@ -13,6 +13,7 @@ import { OgretmenDevamsizlikSayfasiComponent } from './ogretmen-ogrenci-isleri/o
 import { OgretmenGruplarDetaySayfasiComponent } from './ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component';
 import { OgretmenOgrenciDetaySayfasiComponent } from './ogretmen-ogrenci-isleri/ogretmen-ogrenci-detay-sayfasi/ogretmen-ogrenci-detay-sayfasi.component';
 import { OgretmenSiniftaKimlerVarSayfasiComponent } from './ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component';
+import { OgretmenQrGeneratorComponent } from './ogretmen-ogrenci-isleri/ogretmen-qr-generator/ogretmen-qr-generator.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,7 @@ import { OgretmenSiniftaKimlerVarSayfasiComponent } from './ogretmen-ogrenci-isl
     OgretmenGruplarDetaySayfasiComponent,
     OgretmenOgrenciDetaySayfasiComponent,
     OgretmenSiniftaKimlerVarSayfasiComponent,
-    OgretmenSiniftaKimlerVarSayfasiComponent,
+    OgretmenQrGeneratorComponent,
   ],
   imports: [
     CommonModule,

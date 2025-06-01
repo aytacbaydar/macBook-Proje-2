@@ -1,0 +1,186 @@
+
+.qr-generator-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.header-section {
+  text-align: center;
+  margin-bottom: 30px;
+
+  h1 {
+    color: #333;
+    margin-bottom: 30px;
+  }
+}
+
+.student-info {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  border-left: 4px solid #4f46e5;
+  text-align: left;
+
+  h2 {
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 15px;
+  }
+
+  p {
+    margin: 8px 0;
+    
+    strong {
+      color: #4f46e5;
+    }
+  }
+}
+
+.qr-section {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.qr-card {
+  text-align: center;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  border: 2px solid #e9ecef;
+  flex: 1;
+  min-width: 250px;
+
+  &.entry {
+    border-color: #28a745;
+  }
+
+  &.exit {
+    border-color: #dc3545;
+  }
+}
+
+.qr-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+
+  &.entry {
+    color: #28a745;
+  }
+
+  &.exit {
+    color: #dc3545;
+  }
+}
+
+.qr-canvas {
+  margin: 15px 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.qr-data {
+  font-family: monospace;
+  background: #f8f9fa;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 15px;
+  word-break: break-all;
+  font-size: 12px;
+  color: #666;
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.regenerate-btn, .print-btn {
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+}
+
+.regenerate-btn {
+  background: #28a745;
+  color: white;
+
+  &:hover {
+    background: #1e7e34;
+  }
+}
+
+.print-btn {
+  background: #4f46e5;
+  color: white;
+
+  &:hover {
+    background: #3730a3;
+  }
+}
+
+.instructions {
+  background: #e3f2fd;
+  padding: 20px;
+  border-radius: 10px;
+  border-left: 4px solid #2196f3;
+
+  h3 {
+    color: #1976d2;
+    margin-top: 0;
+    margin-bottom: 15px;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+
+  li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+  }
+}
+
+@media print {
+  .action-buttons {
+    display: none !important;
+  }
+  
+  .qr-generator-container {
+    max-width: none;
+    padding: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .qr-section {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .qr-card {
+    min-width: auto;
+    width: 100%;
+    max-width: 300px;
+  }
+}
