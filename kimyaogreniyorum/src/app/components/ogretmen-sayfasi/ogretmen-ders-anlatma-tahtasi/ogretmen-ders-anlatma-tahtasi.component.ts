@@ -66,11 +66,12 @@ export class OgretmenDersAnlatmaTahtasiComponent
 
     // LocalStorage veya sessionStorage'dan token'ı al
     let token = '';
+    let loggedInUser: any = null;
     const userStr =
       localStorage.getItem('user') || sessionStorage.getItem('user');
     if (userStr) {
-      const user = JSON.parse(userStr);
-      token = user.token || '';
+      loggedInUser = JSON.parse(userStr);
+      token = loggedInUser.token || '';
     }
 
     console.log('Öğrenci grupları API isteği gönderiliyor:', apiUrl);
@@ -82,11 +83,20 @@ export class OgretmenDersAnlatmaTahtasiComponent
         next: (response) => {
           console.log('API yanıtı:', response);
           if (response && response.success && response.data) {
+            // Giriş yapan öğretmenin adi_soyadi'sını al
+            const loggedInTeacherName = loggedInUser?.adi_soyadi || '';
+            
+            // Sadece öğrencileri filtrele ve giriş yapan öğretmenin öğrencilerini al
+            const teacherStudents = response.data.filter(
+              (student: any) =>
+                student.rutbe === 'ogrenci' && student.ogretmeni === loggedInTeacherName
+            );
+
             // Öğrencilerden benzersiz grupları çıkar
             const gruplar = new Set<string>();
 
-            // Öğrenci verilerini döngüyle dolaşarak grubu değerlerini al
-            response.data.forEach((ogrenci: any) => {
+            // Öğretmenin öğrencilerini döngüyle dolaşarak grubu değerlerini al
+            teacherStudents.forEach((ogrenci: any) => {
               if (
                 ogrenci.grubu &&
                 typeof ogrenci.grubu === 'string' &&
@@ -112,17 +122,8 @@ export class OgretmenDersAnlatmaTahtasiComponent
               return a.localeCompare(b);
             });
 
-            // Eğer hiç grup yoksa varsayılan grupları ekle
-            if (this.ogrenciGruplari.length === 0) {
-              this.ogrenciGruplari = [
-                '9A Sınıfı',
-                '10B Sınıfı',
-                '11A Sınıfı',
-                '12A Sınıfı',
-              ];
-            }
-
-            console.log('Öğrenci grupları yüklendi:', this.ogrenciGruplari);
+            console.log('Öğretmenin grupları yüklendi:', this.ogrenciGruplari);
+            console.log('Öğretmen adı:', loggedInTeacherName);
           }
         },
         error: (error) => {
@@ -134,25 +135,9 @@ export class OgretmenDersAnlatmaTahtasiComponent
             );
           }
 
-          // Hata durumunda varsayılan grupları kullan ve tarih bazlı gruplar ekle
-          const bugun = new Date();
-          const yil = bugun.getFullYear();
-          const defaultGruplar = [
-            '9A Sınıfı',
-            '9B Sınıfı',
-            '10A Sınıfı',
-            '10B Sınıfı',
-            '11A Sınıfı',
-            '11B Sınıfı',
-            '12A Sınıfı',
-            '12B Sınıfı',
-            `${yil} Bahar Dönemi`,
-            `${yil} Yaz Dönemi`,
-            `${yil} Güz Dönemi`,
-          ];
-
-          this.ogrenciGruplari = defaultGruplar;
-          console.log('Varsayılan gruplar yüklendi:', this.ogrenciGruplari);
+          // Hata durumunda boş grup listesi
+          this.ogrenciGruplari = [];
+          console.log('Hata nedeniyle grup listesi boş bırakıldı');
         },
       });
   }
