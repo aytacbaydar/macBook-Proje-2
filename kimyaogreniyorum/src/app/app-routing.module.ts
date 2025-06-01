@@ -34,6 +34,10 @@ const routes: Routes = [
     component: YoneticiIndexSayfasiComponent,
     children: [
       {
+        path: '',
+        component: OgrenciListesiSayfasiComponent,
+      },
+      {
         path: 'ogrenci-liste-sayfasi',
         component: OgrenciListesiSayfasiComponent,
       },
@@ -47,12 +51,6 @@ const routes: Routes = [
       },
       {
         path: 'mysql-sayfasi',
-
-        {
-          path: 'qr-generator',
-          component: OgretmenQrGeneratorComponent
-        },
-
         component: MysqlSayfasiComponent,
       },
       {
@@ -88,12 +86,12 @@ const routes: Routes = [
         component: OgretmenOgrenciDetaySayfasiComponent,
       },
       {
-        path: 'ogretmen-sinifta-kimler-var-sayfasi', 
-        component: OgretmenSiniftaKimlerVarSayfasiComponent 
+        path: 'ogretmen-sinifta-kimler-var-sayfasi',
+        component: OgretmenSiniftaKimlerVarSayfasiComponent,
       },
       {
-        path: 'ogretmen-sinifta-kimler-var-sayfasi/:grupAdi', 
-        component: OgretmenSiniftaKimlerVarSayfasiComponent 
+        path: 'ogretmen-sinifta-kimler-var-sayfasi/:grupAdi',
+        component: OgretmenSiniftaKimlerVarSayfasiComponent,
       },
       {
         path: 'devamsizlik/:grupAdi',
@@ -110,6 +108,10 @@ const routes: Routes = [
       {
         path: 'ogretmen-ders-anlatma-tahtasi-sayfasi',
         component: OgretmenDersAnlatmaTahtasiComponent,
+      },
+      {
+        path: 'qr-generator',
+        component: OgretmenQrGeneratorComponent,
       },
     ],
   },
