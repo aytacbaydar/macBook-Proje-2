@@ -38,8 +38,12 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, AfterVi
   groupStudents: Student[] = [];
   presentStudents = new Set<number>();
   classroomEntries = new Map<number, ClassroomEntry>();
+  private qrScanInterval: any;
+  private isQRScannerActive: boolean = false;
+  private readonly classroomEntries = new Map<number, any>();
+  private readonly presentStudents = new Set<number>();
+  private readonly recentlyProcessedQR = new Map<string, number>();
 
-  isQRScannerActive: boolean = false;
   mediaStream: MediaStream | null = null;
   scanInterval: any = null;
   currentTime: string = '';
@@ -238,7 +242,7 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, AfterVi
     // QR kod tespit simülasyonu - gerçek implementasyonda jsQR kütüphanesi kullanılır
     this.scanInterval = setInterval(() => {
       this.detectQRCode();
-    }, 1000);
+    }, 200);
   }
 
   private detectQRCode(): void {
@@ -317,7 +321,7 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, AfterVi
     this.recordClassroomActivity(studentId, action);
 
     // QR kod başarıyla işlendi, tarayıcıyı durdur
-    this.stopQRScanner();
+    //this.stopQRScanner(); //QR kapatılmaması için yorum satırına aldım
   }
 
   recordClassroomActivity(studentId: number, action: string): void {
@@ -372,7 +376,7 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, AfterVi
             this.speakMessage(`${student.adi_soyadi}, iyi günler!`);
           }
           // Başarılı işlem sonrası kamerayı kapat
-          this.stopQRScanner();
+          //this.stopQRScanner();//QR kapatılmaması için yorum satırına aldım
         } else {
           this.toastr.error('İşlem kaydedilemedi: ' + response.message, 'Hata');
           this.speakMessage('İşlem başarısız!');
@@ -393,11 +397,11 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, AfterVi
 
     const isPresent = this.presentStudents.has(studentId);
     const action = isPresent ? 'exit' : 'entry';
-    
+
     // Manuel işlem mesajı
     const actionText = action === 'entry' ? 'giriş' : 'çıkış';
     this.toastr.info(`${student.adi_soyadi} manuel ${actionText} işlemi`, 'Manuel İşlem');
-    
+
     this.recordClassroomActivity(studentId, action);
   }
 
@@ -495,7 +499,7 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, AfterVi
     this.speakMessage(message);
   }
 
-  
+
 
   private speakMessage(message: string): void {
     if ('speechSynthesis' in window) {
