@@ -3,12 +3,13 @@
   display: block;
   padding: var(--spacing-lg);
   background: var(--background-primary);
-  min-height: 100vh;
+  height: auto;
   font-family: var(--font-family);
 }
 
 .attendance-container {
   max-width: 1400px;
+  height: 100%;
   margin: 0 auto;
 }
 
