@@ -215,6 +215,7 @@ export class OgretmenOgrenciDetaySayfasiComponent implements OnInit {
       .then((avatarPath) => {
         // Form verilerini hazırla
         const formData = {
+          id: this.studentId,
           temel_bilgiler: {
             adi_soyadi: this.editForm.get('adi_soyadi')?.value,
             email: this.editForm.get('email')?.value,
@@ -234,6 +235,11 @@ export class OgretmenOgrenciDetaySayfasiComponent implements OnInit {
           },
         };
 
+        // Şifre varsa ekle
+        if (this.editForm.get('sifre')?.value) {
+          formData.temel_bilgiler.sifre = this.editForm.get('sifre')?.value;
+        }
+
         // Token'ı al
         let token = '';
         const userStr =
@@ -250,17 +256,13 @@ export class OgretmenOgrenciDetaySayfasiComponent implements OnInit {
 
         // Güncelleme isteği gönder
         this.http
-          .post(
-            `./server/api/ogrenci_profil.php`,
-            { id: this.studentId, ...formData },
-            { headers }
-          )
+          .post('./server/api/ogrenci_profil.php', formData, { headers })
           .subscribe({
             next: (response: any) => {
               if (response.success) {
                 this.success = 'Öğrenci bilgileri başarıyla güncellendi!';
                 this.student = { ...this.student, ...response.data };
-                
+
                 // Başarı mesajını 3 saniye göster
                 setTimeout(() => {
                   this.success = null;
@@ -278,69 +280,7 @@ export class OgretmenOgrenciDetaySayfasiComponent implements OnInit {
                   error.message ||
                   'Bilinmeyen bir hata oluştu.');
 
-              // Hata durumunda da spinner'ı biraz beklet
-              setTimeout(() => {
-                this.isSubmitting = false;
-              }, 1000); // 1 saniye beklet
-            },
-          });
-      })
-      .catch((error) => {
-        this.isSubmitting = false;
-        this.error = 'Avatar yükleme hatası: ' + error;
-      });
-    this.success = null;
-
-    // LocalStorage veya sessionStorage'dan token'ı al
-    let token = '';
-    const userStr =
-      localStorage.getItem('user') || sessionStorage.getItem('user');
-    if (userStr) {
-      const user = JSON.parse(userStr);
-      token = user.token || '';
-    }
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
-
-    // Önce avatar yükle (eğer varsa)
-    this.uploadAvatar()
-      .then((avatarUrl) => {
-        // Form verilerini hazırla
-        const formData = this.prepareFormData(avatarUrl);
-
-        // API'ye gönder
-        this.http
-          .post<any>('./server/api/ogrenci_profil.php', formData, { headers })
-          .subscribe({
-            next: (response) => {
-              if (response.success) {
-                this.success = 'Öğrenci bilgileri başarıyla güncellendi.';
-                // Güncel verileri tekrar yükle
-                setTimeout(() => {
-                  this.loadStudentData();
-                }, 1500);
-              } else {
-                this.error =
-                  response.error || 'Güncelleme sırasında bir hata oluştu.';
-              }
-
-              // Spinner'ı biraz daha uzun süre görünür tut
-              setTimeout(() => {
-                this.isSubmitting = false;
-              }, 1500); // 1.5 saniye beklet
-            },
-            error: (error) => {
               this.isSubmitting = false;
-              this.error =
-                'Bağlantı hatası: ' +
-                (error.message || 'Bilinmeyen bir hata oluştu.');
-
-              // Hata durumunda da spinner'ı biraz beklet
-              setTimeout(() => {
-                this.isSubmitting = false;
-              }, 1000); // 1 saniye beklet
             },
           });
       })
