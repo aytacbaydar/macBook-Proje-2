@@ -1,5 +1,8 @@
 
 <?php
+// Türkiye saat dilimini ayarla
+date_default_timezone_set('Europe/Istanbul');
+
 // Hataları dosyaya logla
 ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
