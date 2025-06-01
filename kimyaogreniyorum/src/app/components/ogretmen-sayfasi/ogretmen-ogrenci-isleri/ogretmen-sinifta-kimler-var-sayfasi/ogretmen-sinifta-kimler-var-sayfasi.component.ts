@@ -158,18 +158,74 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit {
     }
   }
 
-  startQRScanner(): void {
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-      .then(stream => {
-        this.mediaStream = stream;
+  async startQRScanner(): Promise<void> {
+    try {
+      // Önce cihazda kamera var mı kontrol et
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        alert('Bu cihazda kamera desteği bulunmuyor');
+        return;
+      }
+
+      // Kamera izinlerini kontrol et
+      const permission = await navigator.permissions.query({ name: 'camera' as PermissionName });
+      
+      if (permission.state === 'denied') {
+        alert('Kamera erişimi reddedildi. Lütfen tarayıcı ayarlarından kamera iznini açın.');
+        return;
+      }
+
+      // Kamera akışını başlat - önce arka kamera, sonra ön kamera denenir
+      let stream: MediaStream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ 
+          video: { 
+            facingMode: { ideal: 'environment' },
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          } 
+        });
+      } catch (backCameraError) {
+        console.log('Arka kamera erişimi başarısız, ön kamerayı deniyor...', backCameraError);
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({ 
+            video: { 
+              facingMode: 'user',
+              width: { ideal: 1280 },
+              height: { ideal: 720 }
+            } 
+          });
+        } catch (frontCameraError) {
+          console.log('Ön kamera da başarısız, herhangi bir kamera deniyor...', frontCameraError);
+          stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        }
+      }
+
+      this.mediaStream = stream;
+      if (this.videoElement?.nativeElement) {
         this.videoElement.nativeElement.srcObject = stream;
+        await this.videoElement.nativeElement.play();
         this.isQRScannerActive = true;
         this.startScanning();
-      })
-      .catch(error => {
-        console.error('Kamera erişim hatası:', error);
-        alert('Kamera erişimi sağlanamadı');
-      });
+        alert('QR kod tarayıcı başlatıldı. QR kodu kameraya gösterin.');
+      }
+    } catch (error: any) {
+      console.error('Kamera erişim hatası:', error);
+      let errorMessage = 'Kamera erişimi sağlanamadı. ';
+      
+      if (error.name === 'NotAllowedError') {
+        errorMessage += 'Kamera izni verilmedi. Lütfen tarayıcı ayarlarından kamera iznini açın.';
+      } else if (error.name === 'NotFoundError') {
+        errorMessage += 'Bu cihazda kamera bulunamadı.';
+      } else if (error.name === 'NotReadableError') {
+        errorMessage += 'Kamera başka bir uygulama tarafından kullanılıyor.';
+      } else if (error.name === 'SecurityError') {
+        errorMessage += 'Güvenlik nedeniyle erişim engellendi. HTTPS bağlantı gerekli olabilir.';
+      } else {
+        errorMessage += 'Bilinmeyen hata: ' + error.message;
+      }
+      
+      alert(errorMessage);
+    }
   }
 
   stopQRScanner(): void {

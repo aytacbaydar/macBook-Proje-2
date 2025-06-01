@@ -4,7 +4,7 @@ modules = ["nodejs-20", "web", "php-8.2"]
 channel = "stable-24_05"
 
 [workflows]
-runButton = "Angular Dev Server"
+runButton = "Angular Dev Server HTTPS"
 
 [[workflows.workflow]]
 name = "Angular Dev Server"
@@ -31,3 +31,16 @@ args = "cd server"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "php -S 0.0.0.0:8000"
+
+[[workflows.workflow]]
+name = "Angular Dev Server HTTPS"
+author = 99479
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd kimyaogreniyorum"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "ng serve --ssl --host 0.0.0.0 --port 4200"
