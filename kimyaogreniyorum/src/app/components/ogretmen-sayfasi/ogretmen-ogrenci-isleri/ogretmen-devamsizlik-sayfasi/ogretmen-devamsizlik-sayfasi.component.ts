@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/co
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import * as jsQR from 'jsqr';
 
 interface Student {
   id: number;
@@ -274,7 +275,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     const endDate = new Date();
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - 7);
-    
+
     this.startDate = startDate.toISOString().split('T')[0];
     this.endDate = endDate.toISOString().split('T')[0];
     this.loadHistoricalAttendanceByDateRange();
@@ -284,7 +285,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     const endDate = new Date();
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - 30);
-    
+
     this.startDate = startDate.toISOString().split('T')[0];
     this.endDate = endDate.toISOString().split('T')[0];
     this.loadHistoricalAttendanceByDateRange();
@@ -294,7 +295,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     const now = new Date();
     const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
     const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-    
+
     this.startDate = startDate.toISOString().split('T')[0];
     this.endDate = endDate.toISOString().split('T')[0];
     this.loadHistoricalAttendanceByDateRange();
@@ -313,18 +314,18 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     const totalPresent = this.getTotalPresentInPeriod();
     const totalAbsent = this.getTotalAbsentInPeriod();
     const total = totalPresent + totalAbsent;
-    
+
     if (total === 0) return 0;
     return Math.round((totalPresent / total) * 100);
   }
 
   getAverageAttendanceRate(): number {
     if (this.groupedAttendanceByDate.length === 0) return 0;
-    
+
     const totalPresent = this.getTotalPresentInPeriod();
     const totalAbsent = this.getTotalAbsentInPeriod();
     const total = totalPresent + totalAbsent;
-    
+
     return total > 0 ? Math.round((totalPresent / total) * 100) : 0;
   }
 
@@ -441,14 +442,18 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     canvas.height = video.videoHeight;
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    // Simulate QR code detection
-    // In real implementation, use jsQR library here
+    // Gerçek QR kod tespiti jsQR ile
     const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
 
-    // Mock QR code data - in real app this would come from jsQR
-    const mockQRData = this.generateMockQRData();
-    if (mockQRData) {
-      this.processQRCode(mockQRData);
+    try {
+      const qrCode = jsQR(imageData.data, imageData.width, imageData.height);
+
+      if (qrCode && qrCode.data) {
+        console.log('QR Kod tespit edildi:', qrCode.data);
+        this.processQRCode(qrCode.data);
+      }
+    } catch (error) {
+      console.error('QR kod okuma hatası:', error);
     }
   }
 

@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
+import * as jsQR from 'jsqr';
 
 
 
@@ -253,14 +254,18 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, AfterVi
     canvas.height = video.videoHeight;
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    // QR kod tespit simülasyonu
-    // Gerçek implementasyonda burada jsQR kütüphanesi kullanılır
+    // Gerçek QR kod tespiti jsQR ile
     const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-
-    // Mock QR kod verisi - demo amaçlı
-    const mockQRData = this.generateMockQRData();
-    if (mockQRData) {
-      this.processQRCodeForClassroom(mockQRData);
+    
+    try {
+      const qrCode = jsQR(imageData.data, imageData.width, imageData.height);
+      
+      if (qrCode && qrCode.data) {
+        console.log('QR Kod tespit edildi:', qrCode.data);
+        this.processQRCodeForClassroom(qrCode.data);
+      }
+    } catch (error) {
+      console.error('QR kod okuma hatası:', error);
     }
   }
 
