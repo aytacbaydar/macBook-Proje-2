@@ -577,12 +577,16 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
   }
 
   exportToPDF(): void {
+    console.log('PDF export başlatıldı...');
+    console.log('Rapor verileri:', this.dailyReportData);
+    
     if (this.dailyReportData.length === 0) {
       alert('Rapor verisi bulunamadı!');
       return;
     }
 
     try {
+      console.log('jsPDF oluşturuluyor...');
       const pdf = new jsPDF();
 
       // Başlık
