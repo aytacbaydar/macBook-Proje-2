@@ -5,7 +5,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Kod Oluşturucu - Elif</title>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <!-- QR Code kütüphanesi - Birden fazla CDN ile yedekleme -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js" 
+            onerror="loadBackupQRLibrary()"></script>
+    <script>
+        function loadBackupQRLibrary() {
+            console.log('Ana CDN başarısız, yedek CDN deneniyor...');
+            var script = document.createElement('script');
+            script.src = 'https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js';
+            script.onerror = function() {
+                console.log('Yedek CDN da başarısız, local fallback deneniyor...');
+                loadLocalQRLibrary();
+            };
+            document.head.appendChild(script);
+        }
+        
+        function loadLocalQRLibrary() {
+            // Basit QR kod alternatifi
+            window.QRCode = {
+                toCanvas: function(canvas, text, options, callback) {
+                    var ctx = canvas.getContext('2d');
+                    canvas.width = options.width || 200;
+                    canvas.height = options.width || 200;
+                    
+                    // Basit placeholder çiz
+                    ctx.fillStyle = options.color?.light || '#FFFFFF';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    ctx.fillStyle = options.color?.dark || '#000000';
+                    ctx.font = '12px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('QR: ' + text.substring(0, 20), canvas.width/2, canvas.height/2);
+                    
+                    if (callback) callback(null);
+                }
+            };
+            console.log('Basit QR kod alternatifi yüklendi');
+        }
+    </script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -230,6 +267,11 @@
 
         // QR kodları oluştur
         function generateQRCodes() {
+            if (typeof QRCode === 'undefined') {
+                console.error('QRCode kütüphanesi mevcut değil!');
+                return;
+            }
+
             console.log('QR kodları oluşturuluyor...');
             
             const entryData = generateQRData('entry');
@@ -238,59 +280,103 @@
             console.log('Entry QR Data:', entryData);
             console.log('Exit QR Data:', exitData);
 
-            // Giriş QR kodu
-            QRCode.toCanvas(document.getElementById('entryQR'), entryData, {
-                width: 200,
-                margin: 2,
-                color: {
-                    dark: '#28a745',
-                    light: '#FFFFFF'
-                }
-            }, function (error) {
-                if (error) {
-                    console.error('Giriş QR kodu oluşturulamadı:', error);
-                } else {
-                    console.log('Giriş QR kodu oluşturuldu');
-                }
-            });
+            try {
+                // Giriş QR kodu
+                QRCode.toCanvas(document.getElementById('entryQR'), entryData, {
+                    width: 200,
+                    margin: 2,
+                    color: {
+                        dark: '#28a745',
+                        light: '#FFFFFF'
+                    }
+                }, function (error) {
+                    if (error) {
+                        console.error('Giriş QR kodu oluşturulamadı:', error);
+                        document.getElementById('entryQR').style.display = 'none';
+                        document.querySelector('.qr-card.entry').innerHTML += '<p style="color: red;">QR kod oluşturulamadı</p>';
+                    } else {
+                        console.log('Giriş QR kodu oluşturuldu');
+                    }
+                });
 
-            // Çıkış QR kodu
-            QRCode.toCanvas(document.getElementById('exitQR'), exitData, {
-                width: 200,
-                margin: 2,
-                color: {
-                    dark: '#dc3545',
-                    light: '#FFFFFF'
-                }
-            }, function (error) {
-                if (error) {
-                    console.error('Çıkış QR kodu oluşturulamadı:', error);
-                } else {
-                    console.log('Çıkış QR kodu oluşturuldu');
-                }
-            });
+                // Çıkış QR kodu
+                QRCode.toCanvas(document.getElementById('exitQR'), exitData, {
+                    width: 200,
+                    margin: 2,
+                    color: {
+                        dark: '#dc3545',
+                        light: '#FFFFFF'
+                    }
+                }, function (error) {
+                    if (error) {
+                        console.error('Çıkış QR kodu oluşturulamadı:', error);
+                        document.getElementById('exitQR').style.display = 'none';
+                        document.querySelector('.qr-card.exit').innerHTML += '<p style="color: red;">QR kod oluşturulamadı</p>';
+                    } else {
+                        console.log('Çıkış QR kodu oluşturuldu');
+                    }
+                });
 
-            // QR kod verilerini göster
-            document.getElementById('entryData').textContent = entryData;
-            document.getElementById('exitData').textContent = exitData;
-            
-            console.log('QR kodları başarıyla oluşturuldu!');
+                // QR kod verilerini göster
+                document.getElementById('entryData').textContent = entryData;
+                document.getElementById('exitData').textContent = exitData;
+                
+                console.log('QR kodları başarıyla oluşturuldu!');
+            } catch (error) {
+                console.error('QR kod oluşturma hatası:', error);
+                alert('QR kodları oluşturulurken hata oluştu: ' + error.message);
+            }
+        }
+
+        // QR kütüphanesinin yüklenmesini kontrol et
+        function checkQRLibrary() {
+            return new Promise((resolve, reject) => {
+                var attempts = 0;
+                var maxAttempts = 10;
+                
+                function check() {
+                    attempts++;
+                    if (typeof QRCode !== 'undefined') {
+                        console.log('QRCode kütüphanesi başarıyla yüklendi');
+                        resolve(true);
+                    } else if (attempts >= maxAttempts) {
+                        console.error('QRCode kütüphanesi yüklenemedi, maksimum deneme sayısına ulaşıldı');
+                        reject(new Error('QRCode kütüphanesi yüklenemedi'));
+                    } else {
+                        console.log('QRCode kütüphanesi bekleniyor... Deneme:', attempts);
+                        setTimeout(check, 200);
+                    }
+                }
+                check();
+            });
         }
 
         // Sayfa yüklendiğinde çalışacak fonksiyon
-        window.addEventListener('load', function() {
+        window.addEventListener('load', async function() {
             console.log('Sayfa yüklendi, QR kodları oluşturuluyor...');
             updateDateTime();
             
-            // QRCode kütüphanesinin yüklenmesini bekle
-            setTimeout(function() {
-                if (typeof QRCode !== 'undefined') {
-                    generateQRCodes();
-                } else {
-                    console.error('QRCode kütüphanesi yüklenemedi!');
-                    alert('QR kod kütüphanesi yüklenemedi. Sayfayı yenileyin.');
-                }
-            }, 500);
+            try {
+                await checkQRLibrary();
+                generateQRCodes();
+            } catch (error) {
+                console.error('QR kütüphanesi yükleme hatası:', error);
+                document.querySelector('.container').innerHTML += `
+                    <div style="background: #ffebee; color: #c62828; padding: 20px; border-radius: 10px; margin-top: 20px; text-align: center;">
+                        <h3>⚠️ QR Kod Kütüphanesi Yüklenemedi</h3>
+                        <p>QR kodları oluşturulamıyor. Lütfen:</p>
+                        <ul style="text-align: left; display: inline-block;">
+                            <li>İnternet bağlantınızı kontrol edin</li>
+                            <li>Sayfayı yenileyin (F5 veya Ctrl+R)</li>
+                            <li>Tarayıcı önbelleğini temizleyin</li>
+                            <li>Farklı bir tarayıcı deneyin</li>
+                        </ul>
+                        <button onclick="location.reload()" style="background: #c62828; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px;">
+                            🔄 Sayfayı Yenile
+                        </button>
+                    </div>
+                `;
+            }
         });
 
         // Her 1 saniyede bir zamanı güncelle
