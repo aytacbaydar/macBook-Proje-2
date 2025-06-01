@@ -265,13 +265,7 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, AfterVi
   }
 
   private generateMockQRData(): string | null {
-    // Demo amaçlı mock fonksiyon
-    // Gerçek implementasyonda jsQR ile değiştirilecek
-    if (Math.random() < 0.1) { // %10 şansla QR tespit simülasyonu
-      const randomStudent = this.groupStudents[Math.floor(Math.random() * this.groupStudents.length)];
-      const action = Math.random() < 0.5 ? 'entry' : 'exit';
-      return `${randomStudent.id}_${action}_${Date.now()}`;
-    }
+    // Mock fonksiyon devre dışı - sadece gerçek QR kod okuma aktif
     return null;
   }
 

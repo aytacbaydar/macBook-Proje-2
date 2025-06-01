@@ -453,12 +453,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
   }
 
   private generateMockQRData(): string | null {
-    // This is a mock function for demonstration
-    // In real implementation, this would be replaced with actual QR detection
-    if (Math.random() < 0.1) { // 10% chance to simulate QR detection
-      const randomStudent = this.groupStudents[Math.floor(Math.random() * this.groupStudents.length)];
-      return `student_${randomStudent.id}`;
-    }
+    // Mock fonksiyon devre dışı - sadece gerçek QR kod okuma aktif
     return null;
   }
 
