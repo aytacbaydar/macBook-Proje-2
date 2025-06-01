@@ -9,9 +9,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $user = authorize();
         $studentId = isset($_GET['id']) ? intval($_GET['id']) : $user['id'];
         
-        // Admin değilse, sadece kendi bilgilerini görebilir
-        if ($user['rutbe'] !== 'admin' && $studentId !== $user['id']) {
-            errorResponse('Bu bilgilere erişim yetkiniz yok', 403);
+        // Yetkilendirme kontrolü
+        if ($user['rutbe'] === 'admin') {
+            // Admin tüm öğrencileri görebilir
+        } elseif ($user['rutbe'] === 'ogretmen') {
+            // Öğretmen sadece kendi öğrencilerini görebilir
+            $stmt_check = $conn->prepare("
+                SELECT COUNT(*) as count 
+                FROM ogrenciler o
+                LEFT JOIN ogrenci_bilgileri ob ON o.id = ob.ogrenci_id
+                WHERE o.id = :student_id AND o.ogretmeni = :teacher_name
+            ");
+            $stmt_check->bindParam(':student_id', $studentId);
+            $stmt_check->bindParam(':teacher_name', $user['adi_soyadi']);
+            $stmt_check->execute();
+            
+            $check_result = $stmt_check->fetch(PDO::FETCH_ASSOC);
+            if ($check_result['count'] == 0) {
+                errorResponse('Bu öğrencinin bilgilerine erişim yetkiniz yok', 403);
+            }
+        } elseif ($user['rutbe'] === 'ogrenci') {
+            // Öğrenci sadece kendi bilgilerini görebilir
+            if ($studentId !== $user['id']) {
+                errorResponse('Bu bilgilere erişim yetkiniz yok', 403);
+            }
+        } else {
+            errorResponse('Geçersiz kullanıcı türü', 403);
         }
         
         $conn = getConnection();
