@@ -1,50 +1,46 @@
 
 <div class="qr-generator-container">
-  <div class="header-section">
-    <h1>🎓 Öğrenci QR Kodları</h1>
-    
-    <div class="student-info">
-      <h2>👩‍🎓 Öğrenci Bilgileri</h2>
-      <p><strong>Ad Soyad:</strong> {{ studentData.name }}</p>
-      <p><strong>E-mail:</strong> {{ studentData.email }}</p>
-      <p><strong>Öğrenci ID:</strong> {{ studentData.id }}</p>
-      <p><strong>Oluşturulma Tarihi:</strong> {{ currentDate }}</p>
-    </div>
+  <div class="header">
+    <h2>QR Kod Generator</h2>
+    <p class="student-info">
+      <strong>Öğrenci:</strong> {{ studentData.name }} ({{ studentData.email }})
+    </p>
+    <p class="current-time">{{ currentDate }}</p>
   </div>
-  
-  <div class="qr-section">
-    <div class="qr-card entry">
-      <div class="qr-title entry">🚪 GİRİŞ QR KODU</div>
-      <canvas #entryQRCanvas class="qr-canvas"></canvas>
-      <div class="qr-data">{{ entryQRData }}</div>
-    </div>
-    
-    <div class="qr-card exit">
-      <div class="qr-title exit">🚶‍♀️ ÇIKIŞ QR KODU</div>
-      <canvas #exitQRCanvas class="qr-canvas"></canvas>
-      <div class="qr-data">{{ exitQRData }}</div>
-    </div>
-  </div>
-  
-  <div class="action-buttons">
-    <button class="regenerate-btn" (click)="generateQRCodes()">
-      🔄 Yeni QR Kodları Oluştur
-    </button>
-    
-    <button class="print-btn" (click)="printQRCodes()">
-      🖨️ QR Kodları Yazdır
+
+  <!-- Hata mesajı -->
+  <div *ngIf="loadError" class="alert alert-danger">
+    <i class="bi bi-exclamation-triangle"></i>
+    {{ loadError }}
+    <button class="btn btn-sm btn-outline-danger ms-2" (click)="regenerateQRCodes()">
+      Tekrar Dene
     </button>
   </div>
-  
-  <div class="instructions">
-    <h3>📱 Kullanım Talimatları</h3>
-    <ul>
-      <li><strong>Giriş QR Kodu:</strong> Sınıfa girerken öğretmenin kamerasına gösterin</li>
-      <li><strong>Çıkış QR Kodu:</strong> Sınıftan çıkarken öğretmenin kamerasına gösterin</li>
-      <li>QR kodları her kullanımda geçerlidir</li>
-      <li>Kodları temiz ve net tutun</li>
-      <li>Telefonda fotoğraf çekerek de kullanabilirsiniz</li>
-      <li>Yeni QR kodları oluşturmak için "Yeni QR Kodları Oluştur" butonuna basın</li>
-    </ul>
+
+  <!-- QR Kodları -->
+  <div class="qr-codes-section" *ngIf="!loadError">
+    <div class="qr-code-card entry-card">
+      <h3>Giriş QR Kodu</h3>
+      <canvas #entryQRCanvas></canvas>
+      <p class="qr-data">{{ entryQRData }}</p>
+    </div>
+
+    <div class="qr-code-card exit-card">
+      <h3>Çıkış QR Kodu</h3>
+      <canvas #exitQRCanvas></canvas>
+      <p class="qr-data">{{ exitQRData }}</p>
+    </div>
+  </div>
+
+  <!-- Kontrol Butonları -->
+  <div class="controls">
+    <button class="btn btn-primary" (click)="regenerateQRCodes()">
+      <i class="bi bi-arrow-clockwise"></i>
+      Yenile
+    </button>
+    <button class="btn btn-success" (click)="printQRCodes()" *ngIf="!loadError">
+      <i class="bi bi-printer"></i>
+      Yazdır
+    </button>
   </div>
 </div>

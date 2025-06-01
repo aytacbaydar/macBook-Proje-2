@@ -1,5 +1,5 @@
-
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import * as QRCode from 'qrcode';
 
 @Component({
   selector: 'app-ogretmen-qr-generator',
@@ -20,6 +20,8 @@ export class OgretmenQrGeneratorComponent implements OnInit, AfterViewInit {
   currentDate: string = '';
   entryQRData: string = '';
   exitQRData: string = '';
+  isLibraryLoaded: boolean = false;
+  loadError: string = '';
 
   constructor() { }
 
@@ -29,11 +31,9 @@ export class OgretmenQrGeneratorComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.loadQRLibrary().then(() => {
-      this.generateQRCodes();
-    }).catch(error => {
-      console.error('QR kütüphanesi yüklenemedi:', error);
-    });
+    // QRCode kütüphanesi npm ile yüklendiği için direkt kullanabiliriz
+    this.isLibraryLoaded = true;
+    this.generateQRCodes();
   }
 
   updateDateTime(): void {
@@ -46,74 +46,58 @@ export class OgretmenQrGeneratorComponent implements OnInit, AfterViewInit {
     return `${this.studentData.id}_${action}_${timestamp}`;
   }
 
-  async loadQRLibrary(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      if ((window as any).QRCode) {
-        resolve();
-        return;
-      }
-
-      const script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js';
-      script.onload = () => {
-        console.log('QRCode kütüphanesi yüklendi');
-        resolve();
-      };
-      script.onerror = () => {
-        // Yedek CDN deneyelim
-        const backupScript = document.createElement('script');
-        backupScript.src = 'https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js';
-        backupScript.onload = () => {
-          console.log('Yedek QRCode kütüphanesi yüklendi');
-          resolve();
-        };
-        backupScript.onerror = () => {
-          reject(new Error('QRCode kütüphanesi yüklenemedi'));
-        };
-        document.head.appendChild(backupScript);
-      };
-      document.head.appendChild(script);
-    });
-  }
-
   generateQRCodes(): void {
-    const QRCode = (window as any).QRCode;
-    if (!QRCode) {
-      console.error('QRCode kütüphanesi bulunamadı');
+    if (!this.isLibraryLoaded) {
+      console.error('QRCode kütüphanesi henüz yüklenmedi');
       return;
     }
 
-    this.entryQRData = this.generateQRData('entry');
-    this.exitQRData = this.generateQRData('exit');
+    try {
+      this.entryQRData = this.generateQRData('entry');
+      this.exitQRData = this.generateQRData('exit');
 
-    // Giriş QR kodu
-    QRCode.toCanvas(this.entryQRCanvas.nativeElement, this.entryQRData, {
-      width: 200,
-      margin: 2,
-      color: {
-        dark: '#28a745',
-        light: '#FFFFFF'
-      }
-    }, (error: any) => {
-      if (error) console.error('Giriş QR kodu oluşturulamadı:', error);
-      else console.log('Giriş QR kodu oluşturuldu');
-    });
+      // Giriş QR kodu
+      QRCode.toCanvas(this.entryQRCanvas.nativeElement, this.entryQRData, {
+        width: 200,
+        margin: 2,
+        color: {
+          dark: '#28a745',
+          light: '#FFFFFF'
+        }
+      }).then(() => {
+        console.log('Giriş QR kodu başarıyla oluşturuldu');
+      }).catch((error: any) => {
+        console.error('Giriş QR kodu oluşturulamadı:', error);
+        this.loadError = 'Giriş QR kodu oluşturulamadı';
+      });
 
-    // Çıkış QR kodu
-    QRCode.toCanvas(this.exitQRCanvas.nativeElement, this.exitQRData, {
-      width: 200,
-      margin: 2,
-      color: {
-        dark: '#dc3545',
-        light: '#FFFFFF'
-      }
-    }, (error: any) => {
-      if (error) console.error('Çıkış QR kodu oluşturulamadı:', error);
-      else console.log('Çıkış QR kodu oluşturuldu');
-    });
+      // Çıkış QR kodu
+      QRCode.toCanvas(this.exitQRCanvas.nativeElement, this.exitQRData, {
+        width: 200,
+        margin: 2,
+        color: {
+          dark: '#dc3545',
+          light: '#FFFFFF'
+        }
+      }).then(() => {
+        console.log('Çıkış QR kodu başarıyla oluşturuldu');
+      }).catch((error: any) => {
+        console.error('Çıkış QR kodu oluşturulamadı:', error);
+        this.loadError = 'Çıkış QR kodu oluşturulamadı';
+      });
+
+    } catch (error) {
+      console.error('QR kod oluşturma hatası:', error);
+      this.loadError = 'QR kodları oluşturulamadı: ' + error;
+    }
   }
 
   printQRCodes(): void {
     window.print();
+  }
+
+  regenerateQRCodes(): void {
+    this.loadError = '';
+    this.generateQRCodes();
   }
 }
