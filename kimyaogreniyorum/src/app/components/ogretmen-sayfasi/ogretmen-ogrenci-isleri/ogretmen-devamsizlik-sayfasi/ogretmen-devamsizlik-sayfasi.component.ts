@@ -535,7 +535,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
             console.log(message);
             this.playVoiceMessage(`${studentName} devamsız kaydedildi`);
             // UI'ı güncelle - öğrenciyi devamsız listesine ekle
-            this.loadAbsentStudents();
+            // Devamsız öğrenciler otomatik olarak güncellenecek
           } else {
             console.error('Devamsızlık kaydı hatası:', response.error);
             this.playVoiceMessage('Kayıt başarısız!');

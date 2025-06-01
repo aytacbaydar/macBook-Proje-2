@@ -529,7 +529,7 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, AfterVi
             }
 
             // Listeyi güncelle
-            this.loadClassStatus();
+            this.loadClassroomStatus();
           } else {
             console.error('QR işlem hatası:', response.error);
             this.playVoiceMessage('İşlem başarısız!');
