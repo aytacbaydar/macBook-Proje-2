@@ -1,0 +1,157 @@
+<div class="grup-detay-container">
+    <!-- Header -->
+    <div class="header-section">
+      <button class="back-button" routerLink="/yonetici/ogrenci-gruplar">
+        <i class="fas fa-arrow-left"></i>
+        Geri
+      </button>
+      <h1 class="grup-title">{{ grupDetay.name }}</h1>
+      <div class="stats">
+        <span class="student-count">{{ grupDetay.students.length }} Öğrenci</span>
+        <span class="lesson-count">{{ grupDetay.dersKayitlari.length }} Ders Kaydı</span>
+      </div>
+    </div>
+  
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="spinner"></div>
+      <p>Grup detayları yükleniyor...</p>
+    </div>
+  
+    <!-- Error State -->
+    <div *ngIf="error && !isLoading" class="error-container">
+      <i class="fas fa-exclamation-triangle"></i>
+      <p>{{ error }}</p>
+    </div>
+  
+    <!-- Content -->
+    <div *ngIf="!isLoading && !error" class="content-grid">
+  
+      <!-- Ders Programı -->
+      <div class="section-card">
+        <div class="section-header">
+          <i class="fas fa-calendar-alt"></i>
+          <h2>Ders Programı</h2>
+        </div>
+        <div class="program-list">
+          <div *ngFor="let program of grupDetay.dersProgram" class="program-item">
+            <div class="day">{{ program.gun }}</div>
+            <div class="time">{{ program.saat }}</div>
+            <div class="subject">{{ program.ders_adi }}</div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Öğrenci Listesi -->
+      <div class="section-card">
+        <div class="section-header">
+          <i class="fas fa-users"></i>
+          <h2>Öğrenciler</h2>
+        </div>
+        <div class="students-list">
+          <div *ngFor="let student of grupDetay.students" class="student-item">
+            <div class="student-avatar">
+              <i class="fas fa-user"></i>
+            </div>
+            <div class="student-info">
+              <div class="student-name">{{ student.adi_soyadi }}</div>
+              <div class="student-email">{{ student.email }}</div>
+            </div>
+            <div class="student-status" [class.active]="student.aktif" [class.inactive]="!student.aktif">
+              {{ student.aktif ? 'Aktif' : 'Pasif' }}
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Ders Kayıtları -->
+      <div class="section-card full-width">
+        <div class="section-header">
+          <i class="fas fa-book"></i>
+          <h2>İşlenen Konular</h2>
+        </div>
+  
+        <div *ngIf="grupDetay.dersKayitlari.length === 0" class="empty-state">
+          <i class="fas fa-file-pdf"></i>
+          <p>Henüz hiç ders kaydı bulunmuyor.</p>
+        </div>
+  
+        <div *ngIf="grupDetay.dersKayitlari.length > 0" class="lessons-grid">
+          <div *ngFor="let ders of grupDetay.dersKayitlari" class="lesson-card">
+            <div class="lesson-header">
+              <i class="fas fa-file-pdf"></i>
+              <h3>{{ ders.pdf_adi }}</h3>
+            </div>
+            <div class="lesson-info">
+              <div class="info-item">
+                <span class="label">Tarih:</span>
+                <span class="value">{{ formatDate(ders.olusturma_zamani) }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">Sayfa Sayısı:</span>
+                <span class="value">{{ ders.sayfa_sayisi }} sayfa</span>
+              </div>
+              <div class="info-item" *ngIf="ders.ogretmen_adi">
+                <span class="label">Öğretmen:</span>
+                <span class="value">{{ ders.ogretmen_adi }}</span>
+              </div>
+            </div>
+            <div class="lesson-actions">
+                  <button 
+                    class="action-btn view-btn" 
+                    (click)="viewLessonPdf(ders.pdf_dosya_yolu)"
+                    [disabled]="!ders.pdf_dosya_yolu">
+                    <i class="fas fa-eye"></i>
+                    PDF Görüntüle
+                  </button>
+                </div>
+          </div>
+        </div>
+      </div>
+  
+    </div>
+  </div>
+  
+  <!-- PDF Viewer Modal -->
+  <div *ngIf="selectedPdf" class="pdf-modal-overlay" (click)="closePdfViewer()">
+    <div class="pdf-modal-content" (click)="$event.stopPropagation()">
+      <div class="pdf-modal-header">
+        <h3>Ders PDF'i</h3>
+        <div class="modal-actions">
+          <a [href]="selectedPdf" target="_blank" class="download-btn">
+            <i class="fas fa-external-link-alt"></i>
+            Yeni Sekmede Aç
+          </a>
+          <button class="close-btn" (click)="closePdfViewer()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      <div class="pdf-viewer">
+        <div class="pdf-fallback">
+          <div class="fallback-content">
+            <i class="fas fa-file-pdf pdf-icon"></i>
+            <h4>PDF Görüntüleyici</h4>
+            <p>PDF dosyasını görüntülemek için aşağıdaki seçenekleri kullanın:</p>
+            <div class="pdf-actions">
+              <a [href]="selectedPdf" target="_blank" class="pdf-action-btn primary">
+                <i class="fas fa-eye"></i>
+                Yeni Sekmede Görüntüle
+              </a>
+              <a [href]="selectedPdf" download class="pdf-action-btn secondary">
+                <i class="fas fa-download"></i>
+                İndir
+              </a>
+            </div>
+          </div>
+        </div>
+        <iframe 
+          [src]="selectedPdf + '#toolbar=1'" 
+          width="100%" 
+          height="600px"
+          style="border: none;"
+          (error)="onPdfLoadError()">
+        </iframe>
+      </div>
+    </div>
+  </div>

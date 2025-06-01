@@ -10,6 +10,7 @@ import { OgretmenOgrenciListesiSayfasiComponent } from './ogretmen-ogrenci-isler
 import { OgretmenAnaSayfasiComponent } from './ogretmen-ana-sayfasi/ogretmen-ana-sayfasi.component';
 import { OgretmenGruplarSayfasiComponent } from './ogretmen-gruplar-sayfasi/ogretmen-gruplar-sayfasi.component';
 import { OgretmenDevamsizlikSayfasiComponent } from './ogretmen-ogrenci-isleri/ogretmen-devamsizlik-sayfasi/ogretmen-devamsizlik-sayfasi.component';
+import { OgretmenGruplarDetaySayfasiComponent } from './ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { OgretmenDevamsizlikSayfasiComponent } from './ogretmen-ogrenci-isleri/o
     OgretmenAnaSayfasiComponent,
     OgretmenGruplarSayfasiComponent,
     OgretmenDevamsizlikSayfasiComponent,
+    OgretmenGruplarDetaySayfasiComponent,
   ],
   imports: [
     CommonModule,

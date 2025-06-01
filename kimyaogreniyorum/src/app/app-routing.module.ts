@@ -18,6 +18,7 @@ import { OgretmenOgrenciListesiSayfasiComponent } from './components/ogretmen-sa
 import { OgretmenAnaSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-ana-sayfasi/ogretmen-ana-sayfasi.component';
 import { OgretmenGruplarSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-sayfasi.component';
 import { OgretmenDevamsizlikSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-devamsizlik-sayfasi/ogretmen-devamsizlik-sayfasi.component';
+import { OgretmenGruplarDetaySayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/giris-sayfasi', pathMatch: 'full' },
@@ -81,6 +82,10 @@ const routes: Routes = [
       {
         path: 'ogretmen-gruplar-sayfasi',
         component: OgretmenGruplarSayfasiComponent,
+      },
+      {
+        path: 'ogretmen-gruplar-detay-sayfasi/:grupAdi',
+        component: OgretmenGruplarDetaySayfasiComponent,
       },
       {
         path: 'ogretmen-ders-anlatma-tahtasi-sayfasi',
