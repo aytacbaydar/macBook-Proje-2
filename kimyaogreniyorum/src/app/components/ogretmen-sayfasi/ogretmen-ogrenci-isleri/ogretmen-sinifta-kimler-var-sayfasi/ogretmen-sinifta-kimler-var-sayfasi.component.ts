@@ -225,7 +225,7 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, AfterVi
             alert('QR kod tarayıcı başlatıldı. QR kodu kameraya gösterin.');
           } catch (playError) {
             console.error('Video oynatma hatası:', playError);
-            alert('Video başlatılamadı: ' + playError.message);
+            alert('Video başlatılamadı: ' + ((playError as any)?.message || playError));
           }
         });
         
