@@ -73,7 +73,7 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit {
           const uniqueGroups = [...new Set(students
             .filter((s: any) => s.rutbe === 'ogrenci' && s.grubu)
             .map((s: any) => s.grubu))];
-          this.groups = uniqueGroups;
+          this.groups = uniqueGroups as string[];
         }
       },
       error: (error) => {
