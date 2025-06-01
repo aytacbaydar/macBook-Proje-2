@@ -357,6 +357,8 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, AfterVi
               qr_method: 'entry'
             });
             this.toastr.success(`${student.adi_soyadi} sınıfa giriş yaptı! (${currentTime.toLocaleTimeString()})`, 'Giriş Kaydedildi');
+            // Sesli uyarı ekle
+            this.speakMessage(`${student.adi_soyadi}, iyi dersler!`);
           } else {
             this.presentStudents.delete(studentId);
             const existingEntry = this.classroomEntries.get(studentId);
@@ -366,17 +368,21 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, AfterVi
               existingEntry.qr_method = 'exit';
             }
             this.toastr.info(`${student.adi_soyadi} sınıftan çıkış yaptı! (${currentTime.toLocaleTimeString()})`, 'Çıkış Kaydedildi');
+            // Sesli uyarı ekle
+            this.speakMessage(`${student.adi_soyadi}, iyi günler!`);
           }
           // Başarılı işlem sonrası kamerayı kapat
           this.stopQRScanner();
         } else {
           this.toastr.error('İşlem kaydedilemedi: ' + response.message, 'Hata');
+          this.speakMessage('İşlem başarısız!');
         }
       },
       error: (error) => {
         console.error('QR işlem hatası:', error);
         const errorMessage = error.error?.error || error.error?.message || error.message || 'Bilinmeyen hata';
         this.toastr.error('QR işlem hatası: ' + errorMessage, 'Hata');
+        this.speakMessage('Bağlantı hatası!');
       }
     });
   }
@@ -387,6 +393,11 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, AfterVi
 
     const isPresent = this.presentStudents.has(studentId);
     const action = isPresent ? 'exit' : 'entry';
+    
+    // Manuel işlem mesajı
+    const actionText = action === 'entry' ? 'giriş' : 'çıkış';
+    this.toastr.info(`${student.adi_soyadi} manuel ${actionText} işlemi`, 'Manuel İşlem');
+    
     this.recordClassroomActivity(studentId, action);
   }
 
@@ -480,67 +491,11 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, AfterVi
 
   // Sesli mesaj çalma fonksiyonu
   private playVoiceMessage(message: string): void {
-    if ('speechSynthesis' in window) {
-      // Önceki konuşmayı durdur
-      speechSynthesis.cancel();
-
-      const utterance = new SpeechSynthesisUtterance(message);
-
-      // Türkçe ses ayarları
-      utterance.lang = 'tr-TR';
-      utterance.rate = 0.8; // Konuşma hızı
-      utterance.pitch = 1.0; // Ses tonu
-      utterance.volume = 0.8; // Ses seviyesi
-
-      // Türkçe ses varsa kullan
-      const voices = speechSynthesis.getVoices();
-      const turkishVoice = voices.find(voice => 
-        voice.lang.includes('tr') || voice.lang.includes('TR')
-      );
-
-      if (turkishVoice) {
-        utterance.voice = turkishVoice;
-      }
-
-      speechSynthesis.speak(utterance);
-    }
+    console.log('Sesli mesaj çalınacak:', message);
+    this.speakMessage(message);
   }
 
-  processAttendance(studentId: number, action: string, studentName: string): void {
-    const requestData = {
-      student_id: studentId,
-      action: action,
-      grup: this.selectedGroup
-    };
-
-    this.http.post<any>('./server/api/sinif_giris_cikis.php', requestData)
-      .subscribe({
-        next: (response) => {
-          if (response.success) {
-            // Başarılı işlem mesajı ve sesli uyarı
-            if (action === 'entry') {
-              const message = `${studentName} sınıfa giriş yaptı. İyi dersler!`;
-              console.log(message);
-              this.playVoiceMessage(`${studentName}, iyi dersler!`);
-            } else {
-              const message = `${studentName} sınıftan çıkış yaptı. İyi günler!`;
-              console.log(message);
-              this.playVoiceMessage(`${studentName}, iyi günler!`);
-            }
-
-            // Listeyi güncelle
-            this.loadClassroomStatus();
-          } else {
-            console.error('QR işlem hatası:', response.error);
-            this.playVoiceMessage('İşlem başarısız!');
-          }
-        },
-        error: (error) => {
-          console.error('QR işlem hatası:', error);
-          this.playVoiceMessage('Bağlantı hatası!');
-        }
-      });
-  }
+  
 
   private speakMessage(message: string): void {
     if ('speechSynthesis' in window) {
