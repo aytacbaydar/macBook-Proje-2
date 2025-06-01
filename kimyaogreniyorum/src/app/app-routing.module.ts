@@ -83,7 +83,7 @@ const routes: Routes = [
         component: OgretmenGruplarSayfasiComponent,
       },
       {
-        path: 'ogretmen-ders-anlatma-tahtasi',
+        path: 'ogretmen-ders-anlatma-tahtasi-sayfasi',
         component: OgretmenDersAnlatmaTahtasiComponent,
       },
     ],
