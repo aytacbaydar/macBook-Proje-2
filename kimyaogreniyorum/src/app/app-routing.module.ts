@@ -81,11 +81,11 @@ const routes: Routes = [
         component: OgretmenOgrenciDetaySayfasiComponent,
       },
       {
-        path: 'ogretmen-sinifta-kimler-var', 
+        path: 'ogretmen-sinifta-kimler-var-sayfasi', 
         component: OgretmenSiniftaKimlerVarSayfasiComponent 
       },
       {
-        path: 'ogretmen-sinifta-kimler-var/:group', 
+        path: 'ogretmen-sinifta-kimler-var-sayfasi/:grupAdi', 
         component: OgretmenSiniftaKimlerVarSayfasiComponent 
       },
       {
