@@ -1,0 +1,250 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Kod Oluşturucu - Elif</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .student-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #4f46e5;
+        }
+        
+        .qr-section {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .qr-card {
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 2px solid #e9ecef;
+        }
+        
+        .qr-card.entry {
+            border-color: #28a745;
+        }
+        
+        .qr-card.exit {
+            border-color: #dc3545;
+        }
+        
+        .qr-canvas {
+            margin: 15px 0;
+        }
+        
+        .qr-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .qr-title.entry {
+            color: #28a745;
+        }
+        
+        .qr-title.exit {
+            color: #dc3545;
+        }
+        
+        .qr-data {
+            font-family: monospace;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 15px;
+            word-break: break-all;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .print-btn {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            width: 100%;
+        }
+        
+        .print-btn:hover {
+            background: #3730a3;
+        }
+        
+        .instructions {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            border-left: 4px solid #2196f3;
+        }
+        
+        .instructions h3 {
+            color: #1976d2;
+            margin-top: 0;
+        }
+        
+        .instructions ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎓 Öğrenci QR Kodları</h1>
+        
+        <div class="student-info">
+            <h2>👩‍🎓 Öğrenci Bilgileri</h2>
+            <p><strong>Ad Soyad:</strong> Elif Elif</p>
+            <p><strong>E-mail:</strong> elish263624@gmail.com</p>
+            <p><strong>Öğrenci ID:</strong> <span id="studentId">-</span></p>
+            <p><strong>Oluşturulma Tarihi:</strong> <span id="currentDate">-</span></p>
+        </div>
+        
+        <div class="qr-section">
+            <div class="qr-card entry">
+                <div class="qr-title entry">🚪 GİRİŞ QR KODU</div>
+                <canvas id="entryQR" class="qr-canvas"></canvas>
+                <div class="qr-data" id="entryData"></div>
+            </div>
+            
+            <div class="qr-card exit">
+                <div class="qr-title exit">🚶‍♀️ ÇIKIŞ QR KODU</div>
+                <canvas id="exitQR" class="qr-canvas"></canvas>
+                <div class="qr-data" id="exitData"></div>
+            </div>
+        </div>
+        
+        <button class="print-btn" onclick="window.print()">
+            🖨️ QR Kodları Yazdır
+        </button>
+        
+        <div class="instructions">
+            <h3>📱 Kullanım Talimatları</h3>
+            <ul>
+                <li><strong>Giriş QR Kodu:</strong> Sınıfa girerken öğretmenin kamerasına gösterin</li>
+                <li><strong>Çıkış QR Kodu:</strong> Sınıftan çıkarken öğretmenin kamerasına gösterin</li>
+                <li>QR kodları her kullanımda geçerlidir</li>
+                <li>Kodları temiz ve net tutun</li>
+                <li>Telefonda fotoğraf çekerek de kullanabilirsiniz</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Elif'in bilgileri (gerçek uygulamada API'den gelecek)
+        const studentData = {
+            id: 35, // Elif'in ID'si (veritabanından gelecek)
+            name: "Elif Elif",
+            email: "elish263624@gmail.com"
+        };
+
+        // Tarih bilgisini göster
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('tr-TR');
+        document.getElementById('studentId').textContent = studentData.id;
+
+        // QR kod verilerini oluştur
+        function generateQRData(action) {
+            const timestamp = Date.now();
+            return `${studentData.id}_${action}_${timestamp}`;
+        }
+
+        // QR kodları oluştur
+        function generateQRCodes() {
+            const entryData = generateQRData('entry');
+            const exitData = generateQRData('exit');
+
+            // Giriş QR kodu
+            QRCode.toCanvas(document.getElementById('entryQR'), entryData, {
+                width: 200,
+                margin: 2,
+                color: {
+                    dark: '#28a745',
+                    light: '#FFFFFF'
+                }
+            }, function (error) {
+                if (error) console.error('Giriş QR kodu oluşturulamadı:', error);
+            });
+
+            // Çıkış QR kodu
+            QRCode.toCanvas(document.getElementById('exitQR'), exitData, {
+                width: 200,
+                margin: 2,
+                color: {
+                    dark: '#dc3545',
+                    light: '#FFFFFF'
+                }
+            }, function (error) {
+                if (error) console.error('Çıkış QR kodu oluşturulamadı:', error);
+            });
+
+            // QR kod verilerini göster
+            document.getElementById('entryData').textContent = entryData;
+            document.getElementById('exitData').textContent = exitData;
+        }
+
+        // Sayfa yüklendiğinde QR kodları oluştur
+        window.onload = function() {
+            generateQRCodes();
+        };
+
+        // Yazdırma için stil
+        const style = document.createElement('style');
+        style.textContent = `
+            @media print {
+                body {
+                    background: white !important;
+                    -webkit-print-color-adjust: exact;
+                }
+                .container {
+                    box-shadow: none !important;
+                }
+                .print-btn {
+                    display: none !important;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
