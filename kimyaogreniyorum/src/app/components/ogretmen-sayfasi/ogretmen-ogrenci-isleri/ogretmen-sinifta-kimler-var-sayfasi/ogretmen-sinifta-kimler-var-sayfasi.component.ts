@@ -1,15 +1,5 @@
-import { Component } from '@angular/core';
 
-@Component({
-  selector: 'app-ogretmen-sinifta-kimler-var-sayfasi',
-  standalone: false,
-  templateUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.html',
-  styleUrl: './ogretmen-sinifta-kimler-var-sayfasi.component.scss'
-})
-export class OgretmenSiniftaKimlerVarSayfasiComponent {
-
-}
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 
@@ -17,15 +7,27 @@ interface Student {
   id: number;
   adi_soyadi: string;
   email: string;
+  cep_telefonu?: string;
+  okulu?: string;
+  sinifi?: string;
   grubu?: string;
-  avatar?: string;
+  ders_gunu?: string;
+  ders_saati?: string;
+  ucret?: string;
   aktif: boolean;
+  avatar?: string;
+  veli_adi?: string;
+  veli_cep?: string;
+  rutbe?: string;
+  ogretmeni?: string;
 }
 
-interface AttendanceStatus {
+interface ClassroomEntry {
   student_id: number;
+  entry_time: Date;
+  exit_time?: Date;
   is_present: boolean;
-  scan_time: Date;
+  qr_method: 'entry' | 'exit';
 }
 
 @Component({
@@ -43,16 +45,18 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, OnDestr
   groups: string[] = [];
   groupStudents: Student[] = [];
   presentStudents: Set<number> = new Set();
-  attendanceStatus: Map<number, AttendanceStatus> = new Map();
-
+  classroomEntries: Map<number, ClassroomEntry> = new Map();
+  
   // QR Scanner properties
   isQRScannerActive: boolean = false;
   private mediaStream: MediaStream | null = null;
   private qrScanInterval: any;
+  private refreshInterval: any;
 
   // UI state
   isLoading: boolean = false;
   selectedDate: string = new Date().toISOString().split('T')[0];
+  searchQuery: string = '';
 
   constructor(
     private http: HttpClient,
@@ -69,101 +73,168 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, OnDestr
         this.loadGroupStudents();
       }
     });
+
+    // Her 30 saniyede bir sınıf durumunu güncelle
+    this.refreshInterval = setInterval(() => {
+      if (this.selectedGroup) {
+        this.loadClassroomStatus();
+      }
+    }, 30000);
   }
 
   ngOnDestroy(): void {
     this.stopQRScanner();
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+    }
+  }
+
+  private getAuthHeaders(): HttpHeaders {
+    let token = '';
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      token = user.token || '';
+    }
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
   }
 
   loadGroups(): void {
-    let token = '';
-    let loggedInUser: any = null;
-    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
-    if (userStr) {
-      loggedInUser = JSON.parse(userStr);
-      token = loggedInUser.token || '';
-    }
-
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-
-    this.http.get<any>('./server/api/ogrenciler_listesi.php', { headers })
-      .subscribe({
-        next: (response) => {
-          if (response.success) {
-            const loggedInTeacherName = loggedInUser?.adi_soyadi || '';
-            const teacherStudents = response.data.filter(
-              (student: any) =>
-                student.rutbe === 'ogrenci' && student.ogretmeni === loggedInTeacherName
-            );
-
-            const gruplar = new Set<string>();
-            teacherStudents.forEach((ogrenci: any) => {
-              if (ogrenci.grubu && typeof ogrenci.grubu === 'string' && ogrenci.grubu.trim() !== '') {
-                gruplar.add(ogrenci.grubu.trim());
-              }
-            });
-
-            this.groups = Array.from(gruplar).sort((a, b) => a.localeCompare(b));
+    this.isLoading = true;
+    
+    this.http.get<any>('./server/api/ogrenciler_listesi.php', { 
+      headers: this.getAuthHeaders() 
+    }).subscribe({
+      next: (response) => {
+        if (response && response.success && response.data) {
+          // Giriş yapan öğretmenin bilgilerini al
+          let loggedInUser: any = null;
+          const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+          if (userStr) {
+            loggedInUser = JSON.parse(userStr);
           }
-        },
-        error: (error) => {
-          console.error('Gruplar yüklenirken hata:', error);
+
+          const loggedInTeacherName = loggedInUser?.adi_soyadi || '';
+          
+          // Sadece öğrencileri filtrele ve giriş yapan öğretmenin öğrencilerini al
+          const teacherStudents = response.data.filter(
+            (student: any) =>
+              student.rutbe === 'ogrenci' && student.ogretmeni === loggedInTeacherName
+          );
+
+          // Öğrencilerden benzersiz grupları çıkar
+          const gruplar = new Set<string>();
+          teacherStudents.forEach((ogrenci: any) => {
+            if (ogrenci.grubu && typeof ogrenci.grubu === 'string' && ogrenci.grubu.trim() !== '') {
+              gruplar.add(ogrenci.grubu.trim());
+            }
+          });
+
+          this.groups = Array.from(gruplar).sort((a, b) => a.localeCompare(b));
+          console.log('Öğretmenin grupları yüklendi:', this.groups);
         }
-      });
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Grup verileri yüklenirken hata:', error);
+        this.groups = [];
+        this.isLoading = false;
+      }
+    });
+  }
+
+  onGroupChange(): void {
+    if (this.selectedGroup) {
+      this.loadGroupStudents();
+      this.loadClassroomStatus();
+    } else {
+      this.groupStudents = [];
+      this.presentStudents.clear();
+      this.classroomEntries.clear();
+    }
   }
 
   loadGroupStudents(): void {
     if (!this.selectedGroup) return;
 
     this.isLoading = true;
-    let token = '';
-    let loggedInUser: any = null;
-    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
-    if (userStr) {
-      loggedInUser = JSON.parse(userStr);
-      token = loggedInUser.token || '';
-    }
-
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-
-    this.http.get<any>('./server/api/ogrenciler_listesi.php', { headers })
-      .subscribe({
-        next: (response) => {
-          if (response.success) {
-            const loggedInTeacherName = loggedInUser?.adi_soyadi || '';
-            this.groupStudents = response.data.filter(
-              (student: any) =>
-                student.rutbe === 'ogrenci' && 
-                student.ogretmeni === loggedInTeacherName &&
-                student.grubu === this.selectedGroup
-            );
-
-            // Initialize attendance status for all students
-            this.groupStudents.forEach(student => {
-              this.attendanceStatus.set(student.id, {
-                student_id: student.id,
-                is_present: false,
-                scan_time: new Date()
-              });
-            });
+    
+    this.http.get<any>('./server/api/ogrenciler_listesi.php', { 
+      headers: this.getAuthHeaders() 
+    }).subscribe({
+      next: (response) => {
+        if (response && response.success && response.data) {
+          // Giriş yapan öğretmenin bilgilerini al
+          let loggedInUser: any = null;
+          const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+          if (userStr) {
+            loggedInUser = JSON.parse(userStr);
           }
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('Öğrenciler yüklenirken hata:', error);
-          this.isLoading = false;
+
+          const loggedInTeacherName = loggedInUser?.adi_soyadi || '';
+          
+          // Seçilen gruptaki öğrencileri filtrele
+          this.groupStudents = response.data.filter(
+            (student: any) =>
+              student.rutbe === 'ogrenci' && 
+              student.ogretmeni === loggedInTeacherName &&
+              student.grubu === this.selectedGroup
+          );
+
+          console.log(`${this.selectedGroup} grubundaki öğrenciler:`, this.groupStudents);
+          this.loadClassroomStatus();
         }
-      });
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Öğrenci verileri yüklenirken hata:', error);
+        this.isLoading = false;
+      }
+    });
   }
 
-  onGroupChange(): void {
-    this.presentStudents.clear();
-    this.attendanceStatus.clear();
-    this.loadGroupStudents();
+  loadClassroomStatus(): void {
+    if (!this.selectedGroup) return;
+
+    this.http.get<any>(`./server/api/sinif_durumu.php`, {
+      headers: this.getAuthHeaders(),
+      params: {
+        grup: this.selectedGroup,
+        tarih: this.selectedDate
+      }
+    }).subscribe({
+      next: (response) => {
+        if (response && response.success && response.data) {
+          this.presentStudents.clear();
+          this.classroomEntries.clear();
+
+          response.data.forEach((entry: any) => {
+            if (entry.is_present) {
+              this.presentStudents.add(entry.student_id);
+            }
+            
+            this.classroomEntries.set(entry.student_id, {
+              student_id: entry.student_id,
+              entry_time: new Date(entry.entry_time),
+              exit_time: entry.exit_time ? new Date(entry.exit_time) : undefined,
+              is_present: entry.is_present,
+              qr_method: entry.qr_method
+            });
+          });
+
+          console.log('Sınıf durumu güncellendi:', {
+            present: this.presentStudents.size,
+            total: this.groupStudents.length
+          });
+        }
+      },
+      error: (error) => {
+        console.error('Sınıf durumu yüklenirken hata:', error);
+      }
+    });
   }
 
   toggleQRScanner(): void {
@@ -180,46 +251,37 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, OnDestr
         video: { facingMode: 'environment' }
       });
 
-      this.isQRScannerActive = true;
-
-      setTimeout(() => {
-        if (this.videoElement && this.videoElement.nativeElement) {
-          this.videoElement.nativeElement.srcObject = this.mediaStream;
-          this.videoElement.nativeElement.play();
-
-          // Start QR scanning
-          this.qrScanInterval = setInterval(() => {
-            this.scanForQRCode();
-          }, 1000);
-        }
-      }, 100);
-
+      if (this.videoElement?.nativeElement) {
+        this.videoElement.nativeElement.srcObject = this.mediaStream;
+        this.isQRScannerActive = true;
+        
+        // QR kod tarama işlemini başlat
+        this.qrScanInterval = setInterval(() => {
+          this.scanQRCode();
+        }, 1000);
+      }
     } catch (error) {
       console.error('Kamera erişim hatası:', error);
-      alert('Kameraya erişim sağlanamadı. Lütfen kamera izinlerini kontrol edin.');
+      alert('Kameraya erişim izni gerekli');
     }
   }
 
   private stopQRScanner(): void {
-    this.isQRScannerActive = false;
+    if (this.mediaStream) {
+      this.mediaStream.getTracks().forEach(track => track.stop());
+      this.mediaStream = null;
+    }
 
     if (this.qrScanInterval) {
       clearInterval(this.qrScanInterval);
       this.qrScanInterval = null;
     }
 
-    if (this.mediaStream) {
-      this.mediaStream.getTracks().forEach(track => track.stop());
-      this.mediaStream = null;
-    }
-
-    if (this.videoElement && this.videoElement.nativeElement) {
-      this.videoElement.nativeElement.srcObject = null;
-    }
+    this.isQRScannerActive = false;
   }
 
-  private scanForQRCode(): void {
-    if (!this.videoElement || !this.canvasElement) return;
+  private scanQRCode(): void {
+    if (!this.videoElement?.nativeElement || !this.canvasElement?.nativeElement) return;
 
     const video = this.videoElement.nativeElement;
     const canvas = this.canvasElement.nativeElement;
@@ -239,43 +301,89 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, OnDestr
   }
 
   private generateMockQRData(): string | null {
-    // Mock function - gerçek QR detection için
+    // Mock function - gerçek QR detection için jsQR kullanılacak
     if (Math.random() < 0.1) { // %10 şansla QR kod simüle et
       const randomStudent = this.groupStudents[Math.floor(Math.random() * this.groupStudents.length)];
-      return `student_${randomStudent.id}`;
+      const action = Math.random() < 0.5 ? 'entry' : 'exit';
+      return `student_${randomStudent.id}_${action}`;
     }
     return null;
   }
 
   private processQRCode(qrData: string): void {
-    const match = qrData.match(/student_(\d+)/);
+    const match = qrData.match(/student_(\d+)_(entry|exit)/);
     if (match) {
       const studentId = parseInt(match[1]);
+      const action = match[2] as 'entry' | 'exit';
       const student = this.groupStudents.find(s => s.id === studentId);
 
-      if (student && !this.presentStudents.has(studentId)) {
-        this.markStudentPresent(studentId);
-        alert(`${student.adi_soyadi} sınıfa girdi!`);
+      if (student) {
+        this.handleStudentQRAction(studentId, action);
+      } else {
+        alert('QR kodundaki öğrenci bu grupta bulunamadı!');
       }
     }
   }
 
-  markStudentPresent(studentId: number): void {
-    this.presentStudents.add(studentId);
-    this.attendanceStatus.set(studentId, {
+  private handleStudentQRAction(studentId: number, action: 'entry' | 'exit'): void {
+    const student = this.groupStudents.find(s => s.id === studentId);
+    if (!student) return;
+
+    const currentTime = new Date();
+    
+    const classroomData = {
       student_id: studentId,
-      is_present: true,
-      scan_time: new Date()
+      grup: this.selectedGroup,
+      tarih: this.selectedDate,
+      action: action,
+      zaman: currentTime.toISOString()
+    };
+
+    this.http.post('./server/api/sinif_giris_cikis.php', classroomData, {
+      headers: this.getAuthHeaders()
+    }).subscribe({
+      next: (response: any) => {
+        if (response.success) {
+          if (action === 'entry') {
+            this.presentStudents.add(studentId);
+            this.classroomEntries.set(studentId, {
+              student_id: studentId,
+              entry_time: currentTime,
+              is_present: true,
+              qr_method: 'entry'
+            });
+            alert(`${student.adi_soyadi} sınıfa giriş yaptı! (${currentTime.toLocaleTimeString()})`);
+          } else {
+            this.presentStudents.delete(studentId);
+            const existingEntry = this.classroomEntries.get(studentId);
+            if (existingEntry) {
+              existingEntry.exit_time = currentTime;
+              existingEntry.is_present = false;
+              existingEntry.qr_method = 'exit';
+            }
+            alert(`${student.adi_soyadi} sınıftan çıkış yaptı! (${currentTime.toLocaleTimeString()})`);
+          }
+        } else {
+          alert('İşlem kaydedilemedi: ' + response.message);
+        }
+      },
+      error: (error) => {
+        console.error('QR işlem hatası:', error);
+        alert('Bağlantı hatası oluştu');
+      }
     });
   }
 
-  markStudentAbsent(studentId: number): void {
-    this.presentStudents.delete(studentId);
-    this.attendanceStatus.set(studentId, {
-      student_id: studentId,
-      is_present: false,
-      scan_time: new Date()
-    });
+  manualToggleStudentPresence(studentId: number): void {
+    const student = this.groupStudents.find(s => s.id === studentId);
+    if (!student) return;
+
+    const isCurrentlyPresent = this.presentStudents.has(studentId);
+    const action = isCurrentlyPresent ? 'exit' : 'entry';
+    
+    if (confirm(`${student.adi_soyadi} için ${isCurrentlyPresent ? 'çıkış' : 'giriş'} işlemini manuel olarak kaydetmek istediğinizden emin misiniz?`)) {
+      this.handleStudentQRAction(studentId, action);
+    }
   }
 
   isStudentPresent(studentId: number): boolean {
@@ -290,24 +398,50 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent implements OnInit, OnDestr
     return this.groupStudents.length - this.presentStudents.size;
   }
 
-  getStudentScanTime(studentId: number): Date | null {
-    const status = this.attendanceStatus.get(studentId);
-    return status?.is_present ? status.scan_time : null;
+  getStudentEntryTime(studentId: number): Date | null {
+    const entry = this.classroomEntries.get(studentId);
+    return entry?.is_present ? entry.entry_time : null;
+  }
+
+  getStudentExitTime(studentId: number): Date | null {
+    const entry = this.classroomEntries.get(studentId);
+    return entry?.exit_time || null;
+  }
+
+  get filteredStudents(): Student[] {
+    if (!this.searchQuery.trim()) {
+      return this.groupStudents;
+    }
+
+    const query = this.searchQuery.toLowerCase().trim();
+    return this.groupStudents.filter(student =>
+      student.adi_soyadi.toLowerCase().includes(query) ||
+      student.email.toLowerCase().includes(query)
+    );
   }
 
   getDefaultAvatar(name: string): string {
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=4f46e5&color=fff&size=50&font-size=0.6&rounded=true`;
   }
 
-  exportAttendanceList(): void {
+  exportClassroomReport(): void {
     const presentList = this.groupStudents
       .filter(student => this.isStudentPresent(student.id))
-      .map(student => ({
-        name: student.adi_soyadi,
-        scanTime: this.getStudentScanTime(student.id)
-      }));
+      .map(student => {
+        const entry = this.classroomEntries.get(student.id);
+        return {
+          name: student.adi_soyadi,
+          entryTime: entry?.entry_time?.toLocaleTimeString(),
+          exitTime: entry?.exit_time?.toLocaleTimeString() || 'Hala sınıfta'
+        };
+      });
 
-    console.log('Sınıfta bulunanlar:', presentList);
-    // Burada Excel export veya başka format eklenebilir
+    console.log('Sınıf raporu:', presentList);
+    // Excel export veya başka format için işlemler burada yapılabilir
+    alert(`Sınıf raporu konsola yazdırıldı. Toplam ${presentList.length} öğrenci sınıfta.`);
+  }
+
+  refreshClassroomStatus(): void {
+    this.loadClassroomStatus();
   }
 }

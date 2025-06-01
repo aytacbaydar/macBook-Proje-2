@@ -1,5 +1,5 @@
-<p>ogretmen-sinifta-kimler-var-sayfasi works!</p>
-<div class="attendance-checker-container">
+
+<div class="classroom-tracker-container">
   <!-- Header Section -->
   <div class="page-header">
     <div class="header-content">
@@ -8,7 +8,7 @@
           <i class="bi bi-people-fill me-2"></i>
           Sınıfta Kimler Var?
         </h1>
-        <p class="page-description">QR kod okutarak öğrencilerin sınıfa girişini takip edin</p>
+        <p class="page-description">QR kod ile öğrenci giriş/çıkış takibi</p>
       </div>
 
       <!-- Stats Cards -->
@@ -35,7 +35,7 @@
 
         <div class="stat-card">
           <div class="stat-icon bg-warning">
-            <i class="bi bi-question-circle"></i>
+            <i class="bi bi-x-circle"></i>
           </div>
           <div class="stat-content">
             <div class="stat-number">{{ getAbsentCount() }}</div>
@@ -68,7 +68,7 @@
 
     <div class="control-group">
       <label class="control-label">Tarih:</label>
-      <input type="date" class="form-control" [(ngModel)]="selectedDate" readonly>
+      <input type="date" class="form-control" [(ngModel)]="selectedDate" (change)="loadClassroomStatus()">
     </div>
 
     <div class="control-group">
@@ -78,10 +78,17 @@
       </button>
     </div>
 
+    <div class="control-group">
+      <button class="btn btn-secondary" (click)="refreshClassroomStatus()" [disabled]="!selectedGroup">
+        <i class="bi bi-arrow-clockwise me-1"></i>
+        Yenile
+      </button>
+    </div>
+
     <div class="control-group" *ngIf="selectedGroup && groupStudents.length > 0">
-      <button class="btn btn-info" (click)="exportAttendanceList()">
+      <button class="btn btn-info" (click)="exportClassroomReport()">
         <i class="bi bi-download me-1"></i>
-        Listeyi Dışa Aktar
+        Rapor Al
       </button>
     </div>
   </div>
@@ -92,102 +99,126 @@
       <video #videoElement class="scanner-video" autoplay playsinline></video>
       <canvas #canvasElement style="display: none;"></canvas>
       <div class="scanner-overlay">
-        <div class="scanner-frame"></div>
+        <div class="scanner-frame">
+          <div class="scanner-corner top-left"></div>
+          <div class="scanner-corner top-right"></div>
+          <div class="scanner-corner bottom-left"></div>
+          <div class="scanner-corner bottom-right"></div>
+        </div>
         <p class="scanner-text">Öğrenci QR kodunu kameranın önüne tutun</p>
+        <p class="scanner-instructions">
+          <i class="bi bi-info-circle me-1"></i>
+          Giriş için: GİRİŞ QR Kodu | Çıkış için: ÇIKIŞ QR Kodu
+        </p>
       </div>
     </div>
   </div>
 
-  <!-- Students List -->
-  <div *ngIf="selectedGroup && groupStudents.length > 0" class="students-section">
+  <!-- Real-time Classroom Status -->
+  <div *ngIf="selectedGroup && groupStudents.length > 0" class="classroom-status-section">
     <div class="section-header">
-      <h3>{{ selectedGroup }} - Öğrenci Listesi</h3>
-      <div class="list-actions">
-        <div class="search-box">
-          <i class="bi bi-search"></i>
-          <input type="text" placeholder="Öğrenci ara..." class="form-control">
-        </div>
+      <h3>{{ selectedGroup }} - Anlık Sınıf Durumu</h3>
+      <div class="last-update">
+        <i class="bi bi-clock me-1"></i>
+        Son güncellenme: {{ new Date().toLocaleTimeString() }}
       </div>
     </div>
 
+    <!-- Search Box -->
+    <div class="search-section">
+      <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input type="text" 
+               placeholder="Öğrenci ara..." 
+               class="form-control"
+               [(ngModel)]="searchQuery">
+      </div>
+    </div>
+
+    <!-- Students Grid -->
     <div class="students-grid">
-      <div class="student-card" *ngFor="let student of groupStudents" 
+      <div class="student-card" 
+           *ngFor="let student of filteredStudents" 
            [class.present]="isStudentPresent(student.id)"
            [class.absent]="!isStudentPresent(student.id)">
         
-        <div class="student-info">
+        <div class="student-header">
           <div class="student-avatar">
             <img [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)" 
-                 [alt]="student.adi_soyadi" class="avatar-img">
-            <div class="status-indicator" 
-                 [class.present]="isStudentPresent(student.id)"
-                 [class.absent]="!isStudentPresent(student.id)">
-              <i class="bi" 
-                 [class.bi-check-circle-fill]="isStudentPresent(student.id)"
-                 [class.bi-clock-fill]="!isStudentPresent(student.id)"></i>
-            </div>
+                 [alt]="student.adi_soyadi">
           </div>
           
-          <div class="student-details">
+          <div class="student-info">
             <div class="student-name">{{ student.adi_soyadi }}</div>
-            <div class="student-email">{{ student.email }}</div>
-            <div class="student-status" 
-                 [class.text-success]="isStudentPresent(student.id)"
-                 [class.text-warning]="!isStudentPresent(student.id)">
-              {{ isStudentPresent(student.id) ? 'Sınıfta' : 'Henüz Gelmedi' }}
+            <div class="student-meta">
+              <span class="student-class">{{ student.sinifi }}</span>
+              <span class="student-email">{{ student.email }}</span>
             </div>
-            <div class="scan-time" *ngIf="getStudentScanTime(student.id)">
-              <small class="text-muted">
-                <i class="bi bi-clock me-1"></i>
-                Giriş: {{ getStudentScanTime(student.id) | date:'HH:mm:ss' }}
-              </small>
+          </div>
+
+          <div class="presence-indicator">
+            <div class="status-badge" 
+                 [class.online]="isStudentPresent(student.id)"
+                 [class.offline]="!isStudentPresent(student.id)">
+              <i class="bi" 
+                 [class.bi-circle-fill]="isStudentPresent(student.id)"
+                 [class.bi-circle]="!isStudentPresent(student.id)"></i>
+              {{ isStudentPresent(student.id) ? 'Sınıfta' : 'Yok' }}
+            </div>
+          </div>
+        </div>
+
+        <div class="student-details" *ngIf="isStudentPresent(student.id) || getStudentExitTime(student.id)">
+          <div class="time-info">
+            <div class="entry-time" *ngIf="getStudentEntryTime(student.id)">
+              <i class="bi bi-box-arrow-in-right text-success me-1"></i>
+              <span class="time-label">Giriş:</span>
+              <span class="time-value">{{ getStudentEntryTime(student.id) | date:'HH:mm:ss' }}</span>
+            </div>
+            
+            <div class="exit-time" *ngIf="getStudentExitTime(student.id)">
+              <i class="bi bi-box-arrow-left text-danger me-1"></i>
+              <span class="time-label">Çıkış:</span>
+              <span class="time-value">{{ getStudentExitTime(student.id) | date:'HH:mm:ss' }}</span>
             </div>
           </div>
         </div>
 
         <div class="student-actions">
-          <button class="btn btn-sm btn-success" 
-                  [class.active]="isStudentPresent(student.id)"
-                  (click)="markStudentPresent(student.id)"
-                  [disabled]="isStudentPresent(student.id)">
-            <i class="bi bi-check-lg"></i>
-            Sınıfta
-          </button>
-          <button class="btn btn-sm btn-warning" 
-                  [class.active]="!isStudentPresent(student.id)"
-                  (click)="markStudentAbsent(student.id)"
-                  [disabled]="!isStudentPresent(student.id)">
-            <i class="bi bi-x-lg"></i>
-            Çıkart
+          <button class="btn btn-sm" 
+                  [class.btn-danger]="isStudentPresent(student.id)"
+                  [class.btn-success]="!isStudentPresent(student.id)"
+                  (click)="manualToggleStudentPresence(student.id)">
+            <i class="bi" 
+               [class.bi-box-arrow-left]="isStudentPresent(student.id)"
+               [class.bi-box-arrow-in-right]="!isStudentPresent(student.id)"></i>
+            {{ isStudentPresent(student.id) ? 'Manuel Çıkış' : 'Manuel Giriş' }}
           </button>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Empty State -->
-  <div *ngIf="selectedGroup && groupStudents.length === 0 && !isLoading" class="empty-state">
-    <div class="empty-icon">
-      <i class="bi bi-people"></i>
+    <!-- No Students Message -->
+    <div *ngIf="filteredStudents.length === 0 && groupStudents.length > 0" class="no-results">
+      <i class="bi bi-search"></i>
+      <p>Arama kriterinize uygun öğrenci bulunamadı.</p>
     </div>
-    <h3>Bu grupta öğrenci bulunamadı</h3>
-    <p>Seçilen grupta kayıtlı öğrenci bulunmuyor.</p>
-  </div>
-
-  <!-- Loading State -->
-  <div *ngIf="isLoading" class="loading-state">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Yükleniyor...</span>
-    </div>
-    <p>Öğrenciler yükleniyor...</p>
   </div>
 
   <!-- No Group Selected -->
-  <div *ngIf="!selectedGroup" class="no-selection">
-    <div class="empty-icon">
-      <i class="bi bi-arrow-up"></i>
+  <div *ngIf="!selectedGroup" class="no-group-selected">
+    <div class="no-group-content">
+      <i class="bi bi-people-fill"></i>
+      <h3>Grup Seçin</h3>
+      <p>Sınıf takibi için önce bir grup seçmeniz gerekiyor.</p>
     </div>
-    <h3>Grup Seçin</h3>
-    <p>Öğrencileri görüntülemek için yukarıdan bir grup seçin.</p>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="loading-section">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Yükleniyor...</span>
+    </div>
+    <p>Veriler yükleniyor...</p>
   </div>
 </div>
