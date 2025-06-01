@@ -207,6 +207,86 @@ export class OgretmenOgrenciDetaySayfasiComponent implements OnInit {
     this.error = null;
     this.success = null;
 
+    // Önce avatar yükle (varsa)
+    this.uploadAvatar()
+      .then((avatarPath) => {
+        // Form verilerini hazırla
+        const formData = {
+          temel_bilgiler: {
+            adi_soyadi: this.editForm.get('adi_soyadi')?.value,
+            email: this.editForm.get('email')?.value,
+            cep_telefonu: this.editForm.get('cep_telefonu')?.value,
+            avatar: avatarPath,
+          },
+          detay_bilgiler: {
+            okulu: this.editForm.get('okulu')?.value,
+            sinifi: this.editForm.get('sinifi')?.value,
+            grubu: this.editForm.get('grubu')?.value,
+            ders_gunu: this.editForm.get('ders_gunu')?.value,
+            ders_saati: this.editForm.get('ders_saati')?.value,
+            ucret: this.editForm.get('ucret')?.value,
+            veli_adi: this.editForm.get('veli_adi')?.value,
+            veli_cep: this.editForm.get('veli_cep')?.value,
+          },
+        };
+
+        // Token'ı al
+        let token = '';
+        const userStr =
+          localStorage.getItem('user') || sessionStorage.getItem('user');
+        if (userStr) {
+          const user = JSON.parse(userStr);
+          token = user.token || '';
+        }
+
+        const headers = new HttpHeaders({
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        });
+
+        // Güncelleme isteği gönder
+        this.http
+          .post(
+            `./server/api/ogrenci_profil.php`,
+            { id: this.studentId, ...formData },
+            { headers }
+          )
+          .subscribe({
+            next: (response: any) => {
+              if (response.success) {
+                this.success = 'Öğrenci bilgileri başarıyla güncellendi!';
+                this.student = { ...this.student, ...response.data };
+                
+                // Başarı mesajını 3 saniye göster
+                setTimeout(() => {
+                  this.success = null;
+                }, 3000);
+              } else {
+                this.error =
+                  response.message || 'Güncelleme sırasında hata oluştu.';
+              }
+              this.isSubmitting = false;
+            },
+            error: (error) => {
+              this.error =
+                'Bağlantı hatası: ' +
+                (error.error?.message ||
+                  error.message ||
+                  'Bilinmeyen bir hata oluştu.');
+
+              // Hata durumunda da spinner'ı biraz beklet
+              setTimeout(() => {
+                this.isSubmitting = false;
+              }, 1000); // 1 saniye beklet
+            },
+          });
+      })
+      .catch((error) => {
+        this.isSubmitting = false;
+        this.error = 'Avatar yükleme hatası: ' + error;
+      }); = null;
+    this.success = null;
+
     // LocalStorage veya sessionStorage'dan token'ı al
     let token = '';
     const userStr =
