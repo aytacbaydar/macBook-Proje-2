@@ -20,8 +20,8 @@ try {
     
     // Kullanıcı bilgilerini kontrol et (detay bilgileriyle birlikte)
     $stmt = $conn->prepare("
-        SELECT o.id, o.adi_soyadi, o.email, o.sifre, o.rutbe, o.avatar,
-               ob.ogretmeni, ob.sinifi, ob.ders_adi, ob.grubu
+        SELECT o.id, o.adi_soyadi, o.email, o.sifre, o.rutbe, o.avatar, o.ogretmeni,
+             ob.sinifi, ob.ders_adi, ob.grubu
         FROM ogrenciler o
         LEFT JOIN ogrenci_bilgileri ob ON o.id = ob.ogrenci_id
         WHERE o.email = :email AND o.aktif = TRUE
@@ -41,7 +41,9 @@ try {
     }
     
     // Token oluştur
-    $token = md5($user['id'] . $user['email'] . $user['sifre']);
+    // $token = md5($user['id'] . $user['email'] . $user['sifre']);
+    $token = hash('sha256', $user['id'] . $user['email'] . $user['sifre']);
+
     
     // Debug için log ekle
     error_log("Login - User ID: " . $user['id'] . ", Email: " . $user['email']);

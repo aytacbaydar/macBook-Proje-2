@@ -4,19 +4,15 @@
   <aside class="unified-sidebar" [class.collapsed]="!isSidebarOpen" [class.mobile-hidden]="!isSidebarOpen">
     <div class="sidebar-header">
       <div class="brand" [class.collapsed]="!isSidebarOpen">
-        <div class="brand-icon">
+        <div class="brand-icon" (click)="toggleSidebar()">
           <i class="fas fa-graduation-cap"></i>
         </div>
         <span class="brand-text" *ngIf="isSidebarOpen">KimyaÖğreni</span>
       </div>
-      <button class="sidebar-toggle" (click)="toggleSidebar()">
-        <i class="fas" [class.fa-chevron-left]="isSidebarOpen" [class.fa-chevron-right]="!isSidebarOpen"></i>
-      </button>
     </div>
 
     <nav class="sidebar-nav">
       <div class="nav-section">
-        <div class="nav-section-title" *ngIf="isSidebarOpen">Ana Menü</div>
         <a class="nav-item active" routerLink="./">
           <i class="nav-icon fas fa-home"></i>
           <span class="nav-text" *ngIf="isSidebarOpen">Dashboard</span>
@@ -25,6 +21,8 @@
           <i class="nav-icon fas fa-qrcode"></i>
           <span class="nav-text" *ngIf="isSidebarOpen">QR Kod</span>
         </a>
+
+        
       </div>
 
       <div class="nav-section" *ngIf="isSidebarOpen">

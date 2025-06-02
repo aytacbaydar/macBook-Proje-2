@@ -52,7 +52,7 @@ export class OgrenciIndexSayfasiComponent implements OnInit {
         
         // Kullanıcı bilgilerini al (API'den gelen response.data formatına uygun)
         this.studentName = user.adi_soyadi || 'Öğrenci';
-        this.studentClass = user.sinif || 'Sınıf Bilgisi Yok';
+        this.studentClass = user.sinifi || 'Sınıf Bilgisi Yok';
         this.studentTeacher = user.ogretmeni || 'Öğretmen Bilgisi Yok';
         
         // Avatar kontrolü - API'den gelen avatar alanını kullan
