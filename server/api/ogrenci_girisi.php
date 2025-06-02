@@ -18,11 +18,13 @@ try {
     
     $conn = getConnection();
     
-    // Kullanıcı bilgilerini kontrol et
+    // Kullanıcı bilgilerini kontrol et (detay bilgileriyle birlikte)
     $stmt = $conn->prepare("
-        SELECT id, adi_soyadi, email, sifre, rutbe, avatar 
-        FROM ogrenciler 
-        WHERE email = :email AND aktif = TRUE
+        SELECT o.id, o.adi_soyadi, o.email, o.sifre, o.rutbe, o.avatar,
+               ob.ogretmeni, ob.sinifi, ob.ders_adi, ob.grubu
+        FROM ogrenciler o
+        LEFT JOIN ogrenci_bilgileri ob ON o.id = ob.ogrenci_id
+        WHERE o.email = :email AND o.aktif = TRUE
     ");
     $stmt->bindParam(':email', $data['email']);
     $stmt->execute();
