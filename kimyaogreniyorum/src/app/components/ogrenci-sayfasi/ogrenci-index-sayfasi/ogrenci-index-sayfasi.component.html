@@ -1,87 +1,104 @@
 
-<div class="student-dashboard-container d-flex vh-100">
-  <!-- Sidebar -->
-  <nav class="sidebar shadow-lg" [class.collapsed]="!isSidebarOpen">
-    <div class="sidebar-header p-3 border-bottom bg-primary text-white">
-      <div class="d-flex align-items-center justify-content-between">
-        <div class="d-flex align-items-center" *ngIf="isSidebarOpen">
-          <img [src]="studentAvatar" 
-               [alt]="studentName" 
-               class="rounded-circle me-2"
-               width="32" height="32">
-          <div class="user-info">
-            <h6 class="mb-0 fw-medium text-truncate">{{ studentName }}</h6>
-            <small class="text-light opacity-75">{{ studentClass }}</small>
-          </div>
+<div class="app-container">
+  <!-- Unified Sidebar -->
+  <aside class="unified-sidebar" [class.collapsed]="!isSidebarOpen" [class.mobile-hidden]="!isSidebarOpen">
+    <div class="sidebar-header">
+      <div class="brand" [class.collapsed]="!isSidebarOpen">
+        <div class="brand-icon">
+          <i class="fas fa-graduation-cap"></i>
         </div>
-        <button class="btn btn-link text-white p-0" (click)="toggleSidebar()">
-          <i class="bi" [class.bi-chevron-left]="isSidebarOpen" [class.bi-chevron-right]="!isSidebarOpen"></i>
-        </button>
+        <span class="brand-text" *ngIf="isSidebarOpen">KimyaÖğreni</span>
       </div>
+      <button class="sidebar-toggle" (click)="toggleSidebar()">
+        <i class="fas" [class.fa-chevron-left]="isSidebarOpen" [class.fa-chevron-right]="!isSidebarOpen"></i>
+      </button>
     </div>
 
-    <div class="sidebar-menu p-2">
-      <ul class="nav flex-column">
-        <li class="nav-item mb-1">
-          <a class="nav-link active rounded-3 d-flex align-items-center py-2 px-3" href="#">
-            <i class="bi bi-house-door me-2"></i>
-            <span *ngIf="isSidebarOpen">Ana Sayfa</span>
-          </a>
-        </li>
-        <li class="nav-item mb-1">
-          <a class="nav-link rounded-3 d-flex align-items-center py-2 px-3" 
-             routerLink="/ogrenci-sayfasi/ogrenci-qr-kod-sayfasi">
-            <i class="bi bi-qr-code me-2"></i>
-            <span *ngIf="isSidebarOpen">QR Kod</span>
-          </a>
-        </li>
-        <li class="nav-item mb-1">
-          <a class="nav-link rounded-3 d-flex align-items-center py-2 px-3" href="#">
-            <i class="bi bi-calendar-check me-2"></i>
-            <span *ngIf="isSidebarOpen">Devamsızlık</span>
-          </a>
-        </li>
-        <li class="nav-item mb-1">
-          <a class="nav-link rounded-3 d-flex align-items-center py-2 px-3" href="#">
-            <i class="bi bi-book me-2"></i>
-            <span *ngIf="isSidebarOpen">Dersler</span>
-          </a>
-        </li>
-        <li class="nav-item mb-1">
-          <a class="nav-link rounded-3 d-flex align-items-center py-2 px-3" href="#">
-            <i class="bi bi-clipboard-check me-2"></i>
-            <span *ngIf="isSidebarOpen">Sınavlar</span>
-          </a>
-        </li>
-        <li class="nav-item mb-1">
-          <a class="nav-link rounded-3 d-flex align-items-center py-2 px-3" href="#">
-            <i class="bi bi-person-circle me-2"></i>
-            <span *ngIf="isSidebarOpen">Profil</span>
-          </a>
-        </li>
-      </ul>
-    </div>
-  </nav>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-title" *ngIf="isSidebarOpen">Ana Menü</div>
+        <a class="nav-item active" routerLink="./">
+          <i class="nav-icon fas fa-home"></i>
+          <span class="nav-text" *ngIf="isSidebarOpen">Dashboard</span>
+        </a>
+        <a class="nav-item" routerLink="ogrenci-qr-kod-sayfasi">
+          <i class="nav-icon fas fa-qrcode"></i>
+          <span class="nav-text" *ngIf="isSidebarOpen">QR Kod</span>
+        </a>
+      </div>
+
+      <div class="nav-section" *ngIf="isSidebarOpen">
+        <div class="nav-section-title">Eğitim</div>
+        <a class="nav-item" href="#">
+          <i class="nav-icon fas fa-book"></i>
+          <span class="nav-text">Dersler</span>
+        </a>
+        <a class="nav-item" href="#">
+          <i class="nav-icon fas fa-clipboard-check"></i>
+          <span class="nav-text">Sınavlar</span>
+        </a>
+        <a class="nav-item" href="#">
+          <i class="nav-icon fas fa-calendar-check"></i>
+          <span class="nav-text">Devamsızlık</span>
+        </a>
+      </div>
+
+      <div class="nav-section" *ngIf="isSidebarOpen">
+        <div class="nav-section-title">Kişisel</div>
+        <a class="nav-item" href="#">
+          <i class="nav-icon fas fa-user-circle"></i>
+          <span class="nav-text">Profil</span>
+        </a>
+        <a class="nav-item" href="#">
+          <i class="nav-icon fas fa-cog"></i>
+          <span class="nav-text">Ayarlar</span>
+        </a>
+      </div>
+    </nav>
+  </aside>
 
   <!-- Main Content -->
-  <main class="main-content flex-grow-1 bg-light">
-    <!-- Header -->
-    <header class="header bg-white border-bottom p-3 shadow-sm">
-      <div class="d-flex justify-content-between align-items-center">
-        <div>
-          <h4 class="mb-0 fw-bold text-dark">Hoş Geldin, {{ studentName }}!</h4>
-          <p class="text-muted mb-0 small">{{ studentTeacher }} • {{ studentClass }}</p>
-        </div>
-        <div class="d-flex align-items-center gap-3">
+  <main class="main-content" [class.sidebar-collapsed]="!isSidebarOpen">
+    <!-- Unified Header -->
+    <header class="unified-header">
+      <div class="header-left">
+        <button class="mobile-menu-btn" (click)="toggleSidebar()">
+          <i class="fas fa-bars"></i>
+        </button>
+        <h1 class="page-title">Hoş Geldin, {{ studentName }}!</h1>
+        <p class="page-subtitle">{{ studentTeacher }} • {{ studentClass }}</p>
+      </div>
+
+      <div class="header-right">
+        <div class="status-badge">
           <span class="badge bg-success px-3 py-2">Aktif Öğrenci</span>
-          <div class="text-end">
-            <small class="text-muted d-block">{{ 'now' | date:'dd/MM/yyyy' }}</small>
-            <small class="text-muted">{{ 'now' | date:'HH:mm' }}</small>
-          </div>
+        </div>
+
+        <div class="datetime-info text-end">
+          <small class="text-muted d-block">{{ 'now' | date:'dd/MM/yyyy' }}</small>
+          <small class="text-muted">{{ 'now' | date:'HH:mm' }}</small>
+        </div>
+
+        <div class="user-menu dropdown">
+          <button class="user-menu" data-bs-toggle="dropdown">
+            <img [src]="studentAvatar" alt="Avatar" class="user-avatar">
+            <div class="user-info d-none d-md-block">
+              <div class="user-name">{{ studentName }}</div>
+              <div class="user-role">Öğrenci</div>
+            </div>
+            <i class="fas fa-chevron-down" style="font-size: 12px; color: var(--text-secondary);"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="#profil"><i class="fas fa-user"></i>Profil</a></li>
+            <li><a class="dropdown-item" href="#ayarlar"><i class="fas fa-cog"></i>Ayarlar</a></li>
+            <li><div class="dropdown-divider"></div></li>
+            <li><a class="dropdown-item danger" href="#cikis"><i class="fas fa-sign-out-alt"></i>Çıkış</a></li>
+          </ul>
         </div>
       </div>
     </header>
 
+    <!-- Content Area -->
     <router-outlet></router-outlet>
   </main>
 </div>
