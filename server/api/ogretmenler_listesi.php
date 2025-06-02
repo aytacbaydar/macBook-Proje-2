@@ -25,10 +25,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
         $conn = getConnection();
         
-        // Önce tablo yapısını kontrol et
-        $stmt = $conn->prepare("DESCRIBE ogretmenler");
+        // Debug: Tablo yapısını kontrol et
+        error_log("=== ÖĞRETMENLER LİSTESİ DEBUG ===");
+        
+        try {
+            $stmt = $conn->prepare("DESCRIBE ogretmenler");
+            $stmt->execute();
+            $columns = $stmt->fetchAll(PDO::FETCH_COLUMN);
+            error_log("Ogretmenler tablosu sütunları: " . print_r($columns, true));
+        } catch (Exception $e) {
+            error_log("Tablo yapısı kontrol hatası: " . $e->getMessage());
+        }
+        
+        // Önce tüm öğretmenleri kontrol et
+        $stmt = $conn->prepare("SELECT * FROM ogretmenler LIMIT 5");
         $stmt->execute();
-        $columns = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        $sample_teachers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        error_log("Örnek öğretmen kayıtları: " . print_r($sample_teachers, true));
         
         // aktif sütunu varsa filtrele, yoksa tüm öğretmenleri getir
         if (in_array('aktif', $columns)) {
