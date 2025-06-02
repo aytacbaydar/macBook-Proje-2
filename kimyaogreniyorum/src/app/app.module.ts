@@ -12,6 +12,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { YoneticiSayfasiModule } from './components/yonetici-sayfasi/yonetici-sayfasi.module';
 import { OgretmenSayfasiModule } from './components/ogretmen-sayfasi/ogretmen-sayfasi.module';
+import { OgrenciSayfasiModule } from './components/ogrenci-sayfasi/ogrenci-sayfasi.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -32,7 +33,8 @@ import { OgretmenSayfasiModule } from './components/ogretmen-sayfasi/ogretmen-sa
 
     IndexSayfasiModule,
     YoneticiSayfasiModule,
-    OgretmenSayfasiModule
+    OgretmenSayfasiModule,
+    OgrenciSayfasiModule
   ],
   providers: [],
   bootstrap: [AppComponent],
