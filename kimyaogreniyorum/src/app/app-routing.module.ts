@@ -71,6 +71,22 @@ const routes: Routes = [
     ],
   },
 
+  //öğrenci sayfaları
+  {
+    path: 'ogrenci-sayfasi',
+    component: OgrenciIndexSayfasiComponent,
+    children: [
+      {
+        path: '',
+        component: OgrenciAnaSayfasiComponent,
+      },
+      {
+        path: 'ogrenci-qr-kod-sayfasi',
+        component: OgrenciQrKodSayfasiComponent,
+      },
+    ]
+  },
+
   //öğretmenler sayfaları
   {
     path: 'ogretmen-sayfasi',
