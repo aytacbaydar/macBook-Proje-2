@@ -25,6 +25,7 @@
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.6",
     "fabric": "^6.6.5",
+    "html2canvas": "^1.4.1",
     "jspdf": "^3.0.1",
     "jspdf-autotable": "^5.0.2",
     "jsqr": "^1.4.0",

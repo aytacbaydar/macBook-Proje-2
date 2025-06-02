@@ -14,7 +14,7 @@ export class OgretmenQrGeneratorComponent implements OnInit, AfterViewInit {
   @ViewChild('exitQRCanvas', { static: false }) exitQRCanvas!: ElementRef<HTMLCanvasElement>;
 
   studentData = {
-    id: 35,
+    id: 36,
     name: "Elif Elif",
     email: "elish263624@gmail.com"
   };

@@ -5,6 +5,9 @@ import jsQR from 'jsqr';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
+import html2canvas from 'html2canvas';
+
+
 
 
 interface Student {
@@ -51,6 +54,24 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
   currentTime: string = '';
 
   constructor(private http: HttpClient, private toastr: ToastrService) {}
+
+  pdfKaydet() {
+    const element = document.getElementById('sonucSayfasi');
+
+    if (element) {
+      html2canvas(element).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        // Calculate the height to maintain aspect ratio of the canvas image
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save('sinav-sonuc.pdf');
+      });
+    }
+  }
 
   ngOnInit(): void {
     this.loadGroups();
@@ -314,8 +335,11 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
     const now = Date.now();
     const lastProcessed = this.recentlyProcessedQR.get(qrData);
 
-    if (lastProcessed && (now - lastProcessed) < 3000) {
-      console.log('QR kod son 3 saniye içinde işlendi, tekrar işlenmeyecek:', qrData);
+    if (lastProcessed && now - lastProcessed < 3000) {
+      console.log(
+        'QR kod son 3 saniye içinde işlendi, tekrar işlenmeyecek:',
+        qrData
+      );
       return;
     }
 
@@ -494,7 +518,6 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
     return this.groupStudents.length - this.presentStudents.size;
   }
 
-
   isStudentPresent(studentId: number): boolean {
     return this.presentStudents.has(studentId);
   }
@@ -531,7 +554,7 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
     this.dailyReportData = [];
 
     // Alfabetik sıralanmış öğrenci listesi
-    const sortedStudents = [...this.groupStudents].sort((a, b) => 
+    const sortedStudents = [...this.groupStudents].sort((a, b) =>
       a.adi_soyadi.localeCompare(b.adi_soyadi, 'tr', { sensitivity: 'base' })
     );
 
@@ -562,7 +585,7 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
         entry_time: entryTime,
         exit_time: exitTime,
         movement_count: totalMovements,
-        status: isPresent ? 'Sınıfta' : 'Sınıfta Değil'
+        status: isPresent ? 'Sınıfta' : 'Sınıfta Değil',
       });
     });
 
@@ -572,14 +595,16 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
 
   getAttendancePercentage(): number {
     if (this.dailyReportData.length === 0) return 0;
-    const presentCount = this.dailyReportData.filter(report => report.is_present).length;
+    const presentCount = this.dailyReportData.filter(
+      (report) => report.is_present
+    ).length;
     return Math.round((presentCount / this.dailyReportData.length) * 100);
   }
 
   exportToPDF(): void {
     console.log('PDF export başlatıldı...');
     console.log('Rapor verileri:', this.dailyReportData);
-    
+
     if (this.dailyReportData.length === 0) {
       alert('Rapor verisi bulunamadı!');
       return;
@@ -591,13 +616,27 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
 
       // Başlık
       pdf.setFontSize(16);
-      pdf.text(`Günlük Giriş-Çıkış Raporu - ${this.selectedGroup} (${this.selectedDate})`, 20, 20);
+      pdf.text(
+        `Günlük Giriş-Çıkış Raporu - ${this.selectedGroup} (${this.selectedDate})`,
+        20,
+        20
+      );
 
       // İstatistik bilgileri
       pdf.setFontSize(12);
       pdf.text(`Toplam Öğrenci: ${this.dailyReportData.length}`, 20, 35);
-      pdf.text(`Devam Eden: ${this.dailyReportData.filter(r => r.is_present).length}`, 20, 45);
-      pdf.text(`Devamsızlık Oranı: %${100 - this.getAttendancePercentage()}`, 20, 55);
+      pdf.text(
+        `Devam Eden: ${
+          this.dailyReportData.filter((r) => r.is_present).length
+        }`,
+        20,
+        45
+      );
+      pdf.text(
+        `Devamsızlık Oranı: %${100 - this.getAttendancePercentage()}`,
+        20,
+        55
+      );
 
       // Tablo verileri
       const tableData = this.dailyReportData.map((report, index) => [
@@ -607,25 +646,35 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
         report.status,
         report.entry_time,
         report.exit_time,
-        report.movement_count.toString()
+        report.movement_count.toString(),
       ]);
 
       // AutoTable ile tablo oluştur
       (pdf as any).autoTable({
-        head: [['Sıra', 'Öğrenci Adı', 'E-posta', 'Durum', 'Giriş Saati', 'Çıkış Saati', 'Hareket Sayısı']],
+        head: [
+          [
+            'Sıra',
+            'Öğrenci Adı',
+            'E-posta',
+            'Durum',
+            'Giriş Saati',
+            'Çıkış Saati',
+            'Hareket Sayısı',
+          ],
+        ],
         body: tableData,
         startY: 65,
         styles: {
           fontSize: 8,
-          cellPadding: 3
+          cellPadding: 3,
         },
         headStyles: {
           fillColor: [41, 128, 185],
           textColor: 255,
-          fontStyle: 'bold'
+          fontStyle: 'bold',
         },
         alternateRowStyles: {
-          fillColor: [245, 245, 245]
+          fillColor: [245, 245, 245],
         },
         columnStyles: {
           0: { halign: 'center', cellWidth: 15 },
@@ -634,20 +683,20 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
           3: { halign: 'center', cellWidth: 25 },
           4: { halign: 'center', cellWidth: 30 },
           5: { halign: 'center', cellWidth: 30 },
-          6: { halign: 'center', cellWidth: 20 }
-        }
+          6: { halign: 'center', cellWidth: 20 },
+        },
       });
 
       // PDF'i indir
-      const fileName = `Gunluk_Rapor_${this.selectedGroup}_${this.selectedDate.replace(/-/g, '_')}.pdf`;
+      const fileName = `Gunluk_Rapor_${
+        this.selectedGroup
+      }_${this.selectedDate.replace(/-/g, '_')}.pdf`;
       pdf.save(fileName);
-
     } catch (error) {
       console.error('PDF oluşturma hatası:', error);
       alert('PDF oluşturulurken bir hata oluştu!');
     }
   }
-
 
   private getAuthHeaders(): HttpHeaders {
     let token = '';
@@ -757,8 +806,6 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
       console.error('Bu tarayıcı Text-to-Speech desteklemiyor');
     }
   }
-
-
 
   // Eski QR kod kayıtlarını temizle (5 saniyeden eski olanları)
   private cleanupOldQRRecords(): void {
