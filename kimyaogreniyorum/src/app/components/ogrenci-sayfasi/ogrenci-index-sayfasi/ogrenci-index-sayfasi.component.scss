@@ -20,7 +20,7 @@
 
 .app-container {
   display: flex;
-  height: 100vh;
+  height: auto;
   background: var(--light-color);
   overflow: hidden;
 }
@@ -28,7 +28,7 @@
 // Modern Öğrenci Sidebar
 .unified-sidebar {
   width: var(--sidebar-width);
-  height: 100vh;
+  height: auto;
   background: var(--sidebar-bg);
   position: fixed;
   left: 0;
@@ -235,7 +235,7 @@
   transition: var(--transition);
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: auto;
   background: var(--light-color);
 
   &.sidebar-collapsed {

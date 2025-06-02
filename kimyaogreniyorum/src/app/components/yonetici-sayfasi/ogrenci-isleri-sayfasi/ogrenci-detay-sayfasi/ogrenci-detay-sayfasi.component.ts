@@ -23,15 +23,17 @@ export class OgrenciDetaySayfasiComponent implements OnInit {
     email: '',
     cep_telefonu: '',
     rutbe: '',
+    brans: '',
+    ogretmeni: '',
     aktif: true,
     avatar: '',
     okulu: '',
     sinifi: '',
     grubu: '',
+    ders_adi: '',
     ders_gunu: '',
     ders_saati: '',
     ucret: '',
-    brans: ''
   };
   editForm!: FormGroup;
   isLoading: boolean = true;
@@ -81,10 +83,12 @@ export class OgrenciDetaySayfasiComponent implements OnInit {
         okulu: [''],
         sinifi: [''],
         grubu: [''],
+        ders_adi: [''],
         ders_gunu: [''],
         ders_saati: [''],
         ucret: [''],
         brans: [''], // Öğretmen branşı için eklendi
+        ogretmeni: [''], // Öğretmen branşı için eklendi
 
         // Veli bilgileri
         veli_adi: [''],
@@ -149,10 +153,12 @@ export class OgrenciDetaySayfasiComponent implements OnInit {
               okulu: this.student.okulu || '',
               sinifi: this.student.sinifi || '',
               grubu: this.student.grubu || '',
+              ders_adi: this.student.ders_adi || '',
               ders_gunu: this.student.ders_gunu || '',
               ders_saati: this.student.ders_saati || '',
               ucret: this.student.ucret || '',
               brans: this.student.brans || '',
+              ogretmeni: this.student.ogretmeni || '',
 
               // Veli bilgileri
               veli_adi: this.student.veli_adi || '',
@@ -320,11 +326,13 @@ export class OgrenciDetaySayfasiComponent implements OnInit {
         aktif: formValues.aktif ? 1 : 0,
         rutbe: formValues.rutbe, // Rütbe değerini de ekledik
         brans: formValues.brans,
+        ogretmeni: formValues.ogretmeni,
       },
       detay_bilgiler: {
         okulu: formValues.okulu,
         sinifi: formValues.sinifi,
         grubu: formValues.grubu,
+        ders_adi: formValues.ders_adi,
         ders_gunu: formValues.ders_gunu,
         ders_saati: formValues.ders_saati,
         ucret: formValues.ucret,

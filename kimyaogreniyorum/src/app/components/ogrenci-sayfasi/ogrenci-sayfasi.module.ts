@@ -7,11 +7,14 @@ import { OgrenciQrKodSayfasiComponent } from './ogrenci-qr-kod-sayfasi/ogrenci-q
 import { OgrenciIndexSayfasiComponent } from './ogrenci-index-sayfasi/ogrenci-index-sayfasi.component';
 import { RouterModule } from '@angular/router';
 import { OgrenciAnaSayfasiComponent } from './ogrenci-ana-sayfasi/ogrenci-ana-sayfasi.component';
+import { OgrenciTaslakSayfasiComponent } from './template/ogrenci-taslak-sayfasi/ogrenci-taslak-sayfasi.component';
+import { OgrenciNavbarSayfasiComponent } from './template/ogrenci-navbar-sayfasi/ogrenci-navbar-sayfasi.component';
+import { OgrenciSidebarSayfasiComponent } from './template/ogrenci-sidebar-sayfasi/ogrenci-sidebar-sayfasi.component';
 
 
 
 @NgModule({
-  declarations: [OgrenciQrKodSayfasiComponent, OgrenciIndexSayfasiComponent, OgrenciAnaSayfasiComponent],
+  declarations: [OgrenciQrKodSayfasiComponent, OgrenciIndexSayfasiComponent, OgrenciAnaSayfasiComponent, OgrenciTaslakSayfasiComponent, OgrenciNavbarSayfasiComponent, OgrenciSidebarSayfasiComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,

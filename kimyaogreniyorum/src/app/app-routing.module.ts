@@ -24,6 +24,7 @@ import { OgretmenQrGeneratorComponent } from './components/ogretmen-sayfasi/ogre
 import { OgrenciIndexSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-index-sayfasi/ogrenci-index-sayfasi.component';
 import { OgrenciAnaSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-ana-sayfasi/ogrenci-ana-sayfasi.component';
 import { OgrenciQrKodSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-qr-kod-sayfasi/ogrenci-qr-kod-sayfasi.component';
+import { OgrenciTaslakSayfasiComponent } from './components/ogrenci-sayfasi/template/ogrenci-taslak-sayfasi/ogrenci-taslak-sayfasi.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/giris-sayfasi', pathMatch: 'full' },
@@ -74,7 +75,7 @@ const routes: Routes = [
   //öğrenci sayfaları
   {
     path: 'ogrenci-sayfasi',
-    component: OgrenciIndexSayfasiComponent,
+    component: OgrenciTaslakSayfasiComponent,
     children: [
       {
         path: '',

@@ -1,0 +1,11 @@
+<div class="sidebar" [class.closed]="isClosed">
+    <div class="toggle-btn" (click)="toggleSidebar()">
+        <i class="material-icons">menu</i>
+    </div>
+    <ul>
+        <li *ngFor="let item of menuItems">
+            <i class="material-icons">{{ item.icon }}</i>
+            <span class="label" *ngIf="!isClosed">{{ item.label }}</span>
+        </li>
+    </ul>
+</div>

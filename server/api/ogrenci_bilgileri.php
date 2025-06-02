@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         
         // Öğrenci temel bilgilerini getir
         $stmt = $conn->prepare("
-            SELECT id, adi_soyadi, email, cep_telefonu, rutbe, aktif, avatar, brans, created_at
+            SELECT id, adi_soyadi, email, cep_telefonu, rutbe, aktif, avatar, brans, ogretmeni, created_at
             FROM ogrenciler
             WHERE id = :id
         ");
