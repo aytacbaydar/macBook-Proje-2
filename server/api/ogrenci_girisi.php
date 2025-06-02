@@ -41,8 +41,8 @@ try {
     }
     
     // Token oluştur
-    // $token = md5($user['id'] . $user['email'] . $user['sifre']);
-    $token = hash('sha256', $user['id'] . $user['email'] . $user['sifre']);
+    $token = md5($user['id'] . $user['email'] . $user['sifre']);
+    //$token = hash('sha256', $user['id'] . $user['email'] . $user['sifre']);
 
     
     // Debug için log ekle
