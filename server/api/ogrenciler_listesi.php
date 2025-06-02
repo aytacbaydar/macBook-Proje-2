@@ -8,8 +8,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         // Kullanıcıyı doğrula
         $user = authorize();
 
-        // Sadece yöneticiler tüm kullanıcı listesini görebilir, öğretmenler kendi öğrencilerini görebilir
-        if ($user['rutbe'] !== 'yonetici') {
+        // Sadece adminler tüm kullanıcı listesini görebilir
+        if ($user['rutbe'] !== 'admin') {
             errorResponse('Bu işlem için yetkiniz yok.', 403);
         }
 
