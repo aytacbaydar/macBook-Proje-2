@@ -76,7 +76,7 @@ export class OgrenciListesiSayfasiComponent implements OnInit {
       token = user.token || '';
     }
 
-    // API'ye istek gönder - tüm kullanıcıları getirir
+    // API'ye istek gönder - tüm öğrencileri getirir (admin paneli)
     this.http
       .get<any>('./server/api/ogrenciler_listesi.php', {
         headers: { Authorization: `Bearer ${token}` },
@@ -87,20 +87,16 @@ export class OgrenciListesiSayfasiComponent implements OnInit {
             // API yanıtından gelen veriyi al
             const users = Array.isArray(response.data) ? response.data : [];
 
-            // Kullanıcıları rütbelerine göre filtrele
-            // Önemli Değişiklik: aktif durumuna bakmaksızın öğrencileri ve öğretmenleri listeliyoruz
+            // Admin panelinde tüm kullanıcıları göster
             this.students = users.filter(
               (user: User) => user.rutbe === 'ogrenci'
             );
-
             this.teachers = users.filter(
               (user: User) => user.rutbe === 'ogretmen'
             );
 
             // Sadece yeni (daha önce onaylanmamış) kullanıcıları filtrele
-            this.newUsers = users.filter(
-              (user: User) => user.rutbe === 'yeni'
-            );
+            this.newUsers = users.filter((user: User) => user.rutbe === 'yeni');
 
             console.log('Yüklenen kullanıcılar:', {
               students: this.students.length,
