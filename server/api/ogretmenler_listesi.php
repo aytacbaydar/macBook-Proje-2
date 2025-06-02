@@ -45,9 +45,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         
         // aktif sütunu varsa filtrele, yoksa tüm öğretmenleri getir
         if (in_array('aktif', $columns)) {
-            $stmt = $conn->prepare("SELECT ogretmen_id as id, ogrt_adi_soyadi FROM ogretmenler WHERE aktif = 1 ORDER BY ogrt_adi_soyadi ASC");
+            $stmt = $conn->prepare("SELECT id, ogrt_adi_soyadi FROM ogretmenler WHERE aktif = 1 ORDER BY ogrt_adi_soyadi ASC");
         } else {
-            $stmt = $conn->prepare("SELECT ogretmen_id as id, ogrt_adi_soyadi FROM ogretmenler ORDER BY ogrt_adi_soyadi ASC");
+            $stmt = $conn->prepare("SELECT id, ogrt_adi_soyadi FROM ogretmenler ORDER BY ogrt_adi_soyadi ASC");
         }
         $stmt->execute();
         $teachers = $stmt->fetchAll(PDO::FETCH_ASSOC);
