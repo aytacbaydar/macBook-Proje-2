@@ -108,7 +108,10 @@ export class OgrenciIndexSayfasiComponent implements OnInit {
   }
 
   private checkScreenSize(): void {
-    if (window.innerWidth < 768) {
+    const isMobile = window.innerWidth < 768;
+    
+    if (isMobile) {
+      // Mobile'da sidebar kapalı başlasın
       this.isSidebarOpen = false;
     } else {
       // Desktop'ta kullanıcının son tercihini localStorage'dan al
