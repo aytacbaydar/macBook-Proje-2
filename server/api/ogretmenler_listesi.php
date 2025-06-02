@@ -1,12 +1,5 @@
 
 <?php
-// Hataları dosyaya logla
-ini_set('display_errors', 0);
-ini_set('display_startup_errors', 0);
-error_reporting(E_ALL);
-ini_set('log_errors', 0);
-ini_set('error_log', '../../php_errors.log');
-
 // CORS başlıkları
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, OPTIONS");
@@ -25,40 +18,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
         $conn = getConnection();
         
-        // Debug: Tablo yapısını kontrol et
-        error_log("=== ÖĞRETMENLER LİSTESİ DEBUG ===");
-        
-        try {
-            $stmt = $conn->prepare("DESCRIBE ogretmenler");
-            $stmt->execute();
-            $columns = $stmt->fetchAll(PDO::FETCH_COLUMN);
-            error_log("Ogretmenler tablosu sütunları: " . print_r($columns, true));
-        } catch (Exception $e) {
-            error_log("Tablo yapısı kontrol hatası: " . $e->getMessage());
-        }
-        
-        // Önce tüm öğretmenleri kontrol et
-        $stmt = $conn->prepare("SELECT * FROM ogretmenler LIMIT 5");
-        $stmt->execute();
-        $sample_teachers = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        error_log("Örnek öğretmen kayıtları: " . print_r($sample_teachers, true));
-        
-        // aktif sütunu varsa filtrele, yoksa tüm öğretmenleri getir
-        if (in_array('aktif', $columns)) {
-            $stmt = $conn->prepare("SELECT id, ogrt_adi_soyadi FROM ogretmenler WHERE aktif = 1 ORDER BY ogrt_adi_soyadi ASC");
-        } else {
-            $stmt = $conn->prepare("SELECT id, ogrt_adi_soyadi FROM ogretmenler ORDER BY ogrt_adi_soyadi ASC");
-        }
+        // Tüm öğretmenleri getir
+        $stmt = $conn->prepare("SELECT id, ogrt_adi_soyadi, aktif FROM ogretmenler ORDER BY ogrt_adi_soyadi ASC");
         $stmt->execute();
         $teachers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
         successResponse($teachers, 'Öğretmenler başarıyla getirildi');
         
     } catch (PDOException $e) {
-        error_log("Veritabanı hatası: " . $e->getMessage());
         errorResponse('Öğretmenler getirilemedi: ' . $e->getMessage(), 500);
     } catch (Exception $e) {
-        error_log("Genel hata: " . $e->getMessage());
         errorResponse('İşlem sırasında hata: ' . $e->getMessage(), 500);
     }
 } else {

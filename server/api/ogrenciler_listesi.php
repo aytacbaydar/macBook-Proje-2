@@ -5,14 +5,6 @@ require_once '../config.php';
 // GET isteği: Tüm öğrencileri getir
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
-        // Kullanıcıyı doğrula
-        $user = authorize();
-
-        // Sadece adminler tüm kullanıcı listesini görebilir
-        if ($user['rutbe'] !== 'admin') {
-            errorResponse('Bu işlem için yetkiniz yok.', 403);
-        }
-
         $conn = getConnection();
 
         // Tüm öğrencileri getir
