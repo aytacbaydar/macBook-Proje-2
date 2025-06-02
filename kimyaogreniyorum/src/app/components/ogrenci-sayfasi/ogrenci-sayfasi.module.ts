@@ -14,7 +14,14 @@ import { OgrenciSidebarSayfasiComponent } from './template/ogrenci-sidebar-sayfa
 
 
 @NgModule({
-  declarations: [OgrenciQrKodSayfasiComponent, OgrenciIndexSayfasiComponent, OgrenciAnaSayfasiComponent, OgrenciTaslakSayfasiComponent, OgrenciNavbarSayfasiComponent, OgrenciSidebarSayfasiComponent],
+  declarations: [
+    OgrenciQrKodSayfasiComponent,
+    OgrenciIndexSayfasiComponent,
+    OgrenciAnaSayfasiComponent,
+    OgrenciTaslakSayfasiComponent,
+    OgrenciNavbarSayfasiComponent,
+    OgrenciSidebarSayfasiComponent,
+  ],
   imports: [
     CommonModule,
     ReactiveFormsModule,

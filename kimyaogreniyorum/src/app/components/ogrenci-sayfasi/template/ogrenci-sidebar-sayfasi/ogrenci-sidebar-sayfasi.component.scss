@@ -1,34 +1,58 @@
+a{
+    text-decoration: none;
+    color: inherit;
+
+    span{
+        margin-top: -20px;
+    }
+}
 .sidebar {
-    width: 250px;
-    background-color: #00464f;
-    height: 100vh;
-    color: white;
+    width: 220px;
+    background-color: #ffffff;
+    height: calc(100vh - 70px);
+    color: rgb(32, 32, 32);
     transition: width 0.3s;
     overflow: hidden;
     position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
+    top: 60px;
+    left: 15px;
+    z-index: 10;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+
+    .toggle-button{
+        z-index: 12;
+        position: fixed;
+        background-color: #ffffff;
+        margin-left: 205px;
+        margin-top: 10px;
+        border-radius: 50%;
+        padding-top: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        transition: margin-left 0.3s;
+        width: 32px;
+        height: 32px;
+        text-align: center;
+        cursor: pointer;
+        font-size: 18px;
+    }
+
+    .menu-list{
+        margin-top: 30px;
+    }
 
     &.closed {
-        width: 70px;
+        width: 50px;
+
+
+    .toggle-button{
+        z-index: 12;
+        margin-left: 35px;
+
+    }
 
         .label {
             display: none;
-        }
-    }
-
-    .toggle-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 60px;
-        cursor: pointer;
-        background-color: #00363a;
-
-        i {
-            color: white;
-            font-size: 24px;
         }
     }
 
@@ -39,18 +63,26 @@
 
         li {
             display: flex;
+            line-height: 35px;
             align-items: center;
-            padding: 15px;
             cursor: pointer;
             transition: background 0.2s;
 
+            .label {
+                font-size: 16px;
+                font-weight: 700;
+                color: #29303c;
+            }
+
             i {
-                margin-right: 15px;
+                margin-right: 12px;
                 font-size: 24px;
+                margin-bottom: 10px;
             }
 
             &:hover {
-                background-color: #006d78;
+                background-color: #e5f7f9;
+                color: #29303c;
             }
         }
     }

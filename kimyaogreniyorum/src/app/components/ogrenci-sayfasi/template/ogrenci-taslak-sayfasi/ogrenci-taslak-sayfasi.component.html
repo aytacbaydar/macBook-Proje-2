@@ -1,2 +1,9 @@
 <app-ogrenci-navbar-sayfasi></app-ogrenci-navbar-sayfasi>
-<router-outlet></router-outlet>
+<div class="container-full">
+    <div class="sidebar">
+        <app-ogrenci-sidebar-sayfasi></app-ogrenci-sidebar-sayfasi>
+    </div>
+    <div class="main-container" (click)="toggleSidebar()">
+        <router-outlet></router-outlet>
+    </div>
+</div>

@@ -7,8 +7,5 @@ import { Component } from '@angular/core';
   styleUrl: './ogrenci-navbar-sayfasi.component.scss',
 })
 export class OgrenciNavbarSayfasiComponent {
-  isClosed = false;
-  toggleSidebar() {
-    this.isClosed = !this.isClosed;
-  }
+
 }

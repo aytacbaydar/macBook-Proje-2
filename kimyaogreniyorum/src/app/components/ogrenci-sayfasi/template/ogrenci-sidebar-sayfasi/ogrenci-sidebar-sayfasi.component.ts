@@ -7,11 +7,15 @@ import { Component } from '@angular/core';
   styleUrl: './ogrenci-sidebar-sayfasi.component.scss',
 })
 export class OgrenciSidebarSayfasiComponent {
-  isClosed = false;
+  isClosed = true;
 
   menuItems = [
-    { icon: 'dashboard', label: 'Dashboard' },
-    { icon: 'chat_bubble_outline', label: 'Blog' },
+    { icon: 'dashboard', label: 'AnaSayfa', link: 'ogrenci-sayfasi' },
+    {
+      icon: 'qr_code_scanner',
+      label: 'QR Kod',
+      link: 'ogrenci-sayfasi/ogrenci-qr-kod-sayfasi',
+    },
     { icon: 'description', label: 'Sayfalar' },
     { icon: 'group', label: 'Kullanıcılar' },
     { icon: 'exit_to_app', label: 'Çıkış' },
