@@ -21,9 +21,9 @@ export class OgrenciQrKodSayfasiComponent implements OnInit, AfterViewInit {
   exitQRCanvas!: ElementRef<HTMLCanvasElement>;
 
   studentData = {
-    id: 36,
-    name: 'Elif Elif',
-    email: 'elish263624@gmail.com',
+    id: 0,
+    name: '',
+    email: '',
   };
 
   currentDate: string = '';
@@ -34,7 +34,36 @@ export class OgrenciQrKodSayfasiComponent implements OnInit, AfterViewInit {
 
   constructor() {}
 
+  loadStudentData(): void {
+    // localStorage veya sessionStorage'dan giriş yapan kullanıcı bilgilerini al
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        
+        // Kullanıcı öğrenci mi kontrol et
+        if (user.rutbe === 'ogrenci') {
+          this.studentData = {
+            id: user.id || 0,
+            name: user.adi_soyadi || '',
+            email: user.email || '',
+          };
+          
+          console.log('Öğrenci bilgileri yüklendi:', this.studentData);
+        } else {
+          console.warn('Giriş yapan kullanıcı öğrenci değil');
+        }
+      } catch (error) {
+        console.error('Kullanıcı bilgileri parse edilemedi:', error);
+      }
+    } else {
+      console.warn('Kullanıcı bilgileri bulunamadı');
+    }
+  }
+
   ngOnInit(): void {
+    this.loadStudentData();
     this.updateDateTime();
     setInterval(() => this.updateDateTime(), 1000);
   }
