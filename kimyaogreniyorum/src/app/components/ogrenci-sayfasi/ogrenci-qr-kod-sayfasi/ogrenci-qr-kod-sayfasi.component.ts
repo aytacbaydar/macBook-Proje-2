@@ -24,6 +24,9 @@ export class OgrenciQrKodSayfasiComponent implements OnInit, AfterViewInit {
     id: 0,
     name: '',
     email: '',
+    ogretmeni: '',
+    sinifi: '',
+    ders_adi: '',
   };
 
   currentDate: string = '';
@@ -48,6 +51,9 @@ export class OgrenciQrKodSayfasiComponent implements OnInit, AfterViewInit {
             id: user.id || 0,
             name: user.adi_soyadi || '',
             email: user.email || '',
+            ogretmeni: user.ogretmeni || '',
+            sinifi: user.sinif || '',
+            ders_adi: user.ders_adi || 'Kimya',
           };
           
           console.log('Öğrenci bilgileri yüklendi:', this.studentData);
