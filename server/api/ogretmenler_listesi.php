@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $conn = getConnection();
         
         // Tüm öğretmenleri getir
-        $stmt = $conn->prepare("SELECT id, ogrt_adi_soyadi, aktif FROM ogretmenler ORDER BY ogrt_adi_soyadi ASC");
+        $stmt = $conn->prepare("SELECT ogretmen_id as id, ogrt_adi_soyadi, aktif FROM ogretmenler ORDER BY ogrt_adi_soyadi ASC");
         $stmt->execute();
         $teachers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
