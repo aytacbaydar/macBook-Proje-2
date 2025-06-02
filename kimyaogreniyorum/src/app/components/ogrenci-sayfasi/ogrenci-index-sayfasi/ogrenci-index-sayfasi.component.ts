@@ -43,9 +43,12 @@ export class OgrenciIndexSayfasiComponent implements OnInit {
     // localStorage veya sessionStorage'dan giriş yapan kullanıcı bilgilerini al
     const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
     
+    console.log('Raw user string from storage:', userStr);
+    
     if (userStr) {
       try {
         const user = JSON.parse(userStr);
+        console.log('Parsed user object:', user);
         
         // Kullanıcı bilgilerini al (API'den gelen response.data formatına uygun)
         this.studentName = user.adi_soyadi || 'Öğrenci';
