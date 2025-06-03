@@ -21,9 +21,9 @@ try {
     // Kullanıcı bilgilerini kontrol et (detay bilgileriyle birlikte)
     $stmt = $conn->prepare("
         SELECT o.id, o.adi_soyadi, o.email, o.sifre, o.rutbe, o.avatar, o.ogretmeni,
-             COALESCE(ob.sinifi, o.sinif) as sinifi,
+             ob.sinifi,
              COALESCE(ob.ders_adi, 'Kimya') as ders_adi, 
-             COALESCE(ob.grubu, o.grubu) as grubu
+             ob.grubu
         FROM ogrenciler o
         LEFT JOIN ogrenci_bilgileri ob ON o.id = ob.ogrenci_id
         WHERE o.email = :email AND o.aktif = TRUE
