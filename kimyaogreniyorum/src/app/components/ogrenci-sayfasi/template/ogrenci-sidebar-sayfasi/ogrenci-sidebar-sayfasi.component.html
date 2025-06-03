@@ -3,7 +3,7 @@
         <i class="material-icons">{{ isClosed ? 'arrow_forward' : 'arrow_back' }}</i>
     </div>
     <ul class="menu-list" >
-        <div class="logo" *ngIf="!isClosed">KimyaÖğreniyorum</div>
+        <div class="logo" *ngIf="!isClosed">Kimya<span>Öğreniyorum</span></div>
         <div class="menu-sidebar">
             <li class="li-menu" *ngFor="let item of menuItems">
                 <a href="{{ item.link }}">

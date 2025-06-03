@@ -32,7 +32,11 @@ a{
             font-weight: 700;
             font-style: italic;
             color: #29303c;
-            position: absolute;   
+            position: absolute; 
+            
+            span{
+                color: #ff6600;
+            }
         }
         .menu-sidebar{
             margin-top: 50px;
