@@ -52,7 +52,7 @@ export class OgrenciQrKodSayfasiComponent implements OnInit, AfterViewInit {
             name: user.adi_soyadi || '',
             email: user.email || '',
             ogretmeni: user.ogretmeni || '',
-            sinifi: user.sinif || '',
+            sinifi: user.sinifi || '',
             ders_adi: user.ders_adi || 'Kimya',
           };
           
