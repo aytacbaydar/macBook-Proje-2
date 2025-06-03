@@ -10,14 +10,14 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 try {
     // JSON verilerini al
     $data = getJsonData();
-    
+
     // Gerekli alanları kontrol et
     if (!isset($data['email']) || !isset($data['sifre'])) {
         errorResponse('Email ve şifre alanları zorunludur');
     }
-    
+
     $conn = getConnection();
-    
+
     // Kullanıcı bilgilerini kontrol et (detay bilgileriyle birlikte)
     $stmt = $conn->prepare("
         SELECT o.id, o.adi_soyadi, o.email, o.sifre, o.rutbe, o.avatar, o.ogretmeni,
@@ -30,34 +30,34 @@ try {
     ");
     $stmt->bindParam(':email', $data['email']);
     $stmt->execute();
-    
+
     if ($stmt->rowCount() === 0) {
         errorResponse('Kullanıcı bulunamadı veya hesap aktif değil', 401);
     }
-    
+
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    
+
     // Şifre kontrolü
     if (md5($data['sifre']) !== $user['sifre']) {
         errorResponse('Geçersiz şifre', 401);
     }
-    
+
     // Token oluştur
     $token = md5($user['id'] . $user['email'] . $user['sifre']);
     //$token = hash('sha256', $user['id'] . $user['email'] . $user['sifre']);
 
-    
+
     // Debug için log ekle
     error_log("Login - User ID: " . $user['id'] . ", Email: " . $user['email']);
     error_log("Login - Generated Token: " . $token);
     error_log("Login - Aktif durumu: " . $user['aktif']);
-    
+
     // Kullanıcı bilgilerini döndür (şifre hariç)
     unset($user['sifre']);
     $user['token'] = $token;
-    
+
     successResponse($user, 'Giriş başarılı');
-    
+
 } catch (PDOException $e) {
     errorResponse('Veritabanı hatası: ' . $e->getMessage(), 500);
 } catch (Exception $e) {
