@@ -6,14 +6,20 @@
     <div class="ms-auto dropdown">
         <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="userDropdown"
             data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="user-avatar.jpg" alt="Avatar" class="rounded-circle" width="40" height="40">
+            <img [src]="studentAvatar" alt="Avatar" class="user-avatar">
+                <div class="user-info d-none d-md-block">
+                <div class="user-name">{{ studentName }}</div>
+                <div class="user-role">Öğrenci</div>
+                </div>
         </a>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
             <li class="dropdown-user-info">
-                <img src="user-avatar.jpg" alt="Avatar">
-                <div>
-                    <div class="fw-bold">Kullanıcı Adı</div>
-                    <div class="role">Kimya Öğretmeni</div>
+                <img [src]="studentAvatar" alt="Avatar" class="user-avatar">
+                <div class="user-info d-none d-md-block">
+                <div class="user-name">{{ studentName }}</div>
+                <div class="user-role">Öğrenci</div>
+                <div class="user-name"> Öğrt: {{studentTeacher}}</div>
+                <div class="user-name">Sınıfı : {{ studentClass }}</div>
                 </div>
             </li>
             <li>
