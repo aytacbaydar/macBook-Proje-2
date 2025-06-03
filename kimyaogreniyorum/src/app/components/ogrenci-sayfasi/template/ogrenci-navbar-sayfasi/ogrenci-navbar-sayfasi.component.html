@@ -12,21 +12,28 @@
                 <div class="user-role">Öğrenci</div>
                 </div>
         </a>
-        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+        <ul class="dropdown-menu" aria-labelledby="userDropdown">
             <li class="dropdown-user-info">
-                <img [src]="studentAvatar" alt="Avatar" class="user-avatar">
-                <div class="user-info d-none d-md-block">
-                <div class="user-name">{{ studentName }}</div>
-                <div class="user-role">Öğrenci</div>
-                <div class="user-name"> Öğrt: {{studentTeacher}}</div>
-                <div class="user-name">Sınıfı : {{ studentClass }}</div>
+                <div class="user-info">
+                    <div class="user-name-menu">
+                        <div class="menu-flex"><i class="material-icons">school</i><p>Öğretmeni</p></div>
+                    </div>
+                    <div class="user-role-menu">{{ studentTeacher }}</div>
+                    <div class="user-name-menu">
+                        <div class="menu-flex"><i class="material-icons">co_present</i> <p>Sınıfı</p></div>
+                    </div>
+                    <div class="user-role-menu">Sınıfı : {{ studentClass }}</div>
                 </div>
             </li>
             <li>
                 <hr class="dropdown-divider">
             </li>
-            <li><a class="dropdown-item" href="#">👤 Profil</a></li>
-            <li><a class="dropdown-item text-danger" href="#">🚪 Çıkış</a></li>
+            <li>
+                <a class="dropdown-item text-danger text-end" href="#">
+                    <i class="material-icons">logout</i>
+                </a>
+            </li>
         </ul>
+        
     </div>
 </nav>

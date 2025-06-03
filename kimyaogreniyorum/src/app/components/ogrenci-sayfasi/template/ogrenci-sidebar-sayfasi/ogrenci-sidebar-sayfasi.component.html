@@ -3,10 +3,12 @@
         <i class="material-icons">{{ isClosed ? 'arrow_forward' : 'arrow_back' }}</i>
     </div>
     <ul class="menu-list" >
-        <li *ngFor="let item of menuItems">
+        <li class="li-menu" *ngFor="let item of menuItems">
             <a href="{{ item.link }}">
-                <i class="material-icons">{{ item.icon }}</i>
-                <span class="label" *ngIf="!isClosed">{{ item.label }}</span>
+                <div class="menu-flex">
+                    <i class="material-icons">{{ item.icon }}</i>
+                    <p *ngIf="!isClosed">{{ item.label }}</p>
+                </div>
             </a>
         </li>
     </ul>
