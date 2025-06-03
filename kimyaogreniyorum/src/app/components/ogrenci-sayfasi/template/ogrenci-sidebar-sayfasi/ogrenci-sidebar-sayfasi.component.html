@@ -3,13 +3,16 @@
         <i class="material-icons">{{ isClosed ? 'arrow_forward' : 'arrow_back' }}</i>
     </div>
     <ul class="menu-list" >
-        <li class="li-menu" *ngFor="let item of menuItems">
-            <a href="{{ item.link }}">
-                <div class="menu-flex">
-                    <i class="material-icons">{{ item.icon }}</i>
-                    <p *ngIf="!isClosed">{{ item.label }}</p>
-                </div>
-            </a>
-        </li>
+        <div class="logo" *ngIf="!isClosed">KimyaÖğreniyorum</div>
+        <div class="menu-sidebar">
+            <li class="li-menu" *ngFor="let item of menuItems">
+                <a href="{{ item.link }}">
+                    <div class="menu-flex">
+                        <i class="bi {{ item.icon }}"></i>
+                        <p *ngIf="!isClosed">{{ item.label }}</p>
+                    </div>
+                </a>
+            </li>
+        </div>
     </ul>
 </div>

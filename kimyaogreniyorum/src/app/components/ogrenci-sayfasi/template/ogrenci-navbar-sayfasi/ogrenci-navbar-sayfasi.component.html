@@ -1,39 +1,35 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-3">
-    <a class="navbar-brand" role="button">
-        <span class="ms-2 d-none d-lg-inline">Kimya Öğreniyorum</span>
-    </a>
-
-    <div class="ms-auto dropdown">
-        <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="userDropdown"
-            data-bs-toggle="dropdown" aria-expanded="false">
-            <img [src]="studentAvatar" alt="Avatar" class="user-avatar">
-                <div class="user-info d-none d-md-block">
-                <div class="user-name">{{ studentName }}</div>
-                <div class="user-role">Öğrenci</div>
-                </div>
+<div class="navbar">
+<div class="logo"><a routerLink="./">Kimya<span>Öğreniyorum</span></a></div>
+<div class="profil-button ms-auto dropdown">
+    <img [src]="studentAvatar" alt="Avatar" class="user-avatar">
+    <div class="ogrenci-bilgisi">
+        <a href="#"  id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <div class="user-name">{{ studentName }}</div>
+            <div class="user-role">Öğrenci</div>
         </a>
-        <ul class="dropdown-menu" aria-labelledby="userDropdown">
-            <li class="dropdown-user-info">
-                <div class="user-info">
-                    <div class="user-name-menu">
-                        <div class="menu-flex"><i class="material-icons">school</i><p>Öğretmeni</p></div>
-                    </div>
-                    <div class="user-role-menu">{{ studentTeacher }}</div>
-                    <div class="user-name-menu">
-                        <div class="menu-flex"><i class="material-icons">co_present</i> <p>Sınıfı</p></div>
-                    </div>
-                    <div class="user-role-menu">Sınıfı : {{ studentClass }}</div>
+    
+    <ul class="dropdown-menu" aria-labelledby="userDropdown">
+        <li class="dropdown-user-info">
+            <div class="ogrenci-bilgisi">
+                <div class="user-name-menu">
+                    <p>🧑🏻‍🏫 Öğretmeni</p>
                 </div>
-            </li>
-            <li>
-                <hr class="dropdown-divider">
-            </li>
-            <li>
-                <a class="dropdown-item text-danger text-end" href="#">
-                    <i class="material-icons">logout</i>
-                </a>
-            </li>
-        </ul>
-        
-    </div>
-</nav>
+                <div class="user-role-menu">{{ studentTeacher }}</div>
+                <div class="user-name-menu">
+                    <p>🏫 Sınıfı</p>
+                </div>
+                <div class="user-role-menu">Sınıfı : {{ studentClass }}</div>
+            </div>
+        </li>
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+        <li>
+            <a class="dropdown-item text-danger text-end" href="#">
+                <i class="material-icons">logout</i>
+            </a>
+        </li>
+    </ul>
+</div>
+</div>
+</div>
