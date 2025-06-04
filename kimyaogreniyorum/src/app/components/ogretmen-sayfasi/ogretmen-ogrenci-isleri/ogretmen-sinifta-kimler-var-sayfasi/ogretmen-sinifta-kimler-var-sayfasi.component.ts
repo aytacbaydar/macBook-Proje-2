@@ -138,14 +138,28 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
       .subscribe({
         next: (response) => {
           if (response.success) {
-            const students = response.data;
+            // Giriş yapan öğretmenin bilgilerini al
+            let loggedInUser: any = null;
+            const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+            if (userStr) {
+              loggedInUser = JSON.parse(userStr);
+            }
+
+            const loggedInTeacherName = loggedInUser?.adi_soyadi || '';
+            
+            // Sadece öğrencileri filtrele ve giriş yapan öğretmenin öğrencilerini al
+            const teacherStudents = response.data.filter(
+              (student: any) =>
+                student.rutbe === 'ogrenci' && 
+                student.ogretmeni === loggedInTeacherName &&
+                student.grubu
+            );
+
+            // Öğretmenin öğrencilerinden benzersiz grupları çıkar
             const uniqueGroups = [
-              ...new Set(
-                students
-                  .filter((s: any) => s.rutbe === 'ogrenci' && s.grubu)
-                  .map((s: any) => s.grubu)
-              ),
+              ...new Set(teacherStudents.map((s: any) => s.grubu))
             ];
+            
             this.groups = uniqueGroups as string[];
           }
         },
@@ -174,10 +188,20 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
       .subscribe({
         next: (response) => {
           if (response.success) {
+            // Giriş yapan öğretmenin bilgilerini al
+            let loggedInUser: any = null;
+            const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+            if (userStr) {
+              loggedInUser = JSON.parse(userStr);
+            }
+
+            const loggedInTeacherName = loggedInUser?.adi_soyadi || '';
+            
             this.groupStudents = response.data.filter(
               (student: any) =>
                 student.rutbe === 'ogrenci' &&
-                student.grubu === this.selectedGroup
+                student.grubu === this.selectedGroup &&
+                student.ogretmeni === loggedInTeacherName
             );
           }
         },
