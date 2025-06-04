@@ -1,7 +1,7 @@
+<div class="toggle-button" [class.closed]="isClosed" (click)="toggleSidebar()">
+    <i class="material-icons">{{ isClosed ? 'arrow_forward' : 'arrow_back' }}</i>
+</div>
 <div class="sidebar" [class.closed]="isClosed">
-    <div class="toggle-button" (click)="toggleSidebar()">
-        <i class="material-icons">{{ isClosed ? 'arrow_forward' : 'arrow_back' }}</i>
-    </div>
     <ul class="menu-list" >
         <div class="logo" *ngIf="!isClosed">Kimya<span>Öğreniyorum</span></div>
         <div class="menu-sidebar">
