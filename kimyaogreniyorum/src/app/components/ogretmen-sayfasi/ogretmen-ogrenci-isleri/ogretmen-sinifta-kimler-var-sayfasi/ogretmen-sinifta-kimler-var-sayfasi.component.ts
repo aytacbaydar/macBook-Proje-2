@@ -64,18 +64,40 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
 
         const pdf = new jsPDF('p', 'mm', 'a4');
         const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfPageHeight = pdf.internal.pageSize.getHeight();
         
-        // Kenar boşlukları: üst 20mm, sağ 20mm, sol 20mm, alt 15mm
-        const marginTop = 20;
-        const marginLeft = 20;
-        const marginRight = 20;
-        const marginBottom = 15;
+        // Kenar boşlukları: üst 8mm, sağ 5mm, sol 5mm, alt 5mm
+        const marginTop = 8;
+        const marginLeft = 5;
+        const marginRight = 5;
+        const marginBottom = 5;
         
         // Kullanılabilir alan hesaplama
         const availableWidth = pdfWidth - marginLeft - marginRight;
-        const pdfHeight = (canvas.height * availableWidth) / canvas.width;
+        const availableHeight = pdfPageHeight - marginTop - marginBottom;
+        const imgHeight = (canvas.height * availableWidth) / canvas.width;
 
-        pdf.addImage(imgData, 'PNG', marginLeft, marginTop, availableWidth, pdfHeight);
+        // Eğer içerik tek sayfaya sığıyorsa
+        if (imgHeight <= availableHeight) {
+          pdf.addImage(imgData, 'PNG', marginLeft, marginTop, availableWidth, imgHeight);
+        } else {
+          // İçerik birden fazla sayfaya yayılacak
+          let heightLeft = imgHeight;
+          let position = 0;
+          
+          // İlk sayfa
+          pdf.addImage(imgData, 'PNG', marginLeft, marginTop, availableWidth, imgHeight);
+          heightLeft -= availableHeight;
+          
+          // Gerekirse ek sayfalar
+          while (heightLeft > 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', marginLeft, marginTop + position, availableWidth, imgHeight);
+            heightLeft -= availableHeight;
+          }
+        }
+
         pdf.save('sinav-sonuc.pdf');
       });
     }
