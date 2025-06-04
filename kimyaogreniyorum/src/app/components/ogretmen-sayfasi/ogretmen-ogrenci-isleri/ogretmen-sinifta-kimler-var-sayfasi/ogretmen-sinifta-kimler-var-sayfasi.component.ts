@@ -64,10 +64,18 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
 
         const pdf = new jsPDF('p', 'mm', 'a4');
         const pdfWidth = pdf.internal.pageSize.getWidth();
-        // Calculate the height to maintain aspect ratio of the canvas image
-        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+        
+        // Kenar boşlukları: üst 20mm, sağ 20mm, sol 20mm, alt 15mm
+        const marginTop = 20;
+        const marginLeft = 20;
+        const marginRight = 20;
+        const marginBottom = 15;
+        
+        // Kullanılabilir alan hesaplama
+        const availableWidth = pdfWidth - marginLeft - marginRight;
+        const pdfHeight = (canvas.height * availableWidth) / canvas.width;
 
-        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        pdf.addImage(imgData, 'PNG', marginLeft, marginTop, availableWidth, pdfHeight);
         pdf.save('sinav-sonuc.pdf');
       });
     }
