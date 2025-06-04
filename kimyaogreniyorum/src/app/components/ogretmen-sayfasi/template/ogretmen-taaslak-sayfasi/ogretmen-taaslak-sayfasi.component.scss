@@ -1,0 +1,35 @@
+.container-full{
+    width: 100%;
+    height: auto;
+    display: grid;
+    grid-template-columns: 70px 1fr;
+    grid-template-areas: 
+        "sidebar main-container";
+}
+.sidebar {
+    grid-area: sidebar;
+}
+.main-container {
+    grid-area: main-container;
+    padding: 15px 10px 10px 10px;
+
+    &.closed {
+        right: 0;
+        width: calc(100% - 210px);
+        
+    }
+}  
+
+
+@media (max-width: 768px) {
+    .container-full{
+        width: 100%;
+        height: auto;
+        display: grid;
+        grid-template-columns:1fr;
+        grid-template-areas: 
+            "sidebar"
+            "main-container";
+    }
+
+  }

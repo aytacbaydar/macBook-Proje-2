@@ -1,0 +1,18 @@
+<div class="toggle-button" [class.closed]="isClosed" (click)="toggleSidebar()">
+    <i class="material-icons">{{ isClosed ? 'arrow_forward' : 'arrow_back' }}</i>
+</div>
+<div class="sidebar" [class.closed]="isClosed">
+    <ul class="menu-list" >
+        <div class="logo" *ngIf="!isClosed">Kimya<span>Öğreniyorum</span></div>
+        <div class="menu-sidebar">
+            <li class="li-menu" *ngFor="let item of menuItems">
+                <a href="{{ item.link }}">
+                    <div class="menu-flex">
+                        <i class="bi {{ item.icon }}"></i>
+                        <p *ngIf="!isClosed">{{ item.label }}</p>
+                    </div>
+                </a>
+            </li>
+        </div>
+    </ul>
+</div>
