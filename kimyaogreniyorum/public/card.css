@@ -114,12 +114,13 @@
   z-index: 2;
 }
 
-/* Stats Card Varyantı */
+/* Stats Card Varyantı - modern-stat-card ve stat-card birleşimi */
 .unified-card.stat-card {
   padding: 32px;
   display: flex;
   align-items: center;
   gap: 24px;
+  position: relative;
 }
 
 .unified-card.stat-card .stat-icon {
@@ -138,22 +139,27 @@
 
 .unified-card.stat-card.primary .stat-icon {
   background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);
 }
 
 .unified-card.stat-card.success .stat-icon {
   background: linear-gradient(135deg, #22c55e, #16a34a);
+  box-shadow: 0 8px 24px rgba(34, 197, 94, 0.3);
 }
 
 .unified-card.stat-card.warning .stat-icon {
   background: linear-gradient(135deg, #f59e0b, #d97706);
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.3);
 }
 
 .unified-card.stat-card.danger .stat-icon {
   background: linear-gradient(135deg, #ef4444, #dc2626);
+  box-shadow: 0 8px 24px rgba(239, 68, 68, 0.3);
 }
 
 .unified-card.stat-card.info .stat-icon {
   background: linear-gradient(135deg, #3b82f6, #2563eb);
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
 }
 
 .unified-card.stat-card .stat-content {
@@ -182,6 +188,14 @@
   font-weight: 500;
 }
 
+/* Modern Stats Grid - ogretmen-ana-sayfasi için */
+.modern-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .unified-card {
@@ -208,6 +222,11 @@
   
   .unified-card.stat-card .stat-content h3 {
     font-size: 36px;
+  }
+
+  .modern-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
 }
 
