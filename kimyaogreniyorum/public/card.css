@@ -1,26 +1,236 @@
-/* Modern Header */
-.modern-page-header {
+
+/* ========== UNIFIED CARD SYSTEM ========== */
+/* Modern hover border-top efekti ve primary border-left efektini birleştiren card yapısı */
+
+.unified-card {
   background: white;
-  border-radius: 8px;
-  padding: 15px;
-  margin-top: 3px;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  position: relative;
   margin-bottom: 24px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e9ecef;
 }
 
-.modern-btn.primary {
-  background: #4f46e5;
+/* Hover efekti - üste border çıkması */
+.unified-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0;
+  background: linear-gradient(90deg, #4f46e5, #7c3aed, #ec4899);
+  transition: height 0.3s ease;
+  z-index: 1;
+}
+
+.unified-card:hover::before {
+  height: 4px;
+}
+
+/* Primary varyant - sol tarafta border */
+.unified-card.primary {
+  border-left: 4px solid #4f46e5;
+}
+
+.unified-card.primary::before {
+  background: linear-gradient(90deg, #4f46e5, #7c3aed);
+}
+
+/* Success varyant */
+.unified-card.success {
+  border-left: 4px solid #22c55e;
+}
+
+.unified-card.success::before {
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+}
+
+/* Warning varyant */
+.unified-card.warning {
+  border-left: 4px solid #f59e0b;
+}
+
+.unified-card.warning::before {
+  background: linear-gradient(90deg, #f59e0b, #d97706);
+}
+
+/* Danger varyant */
+.unified-card.danger {
+  border-left: 4px solid #ef4444;
+}
+
+.unified-card.danger::before {
+  background: linear-gradient(90deg, #ef4444, #dc2626);
+}
+
+/* Info varyant */
+.unified-card.info {
+  border-left: 4px solid #3b82f6;
+}
+
+.unified-card.info::before {
+  background: linear-gradient(90deg, #3b82f6, #2563eb);
+}
+
+/* Hover genel efektleri */
+.unified-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Card Header */
+.unified-card .card-header {
+  padding: 24px;
+  border-bottom: 1px solid #f1f5f9;
+  background: linear-gradient(135deg, #fafbfc, #f8fafc);
+  position: relative;
+  z-index: 2;
+}
+
+.unified-card .card-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.unified-card .card-subtitle {
+  font-size: 14px;
+  color: #64748b;
+  margin: 8px 0 0 0;
+  font-weight: 500;
+}
+
+/* Card Body */
+.unified-card .card-body {
+  padding: 24px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Stats Card Varyantı */
+.unified-card.stat-card {
+  padding: 32px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.unified-card.stat-card .stat-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
   color: white;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);
+  flex-shrink: 0;
 }
 
-.modern-btn.primary:hover {
-  background: #4338ca;
-  transform: translateY(-1px);
+.unified-card.stat-card.primary .stat-icon {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
 }
 
-@media (max-width: 760px) {
-  .modern-page-header {
-    padding: 16px;
+.unified-card.stat-card.success .stat-icon {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.unified-card.stat-card.warning .stat-icon {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.unified-card.stat-card.danger .stat-icon {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.unified-card.stat-card.info .stat-icon {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.unified-card.stat-card .stat-content {
+  flex: 1;
+}
+
+.unified-card.stat-card .stat-content h3 {
+  font-size: 48px;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0 0 8px 0;
+  line-height: 1;
+}
+
+.unified-card.stat-card .stat-content p {
+  font-size: 16px;
+  color: #64748b;
+  margin: 0;
+  font-weight: 600;
+}
+
+.unified-card.stat-card .stat-content .stat-description {
+  font-size: 14px;
+  color: #94a3b8;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .unified-card {
+    margin-bottom: 16px;
   }
+  
+  .unified-card .card-header,
+  .unified-card .card-body {
+    padding: 20px;
+  }
+  
+  .unified-card.stat-card {
+    padding: 24px;
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+  
+  .unified-card.stat-card .stat-icon {
+    width: 56px;
+    height: 56px;
+    font-size: 20px;
+  }
+  
+  .unified-card.stat-card .stat-content h3 {
+    font-size: 36px;
+  }
+}
+
+/* Glass Effect Varyantı */
+.unified-card.glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Shadow Variants */
+.unified-card.shadow-sm {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.unified-card.shadow-md {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.unified-card.shadow-lg {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.unified-card.shadow-xl {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.16);
 }

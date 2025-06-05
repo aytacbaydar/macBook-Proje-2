@@ -494,44 +494,7 @@ body {
   min-height: calc(100vh - var(--header-height));
 }
 
-/* ========== MODERN CARDS ========== */
-.unified-card {
-  background: var(--bg-primary);
-  border: 1px solid var(--border-primary);
-  border-radius: var(--radius-2xl);
-  overflow: hidden;
-  margin-bottom: var(--space-6);
-  box-shadow: var(--shadow-sm);
-  transition: all var(--transition-base);
-}
 
-.unified-card:hover {
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-2px);
-}
-
-.card-header {
-  padding: var(--space-6) var(--space-8);
-  border-bottom: 1px solid var(--border-primary);
-  background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
-}
-
-.card-title {
-  font-size: var(--font-xl);
-  font-weight: var(--font-bold);
-  color: var(--text-primary);
-  margin: 0;
-}
-
-.card-subtitle {
-  font-size: var(--font-sm);
-  color: var(--text-secondary);
-  margin: var(--space-2) 0 0 0;
-}
-
-.card-body {
-  padding: var(--space-8);
-}
 
 /* ========== ENHANCED BUTTONS ========== */
 .btn {
@@ -601,70 +564,7 @@ body {
   box-shadow: var(--shadow-lg);
 }
 
-/* ========== ENHANCED STATS GRID ========== */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: var(--space-6);
-  margin-bottom: var(--space-12);
-}
 
-.stat-card {
-  background: var(--bg-primary);
-  border: 1px solid var(--border-primary);
-  border-radius: var(--radius-2xl);
-  padding: var(--space-8);
-  display: flex;
-  align-items: center;
-  gap: var(--space-6);
-  transition: all var(--transition-base);
-  position: relative;
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-}
-
-.stat-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #FF6600, #293033);
-}
-
-.stat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-xl);
-}
-
-.stat-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: var(--radius-2xl);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--font-2xl);
-  color: var(--text-inverse);
-  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
-  box-shadow: var(--shadow-md);
-}
-
-.stat-content h3 {
-  font-size: var(--font-4xl);
-  font-weight: var(--font-bold);
-  color: var(--text-primary);
-  margin-bottom: var(--space-2);
-  line-height: 1;
-}
-
-.stat-content p {
-  font-size: var(--font-sm);
-  color: var(--text-secondary);
-  margin: 0;
-  font-weight: var(--font-medium);
-}
 
 /* ========== ENHANCED FORMS ========== */
 .form-group {
