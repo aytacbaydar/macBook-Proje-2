@@ -1,20 +1,48 @@
-
-/* ========== UNIFIED CARD SYSTEM ========== */
-/* Modern hover border-top efekti ve primary border-left efektini birleştiren card yapısı */
-
-.unified-card {
+/* Modern Card Styles */
+.card {
   background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
   transition: all 0.3s ease;
-  position: relative;
   margin-bottom: 24px;
 }
 
-/* Hover efekti - üste border çıkması */
-.unified-card::before {
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #f1f5f9;
+  background: linear-gradient(135deg, #fafbfc, #f8fafc);
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.card-body {
+  padding: 24px;
+}
+
+/* Stats Cards */
+.modern-stat-card {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.modern-stat-card::before {
   content: '';
   position: absolute;
   top: 0;
@@ -23,233 +51,105 @@
   height: 0;
   background: linear-gradient(90deg, #4f46e5, #7c3aed, #ec4899);
   transition: height 0.3s ease;
-  z-index: 1;
 }
 
-.unified-card:hover::before {
+.modern-stat-card:hover::before {
   height: 4px;
 }
 
-/* Primary varyant - sol tarafta border */
-.unified-card.primary {
-  border-left: 4px solid #4f46e5;
-}
-
-.unified-card.primary::before {
-  background: linear-gradient(90deg, #4f46e5, #7c3aed);
-}
-
-/* Success varyant */
-.unified-card.success {
-  border-left: 4px solid #22c55e;
-}
-
-.unified-card.success::before {
-  background: linear-gradient(90deg, #22c55e, #16a34a);
-}
-
-/* Warning varyant */
-.unified-card.warning {
-  border-left: 4px solid #f59e0b;
-}
-
-.unified-card.warning::before {
-  background: linear-gradient(90deg, #f59e0b, #d97706);
-}
-
-/* Danger varyant */
-.unified-card.danger {
-  border-left: 4px solid #ef4444;
-}
-
-.unified-card.danger::before {
-  background: linear-gradient(90deg, #ef4444, #dc2626);
-}
-
-/* Info varyant */
-.unified-card.info {
-  border-left: 4px solid #3b82f6;
-}
-
-.unified-card.info::before {
-  background: linear-gradient(90deg, #3b82f6, #2563eb);
-}
-
-/* Hover genel efektleri */
-.unified-card:hover {
-  transform: translateY(-4px);
+.modern-stat-card:hover {
+  transform: translateY(-8px);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
-/* Card Header */
-.unified-card .card-header {
+.stat-card {
+  background: white;
+  border-radius: 12px;
   padding: 24px;
-  border-bottom: 1px solid #f1f5f9;
-  background: linear-gradient(135deg, #fafbfc, #f8fafc);
-  position: relative;
-  z-index: 2;
-}
-
-.unified-card .card-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: #1e293b;
-  margin: 0;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
 }
 
-.unified-card .card-subtitle {
-  font-size: 14px;
-  color: #64748b;
-  margin: 8px 0 0 0;
-  font-weight: 500;
+.stat-card.primary {
+  border-left: 4px solid #4f46e5;
 }
 
-/* Card Body */
-.unified-card .card-body {
-  padding: 24px;
-  position: relative;
-  z-index: 2;
+.stat-card.success {
+  border-left: 4px solid #22c55e;
 }
 
-/* Stats Card Varyantı - modern-stat-card ve stat-card birleşimi */
-.unified-card.stat-card {
-  padding: 32px;
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  position: relative;
+.stat-card.warning {
+  border-left: 4px solid #f59e0b;
 }
 
-.unified-card.stat-card .stat-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: 16px;
+.stat-card.danger {
+  border-left: 4px solid #ef4444;
+}
+
+.stat-card.info {
+  border-left: 4px solid #3b82f6;
+}
+
+.stat-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  font-size: 20px;
   color: white;
-  background: linear-gradient(135deg, #4f46e5, #7c3aed);
-  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);
   flex-shrink: 0;
 }
 
-.unified-card.stat-card.primary .stat-icon {
+.stat-card.primary .stat-icon {
   background: linear-gradient(135deg, #4f46e5, #7c3aed);
-  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);
 }
 
-.unified-card.stat-card.success .stat-icon {
+.stat-card.success .stat-icon {
   background: linear-gradient(135deg, #22c55e, #16a34a);
-  box-shadow: 0 8px 24px rgba(34, 197, 94, 0.3);
 }
 
-.unified-card.stat-card.warning .stat-icon {
+.stat-card.warning .stat-icon {
   background: linear-gradient(135deg, #f59e0b, #d97706);
-  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.3);
 }
 
-.unified-card.stat-card.danger .stat-icon {
+.stat-card.danger .stat-icon {
   background: linear-gradient(135deg, #ef4444, #dc2626);
-  box-shadow: 0 8px 24px rgba(239, 68, 68, 0.3);
 }
 
-.unified-card.stat-card.info .stat-icon {
+.stat-card.info .stat-icon {
   background: linear-gradient(135deg, #3b82f6, #2563eb);
-  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
 }
 
-.unified-card.stat-card .stat-content {
-  flex: 1;
-}
-
-.unified-card.stat-card .stat-content h3 {
-  font-size: 48px;
-  font-weight: 800;
+.stat-content h3 {
+  font-size: 42px;
+  font-weight: 700;
   color: #1e293b;
   margin: 0 0 8px 0;
   line-height: 1;
 }
 
-.unified-card.stat-card .stat-content p {
+.stat-content p {
   font-size: 16px;
   color: #64748b;
   margin: 0;
-  font-weight: 600;
-}
-
-.unified-card.stat-card .stat-content .stat-description {
-  font-size: 14px;
-  color: #94a3b8;
-  margin-top: 4px;
   font-weight: 500;
-}
-
-/* Modern Stats Grid - ogretmen-ana-sayfasi için */
-.modern-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
-  margin-bottom: 32px;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .unified-card {
-    margin-bottom: 16px;
-  }
-  
-  .unified-card .card-header,
-  .unified-card .card-body {
-    padding: 20px;
-  }
-  
-  .unified-card.stat-card {
-    padding: 24px;
+  .stat-card {
     flex-direction: column;
     text-align: center;
     gap: 16px;
-  }
-  
-  .unified-card.stat-card .stat-icon {
-    width: 56px;
-    height: 56px;
-    font-size: 20px;
-  }
-  
-  .unified-card.stat-card .stat-content h3 {
-    font-size: 36px;
+    padding: 20px;
   }
 
-  .modern-stats-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
+  .stat-content h3 {
+    font-size: 32px;
   }
-}
-
-/* Glass Effect Varyantı */
-.unified-card.glass {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-/* Shadow Variants */
-.unified-card.shadow-sm {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-.unified-card.shadow-md {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-.unified-card.shadow-lg {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-}
-
-.unified-card.shadow-xl {
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.16);
 }
