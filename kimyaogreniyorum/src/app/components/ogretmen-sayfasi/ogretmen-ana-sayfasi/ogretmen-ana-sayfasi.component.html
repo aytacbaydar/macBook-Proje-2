@@ -1,4 +1,53 @@
-<div class="dashboard-container">
+<div class="attendance-container">
+  <!-- Modern Header Section -->
+  <div class="modern-page-header">
+    <div class="header-content">
+      <div class="header-text">
+        <h1 class="modern-page-title">
+          <i class="bi bi-people-fill me-2"></i>
+          Öğrenci Grupları
+        </h1>
+        <p class="modern-page-description">Öğrencilerinizi gruplarına göre yönetin ve devamsızlık takibi yapın</p>
+      </div>
+
+      <!-- Modern Stats Cards -->
+      <div class="modern-stats-grid">
+        <div class="modern-stat-card primary">
+          <div class="stat-icon bg-primary">
+            <i class="bi bi-collection"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{ groups.length }}</div>
+            <div class="stat-label">Toplam Grup</div>
+            <div class="stat-description">Aktif gruplar</div>
+          </div>
+        </div>
+
+        <div class="modern-stat-card">
+          <div class="stat-icon bg-success">
+            <i class="bi bi-people"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{ getTotalStudents() }}</div>
+            <div class="stat-label">Toplam Öğrenci</div>
+            <div class="stat-description">Tüm gruplarda</div>
+          </div>
+        </div>
+
+        <div class="modern-stat-card">
+          <div class="stat-icon bg-info">
+            <i class="bi bi-person-check"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{ getActiveStudents() }}</div>
+            <div class="stat-label">Aktif Öğrenci</div>
+            <div class="stat-description">Derse devam eden</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  <!-- Modern Header Section Son -->
   <!-- Header Stats -->
   <div class="stats-overview">
     <div class="stat-card primary">
@@ -6,7 +55,7 @@
         <i class="fas fa-users"></i>
       </div>
       <div class="stat-content">
-        <h3>{{ totalStudents }}</h3>
+        <h3>{{ getTotalStudents() }}</h3>
         <p>Toplam Öğrenci</p>
         <span class="trend up">
           <i class="fas fa-arrow-up"></i>
@@ -20,7 +69,7 @@
         <i class="fas fa-user-graduate"></i>
       </div>
       <div class="stat-content">
-        <h3>{{ activeStudents }}</h3>
+        <h3>{{ getActiveStudents() }}</h3>
         <p>Aktif Öğrenci</p>
         <span class="trend up">
           <i class="fas fa-arrow-up"></i>
@@ -34,7 +83,7 @@
         <i class="fas fa-chalkboard-teacher"></i>
       </div>
       <div class="stat-content">
-        <h3>{{ totalGroups }}</h3>
+        <h3>{{ groups.length }}</h3>
         <p>Aktif Grup</p>
         <span class="trend stable">
           <i class="fas fa-minus"></i>
@@ -57,6 +106,12 @@
       </div>
     </div>
   </div>
+  <!-- Header Stats son -->
+</div>
+</div>
+
+<div class="dashboard-container">
+
 
   <!-- Main Dashboard Grid -->
   <div class="dashboard-grid">

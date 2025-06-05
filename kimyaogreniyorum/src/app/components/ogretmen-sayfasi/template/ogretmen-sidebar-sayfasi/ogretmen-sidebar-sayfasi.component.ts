@@ -12,9 +12,9 @@ export class OgretmenSidebarSayfasiComponent {
   menuItems = [
     { icon: 'bi-house', label: 'AnaSayfa', link: 'ogretmen-sayfasi' },
     {
-      icon: 'bi-qr-code-scan',
-      label: 'QR Kod',
-      link: 'ogretmen-sayfasi/qr-generator',
+      icon: 'bi-people-fill',
+      label: 'Gruplar',
+      link: 'ogretmen-sayfasi/ogretmen-gruplar-sayfasi',
     },
     {
       icon: 'bi-camera-reels',
