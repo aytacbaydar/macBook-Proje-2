@@ -28,7 +28,11 @@
     grid-template-columns: 1fr;
   }
 }
-
+.deneme{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 .dashboard-card {
   background: white;
   border-radius: 16px;
