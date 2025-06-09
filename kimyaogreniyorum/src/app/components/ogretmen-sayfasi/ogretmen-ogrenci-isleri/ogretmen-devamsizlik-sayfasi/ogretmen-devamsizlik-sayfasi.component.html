@@ -270,9 +270,10 @@
               </div>
 
               <div class="absent-students" *ngIf="dateGroup.katilmayanlar?.length > 0">
-                <h5>Katılmayanlar:</h5>
+                <h5><i class="bi bi-person-x"></i> Derse Katılmayanlar ({{ dateGroup.katilmayanlar?.length }}):</h5>
                 <div class="student-tags">
                   <span class="student-tag absent" *ngFor="let student of dateGroup.katilmayanlar">
+                    <i class="bi bi-x-circle"></i>
                     {{ student.adi_soyadi }}
                   </span>
                 </div>
