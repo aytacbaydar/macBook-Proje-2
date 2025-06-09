@@ -23,12 +23,22 @@
               </div>
 
               <div class="stat-card">
+                  <div class="stat-icon bg-info">
+                      <i class="bi bi-calendar-event"></i>
+                  </div>
+                  <div class="stat-content">
+                      <div class="stat-number">{{ getTotalLessonsCount() }}</div>
+                      <div class="stat-label">Toplam Ders Sayısı</div>
+                  </div>
+              </div>
+
+              <div class="stat-card">
                   <div class="stat-icon bg-success">
                       <i class="bi bi-check-circle"></i>
                   </div>
                   <div class="stat-content">
-                      <div class="stat-number">{{ presentStudents }}</div>
-                      <div class="stat-label">Katılan</div>
+                      <div class="stat-number">{{ getTotalAttendanceCount() }}</div>
+                      <div class="stat-label">Toplam Katılım</div>
                   </div>
               </div>
 
@@ -37,8 +47,63 @@
                       <i class="bi bi-x-circle"></i>
                   </div>
                   <div class="stat-content">
-                      <div class="stat-number">{{ absentStudents }}</div>
-                      <div class="stat-label">Katılmayan</div>
+                      <div class="stat-number">{{ getTotalAbsenceCount() }}</div>
+                      <div class="stat-label">Toplam Devamsızlık</div>
+                  </div>
+              </div>
+
+              <div class="stat-card">
+                  <div class="stat-icon bg-warning">
+                      <i class="bi bi-percent"></i>
+                  </div>
+                  <div class="stat-content">
+                      <div class="stat-number">{{ getOverallAttendancePercentage() }}%</div>
+                      <div class="stat-label">Genel Katılım Oranı</div>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Individual Student Statistics -->
+          <div *ngIf="selectedGroup && getStudentAttendanceStats().length > 0" class="student-stats-section">
+              <div class="section-header">
+                  <h3>
+                      <i class="bi bi-graph-up me-2"></i>
+                      Öğrenci Bazında Katılım İstatistikleri
+                  </h3>
+              </div>
+
+              <div class="student-stats-grid">
+                  <div class="student-stat-card" *ngFor="let studentStat of getStudentAttendanceStats()">
+                      <div class="student-info">
+                          <div class="student-avatar">
+                              <img [src]="studentStat.avatar || getDefaultAvatar(studentStat.name)" 
+                                   [alt]="studentStat.name" 
+                                   onerror="this.src='{{ getDefaultAvatar(studentStat.name) }}'">
+                          </div>
+                          <div class="student-details">
+                              <h5>{{ studentStat.name }}</h5>
+                              <small class="text-muted">{{ studentStat.email }}</small>
+                          </div>
+                      </div>
+
+                      <div class="student-stats">
+                          <div class="stat-item">
+                              <div class="stat-value success">{{ studentStat.presentCount }}</div>
+                              <div class="stat-label">Katıldığı Ders</div>
+                          </div>
+                          <div class="stat-item">
+                              <div class="stat-value danger">{{ studentStat.absentCount }}</div>
+                              <div class="stat-label">Devamsızlık</div>
+                          </div>
+                          <div class="stat-item">
+                              <div class="stat-value primary">{{ studentStat.totalLessons }}</div>
+                              <div class="stat-label">Toplam Ders</div>
+                          </div>
+                          <div class="stat-item">
+                              <div class="stat-value warning">{{ studentStat.attendancePercentage }}%</div>
+                              <div class="stat-label">Katılım Oranı</div>
+                          </div>
+                      </div>
                   </div>
               </div>
           </div>
@@ -360,7 +425,7 @@
       </div>
 
       <!-- Filters and Statistics Combined Section -->
-      
+
 
       <div class="historical-data" *ngIf="groupedAttendanceByDate.length > 0">
           <div class="date-attendance-card" *ngFor="let dateGroup of groupedAttendanceByDate">

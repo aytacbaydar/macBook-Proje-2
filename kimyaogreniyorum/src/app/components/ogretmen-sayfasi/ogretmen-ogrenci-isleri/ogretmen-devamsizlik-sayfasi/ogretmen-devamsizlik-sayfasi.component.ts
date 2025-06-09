@@ -447,6 +447,69 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     return total > 0 ? Math.round((totalPresent / total) * 100) : 0;
   }
 
+  // Toplam ders sayısını getir (tarihlere göre)
+  getTotalLessonsCount(): number {
+    return this.groupedAttendanceByDate.length;
+  }
+
+  // Toplam katılım sayısını getir
+  getTotalAttendanceCount(): number {
+    return this.getTotalPresentInPeriod();
+  }
+
+  // Toplam devamsızlık sayısını getir
+  getTotalAbsenceCount(): number {
+    return this.getTotalAbsentInPeriod();
+  }
+
+  // Genel katılım yüzdesini getir
+  getOverallAttendancePercentage(): number {
+    return this.getAttendancePercentage();
+  }
+
+  // Öğrenci bazında katılım istatistiklerini getir
+  getStudentAttendanceStats(): any[] {
+    if (!this.selectedGroup || this.groupStudents.length === 0) {
+      return [];
+    }
+
+    return this.groupStudents.map(student => {
+      // Bu öğrencinin tüm devamsızlık kayıtlarını bul
+      const studentRecords = this.historicalAttendance.filter(
+        record => record.ogrenci_id === student.id
+      );
+
+      // Katıldığı dersleri say
+      const presentCount = studentRecords.filter(
+        record => record.durum === 'present'
+      ).length;
+
+      // Katılmadığı dersleri say
+      const absentCount = studentRecords.filter(
+        record => record.durum === 'absent'
+      ).length;
+
+      // Toplam ders sayısı
+      const totalLessons = presentCount + absentCount;
+
+      // Katılım yüzdesi
+      const attendancePercentage = totalLessons > 0 
+        ? Math.round((presentCount / totalLessons) * 100) 
+        : 0;
+
+      return {
+        id: student.id,
+        name: student.adi_soyadi,
+        email: student.email,
+        avatar: student.avatar,
+        presentCount: presentCount,
+        absentCount: absentCount,
+        totalLessons: totalLessons,
+        attendancePercentage: attendancePercentage
+      };
+    }).sort((a, b) => b.attendancePercentage - a.attendancePercentage); // Katılım oranına göre sırala
+  }
+
   private initializeAttendanceRecords() {
     this.attendanceRecords.clear();
     this.groupStudents.forEach((student) => {
