@@ -260,9 +260,10 @@
 
             <div class="students-list">
               <div class="present-students" *ngIf="dateGroup.katilanlar?.length > 0">
-                <h5>Katılanlar:</h5>
+                <h5><i class="bi bi-person-check"></i> Derse Katılanlar ({{ dateGroup.katilanlar?.length }}):</h5>
                 <div class="student-tags">
                   <span class="student-tag present" *ngFor="let student of dateGroup.katilanlar">
+                    <i class="bi bi-check-circle"></i>
                     {{ student.adi_soyadi }}
                   </span>
                 </div>
@@ -303,15 +304,19 @@
           <div class="attendance-metrics">
             <div class="metric">
               <span class="metric-value">{{ studentStat.presentCount }}</span>
-              <span class="metric-label">Katıldı</span>
+              <span class="metric-label">Katılım</span>
             </div>
             <div class="metric">
               <span class="metric-value">{{ studentStat.absentCount }}</span>
-              <span class="metric-label">Katılmadı</span>
+              <span class="metric-label">Devamsızlık</span>
+            </div>
+            <div class="metric">
+              <span class="metric-value">{{ studentStat.totalLessons }}</span>
+              <span class="metric-label">Toplam Ders</span>
             </div>
             <div class="metric">
               <span class="metric-value">{{ studentStat.attendancePercentage }}%</span>
-              <span class="metric-label">Oran</span>
+              <span class="metric-label">Katılım Oranı</span>
             </div>
           </div>
 
