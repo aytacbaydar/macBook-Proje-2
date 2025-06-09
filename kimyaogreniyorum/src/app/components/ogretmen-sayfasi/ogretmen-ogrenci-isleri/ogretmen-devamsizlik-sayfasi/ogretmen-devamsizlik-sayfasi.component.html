@@ -301,6 +301,12 @@
                   <i class="bi bi-search"></i>
                   Filtrele
               </button>
+
+              <button class="load-all-btn" (click)="loadAllAttendanceRecords()" 
+                      [disabled]="!selectedGroup">
+                  <i class="bi bi-collection"></i>
+                  Bütün Devamsızlıkları Getir
+              </button>
           </div>
       </div>
 
