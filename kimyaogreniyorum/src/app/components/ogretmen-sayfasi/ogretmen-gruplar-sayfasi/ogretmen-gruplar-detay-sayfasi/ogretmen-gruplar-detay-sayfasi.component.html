@@ -15,7 +15,7 @@
             <i class="bi bi-people"></i>
           </div>
           <div class="stat-content">
-            <span class="stat-number">{{ grupDetay.students?.length || 0 }}</span>
+            <span class="stat-number">{{ grupDetay.students.length || 0 }}</span>
             <span class="stat-label">Toplam Öğrenci</span>
           </div>
         </div>
@@ -25,7 +25,7 @@
             <i class="bi bi-book"></i>
           </div>
           <div class="stat-content">
-            <span class="stat-number">{{ grupDetay.dersKayitlari?.length || 0 }}</span>
+            <span class="stat-number">{{ grupDetay.dersKayitlari.length || 0 }}</span>
             <span class="stat-label">İşlenen Konu</span>
           </div>
         </div>
@@ -35,7 +35,7 @@
             <i class="bi bi-calendar-check"></i>
           </div>
           <div class="stat-content">
-            <span class="stat-number">{{ grupDetay.dersProgram?.length || 0 }}</span>
+            <span class="stat-number">{{ grupDetay.dersProgram.length || 0 }}</span>
             <span class="stat-label">Haftalık Ders</span>
           </div>
         </div>
@@ -76,7 +76,7 @@
           <h2>Öğrenciler</h2>
         </div>
         <div class="section-badge">
-          {{ grupDetay.students?.length || 0 }} öğrenci
+          {{ grupDetay.students.length || 0 }} öğrenci
         </div>
       </div>
 
@@ -89,7 +89,7 @@
           <p>Bu gruba henüz hiç öğrenci eklenmemiş.</p>
         </div>
 
-        <div *ngIf="grupDetay?.students?.length > 0" class="students-list">
+        <div *ngIf="grupDetay && grupDetay.students && grupDetay.students.length > 0" class="students-list">
           <div *ngFor="let student of grupDetay.students" class="student-item">
             <div class="student-avatar">
               <img [src]="student.avatar || 'https://ui-avatars.com/api/?name=' + student.adi_soyadi + '&background=random'" 
@@ -116,7 +116,7 @@
           <h2>Ders Programı</h2>
         </div>
         <div class="section-badge">
-          {{ grupDetay.dersProgram?.length || 0 }} ders
+          {{ grupDetay.dersProgram.length || 0 }} ders
         </div>
       </div>
 
@@ -129,7 +129,7 @@
           <p>Bu grup için henüz ders programı oluşturulmamış.</p>
         </div>
 
-        <div *ngIf="grupDetay?.dersProgram?.length > 0" class="schedule-grid">
+        <div *ngIf="grupDetay && grupDetay.dersProgram && grupDetay.dersProgram.length > 0" class="schedule-grid">
           <div *ngFor="let ders of grupDetay.dersProgram" class="schedule-item">
             <div class="schedule-day">{{ ders.gun }}</div>
             <div class="schedule-time">{{ ders.saat }}</div>
@@ -147,7 +147,7 @@
           <h2>İşlenen Konular</h2>
         </div>
         <div class="section-badge">
-          {{ grupDetay.dersKayitlari?.length || 0 }} konu
+          {{ grupDetay.dersKayitlari.length || 0 }} konu
         </div>
       </div>
 
@@ -160,7 +160,7 @@
           <p>Bu grup için henüz hiç ders kaydı bulunmuyor.</p>
         </div>
 
-        <div *ngIf="grupDetay?.dersKayitlari?.length > 0" class="lessons-grid">
+        <div *ngIf="grupDetay && grupDetay.dersKayitlari && grupDetay.dersKayitlari.length > 0" class="lessons-grid">
           <div *ngFor="let ders of grupDetay.dersKayitlari" class="lesson-card">
             <div class="lesson-header">
               <div class="lesson-icon">
