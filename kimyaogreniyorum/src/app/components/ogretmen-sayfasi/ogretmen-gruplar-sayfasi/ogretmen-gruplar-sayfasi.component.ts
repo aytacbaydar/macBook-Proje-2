@@ -42,6 +42,9 @@ export class OgretmenGruplarSayfasiComponent implements OnInit {
   error: string | null = null;
   searchQuery: string = '';
   
+  // Math object for template
+  Math = Math;
+  
   // Grup renkleri
   groupColors = [
     '#4f46e5', '#06b6d4', '#10b981', '#f59e0b', 
@@ -207,5 +210,11 @@ export class OgretmenGruplarSayfasiComponent implements OnInit {
   goToAttendance(groupName: string): void {
     const encodedGroupName = encodeURIComponent(groupName);
     this.router.navigate(['/ogretmen-sayfasi/devamsizlik', encodedGroupName]);
+  }
+
+  getDefaultAvatar(name: string): string {
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(
+      name
+    )}&background=4f46e5&color=fff&size=32&font-size=0.6&rounded=true`;
   }
 }
