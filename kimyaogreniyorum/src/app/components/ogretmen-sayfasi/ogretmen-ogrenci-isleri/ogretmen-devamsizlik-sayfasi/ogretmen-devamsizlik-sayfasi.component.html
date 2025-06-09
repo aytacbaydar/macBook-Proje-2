@@ -377,28 +377,24 @@
                        *ngFor="let student of dateGroup.ogrenciler"
                        [class.present]="student.durum === 'present'"
                        [class.absent]="student.durum === 'absent'">
+                      <div class="student-avatar">
+                          <img [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)" 
+                               [alt]="student.adi_soyadi">
+                      </div>
                       <div class="student-info">
-                          <div class="student-avatar">
-                              <img [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)" 
-                                   [alt]="student.adi_soyadi">
-                          </div>
-                          <div class="student-details">
-                              <div class="student-name">{{ student.adi_soyadi }}</div>
-                              <div class="attendance-time">
-                                  <i class="bi bi-clock me-1"></i>
-                                  {{ student.zaman | date:'HH:mm' }}
-                              </div>
+                          <div class="student-name">{{ student.adi_soyadi }}</div>
+                          <div class="student-time">
+                              <i class="bi bi-clock"></i>
+                              {{ student.zaman | date:'HH:mm' }}
                           </div>
                       </div>
-                      <div class="attendance-status">
-                          <span class="status-badge" 
-                                [class.success]="student.durum === 'present'"
-                                [class.danger]="student.durum === 'absent'">
-                              <i class="bi" 
-                                 [class.bi-check-circle]="student.durum === 'present'"
-                                 [class.bi-x-circle]="student.durum === 'absent'"></i>
-                              {{ student.durum === 'present' ? 'Katıldı' : 'Katılmadı' }}
-                          </span>
+                      <div class="attendance-status" 
+                           [class.present]="student.durum === 'present'"
+                           [class.absent]="student.durum === 'absent'">
+                          <i class="bi" 
+                             [class.bi-check-circle-fill]="student.durum === 'present'"
+                             [class.bi-x-circle-fill]="student.durum === 'absent'"></i>
+                          {{ student.durum === 'present' ? 'Katıldı' : 'Katılmadı' }}
                       </div>
                   </div>
               </div>

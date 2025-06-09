@@ -244,7 +244,20 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
   }
 
   loadHistoricalAttendanceByDateRange() {
-    if (!this.selectedGroup || !this.startDate || !this.endDate) return;
+    if (!this.selectedGroup || !this.startDate || !this.endDate) {
+      console.warn('Eksik parametreler:', {
+        selectedGroup: this.selectedGroup,
+        startDate: this.startDate,
+        endDate: this.endDate
+      });
+      return;
+    }
+
+    console.log('Tarih aralığı filtresi:', {
+      grup: this.selectedGroup,
+      baslangic_tarih: this.startDate,
+      bitis_tarih: this.endDate
+    });
 
     this.http
       .get<any>(`./server/api/devamsizlik_kayitlari.php`, {
@@ -257,12 +270,20 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       })
       .subscribe({
         next: (response) => {
+          console.log('Tarih aralığı filtre yanıtı:', response);
           if (response.success && response.data) {
             this.historicalAttendance = response.data.kayitlar || [];
             this.groupedAttendanceByDate = response.data.tarihlere_gore || [];
+            
+            if (this.groupedAttendanceByDate.length === 0) {
+              this.toastr.info('Seçilen tarih aralığında kayıt bulunamadı', 'Bilgi');
+            } else {
+              this.toastr.success(`${this.groupedAttendanceByDate.length} günlük kayıt yüklendi`, 'Başarılı');
+            }
           } else {
             this.historicalAttendance = [];
             this.groupedAttendanceByDate = [];
+            this.toastr.warning('Seçilen tarih aralığında kayıt bulunamadı', 'Uyarı');
           }
         },
         error: (error) => {
@@ -272,6 +293,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
           );
           this.historicalAttendance = [];
           this.groupedAttendanceByDate = [];
+          this.toastr.error('Veriler yüklenirken hata oluştu', 'Hata');
         },
       });
   }
@@ -305,20 +327,24 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
   setDateRangeLastWeek() {
     const endDate = new Date();
     const startDate = new Date();
-    startDate.setDate(startDate.getDate() - 7);
+    startDate.setDate(endDate.getDate() - 7);
 
     this.startDate = startDate.toISOString().split('T')[0];
     this.endDate = endDate.toISOString().split('T')[0];
+    
+    console.log('Son 1 hafta filtrelendi:', this.startDate, 'to', this.endDate);
     this.loadHistoricalAttendanceByDateRange();
   }
 
   setDateRangeLastMonth() {
     const endDate = new Date();
     const startDate = new Date();
-    startDate.setDate(startDate.getDate() - 30);
+    startDate.setDate(endDate.getDate() - 30);
 
     this.startDate = startDate.toISOString().split('T')[0];
     this.endDate = endDate.toISOString().split('T')[0];
+    
+    console.log('Son 1 ay filtrelendi:', this.startDate, 'to', this.endDate);
     this.loadHistoricalAttendanceByDateRange();
   }
 
@@ -329,7 +355,50 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
 
     this.startDate = startDate.toISOString().split('T')[0];
     this.endDate = endDate.toISOString().split('T')[0];
+    
+    console.log('Bu ay filtrelendi:', this.startDate, 'to', this.endDate);
     this.loadHistoricalAttendanceByDateRange();
+  }
+
+  // Bütün devamsızlık kayıtlarını getir
+  loadAllAttendanceRecords() {
+    if (!this.selectedGroup) return;
+
+    console.log('Bütün devamsızlık kayıtları yükleniyor...');
+    
+    this.http
+      .get<any>(`./server/api/devamsizlik_kayitlari.php`, {
+        headers: this.getAuthHeaders(),
+        params: {
+          grup: this.selectedGroup,
+          butun_kayitlar: 'true'
+        },
+      })
+      .subscribe({
+        next: (response) => {
+          console.log('Tüm kayıtlar API yanıtı:', response);
+          if (response.success && response.data) {
+            this.historicalAttendance = response.data.kayitlar || [];
+            this.groupedAttendanceByDate = response.data.tarihlere_gore || [];
+            
+            // Tarih inputlarını temizle
+            this.startDate = '';
+            this.endDate = '';
+            
+            this.toastr.success('Tüm devamsızlık kayıtları yüklendi', 'Başarılı');
+          } else {
+            this.historicalAttendance = [];
+            this.groupedAttendanceByDate = [];
+            this.toastr.warning('Herhangi bir kayıt bulunamadı', 'Uyarı');
+          }
+        },
+        error: (error) => {
+          console.error('Tüm devamsızlık kayıtları yüklenirken hata:', error);
+          this.historicalAttendance = [];
+          this.groupedAttendanceByDate = [];
+          this.toastr.error('Kayıtlar yüklenirken hata oluştu', 'Hata');
+        },
+      });
   }
 
   // Aylık özet istatistikleri
