@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -81,7 +80,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit {
       next: (response) => {
         this.yukleniyor = false;
         console.log('API Response:', response);
-        
+
         if (response.success && response.data && Array.isArray(response.data)) {
           this.ogrenciler = response.data.map((ogrenci: any) => ({
             id: Number(ogrenci.id),
