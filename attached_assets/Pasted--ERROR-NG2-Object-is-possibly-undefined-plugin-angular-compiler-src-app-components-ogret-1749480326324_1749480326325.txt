@@ -1,0 +1,89 @@
+[ERROR] NG2: Object is possibly 'undefined'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.html:93:20:
+      93 │         <div *ngIf="grupDetay.students?.length > 0" class="student...
+         ╵                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenGruplarDetaySayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogretmen-gruplar-detay-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG2: Object is possibly 'undefined'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.html:133:20:
+      133 │ ...   <div *ngIf="grupDetay.dersProgram?.length > 0" class="sched...
+          ╵                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenGruplarDetaySayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogretmen-gruplar-detay-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG2: Object is possibly 'undefined'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.html:164:20:
+      164 │ ...  <div *ngIf="grupDetay.dersKayitlari?.length > 0" class="less...
+          ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenGruplarDetaySayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogretmen-gruplar-detay-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'tarih' does not exist on type 'DersKaydi'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.html:172:58:
+      172 │ ...          <p class="lesson-date">{{ formatDate(ders.tarih) }}</p>
+          ╵                                                        ~~~~~
+
+  Error occurs in the template of component OgretmenGruplarDetaySayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogretmen-gruplar-detay-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'pdf_yolu' does not exist on type 'DersKaydi'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.html:177:79:
+      177 │ ...ss="action-btn secondary" (click)="viewLessonPdf(ders.pdf_yolu)">
+          ╵                                                          ~~~~~~~~
+
+  Error occurs in the template of component OgretmenGruplarDetaySayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogretmen-gruplar-detay-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'pdf_yolu' does not exist on type 'DersKaydi'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.html:181:80:
+      181 │ ...s="action-btn secondary" (click)="viewDrawingPng(ders.pdf_yolu)">
+          ╵                                                          ~~~~~~~~
+
+  Error occurs in the template of component OgretmenGruplarDetaySayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogretmen-gruplar-detay-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'pdf_yolu' does not exist on type 'DersKaydi'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.html:185:76:
+      185 │ ...action-btn primary" (click)="downloadFile(ders.pdf_yolu, 'pdf')">
+          ╵                                                   ~~~~~~~~
+
+  Error occurs in the template of component OgretmenGruplarDetaySayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogretmen-gruplar-detay-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
