@@ -1,2 +1,55 @@
-The code changes focus on improving the styling and responsiveness of stat labels within the student statistics section.
-```
+}
+
+  .student-stats {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    min-width: 0;
+  }
+
+  .stat-item {
+    text-align: center;
+    padding: 0.75rem;
+    background: var(--background-tertiary);
+    border-radius: var(--border-radius-md);
+    border: 1px solid var(--border-secondary);
+    min-width: 70px;
+    flex: 1;
+    max-width: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+
+    .stat-value {
+      font-size: 1.2rem;
+      font-weight: 700;
+        color: var(--text-primary);
+      }
+
+      .stat-label {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+        text-align: center;
+        line-height: 1.2;
+      }
+
+      &.primary .stat-value {
+        color: var(--color-primary);
+      }
+
+      &.success .stat-value {
+        color: var(--color-success);
+      }
+
+      &.warning .stat-value {
+        color: var(--color-warning);
+      }
+
+      &.danger .stat-value {
+        color: var(--color-danger);
+      }
+    }
+  }
