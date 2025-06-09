@@ -2,20 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-interface DersKaydi {
-  id: number;
-  pdf_adi: string;
-  pdf_dosya_yolu: string;
-  cizim_dosya_yolu: string;
-  sayfa_sayisi: number;
-  olusturma_zamani: string;
-  ogretmen_adi: string;
-}
-
 interface DersProgram {
   gun: string;
   saat: string;
   ders_adi: string;
+}
+
+interface DersKaydi {
+  id: number;
+  pdf_adi: string;
+  pdf_yolu: string;
+  tarih: string;
+  created_at: string;
 }
 
 interface GroupDetail {

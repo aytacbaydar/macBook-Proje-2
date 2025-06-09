@@ -90,7 +90,7 @@
           <p>Bu gruba henüz hiç öğrenci eklenmemiş.</p>
         </div>
         
-        <div *ngIf="grupDetay.students?.length > 0" class="students-list">
+        <div *ngIf="grupDetay?.students?.length > 0" class="students-list">
           <div *ngFor="let student of grupDetay.students" class="student-item">
             <div class="student-avatar">
               <img [src]="student.avatar || 'https://ui-avatars.com/api/?name=' + student.adi_soyadi + '&background=random'" 
@@ -130,7 +130,7 @@
           <p>Bu grup için henüz ders programı oluşturulmamış.</p>
         </div>
         
-        <div *ngIf="grupDetay.dersProgram?.length > 0" class="schedule-grid">
+        <div *ngIf="grupDetay?.dersProgram?.length > 0" class="schedule-grid">
           <div *ngFor="let ders of grupDetay.dersProgram" class="schedule-item">
             <div class="schedule-day">{{ ders.gun }}</div>
             <div class="schedule-time">{{ ders.saat }}</div>
@@ -161,7 +161,7 @@
           <p>Bu grup için henüz hiç ders kaydı bulunmuyor.</p>
         </div>
         
-        <div *ngIf="grupDetay.dersKayitlari?.length > 0" class="lessons-grid">
+        <div *ngIf="grupDetay?.dersKayitlari?.length > 0" class="lessons-grid">
           <div *ngFor="let ders of grupDetay.dersKayitlari" class="lesson-card">
             <div class="lesson-header">
               <div class="lesson-icon">
