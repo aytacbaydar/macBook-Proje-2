@@ -231,12 +231,38 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
             this.historicalAttendance = response.data.kayitlar || [];
             this.groupedAttendanceByDate = response.data.tarihlere_gore || [];
             
-            // Debug: Katılmayan öğrencileri kontrol et
-            console.log('Geçmiş kayıtlar veri yapısı:', this.groupedAttendanceByDate);
+            // Eksik katılmayan öğrenci listelerini hesapla
             this.groupedAttendanceByDate.forEach(dateGroup => {
-              if (dateGroup.katilmayanlar && dateGroup.katilmayanlar.length > 0) {
-                console.log(`${dateGroup.tarih} tarihinde katılmayanlar:`, dateGroup.katilmayanlar);
+              // Eğer katilmayanlar listesi boş ama katilmayan_sayisi > 0 ise, hesapla
+              if ((!dateGroup.katilmayanlar || dateGroup.katilmayanlar.length === 0) && dateGroup.katilmayan_sayisi > 0) {
+                // O tarihteki tüm devamsızlık kayıtlarını bul
+                const dateRecords = this.historicalAttendance.filter(record => 
+                  record.tarih === dateGroup.tarih
+                );
+                
+                // Katılan öğrenci ID'lerini al
+                const presentStudentIds = dateRecords
+                  .filter(record => record.durum === 'present')
+                  .map(record => record.ogrenci_id);
+                
+                // Katılmayan öğrenci ID'lerini al
+                const absentStudentIds = dateRecords
+                  .filter(record => record.durum === 'absent')
+                  .map(record => record.ogrenci_id);
+                
+                // Katılmayan öğrencilerin detaylarını bul
+                dateGroup.katilmayanlar = this.groupStudents.filter(student => 
+                  absentStudentIds.includes(student.id)
+                );
               }
+              
+              console.log(`${dateGroup.tarih} tarihinde:`, {
+                katilan_sayisi: dateGroup.katilan_sayisi,
+                katilmayan_sayisi: dateGroup.katilmayan_sayisi,
+                katilanlar: dateGroup.katilanlar?.length || 0,
+                katilmayanlar: dateGroup.katilmayanlar?.length || 0,
+                katilmayan_isimler: dateGroup.katilmayanlar?.map(s => s.adi_soyadi) || []
+              });
             });
           } else {
             this.historicalAttendance = [];
