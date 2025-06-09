@@ -372,6 +372,18 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     this.loadHistoricalAttendanceByDateRange();
   }
 
+  setDateRangeThisYear() {
+    const now = new Date();
+    const startDate = new Date(now.getFullYear(), 0, 1);
+    const endDate = new Date(now.getFullYear(), 11, 31);
+
+    this.startDate = startDate.toISOString().split('T')[0];
+    this.endDate = endDate.toISOString().split('T')[0];
+    
+    console.log('Bu yıl filtrelendi:', this.startDate, 'to', this.endDate);
+    this.loadHistoricalAttendanceByDateRange();
+  }
+
   // Bütün devamsızlık kayıtlarını getir
   loadAllAttendanceRecords() {
     if (!this.selectedGroup) return;
