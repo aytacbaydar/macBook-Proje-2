@@ -169,17 +169,22 @@ export class OgretmenGruplarDetaySayfasiComponent  implements OnInit {
     this.isLoading = false;
   }
 
-  openPdfViewer(pdfYolu: string): void {
-    // PDF API endpoint'ini kullan
-    this.selectedPdf = `./server/api/pdf_viewer.php?file=${encodeURIComponent(pdfYolu)}`;
+  viewPdf(pdfYolu: string): void {
+    if (pdfYolu) {
+      const fullPath = pdfYolu.includes('uploads/') ? pdfYolu : `uploads/pdfs/${pdfYolu}`;
+      this.selectedPdf = `./server/${fullPath}`;
+      this.showPdfModal = true;
+    }
   }
 
   closePdfViewer(): void {
     this.selectedPdf = null;
+    this.showPdfModal = false;
   }
 
   onPdfLoadError(): void {
     console.error('PDF yüklenemedi:', this.selectedPdf);
+    alert('PDF dosyası yüklenirken hata oluştu. Dosya mevcut değil veya erişim izni yok.');
   }
 
   formatDate(dateString: string): string {
