@@ -240,9 +240,17 @@
                 <div class="student-tags">
                   <span class="student-tag absent" *ngFor="let student of dateGroup.katilmayanlar">
                     <i class="bi bi-x-circle"></i>
-                    {{ student.adi_soyadi }}
+                    {{ student.adi_soyadi || student.name }}
                   </span>
                 </div>
+              </div>
+
+              <!-- Katılmayan yoksa bilgi mesajı göster -->
+              <div class="no-absents" *ngIf="dateGroup.katilmayan_sayisi === 0">
+                <p class="text-success">
+                  <i class="bi bi-check-circle-fill"></i> 
+                  Bu derste hiçbir öğrenci devamsızlık yapmadı!
+                </p>
               </div>
             </div>
           </div>

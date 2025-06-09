@@ -230,6 +230,14 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
           if (response.success && response.data) {
             this.historicalAttendance = response.data.kayitlar || [];
             this.groupedAttendanceByDate = response.data.tarihlere_gore || [];
+            
+            // Debug: Katılmayan öğrencileri kontrol et
+            console.log('Geçmiş kayıtlar veri yapısı:', this.groupedAttendanceByDate);
+            this.groupedAttendanceByDate.forEach(dateGroup => {
+              if (dateGroup.katilmayanlar && dateGroup.katilmayanlar.length > 0) {
+                console.log(`${dateGroup.tarih} tarihinde katılmayanlar:`, dateGroup.katilmayanlar);
+              }
+            });
           } else {
             this.historicalAttendance = [];
             this.groupedAttendanceByDate = [];
