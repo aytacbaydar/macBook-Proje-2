@@ -105,8 +105,7 @@
           <div class="student-info">
             <div class="student-avatar">
               <img [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)" 
-                   [alt]="student.adi_soyadi" 
-                   onerror="this.src='{{ getDefaultAvatar(student.adi_soyadi) }}'">
+                   [alt]="student.adi_soyadi" >
             </div>
             <div class="student-details">
               <h4>{{ student.adi_soyadi }}</h4>
