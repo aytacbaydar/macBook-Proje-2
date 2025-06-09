@@ -1,413 +1,171 @@
-<div class="attendance-container">
-    <!-- Header Section -->
-    <div class="page-header">
-        <div class="header-content">
-            <div class="header-text">
-                <h1 class="page-title">
-                    <i class="bi bi-calendar-check me-2"></i>
-                    Devamsızlık Takibi
-                </h1>
-                <p class="page-description">Öğrenci devamsızlığını manuel veya QR kod ile takip edin</p>
-            </div>
+<div class="devamsizlik-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <i class="fas fa-calendar-times"></i>
+        Devamsızlık Yönetimi
+      </h1>
+      <p class="page-description">Öğrenci devamsızlık durumlarını takip edin ve kaydedin</p>
+    </div>
+  </div>
 
-            <!-- Stats Cards -->
-            <div class="stats-row">
-                <div class="stat-card">
-                    <div class="stat-icon bg-primary">
-                        <i class="bi bi-people"></i>
-                    </div>
-                    <div class="stat-content">
-                        <div class="stat-number">{{ totalStudents }}</div>
-                        <div class="stat-label">Toplam Öğrenci</div>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon bg-success">
-                        <i class="bi bi-check-circle"></i>
-                    </div>
-                    <div class="stat-content">
-                        <div class="stat-number">{{ presentStudents }}</div>
-                        <div class="stat-label">Katılan</div>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon bg-danger">
-                        <i class="bi bi-x-circle"></i>
-                    </div>
-                    <div class="stat-content">
-                        <div class="stat-number">{{ absentStudents }}</div>
-                        <div class="stat-label">Katılmayan</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <!-- Controls Section -->
+  <div class="controls-section">
+    <div class="date-selector">
+      <label for="tarih" class="form-label">
+        <i class="fas fa-calendar"></i>
+        Tarih Seçin
+      </label>
+      <input 
+        type="date" 
+        id="tarih" 
+        [(ngModel)]="secilenTarih" 
+        (change)="tarihDegisti()"
+        class="form-input date-input">
     </div>
 
-    <!-- Controls Section -->
-    <div class="controls-section">
-        <div class="control-group">
-            <label class="control-label">Grup Seçin:</label>
-            <select class="form-select" [(ngModel)]="selectedGroup" (change)="onGroupChange()">
-                <option value="">Grup seçiniz...</option>
-                <option *ngFor="let group of groups" [value]="group.name">{{ group.name }}</option>
-            </select>
-        </div>
+    <div class="quick-actions">
+      <button 
+        class="btn btn-secondary" 
+        (click)="tumunuIsaretle(true)"
+        title="Tümünü Devamsız Olarak İşaretle">
+        <i class="fas fa-times-circle"></i>
+        Tümü Devamsız
+      </button>
+      <button 
+        class="btn btn-success" 
+        (click)="tumunuIsaretle(false)"
+        title="Tümünü Devam Etti Olarak İşaretle">
+        <i class="fas fa-check-circle"></i>
+        Tümü Devam Etti
+      </button>
+    </div>
+  </div>
 
-        <div class="control-group">
-            <label class="control-label">Tarih:</label>
-            <input type="date" class="form-control" [(ngModel)]="selectedDate" (change)="loadAttendanceData()">
-        </div>
-
-        <div class="control-group">
-            <button class="btn btn-primary" (click)="toggleQRScanner()" [disabled]="!selectedGroup">
-                <i class="bi bi-qr-code-scan me-1"></i>
-                {{ isQRScannerActive ? 'QR Tarayıcıyı Kapat' : 'QR Kod Tarayıcı' }}
-            </button>
-        </div>
-
-        <div class="control-group">
-            <button class="btn btn-info" (click)="toggleHistoricalView()" [disabled]="!selectedGroup">
-                <i class="bi bi-calendar-range me-1"></i>
-                {{ viewHistoricalData ? 'Günlük Yoklama' : 'Geçmiş Kayıtlar' }}
-            </button>
-        </div>
+  <!-- Student List -->
+  <div class="students-section">
+    <div class="section-header">
+      <h2 class="section-title">
+        <i class="fas fa-users"></i>
+        Öğrenci Listesi
+        <span class="student-count">({{ogrenciler.length}} öğrenci)</span>
+      </h2>
     </div>
 
-    <!-- QR Scanner Section -->
-    <div *ngIf="isQRScannerActive" class="qr-scanner-section">
-        <div class="scanner-container">
-            <video #videoElement class="scanner-video" autoplay playsinline></video>
-            <canvas #canvasElement style="display: none;"></canvas>
-            <div class="scanner-overlay">
-                <div class="scanner-frame"></div>
-                <p class="scanner-text">QR kodu kameranın önüne tutun</p>
-            </div>
+    <div class="students-grid" *ngIf="ogrenciler.length > 0; else noStudents">
+      <div 
+        *ngFor="let ogrenci of ogrenciler; trackBy: trackByFn" 
+        class="student-card"
+        [class.absent]="ogrenci.devamsiz"
+        [class.present]="!ogrenci.devamsiz">
+
+        <div class="student-info">
+          <div class="student-avatar">
+            <img 
+              [src]="ogrenci.avatar || getDefaultAvatar(ogrenci.adi_soyadi)" 
+              [alt]="ogrenci.adi_soyadi"
+              class="avatar-img">
+          </div>
+
+          <div class="student-details">
+            <h3 class="student-name">{{ogrenci.adi_soyadi}}</h3>
+            <p class="student-number">No: {{ogrenci.ogrenci_numarasi}}</p>
+            <p class="student-class">Sınıf: {{ogrenci.sinif}}</p>
+          </div>
         </div>
+
+        <div class="attendance-controls">
+          <div class="attendance-toggle">
+            <label class="toggle-switch">
+              <input 
+                type="checkbox" 
+                [(ngModel)]="ogrenci.devamsiz"
+                (change)="devamsizlikDegisti(ogrenci)">
+              <span class="toggle-slider">
+                <span class="toggle-label present">Devam Etti</span>
+                <span class="toggle-label absent">Devamsız</span>
+              </span>
+            </label>
+          </div>
+
+          <div class="status-indicator">
+            <span 
+              class="status-badge" 
+              [class.present]="!ogrenci.devamsiz"
+              [class.absent]="ogrenci.devamsiz">
+              <i class="fas" [class.fa-check]="!ogrenci.devamsiz" [class.fa-times]="ogrenci.devamsiz"></i>
+              {{ogrenci.devamsiz ? 'Devamsız' : 'Devam Etti'}}
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Attendance List -->
-    <div *ngIf="selectedGroup && groupStudents.length > 0" class="attendance-section">
-        <div class="section-header">
-            <h3>{{ selectedGroup }} Grubu - Yoklama</h3>
-            <div class="attendance-actions">
-                <button class="btn btn-success" (click)="markAllPresent()">
-                    <i class="bi bi-check-all me-1"></i>
-                    Hepsini Katıldı İşaretle
-                </button>
-                <button class="btn btn-warning" (click)="markAllAbsent()">
-                    <i class="bi bi-x-lg me-1"></i>
-                    Hepsini Katılmadı İşaretle
-                </button>
-                <button class="btn btn-primary" (click)="saveAttendance()" [disabled]="!hasChanges">
-                    <i class="bi bi-save me-1"></i>
-                    Yoklamayı Kaydet
-                </button>
-            </div>
+    <ng-template #noStudents>
+      <div class="empty-state">
+        <div class="empty-icon">
+          <i class="fas fa-user-slash"></i>
         </div>
+        <h3>Öğrenci Bulunamadı</h3>
+        <p>Bu tarih için kayıtlı öğrenci bulunmuyor.</p>
+      </div>
+    </ng-template>
+  </div>
 
-        <div class="students-attendance-list">
-            <div class="attendance-item" *ngFor="let student of groupStudents">
-                <div class="student-info">
-                    <div class="student-avatar">
-                        <img [src]="student.avatar || 'assets/images/default-avatar.png'" 
-                             [alt]="student.adi_soyadi" class="avatar-img">
-                    </div>
-                    <div class="student-details">
-                        <div class="student-name">{{ student.adi_soyadi }}</div>
-                        <div class="student-meta">
-                            <span class="student-class">{{ student.sinifi }}</span>
-                            <span class="student-email">{{ student.email }}</span>
-                        </div>
-                    </div>
-                </div>
+  <!-- Action Buttons -->
+  <div class="action-section">
+    <div class="action-buttons">
+      <button 
+        class="btn btn-secondary btn-lg"
+        (click)="geriDon()">
+        <i class="fas fa-arrow-left"></i>
+        Geri Dön
+      </button>
 
-                <div class="attendance-controls">
-                    <div class="attendance-status">
-                        <span class="status-label">Durum:</span>
-                        <span class="status-badge" 
-                              [class.present]="getAttendanceStatus(student.id) === 'present'"
-                              [class.absent]="getAttendanceStatus(student.id) === 'absent'"
-                              [class.pending]="getAttendanceStatus(student.id) === 'pending'">
-                            {{ getAttendanceStatusText(student.id) }}
-                        </span>
-                    </div>
-
-                    <div class="attendance-buttons">
-                        <button class="btn btn-sm btn-success" 
-                                [class.active]="getAttendanceStatus(student.id) === 'present'"
-                                (click)="markAttendance(student.id, 'present')">
-                            <i class="bi bi-check-lg"></i>
-                            Katıldı
-                        </button>
-                        <button class="btn btn-sm btn-danger" 
-                                [class.active]="getAttendanceStatus(student.id) === 'absent'"
-                                (click)="markAttendance(student.id, 'absent')">
-                            <i class="bi bi-x-lg"></i>
-                            Katılmadı
-                        </button>
-                    </div>
-
-                    <div class="attendance-time" *ngIf="getAttendanceTime(student.id)">
-                        <small class="text-muted">
-                            <i class="bi bi-clock me-1"></i>
-                            {{ getAttendanceTime(student.id) | date:'HH:mm' }}
-                        </small>
-                    </div>
-                </div>
-            </div>
-        </div>
+      <button 
+        class="btn btn-primary btn-lg"
+        (click)="devamsizliklariKaydet()"
+        [disabled]="kaydetmeIsleminde">
+        <i class="fas" [class.fa-spinner]="kaydetmeIsleminde" [class.fa-save]="!kaydetmeIsleminde"></i>
+        <span *ngIf="kaydetmeIsleminde">Kaydediliyor...</span>
+        <span *ngIf="!kaydetmeIsleminde">Kaydet</span>
+      </button>
     </div>
+  </div>
 
-    <!-- Past Week Attendance Section -->
-    <div *ngIf="selectedGroup && pastWeekAttendance.length > 0" class="past-attendance-section">
-        <div class="section-header">
-            <h4>
-                <i class="bi bi-calendar-week me-2"></i>
-                Geçen Hafta Katılan Öğrenciler ({{ getPastWeekDate() | date:'dd.MM.yyyy' }})
-            </h4>
+  <!-- Summary Stats -->
+  <div class="summary-section" *ngIf="ogrenciler.length > 0">
+    <div class="stats-grid">
+      <div class="stat-item present">
+        <div class="stat-icon">
+          <i class="fas fa-check-circle"></i>
         </div>
-
-        <div class="past-attendance-grid">
-            <div class="attendance-summary-card">
-                <div class="summary-header">
-                    <i class="bi bi-check-circle-fill text-success me-2"></i>
-                    <span>Katılan: {{ getPastWeekPresentCount() }}</span>
-                </div>
-                <div class="summary-header">
-                    <i class="bi bi-x-circle-fill text-danger me-2"></i>
-                    <span>Katılmayan: {{ getPastWeekAbsentCount() }}</span>
-                </div>
-            </div>
-
-            <div class="past-students-list">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h6 class="text-success">
-                            <i class="bi bi-check-circle me-1"></i>
-                            Katılan Öğrenciler
-                        </h6>
-                        <div class="student-list present-list">
-                            <div *ngFor="let student of getPastWeekPresentStudents()" class="student-item present">
-                                <div class="student-avatar">
-                                    <img [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)" 
-                                         [alt]="student.adi_soyadi">
-                                </div>
-                                <span class="student-name">{{ student.adi_soyadi }}</span>
-                                <small class="student-time text-muted">
-                                    {{ student.zaman | date:'HH:mm' }}
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <h6 class="text-danger">
-                            <i class="bi bi-x-circle me-1"></i>
-                            Katılmayan Öğrenciler
-                        </h6>
-                        <div class="student-list absent-list">
-                            <div *ngFor="let student of getPastWeekAbsentStudents()" class="student-item absent">
-                                <div class="student-avatar">
-                                    <img [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)" 
-                                         [alt]="student.adi_soyadi">
-                                </div>
-                                <span class="student-name">{{ student.adi_soyadi }}</span>
-                                <small class="student-time text-muted">
-                                    {{ student.zaman | date:'HH:mm' }}
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="stat-content">
+          <span class="stat-number">{{getDevamEdenSayisi()}}</span>
+          <span class="stat-label">Devam Eden</span>
         </div>
+      </div>
+
+      <div class="stat-item absent">
+        <div class="stat-icon">
+          <i class="fas fa-times-circle"></i>
+        </div>
+        <div class="stat-content">
+          <span class="stat-number">{{getDevamsizSayisi()}}</span>
+          <span class="stat-label">Devamsız</span>
+        </div>
+      </div>
+
+      <div class="stat-item total">
+        <div class="stat-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-content">
+          <span class="stat-number">{{ogrenciler.length}}</span>
+          <span class="stat-label">Toplam</span>
+        </div>
+      </div>
     </div>
-
-    <!-- Empty States -->
-    <div *ngIf="!selectedGroup" class="empty-state">
-        <div class="empty-illustration">
-            <i class="bi bi-collection"></i>
-        </div>
-        <h3>Grup Seçin</h3>
-        <p>Devamsızlık takibi için yukarıdan bir grup seçin</p>
-    </div>
-
-    <div *ngIf="selectedGroup && groupStudents.length === 0" class="empty-state">
-        <div class="empty-illustration">
-            <i class="bi bi-person-x"></i>
-        </div>
-        <h3>Bu Grupta Öğrenci Yok</h3>
-        <p>Seçilen grupta henüz öğrenci bulunmuyor.</p>
-    </div>
-
-    <!-- Loading State -->
-    <div *ngIf="isLoading" class="loading-container">
-        <div class="loading-spinner">
-            <div class="spinner"></div>
-            <p>Yükleniyor...</p>
-        </div>
-    </div>
-
-    <!-- Historical Attendance View -->
-    <div *ngIf="viewHistoricalData && selectedGroup" class="historical-attendance-section">
-        <div class="modern-section-header">
-            <div class="header-content">
-                <h3 class="section-title">
-                    <i class="bi bi-calendar-range"></i>
-                    {{ selectedGroup }} Grubu - Geçmiş Devamsızlık Kayıtları
-                </h3>
-                <p class="section-subtitle">Seçilen tarih aralığındaki devamsızlık kayıtlarını görüntüleyin</p>
-            </div>
-        </div>
-
-        <!-- Modern Filter Controls -->
-        <div class="modern-filter-section">
-            <div class="filter-header">
-                <h4><i class="bi bi-funnel"></i> Filtreler</h4>
-            </div>
-
-            <div class="filter-controls">
-                <div class="date-range-inputs">
-                    <div class="date-input-wrapper">
-                        <label class="modern-label">Başlangıç Tarihi</label>
-                        <input type="date" class="modern-input" [(ngModel)]="startDate" placeholder="Başlangıç">
-                    </div>
-                    <div class="date-separator">-</div>
-                    <div class="date-input-wrapper">
-                        <label class="modern-label">Bitiş Tarihi</label>
-                        <input type="date" class="modern-input" [(ngModel)]="endDate" placeholder="Bitiş">
-                    </div>
-                </div>
-
-                <div class="quick-filter-buttons">
-                    <button class="quick-filter-btn" (click)="setDateRangeLastWeek()">
-                        <i class="bi bi-calendar-week"></i>
-                        Son 1 Hafta
-                    </button>
-                    <button class="quick-filter-btn" (click)="setDateRangeLastMonth()">
-                        <i class="bi bi-calendar-month"></i>
-                        Son 1 Ay
-                    </button>
-                    <button class="quick-filter-btn" (click)="setDateRangeThisMonth()">
-                        <i class="bi bi-calendar3"></i>
-                        Bu Ay
-                    </button>
-                </div>
-
-                <button class="apply-filter-btn" (click)="loadHistoricalAttendanceByDateRange()" 
-                        [disabled]="!startDate || !endDate">
-                    <i class="bi bi-search"></i>
-                    Filtrele
-                </button>
-            </div>
-        </div>
-
-        <!-- Modern Statistics Cards -->
-        <div class="modern-stats-section" *ngIf="groupedAttendanceByDate.length > 0">
-            <div class="stats-grid">
-                <div class="modern-stat-card lessons">
-                    <div class="stat-icon">
-                        <i class="bi bi-calendar-event"></i>
-                    </div>
-                    <div class="stat-content">
-                        <div class="stat-number">{{ groupedAttendanceByDate.length }}</div>
-                        <div class="stat-label">Toplam Ders</div>
-                        <div class="stat-description">Seçilen dönemdeki ders sayısı</div>
-                    </div>
-                </div>
-
-                <div class="modern-stat-card attendance">
-                    <div class="stat-icon">
-                        <i class="bi bi-check-circle-fill"></i>
-                    </div>
-                    <div class="stat-content">
-                        <div class="stat-number">{{ getTotalPresentInPeriod() }}</div>
-                        <div class="stat-label">Toplam Katılım</div>
-                        <div class="stat-description">Derse katılan öğrenci sayısı</div>
-                    </div>
-                </div>
-
-                <div class="modern-stat-card absence">
-                    <div class="stat-icon">
-                        <i class="bi bi-x-circle-fill"></i>
-                    </div>
-                    <div class="stat-content">
-                        <div class="stat-number">{{ getTotalAbsentInPeriod() }}</div>
-                        <div class="stat-label">Toplam Devamsızlık</div>
-                        <div class="stat-description">Derse katılmayan öğrenci sayısı</div>
-                    </div>
-                </div>
-
-                <div class="modern-stat-card percentage">
-                    <div class="stat-icon">
-                        <i class="bi bi-percent"></i>
-                    </div>
-                    <div class="stat-content">
-                        <div class="stat-number">{{ getAttendancePercentage() }}%</div>
-                        <div class="stat-label">Katılım Oranı</div>
-                        <div class="stat-description">Genel katılım yüzdesi</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="historical-data" *ngIf="groupedAttendanceByDate.length > 0">
-            <div class="date-attendance-card" *ngFor="let dateGroup of groupedAttendanceByDate">
-                <div class="date-header">
-                    <h4>
-                        <i class="bi bi-calendar-event me-2"></i>
-                        {{ formatDate(dateGroup.tarih) }} - {{ getDayName(dateGroup.tarih) }}
-                    </h4>
-                    <div class="attendance-summary">
-                        <span class="attendance-count success">
-                            <i class="bi bi-check-circle me-1"></i>
-                            Katılan: {{ dateGroup.katilan_sayisi }}
-                        </span>
-                        <span class="attendance-count danger">
-                            <i class="bi bi-x-circle me-1"></i>
-                            Katılmayan: {{ dateGroup.katilmayan_sayisi }}
-                        </span>
-                    </div>
-                </div>
-
-                <div class="students-grid">
-                    <div class="student-attendance-item" 
-                         *ngFor="let student of dateGroup.ogrenciler"
-                         [class.present]="student.durum === 'present'"
-                         [class.absent]="student.durum === 'absent'">
-                        <div class="student-info">
-                            <div class="student-avatar">
-                                <img [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)" 
-                                     [alt]="student.adi_soyadi">
-                            </div>
-                            <div class="student-details">
-                                <div class="student-name">{{ student.adi_soyadi }}</div>
-                                <div class="attendance-time">
-                                    <i class="bi bi-clock me-1"></i>
-                                    {{ student.zaman | date:'HH:mm' }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="attendance-status">
-                            <span class="status-badge" 
-                                  [class.success]="student.durum === 'present'"
-                                  [class.danger]="student.durum === 'absent'">
-                                <i class="bi" 
-                                   [class.bi-check-circle]="student.durum === 'present'"
-                                   [class.bi-x-circle]="student.durum === 'absent'"></i>
-                                {{ student.durum === 'present' ? 'Katıldı' : 'Katılmadı' }}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div *ngIf="groupedAttendanceByDate.length === 0" class="no-data">
-            <i class="bi bi-calendar-x"></i>
-            <p>Seçilen tarih aralığında devamsızlık kaydı bulunamadı.</p>
-        </div>
-    </div>
+  </div>
 </div>
