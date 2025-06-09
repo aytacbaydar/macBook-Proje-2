@@ -12,6 +12,11 @@ export class OgretmenSidebarSayfasiComponent {
   menuItems = [
     { icon: 'bi-house', label: 'AnaSayfa', link: 'ogretmen-sayfasi' },
     {
+      icon: 'bi-journal-plus',
+      label: 'Ders Anlatımı',
+      link: 'ogretmen-sayfasi/ogretmen-ders-anlatma-tahtasi-sayfasi',
+    },
+    {
       icon: 'bi-people-fill',
       label: 'Gruplar',
       link: 'ogretmen-sayfasi/ogretmen-gruplar-sayfasi',
