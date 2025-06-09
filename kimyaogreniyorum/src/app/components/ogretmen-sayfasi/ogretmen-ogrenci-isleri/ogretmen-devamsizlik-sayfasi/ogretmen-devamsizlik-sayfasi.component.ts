@@ -261,7 +261,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
                 katilmayan_sayisi: dateGroup.katilmayan_sayisi,
                 katilanlar: dateGroup.katilanlar?.length || 0,
                 katilmayanlar: dateGroup.katilmayanlar?.length || 0,
-                katilmayan_isimler: dateGroup.katilmayanlar?.map(s => s.adi_soyadi) || []
+                katilmayan_isimler: dateGroup.katilmayanlar?.map((s: Student) => s.adi_soyadi) || []
               });
             });
           } else {
