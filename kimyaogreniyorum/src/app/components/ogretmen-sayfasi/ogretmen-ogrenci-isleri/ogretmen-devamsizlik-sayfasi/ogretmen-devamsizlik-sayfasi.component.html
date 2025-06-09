@@ -1,171 +1,180 @@
+
 <div class="devamsizlik-container">
-  <!-- Header -->
+  <!-- Header Section -->
   <div class="page-header">
     <div class="header-content">
-      <h1 class="page-title">
-        <i class="fas fa-calendar-times"></i>
-        Devamsızlık Yönetimi
-      </h1>
-      <p class="page-description">Öğrenci devamsızlık durumlarını takip edin ve kaydedin</p>
+      <button class="back-button" (click)="geriDon()">
+        <i class="fas fa-arrow-left"></i>
+        <span>Geri Dön</span>
+      </button>
+      
+      <div class="header-title">
+        <h1>
+          <i class="fas fa-calendar-check"></i>
+          Devamsızlık Takibi
+        </h1>
+        <p>Öğrenci devamsızlık kayıtlarını yönetin</p>
+      </div>
     </div>
   </div>
 
   <!-- Controls Section -->
   <div class="controls-section">
-    <div class="date-selector">
-      <label for="tarih" class="form-label">
-        <i class="fas fa-calendar"></i>
-        Tarih Seçin
-      </label>
+    <div class="control-item">
+      <label for="tarih">Tarih Seçin:</label>
       <input 
         type="date" 
-        id="tarih" 
+        id="tarih"
         [(ngModel)]="secilenTarih" 
         (change)="tarihDegisti()"
-        class="form-input date-input">
+        class="date-input">
     </div>
 
-    <div class="quick-actions">
-      <button 
-        class="btn btn-secondary" 
-        (click)="tumunuIsaretle(true)"
-        title="Tümünü Devamsız Olarak İşaretle">
-        <i class="fas fa-times-circle"></i>
-        Tümü Devamsız
-      </button>
+    <div class="bulk-actions">
       <button 
         class="btn btn-success" 
         (click)="tumunuIsaretle(false)"
-        title="Tümünü Devam Etti Olarak İşaretle">
+        [disabled]="ogrenciler.length === 0">
         <i class="fas fa-check-circle"></i>
-        Tümü Devam Etti
+        Hepsini Devam Etti
+      </button>
+      
+      <button 
+        class="btn btn-danger" 
+        (click)="tumunuIsaretle(true)"
+        [disabled]="ogrenciler.length === 0">
+        <i class="fas fa-times-circle"></i>
+        Hepsini Devamsız
       </button>
     </div>
   </div>
 
-  <!-- Student List -->
-  <div class="students-section">
-    <div class="section-header">
-      <h2 class="section-title">
-        <i class="fas fa-users"></i>
-        Öğrenci Listesi
-        <span class="student-count">({{ogrenciler.length}} öğrenci)</span>
-      </h2>
+  <!-- Stats Section -->
+  <div class="stats-section" *ngIf="ogrenciler.length > 0">
+    <div class="stat-card success">
+      <div class="stat-icon">
+        <i class="fas fa-user-check"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ getDevamEdenSayisi() }}</h3>
+        <p>Devam Eden</p>
+      </div>
     </div>
 
-    <div class="students-grid" *ngIf="ogrenciler.length > 0; else noStudents">
+    <div class="stat-card danger">
+      <div class="stat-icon">
+        <i class="fas fa-user-times"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ getDevamsizSayisi() }}</h3>
+        <p>Devamsız</p>
+      </div>
+    </div>
+
+    <div class="stat-card info">
+      <div class="stat-icon">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ ogrenciler.length }}</h3>
+        <p>Toplam Öğrenci</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-section" *ngIf="yukleniyor">
+    <div class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i>
+    </div>
+    <p>Öğrenciler yükleniyor...</p>
+  </div>
+
+  <!-- Error State -->
+  <div class="error-section" *ngIf="hataVar">
+    <div class="error-icon">
+      <i class="fas fa-exclamation-triangle"></i>
+    </div>
+    <h3>Bir Hata Oluştu</h3>
+    <p>{{ hataMesaji }}</p>
+    <button class="btn btn-primary" (click)="yenidenDene()">
+      <i class="fas fa-redo"></i>
+      Yeniden Dene
+    </button>
+  </div>
+
+  <!-- Students List -->
+  <div class="students-section" *ngIf="!yukleniyor && !hataVar">
+    <div class="students-grid" *ngIf="ogrenciler.length > 0">
       <div 
-        *ngFor="let ogrenci of ogrenciler; trackBy: trackByFn" 
-        class="student-card"
+        class="student-card" 
+        *ngFor="let ogrenci of ogrenciler; trackBy: trackByFn"
         [class.absent]="ogrenci.devamsiz"
         [class.present]="!ogrenci.devamsiz">
-
-        <div class="student-info">
-          <div class="student-avatar">
-            <img 
-              [src]="ogrenci.avatar || getDefaultAvatar(ogrenci.adi_soyadi)" 
-              [alt]="ogrenci.adi_soyadi"
-              class="avatar-img">
-          </div>
-
-          <div class="student-details">
-            <h3 class="student-name">{{ogrenci.adi_soyadi}}</h3>
-            <p class="student-number">No: {{ogrenci.ogrenci_numarasi}}</p>
-            <p class="student-class">Sınıf: {{ogrenci.sinif}}</p>
-          </div>
+        
+        <div class="student-avatar">
+          <img 
+            [src]="ogrenci.avatar || getDefaultAvatar(ogrenci.adi_soyadi)"
+            [alt]="ogrenci.adi_soyadi"
+            (error)="$event.target.src = getDefaultAvatar(ogrenci.adi_soyadi)">
         </div>
 
-        <div class="attendance-controls">
-          <div class="attendance-toggle">
-            <label class="toggle-switch">
-              <input 
-                type="checkbox" 
-                [(ngModel)]="ogrenci.devamsiz"
-                (change)="devamsizlikDegisti(ogrenci)">
-              <span class="toggle-slider">
-                <span class="toggle-label present">Devam Etti</span>
-                <span class="toggle-label absent">Devamsız</span>
-              </span>
-            </label>
-          </div>
-
-          <div class="status-indicator">
-            <span 
-              class="status-badge" 
-              [class.present]="!ogrenci.devamsiz"
-              [class.absent]="ogrenci.devamsiz">
-              <i class="fas" [class.fa-check]="!ogrenci.devamsiz" [class.fa-times]="ogrenci.devamsiz"></i>
-              {{ogrenci.devamsiz ? 'Devamsız' : 'Devam Etti'}}
+        <div class="student-info">
+          <h4>{{ ogrenci.adi_soyadi }}</h4>
+          <div class="student-details">
+            <span class="student-number">
+              <i class="fas fa-id-card"></i>
+              {{ ogrenci.ogrenci_numarasi }}
+            </span>
+            <span class="student-class">
+              <i class="fas fa-graduation-cap"></i>
+              {{ ogrenci.sinif }}
             </span>
           </div>
         </div>
+
+        <div class="student-status">
+          <div class="status-indicator" [class.absent]="ogrenci.devamsiz">
+            <i class="fas" [class.fa-check]="!ogrenci.devamsiz" [class.fa-times]="ogrenci.devamsiz"></i>
+          </div>
+          
+          <label class="status-toggle">
+            <input 
+              type="checkbox" 
+              [(ngModel)]="ogrenci.devamsiz"
+              (change)="devamsizlikDegisti(ogrenci)">
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">
+              {{ ogrenci.devamsiz ? 'Devamsız' : 'Devam Etti' }}
+            </span>
+          </label>
+        </div>
       </div>
     </div>
 
-    <ng-template #noStudents>
-      <div class="empty-state">
-        <div class="empty-icon">
-          <i class="fas fa-user-slash"></i>
-        </div>
-        <h3>Öğrenci Bulunamadı</h3>
-        <p>Bu tarih için kayıtlı öğrenci bulunmuyor.</p>
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="ogrenciler.length === 0 && !yukleniyor && !hataVar">
+      <div class="empty-icon">
+        <i class="fas fa-user-graduate"></i>
       </div>
-    </ng-template>
+      <h3>Öğrenci Bulunamadı</h3>
+      <p>Bu öğretmene ait öğrenci kaydı bulunmuyor.</p>
+      <button class="btn btn-primary" (click)="yenidenDene()">
+        <i class="fas fa-redo"></i>
+        Yeniden Yükle
+      </button>
+    </div>
   </div>
 
-  <!-- Action Buttons -->
-  <div class="action-section">
-    <div class="action-buttons">
-      <button 
-        class="btn btn-secondary btn-lg"
-        (click)="geriDon()">
-        <i class="fas fa-arrow-left"></i>
-        Geri Dön
-      </button>
-
-      <button 
-        class="btn btn-primary btn-lg"
-        (click)="devamsizliklariKaydet()"
-        [disabled]="kaydetmeIsleminde">
-        <i class="fas" [class.fa-spinner]="kaydetmeIsleminde" [class.fa-save]="!kaydetmeIsleminde"></i>
-        <span *ngIf="kaydetmeIsleminde">Kaydediliyor...</span>
-        <span *ngIf="!kaydetmeIsleminde">Kaydet</span>
-      </button>
-    </div>
-  </div>
-
-  <!-- Summary Stats -->
-  <div class="summary-section" *ngIf="ogrenciler.length > 0">
-    <div class="stats-grid">
-      <div class="stat-item present">
-        <div class="stat-icon">
-          <i class="fas fa-check-circle"></i>
-        </div>
-        <div class="stat-content">
-          <span class="stat-number">{{getDevamEdenSayisi()}}</span>
-          <span class="stat-label">Devam Eden</span>
-        </div>
-      </div>
-
-      <div class="stat-item absent">
-        <div class="stat-icon">
-          <i class="fas fa-times-circle"></i>
-        </div>
-        <div class="stat-content">
-          <span class="stat-number">{{getDevamsizSayisi()}}</span>
-          <span class="stat-label">Devamsız</span>
-        </div>
-      </div>
-
-      <div class="stat-item total">
-        <div class="stat-icon">
-          <i class="fas fa-users"></i>
-        </div>
-        <div class="stat-content">
-          <span class="stat-number">{{ogrenciler.length}}</span>
-          <span class="stat-label">Toplam</span>
-        </div>
-      </div>
-    </div>
+  <!-- Save Button -->
+  <div class="save-section" *ngIf="ogrenciler.length > 0 && !yukleniyor && !hataVar">
+    <button 
+      class="save-button"
+      (click)="devamsizliklariKaydet()"
+      [disabled]="kaydetmeIsleminde || !secilenTarih">
+      
+      <i class="fas" [class.fa-save]="!kaydetmeIsleminde" [class.fa-spinner]="kaydetmeIsleminde" [class.fa-spin]="kaydetmeIsleminde"></i>
+      <span>{{ kaydetmeIsleminde ? 'Kaydediliyor...' : 'Kaydet' }}</span>
+    </button>
   </div>
 </div>

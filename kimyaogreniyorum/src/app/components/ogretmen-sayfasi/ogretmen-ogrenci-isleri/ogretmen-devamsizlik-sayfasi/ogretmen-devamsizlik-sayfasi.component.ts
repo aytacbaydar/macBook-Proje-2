@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -15,13 +16,16 @@ interface Ogrenci {
   selector: 'app-ogretmen-devamsizlik-sayfasi',
   templateUrl: './ogretmen-devamsizlik-sayfasi.component.html',
   styleUrls: ['./ogretmen-devamsizlik-sayfasi.component.scss'],
-  standalone: false,
+  standalone: false
 })
 export class OgretmenDevamsizlikSayfasiComponent implements OnInit {
   ogrenciler: Ogrenci[] = [];
   secilenTarih: string = '';
   kaydetmeIsleminde: boolean = false;
   ogretmenId: number = 0;
+  yukleniyor: boolean = false;
+  hataVar: boolean = false;
+  hataMesaji: string = '';
 
   constructor(
     private http: HttpClient,
@@ -44,46 +48,68 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit {
       try {
         const user = JSON.parse(userStr);
         this.ogretmenId = user.id;
+        console.log('Öğretmen ID:', this.ogretmenId);
         this.ogrencileriYukle();
       } catch (error) {
         console.error('Öğretmen bilgileri alınırken hata:', error);
-        this.router.navigate(['/ogretmen-login']);
+        this.hataVar = true;
+        this.hataMesaji = 'Öğretmen bilgileri alınamadı';
       }
     } else {
       console.warn('Öğretmen giriş bilgisi bulunamadı');
-      this.router.navigate(['/ogretmen-login']);
+      this.hataVar = true;
+      this.hataMesaji = 'Giriş bilgisi bulunamadı';
     }
   }
 
   ogrencileriYukle(): void {
     if (!this.ogretmenId) {
       console.error('Öğretmen ID bulunamadı');
+      this.hataVar = true;
+      this.hataMesaji = 'Öğretmen ID bulunamadı';
       return;
     }
 
+    this.yukleniyor = true;
+    this.hataVar = false;
+    this.hataMesaji = '';
+
     const apiUrl = `https://www.kimyaogreniyorum.com/api/ogretmen_ogrencileri.php?ogretmen_id=${this.ogretmenId}`;
+    console.log('API URL:', apiUrl);
 
     this.http.get<any>(apiUrl).subscribe({
       next: (response) => {
-        if (response.success && response.data) {
+        this.yukleniyor = false;
+        console.log('API Response:', response);
+        
+        if (response.success && response.data && Array.isArray(response.data)) {
           this.ogrenciler = response.data.map((ogrenci: any) => ({
-            id: ogrenci.id,
-            adi_soyadi: ogrenci.adi_soyadi,
+            id: Number(ogrenci.id),
+            adi_soyadi: ogrenci.adi_soyadi || 'İsimsiz Öğrenci',
             ogrenci_numarasi: ogrenci.ogrenci_numarasi || 'N/A',
             sinif: ogrenci.sinif || 'Belirtilmemiş',
             avatar: ogrenci.avatar,
             devamsiz: false // Varsayılan olarak devam etti
           }));
 
+          console.log('Yüklenen öğrenciler:', this.ogrenciler);
+
           // Varolan devamsızlık kayıtlarını yükle
-          this.devamsizlikKayitlariniYukle();
+          if (this.ogrenciler.length > 0) {
+            this.devamsizlikKayitlariniYukle();
+          }
         } else {
-          console.error('Öğrenci listesi alınamadı:', response.message);
+          console.error('Öğrenci listesi alınamadı:', response);
+          this.hataVar = true;
+          this.hataMesaji = response.message || 'Öğrenci listesi bulunamadı';
           this.ogrenciler = [];
         }
       },
       error: (error) => {
+        this.yukleniyor = false;
         console.error('Öğrenci listesi yüklenirken hata:', error);
+        this.hataVar = true;
+        this.hataMesaji = 'Öğrenci listesi yüklenemedi';
         this.ogrenciler = [];
       }
     });
@@ -103,7 +129,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit {
 
           // Öğrenci listesini devamsızlık kayıtlarına göre güncelle
           this.ogrenciler.forEach(ogrenci => {
-            const kayit = devamsizlikKayitlari.find((k: any) => k.ogrenci_id === ogrenci.id);
+            const kayit = devamsizlikKayitlari.find((k: any) => Number(k.ogrenci_id) === ogrenci.id);
             ogrenci.devamsiz = kayit ? kayit.devamsiz === '1' : false;
           });
         }
@@ -125,7 +151,6 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit {
   }
 
   devamsizlikDegisti(ogrenci: Ogrenci): void {
-    // Öğrenci durumu değiştiğinde otomatik güncelleme yapılabilir
     console.log(`${ogrenci.adi_soyadi} - ${ogrenci.devamsiz ? 'Devamsız' : 'Devam Etti'}`);
   }
 
@@ -197,5 +222,11 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit {
 
   geriDon(): void {
     this.router.navigate(['/ogretmen-sayfasi']);
+  }
+
+  yenidenDene(): void {
+    this.hataVar = false;
+    this.hataMesaji = '';
+    this.ogrencileriYukle();
   }
 }
