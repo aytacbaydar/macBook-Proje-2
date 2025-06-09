@@ -7,116 +7,61 @@
           <i class="bi bi-people-fill me-2"></i>
           Öğrenci Grupları
         </h1>
-        <p class="modern-page-description">Öğrencilerinizi gruplarına göre yönetin ve devamsızlık takibi yapın</p>
+        <p class="modern-page-description">
+          Öğrencilerinizi gruplarına göre yönetin ve devamsızlık takibi yapın
+        </p>
       </div>
 
-      <!-- Unified Modern Cards -->
-      <div class="unified-cards-grid">
-        <div class="unified-card primary">
-          <div class="card-icon">
-            <i class="bi bi-collection"></i>
+      <!-- Header Stats -->
+      <div class="admin-overview">
+        <div class="stat-card mavi">
+          <div class="stat-icon">
+            <i class="fas fa-users"></i>
           </div>
-          <div class="card-content">
-            <div class="card-number">{{ groups.length }}</div>
-            <div class="card-label">Toplam Grup</div>
-            <div class="card-description">Aktif gruplar</div>
-          </div>
-        </div>
-
-        <div class="unified-card success">
-          <div class="card-icon">
-            <i class="bi bi-people"></i>
-          </div>
-          <div class="card-content">
-            <div class="card-number">{{ getTotalStudents() }}</div>
-            <div class="card-label">Toplam Öğrenci</div>
-            <div class="card-description">Tüm gruplarda</div>
+          <div class="stat-content">
+            <h3>{{ getTotalStudents() }}</h3>
+            <p>Toplam Öğrenci</p>
           </div>
         </div>
 
-        <div class="unified-card info">
-          <div class="card-icon">
-            <i class="bi bi-person-check"></i>
+        <div class="stat-card yesil">
+          <div class="stat-icon">
+            <i class="fas fa-user-graduate"></i>
           </div>
-          <div class="card-content">
-            <div class="card-number">{{ getActiveStudents() }}</div>
-            <div class="card-label">Aktif Öğrenci</div>
-            <div class="card-description">Derse devam eden</div>
+          <div class="stat-content">
+            <h3>{{ getActiveStudents() }}</h3>
+            <p>Aktif Öğrenci</p>
           </div>
         </div>
-      </div>
-    </div>
-  
-  <!-- Modern Header Section Son -->
-  <!-- Header Stats -->
-  <div class="unified-cards-grid">
-    <div class="unified-card primary">
-      <div class="card-icon">
-        <i class="fas fa-users"></i>
-      </div>
-      <div class="card-content">
-        <div class="card-number">{{ getTotalStudents() }}</div>
-        <div class="card-label">Toplam Öğrenci</div>
-        <span class="card-trend up">
-          <i class="fas fa-arrow-up"></i>
-          +12%
-        </span>
-      </div>
-    </div>
 
-    <div class="unified-card success">
-      <div class="card-icon">
-        <i class="fas fa-user-graduate"></i>
-      </div>
-      <div class="card-content">
-        <div class="card-number">{{ getActiveStudents() }}</div>
-        <div class="card-label">Aktif Öğrenci</div>
-        <span class="card-trend up">
-          <i class="fas fa-arrow-up"></i>
-          +8%
-        </span>
-      </div>
-    </div>
+        <div class="stat-card acik-turuncu">
+          <div class="stat-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ getInactiveStudents() }}</h3>
+            <p>Pasit Öğrenci</p>
+          </div>
+        </div>
 
-    <div class="unified-card warning">
-      <div class="card-icon">
-        <i class="fas fa-chalkboard-teacher"></i>
-      </div>
-      <div class="card-content">
-        <div class="card-number">{{ groups.length }}</div>
-        <div class="card-label">Aktif Grup</div>
-        <span class="card-trend stable">
-          <i class="fas fa-minus"></i>
-          0%
-        </span>
-      </div>
-    </div>
-
-    <div class="unified-card info">
-      <div class="card-icon">
-        <i class="fas fa-chart-line"></i>
-      </div>
-      <div class="card-content">
-        <div class="card-number">{{ completedTopics }}</div>
-        <div class="card-label">Tamamlanan Ders</div>
-        <span class="card-trend up">
-          <i class="fas fa-arrow-up"></i>
-          +15%
-        </span>
+        <div class="stat-card mavi">
+          <div class="stat-icon">
+            <i class="fas fa-chalkboard-teacher"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ groups.length }}</h3>
+            <p>Aktif Grup</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <!-- Header Stats son -->
-</div>
-</div>
-
-<div class="dashboard-container">
-
+  <!-- Modern Header Section Son -->
 
   <!-- Main Dashboard Grid -->
-  <div class="dashboard-grid">
+  <div class="admin-grid">
     <!-- Quick Actions -->
-    <div class="dashboard-card quick-actions">
+    <div class="admin-container grid-12">
       <div class="card-header">
         <h3>Hızlı İşlemler</h3>
         <div class="card-actions">
@@ -159,7 +104,7 @@
     </div>
 
     <!-- Recent Activities -->
-    <div class="dashboard-card activities">
+    <div class="admin-container grid-4">
       <div class="card-header">
         <h3>Son Aktiviteler</h3>
         <div class="card-actions">
@@ -216,7 +161,7 @@
     </div>
 
     <!-- Performance Chart -->
-    <div class="dashboard-card chart-card">
+    <div class="admin-container grid-8">
       <div class="card-header">
         <h3>Haftalık Performans</h3>
         <div class="card-actions">
@@ -253,7 +198,7 @@
     </div>
 
     <!-- Upcoming Classes -->
-    <div class="dashboard-card upcoming-classes">
+    <div class="admin-container grid-4">
       <div class="card-header">
         <h3>Yaklaşan Dersler</h3>
         <div class="card-actions">
@@ -308,7 +253,7 @@
     </div>
 
     <!-- Students Progress -->
-    <div class="dashboard-card student-progress">
+    <div class="admin-container grid-4">
       <div class="card-header">
         <h3>Öğrenci İlerlemesi</h3>
         <div class="card-actions">
@@ -320,7 +265,10 @@
           <div class="progress-item">
             <div class="student-info">
               <div class="student-avatar">
-                <img src="https://ui-avatars.com/api/?name=Ahmet+Yilmaz&background=6366f1&color=fff" alt="AY">
+                <img
+                  src="https://ui-avatars.com/api/?name=Ahmet+Yilmaz&background=6366f1&color=fff"
+                  alt="AY"
+                />
               </div>
               <div class="student-details">
                 <h4>Ahmet Yılmaz</h4>
@@ -336,7 +284,10 @@
           <div class="progress-item">
             <div class="student-info">
               <div class="student-avatar">
-                <img src="https://ui-avatars.com/api/?name=Fatma+Kaya&background=10b981&color=fff" alt="FK">
+                <img
+                  src="https://ui-avatars.com/api/?name=Fatma+Kaya&background=10b981&color=fff"
+                  alt="FK"
+                />
               </div>
               <div class="student-details">
                 <h4>Fatma Kaya</h4>
@@ -352,7 +303,10 @@
           <div class="progress-item">
             <div class="student-info">
               <div class="student-avatar">
-                <img src="https://ui-avatars.com/api/?name=Mehmet+Demir&background=f59e0b&color=fff" alt="MD">
+                <img
+                  src="https://ui-avatars.com/api/?name=Mehmet+Demir&background=f59e0b&color=fff"
+                  alt="MD"
+                />
               </div>
               <div class="student-details">
                 <h4>Mehmet Demir</h4>
@@ -369,7 +323,7 @@
     </div>
 
     <!-- Quick Stats -->
-    <div class="dashboard-card quick-stats">
+    <div class="admin-container grid-4">
       <div class="card-header">
         <h3>Özet İstatistikler</h3>
       </div>

@@ -5,7 +5,396 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
+  a{
+    text-decoration: none;
+    color: inherit;
+  }
 }
+
+
+/* QR Kodlar */
+.page-header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 10px;
+  margin-bottom: 25px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+  .header-content {
+  .header-text {
+      margin-bottom: 25px;
+
+      .page-title {
+      color: #2d3748;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+
+      i {
+          color: #667eea;
+      }
+      }
+
+      .page-description {
+      color: #718096;
+      font-size: 1.1rem;
+      margin: 0;
+      }
+  }
+
+  .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+
+      .stat-card {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+      &:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      .stat-icon {
+          width: 60px;
+          height: 60px;
+          border-radius: 15px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-right: 15px;
+
+          i {
+          font-size: 1.5rem;
+          color: white;
+          }
+
+          &.bg-primary { background: linear-gradient(45deg, #667eea, #764ba2); }
+          &.bg-success { background: linear-gradient(45deg, #56ab2f, #a8e6cf); }
+          &.bg-warning { background: linear-gradient(45deg, #f093fb, #f5576c); }
+          &.bg-info { background: linear-gradient(45deg, #4facfe, #00f2fe); }
+      }
+
+      .stat-content {
+          .stat-number {
+          font-size: 2rem;
+          font-weight: 700;
+          color: #2d3748;
+          line-height: 1;
+          }
+
+          .stat-label {
+          color: #718096;
+          font-size: 0.9rem;
+          margin-top: 5px;
+          }
+      }
+
+      .pdf-export-btn {
+          background: linear-gradient(135deg, #dc3545, #c82333);
+          color: white;
+          border: none;
+          border-radius: 8px;
+          padding: 12px 20px;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          justify-content: center;
+          width: 100%;
+
+          &:hover:not(:disabled) {
+          background: linear-gradient(135deg, #c82333, #a71e2a);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+          }
+
+          &:disabled {
+          background: #6c757d;
+          cursor: not-allowed;
+          opacity: 0.6;
+          }
+
+          i {
+          color: white;
+          font-size: 1.2rem;
+          margin: 0;
+          }
+      }
+      }
+  }
+  }
+}
+
+.controls-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 25px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: end;
+
+  .control-group {
+  flex: 1;
+  min-width: 200px;
+
+  .control-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #2d3748;
+      font-size: 0.9rem;
+  }
+
+  .form-select,
+  .form-control {
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px 15px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+
+      &:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      outline: none;
+      }
+  }
+
+  .btn {
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+      border: none;
+
+      &.btn-primary {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: white;
+
+      &:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      }
+      }
+
+      &.btn-secondary {
+      background: linear-gradient(45deg, #718096, #a0aec0);
+      color: white;
+
+      &:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 5px 15px rgba(113, 128, 150, 0.4);
+      }
+      }
+
+      &.btn-info {
+      background: linear-gradient(45deg, #4facfe, #00f2fe);
+      color: white;
+
+      &:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+      }
+      }
+
+      &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      }
+  }
+  }
+}
+
+.qr-scanner-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 30px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+  .scanner-container {
+  position: relative;
+  max-width: 500px;
+  margin: 0 auto;
+
+  .scanner-video {
+      width: 100%;
+      border-radius: 15px;
+      background: #000;
+  }
+
+  .scanner-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+
+      .scanner-frame {
+      position: relative;
+      width: 250px;
+      height: 250px;
+      border: 2px dashed #667eea;
+      border-radius: 15px;
+
+      .scanner-corner {
+          position: absolute;
+          width: 30px;
+          height: 30px;
+          border: 3px solid #667eea;
+
+          &.top-left {
+          top: -3px;
+          left: -3px;
+          border-right: none;
+          border-bottom: none;
+          border-radius: 15px 0 0 0;
+          }
+
+          &.top-right {
+          top: -3px;
+          right: -3px;
+          border-left: none;
+          border-bottom: none;
+          border-radius: 0 15px 0 0;
+          }
+
+          &.bottom-left {
+          bottom: -3px;
+          left: -3px;
+          border-right: none;
+          border-top: none;
+          border-radius: 0 0 0 15px;
+          }
+
+          &.bottom-right {
+          bottom: -3px;
+          right: -3px;
+          border-left: none;
+          border-top: none;
+          border-radius: 0 0 15px 0;
+          }
+      }
+      }
+
+      .scanner-text {
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-top: 20px;
+      text-align: center;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+
+      .scanner-instructions {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.9rem;
+      margin-top: 10px;
+      text-align: center;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+      }
+  }
+  }
+}
+
+
+
+.no-group-selected {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 60px 30px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+  .no-group-content {
+  i {
+      font-size: 4rem;
+      color: #cbd5e0;
+      margin-bottom: 20px;
+  }
+
+  h3 {
+      color: #2d3748;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+  }
+
+  p {
+      color: #718096;
+      font-size: 1.1rem;
+      margin: 0;
+  }
+  }
+}
+
+.loading-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 50px 30px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+  .spinner-border {
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 20px;
+  }
+
+  p {
+  color: #718096;
+  font-size: 1.1rem;
+  margin: 0;
+  }
+}
+
+/* QR Kodlar Son*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 html, body { 
   height: 100%; 

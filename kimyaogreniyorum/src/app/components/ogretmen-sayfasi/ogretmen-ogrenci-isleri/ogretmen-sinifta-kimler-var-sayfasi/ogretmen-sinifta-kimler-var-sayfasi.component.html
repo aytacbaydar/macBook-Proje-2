@@ -1,221 +1,274 @@
-<div class="classroom-tracker-container">
-  <!-- Header Section -->
-  <div class="page-header">
+<!-- Grup Bilgileri-->
+
+<div class="attendance-container">
+  <div class="modern-page-header">
     <div class="header-content">
       <div class="header-text">
-        <h1 class="page-title">
+        <h1 class="modern-page-title">
           <i class="bi bi-people-fill me-2"></i>
-          Sınıfta Kimler Var?
+          Öğrenci Yoklama Sistemi
         </h1>
-        <p class="page-description">QR kod ile öğrenci giriş/çıkış takibi</p>
-
-      <!-- Stats Cards -->
-      <div class="stats-row">
-        <div class="stat-card">
-          <div class="stat-icon bg-primary">
-            <i class="bi bi-people"></i>
+        <p class="modern-page-description">
+          Öğrencilerinizi gruplarına göre devamsızlık takibi Sistemi
+        </p>
+      </div>
+      <div class="admin-overview">
+        <div class="stat-card mavi">
+          <div class="stat-icon">
+            <i class="fas fa-users"></i>
           </div>
           <div class="stat-content">
-            <div class="stat-number">{{ groupStudents.length }}</div>
-            <div class="stat-label">Toplam Öğrenci</div>
+            <h3>{{ groupStudents.length }}</h3>
+            <p>Toplam Öğrenci</p>
           </div>
         </div>
 
-        <div class="stat-card">
-          <div class="stat-icon bg-success">
+        <div class="stat-card yesil">
+          <div class="stat-icon">
             <i class="bi bi-check-circle"></i>
           </div>
           <div class="stat-content">
-            <div class="stat-number">{{ getPresentCount() }}</div>
-            <div class="stat-label">Sınıfta Olan</div>
+            <h3>{{ getPresentCount() }}</h3>
+            <p>Sınıfta Olan</p>
           </div>
         </div>
 
-        <div class="stat-card">
-          <div class="stat-icon bg-warning">
+        <div class="stat-card turuncu">
+          <div class="stat-icon">
             <i class="bi bi-x-circle"></i>
           </div>
           <div class="stat-content">
-            <div class="stat-number">{{ getAbsentCount() }}</div>
-            <div class="stat-label">Henüz Gelmemiş</div>
+            <h3>{{ getAbsentCount() }}</h3>
+            <p>Henüz Gelmemiş</p>
           </div>
         </div>
 
-        <div class="stat-card">
-          <div class="stat-icon bg-info">
+        <div class="stat-card kırmızı">
+          <div class="stat-icon">
             <i class="bi bi-percent"></i>
           </div>
           <div class="stat-content">
-            <div class="stat-number">{{ getAttendancePercentage() }}%</div>
-            <div class="stat-label">Katılım Oranı</div>
+            <h3>{{ getAttendancePercentage() }}%</h3>
+            <p>Katılım Yüzdesi</p>
           </div>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- Controls Section -->
-  <div class="controls-section">
-    <div class="control-group">
-      <label class="control-label">Grup Seçin:</label>
-      <select class="form-select" [(ngModel)]="selectedGroup" (change)="onGroupChange()">
-        <option value="">Grup seçiniz...</option>
-        <option *ngFor="let group of groups" [value]="group">{{ group }}</option>
-      </select>
-    </div>
-
-    <div class="control-group">
-      <label class="control-label">Tarih:</label>
-      <input type="date" class="form-control" [(ngModel)]="selectedDate" (change)="loadClassroomStatus()">
-    </div>
-
-    <div class="control-group">
-      <button class="btn btn-primary" (click)="toggleQRScanner()" [disabled]="!selectedGroup">
-        <i class="bi bi-qr-code-scan me-1"></i>
-        {{ isQRScannerActive ? 'QR Tarayıcıyı Kapat' : 'QR Kod Tarayıcı' }}
-      </button>
-    </div>
-
-    <div class="control-group">
-      <button class="btn btn-secondary" (click)="refreshClassroomStatus()" [disabled]="!selectedGroup">
-        <i class="bi bi-arrow-clockwise me-1"></i>
-        Yenile
-      </button>
-    </div>
-
-    <div class="control-group" *ngIf="selectedGroup && groupStudents.length > 0">
-      <button 
-            class="btn btn-info" 
-            (click)="exportClassroomReport()"
-            [disabled]="!selectedGroup || !selectedDate">
-            <i class="bi bi-table me-1"></i>
-            Rapor Göster
-          </button>
-    </div>
-
-  </div>
-
-  <!-- QR Scanner Section -->
-  <div *ngIf="isQRScannerActive" class="qr-scanner-section">
-    <div class="scanner-container">
-      <video #videoElement class="scanner-video" autoplay playsinline></video>
-      <canvas #canvasElement style="display: none;"></canvas>
-      <div class="scanner-overlay">
-        <div class="scanner-frame">
-          <div class="scanner-corner top-left"></div>
-          <div class="scanner-corner top-right"></div>
-          <div class="scanner-corner bottom-left"></div>
-          <div class="scanner-corner bottom-right"></div>
-        </div>
-        <p class="scanner-text">Öğrenci QR kodunu kameranın önüne tutun</p>
-        <p class="scanner-instructions">
-          <i class="bi bi-info-circle me-1"></i>
-          Giriş için: GİRİŞ QR Kodu | Çıkış için: ÇIKIŞ QR Kodu
+</div>
+<!-- Grup Bilgileri Son-->
+<!-- Grup Bilgilerine Göre Devamsızlık-->
+<div class="attendance-container">
+  <div class="modern-page-header">
+    <div class="header-content">
+      <div class="header-text">
+        <h1 class="modern-page-title">
+          <i class="bi bi-webcam me-2"></i>
+          Yoklama Sistemi
+        </h1>
+        <p class="modern-page-description">
+          Öğrenciler QR kodlarını Cameraya okutabilirler.
         </p>
       </div>
-    </div>
-  </div>
+      <div class="admin-overview">
+        <!-- İçerik-->
+        <!-- Controls Section -->
+        <div class="controls-section">
+          <div class="control-group">
+            <label class="control-label">Grup Seçin:</label>
+            <select
+              class="form-select"
+              [(ngModel)]="selectedGroup"
+              (change)="onGroupChange()"
+            >
+              <option value="">Grup seçiniz...</option>
+              <option *ngFor="let group of groups" [value]="group">
+                {{ group }}
+              </option>
+            </select>
+          </div>
 
-  <!-- Real-time Classroom Status -->
-  <div *ngIf="selectedGroup && groupStudents.length > 0" class="classroom-status-section">
-    <div class="section-header">
-      <h3>{{ selectedGroup }} - Anlık Sınıf Durumu</h3>
-      <div class="last-update">
-        <i class="bi bi-clock me-1"></i>
-        Son güncellenme: {{ currentTime }}
+          <div class="control-group">
+            <label class="control-label">Tarih:</label>
+            <input
+              type="date"
+              class="form-control"
+              [(ngModel)]="selectedDate"
+              (change)="loadClassroomStatus()"
+            />
+          </div>
+
+          <div class="control-group">
+            <button
+              class="btn btn-primary"
+              (click)="toggleQRScanner()"
+              [disabled]="!selectedGroup"
+            >
+              <i class="bi bi-qr-code-scan me-1"></i>
+              {{
+                isQRScannerActive ? "QR Tarayıcıyı Kapat" : "QR Kod Tarayıcı"
+              }}
+            </button>
+          </div>
+        </div>
+
+        <!-- QR Scanner Section -->
+        <div *ngIf="isQRScannerActive" class="qr-scanner-section">
+          <div class="scanner-container">
+            <video
+              #videoElement
+              class="scanner-video"
+              autoplay
+              playsinline
+            ></video>
+            <canvas #canvasElement style="display: none"></canvas>
+            <div class="scanner-overlay">
+              <div class="scanner-frame">
+                <div class="scanner-corner top-left"></div>
+                <div class="scanner-corner top-right"></div>
+                <div class="scanner-corner bottom-left"></div>
+                <div class="scanner-corner bottom-right"></div>
+              </div>
+              <p class="scanner-text">
+                Öğrenci QR kodunu kameranın önüne tutun
+              </p>
+              <p class="scanner-instructions">
+                <i class="bi bi-info-circle me-1"></i>
+                Giriş için: GİRİŞ QR Kodu | Çıkış için: ÇIKIŞ QR Kodu
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- İçerik-->
       </div>
     </div>
+  </div>
+</div>
+<!-- Grup Bilgilerine Göre Devamsızlık Son-->
 
-    <div class="students-grid">
-      <div *ngFor="let student of groupStudents" class="student-card"
-           [class.present]="isStudentPresent(student.id)"
-           [class.absent]="!isStudentPresent(student.id)">
-
-        <div class="student-header">
-          <div class="student-info">
-            <img [src]="getStudentAvatar(student.adi_soyadi)" 
-                 [alt]="student.adi_soyadi" 
-                 class="student-avatar">
-            <div class="student-name">
-              <h4>{{ student.adi_soyadi }}</h4>
-              <p>{{ student.email }}</p>
-            </div>
-          </div>
-
-          <div class="presence-indicator">
-            <div class="status-badge" 
-                 [class.online]="isStudentPresent(student.id)"
-                 [class.offline]="!isStudentPresent(student.id)">
-              <i class="bi" 
-                 [class.bi-circle-fill]="isStudentPresent(student.id)"
-                 [class.bi-circle]="!isStudentPresent(student.id)"></i>
-              {{ isStudentPresent(student.id) ? 'Sınıfta' : 'Yok' }}
-            </div>
-          </div>
-        </div>
-
-        <div class="student-details" *ngIf="isStudentPresent(student.id) || getStudentExitTime(student.id)">
-          <div class="time-info">
-            <div class="entry-time" *ngIf="getStudentEntryTime(student.id)">
-              <i class="bi bi-box-arrow-in-right text-success me-1"></i>
-              <span class="time-label">Giriş:</span>
-              <span class="time-value">{{ getStudentEntryTime(student.id) | date:'HH:mm:ss' }}</span>
-            </div>
-
-            <div class="exit-time" *ngIf="getStudentExitTime(student.id)">
-              <i class="bi bi-box-arrow-left text-danger me-1"></i>
-              <span class="time-label">Çıkış:</span>
-              <span class="time-value">{{ getStudentExitTime(student.id) | date:'HH:mm:ss' }}</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="student-actions">
-          <button class="btn btn-sm" 
-                  [class.btn-danger]="isStudentPresent(student.id)"
-                  [class.btn-success]="!isStudentPresent(student.id)"
-                  (click)="manualToggleStudentPresence(student.id)">
-            <i class="bi" 
-               [class.bi-box-arrow-left]="isStudentPresent(student.id)"
-               [class.bi-box-arrow-in-right]="!isStudentPresent(student.id)"></i>
-            {{ isStudentPresent(student.id) ? 'Çıkış Yap' : 'Giriş Yap' }}
-          </button>
-        </div>
+<!-- Grup Bilgilerine Listesi-->
+<div class="attendance-container">
+  <div class="modern-page-header">
+    <div class="header-content">
+      <div class="header-text">
+        <h1 class="modern-page-title">
+          <i class="bi bi-card-checklist me-2"></i>
+          Öğrenci Yoklama Listesi
+        </h1>
+        <p class="modern-page-description">Öğrencilerin Geliş Gidiş Listesi.</p>
       </div>
-    </div>
+      <div class="admin-grid">
+        <!-- İçerik-->
+        <!-- Header Section -->
+        <div class="admin-container grid-12">
+          <div class="classroom-tracker-container">
+            <!-- Real-time Classroom Status -->
+            <div *ngIf="selectedGroup && groupStudents.length > 0" class="classroom-status-section" >
+              <div class="section-header">
+                <h3>{{ selectedGroup }} - Anlık Sınıf Durumu</h3>
+                <div class="last-update">
+                  <i class="bi bi-clock me-1"></i>
+                  Son güncellenme: {{ currentTime }}
+                  <button
+                    class="btn btn-danger btn-sm ms-2"
+                    (click)="exportClassroomReport()"
+                    [disabled]="!selectedGroup || !selectedDate"
+                  > Rapor Göster
+                  </button>
+                </div>
+              </div>
+              <!-- Öğrenci Cardları-->
 
-    <div *ngIf="groupStudents.length === 0" class="no-students">
-      <i class="bi bi-people text-muted fs-1 mb-3"></i>
-      <p class="text-muted">Bu grupta henüz öğrenci bulunmuyor</p>
-    </div>
-  </div>
+              <div class="students-grid">
+                <div *ngFor="let student of groupStudents" class="student-card"
+                    [class.present]="isStudentPresent(student.id)"
+                    [class.absent]="!isStudentPresent(student.id)">
 
-  <div *ngIf="!selectedGroup" class="no-group-selected">
-    <i class="bi bi-arrow-up text-muted fs-1 mb-3"></i>
-    <p class="text-muted">Sınıf durumunu görmek için yukarıdan bir grup seçin</p>
-  </div>
-    </div>
-  </div>
+                  <div class="student-header">
+                    <div class="student-info">
+                      <img [src]="getStudentAvatar(student.adi_soyadi)" 
+                          [alt]="student.adi_soyadi" 
+                          class="student-avatar">
+                      <div class="student-name">
+                        <h4>{{ student.adi_soyadi }}</h4>
+                        <p>{{ student.email }}</p>
+                      </div>
+                    </div>
 
-<div class="classroom-tracker-container">
-  <!-- Günlük Rapor Tablosu -->
-  <div  id="sonucSayfasi" class="card border-0 shadow-sm mb-4" *ngIf="dailyReportData.length > 0; else noReportData">
+                    <div class="presence-indicator">
+                      <div class="status-badge" 
+                          [class.online]="isStudentPresent(student.id)"
+                          [class.offline]="!isStudentPresent(student.id)">
+                        <i class="bi" 
+                          [class.bi-circle-fill]="isStudentPresent(student.id)"
+                          [class.bi-circle]="!isStudentPresent(student.id)"></i>
+                        {{ isStudentPresent(student.id) ? 'Sınıfta' : 'Yok' }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="student-details" *ngIf="isStudentPresent(student.id) || getStudentExitTime(student.id)">
+                    <div class="time-info">
+                      <div class="entry-time" *ngIf="getStudentEntryTime(student.id)">
+                        <i class="bi bi-box-arrow-in-right text-success me-1"></i>
+                        <span class="time-label">Giriş:</span>
+                        <span class="time-value">{{ getStudentEntryTime(student.id) | date:'HH:mm:ss' }}</span>
+                      </div>
+
+                      <div class="exit-time" *ngIf="getStudentExitTime(student.id)">
+                        <i class="bi bi-box-arrow-left text-danger me-1"></i>
+                        <span class="time-label">Çıkış:</span>
+                        <span class="time-value">{{ getStudentExitTime(student.id) | date:'HH:mm:ss' }}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="student-actions">
+                    <button class="btn btn-sm" 
+                            [class.btn-danger]="isStudentPresent(student.id)"
+                            [class.btn-success]="!isStudentPresent(student.id)"
+                            (click)="manualToggleStudentPresence(student.id)">
+                      <i class="bi" 
+                        [class.bi-box-arrow-left]="isStudentPresent(student.id)"
+                        [class.bi-box-arrow-in-right]="!isStudentPresent(student.id)"></i>
+                      {{ isStudentPresent(student.id) ? 'Çıkış Yap' : 'Giriş Yap' }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <!-- Öğrenci Cardları Son-->
+
+              <div *ngIf="groupStudents.length === 0" class="no-students">
+                <i class="bi bi-people text-muted fs-1 mb-3"></i>
+                <p class="text-muted">Bu grupta henüz öğrenci bulunmuyor</p>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="!selectedGroup" class="no-group-selected">
+            <i class="bi bi-arrow-up text-muted fs-1 mb-3"></i>
+            <p class="text-muted">
+              Sınıf durumunu görmek için yukarıdan bir grup seçin
+            </p>
+          </div>
+        </div>
+
+        <!-- Günlük Rapor Tablosu -->
+        <div id="sonucSayfasi" class="admin-container grid-12" *ngIf="dailyReportData.length > 0" >
           <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
+              <h5 style="margin: 15px 10px 0px 10px;" class="card-title mb-0 mt-1"> Günlük Giriş-Çıkış Raporu - {{ selectedGroup }} ({{ selectedDate }}) </h5>
             <div>
-              <h5 class="card-title mb-0">
-                <i class="bi bi-table me-2 text-primary"></i>
-                Günlük Giriş-Çıkış Raporu - {{ selectedGroup }} ({{ selectedDate }})
-              </h5>
-              <p class="text-muted small mb-0">Öğrencilerin günlük devam durumu ve giriş-çıkış saatleri</p>
-            </div>
-            <div>
-              <button 
-                class="btn btn-outline-primary btn-sm me-2" 
-                (click)="pdfKaydet()">
+              <button
+                class="btn btn-outline-primary btn-sm me-2"
+                (click)="pdfKaydet()"
+              >
                 <i class="bi bi-file-earmark-pdf me-1"></i>
                 PDF İndir
               </button>
-              <span class="badge bg-light text-dark">{{ dailyReportData.length }} öğrenci</span>
+              <span class="badge bg-light text-dark"
+                >{{ dailyReportData.length }} öğrenci</span
+              >
             </div>
           </div>
 
@@ -224,58 +277,104 @@
               <table class="table table-hover mb-0">
                 <thead class="table-light">
                   <tr>
-                    <th class="text-uppercase small fw-medium border-0 px-3">Sıra</th>
-                    <th class="text-uppercase small fw-medium border-0">Öğrenci Adı</th>
-                    <th class="text-uppercase small fw-medium border-0">E-posta</th>
-                    <th class="text-uppercase small fw-medium border-0 text-center">Durum</th>
-                    <th class="text-uppercase small fw-medium border-0 text-center">Giriş Saati</th>
-                    <th class="text-uppercase small fw-medium border-0 text-center">Çıkış Saati</th>
-                    <th class="text-uppercase small fw-medium border-0 text-center">Hareket Sayısı</th>
+                    <th class="text-uppercase small fw-medium border-0 px-3">
+                      Sıra
+                    </th>
+                    <th class="text-uppercase small fw-medium border-0">
+                      Öğrenci Adı
+                    </th>
+                    <th class="text-uppercase small fw-medium border-0">
+                      E-posta
+                    </th>
+                    <th
+                      class="text-uppercase small fw-medium border-0 text-center"
+                    >
+                      Durum
+                    </th>
+                    <th
+                      class="text-uppercase small fw-medium border-0 text-center"
+                    >
+                      Giriş Saati
+                    </th>
+                    <th
+                      class="text-uppercase small fw-medium border-0 text-center"
+                    >
+                      Çıkış Saati
+                    </th>
+                    <th
+                      class="text-uppercase small fw-medium border-0 text-center"
+                    >
+                      Hareket Sayısı
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let report of dailyReportData; let i = index" class="border-bottom border-light">
+                  <tr
+                    *ngFor="let report of dailyReportData; let i = index"
+                    class="border-bottom border-light"
+                  >
                     <td class="fw-medium text-muted px-3">{{ i + 1 }}</td>
                     <td class="fw-semibold">{{ report.student_name }}</td>
                     <td class="text-muted small">{{ report.student_email }}</td>
                     <td class="text-center">
-                      <span [class]="report.is_present ? 'badge bg-success-subtle text-success' : 'badge bg-secondary-subtle text-secondary'">
-                        <i [class]="report.is_present ? 'bi bi-check-circle me-1' : 'bi bi-x-circle me-1'"></i>
+                      <span
+                        [class]="
+                          report.is_present
+                            ? 'badge bg-success-subtle text-success'
+                            : 'badge bg-secondary-subtle text-secondary'
+                        "
+                      >
+                        <i
+                          [class]="
+                            report.is_present
+                              ? 'bi bi-check-circle me-1'
+                              : 'bi bi-x-circle me-1'
+                          "
+                        ></i>
                         {{ report.status }}
                       </span>
                     </td>
                     <td class="text-center">
-                      <span [class]="report.entry_time !== '-' ? 'text-success fw-medium' : 'text-muted'">
-                    {{ report.entry_time }}
-                  </span>
-                </td>
-                <td class="text-center">
-                  <span [class]="report.exit_time !== '-' ? 'text-danger fw-medium' : 'text-muted'">
-                    {{ report.exit_time }}
-                  </span>
-                </td>
-                <td class="text-center">
-                  <span class="badge bg-info-subtle text-info">{{ report.movement_count }}</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+                      <span
+                        [class]="
+                          report.entry_time !== '-'
+                            ? 'text-success fw-medium'
+                            : 'text-muted'
+                        "
+                      >
+                        {{ report.entry_time }}
+                      </span>
+                    </td>
+                    <td class="text-center">
+                      <span
+                        [class]="
+                          report.exit_time !== '-'
+                            ? 'text-danger fw-medium'
+                            : 'text-muted'
+                        "
+                      >
+                        {{ report.exit_time }}
+                      </span>
+                    </td>
+                    <td class="text-center">
+                      <span class="badge bg-info-subtle text-info">{{
+                        report.movement_count
+                      }}</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
 
-        <div *ngIf="dailyReportData.length === 0" class="text-center p-4">
-          <i class="bi bi-exclamation-triangle text-warning fs-3"></i>
-          <p class="mb-0">Bu tarih için henüz bir kayıt bulunamadı.</p>
+            <div *ngIf="dailyReportData.length === 0" class="text-center p-4">
+              <i class="bi bi-exclamation-triangle text-warning fs-3"></i>
+              <p class="mb-0">Bu tarih için henüz bir kayıt bulunamadı.</p>
+            </div>
+          </div>
         </div>
+        <!-- İçerik Son-->
       </div>
     </div>
-
-    <ng-template #noReportData>
-      <div class="card border-0 shadow-sm">
-        <div class="card-body text-center p-5">
-          <i class="bi bi-table text-muted fs-1 d-block mb-3"></i>
-          <h6 class="text-muted">Rapor Verisi Yok</h6>
-          <p class="text-muted small">Raporu görüntülemek için yukarıdaki "Raporu Yenile" butonuna tıklayın.</p>
-        </div>
-      </div>
-    </ng-template>
   </div>
+</div>
+<!-- Grup Bilgilerine Listesi Son-->

@@ -1,14 +1,13 @@
 .classroom-tracker-container {
-  padding: 20px;
+
   height: auto;
 
   .page-header {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
-    border-radius: 20px;
+    border-radius: 8px;
     padding: 10px;
     margin-bottom: 25px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 
     .header-content {
       .header-text {
@@ -39,7 +38,7 @@
 
         .stat-card {
           background: white;
-          border-radius: 15px;
+          border-radius: 8px;
           padding: 20px;
           display: flex;
           align-items: center;
@@ -311,18 +310,15 @@
   }
 
   .classroom-status-section {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-radius: 15px;
-    padding: 30px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    
 
     .section-header {
+      width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 25px;
-      padding-bottom: 15px;
+      padding: 10px 5px 10px 5px;
       border-bottom: 2px solid #e2e8f0;
 
       h3 {
@@ -378,9 +374,9 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
       gap: 20px;
+      padding: 10px;
 
       .student-card {
-        background: white;
         border: 2px solid #e2e8f0;
         border-radius: 15px;
         padding: 20px;
@@ -590,7 +586,6 @@
     border-radius: 15px;
     padding: 60px 30px;
     text-align: center;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 
     .no-group-content {
       i {
@@ -667,7 +662,7 @@
 // Responsive Design
 @media (max-width: 768px) {
   .classroom-tracker-container {
-    padding: 15px;
+    padding: 5px;
 
     .page-header .header-content .stats-row {
       grid-template-columns: repeat(2, 1fr);
@@ -796,75 +791,4 @@
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
   }
-}
-
-/* QR scanner ve sınıf yönetimi sayfası stilleri */
-
-/* Tablo satırları için alternatif renkler */
-.table-striped tbody tr:nth-child(odd) {
-  background-color: #f8f9fa;
-}
-
-.table-striped tbody tr:nth-child(even) {
-  background-color: #ffffff;
-}
-
-.table-striped tbody tr:hover {
-  background-color: #e3f2fd !important;
-  transition: background-color 0.2s ease;
-}
-
-/* Başlık satırı için özel stil */
-.table thead th {
-  background-color: #343a40;
-  color: white;
-  border-bottom: 2px solid #dee2e6;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.875rem;
-  letter-spacing: 0.5px;
-}
-
-/* Tablo genel stileri */
-.table {
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  border: 2px solid #dee2e6;
-}
-
-.table td, .table th {
-  vertical-align: middle;
-  padding: 12px;
-  border-bottom: 2px solid #dee2e6;
-  border-right: 1px solid #e9ecef;
-}
-
-.table th {
-  border-bottom: 3px solid #adb5bd;
-}
-
-.table td:last-child, .table th:last-child {
-  border-right: none;
-}
-
-/* Durum badge'leri için özel stiller */
-.badge {
-  font-size: 0.75rem;
-  padding: 0.375rem 0.75rem;
-  font-weight: 500;
-}
-
-.badge.bg-success {
-  background-color: #28a745 !important;
-}
-
-.badge.bg-danger {
-  background-color: #dc3545 !important;
-}
-
-/* Avatar için özel stil */
-.student-avatar {
-  border: 2px solid #fff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }

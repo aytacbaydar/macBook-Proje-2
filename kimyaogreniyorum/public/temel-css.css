@@ -1,39 +1,12 @@
-.attendance-container {
-  padding: 20px;
-  width: 100%;
-  margin: 0 auto;
-  height: auto;
-}
 
 
 
-.header-content {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
 
-.header-text {
-  text-align: center;
-}
 
-.modern-page-title {
-  color: #2c3e50;
-  font-size: 28px;
-  font-weight: 700;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
 
-.modern-page-description {
-  color: #6c757d;
-  margin: 8px 0 0 0;
-  font-size: 16px;
-  font-weight: 400;
-}
+
+
+
 
 
 
@@ -120,21 +93,6 @@
   overflow: hidden;
 }
 
-.section-header {
-  background: #f8f9fa;
-  padding: 16px 24px;
-  border-bottom: 1px solid #e9ecef;
-}
-
-.section-header h3 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: #2c3e50;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
 
 .modern-groups-grid {
   display: grid;
@@ -433,9 +391,6 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .attendance-container {
-    padding: 12px;
-  }
 
   .modern-groups-grid {
     grid-template-columns: 1fr;

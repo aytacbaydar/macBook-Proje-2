@@ -1,0 +1,58 @@
+<div class="attendance-container">
+  <div class="modern-page-header">
+    <div class="header-content">
+      <div class="header-text">
+        <h1 class="modern-page-title">
+          <i class="bi bi-people-fill me-2"></i>
+          Öğrenci Yoklama Sistemi
+        </h1>
+        <p class="modern-page-description">
+          Öğrencilerinizi gruplarına göre devamsızlık takibi Sistemi
+        </p>
+      </div>
+      <div class="admin-overview">
+        <!-- İçerik-->
+        <div class="stat-card mavi">
+          <div class="stat-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ groupStudents.length }}</h3>
+            <p>Toplam Öğrenci</p>
+          </div>
+        </div>
+
+        <div class="stat-card yesil">
+          <div class="stat-icon">
+            <i class="bi bi-check-circle"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ getPresentCount() }}</h3>
+            <p>Sınıfta Olan</p>
+          </div>
+        </div>
+
+        <div class="stat-card acik-turuncu">
+          <div class="stat-icon">
+            <i class="bi bi-x-circle"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ getAbsentCount() }}</h3>
+            <p>Henüz Gelmemiş</p>
+          </div>
+        </div>
+
+        <div class="stat-card mavi">
+          <div class="stat-icon">
+            <i class="bi bi-percent"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ getAttendancePercentage() }}%</h3>
+            <p>Katılım Yüzdesi</p>
+          </div>
+        </div>
+        <!-- İçerik-->
+      </div>
+    </div>
+  </div>
+</div>

@@ -13,6 +13,7 @@ import html2canvas from 'html2canvas';
 interface Student {
   id: number;
   adi_soyadi: string;
+  avatar: string;
   email: string;
   grubu?: string;
   aktif: boolean;

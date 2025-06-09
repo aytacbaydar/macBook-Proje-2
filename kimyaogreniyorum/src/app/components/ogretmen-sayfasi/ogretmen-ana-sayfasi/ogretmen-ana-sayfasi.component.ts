@@ -185,6 +185,14 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
     );
   }
 
+  getInactiveStudents(): number {
+    return this.groups.reduce(
+      (total, group) =>
+        total + group.students.filter((student) => !student.aktif).length,
+      0
+    );
+  }
+
   deleteStudent(studentId: number): void {
     if (confirm('Bu öğrenciyi silmek istediğinizden emin misiniz?')) {
       let token = '';
