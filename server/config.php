@@ -120,25 +120,29 @@ function getJsonData() {
     return $data;
 }
 
-// Hata yanıtı
-function errorResponse($message, $statusCode = 400) {
-    http_response_code($statusCode);
-    echo json_encode(['error' => $message]);
-    exit();
+// Hata yanıtı - function_exists kontrolü ile
+if (!function_exists('errorResponse')) {
+    function errorResponse($message, $statusCode = 400) {
+        http_response_code($statusCode);
+        echo json_encode(['error' => $message]);
+        exit();
+    }
 }
 
-// Başarı yanıtı
-function successResponse($data = null, $message = null) {
-    $response = ['success' => true];
-    
-    if ($data !== null) {
-        $response['data'] = $data;
+// Başarı yanıtı - function_exists kontrolü ile
+if (!function_exists('successResponse')) {
+    function successResponse($data = null, $message = null) {
+        $response = ['success' => true];
+        
+        if ($data !== null) {
+            $response['data'] = $data;
+        }
+        
+        if ($message !== null) {
+            $response['message'] = $message;
+        }
+        
+        echo json_encode($response);
+        exit();
     }
-    
-    if ($message !== null) {
-        $response['message'] = $message;
-    }
-    
-    echo json_encode($response);
-    exit();
 }
