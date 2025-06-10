@@ -168,21 +168,26 @@ export class OgretmenSinavlarSayfasiComponent implements OnInit, OnDestroy {
   }
   loadCevapAnahtarlari() {
     console.log('Cevap anahtarları yükleniyor...');
+    this.loading = true;
     this.http.get<any>('./server/api/cevap-anahtarlari-listele.php')
       .subscribe({
         next: (response: any) => {
           console.log('API yanıtı:', response);
+          this.loading = false;
           if (response.success) {
             this.cevapAnahtarlari = response.data || [];
             console.log('Yüklenen cevap anahtarları:', this.cevapAnahtarlari);
           } else {
             console.error('API hatası:', response.message);
             this.cevapAnahtarlari = [];
+            this.showError('Cevap anahtarları yüklenirken bir hata oluştu: ' + (response.message || 'Bilinmeyen hata'));
           }
         },
         error: (error) => {
           console.error('HTTP hatası:', error);
+          this.loading = false;
           this.cevapAnahtarlari = [];
+          this.showError('Sunucu hatası: ' + (error.message || 'Bağlantı hatası'));
         }
       });
   }

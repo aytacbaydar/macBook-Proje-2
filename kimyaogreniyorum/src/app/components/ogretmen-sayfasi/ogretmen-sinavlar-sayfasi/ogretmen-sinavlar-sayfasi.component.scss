@@ -368,13 +368,15 @@
       width: 2.5rem;
       height: 2.5rem;
       background: var(--primary-color);
-      color: white;
+      color: white !important;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 600;
       flex-shrink: 0;
+      font-size: 0.9rem;
+      text-shadow: none;
     }
     
     .answer-inputs {
@@ -662,13 +664,15 @@
           font-size: 0.75rem;
           
           .q-num {
-            color: var(--text-light);
+            color: var(--text-secondary);
             margin-bottom: 0.25rem;
+            font-size: 0.7rem;
           }
           
           .q-answer {
             font-weight: 600;
-            color: var(--text-primary);
+            color: var(--primary-color);
+            font-size: 0.8rem;
           }
         }
       }
