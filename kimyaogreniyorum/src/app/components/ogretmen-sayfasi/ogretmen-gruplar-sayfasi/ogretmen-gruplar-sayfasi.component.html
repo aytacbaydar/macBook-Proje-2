@@ -1,3 +1,4 @@
+
 <div class="groups-container">
   <!-- Header Section -->
   <div class="page-header">
@@ -83,108 +84,91 @@
     </div>
   </div>
 
-  <!-- Groups Grid -->
-  <div *ngIf="!isLoading && !error && filteredGroups.length > 0" class="groups-grid">
-    <div class="group-card" *ngFor="let group of filteredGroups">
-      <!-- Group Header -->
-      <div class="group-header">
-        <div class="group-icon" [style.background-color]="group.color">
-          <i class="bi bi-people-fill"></i>
+  <!-- Full Width Group Cards -->
+  <div *ngIf="!isLoading && !error && filteredGroups.length > 0" class="full-width-groups">
+    <div class="full-width-group-card" *ngFor="let group of filteredGroups">
+      <!-- Group Header with Actions -->
+      <div class="group-card-header" [style.background]="'linear-gradient(135deg, ' + group.color + ' 0%, ' + adjustColorBrightness(group.color, -20) + ' 100%)'">
+        <div class="group-header-left">
+          <div class="group-icon">
+            <i class="bi bi-people-fill"></i>
+          </div>
+          <div class="group-info">
+            <h2 class="group-title">{{ group.name }}</h2>
+            <div class="group-meta">
+              <span class="group-count">
+                <i class="bi bi-person-fill me-1"></i>
+                {{ group.students.length }} öğrenci
+              </span>
+              <span class="active-count">
+                <i class="bi bi-check-circle-fill me-1"></i>
+                {{ getActiveStudentsInGroup(group) }} aktif
+              </span>
+              <span class="inactive-count">
+                <i class="bi bi-x-circle-fill me-1"></i>
+                {{ getInactiveStudentsInGroup(group) }} pasif
+              </span>
+            </div>
+          </div>
         </div>
-        <div class="group-info">
-          <h3 class="group-name">{{ group.name }}</h3>
-          <span class="group-count">{{ group.students.length }} öğrenci</span>
-        </div>
-        <div class="group-badge" [style.background-color]="group.color + '20'" [style.color]="group.color">
-          <i class="bi bi-mortarboard-fill me-1"></i>
-          Aktif
+
+        <div class="group-header-actions">
+          <button class="header-action-btn detail-btn" (click)="viewGroupDetail(group.name)">
+            <i class="bi bi-eye-fill"></i>
+            <span>Detay Görüntüle</span>
+          </button>
+          
+          <button class="header-action-btn attendance-btn" (click)="goToAttendance(group.name)">
+            <i class="bi bi-clipboard-check-fill"></i>
+            <span>Yoklama Al</span>
+          </button>
         </div>
       </div>
 
       <!-- Students List -->
-      <div class="students-section">
-        <div class="students-header">
-          <h4>Öğrenciler</h4>
-          <span class="students-count">{{ group.students.length }} kişi</span>
+      <div class="students-content">
+        <div *ngIf="group.students.length === 0" class="empty-group-message">
+          <div class="empty-icon">
+            <i class="bi bi-person-x"></i>
+          </div>
+          <p>Bu grupta henüz öğrenci bulunmuyor</p>
         </div>
 
-        <div class="students-list">
-          <div class="student-item" *ngFor="let student of group.students.slice(0, 3)">
-            <div class="student-avatar">
-              <img [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)" 
+        <div *ngIf="group.students.length > 0" class="students-horizontal-list">
+          <div class="student-list-item" *ngFor="let student of group.students">
+            <div class="student-avatar-container">
+              <img class="student-avatar" 
+                   [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)" 
                    [alt]="student.adi_soyadi">
+              <div class="student-status-indicator" 
+                   [class.active]="student.aktif" 
+                   [class.inactive]="!student.aktif">
+                <i class="bi" 
+                   [class.bi-check-circle-fill]="student.aktif" 
+                   [class.bi-x-circle-fill]="!student.aktif"></i>
+              </div>
             </div>
-            <div class="student-info">
-              <span class="student-name">{{ student.adi_soyadi }}</span>
-              <span class="student-email">{{ student.email }}</span>
+            
+            <div class="student-details">
+              <h4 class="student-name">{{ student.adi_soyadi }}</h4>
+              <p class="student-email">{{ student.email }}</p>
+              <div class="student-meta-tags">
+                <span class="meta-tag" *ngIf="student.sinifi">
+                  <i class="bi bi-mortarboard me-1"></i>
+                  {{ student.sinifi }}
+                </span>
+                <span class="meta-tag" *ngIf="student.okulu">
+                  <i class="bi bi-building me-1"></i>
+                  {{ student.okulu }}
+                </span>
+                <span class="meta-tag" *ngIf="student.ders_gunu && student.ders_saati">
+                  <i class="bi bi-calendar me-1"></i>
+                  {{ student.ders_gunu }} - {{ student.ders_saati }}
+                </span>
+              </div>
             </div>
-            <div class="student-status" [class.active]="student.aktif">
-              <i class="bi" [class.bi-check-circle-fill]="student.aktif" 
-                           [class.bi-x-circle-fill]="!student.aktif"></i>
-            </div>
-          </div>
-
-          <!-- More students indicator -->
-          <div class="more-students" *ngIf="group.students.length > 3">
-            <span>+{{ group.students.length - 3 }} diğer öğrenci</span>
           </div>
         </div>
-      </div>
-
-      <!-- Group Stats -->
-      <div class="group-stats">
-        <div class="mini-stat-card">
-          <div class="mini-stat-icon success">
-            <i class="bi bi-person-check-fill"></i>
-          </div>
-          <div class="mini-stat-content">
-            <h4>{{ getActiveStudentsInGroup(group) }}</h4>
-            <p>Aktif</p>
-          </div>
-        </div>
-
-        <div class="mini-stat-card">
-          <div class="mini-stat-icon warning">
-            <i class="bi bi-clock-fill"></i>
-          </div>
-          <div class="mini-stat-content">
-            <h4>{{ getInactiveStudentsInGroup(group) }}</h4>
-            <p>Pasif</p>
-          </div>
-        </div>
-
-        <div class="mini-stat-card">
-          <div class="mini-stat-icon info">
-            <i class="bi bi-book-fill"></i>
-          </div>
-          <div class="mini-stat-content">
-            <h4>12</h4>
-            <p>Ders</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Group Actions -->
-      <div class="group-actions">
-        <button class="modern-action-btn detail-btn" (click)="viewGroupDetail(group.name)">
-          <div class="btn-icon-wrapper">
-            <i class="bi bi-eye-fill"></i>
-          </div>
-          <div class="btn-content">
-            <span class="btn-title">Detay Görüntüle</span>
-            <span class="btn-subtitle">Grup bilgileri</span>
-          </div>
-        </button>
-        
-        <button class="modern-action-btn attendance-btn" (click)="goToAttendance(group.name)">
-          <div class="btn-icon-wrapper">
-            <i class="bi bi-clipboard-check-fill"></i>
-          </div>
-          <div class="btn-content">
-            <span class="btn-title">Yoklama Al</span>
-            <span class="btn-subtitle">Devamsızlık takibi</span>
-          </div>
-        </button>
       </div>
     </div>
   </div>
