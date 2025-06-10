@@ -258,6 +258,14 @@ export class OgretmenSinavlarSayfasiComponent implements OnInit, OnDestroy {
     document.body.style.overflow = '';
   }
 
+  // Modal backdrop click handler
+  onModalBackdropClick(event: MouseEvent) {
+    // Sadece backdrop'a tıklandığında modalı kapat
+    if (event.target === event.currentTarget) {
+      this.cancelEdit();
+    }
+  }
+
   // Düzenleme formunu gönderme
   submitEditForm() {
     if (
