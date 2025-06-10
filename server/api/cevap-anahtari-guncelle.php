@@ -64,6 +64,8 @@ try {
         $videolar = json_encode($videolar);
     }
 
+    $aktiflik = isset($data['aktiflik']) ? (bool)$data['aktiflik'] : true;
+
     // Dosya yükleme işlemi
     $sinav_kapagi_update = false;
     $sinav_kapagi = '';
@@ -119,7 +121,8 @@ try {
                 sinav_kapagi = :sinav_kapagi, 
                 cevaplar = :cevaplar, 
                 konular = :konular, 
-                videolar = :videolar 
+                videolar = :videolar,
+                aktiflik = :aktiflik
                 WHERE id = :id");
 
         $params = [
@@ -131,6 +134,7 @@ try {
             ':cevaplar' => $cevaplar,
             ':konular' => $konular,
             ':videolar' => $videolar,
+            ':aktiflik' => $aktiflik,
             ':id' => $id
         ];
     } else {
@@ -141,7 +145,8 @@ try {
                 tarih = :tarih, 
                 cevaplar = :cevaplar, 
                 konular = :konular, 
-                videolar = :videolar 
+                videolar = :videolar,
+                aktiflik = :aktiflik
                 WHERE id = :id");
 
         $params = [
@@ -152,6 +157,7 @@ try {
             ':cevaplar' => $cevaplar,
             ':konular' => $konular,
             ':videolar' => $videolar,
+            ':aktiflik' => $aktiflik,
             ':id' => $id
         ];
     }

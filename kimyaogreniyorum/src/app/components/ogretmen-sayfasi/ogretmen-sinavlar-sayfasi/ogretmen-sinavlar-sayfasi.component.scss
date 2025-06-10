@@ -361,176 +361,198 @@
       font-weight: 400;
     }
   }
-}
 
-// Upload Area
-.upload-area {
-  border: 2px dashed #e2e8f0;
-  border-radius: 12px;
-  transition: all 0.2s ease;
-  overflow: hidden;
+  .upload-area {
+    border: 2px dashed #e2e8f0;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    overflow: hidden;
 
-  &:hover {
-    border-color: #667eea;
-    background: rgba(102, 126, 234, 0.02);
-  }
-
-  &.has-file {
-    border-style: solid;
-    border-color: #10b981;
-  }
-
-  .file-input {
-    display: none;
-  }
-
-  .upload-label {
-    display: block;
-    cursor: pointer;
-
-    .upload-content {
-      padding: 2rem;
-      text-align: center;
-      color: #64748b;
-
-      i {
-        font-size: 2rem;
-        color: #667eea;
-        margin-bottom: 0.5rem;
-        display: block;
-      }
-
-      span {
-        display: block;
-        font-size: 1rem;
-        font-weight: 500;
-        margin-bottom: 0.25rem;
-      }
-
-      small {
-        color: #9ca3af;
-      }
+    &:hover {
+      border-color: #667eea;
+      background: rgba(102, 126, 234, 0.02);
     }
 
-    .image-preview {
-      position: relative;
+    &.has-file {
+      border-style: solid;
+      border-color: #10b981;
+    }
 
-      img {
-        width: 100%;
-        max-height: 150px;
-        object-fit: cover;
-        display: block;
-      }
+    .file-input {
+      display: none;
+    }
 
-      .image-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.7);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        opacity: 0;
-        transition: opacity 0.2s;
+    .upload-label {
+      display: block;
+      cursor: pointer;
+
+      .upload-content {
+        padding: 2rem;
+        text-align: center;
+        color: #64748b;
 
         i {
-          font-size: 1.5rem;
+          font-size: 2rem;
+          color: #667eea;
+          margin-bottom: 0.5rem;
+          display: block;
+        }
+
+        span {
+          display: block;
+          font-size: 1rem;
+          font-weight: 500;
           margin-bottom: 0.25rem;
         }
+
+        small {
+          color: #9ca3af;
+        }
       }
 
-      &:hover .image-overlay {
-        opacity: 1;
+      .image-preview {
+        position: relative;
+
+        img {
+          width: 100%;
+          max-height: 150px;
+          object-fit: cover;
+          display: block;
+        }
+
+        .image-overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.7);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          opacity: 0;
+          transition: opacity 0.2s;
+
+          i {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+          }
+        }
+
+        &:hover .image-overlay {
+          opacity: 1;
+        }
       }
     }
   }
-}
 
-// Answers Section
-.answers-section {
-  margin-top: 2rem;
+  .answers-section {
+    margin-top: 2rem;
 
-  .section-title {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: #1e293b;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-
-    i {
-      color: #667eea;
-    }
-  }
-}
-
-.answers-grid {
-  display: grid;
-  gap: 1rem;
-  max-height: 300px;
-  overflow-y: auto;
-  padding: 1rem;
-  background: #f8fafc;
-  border-radius: 12px;
-
-  .answer-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    background: white;
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-
-    .question-number {
-      width: 2.5rem;
-      height: 2.5rem;
-      background: #667eea;
-      color: white;
-      border-radius: 50%;
+    .section-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 1rem;
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      flex-shrink: 0;
-      font-size: 0.9rem;
+
+      i {
+        color: #667eea;
+      }
+    }
+  }
+
+  .answers-grid {
+    display: grid;
+    gap: 1rem;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 12px;
+
+    .answer-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+      .question-number {
+        width: 2.5rem;
+        height: 2.5rem;
+        background: #667eea;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        flex-shrink: 0;
+        font-size: 0.9rem;
+      }
+
+      .answer-inputs {
+        display: flex;
+        gap: 0.75rem;
+        flex: 1;
+
+        .answer-input {
+          width: 60px;
+          text-align: center;
+          font-weight: 600;
+          text-transform: uppercase;
+        }
+
+        .topic-input {
+          flex: 1;
+        }
+
+        .video-input {
+          flex: 1;
+        }
+
+        input {
+          padding: 0.5rem;
+          border: 1px solid #e2e8f0;
+          border-radius: 6px;
+          font-size: 0.875rem;
+
+          &:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+          }
+        }
+      }
+    }
+  }
+
+  .checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .checkbox-input {
+      width: 18px;
+      height: 18px;
+      accent-color: #667eea;
+      cursor: pointer;
     }
 
-    .answer-inputs {
+    .checkbox-label {
+      cursor: pointer;
       display: flex;
-      gap: 0.75rem;
-      flex: 1;
+      align-items: center;
 
-      .answer-input {
-        width: 60px;
-        text-align: center;
-        font-weight: 600;
-        text-transform: uppercase;
-      }
-
-      .topic-input {
-        flex: 1;
-      }
-
-      .video-input {
-        flex: 1;
-      }
-
-      input {
-        padding: 0.5rem;
-        border: 1px solid #e2e8f0;
-        border-radius: 6px;
-        font-size: 0.875rem;
-
-        &:focus {
-          outline: none;
-          border-color: #667eea;
-          box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
-        }
+      .checkbox-text {
+        font-weight: 500;
+        color: #374151;
       }
     }
   }
@@ -796,7 +818,7 @@
     .exam-content {
       padding: 2rem;
       display: block;
-      
+
       &::after {
         content: "";
         display: table;
@@ -819,7 +841,7 @@
       .answers-preview,
       .topics-preview {
         margin-bottom: 2rem;
-        
+
         h4 {
           font-size: 1rem;
           font-weight: 600;
@@ -834,12 +856,12 @@
           }
         }
       }
-      
+
       .topics-list {
         display: flex;
         flex-wrap: wrap;
         gap: 0.5rem;
-        
+
         .topic-item {
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           color: white;
@@ -849,7 +871,7 @@
           font-weight: 500;
           text-align: center;
           box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
-          
+
           &:empty {
             display: none;
           }
@@ -1208,7 +1230,7 @@
   .answers-grid-preview {
     gap: 0.5rem;
   }
-  
+
   .exam-content {
     .exam-image .exam-cover {
       float: none;
@@ -1219,10 +1241,10 @@
       display: block;
     }
   }
-  
+
   .topics-list {
     gap: 0.4rem;
-    
+
     .topic-item {
       font-size: 0.75rem;
       padding: 0.3rem 0.6rem;
@@ -1238,3 +1260,34 @@
     }
   }
 }
+
+.question-count {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+          }
+
+          .aktiflik-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            gap: 0.25rem;
+
+            &.active {
+              background-color: rgba(34, 197, 94, 0.2);
+              color: #15803d;
+              border: 1px solid rgba(34, 197, 94, 0.3);
+            }
+
+            &.inactive {
+              background-color: rgba(239, 68, 68, 0.2);
+              color: #dc2626;
+              border: 1px solid rgba(239, 68, 68, 0.3);
+            }
+          }
+        }
+      }

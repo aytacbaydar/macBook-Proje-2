@@ -166,6 +166,25 @@
               required
             >
           </div>
+
+          <div class="form-field">
+            <label class="field-label">
+              <i class="bi bi-toggle-on me-1"></i>
+              Sınav Durumu
+            </label>
+            <div class="checkbox-wrapper">
+              <input 
+                type="checkbox" 
+                id="aktiflik"
+                class="checkbox-input"
+                [(ngModel)]="cevapAnahtari.aktiflik"
+                name="aktiflik"
+              >
+              <label for="aktiflik" class="checkbox-label">
+                <span class="checkbox-text">{{ cevapAnahtari.aktiflik ? 'Aktif' : 'Pasif' }}</span>
+              </label>
+            </div>
+          </div>
         </div>
 
         <!-- File Upload -->
@@ -297,6 +316,10 @@
                 <i class="bi bi-list-ol me-1"></i>
                 {{ cevap.soru_sayisi }} soru
               </span>
+              <span class="aktiflik-badge" [class.active]="cevap.aktiflik" [class.inactive]="!cevap.aktiflik">
+                <i class="bi" [class.bi-check-circle-fill]="cevap.aktiflik" [class.bi-x-circle-fill]="!cevap.aktiflik"></i>
+                {{ cevap.aktiflik ? 'Aktif' : 'Pasif' }}
+              </span>
             </div>
           </div>
         </div>
@@ -329,8 +352,13 @@
           </h4>
           <div class="answers-grid-preview">
             <div class="answer-preview" *ngFor="let i of getSoruDizisi(cevap); let idx = index">
-              <span class="q-num">{{ idx + 1 }}.</span>
-              <span class="q-answer">{{ cevap.cevaplar['ca' + (idx + 1)] || '-' }}</span>
+              <div class="q-topic" *ngIf="cevap.konular && cevap.konular['ka' + (idx + 1)]">
+                {{ cevap.konular['ka' + (idx + 1)] }}
+              </div>
+              <div class="q-answer-row">
+                <span class="q-num">{{ idx + 1 }}.</span>
+                <span class="q-answer">{{ cevap.cevaplar['ca' + (idx + 1)] || '-' }}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -444,6 +472,22 @@
                 name="edit_tarih"
                 required
               >
+            </div>
+
+            <div class="form-field">
+              <label class="field-label">Sınav Durumu</label>
+              <div class="checkbox-wrapper">
+                <input 
+                  type="checkbox" 
+                  id="edit_aktiflik"
+                  class="checkbox-input"
+                  [(ngModel)]="currentEditingCevapAnahtari.aktiflik"
+                  name="edit_aktiflik"
+                >
+                <label for="edit_aktiflik" class="checkbox-label">
+                  <span class="checkbox-text">{{ currentEditingCevapAnahtari.aktiflik ? 'Aktif' : 'Pasif' }}</span>
+                </label>
+              </div>
             </div>
           </div>
 

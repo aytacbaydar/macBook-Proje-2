@@ -11,6 +11,8 @@ export class CevapAnahtari {
   konular: { [key: string]: string }; // Örn: { ka1: 'Fonksiyonlar', ka2: 'Türev', ... }
   // Her soru için video çözümü linki
   videolar: { [key: string]: string }; // Örn: { va1: 'video_url1', va2: 'video_url2', ... }
+  // Sınavın aktiflik durumu
+  aktiflik: boolean;
 
   constructor(data?: Partial<CevapAnahtari>) {
     this.id = data?.id;
@@ -22,6 +24,7 @@ export class CevapAnahtari {
     this.cevaplar = data?.cevaplar || {};
     this.konular = data?.konular || {};
     this.videolar = data?.videolar || {};
+    this.aktiflik = data?.aktiflik ?? true;
   }
 
   // Yardımcı metod: JSON'dan CevapAnahtari nesnesi oluşturur
@@ -45,6 +48,7 @@ export class CevapAnahtari {
         typeof json.videolar === 'object'
           ? json.videolar
           : JSON.parse(json.videolar || '{}'),
+      aktiflik: json.aktiflik !== undefined ? Boolean(json.aktiflik) : true,
     });
   }
 
@@ -60,6 +64,7 @@ export class CevapAnahtari {
       cevaplar: this.cevaplar,
       konular: this.konular,
       videolar: this.videolar,
+      aktiflik: this.aktiflik,
     };
   }
 }

@@ -56,6 +56,7 @@ export class OgretmenSinavlarSayfasiComponent implements OnInit, OnDestroy {
       cevaplar: {},
       konular: {},
       videolar: {},
+      aktiflik: true,
     });
 
     // Varsayılan 20 soru için soruları güncelle
@@ -134,6 +135,7 @@ export class OgretmenSinavlarSayfasiComponent implements OnInit, OnDestroy {
     formData.append('cevaplar', JSON.stringify(this.cevapAnahtari.cevaplar));
     formData.append('konular', JSON.stringify(this.cevapAnahtari.konular));
     formData.append('videolar', JSON.stringify(this.cevapAnahtari.videolar));
+    formData.append('aktiflik', this.cevapAnahtari.aktiflik ? '1' : '0');
 
     // Dosya ekle
     const fileInput = document.getElementById(
@@ -313,6 +315,7 @@ export class OgretmenSinavlarSayfasiComponent implements OnInit, OnDestroy {
       'videolar',
       JSON.stringify(this.currentEditingCevapAnahtari.videolar)
     );
+    formData.append('aktiflik', this.currentEditingCevapAnahtari.aktiflik ? '1' : '0');
 
     // Dosya ekle (eğer varsa)
     const fileInput = document.getElementById(

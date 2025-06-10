@@ -34,6 +34,7 @@ try {
         cevaplar TEXT NOT NULL,
         konular TEXT,
         videolar TEXT,
+        aktiflik BOOLEAN DEFAULT TRUE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )";
     
@@ -47,6 +48,7 @@ try {
     $cevaplar = $_POST['cevaplar'] ?? '{}';
     $konular = $_POST['konular'] ?? '{}';
     $videolar = $_POST['videolar'] ?? '{}';
+    $aktiflik = isset($_POST['aktiflik']) ? (bool)$_POST['aktiflik'] : true;
     
     // Veri doğrulama
     if (empty($sinav_adi) || empty($sinav_turu) || $soru_sayisi <= 0 || empty($tarih) || empty($cevaplar)) {
@@ -82,8 +84,8 @@ try {
     }
     
     // SQL sorgusu
-    $sql = "INSERT INTO cevapAnahtari (sinav_adi, sinav_turu, soru_sayisi, tarih, sinav_kapagi, cevaplar, konular, videolar) 
-            VALUES (:sinav_adi, :sinav_turu, :soru_sayisi, :tarih, :sinav_kapagi, :cevaplar, :konular, :videolar)";
+    $sql = "INSERT INTO cevapAnahtari (sinav_adi, sinav_turu, soru_sayisi, tarih, sinav_kapagi, cevaplar, konular, videolar, aktiflik) 
+            VALUES (:sinav_adi, :sinav_turu, :soru_sayisi, :tarih, :sinav_kapagi, :cevaplar, :konular, :videolar, :aktiflik)";
     
     $stmt = $pdo->prepare($sql);
     $result = $stmt->execute([
@@ -94,7 +96,8 @@ try {
         ':sinav_kapagi' => $sinav_kapagi,
         ':cevaplar' => $cevaplar,
         ':konular' => $konular,
-        ':videolar' => $videolar
+        ':videolar' => $videolar,
+        ':aktiflik' => $aktiflik
     ]);
     
     if ($result) {
