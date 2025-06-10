@@ -119,13 +119,31 @@
                 </div>
 
                 <div class="form-row">
+                  
                   <div class="form-field">
-                    <div class="material-input-container" [class.focused]="isFocused('aktif')">
-                      <select id="aktif" class="material-input material-select" formControlName="aktif" (focus)="onFocus('aktif')" (blur)="onBlur('aktif')">
-                        <option [ngValue]="true">Aktif</option>
-                        <option [ngValue]="false">Pasif</option>
-                      </select>
-                      <label for="aktif" class="material-input-label" [class.raised]="isRaised('aktif')">Hesap Durumu</label>
+                    <div class="form-group status-toggle-group">
+                      <label class="form-label">Öğrenci Durumu</label>
+                      <div class="status-toggle-container">
+                        <div class="status-toggle" 
+                             [class.active]="editForm.get('aktif')?.value" 
+                             [class.inactive]="!editForm.get('aktif')?.value"
+                             (click)="toggleStudentStatus()">
+                          <div class="toggle-slider"></div>
+                          <span class="status-text">
+                            {{ editForm.get('aktif')?.value ? 'Aktif' : 'Pasif' }}
+                          </span>
+                        </div>
+                        <div class="status-description">
+                          <span *ngIf="editForm.get('aktif')?.value" class="text-success">
+                            <i class="bi bi-check-circle"></i>
+                            Öğrenci sisteme giriş yapabilir ve derslere katılabilir
+                          </span>
+                          <span *ngIf="!editForm.get('aktif')?.value" class="text-danger">
+                            <i class="bi bi-x-circle"></i>
+                            Öğrenci sisteme giriş yapamaz ve derslere katılamaz
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
 

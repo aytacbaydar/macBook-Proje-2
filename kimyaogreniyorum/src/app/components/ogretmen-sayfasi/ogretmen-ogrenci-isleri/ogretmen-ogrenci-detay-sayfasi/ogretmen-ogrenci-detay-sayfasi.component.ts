@@ -214,32 +214,7 @@ export class OgretmenOgrenciDetaySayfasiComponent implements OnInit {
     this.uploadAvatar()
       .then((avatarPath) => {
         // Form verilerini hazırla
-        const formData = {
-          id: this.studentId,
-          temel_bilgiler: {
-            adi_soyadi: this.editForm.get('adi_soyadi')?.value,
-            email: this.editForm.get('email')?.value,
-            cep_telefonu: this.editForm.get('cep_telefonu')?.value,
-            avatar: avatarPath,
-            sifre: '', // sifre özelliği eklendi
-          },
-          detay_bilgiler: {
-            okulu: this.editForm.get('okulu')?.value,
-            sinifi: this.editForm.get('sinifi')?.value,
-            grubu: this.editForm.get('grubu')?.value,
-            ders_adi: this.editForm.get('ders_adi')?.value,
-            ders_gunu: this.editForm.get('ders_gunu')?.value,
-            ders_saati: this.editForm.get('ders_saati')?.value,
-            ucret: this.editForm.get('ucret')?.value,
-            veli_adi: this.editForm.get('veli_adi')?.value,
-            veli_cep: this.editForm.get('veli_cep')?.value,
-          },
-        };
-
-        // Şifre varsa ekle
-        if (this.editForm.get('sifre')?.value) {
-          formData.temel_bilgiler.sifre = this.editForm.get('sifre')?.value;
-        }
+        const formData = this.prepareFormData(avatarPath);
 
         // Token'ı al
         let token = '';
@@ -343,7 +318,7 @@ export class OgretmenOgrenciDetaySayfasiComponent implements OnInit {
         email: formValues.email,
         cep_telefonu: formValues.cep_telefonu,
         aktif: formValues.aktif ? 1 : 0,
-        rutbe: formValues.rutbe, // Rütbe değerini de ekledik
+        rutbe: formValues.rutbe,
         brans: formValues.brans,
       },
       detay_bilgiler: {
@@ -402,5 +377,10 @@ export class OgretmenOgrenciDetaySayfasiComponent implements OnInit {
   isInvalid(fieldName: string): boolean {
     const control = this.editForm.get(fieldName);
     return (control?.invalid && control?.touched) ?? false;
+  }
+
+  toggleStudentStatus(): void {
+    const currentStatus = this.editForm.get('aktif')?.value;
+    this.editForm.get('aktif')?.setValue(!currentStatus);
   }
 }
