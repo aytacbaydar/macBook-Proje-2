@@ -324,14 +324,27 @@
         <!-- Answers Preview -->
         <div class="answers-preview" *ngIf="cevap.cevaplar">
           <h4>
-            <i class="bi bi-eye me-1"></i>
-            Cevap Anahtarı Önizleme
+            <i class="bi bi-check-circle me-1"></i>
+            Cevap Anahtarı
           </h4>
           <div class="answers-grid-preview">
             <div class="answer-preview" *ngFor="let i of getSoruDizisi(cevap); let idx = index">
-              <span class="q-num">{{ idx + 1 }}</span>
+              <span class="q-num">{{ idx + 1 }}.</span>
               <span class="q-answer">{{ cevap.cevaplar['ca' + (idx + 1)] || '-' }}</span>
             </div>
+          </div>
+        </div>
+
+        <!-- Topics Preview -->
+        <div class="topics-preview" *ngIf="cevap.konular">
+          <h4>
+            <i class="bi bi-bookmarks me-1"></i>
+            Konular
+          </h4>
+          <div class="topics-list">
+            <span class="topic-item" *ngFor="let i of getSoruDizisi(cevap); let idx = index">
+              {{ cevap.konular['ka' + (idx + 1)] }}
+            </span>
           </div>
         </div>
       </div>

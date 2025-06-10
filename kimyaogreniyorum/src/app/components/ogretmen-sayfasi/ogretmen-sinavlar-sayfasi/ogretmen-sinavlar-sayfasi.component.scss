@@ -795,20 +795,31 @@
 
     .exam-content {
       padding: 2rem;
-      display: grid;
-      gap: 2rem;
+      display: block;
+      
+      &::after {
+        content: "";
+        display: table;
+        clear: both;
+      }
 
       .exam-image {
         .exam-cover {
-          width: 100%;
-          max-height: 200px;
+          width: 200px;
+          height: 120px;
           object-fit: cover;
           border-radius: 12px;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          float: left;
+          margin-right: 1.5rem;
+          margin-bottom: 1rem;
         }
       }
 
-      .answers-preview {
+      .answers-preview,
+      .topics-preview {
+        margin-bottom: 2rem;
+        
         h4 {
           font-size: 1rem;
           font-weight: 600;
@@ -822,31 +833,62 @@
             margin-right: 0.5rem;
           }
         }
+      }
+      
+      .topics-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        
+        .topic-item {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          padding: 0.4rem 0.8rem;
+          border-radius: 20px;
+          font-size: 0.8rem;
+          font-weight: 500;
+          text-align: center;
+          box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+          
+          &:empty {
+            display: none;
+          }
+        }
+      }
 
         .answers-grid-preview {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
-          gap: 0.5rem;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.75rem;
+          line-height: 1.4;
 
           .answer-preview {
-            display: flex;
-            flex-direction: column;
+            display: inline-flex;
             align-items: center;
-            padding: 0.5rem;
+            padding: 0.5rem 0.75rem;
             background: #f8fafc;
+            border: 1px solid #e2e8f0;
             border-radius: 8px;
-            font-size: 0.75rem;
+            font-size: 0.875rem;
+            min-width: 60px;
+            transition: all 0.2s ease;
+
+            &:hover {
+              background: #e2e8f0;
+              transform: translateY(-1px);
+            }
 
             .q-num {
               color: #64748b;
-              margin-bottom: 0.25rem;
-              font-size: 0.7rem;
+              margin-right: 0.5rem;
+              font-weight: 500;
+              font-size: 0.8rem;
             }
 
             .q-answer {
-              font-weight: 600;
+              font-weight: 700;
               color: #667eea;
-              font-size: 0.8rem;
+              font-size: 0.9rem;
             }
           }
         }
@@ -1164,7 +1206,27 @@
   }
 
   .answers-grid-preview {
-    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    gap: 0.5rem;
+  }
+  
+  .exam-content {
+    .exam-image .exam-cover {
+      float: none;
+      width: 100%;
+      max-width: 200px;
+      height: 120px;
+      margin: 0 auto 1rem auto;
+      display: block;
+    }
+  }
+  
+  .topics-list {
+    gap: 0.4rem;
+    
+    .topic-item {
+      font-size: 0.75rem;
+      padding: 0.3rem 0.6rem;
+    }
   }
 
   .exam-header-actions {
