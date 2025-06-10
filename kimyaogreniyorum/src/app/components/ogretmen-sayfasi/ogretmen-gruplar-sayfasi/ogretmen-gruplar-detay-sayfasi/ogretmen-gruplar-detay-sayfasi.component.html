@@ -51,7 +51,7 @@
       <div class="students-list">
         <div *ngFor="let student of grupDetay.students" class="student-item">
           <div class="student-avatar">
-            <i class="fas fa-user"></i>
+            <img [src]="student.avatar" alt="" style="width: 45px; height: 45px; border-radius: 50%;">
           </div>
           <div class="student-info">
             <div class="student-name">{{ student.adi_soyadi }}</div>
@@ -90,10 +90,6 @@
             <div class="info-item">
               <span class="label">Sayfa Sayısı:</span>
               <span class="value">{{ ders.sayfa_sayisi }} sayfa</span>
-            </div>
-            <div class="info-item" *ngIf="ders.ogretmen_adi">
-              <span class="label">Öğretmen:</span>
-              <span class="value">{{ ders.ogretmen_adi }}</span>
             </div>
           </div>
           <div class="lesson-actions">
