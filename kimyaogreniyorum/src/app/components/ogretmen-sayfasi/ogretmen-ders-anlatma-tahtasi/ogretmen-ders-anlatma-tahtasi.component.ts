@@ -57,19 +57,10 @@ export class OgretmenDersAnlatmaTahtasiComponent
   seciliPdfSayfasi: number = 1;
 
   constructor(private http: HttpClient) {
-    // PDF.js worker'ı dinamik olarak yükle
+    // PDF.js worker'ı node_modules'tan kullan
     if (typeof window !== 'undefined') {
-      // Sürüm uyumluluğu için worker'ı belirlenen sürümle yükle
-      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
-
-      // Worker yükleme başarısızlığı durumunda alternatif
-      const checkWorker = () => {
-        if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
-          pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`;
-        }
-      };
-
-      setTimeout(checkWorker, 100);
+      // Local pdfjs-dist paketinden worker'ı kullan
+      pdfjsLib.GlobalWorkerOptions.workerSrc = '/node_modules/pdfjs-dist/build/pdf.worker.min.js';
     }
   }
 
@@ -1541,8 +1532,8 @@ export class OgretmenDersAnlatmaTahtasiComponent
         (element as any).mozRequestFullScreen();
       } else if ((element as any).webkitRequestFullscreen) {
         (element as any).webkitRequestFullscreen();
-      } else if ((element as any).msRequestFullscreen) {
-        (element as any).msRequestFullscreen();
+      } else if ((document as any).msRequestFullscreen) {
+        (document as any).msRequestFullscreen();
       }
     }
     this.isTamEkran = !this.isTamEkran;
