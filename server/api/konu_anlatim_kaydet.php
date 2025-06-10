@@ -45,24 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-// JSON yanıt fonksiyonlarını tanımla (eğer config.php'de yoksa)
-if (!function_exists('errorResponse')) {
-    function errorResponse($message, $code = 400) {
-        http_response_code($code);
-        header('Content-Type: application/json; charset=UTF-8');
-        echo json_encode(['success' => false, 'error' => $message]);
-        exit();
-    }
-}
-
-if (!function_exists('successResponse')) {
-    function successResponse($data = null, $message = 'İşlem başarılı') {
-        http_response_code(200);
-        header('Content-Type: application/json; charset=UTF-8');
-        echo json_encode(['success' => true, 'message' => $message, 'data' => $data]);
-        exit();
-    }
-}
+// config.php'den gelen fonksiyonları kullanacağız
+// errorResponse ve successResponse fonksiyonları config.php'de tanımlı
 
 // POST isteği kontrol et
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -260,16 +244,8 @@ if (isset($_FILES['cizim_verisi']) && $_FILES['cizim_verisi']['error'] == 0) {
 // Veritabanı işlemlerini buraya ekleyebilirsiniz
 // MySQL tablosu ile uyumlu bir kayıt gerçekleştirme örneği:
 try {
-    // config.php dosyasını kontrol et ve dahil et
-    $configPath = dirname(__FILE__) . '/../config.php';
-    if (!file_exists($configPath)) {
-        errorResponse('Veritabanı yapılandırma dosyası bulunamadı');
-    }
-    
-    // config.php'yi dahil et (sadece bir kez)
-    if (!function_exists('getConnection')) {
-        require_once $configPath;
-    }
+    // config.php'yi dahil et
+    require_once '../config.php';
     
     // Veritabanı bağlantısını al
     $conn = getConnection();
