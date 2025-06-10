@@ -168,13 +168,20 @@ export class OgretmenDersAnlatmaTahtasiComponent
       if (canvas) {
         // Kağıt resmini arka plan olarak ayarla
         const canvasElement = canvas.getElement();
-        const kagitUrl = '/kagit.png'; // public klasöründeki kagit.png
+        const kagitUrl = './kagit.png'; // public klasöründeki kagit.png
         
-        // Canvas arka planını kağıt resmi olarak ayarla
-        canvasElement.style.backgroundImage = `url(${kagitUrl})`;
-        canvasElement.style.backgroundSize = 'cover';
-        canvasElement.style.backgroundRepeat = 'no-repeat';
-        canvasElement.style.backgroundPosition = 'center';
+        // Canvas container'ına arka plan ekle
+        const canvasContainer = canvasElement.parentElement;
+        if (canvasContainer) {
+          canvasContainer.style.backgroundImage = `url(${kagitUrl})`;
+          canvasContainer.style.backgroundSize = 'contain';
+          canvasContainer.style.backgroundRepeat = 'no-repeat';
+          canvasContainer.style.backgroundPosition = 'center';
+        }
+        
+        // Canvas'ın kendisini şeffaf yap
+        canvas.backgroundColor = 'transparent';
+        canvas.renderAll();
         
         // PDF bilgilerini ayarla (kağıt için)
         this.yuklenenPdf = { local: true, url: kagitUrl };
@@ -233,15 +240,20 @@ export class OgretmenDersAnlatmaTahtasiComponent
           // Canvas elementini al
           const canvas = this.canvasInstances[this.currentPage - 1];
           if (canvas) {
-            // PDF'i arka plan resmi olarak ayarla
+            // Canvas container'ına arka plan ekle
             const canvasElement = canvas.getElement();
-            const pdfDataUrl = base64String;
+            const canvasContainer = canvasElement.parentElement;
             
-            // Canvas arka planını PDF olarak ayarla
-            canvasElement.style.backgroundImage = `url(${pdfDataUrl})`;
-            canvasElement.style.backgroundSize = 'contain';
-            canvasElement.style.backgroundRepeat = 'no-repeat';
-            canvasElement.style.backgroundPosition = 'center';
+            if (canvasContainer) {
+              canvasContainer.style.backgroundImage = `url(${base64String})`;
+              canvasContainer.style.backgroundSize = 'contain';
+              canvasContainer.style.backgroundRepeat = 'no-repeat';
+              canvasContainer.style.backgroundPosition = 'center';
+            }
+            
+            // Canvas'ı şeffaf yap
+            canvas.backgroundColor = 'transparent';
+            canvas.renderAll();
             
             // PDF bilgilerini ayarla
             this.yuklenenPdf = { base64: base64String };
@@ -281,7 +293,16 @@ export class OgretmenDersAnlatmaTahtasiComponent
     const canvas = this.canvasInstances[this.currentPage - 1];
     if (canvas) {
       const canvasElement = canvas.getElement();
-      canvasElement.style.backgroundImage = 'none';
+      const canvasContainer = canvasElement.parentElement;
+      
+      // Container'dan arka planı temizle
+      if (canvasContainer) {
+        canvasContainer.style.backgroundImage = 'none';
+      }
+      
+      // Canvas arka planını beyaz yap
+      canvas.backgroundColor = '#ffffff';
+      canvas.renderAll();
       
       // PDF verilerini temizle
       this.yuklenenPdf = null;

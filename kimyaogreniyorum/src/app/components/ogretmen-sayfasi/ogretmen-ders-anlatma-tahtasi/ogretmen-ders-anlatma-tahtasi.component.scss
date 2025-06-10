@@ -253,7 +253,10 @@
   }
 
   .beyaz-tahta {
-    background-color: #ffffff;
+    position: relative;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
     border: 1px solid #eaeaea;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
@@ -269,11 +272,11 @@
   }
 
   .drawing-canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    border: 1px solid #ddd;
+    cursor: crosshair;
+    background-color: transparent;
+    position: relative;
+    z-index: 2;
 
     /* PDF arka plan için ek stiller */
     background-color: transparent;
@@ -469,4 +472,13 @@
       max-height: calc(100vh - 150px);
       overflow: auto;
     }
+  }
+
+  .kagit-yukle {
+    background: linear-gradient(135deg, #f4f4f4, #e8e8e8);
+    color: #333;
+  }
+
+  .kagit-yukle:hover {
+    background: linear-gradient(135deg, #e8e8e8, #ddd);
   }

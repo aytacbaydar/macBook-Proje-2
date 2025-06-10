@@ -9,7 +9,7 @@
           <button (click)="hizliRenkSec('#000000')" class="renk-btn siyah" [class.aktif]="kalemRengi === '#000000'" title="Siyah"></button>
           <input type="color" [(ngModel)]="kalemRengi" (change)="ayarlaKalemOzellikleri()" class="renk-input" title="Özel Renk Seç">
         </div>
-  
+
         <div class="arac-grubu">
           <span class="arac-grup-label">Araçlar:</span>
           <button (click)="kalemModunuAc()" class="btn-modern" [class.aktif]="!silgiModu && !fosforluKalemModu && cizilebilir && !sekilModu">
@@ -25,7 +25,7 @@
             <i class="ikon">👆</i> El
           </button>
         </div>
-        
+
         <div class="arac-grubu fosforlu-renkler" *ngIf="fosforluKalemModu">
           <span class="arac-grup-label">Fosforlu Renkler:</span>
           <button (click)="fosforluKalemModunuAc('sari')" class="fosforlu-renk-btn sari" [class.aktif]="secilenFosforluRenk === fosforluRenkler['sari']" title="Sarı"></button>
@@ -34,7 +34,7 @@
           <button (click)="fosforluKalemModunuAc('mavi')" class="fosforlu-renk-btn mavi" [class.aktif]="secilenFosforluRenk === fosforluRenkler['mavi']" title="Mavi"></button>
           <button (click)="fosforluKalemModunuAc('turuncu')" class="fosforlu-renk-btn turuncu" [class.aktif]="secilenFosforluRenk === fosforluRenkler['turuncu']" title="Turuncu"></button>
         </div>
-  
+
         <div class="arac-grubu">
           <span class="arac-grup-label">Kalınlık:</span>
           <select [(ngModel)]="kalemKalinligi" (change)="ayarlaKalemOzellikleri()" class="boyut-secici">
@@ -45,7 +45,7 @@
             <option [value]="16">Ekstra Kalın (16px)</option>
           </select>
         </div>
-  
+
         <div class="arac-grubu sekil-grubu">
           <span class="arac-grup-label">Şekiller:</span>
           <button (click)="sekilSec('cizgi')" class="sekil-btn" [class.aktif]="secilenSekil === 'cizgi'" title="Çizgi">
@@ -65,7 +65,7 @@
           </button>
         </div>
       </div>
-  
+
       <div class="arac-grubu">
         <button (click)="temizleSayfa()" class="btn-modern temizle">
           <i class="ikon">🗑️</i> Temizle
@@ -88,7 +88,7 @@
           <i class="ikon">{{ isTamEkran ? '⤓' : '⤢' }}</i> {{ isTamEkran ? 'Tam Ekrandan Çık' : 'Tam Ekran' }}
         </button>
       </div>
-  
+
       <div class="arac-grubu kaydetme-bolumu">
         <select [(ngModel)]="secilenGrup" class="grup-secici">
           <option value="" disabled selected>Öğrenci Grubu Seçin</option>
@@ -102,7 +102,7 @@
         </button>
       </div>
     </div>
-  
+
     <div class="calisma-alani">
       <div class="beyaz-tahta-container">
         <div *ngFor="let sayfa of sayfalar; let i = index" [class.aktif-sayfa]="currentPage === i + 1" class="beyaz-tahta">
@@ -110,7 +110,7 @@
         </div>
       </div>
     </div>
-  
+
     <div class="sayfa-navigasyon">
       <div class="footer-content">
         <!-- Canvas Sayfa Navigasyonu -->
