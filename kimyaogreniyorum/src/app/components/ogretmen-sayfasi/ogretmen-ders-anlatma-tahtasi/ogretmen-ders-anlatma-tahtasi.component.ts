@@ -57,8 +57,13 @@ export class OgretmenDersAnlatmaTahtasiComponent
   seciliPdfSayfasi: number = 1;
 
   constructor(private http: HttpClient) {
-    // PDF.js worker'ı ayarla
-    pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
+    // PDF.js worker'ı dinamik olarak ayarla
+    if (typeof window !== 'undefined') {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+        'pdfjs-dist/build/pdf.worker.js',
+        import.meta.url
+      ).toString();
+    }
   }
 
   ngOnInit(): void {
