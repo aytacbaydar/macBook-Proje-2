@@ -218,4 +218,12 @@ export class OgretmenGruplarSayfasiComponent implements OnInit {
       name
     )}&background=4f46e5&color=fff&size=32&font-size=0.6&rounded=true`;
   }
+
+  getActiveStudentsInGroup(group: Group): number {
+    return group.students.filter(student => student.aktif).length;
+  }
+
+  getInactiveStudentsInGroup(group: Group): number {
+    return group.students.filter(student => !student.aktif).length;
+  }
 }

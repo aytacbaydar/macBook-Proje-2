@@ -131,15 +131,59 @@
         </div>
       </div>
 
+      <!-- Group Stats -->
+      <div class="group-stats">
+        <div class="mini-stat-card">
+          <div class="mini-stat-icon success">
+            <i class="bi bi-person-check-fill"></i>
+          </div>
+          <div class="mini-stat-content">
+            <h4>{{ getActiveStudentsInGroup(group) }}</h4>
+            <p>Aktif</p>
+          </div>
+        </div>
+
+        <div class="mini-stat-card">
+          <div class="mini-stat-icon warning">
+            <i class="bi bi-clock-fill"></i>
+          </div>
+          <div class="mini-stat-content">
+            <h4>{{ getInactiveStudentsInGroup(group) }}</h4>
+            <p>Pasif</p>
+          </div>
+        </div>
+
+        <div class="mini-stat-card">
+          <div class="mini-stat-icon info">
+            <i class="bi bi-book-fill"></i>
+          </div>
+          <div class="mini-stat-content">
+            <h4>12</h4>
+            <p>Ders</p>
+          </div>
+        </div>
+      </div>
+
       <!-- Group Actions -->
       <div class="group-actions">
-        <button class="action-btn secondary" (click)="viewGroupDetail(group.name)">
-          <i class="bi bi-eye-fill"></i>
-          Detay Görüntüle
+        <button class="modern-action-btn detail-btn" (click)="viewGroupDetail(group.name)">
+          <div class="btn-icon-wrapper">
+            <i class="bi bi-eye-fill"></i>
+          </div>
+          <div class="btn-content">
+            <span class="btn-title">Detay Görüntüle</span>
+            <span class="btn-subtitle">Grup bilgileri</span>
+          </div>
         </button>
-        <button class="action-btn primary" (click)="goToAttendance(group.name)">
-          <i class="bi bi-clipboard-check-fill"></i>
-          Yoklama Al
+        
+        <button class="modern-action-btn attendance-btn" (click)="goToAttendance(group.name)">
+          <div class="btn-icon-wrapper">
+            <i class="bi bi-clipboard-check-fill"></i>
+          </div>
+          <div class="btn-content">
+            <span class="btn-title">Yoklama Al</span>
+            <span class="btn-subtitle">Devamsızlık takibi</span>
+          </div>
         </button>
       </div>
     </div>
