@@ -187,9 +187,7 @@
 
                   <div class="student-header">
                     <div class="student-info">
-                      <img [src]="getStudentAvatar(student.adi_soyadi)" 
-                          [alt]="student.adi_soyadi" 
-                          class="student-avatar">
+                      <img [src]="student.avatar" style="width: 45px; height: 45px; border-radius: 50%;" >
                       <div class="student-name">
                         <h4>{{ student.adi_soyadi }}</h4>
                         <p>{{ student.email }}</p>
