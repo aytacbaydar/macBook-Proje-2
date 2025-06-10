@@ -1,3 +1,4 @@
+
 <?php
 // CORS başlıkları
 header('Content-Type: application/json');
@@ -10,9 +11,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
+// Config dosyasını dahil et
+require_once '../config.php';
+
+// POST isteği kontrolü
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    errorResponse('Sadece POST istekleri kabul edilir');
+}
+
 try {
-    // Bağlantıyı içe aktar
-    require_once '../baglanti.php';
+    // Bağlantıyı al
     $pdo = getConnection();
     
     // Tablo oluştur (eğer yoksa)
@@ -42,7 +50,7 @@ try {
     
     // Veri doğrulama
     if (empty($sinav_adi) || empty($sinav_turu) || $soru_sayisi <= 0 || empty($tarih) || empty($cevaplar)) {
-        throw new Exception("Tüm zorunlu alanları doldurunuz");
+        errorResponse("Tüm zorunlu alanları doldurunuz");
     }
     
     // Dosya yükleme işlemi
@@ -61,7 +69,7 @@ try {
         // İzin verilen dosya türleri
         $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
         if (!in_array($fileExt, $allowedExtensions)) {
-            throw new Exception("Sadece JPG, JPEG, PNG ve GIF dosyaları yüklenebilir");
+            errorResponse("Sadece JPG, JPEG, PNG ve GIF dosyaları yüklenebilir");
         }
         
         // Benzersiz bir dosya adı oluştur
@@ -69,7 +77,7 @@ try {
         $targetFile = $uploadDir . $sinav_kapagi;
         
         if (!move_uploaded_file($tempFile, $targetFile)) {
-            throw new Exception("Dosya yükleme hatası");
+            errorResponse("Dosya yükleme hatası");
         }
     }
     
@@ -78,7 +86,7 @@ try {
             VALUES (:sinav_adi, :sinav_turu, :soru_sayisi, :tarih, :sinav_kapagi, :cevaplar, :konular, :videolar)";
     
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([
+    $result = $stmt->execute([
         ':sinav_adi' => $sinav_adi,
         ':sinav_turu' => $sinav_turu,
         ':soru_sayisi' => $soru_sayisi,
@@ -89,17 +97,14 @@ try {
         ':videolar' => $videolar
     ]);
     
-    echo json_encode([
-        'success' => true,
-        'message' => 'Cevap anahtarı başarıyla kaydedildi.'
-    ]);
+    if ($result) {
+        successResponse('Cevap anahtarı başarıyla kaydedildi.');
+    } else {
+        errorResponse('Kaydetme işlemi başarısız oldu.');
+    }
     
 } catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'message' => $e->getMessage()
-    ]);
+    errorResponse($e->getMessage());
 }
 
 // Bağlantıyı kapat

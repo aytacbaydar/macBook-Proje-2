@@ -1,3 +1,4 @@
+
 <?php
 // CORS başlıkları
 header('Content-Type: application/json');
@@ -10,19 +11,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
+// Config dosyasını dahil et
+require_once '../config.php';
+
+// GET isteği kontrolü
+if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+    errorResponse('Sadece GET istekleri kabul edilir');
+}
+
 try {
-    // Bağlantıyı içe aktar
-    require_once '../baglanti.php';
+    // Bağlantıyı al
     $pdo = getConnection();
     
     // Tablo var mı kontrol et
     $stmt = $pdo->query("SHOW TABLES LIKE 'cevapAnahtari'");
     if ($stmt->rowCount() == 0) {
         // Tablo yoksa boş dizi döndür
-        echo json_encode([
-            'success' => true,
-            'data' => []
-        ]);
+        successResponse('Başarılı', []);
         exit;
     }
     
@@ -37,17 +42,10 @@ try {
         $row['videolar'] = json_decode($row['videolar'], true);
     }
     
-    echo json_encode([
-        'success' => true,
-        'data' => $cevapAnahtarlari
-    ]);
+    successResponse('Cevap anahtarları başarıyla getirildi.', $cevapAnahtarlari);
     
 } catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'message' => $e->getMessage()
-    ]);
+    errorResponse($e->getMessage());
 }
 
 // Bağlantıyı kapat
