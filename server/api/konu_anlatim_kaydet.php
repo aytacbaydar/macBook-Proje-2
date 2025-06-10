@@ -1,10 +1,15 @@
 <?php
-// CORS ve Content-Type başlıkları - saf JSON yanıtı için
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
-header("Access-Control-Max-Age: 3600"); // Preflight önbelleği
-header("Content-Type: application/json; charset=UTF-8");
+// Output buffering başlat - hataları yakalamak için
+ob_start();
+
+// CORS ve Content-Type başlıkları - saf JSON yanıtı için (sadece bir kez)
+if (!headers_sent()) {
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Methods: POST, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+    header("Access-Control-Max-Age: 3600"); // Preflight önbelleği
+    header("Content-Type: application/json; charset=UTF-8");
+}
 // JSON parsing hatalarını önlemek için fazla header'ları kaldırdık
 
 // İstek zaman aşımını ve bellek limitini artır (büyük dosyalar için)
@@ -40,8 +45,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-// Not: errorResponse ve successResponse fonksiyonları config.php'den geliyor
-// Bu dosyada tekrar tanımlamıyoruz
+// JSON yanıt fonksiyonlarını tanımla (eğer config.php'de yoksa)
+if (!function_exists('errorResponse')) {
+    function errorResponse($message, $code = 400) {
+        http_response_code($code);
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode(['success' => false, 'error' => $message]);
+        exit();
+    }
+}
+
+if (!function_exists('successResponse')) {
+    function successResponse($data = null, $message = 'İşlem başarılı') {
+        http_response_code(200);
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode(['success' => true, 'message' => $message, 'data' => $data]);
+        exit();
+    }
+}
 
 // POST isteği kontrol et
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -239,8 +260,18 @@ if (isset($_FILES['cizim_verisi']) && $_FILES['cizim_verisi']['error'] == 0) {
 // Veritabanı işlemlerini buraya ekleyebilirsiniz
 // MySQL tablosu ile uyumlu bir kayıt gerçekleştirme örneği:
 try {
-    // Veritabanına bağlan
-    require_once '../config.php'; // config.php'yi bir kez dahil ediyoruz
+    // config.php dosyasını kontrol et ve dahil et
+    $configPath = dirname(__FILE__) . '/../config.php';
+    if (!file_exists($configPath)) {
+        errorResponse('Veritabanı yapılandırma dosyası bulunamadı');
+    }
+    
+    // config.php'yi dahil et (sadece bir kez)
+    if (!function_exists('getConnection')) {
+        require_once $configPath;
+    }
+    
+    // Veritabanı bağlantısını al
     $conn = getConnection();
 
     // Tablo kontrol et/oluştur
@@ -290,8 +321,16 @@ try {
     ], 'Konu anlatım kaydı başarıyla oluşturuldu');
 
 } catch (PDOException $e) {
-    errorResponse('Veritabanı hatası: ' . $e->getMessage());
+    // Veritabanı hatasını logla
+    $error_msg = 'Veritabanı hatası: ' . $e->getMessage();
+    file_put_contents($log_file, "PDO Hatası: " . $error_msg . "\n", FILE_APPEND);
+    file_put_contents($log_file, "Stack trace: " . $e->getTraceAsString() . "\n", FILE_APPEND);
+    errorResponse($error_msg);
 } catch (Exception $e) {
-    errorResponse('Beklenmeyen bir hata oluştu: ' . $e->getMessage());
+    // Genel hataları logla
+    $error_msg = 'Beklenmeyen bir hata oluştu: ' . $e->getMessage();
+    file_put_contents($log_file, "Genel Hata: " . $error_msg . "\n", FILE_APPEND);
+    file_put_contents($log_file, "Stack trace: " . $e->getTraceAsString() . "\n", FILE_APPEND);
+    errorResponse($error_msg);
 }
 ?>
