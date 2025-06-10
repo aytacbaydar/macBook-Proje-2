@@ -234,24 +234,30 @@ export class OgretmenDersAnlatmaTahtasiComponent
 
       // Geçici canvas'tan fabric.js Image oluştur
       const dataURL = tempCanvas.toDataURL();
-      fabric.Image.fromURL(dataURL, (img: fabric.Image) => {
-        // Diğer modları kapat
-        this.sekilModu = false;
-        this.secilenSekil = '';
-        canvas.isDrawingMode = false;
+      fabric.Image.fromURL(
+        dataURL,
+        {
+          crossOrigin: 'anonymous',
+        },
+        (img: fabric.Image) => {
+          // Diğer modları kapat
+          this.sekilModu = false;
+          this.secilenSekil = '';
+          canvas.isDrawingMode = false;
 
-        img.set({
-          left: (canvas.width! - scaledViewport.width) / 2,
-          top: (canvas.height! - scaledViewport.height) / 2,
-          selectable: true,
-          hasControls: true,
-          hasBorders: true,
-        });
+          img.set({
+            left: (canvas.width! - scaledViewport.width) / 2,
+            top: (canvas.height! - scaledViewport.height) / 2,
+            selectable: true,
+            hasControls: true,
+            hasBorders: true,
+          });
 
-        canvas.add(img);
-        canvas.setActiveObject(img);
-        canvas.renderAll();
-      });
+          canvas.add(img);
+          canvas.setActiveObject(img);
+          canvas.renderAll();
+        }
+      );
 
       this.seciliPdfSayfasi = sayfaNo;
     } catch (error) {
