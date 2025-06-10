@@ -252,18 +252,20 @@
 
 .groups-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 1.5rem;
 
   .group-card {
     background: white;
-    border-radius: 8px;
-    padding: 1.5rem;
+    border-radius: 12px;
+    padding: 1.25rem;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
     border: 1px solid rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    min-width: 0; // Prevent overflow
+    width: 100%; // Ensure full width usage
 
     &::before {
       content: '';
@@ -491,19 +493,20 @@
 
   .group-actions {
     display: flex;
-    gap: 16px;
+    gap: 12px;
     margin-top: 20px;
 
     .modern-action-btn {
       flex: 1;
-      padding: 20px;
+      min-width: 0; // Prevent overflow
+      padding: 16px 12px;
       border: none;
-      border-radius: 16px;
-      font-size: 14px;
+      border-radius: 12px;
+      font-size: 13px;
       font-weight: 600;
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
       cursor: pointer;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       text-decoration: none;
@@ -526,13 +529,13 @@
       }
 
       .btn-icon-wrapper {
-        width: 50px;
-        height: 50px;
-        border-radius: 12px;
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 20px;
+        font-size: 18px;
         color: white;
         flex-shrink: 0;
       }
@@ -540,20 +543,28 @@
       .btn-content {
         flex: 1;
         text-align: left;
+        min-width: 0; // Prevent text overflow
+        overflow: hidden;
 
         .btn-title {
           display: block;
-          font-size: 16px;
+          font-size: 14px;
           font-weight: 600;
           color: white;
-          margin-bottom: 4px;
+          margin-bottom: 2px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         .btn-subtitle {
           display: block;
-          font-size: 12px;
+          font-size: 11px;
           color: rgba(255, 255, 255, 0.8);
           font-weight: 400;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
 
@@ -565,8 +576,8 @@
         }
 
         &:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 12px 30px rgba(99, 102, 241, 0.4);
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
         }
       }
 
@@ -578,8 +589,8 @@
         }
 
         &:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 12px 30px rgba(16, 185, 129, 0.4);
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
         }
       }
 
@@ -665,14 +676,58 @@
   }
 
   .group-card {
-    padding: 1.25rem;
+    padding: 1rem;
+    margin: 0 auto;
+    max-width: 100%;
   }
 
   .group-actions {
-    flex-direction: column;
+    gap: 8px;
 
-    .action-btn {
-      width: 100%;
+    .modern-action-btn {
+      padding: 12px 8px;
+      gap: 8px;
+
+      .btn-icon-wrapper {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+      }
+
+      .btn-content {
+        .btn-title {
+          font-size: 12px;
+        }
+
+        .btn-subtitle {
+          font-size: 10px;
+        }
+      }
+    }
+  }
+
+  .group-stats {
+    gap: 8px;
+
+    .mini-stat-card {
+      padding: 12px;
+      gap: 8px;
+
+      .mini-stat-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+      }
+
+      .mini-stat-content {
+        h4 {
+          font-size: 16px;
+        }
+
+        p {
+          font-size: 10px;
+        }
+      }
     }
   }
 }
@@ -689,7 +744,7 @@
   }
 
   .group-card {
-    padding: 1rem;
+    padding: 0.875rem;
   }
 
   .group-header {
@@ -701,5 +756,37 @@
       width: 100%;
       justify-content: center;
     }
+  }
+
+  .group-actions {
+    flex-direction: column;
+    gap: 12px;
+
+    .modern-action-btn {
+      width: 100%;
+      padding: 16px;
+      gap: 12px;
+
+      .btn-icon-wrapper {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+      }
+
+      .btn-content {
+        .btn-title {
+          font-size: 14px;
+        }
+
+        .btn-subtitle {
+          font-size: 11px;
+        }
+      }
+    }
+  }
+
+  .group-stats {
+    flex-direction: column;
+    gap: 12px;
   }
 }
