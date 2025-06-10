@@ -120,36 +120,18 @@
 
                 <div class="form-row">
                   <div class="form-field">
-                    <div class="form-group">
-                      <label class="form-label" for="aktif">Öğrenci Durumu</label>
-                      <div class="form-input-container"
-                           [class.focused]="isFocused('aktif')"
-                           [class.raised]="isRaised('aktif')"
-                           [class.error]="isInvalid('aktif')">
-                        <select
-                          class="form-input"
-                          formControlName="aktif"
-                          id="aktif"
-                          (focus)="onFocus('aktif')"
-                          (blur)="onBlur('aktif')">
-                          <option value="true">Aktif</option>
-                          <option value="false">Pasif</option>
-                        </select>
-                        <i class="form-icon bi bi-person-check"></i>
-                      </div>
-                      <div class="status-description mt-2">
-                        <span *ngIf="editForm.get('aktif')?.value === 'true' || editForm.get('aktif')?.value === true" class="text-success small">
-                          <i class="bi bi-check-circle"></i>
-                          Öğrenci sisteme giriş yapabilir ve derslere katılabilir
-                        </span>
-                        <span *ngIf="editForm.get('aktif')?.value === 'false' || editForm.get('aktif')?.value === false" class="text-danger small">
-                          <i class="bi bi-x-circle"></i>
-                          Öğrenci sisteme giriş yapamaz ve derslere katılamaz
-                        </span>
-                      </div>
+                    <div class="material-input-container" [class.focused]="isFocused('aktif')">
+                      <select id="aktif" class="material-input material-select" formControlName="aktif"
+                        (focus)="onFocus('aktif')" (blur)="onBlur('aktif')">
+                        <option value="true">Aktif</option>
+                        <option value="false">Pasif</option>
+                      </select>
+                      <label for="aktif" class="material-input-label" [class.raised]="isRaised('aktif')">Hesap Durumu</label>
                     </div>
                   </div>
+                </div>
 
+                <div class="form-row">
                   <div class="form-field">
                     <div class="material-input-container" [class.focused]="isFocused('sifre')">
                       <input id="sifre" type="password" class="material-input" formControlName="sifre" (focus)="onFocus('sifre')" (blur)="onBlur('sifre')">
