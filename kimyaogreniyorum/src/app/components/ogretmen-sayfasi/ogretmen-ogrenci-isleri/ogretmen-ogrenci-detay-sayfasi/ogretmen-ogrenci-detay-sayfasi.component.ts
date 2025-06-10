@@ -379,8 +379,5 @@ export class OgretmenOgrenciDetaySayfasiComponent implements OnInit {
     return (control?.invalid && control?.touched) ?? false;
   }
 
-  toggleStudentStatus(): void {
-    const currentStatus = this.editForm.get('aktif')?.value;
-    this.editForm.get('aktif')?.setValue(!currentStatus);
-  }
+  
 }
