@@ -952,6 +952,16 @@
         }
       }
 
+      &:nth-child(2) {
+        background: #17a2b8;
+        color: white;
+
+        &:hover {
+          background: #138496;
+          transform: translateY(-1px);
+        }
+      }
+
       &.download-btn {
         background: #007bff;
         color: white;
