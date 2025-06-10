@@ -839,44 +839,17 @@
       }
 
       .answers-preview,
-      .topics-preview {
-        margin-bottom: 2rem;
-
-        h4 {
-          font-size: 1rem;
-          font-weight: 600;
-          color: #1e293b;
-          margin: 0 0 1rem 0;
-          display: flex;
-          align-items: center;
-
-          i {
-            color: #667eea;
-            margin-right: 0.5rem;
-          }
-        }
-      }
-
-      .topics-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-
-        .topic-item {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          padding: 0.4rem 0.8rem;
-          border-radius: 20px;
-          font-size: 0.8rem;
-          font-weight: 500;
-          text-align: center;
-          box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
-
-          &:empty {
-            display: none;
-          }
-        }
-      }
+      // Tooltip animation
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
 
         .answers-grid-preview {
           display: flex;
@@ -894,10 +867,44 @@
             font-size: 0.875rem;
             min-width: 60px;
             transition: all 0.2s ease;
+            position: relative;
+            cursor: pointer;
 
             &:hover {
               background: #e2e8f0;
               transform: translateY(-1px);
+            }
+
+            &.has-tooltip:hover::after {
+              content: attr(data-tooltip);
+              position: absolute;
+              bottom: -40px;
+              left: 50%;
+              transform: translateX(-50%);
+              background: #1e293b;
+              color: white;
+              padding: 0.5rem 0.75rem;
+              border-radius: 6px;
+              font-size: 0.75rem;
+              white-space: nowrap;
+              z-index: 1000;
+              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+              animation: tooltipFadeIn 0.2s ease-out;
+            }
+
+            &.has-tooltip:hover::before {
+              content: '';
+              position: absolute;
+              bottom: -8px;
+              left: 50%;
+              transform: translateX(-50%);
+              width: 0;
+              height: 0;
+              border-left: 6px solid transparent;
+              border-right: 6px solid transparent;
+              border-bottom: 8px solid #1e293b;
+              z-index: 1001;
+              animation: tooltipFadeIn 0.2s ease-out;
             }
 
             .q-num {
@@ -1242,12 +1249,16 @@
     }
   }
 
-  .topics-list {
-    gap: 0.4rem;
-
-    .topic-item {
-      font-size: 0.75rem;
-      padding: 0.3rem 0.6rem;
+  .answers-grid-preview {
+    .answer-preview {
+      &.has-tooltip:hover::after {
+        font-size: 0.7rem;
+        padding: 0.4rem 0.6rem;
+        bottom: -35px;
+        max-width: 150px;
+        white-space: normal;
+        text-align: center;
+      }
     }
   }
 

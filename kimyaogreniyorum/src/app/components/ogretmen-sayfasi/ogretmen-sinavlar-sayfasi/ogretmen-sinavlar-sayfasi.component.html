@@ -351,28 +351,13 @@
             Cevap Anahtarı
           </h4>
           <div class="answers-grid-preview">
-            <div class="answer-preview" *ngFor="let i of getSoruDizisi(cevap); let idx = index">
-              <div class="q-topic" *ngIf="cevap.konular && cevap.konular['ka' + (idx + 1)]">
-                {{ cevap.konular['ka' + (idx + 1)] }}
-              </div>
-              <div class="q-answer-row">
-                <span class="q-num">{{ idx + 1 }}.</span>
-                <span class="q-answer">{{ cevap.cevaplar['ca' + (idx + 1)] || '-' }}</span>
-              </div>
+            <div class="answer-preview" 
+                 *ngFor="let i of getSoruDizisi(cevap); let idx = index"
+                 [attr.data-tooltip]="cevap.konular && cevap.konular['ka' + (idx + 1)] ? cevap.konular['ka' + (idx + 1)] : 'Konu bilgisi yok'"
+                 [class.has-tooltip]="cevap.konular && cevap.konular['ka' + (idx + 1)]">
+              <span class="q-num">{{ idx + 1 }}.</span>
+              <span class="q-answer">{{ cevap.cevaplar['ca' + (idx + 1)] || '-' }}</span>
             </div>
-          </div>
-        </div>
-
-        <!-- Topics Preview -->
-        <div class="topics-preview" *ngIf="cevap.konular">
-          <h4>
-            <i class="bi bi-bookmarks me-1"></i>
-            Konular
-          </h4>
-          <div class="topics-list">
-            <span class="topic-item" *ngFor="let i of getSoruDizisi(cevap); let idx = index">
-              {{ cevap.konular['ka' + (idx + 1)] }}
-            </span>
           </div>
         </div>
       </div>
