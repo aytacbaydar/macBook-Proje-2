@@ -158,7 +158,45 @@ export class OgretmenDersAnlatmaTahtasiComponent
     }, 500);
   }
 
-  // PDF yükleme metotları - Background Image yaklaşımı
+  // Kağıt arka planı yükleme metodu
+  kagitArkaPlaniYukle(): void {
+    this.pdfYukleniyor = true;
+
+    try {
+      // Canvas elementini al
+      const canvas = this.canvasInstances[this.currentPage - 1];
+      if (canvas) {
+        // Kağıt resmini arka plan olarak ayarla
+        const canvasElement = canvas.getElement();
+        const kagitUrl = '/kagit.png'; // public klasöründeki kagit.png
+        
+        // Canvas arka planını kağıt resmi olarak ayarla
+        canvasElement.style.backgroundImage = `url(${kagitUrl})`;
+        canvasElement.style.backgroundSize = 'cover';
+        canvasElement.style.backgroundRepeat = 'no-repeat';
+        canvasElement.style.backgroundPosition = 'center';
+        
+        // PDF bilgilerini ayarla (kağıt için)
+        this.yuklenenPdf = { local: true, url: kagitUrl };
+        this.pdfSayfaSayisi = 1;
+        this.seciliPdfSayfasi = 1;
+
+        console.log('Kağıt arka planı başarıyla yüklendi');
+        this.pdfYukleniyor = false;
+        
+        // Çizim modunu aktifleştir
+        this.kalemModunuAc();
+      } else {
+        throw new Error('Canvas bulunamadı');
+      }
+    } catch (error) {
+      console.error('Kağıt arka planı yükleme hatası:', error);
+      alert('Kağıt arka planı yüklenemedi!');
+      this.pdfYukleniyor = false;
+    }
+  }
+
+  // PDF dosyası yükleme metodu (kullanıcı dosya seçerse)
   pdfYukle(event: Event): void {
     const input = event.target as HTMLInputElement;
 

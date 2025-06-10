@@ -73,6 +73,9 @@
         <button (click)="sayfaEkle()" class="btn-modern">
           <i class="ikon">➕</i> Yeni Sayfa
         </button>
+        <button (click)="kagitArkaPlaniYukle()" class="btn-modern kagit-yukle-btn">
+          <i class="ikon">📝</i> {{ pdfYukleniyor ? 'Kağıt Yükleniyor...' : 'Kağıt Arka Plan' }}
+        </button>
         <label for="pdf-upload" class="btn-modern pdf-yukle-btn">
           <i class="ikon">📄</i> {{ pdfYukleniyor ? 'PDF Yükleniyor...' : 'PDF Yükle' }}
         </label>
