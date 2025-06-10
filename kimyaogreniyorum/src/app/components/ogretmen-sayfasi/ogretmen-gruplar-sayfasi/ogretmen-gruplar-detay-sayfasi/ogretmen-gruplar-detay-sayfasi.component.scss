@@ -950,69 +950,184 @@
 
 // PDF Modal
 .pdf-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
 
   .pdf-modal-content {
-    background: white;
-    border-radius: 12px;
     width: 90%;
     height: 90%;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+  }
 
-    .pdf-modal-header {
+  .pdf-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+
+    h3 {
+      margin: 0;
+      color: #333;
+      font-size: 1.2rem;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 20px;
-      border-bottom: 1px solid #e9ecef;
+    }
+  }
 
-      h3 {
-        margin: 0;
-        color: #333;
-      }
+  .pdf-controls {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
 
-      .close-btn {
-        background: #dc3545;
-        color: white;
-        border: none;
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
+  .control-btn, .close-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    transition: background-color 0.2s;
 
-        &:hover {
-          background: #c82333;
-        }
+    &:hover {
+      background: #0056b3;
+    }
+
+    i {
+      font-size: 1rem;
+    }
+  }
+
+  .close-btn {
+    background: #dc3545;
+    padding: 0.5rem;
+
+    &:hover {
+      background: #c82333;
+    }
+  }
+
+  .pdf-modal-body {
+    flex: 1;
+    position: relative;
+    background: #f5f5f5;
+  }
+
+  .pdf-fallback {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    z-index: 1;
+  }
+
+  .fallback-content {
+    text-align: center;
+    max-width: 400px;
+    padding: 2rem;
+
+    .pdf-icon {
+      font-size: 4rem;
+      color: #dc3545;
+      margin-bottom: 1rem;
+    }
+
+    h4 {
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    p {
+      color: #666;
+      margin-bottom: 2rem;
+    }
+  }
+
+  .pdf-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .pdf-action-btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+
+    &.primary {
+      background: #007bff;
+      color: white;
+
+      &:hover {
+        background: #0056b3;
       }
     }
 
-    .pdf-modal-body {
-      flex: 1;
-      padding: 0;
+    &.secondary {
+      background: #6c757d;
+      color: white;
 
-      iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
+      &:hover {
+        background: #545b62;
       }
     }
   }
-}
+
+  .pdf-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #666;
+    z-index: 2;
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+    i {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  }
 
 @media (max-width: 768px) {
   .grup-detay-container {

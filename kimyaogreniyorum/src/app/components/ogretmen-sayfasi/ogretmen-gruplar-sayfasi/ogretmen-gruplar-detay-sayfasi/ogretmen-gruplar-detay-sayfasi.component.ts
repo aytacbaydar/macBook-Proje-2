@@ -236,6 +236,23 @@ export class OgretmenGruplarDetaySayfasiComponent implements OnInit {
     }
   }
 
+  openPdfInNewTab(): void {
+    if (this.selectedPdf) {
+      window.open(this.selectedPdf, '_blank');
+    }
+  }
+
+  downloadPdf(): void {
+    if (this.selectedPdf) {
+      const link = document.createElement('a');
+      link.href = this.selectedPdf;
+      link.download = 'ders_notlari.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  }
+
   viewDrawingPng(fileName: string): void {
     if (fileName) {
       const pngFileName = fileName.replace('.pdf', '.png');
