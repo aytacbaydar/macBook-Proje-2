@@ -42,6 +42,7 @@ export class OgretmenGruplarDetaySayfasiComponent implements OnInit {
   error: string | null = null;
   selectedPdf: string | null = null;
   showPdfModal: boolean = false;
+  pdfLoaded: boolean = false;
   private apiBaseUrl = this.getApiBaseUrl();
 
   constructor(private route: ActivatedRoute, private http: HttpClient) {}
@@ -192,10 +193,18 @@ export class OgretmenGruplarDetaySayfasiComponent implements OnInit {
 
   closePdfViewer(): void {
     this.selectedPdf = null;
+    this.showPdfModal = false;
+  }
+
+  onPdfLoad(): void {
+    this.pdfLoaded = true;
+    console.log('PDF başarıyla yüklendi');
   }
 
   onPdfLoadError(): void {
     console.error('PDF yüklenemedi:', this.selectedPdf);
+    this.pdfLoaded = false;
+    alert('PDF dosyası yüklenirken hata oluştu. Dosya mevcut olmayabilir.');
   }
 
   formatDate(dateString: string): string {
@@ -211,10 +220,19 @@ export class OgretmenGruplarDetaySayfasiComponent implements OnInit {
 
   viewLessonPdf(fileName: string): void {
     if (fileName) {
-      this.selectedPdf = `${
-        this.apiBaseUrl
-      }/pdf_viewer.php?file=${encodeURIComponent(fileName)}`;
+      console.log('PDF açılıyor:', fileName);
+      console.log('API Base URL:', this.apiBaseUrl);
+      
+      // PDF state'ini sıfırla
+      this.pdfLoaded = false;
+      
+      // Önce modal'ı aç
       this.showPdfModal = true;
+      
+      // Sonra PDF URL'ini ayarla
+      this.selectedPdf = `./server/api/pdf_viewer.php?file=${encodeURIComponent(fileName)}`;
+      
+      console.log('PDF URL oluşturuldu:', this.selectedPdf);
     }
   }
 

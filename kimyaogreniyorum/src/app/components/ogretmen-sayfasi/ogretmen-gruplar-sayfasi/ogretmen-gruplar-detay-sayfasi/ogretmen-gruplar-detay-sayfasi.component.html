@@ -127,8 +127,13 @@
         frameborder="0" 
         width="100%" 
         height="100%"
+        (load)="onPdfLoad()" 
         (error)="onPdfLoadError()">
       </iframe>
+      <div class="pdf-loading" *ngIf="!pdfLoaded">
+        <i class="bi bi-hourglass-split"></i>
+        <p>PDF yükleniyor...</p>
+      </div>
     </div>
   </div>
 </div>
