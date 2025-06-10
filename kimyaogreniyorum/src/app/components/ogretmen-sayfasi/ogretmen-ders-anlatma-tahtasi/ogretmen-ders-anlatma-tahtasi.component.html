@@ -128,20 +128,24 @@
           </button>
         </div>
 
-        <!-- PDF Sayfa Navigasyonu -->
+        <!-- PDF Kontrolleri -->
         <div class="navigasyon-grubu" *ngIf="yuklenenPdf">
           <span class="navigasyon-label">PDF:</span>
-          <button (click)="pdfSayfasiDegistir(1)" class="btn-modern btn-sayfa">
-            <i class="ikon">⏮️</i> İlk
+          <button (click)="pdfArkaPlaniTemizle()" class="btn-modern btn-temizle">
+            <i class="ikon">🗑️</i> PDF Temizle
           </button>
-          <button (click)="oncekiPdfSayfasi()" class="btn-modern btn-sayfa" [disabled]="seciliPdfSayfasi <= 1">
-            <i class="ikon">◀️</i> Önceki
+          <button (click)="pdfSaydamlikAyarla(0.5)" class="btn-modern">
+            <i class="ikon">👻</i> Saydamlaştır
           </button>
-          <span class="sayfa-bilgisi">{{ seciliPdfSayfasi }} / {{ pdfSayfaSayisi }}</span>
-          <button (click)="sonrakiPdfSayfasi()" class="btn-modern btn-sayfa" [disabled]="seciliPdfSayfasi >= pdfSayfaSayisi">
-            <i class="ikon">▶️</i> Sonraki
+          <button (click)="pdfSaydamlikAyarla(1)" class="btn-modern">
+            <i class="ikon">🔧</i> Normal
           </button>
-          <button (click)="pdfSayfasiDegistir(pdfSayfaSayisi)" class="btn-modern btn-sayfa">
+          <button (click)="pdfBoyutAyarla('contain')" class="btn-modern">
+            <i class="ikon">📐</i> Sığdır
+          </button>
+          <button (click)="pdfBoyutAyarla('100% 100%')" class="btn-modern">
+            <i class="ikon">🔍</i> Doldur
+          </button> btn-sayfa">
             <i class="ikon">⏭️</i> Son
           </button>
         </div>
