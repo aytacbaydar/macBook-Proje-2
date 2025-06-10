@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CevapAnahtari } from '../modeller/cevap-anahtari';
 
@@ -10,11 +10,8 @@ import { CevapAnahtari } from '../modeller/cevap-anahtari';
   templateUrl: './ogretmen-sinavlar-sayfasi.component.html',
   styleUrl: './ogretmen-sinavlar-sayfasi.component.scss',
 })
-export class OgretmenSinavlarSayfasiComponent implements OnInit {
-  cevap: any;
-  resetForm() {
-    throw new Error('Method not implemented.');
-  }
+export class OgretmenSinavlarSayfasiComponent implements OnInit, OnDestroy {
+  
   cevapAnahtari: CevapAnahtari = new CevapAnahtari();
   imagePreview: string | null = null;
   submitting = false;
@@ -38,18 +35,12 @@ export class OgretmenSinavlarSayfasiComponent implements OnInit {
     this.initModel();
     this.loadCevapAnahtarlari();
 
-    this.initForm();
-    this.loadCevapAnahtarlari();
-
     // ESC tuşu ile modalı kapatma
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape' && this.editMode) {
         this.cancelEdit();
       }
     });
-  }
-  initForm() {
-    throw new Error('Method not implemented.');
   }
   initModel() {
     const today = new Date();
@@ -350,9 +341,6 @@ export class OgretmenSinavlarSayfasiComponent implements OnInit {
 
   // Component yok edildiğinde temizlik yap
   ngOnDestroy() {
-    // Bellek sızıntısı olmaması için event listener'ı temizle
-    document.removeEventListener('keydown', () => {});
-
     // Scroll'u geri etkinleştir
     document.body.style.overflow = '';
   }
