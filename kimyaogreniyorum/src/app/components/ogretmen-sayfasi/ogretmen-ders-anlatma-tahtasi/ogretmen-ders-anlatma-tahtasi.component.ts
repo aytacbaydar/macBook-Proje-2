@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { NgIf, NgFor } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { jsPDF } from 'jspdf';
+import * as pdfjsLib from 'pdfjs-dist';
 
 @Component({
   selector: 'app-ogretmen-ders-anlatma-tahtasi',
@@ -49,7 +50,16 @@ export class OgretmenDersAnlatmaTahtasiComponent
   // Resim yükleme özellikleri
   resimYukleniyor: boolean = false;
 
-  constructor(private http: HttpClient) {}
+  // PDF yükleme özellikleri
+  pdfYukleniyor: boolean = false;
+  yuklenenPdf: any = null;
+  pdfSayfaSayisi: number = 0;
+  seciliPdfSayfasi: number = 1;
+
+  constructor(private http: HttpClient) {
+    // PDF.js worker'ı ayarla
+    pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
+  }
 
   ngOnInit(): void {
     // Kalem modunu aktifleştir
@@ -147,6 +157,125 @@ export class OgretmenDersAnlatmaTahtasiComponent
     setTimeout(() => {
       this.canvasOlustur(1);
     }, 500);
+  }
+
+  // PDF yükleme metotları
+  pdfYukle(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files.length > 0) {
+      this.pdfYukleniyor = true;
+
+      const file = input.files[0];
+      if (file.type !== 'application/pdf') {
+        alert('Lütfen sadece PDF dosyası seçin!');
+        this.pdfYukleniyor = false;
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          const arrayBuffer = e.target?.result as ArrayBuffer;
+          const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+          
+          this.yuklenenPdf = pdf;
+          this.pdfSayfaSayisi = pdf.numPages;
+          this.seciliPdfSayfasi = 1;
+          
+          // İlk sayfayı yükle
+          await this.pdfSayfasiniYukle(1);
+          
+          this.pdfYukleniyor = false;
+        } catch (error) {
+          console.error('PDF yükleme hatası:', error);
+          alert('PDF dosyası yüklenemedi!');
+          this.pdfYukleniyor = false;
+        }
+      };
+
+      reader.onerror = () => {
+        console.error('PDF okuma hatası');
+        this.pdfYukleniyor = false;
+      };
+
+      reader.readAsArrayBuffer(file);
+
+      // Input değerini sıfırla
+      input.value = '';
+    }
+  }
+
+  async pdfSayfasiniYukle(sayfaNo: number): Promise<void> {
+    if (!this.yuklenenPdf) return;
+
+    try {
+      const page = await this.yuklenenPdf.getPage(sayfaNo);
+      const canvas = this.canvasInstances[this.currentPage - 1];
+      
+      if (!canvas) return;
+
+      // PDF sayfasını canvas boyutuna uygun şekilde ölçekle
+      const viewport = page.getViewport({ scale: 1 });
+      const scale = Math.min(canvas.width! / viewport.width, canvas.height! / viewport.height) * 0.9;
+      const scaledViewport = page.getViewport({ scale });
+
+      // Geçici canvas oluştur
+      const tempCanvas = document.createElement('canvas');
+      const tempContext = tempCanvas.getContext('2d')!;
+      tempCanvas.width = scaledViewport.width;
+      tempCanvas.height = scaledViewport.height;
+
+      // PDF sayfasını geçici canvas'a çiz
+      await page.render({
+        canvasContext: tempContext,
+        viewport: scaledViewport
+      }).promise;
+
+      // Geçici canvas'tan fabric.js Image oluştur
+      const dataURL = tempCanvas.toDataURL();
+      fabric.Image.fromURL(dataURL, (img: fabric.Image) => {
+        // Diğer modları kapat
+        this.sekilModu = false;
+        this.secilenSekil = '';
+        canvas.isDrawingMode = false;
+
+        img.set({
+          left: (canvas.width! - scaledViewport.width) / 2,
+          top: (canvas.height! - scaledViewport.height) / 2,
+          selectable: true,
+          hasControls: true,
+          hasBorders: true,
+        });
+
+        canvas.add(img);
+        canvas.setActiveObject(img);
+        canvas.renderAll();
+      });
+
+      this.seciliPdfSayfasi = sayfaNo;
+    } catch (error) {
+      console.error('PDF sayfa yükleme hatası:', error);
+      alert('PDF sayfası yüklenemedi!');
+    }
+  }
+
+  pdfSayfasiDegistir(yeniSayfa: number): void {
+    if (yeniSayfa >= 1 && yeniSayfa <= this.pdfSayfaSayisi) {
+      this.pdfSayfasiniYukle(yeniSayfa);
+    }
+  }
+
+  oncekiPdfSayfasi(): void {
+    if (this.seciliPdfSayfasi > 1) {
+      this.pdfSayfasiDegistir(this.seciliPdfSayfasi - 1);
+    }
+  }
+
+  sonrakiPdfSayfasi(): void {
+    if (this.seciliPdfSayfasi < this.pdfSayfaSayisi) {
+      this.pdfSayfasiDegistir(this.seciliPdfSayfasi + 1);
+    }
   }
 
   // Resim yükleme metotları

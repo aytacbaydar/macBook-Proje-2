@@ -73,6 +73,10 @@
         <button (click)="sayfaEkle()" class="btn-modern">
           <i class="ikon">➕</i> Yeni Sayfa
         </button>
+        <label for="pdf-upload" class="btn-modern pdf-yukle-btn">
+          <i class="ikon">📄</i> {{ pdfYukleniyor ? 'PDF Yükleniyor...' : 'PDF Yükle' }}
+        </label>
+        <input type="file" id="pdf-upload" accept="application/pdf" (change)="pdfYukle($event)" style="display: none;">
         <button (click)="tamEkranModu()" class="btn-modern tam-ekran">
           <i class="ikon">{{ isTamEkran ? '⤓' : '⤢' }}</i> {{ isTamEkran ? 'Tam Ekrandan Çık' : 'Tam Ekran' }}
         </button>
@@ -102,19 +106,41 @@
   
     <div class="sayfa-navigasyon">
       <div class="footer-content">
-        <button (click)="sayfaBas()" class="btn-modern btn-sayfa">
-          <i class="ikon">⏮️</i> İlk Sayfa
-        </button>
-        <button (click)="oncekiSayfa()" class="btn-modern btn-sayfa" [disabled]="currentPage <= 1">
-          <i class="ikon">◀️</i> Önceki
-        </button>
-        <span class="sayfa-bilgisi">Sayfa {{ currentPage }} / {{ totalPages }}</span>
-        <button (click)="sonrakiSayfa()" class="btn-modern btn-sayfa" [disabled]="currentPage >= totalPages">
-          <i class="ikon">▶️</i> Sonraki
-        </button>
-        <button (click)="sayfaSon()" class="btn-modern btn-sayfa">
-          <i class="ikon">⏭️</i> Son Sayfa
-        </button>
+        <!-- Canvas Sayfa Navigasyonu -->
+        <div class="navigasyon-grubu">
+          <span class="navigasyon-label">Canvas:</span>
+          <button (click)="sayfaBas()" class="btn-modern btn-sayfa">
+            <i class="ikon">⏮️</i> İlk
+          </button>
+          <button (click)="oncekiSayfa()" class="btn-modern btn-sayfa" [disabled]="currentPage <= 1">
+            <i class="ikon">◀️</i> Önceki
+          </button>
+          <span class="sayfa-bilgisi">{{ currentPage }} / {{ totalPages }}</span>
+          <button (click)="sonrakiSayfa()" class="btn-modern btn-sayfa" [disabled]="currentPage >= totalPages">
+            <i class="ikon">▶️</i> Sonraki
+          </button>
+          <button (click)="sayfaSon()" class="btn-modern btn-sayfa">
+            <i class="ikon">⏭️</i> Son
+          </button>
+        </div>
+
+        <!-- PDF Sayfa Navigasyonu -->
+        <div class="navigasyon-grubu" *ngIf="yuklenenPdf">
+          <span class="navigasyon-label">PDF:</span>
+          <button (click)="pdfSayfasiDegistir(1)" class="btn-modern btn-sayfa">
+            <i class="ikon">⏮️</i> İlk
+          </button>
+          <button (click)="oncekiPdfSayfasi()" class="btn-modern btn-sayfa" [disabled]="seciliPdfSayfasi <= 1">
+            <i class="ikon">◀️</i> Önceki
+          </button>
+          <span class="sayfa-bilgisi">{{ seciliPdfSayfasi }} / {{ pdfSayfaSayisi }}</span>
+          <button (click)="sonrakiPdfSayfasi()" class="btn-modern btn-sayfa" [disabled]="seciliPdfSayfasi >= pdfSayfaSayisi">
+            <i class="ikon">▶️</i> Sonraki
+          </button>
+          <button (click)="pdfSayfasiDegistir(pdfSayfaSayisi)" class="btn-modern btn-sayfa">
+            <i class="ikon">⏭️</i> Son
+          </button>
+        </div>
       </div>
     </div>
   </div>

@@ -393,6 +393,42 @@
   .btn-modern.tam-ekran:hover {
     background-color: #2980b9;
   }
+
+  /* PDF yükleme butonu stilleri */
+  .pdf-yukle-btn {
+    background-color: #e74c3c;
+    color: white;
+    cursor: pointer;
+  }
+
+  .pdf-yukle-btn:hover {
+    background-color: #c0392b;
+  }
+
+  /* Navigasyon grupları */
+  .footer-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+  }
+
+  .navigasyon-grubu {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+  }
+
+  .navigasyon-label {
+    font-weight: bold;
+    font-size: 12px;
+    color: #666;
+    margin-right: 5px;
+  }
   
   /* Tam ekran modu stilleri */
   body.tam-ekran-modu {
