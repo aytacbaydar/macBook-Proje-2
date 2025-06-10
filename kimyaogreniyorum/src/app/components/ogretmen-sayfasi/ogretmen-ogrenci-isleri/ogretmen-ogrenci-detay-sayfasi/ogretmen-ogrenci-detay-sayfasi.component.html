@@ -119,7 +119,6 @@
                 </div>
 
                 <div class="form-row">
-
                   <div class="form-field">
                     <div class="form-group">
                       <label class="form-label" for="aktif">Öğrenci Durumu</label>
@@ -133,17 +132,17 @@
                           id="aktif"
                           (focus)="onFocus('aktif')"
                           (blur)="onBlur('aktif')">
-                          <option [value]="true">Aktif</option>
-                          <option [value]="false">Pasif</option>
+                          <option value="true">Aktif</option>
+                          <option value="false">Pasif</option>
                         </select>
                         <i class="form-icon bi bi-person-check"></i>
                       </div>
                       <div class="status-description mt-2">
-                        <span *ngIf="editForm.get('aktif')?.value" class="text-success small">
+                        <span *ngIf="editForm.get('aktif')?.value === 'true' || editForm.get('aktif')?.value === true" class="text-success small">
                           <i class="bi bi-check-circle"></i>
                           Öğrenci sisteme giriş yapabilir ve derslere katılabilir
                         </span>
-                        <span *ngIf="!editForm.get('aktif')?.value" class="text-danger small">
+                        <span *ngIf="editForm.get('aktif')?.value === 'false' || editForm.get('aktif')?.value === false" class="text-danger small">
                           <i class="bi bi-x-circle"></i>
                           Öğrenci sisteme giriş yapamaz ve derslere katılamaz
                         </span>

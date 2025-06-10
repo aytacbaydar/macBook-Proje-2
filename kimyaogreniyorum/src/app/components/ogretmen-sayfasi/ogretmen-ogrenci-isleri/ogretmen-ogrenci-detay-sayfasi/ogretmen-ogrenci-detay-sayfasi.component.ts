@@ -144,7 +144,7 @@ export class OgretmenOgrenciDetaySayfasiComponent implements OnInit {
               adi_soyadi: this.student.adi_soyadi || '',
               email: this.student.email || '',
               cep_telefonu: this.student.cep_telefonu || '',
-              aktif: this.student.aktif === 1 || this.student.aktif === true,
+              aktif: (this.student.aktif === 1 || this.student.aktif === true) ? 'true' : 'false',
               rutbe: this.student.rutbe || '', // Rütbe alanı eklendi
 
               // Eğitim bilgileri
@@ -317,7 +317,7 @@ export class OgretmenOgrenciDetaySayfasiComponent implements OnInit {
         adi_soyadi: formValues.adi_soyadi,
         email: formValues.email,
         cep_telefonu: formValues.cep_telefonu,
-        aktif: formValues.aktif ? 1 : 0,
+        aktif: (formValues.aktif === 'true' || formValues.aktif === true) ? 1 : 0,
         rutbe: formValues.rutbe,
         brans: formValues.brans,
       },
@@ -348,7 +348,7 @@ export class OgretmenOgrenciDetaySayfasiComponent implements OnInit {
   }
 
   navigateBack(): void {
-    this.router.navigate(['/yonetici-sayfasi/ogrenci-liste-sayfasi']);
+    this.router.navigate(['/ogretmen-sayfasi/ogretmen-ogrenci-listesi-sayfasi']);
   }
 
   // Form alanları için odaklanma yönetimi
