@@ -150,8 +150,7 @@ export class OgretmenSinavlarSayfasiComponent implements OnInit {
     }
     // API'ye gönder
     this.http
-      .post(
-        'https://www.kimyaogreniyorum.com/phpData/yonetici/cevap-anahtari-ekle.php',
+      .post(`./server/api/cevap-anahtari-ekle.php`,
         formData
       )
       .subscribe(
@@ -178,28 +177,24 @@ export class OgretmenSinavlarSayfasiComponent implements OnInit {
   }
   loadCevapAnahtarlari() {
     this.loading = true;
-    this.http
-      .get(
-        'https://www.kimyaogreniyorum.com/phpData/yonetici/cevap-anahtarlari-listele.php'
-      )
-      .subscribe(
-        (response: any) => {
-          this.loading = false;
-          if (response.success) {
-            this.cevapAnahtarlari = response.data.map((item: any) =>
-              CevapAnahtari.fromJson(item)
-            );
-          } else {
-            this.showError('Cevap anahtarları yüklenirken bir hata oluştu.');
-          }
-        },
-        (error) => {
-          this.loading = false;
-          this.showError(
-            'Sunucu hatası: ' + (error.message || 'Bilinmeyen bir hata oluştu.')
+    this.http.get(`./server/api/cevap-anahtarlari-listele.php`).subscribe(
+      (response: any) => {
+        this.loading = false;
+        if (response.success) {
+          this.cevapAnahtarlari = response.data.map((item: any) =>
+            CevapAnahtari.fromJson(item)
           );
+        } else {
+          this.showError('Cevap anahtarları yüklenirken bir hata oluştu.');
         }
-      );
+      },
+      (error) => {
+        this.loading = false;
+        this.showError(
+          'Sunucu hatası: ' + (error.message || 'Bilinmeyen bir hata oluştu.')
+        );
+      }
+    );
   }
   getSoruDizisi(cevap: any): number[] {
     // Eğer cevap.soru_sayisi varsa ve sayısal bir değerse, o sayıyı kullan
@@ -324,10 +319,7 @@ export class OgretmenSinavlarSayfasiComponent implements OnInit {
 
     // API'ye gönder
     this.http
-      .post(
-        'https://www.kimyaogreniyorum.com/phpData/yonetici/cevap-anahtari-guncelle.php',
-        formData
-      )
+      .post(`./server/api/cevap-anahtari-guncelle.php`, formData)
       .subscribe(
         (response: any) => {
           this.submitting = false;
@@ -368,7 +360,7 @@ export class OgretmenSinavlarSayfasiComponent implements OnInit {
     if (confirm('Bu cevap anahtarını silmek istediğinize emin misiniz?')) {
       this.http
         .post(
-          'https://www.kimyaogreniyorum.com/phpData/yonetici/cevap-anahtari-sil.php',
+          `./server/api/cevap-anahtari-sil.php`,
           { id }
         )
         .subscribe(
