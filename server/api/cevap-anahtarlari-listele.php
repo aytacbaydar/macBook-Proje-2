@@ -27,7 +27,7 @@ try {
     $stmt = $pdo->query("SHOW TABLES LIKE 'cevapAnahtari'");
     if ($stmt->rowCount() == 0) {
         // Tablo yoksa boş dizi döndür
-        successResponse('Başarılı', []);
+        successResponse([], 'Tablo bulunamadı, boş liste döndürülüyor.');
         exit;
     }
     
@@ -42,7 +42,7 @@ try {
         $row['videolar'] = json_decode($row['videolar'], true);
     }
     
-    successResponse('Cevap anahtarları başarıyla getirildi.', $cevapAnahtarlari);
+    successResponse($cevapAnahtarlari, 'Cevap anahtarları başarıyla getirildi.');
     
 } catch (Exception $e) {
     errorResponse($e->getMessage());

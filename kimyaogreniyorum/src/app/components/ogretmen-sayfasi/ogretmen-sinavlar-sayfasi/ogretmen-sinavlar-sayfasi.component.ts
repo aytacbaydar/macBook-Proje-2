@@ -11,7 +11,7 @@ import { CevapAnahtari } from '../modeller/cevap-anahtari';
   styleUrl: './ogretmen-sinavlar-sayfasi.component.scss',
 })
 export class OgretmenSinavlarSayfasiComponent implements OnInit, OnDestroy {
-  
+
   cevapAnahtari: CevapAnahtari = new CevapAnahtari();
   imagePreview: string | null = null;
   submitting = false;
@@ -167,25 +167,24 @@ export class OgretmenSinavlarSayfasiComponent implements OnInit, OnDestroy {
       );
   }
   loadCevapAnahtarlari() {
-    this.loading = true;
-    this.http.get(`./server/api/cevap-anahtarlari-listele.php`).subscribe(
-      (response: any) => {
-        this.loading = false;
-        if (response.success) {
-          this.cevapAnahtarlari = response.data.map((item: any) =>
-            CevapAnahtari.fromJson(item)
-          );
-        } else {
-          this.showError('Cevap anahtarları yüklenirken bir hata oluştu.');
+    console.log('Cevap anahtarları yükleniyor...');
+    this.http.get('http://localhost:8000/api/cevap-anahtarlari-listele.php')
+      .subscribe({
+        next: (response: any) => {
+          console.log('API yanıtı:', response);
+          if (response.success) {
+            this.cevapAnahtarlari = response.data || [];
+            console.log('Yüklenen cevap anahtarları:', this.cevapAnahtarlari);
+          } else {
+            console.error('API hatası:', response.message);
+            this.cevapAnahtarlari = [];
+          }
+        },
+        error: (error) => {
+          console.error('HTTP hatası:', error);
+          this.cevapAnahtarlari = [];
         }
-      },
-      (error) => {
-        this.loading = false;
-        this.showError(
-          'Sunucu hatası: ' + (error.message || 'Bilinmeyen bir hata oluştu.')
-        );
-      }
-    );
+      });
   }
   getSoruDizisi(cevap: any): number[] {
     // Eğer cevap.soru_sayisi varsa ve sayısal bir değerse, o sayıyı kullan
