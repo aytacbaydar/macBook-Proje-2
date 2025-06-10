@@ -57,9 +57,19 @@ export class OgretmenDersAnlatmaTahtasiComponent
   seciliPdfSayfasi: number = 1;
 
   constructor(private http: HttpClient) {
-    // PDF.js worker'ı CDN'den yükle - güncel ve stabil sürüm
+    // PDF.js worker'ı dinamik olarak yükle
     if (typeof window !== 'undefined') {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`;
+      // Sürüm uyumluluğu için worker'ı belirlenen sürümle yükle
+      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
+
+      // Worker yükleme başarısızlığı durumunda alternatif
+      const checkWorker = () => {
+        if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
+          pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`;
+        }
+      };
+
+      setTimeout(checkWorker, 100);
     }
   }
 
@@ -75,7 +85,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
   getOgrenciGruplari(): void {
     // Tüm öğrencileri listeleyen API
     const apiUrl = './server/api/ogrenciler_listesi.php';
-    
+
     console.log('Öğrenci grupları yükleniyor...');
 
     // LocalStorage veya sessionStorage'dan token'ı al
@@ -99,7 +109,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
           if (response && response.success && response.data) {
             // Giriş yapan öğretmenin adi_soyadi'sını al
             const loggedInTeacherName = loggedInUser?.adi_soyadi || '';
-            
+
             // Sadece öğrencileri filtrele ve giriş yapan öğretmenin öğrencilerini al
             const teacherStudents = response.data.filter(
               (student: any) =>
@@ -171,7 +181,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
       this.pdfYukleniyor = true;
 
       const file = input.files[0];
-      
+
       // Dosya boyutu kontrolü (25MB limit)
       const maxSize = 25 * 1024 * 1024; // 25MB
       if (file.size > maxSize) {
@@ -197,14 +207,14 @@ export class OgretmenDersAnlatmaTahtasiComponent
           }
 
           const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
-          
+
           this.yuklenenPdf = pdf;
           this.pdfSayfaSayisi = pdf.numPages;
           this.seciliPdfSayfasi = 1;
-          
+
           // İlk sayfayı yükle
           await this.pdfSayfasiniYukle(1);
-          
+
           console.log('PDF başarıyla yüklendi:', pdf.numPages, 'sayfa');
           this.pdfYukleniyor = false;
         } catch (error) {
@@ -233,7 +243,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
     try {
       const page = await this.yuklenenPdf.getPage(sayfaNo);
       const canvas = this.canvasInstances[this.currentPage - 1];
-      
+
       if (!canvas) return;
 
       // PDF sayfasını canvas boyutuna uygun şekilde ölçekle
@@ -891,7 +901,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
     try {
       if (canvas.freeDrawingBrush.hasOwnProperty('getInk')) {
         (canvas.freeDrawingBrush as any).getInk = false;
-      }
+            }
     } catch (e) {
       console.log('getInk özelliği bu fabric.js versiyonunda desteklenmiyor');
     }
