@@ -57,9 +57,9 @@ export class OgretmenDersAnlatmaTahtasiComponent
   seciliPdfSayfasi: number = 1;
 
   constructor(private http: HttpClient) {
-    // PDF.js worker'ı CDN'den yükle - sürüm uyumluluğu için
+    // PDF.js worker'ı CDN'den yükle - güncel ve stabil sürüm
     if (typeof window !== 'undefined') {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.3.31/pdf.worker.min.js`;
+      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`;
     }
   }
 
