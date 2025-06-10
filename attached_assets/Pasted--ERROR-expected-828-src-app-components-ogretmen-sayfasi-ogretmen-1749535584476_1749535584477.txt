@@ -1,0 +1,189 @@
+
+✘ [ERROR] expected "}".
+    ╷
+828 │ }
+    │  ^
+    ╵
+  src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.scss 828:2  root stylesheet [plugin angular-sass]
+
+
+✘ [ERROR] NG9: Property 'getActiveStudentCount' does not exist on type 'OgretmenGruplarDetaySayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.html:31:40:
+      31 │ ...      <div class="stat-number">{{ getActiveStudentCount() }}</div>
+         ╵                                      ~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenGruplarDetaySayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogretmen-gruplar-detay-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG2: Object is possibly 'undefined'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.html:100:20:
+      100 │ ...    <div *ngIf="grupDetay?.students?.length > 0" class="studen...
+          ╵                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenGruplarDetaySayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogretmen-gruplar-detay-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'getDefaultAvatar' does not exist on type 'OgretmenGruplarDetaySayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.html:104:44:
+      104 │ ...   [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)"
+          ╵                                ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenGruplarDetaySayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogretmen-gruplar-detay-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG2: Object is possibly 'undefined'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.html:130:48:
+      130 │ ...l-width-section-card" *ngIf="grupDetay?.dersProgram?.length > 0">
+          ╵                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenGruplarDetaySayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogretmen-gruplar-detay-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG2: Object is possibly 'undefined'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.html:186:20:
+      186 │ ... <div *ngIf="grupDetay?.dersKayitlari?.length > 0" class="less...
+          ╵                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenGruplarDetaySayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogretmen-gruplar-detay-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'created_at' does not exist on type 'DersKaydi'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.html:194:58:
+      194 │ ...     <p class="lesson-date">{{ formatDate(ders.created_at) }}</p>
+          ╵                                                   ~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenGruplarDetaySayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogretmen-gruplar-detay-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'viewPdf' does not exist on type 'OgretmenGruplarDetaySayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.html:199:66:
+      199 │ ...ss="lesson-action-btn view-btn" (click)="viewPdf(ders.pdf_yolu)">
+          ╵                                             ~~~~~~~
+
+  Error occurs in the template of component OgretmenGruplarDetaySayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogretmen-gruplar-detay-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG1: Property 'pdf_yolu' does not exist on type 'DersKaydi'. Did you mean 'pdfYolu'? [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.html:199:79:
+      199 │ ...ss="lesson-action-btn view-btn" (click)="viewPdf(ders.pdf_yolu)">
+          ╵                                                          ~~~~~~~~
+
+  Error occurs in the template of component OgretmenGruplarDetaySayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogretmen-gruplar-detay-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'downloadPdf' does not exist on type 'OgretmenGruplarDetaySayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.html:203:70:
+      203 │ ...tn download-btn" (click)="downloadPdf(ders.pdf_yolu, ders.pdf_...
+          ╵                              ~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenGruplarDetaySayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogretmen-gruplar-detay-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG1: Property 'pdf_yolu' does not exist on type 'DersKaydi'. Did you mean 'pdfYolu'? [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.html:203:87:
+      203 │ ...download-btn" (click)="downloadPdf(ders.pdf_yolu, ders.pdf_adi)">
+          ╵                                            ~~~~~~~~
+
+  Error occurs in the template of component OgretmenGruplarDetaySayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogretmen-gruplar-detay-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'closePdfModal' does not exist on type 'OgretmenGruplarDetaySayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.html:215:63:
+      215 │ ...howPdfModal" class="pdf-modal-overlay" (click)="closePdfModal()">
+          ╵                                                    ~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenGruplarDetaySayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogretmen-gruplar-detay-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'closePdfModal' does not exist on type 'OgretmenGruplarDetaySayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.html:219:43:
+      219 │         <button class="close-btn" (click)="closePdfModal()">
+          ╵                                            ~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenGruplarDetaySayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogretmen-gruplar-detay-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'closePdfModal' does not exist on type 'OgretmenGruplarDetaySayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.html:231:61:
+      231 │ ...howPdfModal" class="pdf-modal-overlay" (click)="closePdfModal()">
+          ╵                                                    ~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenGruplarDetaySayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogretmen-gruplar-detay-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'closePdfModal' does not exist on type 'OgretmenGruplarDetaySayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.html:235:41:
+      235 │       <button class="close-btn" (click)="closePdfModal()">
+          ╵                                          ~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenGruplarDetaySayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-gruplar-sayfasi/ogretmen-gruplar-detay-sayfasi/ogretmen-gruplar-detay-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogretmen-gruplar-detay-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
