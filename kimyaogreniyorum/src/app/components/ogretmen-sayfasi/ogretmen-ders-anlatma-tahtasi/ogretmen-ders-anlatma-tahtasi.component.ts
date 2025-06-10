@@ -73,6 +73,8 @@ export class OgretmenDersAnlatmaTahtasiComponent
   getOgrenciGruplari(): void {
     // Tüm öğrencileri listeleyen API
     const apiUrl = './server/api/ogrenciler_listesi.php';
+    
+    console.log('Öğrenci grupları yükleniyor...');
 
     // LocalStorage veya sessionStorage'dan token'ı al
     let token = '';
@@ -167,9 +169,20 @@ export class OgretmenDersAnlatmaTahtasiComponent
       this.pdfYukleniyor = true;
 
       const file = input.files[0];
+      
+      // Dosya boyutu kontrolü (25MB limit)
+      const maxSize = 25 * 1024 * 1024; // 25MB
+      if (file.size > maxSize) {
+        alert('PDF dosyası çok büyük! Maksimum 25MB olmalı.');
+        this.pdfYukleniyor = false;
+        input.value = '';
+        return;
+      }
+
       if (file.type !== 'application/pdf') {
         alert('Lütfen sadece PDF dosyası seçin!');
         this.pdfYukleniyor = false;
+        input.value = '';
         return;
       }
 
@@ -177,6 +190,10 @@ export class OgretmenDersAnlatmaTahtasiComponent
       reader.onload = async (e) => {
         try {
           const arrayBuffer = e.target?.result as ArrayBuffer;
+          if (!arrayBuffer || arrayBuffer.byteLength === 0) {
+            throw new Error('PDF dosyası boş veya okunamadı');
+          }
+
           const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
           
           this.yuklenenPdf = pdf;
@@ -186,16 +203,18 @@ export class OgretmenDersAnlatmaTahtasiComponent
           // İlk sayfayı yükle
           await this.pdfSayfasiniYukle(1);
           
+          console.log('PDF başarıyla yüklendi:', pdf.numPages, 'sayfa');
           this.pdfYukleniyor = false;
         } catch (error) {
           console.error('PDF yükleme hatası:', error);
-          alert('PDF dosyası yüklenemedi!');
+          alert('PDF dosyası yüklenemedi! Dosya bozuk olabilir.');
           this.pdfYukleniyor = false;
         }
       };
 
       reader.onerror = () => {
         console.error('PDF okuma hatası');
+        alert('PDF dosyası okunamadı!');
         this.pdfYukleniyor = false;
       };
 
@@ -1293,9 +1312,8 @@ export class OgretmenDersAnlatmaTahtasiComponent
 
         // ADIM 11: API URL'ini belirle
         console.log('ADIM 11: API URL hazırlanıyor...');
-        // Tam URL kullanmak daha güvenli
-        const apiUrl =
-          'https://www.kimyaogreniyorum.com/server/api/konu_anlatim_kaydet.php';
+        // Relative path kullanmak daha güvenilir
+        const apiUrl = './server/api/konu_anlatim_kaydet.php';
         console.log('API URL:', apiUrl);
 
         // ADIM 12: HTTP isteğini gönder - daha sağlam yapılandırma ile
@@ -1322,7 +1340,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
           token = user.token || '';
         }
 
-        // Basitleştirilmiş, daha güvenilir bir HTTP istek yöntemi kullanıyoruz
+        // HTTP istek gönderimi
         this.http
           .post(apiUrl, formData, {
             reportProgress: true,
@@ -1332,8 +1350,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
               'Cache-Control': 'no-cache',
               'Pragma': 'no-cache',
             },
-            // Yanıt tipini açıkça belirtmiyoruz (responseType: 'json'),
-            // bu JSON parsing hatasını önleyecek
+            responseType: 'json'
           })
           .subscribe({
             next: (event: any) => {

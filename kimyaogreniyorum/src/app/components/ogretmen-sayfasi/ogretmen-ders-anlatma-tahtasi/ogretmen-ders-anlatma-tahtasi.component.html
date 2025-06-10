@@ -77,6 +77,10 @@
           <i class="ikon">📄</i> {{ pdfYukleniyor ? 'PDF Yükleniyor...' : 'PDF Yükle' }}
         </label>
         <input type="file" id="pdf-upload" accept="application/pdf" (change)="pdfYukle($event)" style="display: none;">
+        <label for="resim-upload" class="btn-modern resim-yukle-btn">
+          <i class="ikon">🖼️</i> {{ resimYukleniyor ? 'Resim Yükleniyor...' : 'Resim Yükle' }}
+        </label>
+        <input type="file" id="resim-upload" accept="image/*" (change)="resimYukle($event)" style="display: none;">
         <button (click)="tamEkranModu()" class="btn-modern tam-ekran">
           <i class="ikon">{{ isTamEkran ? '⤓' : '⤢' }}</i> {{ isTamEkran ? 'Tam Ekrandan Çık' : 'Tam Ekran' }}
         </button>
