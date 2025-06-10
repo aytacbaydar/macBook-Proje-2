@@ -6,9 +6,11 @@ interface DersKaydi {
   id: number;
   pdf_adi: string;
   pdfYolu: string;
+  pdf_yolu: string;
   cizim_dosya_yolu: string;
   sayfa_sayisi: number;
   olusturma_zamani: string;
+  created_at: string;
   ogretmen_adi: string;
 }
 
@@ -245,6 +247,35 @@ export class OgretmenGruplarDetaySayfasiComponent implements OnInit {
       link.download = fileName;
       document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
+    }
+  }
+
+  // Eksik metodları ekle
+  getActiveStudentCount(): number {
+    if (!this.grupDetay || !this.grupDetay.students) {
+      return 0;
+    }
+    return this.grupDetay.students.filter(student => student.aktif).length;
+  }
+
+  getDefaultAvatar(name: string): string {
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(
+      name
+    )}&background=4f46e5&color=fff&size=40&font-size=0.6&rounded=true`;
+  }
+
+  viewPdf(pdfYolu: string): void {
+    this.viewLessonPdf(pdfYolu);
+  }
+
+  downloadPdf(pdfYolu: string, fileName: string): void {
+    this.downloadFile(fileName, 'pdf');
+  }
+
+  closePdfModal(): void {
+    this.showPdfModal = false;
+    this.selectedPdf = null;ck();
       document.body.removeChild(link);
     }
   }

@@ -1,4 +1,3 @@
-
 <div class="group-detail-container">
   <!-- Header Section -->
   <div class="page-header">
@@ -69,7 +68,7 @@
 
   <!-- Content Section -->
   <div *ngIf="!isLoading && !error" class="content-section">
-    
+
     <!-- Students Section -->
     <div class="full-width-section-card">
       <div class="section-card-header" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
@@ -97,7 +96,7 @@
           <p>Bu grupta henüz öğrenci bulunmuyor</p>
         </div>
 
-        <div *ngIf="grupDetay?.students?.length > 0" class="students-grid">
+        <div *ngIf="grupDetay && grupDetay.students && grupDetay.students.length > 0" class="students-grid">
           <div class="student-card-item" *ngFor="let student of grupDetay.students">
             <div class="student-avatar-container">
               <img class="student-avatar" 
@@ -111,7 +110,7 @@
                    [class.bi-x-circle-fill]="!student.aktif"></i>
               </div>
             </div>
-            
+
             <div class="student-details">
               <h4 class="student-name">{{ student.adi_soyadi }}</h4>
               <p class="student-email">{{ student.email }}</p>
@@ -183,7 +182,7 @@
           <p>Bu grup için henüz hiç ders kaydı bulunmuyor</p>
         </div>
 
-        <div *ngIf="grupDetay?.dersKayitlari?.length > 0" class="lessons-grid">
+        <div *ngIf="grupDetay && grupDetay.dersKayitlari && grupDetay.dersKayitlari.length > 0" class="lessons-grid">
           <div class="lesson-card" *ngFor="let ders of grupDetay.dersKayitlari">
             <div class="lesson-header">
               <div class="lesson-icon">
@@ -194,13 +193,13 @@
                 <p class="lesson-date">{{ formatDate(ders.created_at) }}</p>
               </div>
             </div>
-            
+
             <div class="lesson-actions">
-              <button class="lesson-action-btn view-btn" (click)="viewPdf(ders.pdf_yolu)">
+              <button class="lesson-action-btn view-btn" (click)="viewPdf(ders.pdfYolu)">
                 <i class="bi bi-eye-fill"></i>
                 <span>Görüntüle</span>
               </button>
-              <button class="lesson-action-btn download-btn" (click)="downloadPdf(ders.pdf_yolu, ders.pdf_adi)">
+              <button class="lesson-action-btn download-btn" (click)="downloadPdf(ders.pdfYolu, ders.pdf_adi)">
                 <i class="bi bi-download"></i>
                 <span>İndir</span>
               </button>

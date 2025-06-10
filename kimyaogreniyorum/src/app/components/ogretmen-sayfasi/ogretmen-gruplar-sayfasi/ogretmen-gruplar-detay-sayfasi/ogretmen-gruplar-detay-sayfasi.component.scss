@@ -543,6 +543,8 @@
         }
       }
     }
+  }
+}
 
 // PDF Modal Styles
 .pdf-modal-overlay {
@@ -571,7 +573,7 @@
 
 .pdf-modal-header {
   display: flex;
-  justify-content: between;
+  justify-content: space-between;
   align-items: center;
   padding: 20px;
   border-bottom: 1px solid #e5e7eb;
@@ -670,6 +672,8 @@
     iframe {
       border: none;
     }
+  }
+}
   }
 }
 
