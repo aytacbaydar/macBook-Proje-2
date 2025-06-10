@@ -57,10 +57,10 @@ export class OgretmenDersAnlatmaTahtasiComponent
   seciliPdfSayfasi: number = 1;
 
   constructor(private http: HttpClient) {
-    // PDF.js worker'ı node_modules'tan kullan
+    // PDF.js worker'ı CDN'den yükle - production ortamında güvenilir
     if (typeof window !== 'undefined') {
-      // Local pdfjs-dist paketinden worker'ı kullan
-      pdfjsLib.GlobalWorkerOptions.workerSrc = '/node_modules/pdfjs-dist/build/pdf.worker.min.js';
+      // UNPKG CDN'den stable sürüm - alternatif olarak en güncel LTS
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.js';
     }
   }
 
