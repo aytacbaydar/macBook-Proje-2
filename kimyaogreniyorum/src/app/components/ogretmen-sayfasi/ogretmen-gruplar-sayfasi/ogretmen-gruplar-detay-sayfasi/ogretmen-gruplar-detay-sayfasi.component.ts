@@ -192,8 +192,10 @@ export class OgretmenGruplarDetaySayfasiComponent implements OnInit {
   }
 
   closePdfViewer(): void {
-    this.selectedPdf = null;
     this.showPdfModal = false;
+    this.selectedPdf = null;
+    this.pdfLoaded = false;
+    console.log('PDF modal kapatıldı');
   }
 
   onPdfLoad(): void {
@@ -201,10 +203,12 @@ export class OgretmenGruplarDetaySayfasiComponent implements OnInit {
     console.log('PDF başarıyla yüklendi');
   }
 
-  onPdfLoadError(): void {
-    console.error('PDF yüklenemedi:', this.selectedPdf);
+  onPdfLoadError(event: any): void {
+    console.error('PDF yüklenemedi:', this.selectedPdf, event);
     this.pdfLoaded = false;
-    alert('PDF dosyası yüklenirken hata oluştu. Dosya mevcut olmayabilir.');
+    setTimeout(() => {
+      alert('PDF dosyası yüklenirken hata oluştu. Dosya mevcut olmayabilir veya bozuk olabilir.');
+    }, 100);
   }
 
   formatDate(dateString: string): string {
@@ -219,21 +223,26 @@ export class OgretmenGruplarDetaySayfasiComponent implements OnInit {
   }
 
   viewLessonPdf(fileName: string): void {
-    if (fileName) {
-      console.log('PDF açılıyor:', fileName);
-      console.log('API Base URL:', this.apiBaseUrl);
-      
-      // PDF state'ini sıfırla
-      this.pdfLoaded = false;
-      
-      // Önce modal'ı aç
-      this.showPdfModal = true;
-      
-      // Sonra PDF URL'ini ayarla
-      this.selectedPdf = `./server/api/pdf_viewer.php?file=${encodeURIComponent(fileName)}`;
-      
-      console.log('PDF URL oluşturuldu:', this.selectedPdf);
+    if (!fileName) {
+      alert('PDF dosya adı bulunamadı!');
+      return;
     }
+
+    console.log('PDF açılıyor:', fileName);
+    console.log('API Base URL:', this.apiBaseUrl);
+    
+    // PDF state'ini sıfırla
+    this.pdfLoaded = false;
+    this.selectedPdf = null;
+    
+    // Modal'ı aç
+    this.showPdfModal = true;
+    
+    // Kısa bir gecikme ile PDF URL'ini ayarla
+    setTimeout(() => {
+      this.selectedPdf = `./server/api/pdf_viewer.php?file=${encodeURIComponent(fileName)}`;
+      console.log('PDF URL oluşturuldu:', this.selectedPdf);
+    }, 100);
   }
 
   openPdfInNewTab(): void {

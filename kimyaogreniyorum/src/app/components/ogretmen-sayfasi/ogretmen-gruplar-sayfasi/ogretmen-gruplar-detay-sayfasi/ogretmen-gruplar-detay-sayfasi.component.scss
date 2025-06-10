@@ -372,198 +372,6 @@
   }
 }
 
-// PDF Modal Styles
-.pdf-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-
-.pdf-modal-content {
-  background: white;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 1000px;
-  height: 80%;
-  max-height: 700px;
-  display: flex;
-  flex-direction: column;
-}
-
-.pdf-modal-header {
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid #e0e0e0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  h3 {
-    margin: 0;
-    color: #2c3e50;
-  }
-
-  .modal-actions {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-  }
-
-  .download-btn {
-    background: #3498db;
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: background-color 0.3s;
-
-    &:hover {
-      background: #2980b9;
-    }
-
-    i {
-      margin-right: 0.5rem;
-    }
-  }
-
-  .close-btn {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: #7f8c8d;
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 4px;
-
-    &:hover {
-      background-color: #f8f9fa;
-      color: #e74c3c;
-    }
-  }
-}
-
-.pdf-viewer {
-  flex: 1;
-  padding: 1rem;
-  position: relative;
-
-  iframe {
-    width: 100%;
-    height: 100%;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-  }
-}
-
-.pdf-fallback {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  z-index: 1;
-}
-
-.fallback-content {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-
-  .pdf-icon {
-    font-size: 3rem;
-    color: #e74c3c;
-    margin-bottom: 1rem;
-  }
-
-  h4 {
-    margin: 0 0 1rem 0;
-    color: #2c3e50;
-  }
-
-  p {
-    margin-bottom: 1.5rem;
-    color: #7f8c8d;
-  }
-}
-
-.pdf-actions {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-}
-
-.pdf-action-btn {
-  padding: 0.75rem 1.5rem;
-  border-radius: 4px;
-  text-decoration: none;
-  font-weight: 500;
-  transition: all 0.3s;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-
-  &.primary {
-    background: #3498db;
-    color: white;
-
-    &:hover {
-      background: #2980b9;
-    }
-  }
-
-  &.secondary {
-    background: #95a5a6;
-    color: white;
-
-    &:hover {
-      background: #7f8c8d;
-    }
-  }
-}
-
-@media (max-width: 768px) {
-  .grup-detay-container {
-    padding: 15px;
-  }
-
-  .header-section {
-    .grup-title {
-      font-size: 22px;
-    }
-
-    .stats {
-      width: 100%;
-      justify-content: center;
-    }
-  }
-
-  .lessons-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .program-item {
-    grid-template-columns: 1fr !important;
-    gap: 8px !important;
-    text-align: center;
-  }
-
-  .pdf-modal-content {
-    width: 95%;
-    max-height: 85vh;
-  }
-
-  .pdf-viewer iframe {
-    height: 500px !important;
-  }
-}
 .grup-detay-container {
   padding: 20px;
   background: #f8f9fa;
@@ -948,186 +756,123 @@
   }
 }
 
-// PDF Modal
-.pdf-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+/* PDF Modal Styles */
+.pdf-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.pdf-modal-content {
+  background: white;
+  border-radius: 12px;
+  width: 100%;
+  height: 100%;
+  max-width: 1200px;
+  max-height: 900px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.pdf-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #e9ecef;
+  background: #f8f9fa;
+  border-radius: 12px 12px 0 0;
+  flex-shrink: 0;
+}
+
+.pdf-modal-header h4 {
+  margin: 0;
+  color: #333;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.pdf-close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 8px;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.pdf-close-btn:hover {
+  background-color: #e9ecef;
+  color: #dc3545;
+  transform: scale(1.1);
+}
+
+.pdf-modal-body {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.pdf-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  flex: 1;
+}
+
+.pdf-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #6c757d;
+  z-index: 10;
+}
+
+.pdf-loading p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .pdf-modal-overlay {
+    padding: 10px;
   }
 
   .pdf-modal-content {
-    width: 90%;
-    height: 90%;
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    display: flex;
-    flex-direction: column;
+    max-height: 95vh;
   }
 
   .pdf-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 1.5rem;
-    background: #f8f9fa;
-    border-bottom: 1px solid #dee2e6;
-
-    h3 {
-      margin: 0;
-      color: #333;
-      font-size: 1.2rem;
-      display: flex;
-      align-items: center;
-    }
+    padding: 10px 15px;
   }
 
-  .pdf-controls {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
+  .pdf-modal-header h4 {
+    font-size: 1.1rem;
   }
-
-  .control-btn, .close-btn {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 6px;
-    background: #007bff;
-    color: white;
-    cursor: pointer;
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-    transition: background-color 0.2s;
-
-    &:hover {
-      background: #0056b3;
-    }
-
-    i {
-      font-size: 1rem;
-    }
-  }
-
-  .close-btn {
-    background: #dc3545;
-    padding: 0.5rem;
-
-    &:hover {
-      background: #c82333;
-    }
-  }
-
-  .pdf-modal-body {
-    flex: 1;
-    position: relative;
-    background: #f5f5f5;
-  }
-
-  .pdf-fallback {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: white;
-    z-index: 1;
-  }
-
-  .fallback-content {
-    text-align: center;
-    max-width: 400px;
-    padding: 2rem;
-
-    .pdf-icon {
-      font-size: 4rem;
-      color: #dc3545;
-      margin-bottom: 1rem;
-    }
-
-    h4 {
-      margin-bottom: 1rem;
-      color: #333;
-    }
-
-    p {
-      color: #666;
-      margin-bottom: 2rem;
-    }
-  }
-
-  .pdf-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-  }
-
-  .pdf-action-btn {
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.2s;
-
-    &.primary {
-      background: #007bff;
-      color: white;
-
-      &:hover {
-        background: #0056b3;
-      }
-    }
-
-    &.secondary {
-      background: #6c757d;
-      color: white;
-
-      &:hover {
-        background: #545b62;
-      }
-    }
-  }
-
-  .pdf-loading {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    color: #666;
-    z-index: 2;
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-
-    i {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      animation: spin 2s linear infinite;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  }
+}
 
 @media (max-width: 768px) {
   .grup-detay-container {
