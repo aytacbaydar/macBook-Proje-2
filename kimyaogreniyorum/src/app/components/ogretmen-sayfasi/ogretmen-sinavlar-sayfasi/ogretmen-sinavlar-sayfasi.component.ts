@@ -168,7 +168,7 @@ export class OgretmenSinavlarSayfasiComponent implements OnInit, OnDestroy {
   }
   loadCevapAnahtarlari() {
     console.log('Cevap anahtarları yükleniyor...');
-    this.http.get('http://localhost:8000/api/cevap-anahtarlari-listele.php')
+    this.http.get<any>('./server/api/cevap-anahtarlari-listele.php')
       .subscribe({
         next: (response: any) => {
           console.log('API yanıtı:', response);
