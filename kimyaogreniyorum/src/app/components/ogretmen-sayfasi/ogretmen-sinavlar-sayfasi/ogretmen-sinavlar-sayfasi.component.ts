@@ -20,6 +20,9 @@ export class OgretmenSinavlarSayfasiComponent implements OnInit, OnDestroy {
   cevapAnahtarlari: CevapAnahtari[] = [];
   loading = true;
   maxSoruSayisi = 100;
+  searchQuery = '';
+  showAddForm = false;
+  error: string | null = null;
 
   sinavTurleri = [
     { id: 'TYT', label: 'TYT Deneme' },
@@ -393,5 +396,51 @@ export class OgretmenSinavlarSayfasiComponent implements OnInit, OnDestroy {
   }
   trackByFn(index: number, item: any) {
     return index;
+  }
+
+  // Filtreleme için getter
+  get filteredCevapAnahtarlari(): CevapAnahtari[] {
+    if (!this.searchQuery.trim()) {
+      return this.cevapAnahtarlari;
+    }
+
+    const query = this.searchQuery.toLowerCase().trim();
+    return this.cevapAnahtarlari.filter(cevap =>
+      cevap.sinav_adi.toLowerCase().includes(query) ||
+      this.getSinavTuruLabel(cevap.sinav_turu).toLowerCase().includes(query)
+    );
+  }
+
+  // İstatistik metodları
+  getActiveSinavCount(): number {
+    const today = new Date();
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(today.getMonth() - 1);
+    
+    return this.cevapAnahtarlari.filter(cevap => {
+      const cevapDate = new Date(cevap.tarih);
+      return cevapDate >= oneMonthAgo;
+    }).length;
+  }
+
+  getThisMonthCount(): number {
+    const today = new Date();
+    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    
+    return this.cevapAnahtarlari.filter(cevap => {
+      const cevapDate = new Date(cevap.tarih);
+      return cevapDate >= firstDayOfMonth;
+    }).length;
+  }
+
+  // Sınav türüne göre renk
+  getExamTypeColor(sinavTuru: string): string {
+    const colors: { [key: string]: string } = {
+      'TYT': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      'AYT': 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+      'TAR': 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+      'TEST': 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
+    };
+    return colors[sinavTuru] || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
   }
 }
