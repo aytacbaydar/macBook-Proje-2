@@ -26,6 +26,7 @@ import { OgrenciAnaSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci
 import { OgrenciQrKodSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-qr-kod-sayfasi/ogrenci-qr-kod-sayfasi.component';
 import { OgrenciTaslakSayfasiComponent } from './components/ogrenci-sayfasi/template/ogrenci-taslak-sayfasi/ogrenci-taslak-sayfasi.component';
 import { OgretmenTaaslakSayfasiComponent } from './components/ogretmen-sayfasi/template/ogretmen-taaslak-sayfasi/ogretmen-taaslak-sayfasi.component';
+import { OgretmenSinavlarSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-sinavlar-sayfasi.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/giris-sayfasi', pathMatch: 'full' },
@@ -86,7 +87,7 @@ const routes: Routes = [
         path: 'ogrenci-qr-kod-sayfasi',
         component: OgrenciQrKodSayfasiComponent,
       },
-    ]
+    ],
   },
 
   //öğretmenler sayfaları
@@ -134,6 +135,10 @@ const routes: Routes = [
         path: 'qr-generator',
         component: OgretmenQrGeneratorComponent,
       },
+      {
+        path: 'ogretmen-sinavlar-sayfasi',
+        component: OgretmenSinavlarSayfasiComponent,
+      },
     ],
   },
 
@@ -144,14 +149,14 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: OgrenciAnaSayfasiComponent
+        component: OgrenciAnaSayfasiComponent,
       },
       {
         path: 'ogrenci-qr-kod-sayfasi',
-        component: OgrenciQrKodSayfasiComponent
+        component: OgrenciQrKodSayfasiComponent,
       },
-
-    ]},
+    ],
+  },
 ];
 
 @NgModule({

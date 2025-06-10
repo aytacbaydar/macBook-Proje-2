@@ -29,7 +29,7 @@ export class OgretmenSidebarSayfasiComponent {
     {
       icon: 'bi-pencil-square',
       label: 'Sınavlar',
-      link: 'ogretmen-sayfasi/',
+      link: 'ogretmen-sayfasi/ogretmen-sinavlar-sayfasi',
     },
     { icon: 'bi-archive', label: 'Testler', link: 'ogretmen-sayfasi/' },
     { icon: 'bi-diagram-3', label: 'Yol Haritası', link: 'ogretmen-sayfasi/' },

@@ -1,0 +1,540 @@
+<div class="container">
+    <div class="header">
+      <h1>Cevap Anahtarı Yönetimi</h1>
+      <p class="subtitle">Sınav cevap anahtarlarını, konu bilgilerini ve video çözümlerini ekleyebilirsiniz.</p>
+    </div>
+  
+    <!-- Başarı ve Hata Mesajları -->
+    <div *ngIf="successMessage" class="alert alert-success">
+      <i class="fas fa-check-circle"></i> {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="alert alert-error">
+      <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
+    </div>
+  
+    <div class="content-container">
+      <!-- Form Paneli -->
+      <div class="panel form-panel">
+        <h2>Yeni Cevap Anahtarı Ekle</h2>
+        
+        <form (ngSubmit)="submitForm()" class="cevap-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="sinav_adi">Sınav Adı</label>
+              <input 
+                type="text" 
+                id="sinav_adi" 
+                name="sinav_adi"
+                [(ngModel)]="cevapAnahtari.sinav_adi"
+                placeholder="Örn: TYT-AYT Kimya"
+                required
+              >
+            </div>
+            
+            <div class="form-group">
+              <label for="sinav_turu">Sınav Türü</label>
+              <select 
+                id="sinav_turu" 
+                name="sinav_turu"
+                [(ngModel)]="cevapAnahtari.sinav_turu"
+                required
+              >
+                <option value="">Sınav Türü Seçin</option>
+                <option *ngFor="let tur of sinavTurleri" [value]="tur.id">{{ tur.label }}</option>
+              </select>
+            </div>
+          </div>
+  
+          <div class="form-row">
+            <div class="form-group">
+              <label for="soru_sayisi">Soru Sayısı</label>
+              <input 
+                type="number" 
+                id="soru_sayisi" 
+                name="soru_sayisi"
+                [(ngModel)]="cevapAnahtari.soru_sayisi"
+                (ngModelChange)="updateSorular($event)"
+                min="1" 
+                [max]="maxSoruSayisi"
+                required
+              >
+            </div>
+            
+            <div class="form-group">
+              <label for="tarih">Sınav Tarihi</label>
+              <input 
+                type="date" 
+                id="tarih" 
+                name="tarih"
+                [(ngModel)]="cevapAnahtari.tarih"
+                required
+              >
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <label for="sinav_kapagi">Sınav Kapağı</label>
+            <div class="file-upload">
+              <input 
+                type="file" 
+                id="sinav_kapagi"
+                name="sinav_kapagi"
+                accept="image/*" 
+                (change)="onImageSelected($event)"
+              >
+              <label for="sinav_kapagi" class="file-label">
+                <i class="fas fa-upload"></i> Dosya Seç
+              </label>
+              <span class="file-name" *ngIf="cevapAnahtari.sinav_kapagi">
+                {{ cevapAnahtari.sinav_kapagi }}
+              </span>
+            </div>
+            
+            <div class="image-preview" *ngIf="imagePreview">
+              <img [src]="imagePreview" alt="Sınav Kapağı Önizleme">
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <label>Soru Detayları</label>
+            <div class="table-container">
+              <table class="soru-detay-table">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Cevap</th>
+                    <th>Konu</th>
+                    <th>Video Çözümü</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let soru of sorular; trackBy: trackByFn">
+                    <td>{{ soru }}</td>
+                    <td>
+                      <input 
+                        type="text" 
+                        [name]="'ca' + soru" 
+                        [(ngModel)]="cevapAnahtari.cevaplar['ca' + soru]" 
+                        maxlength="1" 
+                        placeholder="A-E"
+                        required
+                      >
+                    </td>
+                    <td>
+                      <input 
+                        type="text" 
+                        [name]="'ka' + soru" 
+                        [(ngModel)]="cevapAnahtari.konular['ka' + soru]" 
+                        placeholder="Konu adı"
+                      >
+                    </td>
+                    <td>
+                      <input 
+                        type="text" 
+                        [name]="'va' + soru" 
+                        [(ngModel)]="cevapAnahtari.videolar['va' + soru]" 
+                        placeholder="Video URL"
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+  
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" (click)="initModel()">
+              <i class="fas fa-refresh"></i> Formu Temizle
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="submitting">
+              <i class="fas fa-save"></i> {{ submitting ? 'Kaydediliyor...' : 'Kaydet' }}
+            </button>
+          </div>
+        </form>
+      </div>
+      
+      <!-- Liste Paneli -->
+      <div class="panel list-panel">
+        <h2>Cevap Anahtarları</h2>
+        
+        <div class="cevap-anahtari-list">
+          <div class="loading" *ngIf="loading">
+            <i class="fas fa-spinner fa-spin"></i> Yükleniyor...
+          </div>
+          
+          <div class="empty-list" *ngIf="!loading && cevapAnahtarlari.length === 0">
+            <i class="fas fa-info-circle"></i>
+            <p>Henüz cevap anahtarı bulunmamaktadır.</p>
+          </div>
+          
+          <div class="list-item" *ngFor="let cevap of cevapAnahtarlari">
+            <div class="list-item-header">
+              <div class="list-item-title">
+                <h3>{{ cevap.sinav_adi }}</h3>
+                <span class="badge">{{ getSinavTuruLabel(cevap.sinav_turu) }}</span>
+              </div>
+  
+  
+              <div class="list-item-actions">
+                <button class="btn-icon btn-edit" (click)="editCevapAnahtari(cevap)">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn-icon btn-danger" (click)="cevap.id && deleteCevapAnahtari(cevap.id)">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+  
+  
+  
+  
+            </div>
+            
+            <div class="list-item-body">
+              <div class="info-row">
+                <div class="info-item">
+                  <span class="label">Soru Sayısı:</span>
+                  <span class="value">{{ cevap.soru_sayisi }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Tarih:</span>
+                  <span class="value">{{ cevap.tarih }}</span>
+                </div>
+              </div>
+              
+              <div class="kapak-preview" *ngIf="cevap.sinav_kapagi">
+                <img [src]="'/uploads/' + cevap.sinav_kapagi" alt="Sınav Kapağı">
+              </div>
+              
+              <div class="soru-detay-preview">
+                <h4>Cevap Anahtarı ve Konu Dağılımı</h4>
+                <div class="table-container">
+                  <table class="soru-detay-table-mini">
+                    <thead>
+                      <tr>
+                        <th>No</th>
+                        <th>Cevap</th>
+                        <th>Konu</th>
+                        <th>Video</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let i of getSoruDizisi(cevap); let idx = index">
+                        <td>{{ idx + 1 }}</td>
+                        <td>{{ cevap.cevaplar['ca' + (idx + 1)] || '' }}</td>
+                        <td>{{ cevap.konular['ka' + (idx + 1)] || '' }}</td>
+                        <td>
+                          <a *ngIf="cevap.videolar && cevap.videolar['va' + (idx + 1)]" [href]="cevap.videolar['va' + (idx + 1)]"
+                            target="_blank">
+                            <i class="fas fa-video"></i>
+                          </a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Form Paneli 
+  <div class="panel form-panel">
+    <h2>{{ editMode ? 'Cevap Anahtarı Düzenle' : 'Yeni Cevap Anahtarı Ekle' }}</h2>
+    
+  
+    <form *ngIf="editMode && currentEditingCevapAnahtari" (ngSubmit)="submitEditForm()" class="cevap-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="edit_sinav_adi">Sınav Adı</label>
+          <input 
+            type="text" 
+            id="edit_sinav_adi" 
+            name="edit_sinav_adi"
+            [(ngModel)]="currentEditingCevapAnahtari.sinav_adi"
+            placeholder="Örn: Matematik Vize Sınavı"
+            required
+          >
+        </div>
+        
+        <div class="form-group">
+          <label for="edit_sinav_turu">Sınav Türü</label>
+          <select 
+            id="edit_sinav_turu" 
+            name="edit_sinav_turu"
+            [(ngModel)]="currentEditingCevapAnahtari.sinav_turu"
+            required
+          >
+            <option value="">Sınav Türü Seçin</option>
+            <option *ngFor="let tur of sinavTurleri" [value]="tur.id">{{ tur.label }}</option>
+          </select>
+        </div>
+      </div>
+  
+      <div class="form-row">
+        <div class="form-group">
+          <label for="edit_soru_sayisi">Soru Sayısı</label>
+          <input 
+            type="number" 
+            id="edit_soru_sayisi" 
+            name="edit_soru_sayisi"
+            [(ngModel)]="currentEditingCevapAnahtari.soru_sayisi"
+            (ngModelChange)="updateSorular($event)"
+            min="1" 
+            [max]="maxSoruSayisi"
+            required
+          >
+        </div>
+        
+        <div class="form-group">
+          <label for="edit_tarih">Sınav Tarihi</label>
+          <input 
+            type="date" 
+            id="edit_tarih" 
+            name="edit_tarih"
+            [(ngModel)]="currentEditingCevapAnahtari.tarih"
+            required
+          >
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label for="edit_sinav_kapagi">Sınav Kapağı</label>
+        <div class="file-upload">
+          <input 
+            type="file" 
+            id="edit_sinav_kapagi"
+            name="edit_sinav_kapagi"
+            accept="image/*" 
+            (change)="onImageSelected($event)"
+          >
+          <label for="edit_sinav_kapagi" class="file-label">
+            <i class="fas fa-upload"></i> Dosya Seç
+          </label>
+          <span class="file-name" *ngIf="currentEditingCevapAnahtari.sinav_kapagi">
+            {{ currentEditingCevapAnahtari.sinav_kapagi }}
+          </span>
+        </div>
+        
+        <div class="image-preview" *ngIf="imagePreview">
+          <img [src]="imagePreview" alt="Sınav Kapağı Önizleme">
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label>Soru Detayları</label>
+        <div class="table-container">
+          <table class="soru-detay-table">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Cevap</th>
+                <th>Konu</th>
+                <th>Video Çözümü</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let i of getSoruDizisi(currentEditingCevapAnahtari); let idx = index">
+                <td>{{ idx + 1 }}</td>
+                <td>
+                  <input 
+                    type="text" 
+                    [name]="'edit_ca' + (idx + 1)" 
+                    [(ngModel)]="currentEditingCevapAnahtari.cevaplar['ca' + (idx + 1)]" 
+                    maxlength="1" 
+                    placeholder="A-E"
+                    required
+                  >
+                </td>
+                <td>
+                  <input 
+                    type="text" 
+                    [name]="'edit_ka' + (idx + 1)" 
+                    [(ngModel)]="currentEditingCevapAnahtari.konular['ka' + (idx + 1)]" 
+                    placeholder="Konu adı"
+                  >
+                </td>
+                <td>
+                  <input 
+                    type="text" 
+                    [name]="'edit_va' + (idx + 1)" 
+                    [(ngModel)]="currentEditingCevapAnahtari.videolar['va' + (idx + 1)]" 
+                    placeholder="Video URL"
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+  
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="cancelEdit()">
+          <i class="fas fa-times"></i> İptal
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="submitting">
+          <i class="fas fa-save"></i> {{ submitting ? 'Güncelleniyor...' : 'Güncelle' }}
+        </button>
+      </div>
+    </form>
+    
+   
+    <form *ngIf="!editMode" (ngSubmit)="submitForm()" class="cevap-form">
+  
+    </form>
+  </div>
+  -->
+  
+  
+  <!-- Düzenleme Modalı -->
+  <div class="modal" [class.active]="editMode">
+    <div class="modal-overlay" (click)="cancelEdit()"></div>
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3>Cevap Anahtarı Düzenle</h3>
+        <button class="modal-close" (click)="cancelEdit()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="modal-body">
+        <!-- Düzenleme Formu -->
+        <form *ngIf="currentEditingCevapAnahtari" (ngSubmit)="submitEditForm()" class="cevap-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="edit_sinav_adi">Sınav Adı</label>
+              <input 
+                type="text" 
+                id="edit_sinav_adi" 
+                name="edit_sinav_adi"
+                [(ngModel)]="currentEditingCevapAnahtari.sinav_adi"
+                placeholder="Örn: Matematik Vize Sınavı"
+                required
+              >
+            </div>
+            
+            <div class="form-group">
+              <label for="edit_sinav_turu">Sınav Türü</label>
+              <select 
+                id="edit_sinav_turu" 
+                name="edit_sinav_turu"
+                [(ngModel)]="currentEditingCevapAnahtari.sinav_turu"
+                required
+              >
+                <option value="">Sınav Türü Seçin</option>
+                <option *ngFor="let tur of sinavTurleri" [value]="tur.id">{{ tur.label }}</option>
+              </select>
+            </div>
+          </div>
+  
+          <div class="form-row">
+            <div class="form-group">
+              <label for="edit_soru_sayisi">Soru Sayısı</label>
+              <input 
+                type="number" 
+                id="edit_soru_sayisi" 
+                name="edit_soru_sayisi"
+                [(ngModel)]="currentEditingCevapAnahtari.soru_sayisi"
+                (ngModelChange)="updateSorular($event)"
+                min="1" 
+                [max]="maxSoruSayisi"
+                required
+              >
+            </div>
+            
+            <div class="form-group">
+              <label for="edit_tarih">Sınav Tarihi</label>
+              <input 
+                type="date" 
+                id="edit_tarih" 
+                name="edit_tarih"
+                [(ngModel)]="currentEditingCevapAnahtari.tarih"
+                required
+              >
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <label for="edit_sinav_kapagi">Sınav Kapağı</label>
+            <div class="file-upload">
+              <input 
+                type="file" 
+                id="edit_sinav_kapagi"
+                name="edit_sinav_kapagi"
+                accept="image/*" 
+                (change)="onImageSelected($event)"
+              >
+              <label for="edit_sinav_kapagi" class="file-label">
+                <i class="fas fa-upload"></i> Dosya Seç
+              </label>
+              <span class="file-name" *ngIf="currentEditingCevapAnahtari.sinav_kapagi">
+                {{ currentEditingCevapAnahtari.sinav_kapagi }}
+              </span>
+            </div>
+            
+            <div class="image-preview" *ngIf="imagePreview">
+              <img [src]="imagePreview" alt="Sınav Kapağı Önizleme">
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <label>Soru Detayları</label>
+            <div class="table-container">
+              <table class="soru-detay-table">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Cevap</th>
+                    <th>Konu</th>
+                    <th>Video Çözümü</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let i of getSoruDizisi(currentEditingCevapAnahtari); let idx = index">
+                    <td>{{ idx + 1 }}</td>
+                    <td>
+                      <input 
+                        type="text" 
+                        [name]="'edit_ca' + (idx + 1)" 
+                        [(ngModel)]="currentEditingCevapAnahtari.cevaplar['ca' + (idx + 1)]" 
+                        maxlength="1" 
+                        placeholder="A-E"
+                        required
+                      >
+                    </td>
+                    <td>
+                      <input 
+                        type="text" 
+                        [name]="'edit_ka' + (idx + 1)" 
+                        [(ngModel)]="currentEditingCevapAnahtari.konular['ka' + (idx + 1)]" 
+                        placeholder="Konu adı"
+                      >
+                    </td>
+                    <td>
+                      <input 
+                        type="text" 
+                        [name]="'edit_va' + (idx + 1)" 
+                        [(ngModel)]="currentEditingCevapAnahtari.videolar['va' + (idx + 1)]" 
+                        placeholder="Video URL"
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </form>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="cancelEdit()">
+          <i class="fas fa-times"></i> İptal
+        </button>
+        <button type="button" class="btn btn-primary" [disabled]="submitting" (click)="submitEditForm()">
+          <i class="fas fa-save"></i> {{ submitting ? 'Güncelleniyor...' : 'Güncelle' }}
+        </button>
+      </div>
+    </div>
+  </div>
