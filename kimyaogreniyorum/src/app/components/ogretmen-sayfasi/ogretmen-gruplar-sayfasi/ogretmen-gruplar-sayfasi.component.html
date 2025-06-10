@@ -134,9 +134,10 @@
           <p>Bu grupta henüz öğrenci bulunmuyor</p>
         </div>
 
-        <div *ngIf="group.students.length > 0" class="students-horizontal-list">
+        <div *ngIf="group.students.length > 0" class="students-horizontal-list" >
           <div class="student-list-item" *ngFor="let student of group.students">
-            <div class="student-avatar-container">
+            
+            <div class="student-avatar-container" >
               <img class="student-avatar" 
                    [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)" 
                    [alt]="student.adi_soyadi">
@@ -148,7 +149,6 @@
                    [class.bi-x-circle-fill]="!student.aktif"></i>
               </div>
             </div>
-            
             <div class="student-details">
               <h4 class="student-name">{{ student.adi_soyadi }}</h4>
               <p class="student-email">{{ student.email }}</p>
@@ -165,8 +165,15 @@
                   <i class="bi bi-calendar me-1"></i>
                   {{ student.ders_gunu }} - {{ student.ders_saati }}
                 </span>
+                <a [routerLink]="['/ogretmen-sayfasi/ogretmen-ogrenci-detay-sayfasi', student.id]">
+                <span class="meta-tag" *ngIf="student.ders_gunu && student.ders_saati">
+                  <i class="bi bi-layout-text-window-reverse me-1"></i>
+                  Güncelle
+                </span>
+              </a>
               </div>
             </div>
+            
           </div>
         </div>
       </div>

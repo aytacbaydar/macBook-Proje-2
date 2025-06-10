@@ -44,9 +44,9 @@ try {
         $updateFields = [];
         $params = [];
 
-        $allowed = ['adi_soyadi', 'cep_telefonu', 'avatar'];
+        $allowed = ['adi_soyadi', 'cep_telefonu', 'avatar', 'aktif', 'email'];
         if ($user['rutbe'] === 'admin') {
-            $allowed = array_merge($allowed, ['rutbe', 'aktif', 'email', 'brans', 'ogretmeni']);
+            $allowed = array_merge($allowed, ['rutbe', 'brans', 'ogretmeni']);
         }
 
         foreach ($allowed as $field) {
