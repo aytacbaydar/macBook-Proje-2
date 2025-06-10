@@ -138,6 +138,43 @@
         (error)="onPdfLoadError()"
         class="pdf-iframe">
       </iframe>
-    </div>
+      <div class="pdf-fallback" *ngIf="!pdfLoaded">
+              <div class="fallback-content">
+                <div class="pdf-icon">
+                  <i class="bi bi-file-earmark-pdf"></i>
+                </div>
+                <h4>PDF Görüntülenemiyor</h4>
+                <p>PDF dosyası tarayıcınızda görüntülenemiyor. Aşağıdaki seçenekleri kullanabilirsiniz:</p>
+                <div class="pdf-actions">
+                  <a [href]="selectedPdfUrl" target="_blank" class="pdf-action-btn primary">
+                    <i class="bi bi-download"></i>
+                    İndir
+                  </a>
+                  <button (click)="closePdfModal()" class="pdf-action-btn secondary">
+                    <i class="bi bi-x-circle"></i>
+                    Kapat
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pdf-modal-footer">
+            <div class="pdf-controls">
+              <button class="pdf-control-btn" (click)="closePdfModal()">
+                <i class="bi bi-x-circle"></i>
+                Kapat
+              </button>
+              <a [href]="selectedPdfUrl" target="_blank" class="pdf-control-btn download-btn">
+                <i class="bi bi-download"></i>
+                İndir
+              </a>
+              <button class="pdf-control-btn" (click)="printPdf()">
+                <i class="bi bi-printer"></i>
+                Yazdır
+              </button>
+            </div>
+          
   </div>
+</div>
 </div>

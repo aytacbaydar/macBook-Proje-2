@@ -230,14 +230,14 @@ export class OgretmenGruplarDetaySayfasiComponent implements OnInit {
 
     console.log('PDF açılıyor:', fileName);
     console.log('API Base URL:', this.apiBaseUrl);
-    
+
     // PDF state'ini sıfırla
     this.pdfLoaded = false;
     this.selectedPdf = null;
-    
+
     // Modal'ı aç
     this.showPdfModal = true;
-    
+
     // Kısa bir gecikme ile PDF URL'ini ayarla
     setTimeout(() => {
       this.selectedPdf = `./server/api/pdf_viewer.php?file=${encodeURIComponent(fileName)}`;
@@ -290,6 +290,17 @@ export class OgretmenGruplarDetaySayfasiComponent implements OnInit {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+    }
+  }
+
+    printPdf(): void {
+    if (this.selectedPdf) {
+      const printWindow = window.open(this.selectedPdf, '_blank');
+      if (printWindow) {
+        printWindow.onload = () => {
+          printWindow.print();
+        };
+      }
     }
   }
 }
