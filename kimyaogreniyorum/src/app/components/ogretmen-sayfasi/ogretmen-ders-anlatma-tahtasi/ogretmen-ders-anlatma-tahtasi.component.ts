@@ -168,20 +168,18 @@ export class OgretmenDersAnlatmaTahtasiComponent
       if (canvas) {
         // Kağıt resmini arka plan olarak ayarla
         const canvasElement = canvas.getElement();
-        const kagitUrl = './kagit.png'; // public klasöründeki kagit.png
+        const kagitUrl = '/kagit.png'; // public klasöründeki kagit.png - absolute path
         
-        // Canvas container'ına arka plan ekle
-        const canvasContainer = canvasElement.parentElement;
-        if (canvasContainer) {
-          canvasContainer.style.backgroundImage = `url(${kagitUrl})`;
-          canvasContainer.style.backgroundSize = 'contain';
-          canvasContainer.style.backgroundRepeat = 'no-repeat';
-          canvasContainer.style.backgroundPosition = 'center';
-        }
-        
-        // Canvas'ın kendisini şeffaf yap
-        canvas.backgroundColor = 'transparent';
-        canvas.renderAll();
+        // Canvas'ın arka planını kağıt resmi olarak ayarla
+        canvas.setBackgroundImage(kagitUrl, () => {
+          canvas.renderAll();
+          console.log('Kağıt arka planı canvas\'a başarıyla eklendi');
+        }, {
+          scaleX: canvas.width / 800, // Varsayılan kağıt boyutuna göre ölçekle
+          scaleY: canvas.height / 600,
+          originX: 'left',
+          originY: 'top'
+        });
         
         // PDF bilgilerini ayarla (kağıt için)
         this.yuklenenPdf = { local: true, url: kagitUrl };
@@ -228,7 +226,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
         return;
       }
 
-      // PDF'i Base64 olarak oku ve arka plan resmi olarak ayarla
+      // PDF'i Base64 olarak oku
       const reader = new FileReader();
       reader.onload = (e) => {
         try {
@@ -240,31 +238,45 @@ export class OgretmenDersAnlatmaTahtasiComponent
           // Canvas elementini al
           const canvas = this.canvasInstances[this.currentPage - 1];
           if (canvas) {
-            // Canvas container'ına arka plan ekle
-            const canvasElement = canvas.getElement();
-            const canvasContainer = canvasElement.parentElement;
-            
-            if (canvasContainer) {
-              canvasContainer.style.backgroundImage = `url(${base64String})`;
-              canvasContainer.style.backgroundSize = 'contain';
-              canvasContainer.style.backgroundRepeat = 'no-repeat';
-              canvasContainer.style.backgroundPosition = 'center';
-            }
-            
-            // Canvas'ı şeffaf yap
-            canvas.backgroundColor = 'transparent';
-            canvas.renderAll();
+            // PDF'i fabric.js Image objesi olarak yükle
+            fabric.Image.fromURL(base64String, (img) => {
+              if (img) {
+                // Canvas boyutlarına göre ölçekle
+                const scaleX = canvas.width / (img.width || 800);
+                const scaleY = canvas.height / (img.height || 600);
+                const scale = Math.min(scaleX, scaleY);
+                
+                img.set({
+                  scaleX: scale,
+                  scaleY: scale,
+                  originX: 'left',
+                  originY: 'top',
+                  left: 0,
+                  top: 0,
+                  selectable: false,
+                  evented: false,
+                  excludeFromExport: false
+                });
+
+                // Arka plan olarak ayarla
+                canvas.setBackgroundImage(img, () => {
+                  canvas.renderAll();
+                  console.log('PDF başarıyla canvas arka planı olarak ayarlandı');
+                });
+                
+                this.pdfYukleniyor = false;
+                this.kalemModunuAc();
+              } else {
+                throw new Error('PDF resim olarak yüklenemedi');
+              }
+            }, { crossOrigin: 'anonymous' });
             
             // PDF bilgilerini ayarla
             this.yuklenenPdf = { base64: base64String };
-            this.pdfSayfaSayisi = 1; // Tek sayfa olarak işle
+            this.pdfSayfaSayisi = 1;
             this.seciliPdfSayfasi = 1;
 
-            console.log('PDF başarıyla arka plan olarak yüklendi');
-            this.pdfYukleniyor = false;
-            
-            // Çizim modunu aktifleştir
-            this.kalemModunuAc();
+            console.log('PDF yükleme işlemi başlatıldı');
           } else {
             throw new Error('Canvas bulunamadı');
           }
@@ -292,24 +304,17 @@ export class OgretmenDersAnlatmaTahtasiComponent
   pdfArkaPlaniTemizle(): void {
     const canvas = this.canvasInstances[this.currentPage - 1];
     if (canvas) {
-      const canvasElement = canvas.getElement();
-      const canvasContainer = canvasElement.parentElement;
-      
-      // Container'dan arka planı temizle
-      if (canvasContainer) {
-        canvasContainer.style.backgroundImage = 'none';
-      }
-      
-      // Canvas arka planını beyaz yap
-      canvas.backgroundColor = '#ffffff';
-      canvas.renderAll();
+      // Canvas arka plan resmini temizle
+      canvas.setBackgroundImage(null, () => {
+        canvas.backgroundColor = '#ffffff';
+        canvas.renderAll();
+        console.log('PDF arka planı temizlendi');
+      });
       
       // PDF verilerini temizle
       this.yuklenenPdf = null;
       this.pdfSayfaSayisi = 0;
       this.seciliPdfSayfasi = 1;
-      
-      console.log('PDF arka planı temizlendi');
     }
   }
 
@@ -714,6 +719,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
         renderOnAddRemove: true,
         interactive: true,
         backgroundColor: '#ffffff',
+        preserveObjectStacking: true,
       });
 
       // Canvas array'e ekle veya güncelle
