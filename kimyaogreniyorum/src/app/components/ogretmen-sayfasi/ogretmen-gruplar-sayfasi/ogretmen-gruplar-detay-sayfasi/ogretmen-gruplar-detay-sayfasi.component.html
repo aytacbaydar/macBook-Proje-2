@@ -226,3 +226,20 @@
     </div>
   </div>
 </div>
+
+<!-- PDF Modal -->
+<div *ngIf="showPdfModal" class="pdf-modal-overlay" (click)="closePdfModal()">
+  <div class="pdf-modal-content" (click)="$event.stopPropagation()">
+    <div class="pdf-modal-header">
+      <h3>PDF Görüntüleyici</h3>
+      <button class="close-btn" (click)="closePdfModal()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    <div class="pdf-modal-body">
+      <iframe *ngIf="selectedPdf" [src]="selectedPdf" width="100%" height="600px" frameborder="0">
+        PDF yüklenemedi.
+      </iframe>
+    </div>
+  </div>
+</div>

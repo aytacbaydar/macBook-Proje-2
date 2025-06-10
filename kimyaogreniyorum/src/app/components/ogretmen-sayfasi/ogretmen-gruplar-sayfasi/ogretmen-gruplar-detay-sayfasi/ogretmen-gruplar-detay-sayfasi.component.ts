@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 interface DersKaydi {
   id: number;
   pdf_adi: string;
-  pdf_dosya_yolu: string;
+  pdfYolu: string;
   cizim_dosya_yolu: string;
   sayfa_sayisi: number;
   olusturma_zamani: string;
