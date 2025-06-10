@@ -34,10 +34,10 @@
         <h2>Ders Programı</h2>
       </div>
       <div class="program-list">
-        <div *ngFor="let program of grupDetay.dersProgram" class="program-item">
-          <div class="day">{{ program.gun }}</div>
-          <div class="time">{{ program.saat }}</div>
-          <div class="subject">{{ program.ders_adi }}</div>
+        <div *ngFor="let student of grupDetay.students"class="program-item">
+          <div class="day">{{ student.ders_gunu }}</div>
+          <div class="time">{{ student.ders_saati }}</div>
+          <div class="subject">{{ student.ders_adi }}</div>
         </div>
       </div>
     </div>
@@ -50,8 +50,8 @@
       </div>
       <div class="students-list">
         <div *ngFor="let student of grupDetay.students" class="student-item">
-          <div class="student-avatar">
-            <i class="fas fa-user"></i>
+          <div>
+            <img [src]="student.avatar" alt="" style="width: 45px; height: 45px; border-radius: 50%;">
           </div>
           <div class="student-info">
             <div class="student-name">{{ student.adi_soyadi }}</div>
