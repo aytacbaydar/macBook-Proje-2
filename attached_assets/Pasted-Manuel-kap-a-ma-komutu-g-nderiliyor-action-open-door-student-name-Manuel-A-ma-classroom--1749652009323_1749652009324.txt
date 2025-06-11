@@ -1,0 +1,82 @@
+Manuel kapı açma komutu gönderiliyor: {action: 'open_door', student_name: 'Manuel Açma', classroom: 'EAE', timestamp: '2025-06-11T14:26:33.357Z'}
+polyfills-FFHMD2TL.js:1 [Violation] 'click' handler took 1227ms
+polyfills-FFHMD2TL.js:1 
+            
+            
+           POST https://www.kimyaogreniyorum.com/server/api/door_control_usb.php 500 (Internal Server Error)
+k @ polyfills-FFHMD2TL.js:1
+scheduleTask @ polyfills-FFHMD2TL.js:1
+onScheduleTask @ polyfills-FFHMD2TL.js:1
+scheduleTask @ polyfills-FFHMD2TL.js:1
+scheduleTask @ polyfills-FFHMD2TL.js:1
+scheduleMacroTask @ polyfills-FFHMD2TL.js:1
+Ge @ polyfills-FFHMD2TL.js:1
+(anonymous) @ polyfills-FFHMD2TL.js:1
+t.<computed> @ polyfills-FFHMD2TL.js:1
+(anonymous) @ main-PCAQJ226.js:15
+_trySubscribe @ main-PCAQJ226.js:10
+(anonymous) @ main-PCAQJ226.js:10
+_0 @ main-PCAQJ226.js:10
+subscribe @ main-PCAQJ226.js:10
+t.subscribe.s @ main-PCAQJ226.js:10
+_next @ main-PCAQJ226.js:10
+next @ main-PCAQJ226.js:10
+(anonymous) @ main-PCAQJ226.js:10
+_trySubscribe @ main-PCAQJ226.js:10
+(anonymous) @ main-PCAQJ226.js:10
+_0 @ main-PCAQJ226.js:10
+subscribe @ main-PCAQJ226.js:10
+(anonymous) @ main-PCAQJ226.js:10
+(anonymous) @ main-PCAQJ226.js:10
+(anonymous) @ main-PCAQJ226.js:10
+_0 @ main-PCAQJ226.js:10
+subscribe @ main-PCAQJ226.js:10
+(anonymous) @ main-PCAQJ226.js:10
+(anonymous) @ main-PCAQJ226.js:10
+(anonymous) @ main-PCAQJ226.js:10
+_0 @ main-PCAQJ226.js:10
+subscribe @ main-PCAQJ226.js:10
+(anonymous) @ main-PCAQJ226.js:10
+(anonymous) @ main-PCAQJ226.js:10
+(anonymous) @ main-PCAQJ226.js:10
+_0 @ main-PCAQJ226.js:10
+subscribe @ main-PCAQJ226.js:10
+v @ main-PCAQJ226.js:10
+h @ main-PCAQJ226.js:10
+_next @ main-PCAQJ226.js:10
+next @ main-PCAQJ226.js:10
+(anonymous) @ main-PCAQJ226.js:10
+_trySubscribe @ main-PCAQJ226.js:10
+(anonymous) @ main-PCAQJ226.js:10
+_0 @ main-PCAQJ226.js:10
+subscribe @ main-PCAQJ226.js:10
+u3 @ main-PCAQJ226.js:10
+(anonymous) @ main-PCAQJ226.js:10
+(anonymous) @ main-PCAQJ226.js:10
+(anonymous) @ main-PCAQJ226.js:10
+_0 @ main-PCAQJ226.js:10
+subscribe @ main-PCAQJ226.js:10
+(anonymous) @ main-PCAQJ226.js:10
+(anonymous) @ main-PCAQJ226.js:10
+(anonymous) @ main-PCAQJ226.js:10
+_0 @ main-PCAQJ226.js:10
+subscribe @ main-PCAQJ226.js:10
+(anonymous) @ main-PCAQJ226.js:10
+(anonymous) @ main-PCAQJ226.js:10
+(anonymous) @ main-PCAQJ226.js:10
+_0 @ main-PCAQJ226.js:10
+subscribe @ main-PCAQJ226.js:10
+openDoorManually @ main-PCAQJ226.js:604
+(anonymous) @ main-PCAQJ226.js:604
+eO @ main-PCAQJ226.js:14
+n @ main-PCAQJ226.js:14
+(anonymous) @ main-PCAQJ226.js:14
+invokeTask @ polyfills-FFHMD2TL.js:1
+onInvokeTask @ main-PCAQJ226.js:14
+invokeTask @ polyfills-FFHMD2TL.js:1
+runTask @ polyfills-FFHMD2TL.js:1
+invokeTask @ polyfills-FFHMD2TL.js:1
+I @ polyfills-FFHMD2TL.js:1
+H @ polyfills-FFHMD2TL.js:1
+U @ polyfills-FFHMD2TL.js:1Understand this error
+main-PCAQJ226.js:604 Manuel kapı kontrolü hatası: Ip {headers: i, status: 500, statusText: 'OK', url: 'https://www.kimyaogreniyorum.com/server/api/door_control_usb.php', ok: false, …}
