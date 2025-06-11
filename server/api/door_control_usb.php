@@ -33,6 +33,54 @@ function errorResponse($message, $code = 400) {
     exit();
 }
 
+// Local Arduino Bridge ile haberleşme
+function tryLocalArduinoBridge($action, $classroom, $student_name) {
+    try {
+        $bridge_data = [
+            'action' => $action,
+            'classroom' => $classroom,
+            'student_name' => $student_name,
+            'timestamp' => date('Y-m-d H:i:s')
+        ];
+        
+        $context = stream_context_create([
+            'http' => [
+                'method' => 'POST',
+                'header' => 'Content-Type: application/json',
+                'content' => json_encode($bridge_data),
+                'timeout' => 10
+            ]
+        ]);
+        
+        $response = @file_get_contents(LOCAL_ARDUINO_BRIDGE_URL, false, $context);
+        
+        if ($response === false) {
+            return [
+                'success' => false,
+                'message' => 'Local Arduino bridge\'e ulaşılamadı'
+            ];
+        }
+        
+        $result = json_decode($response, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return [
+                'success' => false,
+                'message' => 'Local bridge\'den geçersiz yanıt'
+            ];
+        }
+        
+        error_log("Local Arduino bridge başarılı: " . $response);
+        return $result;
+        
+    } catch (Exception $e) {
+        error_log("Local Arduino bridge hatası: " . $e->getMessage());
+        return [
+            'success' => false,
+            'message' => 'Local bridge bağlantı hatası: ' . $e->getMessage()
+        ];
+    }
+}
+
 // Yetkilendirme kontrolü
 function authorize() {
     $headers = getallheaders();
@@ -60,9 +108,20 @@ function authorize() {
     }
 }
 
+// Local Arduino Bridge URL'si (Arduino'nuz local bilgisayarda ise)
+define('LOCAL_ARDUINO_BRIDGE_URL', 'http://YOUR_LOCAL_IP:8080'); // IP'nizi buraya yazın
+
 // Arduino ile seri haberleşme fonksiyonu
 function controlArduinoDoor($action, $classroom, $student_name = 'Manual') {
     error_log("Arduino kontrol fonksiyonu çağrıldı - Action: $action, Classroom: $classroom, Student: $student_name");
+    
+    // Önce local bridge'i dene
+    $bridge_result = tryLocalArduinoBridge($action, $classroom, $student_name);
+    if ($bridge_result['success']) {
+        return $bridge_result;
+    }
+    
+    error_log("Local bridge başarısız, direct connection deneniyor...");
     
     // Arduino'nun bağlı olduğu seri port
     // Windows: COM3, COM4 vb.
