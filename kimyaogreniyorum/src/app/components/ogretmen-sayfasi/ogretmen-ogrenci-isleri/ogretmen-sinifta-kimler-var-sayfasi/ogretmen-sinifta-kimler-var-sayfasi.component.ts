@@ -923,6 +923,63 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
     }).subscribe({
       next: (response: any) => {
         if (response.success) {
+          this.toastr.success('Kapı kapatıldı!', 'Kapı Kontrolü');
+          console.log('Kapı kapatma yanıtı:', response);
+        } else {
+          this.toastr.error('Kapı kapatılamadı: ' + response.message, 'Kapı Hatası');
+        }
+      },
+      error: (error) => {
+        console.error('Kapı kapatma hatası:', error);
+        this.toastr.error('Kapı kapatma başarısız', 'Bağlantı Hatası');
+      }
+    });
+  }
+
+  // Manuel kapı açma fonksiyonu
+  openDoorManually(): void {
+    if (!this.selectedGroup) {
+      this.toastr.warning('Önce bir sınıf seçin', 'Uyarı');
+      return;
+    }
+
+    if (confirm(`${this.selectedGroup} sınıfının kapısını manuel olarak açmak istiyor musunuz?`)) {
+      const doorData = {
+        action: 'open_door',
+        student_name: 'Manuel Açma',
+        classroom: this.selectedGroup,
+        timestamp: new Date().toISOString()
+      };
+
+      console.log('Manuel kapı açma komutu gönderiliyor:', doorData);
+
+      this.http.post('./server/api/door_control.php', doorData, {
+        headers: this.getAuthHeaders()
+      }).subscribe({
+        next: (response: any) => {
+          if (response.success) {
+            this.toastr.success('Kapı manuel olarak açıldı!', 'Kapı Kontrolü');
+            this.speakMessage('Kapı manuel olarak açıldı!');
+            
+            // ESP8266 IP adresini göster
+            if (response.esp_ip) {
+              console.log('ESP8266 IP adresi:', response.esp_ip);
+            }
+            
+            // 10 saniye sonra kapıyı otomatik kapat
+            setTimeout(() => {
+              this.closeClassroomDoor();
+            }, 10000);
+          } else {
+            this.toastr.error('Kapı açılamadı: ' + response.message, 'Kapı Hatası');
+          }
+        },
+        error: (error) => {
+          console.error('Manuel kapı kontrolü hatası:', error);
+          this.toastr.error('Manuel kapı kontrolü başarısız', 'Bağlantı Hatası');
+        }
+      });
+    }ccess) {
           console.log('Kapı kapatıldı');
         }
       },

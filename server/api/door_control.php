@@ -94,13 +94,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Hardware kontrol fonksiyonu
 function controlClassroomDoor($action, $classroom) {
-    // Raspberry Pi veya Arduino'ya HTTP isteği gönder
-    $hardware_url = "http://192.168.1.100:5000/door"; // Raspberry Pi IP'si
+    // ESP8266 NodeMCU cihazlarının IP adresleri (sınıfa göre)
+    $esp8266_ips = [
+        'A101' => '192.168.1.101', // A101 sınıfı ESP8266 IP'si
+        'A102' => '192.168.1.102', // A102 sınıfı ESP8266 IP'si
+        'B201' => '192.168.1.103', // B201 sınıfı ESP8266 IP'si
+        'default' => '192.168.1.100' // Varsayılan ESP8266 IP'si
+    ];
+    
+    // Sınıfa göre ESP8266 IP adresini belirle
+    $esp_ip = $esp8266_ips[$classroom] ?? $esp8266_ips['default'];
+    $hardware_url = "http://{$esp_ip}:5000/door";
     
     $post_data = json_encode([
         'action' => $action,
         'classroom' => $classroom,
-        'security_token' => 'YOUR_SECURITY_TOKEN' // Güvenlik için
+        'security_token' => 'KIMYA_DOOR_CONTROL_2024' // Güvenlik token'ı
     ]);
     
     $context = stream_context_create([
@@ -108,31 +117,53 @@ function controlClassroomDoor($action, $classroom) {
             'method' => 'POST',
             'header' => 'Content-Type: application/json',
             'content' => $post_data,
-            'timeout' => 3 // 3 saniye timeout
+            'timeout' => 5 // 5 saniye timeout (WiFi gecikmeleri için)
         ]
     ]);
     
     try {
+        error_log("ESP8266'ya istek gönderiliyor: {$hardware_url} - Action: {$action}");
+        
         $response = file_get_contents($hardware_url, false, $context);
         
         if ($response === FALSE) {
-            return ['success' => false, 'message' => 'Hardware bağlantısı başarısız'];
+            // HTTP durum kodunu kontrol et
+            $http_response_header_info = $http_response_header ?? [];
+            error_log("ESP8266 bağlantı hatası - Headers: " . print_r($http_response_header_info, true));
+            
+            return [
+                'success' => false, 
+                'message' => "ESP8266 ({$esp_ip}) bağlantısı başarısız"
+            ];
         }
         
         $result = json_decode($response, true);
+        
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            error_log("ESP8266'dan geçersiz JSON yanıtı: " . $response);
+            return [
+                'success' => false, 
+                'message' => 'ESP8266\'dan geçersiz yanıt'
+            ];
+        }
+        
+        error_log("ESP8266 yanıtı: " . print_r($result, true));
+        
         return [
-            'success' => true, 
-            'message' => $result['message'] ?? 'Kapı kontrolü tamamlandı'
+            'success' => $result['success'] ?? true, 
+            'message' => $result['message'] ?? 'Kapı kontrolü tamamlandı',
+            'esp_ip' => $esp_ip,
+            'door_status' => $result['status'] ?? 'unknown'
         ];
         
     } catch (Exception $e) {
-        // Hardware bağlantısı yoksa simülasyon yap
-        error_log("Hardware bağlantı hatası: " . $e->getMessage());
+        error_log("ESP8266 kontrol hatası: " . $e->getMessage());
         
-        // Simülasyon için başarılı yanıt döndür
+        // Simülasyon modu (test için)
         return [
             'success' => true, 
-            'message' => 'Simülasyon: Kapı ' . ($action == 'open_door' ? 'açıldı' : 'kapatıldı')
+            'message' => "Simülasyon: Kapı " . ($action == 'open_door' ? 'açıldı' : 'kapatıldı') . " (ESP8266: {$esp_ip})",
+            'simulation' => true
         ];
     }
 }
