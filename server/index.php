@@ -73,6 +73,14 @@ if (strpos($requestUri, $basePath) === 0) {
             require_once 'api/cevap-anahtari-sil.php';
             break;
             
+        case 'door_control_usb':
+            require_once 'door_control_usb.php';
+            break;
+            
+        case 'door_control':
+            require_once 'door_control.php';
+            break;
+            
         default:
             http_response_code(404);
             echo json_encode(['error' => 'API endpoint bulunamadı']);
