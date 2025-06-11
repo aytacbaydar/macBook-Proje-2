@@ -121,6 +121,19 @@ function controlArduinoDoor($action, $classroom, $student_name = 'Manual') {
         return $bridge_result;
     }
     
+    error_log("Local bridge başarısız: " . $bridge_result['message']);
+    
+    // Replit sunucusunda seri port erişimi yok, sadece bridge kullan
+    if (strpos(gethostname(), 'replit') !== false || isset($_ENV['REPL_ID'])) {
+        error_log("Replit ortamı tespit edildi - sadece local bridge destekleniyor");
+        return [
+            'success' => false, 
+            'message' => 'Local Arduino Bridge (77.245.149.70:8080) bağlantısı gerekli',
+            'bridge_error' => $bridge_result['message'],
+            'suggestion' => 'Local bilgisayarda run_local_bridge.bat çalıştırın'
+        ];
+    }
+    
     error_log("Local bridge başarısız, direct connection deneniyor...");
     
     // Arduino'nun bağlı olduğu seri port
@@ -161,11 +174,13 @@ function controlArduinoDoor($action, $classroom, $student_name = 'Manual') {
         error_log($error_msg);
         return [
             'success' => false, 
-            'message' => 'Arduino bulunamadı (USB bağlantısını kontrol edin)',
+            'message' => 'Local Arduino Bridge kullanın - seri port erişimi yok',
+            'bridge_error' => $bridge_result['message'],
             'debug_info' => [
                 'checked_ports' => $serial_ports,
                 'available_ports' => $available_ports,
-                'os' => PHP_OS
+                'os' => PHP_OS,
+                'environment' => 'Replit/Cloud'
             ]
         ];
     }
