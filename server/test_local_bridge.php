@@ -1,4 +1,3 @@
-
 <?php
 // Local Bridge Test Sayfası
 // Bu sayfa Replit sunucusundan local bridge'i test eder
@@ -7,9 +6,10 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 echo "<h2>Local Arduino Bridge Test</h2>";
-echo "<h3>Replit -> Local Bridge (192.168.0.30:8080) Test</h3>";
+echo "<h3>Replit -> Local Bridge (LOCAL_IP:8080) Test</h3>";
 
-$bridge_url = 'http://77.245.149.70:8080';
+// BURAYA ARDUINO BAĞLI BİLGİSAYARIN LOCAL IP'SİNİ YAZIN
+$bridge_url = 'http://192.168.1.100:8080'; // ÖRN: 192.168.1.100
 
 // Status test
 echo "<h4>1. Bridge Status Test:</h4>";
@@ -20,9 +20,9 @@ try {
             'timeout' => 5
         ]
     ]);
-    
+
     $response = @file_get_contents($bridge_url, false, $context);
-    
+
     if ($response === false) {
         echo "❌ Bridge'e ulaşılamadı. 192.168.0.30:8080 çalışıyor mu?<br>";
         echo "Kontrol edin:<br>";
@@ -46,7 +46,7 @@ try {
         'classroom' => 'TEST',
         'student_name' => 'Bridge Test'
     ];
-    
+
     $context = stream_context_create([
         'http' => [
             'method' => 'POST',
@@ -55,15 +55,15 @@ try {
             'timeout' => 10
         ]
     ]);
-    
+
     $response = @file_get_contents($bridge_url, false, $context);
-    
+
     if ($response === false) {
         echo "❌ Arduino test komutu gönderilemedi<br>";
     } else {
         echo "✅ Arduino test komutu gönderildi!<br>";
         echo "Yanıt: " . htmlspecialchars($response) . "<br>";
-        
+
         $result = json_decode($response, true);
         if ($result) {
             echo "<pre>" . print_r($result, true) . "</pre>";

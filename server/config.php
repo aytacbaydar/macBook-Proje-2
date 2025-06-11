@@ -147,7 +147,11 @@ if (!function_exists('successResponse')) {
     }
 }
 
-// Arduino Bridge URL'si (Arduino bağlı bilgisayar IP'si)
+// Arduino Bridge URL'si (Arduino bağlı bilgisayar LOCAL IP'si)
 if (!defined('LOCAL_ARDUINO_BRIDGE_URL')) {
-    define('LOCAL_ARDUINO_BRIDGE_URL', 'http://192.168.0.30:8080');
+    define('LOCAL_ARDUINO_BRIDGE_URL', 'http://192.168.1.100:8080'); // BURAYA LOCAL IP'NİZİ YAZIN
+}
+
+// Alternatif olarak localhost kullanın
+if (!defined('LOCAL_ARDUINO_BRIDGE_URL', 'http://192.168.0.30:8080');
 }
