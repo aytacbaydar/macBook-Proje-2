@@ -3,6 +3,7 @@
 // Pin tanımlamaları
 const int RELAY_PIN = 7;        // Röle kontrolü için dijital pin 7
 const int LED_PIN = 13;         // Built-in LED (pin 13)
+const int C11_LED_PIN = 11;     // Harici LED (pin 11) - Kapı durumu göstergesi
 const int BUZZER_PIN = 8;       // Buzzer için dijital pin 8
 
 // Kapı durumu
@@ -21,11 +22,13 @@ void setup() {
   // Pin konfigürasyonu
   pinMode(RELAY_PIN, OUTPUT);
   pinMode(LED_PIN, OUTPUT);
+  pinMode(C11_LED_PIN, OUTPUT);   // C11 LED pin ayarı
   pinMode(BUZZER_PIN, OUTPUT);
 
   // Başlangıç durumu
   digitalWrite(RELAY_PIN, LOW);   // Kapı kapalı
   digitalWrite(LED_PIN, LOW);     // LED kapalı
+  digitalWrite(C11_LED_PIN, LOW); // C11 LED kapalı
   digitalWrite(BUZZER_PIN, LOW);
 
   // Başlangıç mesajı
@@ -101,7 +104,8 @@ void openDoor() {
   doorOpenTime = millis();
 
   digitalWrite(RELAY_PIN, HIGH);  // Röleyi aktifleştir
-  digitalWrite(LED_PIN, HIGH);    // LED'i yak
+  digitalWrite(LED_PIN, HIGH);    // Built-in LED'i yak
+  digitalWrite(C11_LED_PIN, HIGH); // C11 LED'i yak (kapı açık göstergesi)
 
   // Kapı açılma sesi
   playOpenSound();
@@ -111,7 +115,8 @@ void closeDoor() {
   doorOpen = false;
 
   digitalWrite(RELAY_PIN, LOW);   // Röleyi deaktifleştir
-  digitalWrite(LED_PIN, LOW);     // LED'i söndür
+  digitalWrite(LED_PIN, LOW);     // Built-in LED'i söndür
+  digitalWrite(C11_LED_PIN, LOW); // C11 LED'i söndür (kapı kapalı göstergesi)
 
   // Kapı kapanma sesi
   playCloseSound();

@@ -7,9 +7,10 @@
 Arduino Uno Pin  ->  Bağlantı
 Pin 7           ->  Röle Sinyal Pini (IN)
 Pin 8           ->  Buzzer (+) Pini  
+Pin 11          ->  C11 LED (+) Pini (220Ω direnç ile)
 Pin 13          ->  Built-in LED (otomatik)
 5V              ->  Röle VCC (5V)
-GND             ->  Röle GND, Buzzer (-) GND
+GND             ->  Röle GND, Buzzer (-) GND, C11 LED (-) GND
 ```
 
 ## Görsel Bağlantı Şeması
@@ -33,6 +34,7 @@ GND             ->  Röle GND, Buzzer (-) GND
     │         4   │
     │         ~3  │
     │         2   │
+    │        ~11  │════► C11 LED + (220Ω)
     │ A0      TX► │
     │ A1      RX◄ │
     │ A2      1   │
