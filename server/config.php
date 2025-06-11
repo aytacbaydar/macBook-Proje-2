@@ -147,7 +147,7 @@ if (!function_exists('successResponse')) {
     }
 }
 
-// Arduino Bridge URL'si (Replit environment için)
+// Arduino Bridge URL'si (Arduino bağlı bilgisayar IP'si)
 if (!defined('LOCAL_ARDUINO_BRIDGE_URL')) {
-    define('LOCAL_ARDUINO_BRIDGE_URL', 'https://kimyaogreniyorum-com.replit.app:8080');
+    define('LOCAL_ARDUINO_BRIDGE_URL', 'http://192.168.0.30:8080');
 }

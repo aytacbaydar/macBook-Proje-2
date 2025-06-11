@@ -1,7 +1,7 @@
 
 <?php
 // Local Arduino Bridge Server
-// Bu dosyayı local bilgisayarınızda çalıştırın: php -S localhost:8080 arduino_bridge_local.php
+// Bu dosyayı 192.168.0.30 IP'li bilgisayarınızda çalıştırın: php -S 0.0.0.0:8080 arduino_bridge_local.php
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
@@ -16,36 +16,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 function controlArduinoLocal($action, $classroom, $student_name = 'Manual') {
     error_log("Local Arduino kontrol: $action, $classroom, $student_name");
     
-    // Windows COM portları
-    $com_ports = ['COM5', 'COM4', 'COM3', 'COM6', 'COM7'];
-    
-    $connected_port = null;
-    
-    // COM port bul
-    foreach ($com_ports as $port) {
-        $serial = @fopen($port, "r+b");
-        if ($serial) {
-            $connected_port = $port;
-            fclose($serial);
-            break;
-        }
-    }
-    
-    if (!$connected_port) {
-        return [
-            'success' => false,
-            'message' => 'Arduino bulunamadı. COM portlarını kontrol edin.',
-            'checked_ports' => $com_ports
-        ];
-    }
+    // Windows COM5 port (sizin Arduino'nuz burada bağlı)
+    $com_port = 'COM5';
     
     try {
-        $serial = fopen($connected_port, "r+b");
+        $serial = @fopen($com_port, "r+b");
         
         if (!$serial) {
             return [
                 'success' => false,
-                'message' => "COM port açılamadı: $connected_port"
+                'message' => "COM5 port açılamadı. Arduino bağlantısını kontrol edin.",
+                'port' => $com_port
             ];
         }
         
@@ -56,6 +37,8 @@ function controlArduinoLocal($action, $classroom, $student_name = 'Manual') {
             'student_name' => $student_name,
             'timestamp' => date('Y-m-d H:i:s')
         ]) . "\n";
+        
+        error_log("Arduino'ya gönderilen komut: " . trim($command));
         
         $bytes_written = fwrite($serial, $command);
         fflush($serial);
@@ -84,11 +67,14 @@ function controlArduinoLocal($action, $classroom, $student_name = 'Manual') {
         
         fclose($serial);
         
+        error_log("Arduino'dan alınan yanıt: " . trim($response));
+        
         if (empty($response)) {
             return [
                 'success' => false,
                 'message' => 'Arduino\'dan yanıt alınamadı (timeout)',
-                'port' => $connected_port
+                'port' => $com_port,
+                'command_sent' => trim($command)
             ];
         }
         
@@ -99,7 +85,7 @@ function controlArduinoLocal($action, $classroom, $student_name = 'Manual') {
             return [
                 'success' => true,
                 'message' => 'Arduino komutu gönderildi',
-                'port' => $connected_port,
+                'port' => $com_port,
                 'raw_response' => $trimmed_response
             ];
         }
@@ -107,7 +93,7 @@ function controlArduinoLocal($action, $classroom, $student_name = 'Manual') {
         return [
             'success' => $arduino_response['success'] ?? true,
             'message' => $arduino_response['message'] ?? 'Kapı kontrolü tamamlandı',
-            'port' => $connected_port,
+            'port' => $com_port,
             'door_status' => $arduino_response['status'] ?? 'unknown'
         ];
         
@@ -141,9 +127,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Status endpoint
     echo json_encode([
         'status' => 'running',
-        'message' => 'Local Arduino Bridge Server',
+        'message' => 'Local Arduino Bridge Server (192.168.0.30)',
         'platform' => PHP_OS,
-        'version' => PHP_VERSION
+        'version' => PHP_VERSION,
+        'arduino_port' => 'COM5'
     ]);
     
 } else {
