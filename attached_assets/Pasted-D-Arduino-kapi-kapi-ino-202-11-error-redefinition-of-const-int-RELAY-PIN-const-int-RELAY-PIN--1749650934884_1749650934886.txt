@@ -1,0 +1,95 @@
+D:\Arduino\kapi\kapi.ino:202:11: error: redefinition of 'const int RELAY_PIN'
+ const int RELAY_PIN = 7;        // Röle kontrolü için dijital pin 7
+           ^~~~~~~~~
+D:\Arduino\kapi\kapi.ino:12:11: note: 'const int RELAY_PIN' previously defined here
+ const int RELAY_PIN = 7;        // Röle kontrolü için
+           ^~~~~~~~~
+D:\Arduino\kapi\kapi.ino:203:11: error: redefinition of 'const int LED_PIN'
+ const int LED_PIN = 13;         // Built-in LED (pin 13)
+           ^~~~~~~
+D:\Arduino\kapi\kapi.ino:13:11: note: 'const int LED_PIN' previously defined here
+ const int LED_PIN = 13;         // Durum LED'i (built-in LED)
+           ^~~~~~~
+D:\Arduino\kapi\kapi.ino:204:11: error: redefinition of 'const int BUZZER_PIN'
+ const int BUZZER_PIN = 8;       // Buzzer için dijital pin 8
+           ^~~~~~~~~~
+D:\Arduino\kapi\kapi.ino:14:11: note: 'const int BUZZER_PIN' previously defined here
+ const int BUZZER_PIN = 8;       // Buzzer
+           ^~~~~~~~~~
+D:\Arduino\kapi\kapi.ino:207:6: error: redefinition of 'bool doorOpen'
+ bool doorOpen = false;
+      ^~~~~~~~
+D:\Arduino\kapi\kapi.ino:17:6: note: 'bool doorOpen' previously defined here
+ bool doorOpen = false;
+      ^~~~~~~~
+D:\Arduino\kapi\kapi.ino:208:15: error: redefinition of 'long unsigned int doorOpenTime'
+ unsigned long doorOpenTime = 0;
+               ^~~~~~~~~~~~
+D:\Arduino\kapi\kapi.ino:18:15: note: 'long unsigned int doorOpenTime' previously defined here
+ unsigned long doorOpenTime = 0;
+               ^~~~~~~~~~~~
+D:\Arduino\kapi\kapi.ino:209:21: error: redefinition of 'const long unsigned int AUTO_CLOSE_TIME'
+ const unsigned long AUTO_CLOSE_TIME = 5000; // 5 saniye otomatik kapanma
+                     ^~~~~~~~~~~~~~~
+D:\Arduino\kapi\kapi.ino:19:21: note: 'const long unsigned int AUTO_CLOSE_TIME' previously defined here
+ const unsigned long AUTO_CLOSE_TIME = 5000; // 5 saniye otomatik kapanma
+                     ^~~~~~~~~~~~~~~
+D:\Arduino\kapi\kapi.ino: In function 'void setup()':
+D:\Arduino\kapi\kapi.ino:215:6: error: redefinition of 'void setup()'
+ void setup() {
+      ^~~~~
+D:\Arduino\kapi\kapi.ino:21:6: note: 'void setup()' previously defined here
+ void setup() {
+      ^~~~~
+D:\Arduino\kapi\kapi.ino: In function 'void loop()':
+D:\Arduino\kapi\kapi.ino:239:6: error: redefinition of 'void loop()'
+ void loop() {
+      ^~~~
+D:\Arduino\kapi\kapi.ino:46:6: note: 'void loop()' previously defined here
+ void loop() {
+      ^~~~
+D:\Arduino\kapi\kapi.ino: In function 'void processCommand(String)':
+D:\Arduino\kapi\kapi.ino:266:6: error: redefinition of 'void processCommand(String)'
+ void processCommand(String command) {
+      ^~~~~~~~~~~~~~
+D:\Arduino\kapi\kapi.ino:108:6: note: 'void processCommand(String)' previously defined here
+ void processCommand(String data) {
+      ^~~~~~~~~~~~~~
+D:\Arduino\kapi\kapi.ino: In function 'void openDoor()':
+D:\Arduino\kapi\kapi.ino:297:6: error: redefinition of 'void openDoor()'
+ void openDoor() {
+      ^~~~~~~~
+D:\Arduino\kapi\kapi.ino:152:6: note: 'void openDoor()' previously defined here
+ void openDoor() {
+      ^~~~~~~~
+D:\Arduino\kapi\kapi.ino: In function 'void closeDoor()':
+D:\Arduino\kapi\kapi.ino:308:6: error: redefinition of 'void closeDoor()'
+ void closeDoor() {
+      ^~~~~~~~~
+D:\Arduino\kapi\kapi.ino:165:6: note: 'void closeDoor()' previously defined here
+ void closeDoor() {
+      ^~~~~~~~~
+D:\Arduino\kapi\kapi.ino: In function 'void playStartupSound()':
+D:\Arduino\kapi\kapi.ino:318:6: error: redefinition of 'void playStartupSound()'
+ void playStartupSound() {
+      ^~~~~~~~~~~~~~~~
+D:\Arduino\kapi\kapi.ino:177:6: note: 'void playStartupSound()' previously defined here
+ void playStartupSound() {
+      ^~~~~~~~~~~~~~~~
+D:\Arduino\kapi\kapi.ino: In function 'void playOpenSound()':
+D:\Arduino\kapi\kapi.ino:327:6: error: redefinition of 'void playOpenSound()'
+ void playOpenSound() {
+      ^~~~~~~~~~~~~
+D:\Arduino\kapi\kapi.ino:186:6: note: 'void playOpenSound()' previously defined here
+ void playOpenSound() {
+      ^~~~~~~~~~~~~
+D:\Arduino\kapi\kapi.ino: In function 'void playCloseSound()':
+D:\Arduino\kapi\kapi.ino:334:6: error: redefinition of 'void playCloseSound()'
+ void playCloseSound() {
+      ^~~~~~~~~~~~~~
+D:\Arduino\kapi\kapi.ino:193:6: note: 'void playCloseSound()' previously defined here
+ void playCloseSound() {
+      ^~~~~~~~~~~~~~
+exit status 1
+
+Compilation error: redefinition of 'const int RELAY_PIN'
