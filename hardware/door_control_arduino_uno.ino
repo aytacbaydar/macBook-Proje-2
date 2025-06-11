@@ -1,12 +1,8 @@
+
 // Arduino Uno Kapı Kontrol Sistemi
 // Bu kod Arduino Uno için optimize edilmiştir
 // Seri haberleşme: 9600 baud rate
 // Kapı kontrolü: Röle modülü ile
-// 
-// COM Port öğrenmek için:
-// Arduino IDE > Tools > Port menüsüne bakın
-
-#include <ArduinoJson.h>
 
 // Pin tanımlamaları
 const int RELAY_PIN = 7;     // Röle kontrol pini
@@ -16,10 +12,15 @@ const int STATUS_LED = 11;   // Harici durum LED'i (opsiyonel)
 // Kapı durumu
 bool door_open = false;
 unsigned long last_action_time = 0;
+String inputString = "";
+bool stringComplete = false;
 
 void setup() {
   // Seri haberleşme başlat
   Serial.begin(9600);
+  while (!Serial) {
+    ; // Serial port bağlantısını bekle
+  }
 
   // Pin modlarını ayarla
   pinMode(RELAY_PIN, OUTPUT);
@@ -32,54 +33,84 @@ void setup() {
   digitalWrite(STATUS_LED, LOW);
 
   // Başlangıç mesajı
-  Serial.println("{\"success\":true,\"message\":\"Arduino Uno Kapi Kontrol Hazir\",\"port\":\"COM5\"}");
+  Serial.println("{\"success\":true,\"message\":\"Arduino Uno Kapi Kontrol Hazir\",\"port\":\"COM5\",\"version\":\"1.0\"}");
+  
+  // String alma için rezerve et
+  inputString.reserve(200);
 }
 
 void loop() {
   // Seri portan gelen verileri oku
-  while (Serial.available()) {
-    char inChar = (char)Serial.read();
-    if (inChar == '\n') {
-      static String inputString;
-      processCommand(inputString);
-      inputString = "";
-    } else {
-      static String inputString;
-      inputString += inChar;
-    }
+  if (stringComplete) {
+    processCommand(inputString);
+    // String'i temizle
+    inputString = "";
+    stringComplete = false;
   }
+  
+  // Otomatik kapı kapama (30 saniye sonra)
+  if (door_open && (millis() - last_action_time > 30000)) {
+    closeDoor();
+    Serial.println("{\"success\":true,\"message\":\"Kapi otomatik kapatildi\",\"status\":\"closed\",\"reason\":\"timeout\"}");
+  }
+  
   delay(100);
 }
 
+void serialEvent() {
+  while (Serial.available()) {
+    char inChar = (char)Serial.read();
+    
+    if (inChar == '\n') {
+      stringComplete = true;
+    } else {
+      inputString += inChar;
+    }
+  }
+}
+
 void processCommand(String command) {
-  // JSON parse et
-  DynamicJsonDocument doc(1024);
-  DeserializationError error = deserializeJson(doc, command);
-
-  if (error) {
-    Serial.println("{\"success\":false,\"message\":\"Gecersiz JSON formatı\"}");
-    return;
-  }
-
-  String action = doc["action"];
-  String classroom = doc["classroom"];
-  String student_name = doc["student_name"];
-
-  if (action == "open_door") {
+  // Basit JSON parse (ArduinoJson kütüphanesi olmadan)
+  command.trim();
+  
+  if (command.indexOf("\"action\":\"open_door\"") > -1) {
+    String classroom = extractJsonValue(command, "classroom");
+    String student_name = extractJsonValue(command, "student_name");
+    
     openDoor();
-    Serial.println("{\"success\":true,\"message\":\"Kapi acildi\",\"status\":\"open\",\"classroom\":\"" + classroom + "\",\"student\":\"" + student_name + "\"}");
+    Serial.println("{\"success\":true,\"message\":\"Kapi acildi\",\"status\":\"open\",\"classroom\":\"" + classroom + "\",\"student\":\"" + student_name + "\",\"timestamp\":" + String(millis()) + "}");
   }
-  else if (action == "close_door") {
+  else if (command.indexOf("\"action\":\"close_door\"") > -1) {
+    String classroom = extractJsonValue(command, "classroom");
+    
     closeDoor();
-    Serial.println("{\"success\":true,\"message\":\"Kapi kapatildi\",\"status\":\"closed\",\"classroom\":\"" + classroom + "\"}");
+    Serial.println("{\"success\":true,\"message\":\"Kapi kapatildi\",\"status\":\"closed\",\"classroom\":\"" + classroom + "\",\"timestamp\":" + String(millis()) + "}");
   }
-  else if (action == "status") {
+  else if (command.indexOf("\"action\":\"status\"") > -1) {
     String status = door_open ? "open" : "closed";
-    Serial.println("{\"success\":true,\"door_status\":\"" + status + "\",\"uptime\":" + String(millis()) + "}");
+    Serial.println("{\"success\":true,\"door_status\":\"" + status + "\",\"uptime\":" + String(millis()) + ",\"last_action\":" + String(last_action_time) + "}");
   }
   else {
-    Serial.println("{\"success\":false,\"message\":\"Gecersiz komut: " + action + "\"}");
+    Serial.println("{\"success\":false,\"message\":\"Gecersiz komut\",\"received\":\"" + command + "\"}");
   }
+}
+
+String extractJsonValue(String json, String key) {
+  String searchKey = "\"" + key + "\":\"";
+  int startIndex = json.indexOf(searchKey);
+  
+  if (startIndex == -1) {
+    return "";
+  }
+  
+  startIndex += searchKey.length();
+  int endIndex = json.indexOf("\"", startIndex);
+  
+  if (endIndex == -1) {
+    return "";
+  }
+  
+  return json.substring(startIndex, endIndex);
 }
 
 void openDoor() {
