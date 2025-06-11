@@ -146,3 +146,8 @@ if (!function_exists('successResponse')) {
         exit();
     }
 }
+
+// Arduino Bridge URL'si (Replit environment için)
+if (!defined('LOCAL_ARDUINO_BRIDGE_URL')) {
+    define('LOCAL_ARDUINO_BRIDGE_URL', 'https://kimyaogreniyorum-com.replit.app:8080');
+}

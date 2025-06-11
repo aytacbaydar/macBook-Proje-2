@@ -108,8 +108,8 @@ function authorize() {
     }
 }
 
-// Local Arduino Bridge URL'si (Arduino'nuz local bilgisayarda ise)
-define('LOCAL_ARDUINO_BRIDGE_URL', 'http://YOUR_LOCAL_IP:8080'); // IP'nizi buraya yazın
+// Local Arduino Bridge URL'si (Replit environment için)
+define('LOCAL_ARDUINO_BRIDGE_URL', 'https://kimyaogreniyorum-com.replit.app:8080'); // Replit URL
 
 // Arduino ile seri haberleşme fonksiyonu
 function controlArduinoDoor($action, $classroom, $student_name = 'Manual') {
