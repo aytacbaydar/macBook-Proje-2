@@ -1,70 +1,50 @@
+// Arduino Uno Kapı Kontrol Sistemi
+// Bu kod Arduino Uno için optimize edilmiştir
+// Seri haberleşme: 9600 baud rate
+// Kapı kontrolü: Röle modülü ile
+
 #include <ArduinoJson.h>
 
 // Pin tanımlamaları
-const int RELAY_PIN = 7;        // Röle kontrolü için dijital pin 7
-const int LED_PIN = 13;         // Built-in LED (pin 13)
-const int C11_LED_PIN = 11;     // Harici LED (pin 11) - Kapı durumu göstergesi
-const int BUZZER_PIN = 8;       // Buzzer için dijital pin 8
+const int RELAY_PIN = 7;     // Röle kontrol pini
+const int LED_PIN = 13;      // Durum LED'i (Arduino Uno'da dahili LED)
+const int STATUS_LED = 11;   // Harici durum LED'i (opsiyonel)
 
 // Kapı durumu
-bool doorOpen = false;
-unsigned long doorOpenTime = 0;
-const unsigned long AUTO_CLOSE_TIME = 5000; // 5 saniye otomatik kapanma
-
-// Seri haberleşme için buffer
-String inputString = "";
-boolean stringComplete = false;
+bool door_open = false;
+unsigned long last_action_time = 0;
 
 void setup() {
-  // Seri haberleşmeyi başlat
+  // Seri haberleşme başlat
   Serial.begin(9600);
 
-  // Pin konfigürasyonu
+  // Pin modlarını ayarla
   pinMode(RELAY_PIN, OUTPUT);
   pinMode(LED_PIN, OUTPUT);
-  pinMode(C11_LED_PIN, OUTPUT);   // C11 LED pin ayarı
-  pinMode(BUZZER_PIN, OUTPUT);
+  pinMode(STATUS_LED, OUTPUT);
 
-  // Başlangıç durumu
-  digitalWrite(RELAY_PIN, LOW);   // Kapı kapalı
-  digitalWrite(LED_PIN, LOW);     // LED kapalı
-  digitalWrite(C11_LED_PIN, LOW); // C11 LED kapalı
-  digitalWrite(BUZZER_PIN, LOW);
+  // Başlangıç durumu - kapı kapalı
+  digitalWrite(RELAY_PIN, LOW);
+  digitalWrite(LED_PIN, LOW);
+  digitalWrite(STATUS_LED, LOW);
 
   // Başlangıç mesajı
-  Serial.println("{\"status\":\"ready\",\"message\":\"Arduino Uno Kapı Kontrol Sistemi Hazır\"}");
-
-  // Başlangıç sesi
-  playStartupSound();
-
-  // Input string'i reserve et
-  inputString.reserve(200);
+  Serial.println("{\"success\":true,\"message\":\"Arduino Uno Kapi Kontrol Hazir\",\"port\":\"COM5\"}");
 }
 
 void loop() {
   // Seri portan gelen verileri oku
   while (Serial.available()) {
     char inChar = (char)Serial.read();
-    inputString += inChar;
-
     if (inChar == '\n') {
-      stringComplete = true;
+      static String inputString;
+      processCommand(inputString);
+      inputString = "";
+    } else {
+      static String inputString;
+      inputString += inChar;
     }
   }
-
-  // Komut geldiğinde işle
-  if (stringComplete) {
-    processCommand(inputString);
-    inputString = "";
-    stringComplete = false;
-  }
-
-  // Otomatik kapı kapanma kontrolü
-  if (doorOpen && (millis() - doorOpenTime > AUTO_CLOSE_TIME)) {
-    closeDoor();
-    Serial.println("{\"status\":\"auto_closed\",\"message\":\"Kapı otomatik olarak kapatıldı\"}");
-  }
-
   delay(100);
 }
 
@@ -74,7 +54,7 @@ void processCommand(String command) {
   DeserializationError error = deserializeJson(doc, command);
 
   if (error) {
-    Serial.println("{\"success\":false,\"message\":\"Geçersiz JSON formatı\"}");
+    Serial.println("{\"success\":false,\"message\":\"Gecersiz JSON formatı\"}");
     return;
   }
 
@@ -84,63 +64,34 @@ void processCommand(String command) {
 
   if (action == "open_door") {
     openDoor();
-    Serial.println("{\"success\":true,\"message\":\"Kapı açıldı\",\"status\":\"open\",\"classroom\":\"" + classroom + "\",\"student\":\"" + student_name + "\"}");
-  } 
+    Serial.println("{\"success\":true,\"message\":\"Kapi acildi\",\"status\":\"open\",\"classroom\":\"" + classroom + "\",\"student\":\"" + student_name + "\"}");
+  }
   else if (action == "close_door") {
     closeDoor();
-    Serial.println("{\"success\":true,\"message\":\"Kapı kapatıldı\",\"status\":\"closed\",\"classroom\":\"" + classroom + "\"}");
+    Serial.println("{\"success\":true,\"message\":\"Kapi kapatildi\",\"status\":\"closed\",\"classroom\":\"" + classroom + "\"}");
   }
   else if (action == "status") {
-    String status = doorOpen ? "open" : "closed";
+    String status = door_open ? "open" : "closed";
     Serial.println("{\"success\":true,\"door_status\":\"" + status + "\",\"uptime\":" + String(millis()) + "}");
   }
   else {
-    Serial.println("{\"success\":false,\"message\":\"Geçersiz komut: " + action + "\"}");
+    Serial.println("{\"success\":false,\"message\":\"Gecersiz komut: " + action + "\"}");
   }
 }
 
 void openDoor() {
-  doorOpen = true;
-  doorOpenTime = millis();
+  door_open = true;
+  last_action_time = millis();
 
   digitalWrite(RELAY_PIN, HIGH);  // Röleyi aktifleştir
   digitalWrite(LED_PIN, HIGH);    // Built-in LED'i yak
-  digitalWrite(C11_LED_PIN, HIGH); // C11 LED'i yak (kapı açık göstergesi)
-
-  // Kapı açılma sesi
-  playOpenSound();
+  digitalWrite(STATUS_LED, HIGH); // Harici durum LED'ini yak (opsiyonel)
 }
 
 void closeDoor() {
-  doorOpen = false;
+  door_open = false;
 
   digitalWrite(RELAY_PIN, LOW);   // Röleyi deaktifleştir
   digitalWrite(LED_PIN, LOW);     // Built-in LED'i söndür
-  digitalWrite(C11_LED_PIN, LOW); // C11 LED'i söndür (kapı kapalı göstergesi)
-
-  // Kapı kapanma sesi
-  playCloseSound();
-}
-
-void playStartupSound() {
-  // Sistem başlangıç melodisi
-  tone(BUZZER_PIN, 1000, 200);
-  delay(250);
-  tone(BUZZER_PIN, 1500, 200);
-  delay(250);
-  tone(BUZZER_PIN, 2000, 200);
-}
-
-void playOpenSound() {
-  // Kapı açılma sesi
-  tone(BUZZER_PIN, 800, 100);
-  delay(150);
-  tone(BUZZER_PIN, 1200, 100);
-}
-
-void playCloseSound() {
-  // Kapı kapanma sesi
-  tone(BUZZER_PIN, 1200, 100);
-  delay(150);
-  tone(BUZZER_PIN, 800, 100);
+  digitalWrite(STATUS_LED, LOW); // Harici durum LED'ini söndür (opsiyonel)
 }
