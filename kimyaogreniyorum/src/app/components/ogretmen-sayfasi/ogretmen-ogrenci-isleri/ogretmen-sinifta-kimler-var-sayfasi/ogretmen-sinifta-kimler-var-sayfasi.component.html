@@ -110,6 +110,18 @@
               }}
             </button>
           </div>
+
+          <div class="control-group">
+            <button
+              class="btn btn-warning"
+              (click)="openDoorManually()"
+              [disabled]="!selectedGroup"
+              title="Acil durum için manuel kapı açma"
+            >
+              <i class="bi bi-door-open me-1"></i>
+              Kapıyı Aç
+            </button>
+          </div>
         </div>
 
         <!-- QR Scanner Section -->

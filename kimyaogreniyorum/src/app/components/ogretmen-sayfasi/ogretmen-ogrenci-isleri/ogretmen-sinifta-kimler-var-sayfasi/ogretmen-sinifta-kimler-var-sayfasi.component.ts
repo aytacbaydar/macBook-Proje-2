@@ -508,6 +508,8 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
               );
               // Sesli uyarı ekle
               this.speakMessage(`${student.adi_soyadi}, iyi dersler!`);
+              // Kapıyı aç
+              this.openClassroomDoor(student.adi_soyadi);
             } else {
               this.presentStudents.delete(studentId);
               const existingEntry = this.classroomEntries.get(studentId);
@@ -871,6 +873,69 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
       if (now - timestamp > maxAge) {
         this.recentlyProcessedQR.delete(qrData);
       }
+    }
+  }
+
+  // Kapı açma fonksiyonu
+  private openClassroomDoor(studentName: string): void {
+    const doorData = {
+      action: 'open_door',
+      student_name: studentName,
+      classroom: this.selectedGroup,
+      timestamp: new Date().toISOString()
+    };
+
+    console.log('Kapı açma komutu gönderiliyor:', doorData);
+
+    this.http.post('./server/api/door_control.php', doorData, {
+      headers: this.getAuthHeaders()
+    }).subscribe({
+      next: (response: any) => {
+        if (response.success) {
+          this.toastr.success('Kapı açıldı!', 'Kapı Kontrolü');
+          this.speakMessage('Kapı açıldı, buyurun!');
+          
+          // 5 saniye sonra kapıyı otomatik kapat
+          setTimeout(() => {
+            this.closeClassroomDoor();
+          }, 5000);
+        } else {
+          this.toastr.error('Kapı açılamadı: ' + response.message, 'Kapı Hatası');
+        }
+      },
+      error: (error) => {
+        console.error('Kapı kontrolü hatası:', error);
+        this.toastr.error('Kapı kontrolü başarısız', 'Bağlantı Hatası');
+      }
+    });
+  }
+
+  // Kapı kapatma fonksiyonu
+  private closeClassroomDoor(): void {
+    const doorData = {
+      action: 'close_door',
+      classroom: this.selectedGroup,
+      timestamp: new Date().toISOString()
+    };
+
+    this.http.post('./server/api/door_control.php', doorData, {
+      headers: this.getAuthHeaders()
+    }).subscribe({
+      next: (response: any) => {
+        if (response.success) {
+          console.log('Kapı kapatıldı');
+        }
+      },
+      error: (error) => {
+        console.error('Kapı kapatma hatası:', error);
+      }
+    });
+  }
+
+  // Manuel kapı açma (acil durum için)
+  openDoorManually(): void {
+    if (confirm('Kapıyı manuel olarak açmak istediğinizden emin misiniz?')) {
+      this.openClassroomDoor('Manuel Açım');
     }
   }
 }
