@@ -62,50 +62,92 @@ function authorize() {
 
 // Arduino ile seri haberleşme fonksiyonu
 function controlArduinoDoor($action, $classroom, $student_name = 'Manual') {
+    error_log("Arduino kontrol fonksiyonu çağrıldı - Action: $action, Classroom: $classroom, Student: $student_name");
+    
     // Arduino'nun bağlı olduğu seri port
     // Windows: COM3, COM4 vb.
     // Linux/Mac: /dev/ttyUSB0, /dev/ttyACM0 vb.
     $serial_ports = [
         '/dev/ttyACM0',    // Linux/Mac için Arduino Uno
         '/dev/ttyUSB0',    // Linux için USB-Serial
+        '/dev/ttyACM1',    // Alternatif Linux port
         'COM3',            // Windows için (değiştirilebilir)
         'COM4',            // Windows için alternatif
+        'COM5',            // Windows alternatif
     ];
     
     $connected_port = null;
+    $available_ports = [];
     
-    // Mevcut portları kontrol et
+    // Mevcut portları kontrol et ve kaydet
     foreach ($serial_ports as $port) {
-        if (file_exists($port) || (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' && strpos($port, 'COM') === 0)) {
-            $connected_port = $port;
-            break;
+        if (file_exists($port)) {
+            $available_ports[] = $port;
+            if (!$connected_port) {
+                $connected_port = $port;
+            }
+        } elseif (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' && strpos($port, 'COM') === 0) {
+            // Windows için COM port kontrolü daha detaylı olmalı
+            $available_ports[] = $port . " (Windows - kontrol edilemez)";
+            if (!$connected_port) {
+                $connected_port = $port;
+            }
         }
     }
     
+    error_log("Mevcut portlar: " . implode(', ', $available_ports));
+    
     if (!$connected_port) {
-        error_log("Arduino bulunamadı - kontrol edilen portlar: " . implode(', ', $serial_ports));
+        $error_msg = "Arduino bulunamadı. Kontrol edilen portlar: " . implode(', ', $serial_ports);
+        error_log($error_msg);
         return [
             'success' => false, 
-            'message' => 'Arduino bulunamadı (USB bağlantısını kontrol edin)'
+            'message' => 'Arduino bulunamadı (USB bağlantısını kontrol edin)',
+            'debug_info' => [
+                'checked_ports' => $serial_ports,
+                'available_ports' => $available_ports,
+                'os' => PHP_OS
+            ]
         ];
     }
     
     try {
+        error_log("Seri port bağlantısı deneniyor: $connected_port");
+        
         // Seri port ayarları (Linux/Mac için)
         if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
             // Linux/Mac seri port konfigürasyonu
-            exec("stty -F {$connected_port} cs8 9600 ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echoke noflsh -ixon -crtscts");
+            $stty_command = "stty -F {$connected_port} cs8 9600 ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echoke noflsh -ixon -crtscts 2>&1";
+            $stty_output = [];
+            $stty_return = 0;
+            exec($stty_command, $stty_output, $stty_return);
+            
+            if ($stty_return !== 0) {
+                error_log("STTY konfigürasyon hatası: " . implode("\n", $stty_output));
+            } else {
+                error_log("STTY konfigürasyonu başarılı");
+            }
         }
         
         // Seri porta bağlan
+        error_log("fopen ile seri port açılıyor...");
         $serial = fopen($connected_port, "r+b");
         
         if (!$serial) {
+            $error_msg = "Seri port açılamadı: {$connected_port}. PHP error: " . error_get_last()['message'];
+            error_log($error_msg);
             return [
                 'success' => false, 
-                'message' => "Seri port açılamadı: {$connected_port}"
+                'message' => "Seri port açılamadı: {$connected_port}",
+                'debug_info' => [
+                    'port' => $connected_port,
+                    'php_error' => error_get_last(),
+                    'permissions' => is_readable($connected_port) && is_writable($connected_port)
+                ]
             ];
         }
+        
+        error_log("Seri port başarıyla açıldı: $connected_port");
         
         // Arduino'ya JSON komutu gönder
         $command = json_encode([
@@ -115,13 +157,30 @@ function controlArduinoDoor($action, $classroom, $student_name = 'Manual') {
             'timestamp' => date('Y-m-d H:i:s')
         ]) . "\n";
         
-        fwrite($serial, $command);
+        error_log("Arduino'ya gönderilen komut: " . trim($command));
         
-        // Arduino'dan yanıt bekle (maksimum 3 saniye)
+        $bytes_written = fwrite($serial, $command);
+        if ($bytes_written === false || $bytes_written === 0) {
+            fclose($serial);
+            return [
+                'success' => false, 
+                'message' => 'Arduino\'ya komut gönderilemedi'
+            ];
+        }
+        
+        error_log("Arduino'ya $bytes_written byte gönderildi");
+        
+        // Buffer'ı temizle
+        fflush($serial);
+        
+        // Arduino'dan yanıt bekle (maksimum 5 saniye)
         $start_time = time();
         $response = '';
+        $timeout = 5;
         
-        while ((time() - $start_time) < 3) {
+        error_log("Arduino'dan yanıt bekleniyor ($timeout saniye)...");
+        
+        while ((time() - $start_time) < $timeout) {
             $char = fgetc($serial);
             if ($char !== false) {
                 $response .= $char;
@@ -129,30 +188,43 @@ function controlArduinoDoor($action, $classroom, $student_name = 'Manual') {
                     break;
                 }
             }
-            usleep(10000); // 10ms bekle
+            usleep(50000); // 50ms bekle (daha az CPU kullanımı)
         }
         
         fclose($serial);
         
+        error_log("Arduino'dan alınan ham yanıt: '" . $response . "'");
+        
         if (empty($response)) {
             return [
                 'success' => false, 
-                'message' => 'Arduino\'dan yanıt alınamadı'
+                'message' => 'Arduino\'dan yanıt alınamadı (timeout)',
+                'debug_info' => [
+                    'timeout' => $timeout,
+                    'port' => $connected_port,
+                    'command_sent' => trim($command)
+                ]
             ];
         }
         
         // Arduino yanıtını parse et
-        $arduino_response = json_decode(trim($response), true);
+        $trimmed_response = trim($response);
+        $arduino_response = json_decode($trimmed_response, true);
         
         if (json_last_error() !== JSON_ERROR_NONE) {
-            error_log("Arduino'dan geçersiz JSON: " . $response);
+            error_log("Arduino'dan geçersiz JSON: " . $trimmed_response);
+            error_log("JSON hata: " . json_last_error_msg());
+            
+            // Basit yanıt olarak kabul et
             return [
-                'success' => false, 
-                'message' => 'Arduino\'dan geçersiz yanıt'
+                'success' => true,
+                'message' => 'Arduino komutu gönderildi (yanıt: ' . $trimmed_response . ')',
+                'serial_port' => $connected_port,
+                'raw_response' => $trimmed_response
             ];
         }
         
-        error_log("Arduino yanıtı: " . print_r($arduino_response, true));
+        error_log("Arduino JSON yanıtı: " . print_r($arduino_response, true));
         
         return [
             'success' => $arduino_response['success'] ?? true,
@@ -163,10 +235,17 @@ function controlArduinoDoor($action, $classroom, $student_name = 'Manual') {
         
     } catch (Exception $e) {
         error_log("Arduino seri haberleşme hatası: " . $e->getMessage());
+        error_log("Hata detayı: " . $e->getTraceAsString());
         
         return [
             'success' => false, 
-            'message' => 'Arduino haberleşme hatası: ' . $e->getMessage()
+            'message' => 'Arduino haberleşme hatası: ' . $e->getMessage(),
+            'debug_info' => [
+                'exception' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'port' => $connected_port ?? 'unknown'
+            ]
         ];
     }
 }
@@ -233,8 +312,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
     } catch (Exception $e) {
-        error_log("Door control hatası: " . $e->getMessage());
-        errorResponse('Sunucu hatası oluştu', 500);
+        error_log("Door control ana hatası: " . $e->getMessage());
+        error_log("Hata stack trace: " . $e->getTraceAsString());
+        
+        // Detaylı hata bilgisi dön
+        http_response_code(500);
+        echo json_encode([
+            'success' => false, 
+            'message' => 'Sunucu hatası: ' . $e->getMessage(),
+            'debug_info' => [
+                'error_type' => get_class($e),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'request_data' => $data ?? null
+            ]
+        ]);
+        exit();
     }
 } else {
     errorResponse('Sadece POST istekleri kabul edilir', 405);
