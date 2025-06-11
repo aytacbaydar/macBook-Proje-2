@@ -66,13 +66,13 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
         const pdf = new jsPDF('p', 'mm', 'a4');
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfPageHeight = pdf.internal.pageSize.getHeight();
-        
+
         // Kenar boşlukları: üst 8mm, sağ 5mm, sol 5mm, alt 5mm
         const marginTop = 8;
         const marginLeft = 5;
         const marginRight = 5;
         const marginBottom = 5;
-        
+
         // Kullanılabilir alan hesaplama
         const availableWidth = pdfWidth - marginLeft - marginRight;
         const availableHeight = pdfPageHeight - marginTop - marginBottom;
@@ -85,11 +85,11 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
           // İçerik birden fazla sayfaya yayılacak
           let heightLeft = imgHeight;
           let position = 0;
-          
+
           // İlk sayfa
           pdf.addImage(imgData, 'PNG', marginLeft, marginTop, availableWidth, imgHeight);
           heightLeft -= availableHeight;
-          
+
           // Gerekirse ek sayfalar
           while (heightLeft > 0) {
             position = heightLeft - imgHeight;
@@ -147,7 +147,7 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
             }
 
             const loggedInTeacherName = loggedInUser?.adi_soyadi || '';
-            
+
             // Sadece öğrencileri filtrele ve giriş yapan öğretmenin öğrencilerini al
             const teacherStudents = response.data.filter(
               (student: any) =>
@@ -160,7 +160,7 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
             const uniqueGroups = [
               ...new Set(teacherStudents.map((s: any) => s.grubu))
             ];
-            
+
             this.groups = uniqueGroups as string[];
           }
         },
@@ -197,7 +197,7 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
             }
 
             const loggedInTeacherName = loggedInUser?.adi_soyadi || '';
-            
+
             this.groupStudents = response.data.filter(
               (student: any) =>
                 student.rutbe === 'ogrenci' &&
@@ -887,14 +887,14 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
 
     console.log('Kapı açma komutu gönderiliyor:', doorData);
 
-    this.http.post('./server/api/door_control.php', doorData, {
+    this.http.post('./server/api/door_control_usb.php', doorData, {
       headers: this.getAuthHeaders()
     }).subscribe({
       next: (response: any) => {
         if (response.success) {
           this.toastr.success('Kapı açıldı!', 'Kapı Kontrolü');
           this.speakMessage('Kapı açıldı, buyurun!');
-          
+
           // 5 saniye sonra kapıyı otomatik kapat
           setTimeout(() => {
             this.closeClassroomDoor();
@@ -912,13 +912,13 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
 
   // Kapı kapatma fonksiyonu
   private closeClassroomDoor(): void {
-    const doorData = {
+    const doorCloseData = {
       action: 'close_door',
       classroom: this.selectedGroup,
       timestamp: new Date().toISOString()
     };
 
-    this.http.post('./server/api/door_control.php', doorData, {
+    this.http.post('./server/api/door_control_usb.php', doorCloseData, {
       headers: this.getAuthHeaders()
     }).subscribe({
       next: (response: any) => {
@@ -953,19 +953,19 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
 
       console.log('Manuel kapı açma komutu gönderiliyor:', doorData);
 
-      this.http.post('./server/api/door_control.php', doorData, {
+      this.http.post('./server/api/door_control_usb.php', doorData, {
         headers: this.getAuthHeaders()
       }).subscribe({
         next: (response: any) => {
           if (response.success) {
             this.toastr.success('Kapı manuel olarak açıldı!', 'Kapı Kontrolü');
             this.speakMessage('Kapı manuel olarak açıldı!');
-            
+
             // ESP8266 IP adresini göster
             if (response.esp_ip) {
               console.log('ESP8266 IP adresi:', response.esp_ip);
             }
-            
+
             // 10 saniye sonra kapıyı otomatik kapat
             setTimeout(() => {
               this.closeClassroomDoor();
@@ -979,20 +979,7 @@ export class OgretmenSiniftaKimlerVarSayfasiComponent
           this.toastr.error('Manuel kapı kontrolü başarısız', 'Bağlantı Hatası');
         }
       });
-    }ccess) {
-          console.log('Kapı kapatıldı');
-        }
-      },
-      error: (error) => {
-        console.error('Kapı kapatma hatası:', error);
-      }
-    });
-  }
-
-  // Manuel kapı açma (acil durum için)
-  openDoorManually(): void {
-    if (confirm('Kapıyı manuel olarak açmak istediğinizden emin misiniz?')) {
-      this.openClassroomDoor('Manuel Açım');
     }
+
   }
 }
