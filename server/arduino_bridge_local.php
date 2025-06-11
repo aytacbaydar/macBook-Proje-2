@@ -16,8 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 function controlArduinoLocal($action, $classroom, $student_name = 'Manual') {
     error_log("Local Arduino kontrol: $action, $classroom, $student_name");
     
-    // Windows COM5 port (sizin Arduino'nuz burada bağlı)
-    $com_port = 'COM5';
+    // Windows COM port (Arduino IDE'den kontrol edin: Tools > Port)
+    $com_port = 'COM5'; // BURAYA GERÇEK PORT NUMARANIZI YAZIN
     
     try {
         $serial = @fopen($com_port, "r+b");

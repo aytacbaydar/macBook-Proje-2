@@ -2,6 +2,9 @@
 // Bu kod Arduino Uno için optimize edilmiştir
 // Seri haberleşme: 9600 baud rate
 // Kapı kontrolü: Röle modülü ile
+// 
+// COM Port öğrenmek için:
+// Arduino IDE > Tools > Port menüsüne bakın
 
 #include <ArduinoJson.h>
 
