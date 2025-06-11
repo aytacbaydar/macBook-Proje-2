@@ -1,11 +1,10 @@
-
 @echo off
 echo Arduino Bridge Server Baslatiliyor...
 echo.
 echo Bu dosyayi 192.168.0.30 IP'li bilgisayarda calistirin
 echo Arduino COM5 portunda bagli olmali
 echo.
-php -S 0.0.0.0:8080 arduino_bridge_local.php
+C:\xampp\php\php.exe -S 0.0.0.0:8080 arduino_bridge_local.php
 pause
 @echo off
 echo Arduino Bridge Server Başlatılıyor...
@@ -15,6 +14,6 @@ echo Arduino Port: COM5
 echo.
 
 cd /d "%~dp0server"
-php -S 0.0.0.0:8080 arduino_bridge_local.php
+C:\xampp\php\php.exe -S 0.0.0.0:8080 arduino_bridge_local.php
 
 pause
