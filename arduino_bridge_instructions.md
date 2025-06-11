@@ -1,7 +1,7 @@
 
 # Arduino Bridge Kurulum Talimatları
 
-## Adım 1: Local Bilgisayarınızda (192.168.0.30)
+## Adım 1: Local Bilgisayarınızda (77.245.149.70)
 
 1. Bu projeyi local bilgisayarınıza indirin/kopyalayın
 2. Arduino'nun COM5'te bağlı olduğundan emin olun
@@ -17,7 +17,7 @@
 Local bridge çalıştıktan sonra şu URL'leri test edin:
 
 ### Status Test (Local):
-http://192.168.0.30:8080
+http://77.245.149.70:8080
 
 ### Status Test (Replit'ten):
 https://www.kimyaogreniyorum.com/server/test_local_bridge.php
@@ -28,7 +28,7 @@ Local bridge çalışırsa şu yanıtı alacaksınız:
 ```json
 {
   "status": "running",
-  "message": "Local Arduino Bridge Server (192.168.0.30)",
+  "message": "Local Arduino Bridge Server (77.245.149.70)",
   "platform": "Windows",
   "version": "x.x.x",
   "arduino_port": "COM5"

@@ -108,8 +108,8 @@ function authorize() {
     }
 }
 
-// Local Arduino Bridge URL'si (Arduino bağlı bilgisayar IP'si)
-define('LOCAL_ARDUINO_BRIDGE_URL', 'http://192.168.0.30:8080'); // Arduino bağlı bilgisayar IP'si
+// Local Arduino Bridge URL'si (Arduino bağlı bilgisayar PUBLIC IP'si)
+define('LOCAL_ARDUINO_BRIDGE_URL', 'http://77.245.149.70:8080'); // Arduino bağlı bilgisayar PUBLIC IP'si
 
 // Arduino ile seri haberleşme fonksiyonu
 function controlArduinoDoor($action, $classroom, $student_name = 'Manual') {

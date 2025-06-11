@@ -9,7 +9,7 @@ ini_set('display_errors', 1);
 echo "<h2>Local Arduino Bridge Test</h2>";
 echo "<h3>Replit -> Local Bridge (192.168.0.30:8080) Test</h3>";
 
-$bridge_url = 'http://192.168.0.30:8080';
+$bridge_url = 'http://77.245.149.70:8080';
 
 // Status test
 echo "<h4>1. Bridge Status Test:</h4>";
