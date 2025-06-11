@@ -8,8 +8,8 @@ ini_set('display_errors', 1);
 echo "<h2>Local Arduino Bridge Test</h2>";
 echo "<h3>Replit -> Local Bridge (LOCAL_IP:8080) Test</h3>";
 
-// BURAYA ARDUINO BAĞLI BİLGİSAYARIN LOCAL IP'SİNİ YAZIN
-$bridge_url = 'http://192.168.1.100:8080'; // ÖRN: 192.168.1.100
+// ARDUINO BAĞLI BİLGİSAYARIN LOCAL IP'Sİ
+$bridge_url = 'http://192.168.0.30:8080'; // IPv4 Address'den alınan IP
 
 // Status test
 echo "<h4>1. Bridge Status Test:</h4>";
@@ -27,7 +27,7 @@ try {
         echo "❌ Bridge'e ulaşılamadı. 192.168.0.30:8080 çalışıyor mu?<br>";
         echo "Kontrol edin:<br>";
         echo "- Local bilgisayarda bridge server çalışıyor mu?<br>";
-        echo "- IP adresi doğru mu? (192.168.0.30)<br>";
+        echo "- IP adresi doğru mu? (192.168.0.30) ✅<br>";
         echo "- Port 8080 açık mı?<br>";
         echo "- Firewall engelliyor mu?<br>";
     } else {
@@ -76,7 +76,7 @@ try {
 echo "<hr>";
 echo "<h3>Kurulum Adımları:</h3>";
 echo "<ol>";
-echo "<li>192.168.0.30 IP'li bilgisayarda terminal/cmd açın</li>";
+echo "<li>192.168.0.30 IP'li bilgisayarda terminal/cmd açın ✅</li>";
 echo "<li>Arduino bridge klasörüne gidin</li>";
 echo "<li>Şu komutu çalıştırın: <code>php -S 0.0.0.0:8080 arduino_bridge_local.php</code></li>";
 echo "<li>Arduino'nun COM5'te bağlı olduğundan emin olun</li>";
