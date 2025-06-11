@@ -126,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Status endpoint
     echo json_encode([
         'status' => 'running',
-        'message' => 'Local Arduino Bridge Server (LOCAL_IP)',
+        'message' => 'Local Arduino Bridge Server (192.168.0.30)',
         'platform' => PHP_OS,
         'version' => PHP_VERSION,
         'arduino_port' => 'COM5'

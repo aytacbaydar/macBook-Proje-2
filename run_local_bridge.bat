@@ -1,7 +1,8 @@
 
 @echo off
 echo Arduino Bridge Server Baslatiliyor...
-echo IP: LOCAL_NETWORK_IP (ipconfig ile kontrol edin)
+echo Local IP: 192.168.0.30 (sadece yerel ag)
+echo Public IP: 77.245.149.70 (Replit icin gerekli)
 echo Port: 8080  
 echo Arduino Port: COM5
 echo.
