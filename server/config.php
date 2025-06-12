@@ -128,6 +128,8 @@ function getJsonData() {
 // Hata yanıtı - function_exists kontrolü ile
 if (!function_exists('errorResponse')) {
     function errorResponse($message, $code = 400) {
+        // Output buffer'ı temizle
+        if (ob_get_level()) ob_clean();
         http_response_code($code);
         header('Content-Type: application/json; charset=utf-8');
         echo json_encode([
@@ -142,6 +144,8 @@ if (!function_exists('errorResponse')) {
 // Başarı yanıtı - function_exists kontrolü ile
 if (!function_exists('successResponse')) {
     function successResponse($data = null, $message = 'Başarılı') {
+        // Output buffer'ı temizle
+        if (ob_get_level()) ob_clean();
         http_response_code(200);
         header('Content-Type: application/json; charset=utf-8');
         $response = [

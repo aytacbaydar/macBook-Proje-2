@@ -241,4 +241,8 @@ try {
     error_log("General error in ogretmen_ucret_yonetimi.php: " . $e->getMessage());
     errorResponse('Beklenmeyen bir hata oluştu: ' . $e->getMessage(), 500);
 }
-?>
+
+// Output buffer'ı temizle ve içeriği gönder
+if (ob_get_level()) {
+    ob_end_clean();
+}
