@@ -85,19 +85,32 @@ export class OgrenciGirisSayfasiComponent implements OnInit {
             console.log('Token in response:', userData.token);
             
             // Token kontrolü
-            if (!userData.token) {
-              console.error('Token bulunamadı!', userData);
-              this.toastr.error('Giriş sırasında token alınamadı!', 'Hata');
+            if (!userData.token || userData.token.trim() === '') {
+              console.error('Token bulunamadı veya boş!', userData);
+              this.toastr.error('Giriş sırasında geçerli token alınamadı!', 'Hata');
               this.spinner.hide();
               return;
             }
             
+            // Veriyi kaydet
+            const storageData = {
+              ...userData,
+              loginTime: new Date().toISOString() // Giriş zamanını da kaydet
+            };
+            
             if (this.loginForm.value.remember) {
-              localStorage.setItem('user', JSON.stringify(userData));
-              console.log('User data saved to localStorage with token');
+              localStorage.setItem('user', JSON.stringify(storageData));
+              console.log('User data saved to localStorage with token:', userData.token.substring(0, 10) + '...');
             } else {
-              sessionStorage.setItem('user', JSON.stringify(userData));
-              console.log('User data saved to sessionStorage with token');
+              sessionStorage.setItem('user', JSON.stringify(storageData));
+              console.log('User data saved to sessionStorage with token:', userData.token.substring(0, 10) + '...');
+            }
+            
+            // Hemen test et
+            const testUser = localStorage.getItem('user') || sessionStorage.getItem('user');
+            if (testUser) {
+              const parsedTest = JSON.parse(testUser);
+              console.log('Verification - Token saved correctly:', !!parsedTest.token);
             }
 
             // Navigate to appropriate page based on user role

@@ -97,30 +97,49 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     this.loadPaymentData();
   }
 
-  private getAuthHeaders(): any {
-    // localStorage veya sessionStorage'dan kullanıcı bilgilerini al
+  private getAuthHeaders() {
     const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    console.log('Getting auth headers, userStr exists:', !!userStr);
 
-    if (userStr) {
-      try {
-        const user = JSON.parse(userStr);
-        console.log('User data for auth:', user);
-
-        if (user.token) {
-          return {
-            'Authorization': `Bearer ${user.token}`,
-            'Content-Type': 'application/json'
-          };
-        }
-      } catch (error) {
-        console.error('Error parsing user data:', error);
-      }
+    if (!userStr) {
+      console.error('No user data found - redirecting to login');
+      this.redirectToLogin();
+      return {};
     }
 
-    console.warn('No valid token found');
-    return {
-      'Content-Type': 'application/json'
-    };
+    try {
+      const user = JSON.parse(userStr);
+      console.log('User data parsed, has token:', !!user.token);
+
+      if (!user.token) {
+        console.error('No token found in user data - redirecting to login');
+        this.redirectToLogin();
+        return {};
+      }
+
+      console.log('Token found:', user.token.substring(0, 10) + '...');
+
+      return {
+        'Authorization': `Bearer ${user.token}`,
+        'Content-Type': 'application/json'
+      };
+    } catch (error) {
+      console.error('Error parsing user data:', error);
+      this.redirectToLogin();
+      return {};
+    }
+  }
+
+  private redirectToLogin() {
+    // Clear invalid session data
+    localStorage.removeItem('user');
+    sessionStorage.removeItem('user');
+
+    // Show user-friendly message
+    alert('Oturum süresi dolmuş. Lütfen tekrar giriş yapın.');
+
+    // Redirect to login page
+    window.location.href = '/';
   }
 
   loadPaymentData(): void {

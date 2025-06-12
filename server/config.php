@@ -43,18 +43,36 @@ function getConnection() {
 
 // Oturum yetkilendirme
 function authorize() {
-    if (!isset($_SERVER['HTTP_AUTHORIZATION'])) {
+    // Authorization header'ı kontrol et
+    $headers = getallheaders();
+    $authHeader = null;
+    
+    // Case-insensitive header kontrolü
+    foreach ($headers as $name => $value) {
+        if (strtolower($name) === 'authorization') {
+            $authHeader = $value;
+            break;
+        }
+    }
+    
+    if (!$authHeader && isset($_SERVER['HTTP_AUTHORIZATION'])) {
+        $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
+    }
+    
+    if (!$authHeader) {
+        error_log("Authorization - Header bulunamadı. Mevcut headers: " . json_encode($headers));
         http_response_code(401);
-        echo json_encode(['error' => 'Yetkilendirme gerekli']);
+        echo json_encode(['error' => 'Oturum süresi dolmuş. Lütfen tekrar giriş yapın.']);
         exit();
     }
 
-    $auth = $_SERVER['HTTP_AUTHORIZATION'];
-    $token = str_replace('Bearer ', '', $auth);
+    $token = str_replace('Bearer ', '', $authHeader);
+    $token = trim($token);
 
     if (empty($token)) {
+        error_log("Authorization - Token boş");
         http_response_code(401);
-        echo json_encode(['error' => 'Geçersiz token']);
+        echo json_encode(['error' => 'Oturum süresi dolmuş. Lütfen tekrar giriş yapın.']);
         exit();
     }
 
@@ -62,47 +80,33 @@ function authorize() {
     try {
         $conn = getConnection();
 
-        // Debug için önce fusun@gmail.com kullanıcısını kontrol et
-        $debugStmt = $conn->prepare("SELECT id, adi_soyadi, email, rutbe, aktif, sifre FROM ogrenciler WHERE email = 'fusun@gmail.com'");
-        $debugStmt->execute();
-        $debugUser = $debugStmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($debugUser) {
-            $expectedToken = md5($debugUser['id'] . $debugUser['email'] . $debugUser['sifre']);
-            error_log("Debug - fusun@gmail.com için beklenen token: " . $expectedToken);
-            error_log("Debug - Gelen token: " . $token);
-            error_log("Debug - Aktif durumu: " . $debugUser['aktif']);
-            error_log("Debug - Rütbe: " . $debugUser['rutbe']);
-        }
-
-        // Orijinal token doğrulama
-        $stmt = $conn->prepare("SELECT id, adi_soyadi, email, rutbe, aktif FROM ogrenciler WHERE MD5(CONCAT(id, email, sifre)) = :token");
+        // Token ile kullanıcı bul
+        $stmt = $conn->prepare("
+            SELECT id, adi_soyadi, email, rutbe, aktif 
+            FROM ogrenciler 
+            WHERE MD5(CONCAT(id, email, sifre)) = :token 
+            AND aktif = 1
+        ");
         $stmt->bindParam(':token', $token);
         $stmt->execute();
 
-        error_log("Authorization - Token doğrulama sorgusu çalıştırıldı. Bulunan kayıt sayısı: " . $stmt->rowCount());
+        error_log("Authorization - Token: " . substr($token, 0, 10) . "... Query rowCount: " . $stmt->rowCount());
 
         if ($stmt->rowCount() === 0) {
-            error_log("Authorization - Token veritabanında bulunamadı");
+            error_log("Authorization - Token veritabanında bulunamadı veya kullanıcı aktif değil");
             http_response_code(401);
-            echo json_encode(['error' => 'Geçersiz veya süresi dolmuş token', 'debug' => 'Token veritabanında bulunamadı']);
+            echo json_encode(['error' => 'Oturum süresi dolmuş. Lütfen tekrar giriş yapın.']);
             exit();
         }
 
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        error_log("Authorization - Bulunan kullanıcı: " . json_encode($user));
-
-        if ($user['aktif'] != 1) {
-            error_log("Authorization - Kullanıcı aktif değil");
-            http_response_code(401);
-            echo json_encode(['error' => 'Hesap aktif değil', 'debug' => 'Kullanıcı aktif değil']);
-            exit();
-        }
+        error_log("Authorization - Başarılı giriş: " . $user['email']);
 
         return $user;
     } catch (PDOException $e) {
+        error_log("Authorization - Veritabanı hatası: " . $e->getMessage());
         http_response_code(500);
-        echo json_encode(['error' => 'Veritabanı hatası: ' . $e->getMessage()]);
+        echo json_encode(['error' => 'Sistem hatası. Lütfen tekrar deneyin.']);
         exit();
     }
 }
