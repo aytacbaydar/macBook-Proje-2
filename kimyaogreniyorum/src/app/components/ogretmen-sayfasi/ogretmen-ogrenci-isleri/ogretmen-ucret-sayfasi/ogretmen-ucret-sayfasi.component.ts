@@ -8,8 +8,6 @@ interface Student {
   email: string;
   aktif: boolean;
   ucret?: string;
-  ders_gunu?: string;
-  ders_saati?: string;
   grubu?: string;
 }
 
@@ -27,7 +25,6 @@ interface Payment {
 interface PaymentSummary {
   totalExpected: number;
   totalReceived: number;
-  yearlyTotal: number;
   studentsWhoPayThis: Student[];
   studentsWhoDidntPay: Student[];
   currentMonth: number;
@@ -38,7 +35,7 @@ interface PaymentSummary {
   selector: 'app-ogretmen-ucret-sayfasi',
   standalone: false,
   templateUrl: './ogretmen-ucret-sayfasi.component.html',
-  styleUrl: './ogretmen-ucret-sayfasi.component.scss'
+  styleUrl: './ogretmen-ucret-sayfasi.component.scss',
 })
 export class OgretmenUcretSayfasiComponent implements OnInit {
 
@@ -47,7 +44,6 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
   summary: PaymentSummary = {
     totalExpected: 0,
     totalReceived: 0,
-    yearlyTotal: 0,
     studentsWhoPayThis: [],
     studentsWhoDidntPay: [],
     currentMonth: new Date().getMonth() + 1,
@@ -88,13 +84,10 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     { value: 12, name: 'Aralık' }
   ];
 
-  constructor(
-    private http: HttpClient,
-    private toastr: ToastrService
-  ) { }
+  constructor(private http: HttpClient, private toastr: ToastrService) { }
 
   ngOnInit(): void {
-    this.loadPaymentData();
+    this.loadData();
     this.loadStudentsForPayment();
   }
 
@@ -123,83 +116,37 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
       });
   }
 
-  private getAuthHeaders() {
+  private getAuthHeaders(): HttpHeaders {
+    let token = '';
     const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
-    console.log('Getting auth headers, userStr exists:', !!userStr);
 
-    if (!userStr) {
-      console.error('No user data found - redirecting to login');
-      this.redirectToLogin();
-      return {};
-    }
-
-    try {
+    if (userStr) {
       const user = JSON.parse(userStr);
-      console.log('User data:', {
-        hasToken: !!user.token,
-        rutbe: user.rutbe,
-        name: user.adi_soyadi
-      });
-
-      if (!user.token) {
-        console.error('No token found in user data - redirecting to login');
-        this.redirectToLogin();
-        return {};
-      }
-
-      const headers = new HttpHeaders({
-        'Authorization': `Bearer ${user.token}`,
-        'Content-Type': 'application/json'
-      });
-
-      console.log('Token found:', user.token.substring(0, 10) + '...');
-      console.log('Headers created successfully');
-
-      return headers;
-    } catch (error) {
-      console.error('Error parsing user data:', error);
-      this.redirectToLogin();
-      return {};
+      token = user.token || '';
     }
+
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
   }
 
-  private redirectToLogin() {
-    // Clear invalid session data
-    localStorage.removeItem('user');
-    sessionStorage.removeItem('user');
-
-    // Show user-friendly message
-    alert('Oturum süresi dolmuş. Lütfen tekrar giriş yapın.');
-
-    // Redirect to login page
-    window.location.href = '/';
-  }
-
-  loadPaymentData(): void {
+  loadData(): void {
     this.isLoading = true;
     this.error = null;
 
     const headers = this.getAuthHeaders();
 
-    // Headers boşsa giriş sayfasına yönlendirilmiş olacak
-    if (!headers || Object.keys(headers).length === 0) {
-      this.isLoading = false;
-      return;
-    }
-
-    const apiUrl = 'https://www.kimyaogreniyorum.com/server/api/ogretmen_ucret_yonetimi.php';
-    console.log('API URL:', apiUrl);
-    console.log('Making API request with headers:', headers);
-
-    this.http.get<any>(apiUrl, { headers })
+    this.http.get<any>('./server/api/ucret_yonetimi.php', { headers })
       .subscribe({
         next: (response) => {
           console.log('API Response:', response);
           if (response && response.success) {
-            this.students = response.data?.students || [];
-            this.payments = response.data?.thisMonthPayments || [];
-            this.summary = response.data?.summary || {};
-            console.log('Parsed data:', {
+            this.students = response.data.students || [];
+            this.payments = response.data.payments || [];
+            this.summary = response.data.summary || this.summary;
+
+            console.log('Loaded data:', {
               studentsCount: this.students.length,
               paymentsCount: this.payments.length,
               summary: this.summary
@@ -210,28 +157,14 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
           this.isLoading = false;
         },
         error: (error) => {
-          console.error('Full API Error:', error);
-          console.error('Error status:', error.status);
-          console.error('Error response:', error.error);
+          console.error('API Error:', error);
+          this.error = 'Veriler yüklenirken hata oluştu: ' + (error.error?.message || error.message);
           this.isLoading = false;
-
-          let errorMessage = 'Veriler yüklenirken hata oluştu!';
-
-          if (error.status === 403) {
-            errorMessage = 'Bu işlem için yetkiniz yok!';
-          } else if (error.error && error.error.message) {
-            errorMessage = error.error.message;
-          }
-
-          alert(errorMessage);
         }
       });
   }
 
   openPaymentForm(student?: Student): void {
-    // Form açılırken öğrencileri tekrar yükle
-    this.loadStudentsForPayment();
-
     if (student) {
       this.selectedStudent = student;
       this.paymentForm.ogrenci_id = student.id;
@@ -244,8 +177,8 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
 
     this.paymentForm.aciklama = '';
     this.paymentForm.odeme_tarihi = new Date().toISOString().split('T')[0];
-    this.paymentForm.ay = this.selectedMonth;
-    this.paymentForm.yil = this.selectedYear;
+    this.paymentForm.ay = new Date().getMonth() + 1;
+    this.paymentForm.yil = new Date().getFullYear();
 
     this.showPaymentForm = true;
   }
@@ -262,49 +195,24 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     }
 
     const headers = this.getAuthHeaders();
-    console.log('Sending payment with headers:', headers);
 
-    this.http.post<any>('https://www.kimyaogreniyorum.com/server/api/ogretmen_ucret_yonetimi.php', this.paymentForm, { headers })
+    this.http.post<any>('./server/api/ucret_yonetimi.php', this.paymentForm, { headers })
       .subscribe({
         next: (response) => {
           console.log('Payment save response:', response);
           if (response && response.success) {
             this.toastr.success('Ödeme kaydı başarıyla eklendi.');
             this.closePaymentForm();
-            this.loadPaymentData();
+            this.loadData(); // Verileri yenile
           } else {
-            this.toastr.error(response?.message || 'Ödeme kaydı eklenirken hata oluştu.');
+            this.toastr.error('Ödeme kaydı eklenirken hata oluştu: ' + (response?.message || 'Bilinmeyen hata'));
           }
         },
         error: (error) => {
-          console.error('Payment Save Error Details:', error);
-
-          let errorMessage = 'Ödeme kaydedilirken hata oluştu: ';
-
-          if (error.status === 0) {
-            errorMessage += 'Sunucuya bağlanılamadı.';
-          } else if (error.error) {
-            if (typeof error.error === 'string' && error.error.includes('<html>')) {
-              errorMessage += 'Sunucu PHP hatası döndürdü';
-            } else {
-              errorMessage += error.error?.message || error.error || error.message;
-            }
-          } else {
-            errorMessage += error.message || 'Bilinmeyen hata';
-          }
-
-          this.toastr.error(errorMessage);
+          console.error('Payment Save Error:', error);
+          this.toastr.error('Ödeme kaydedilirken hata oluştu: ' + (error.error?.message || error.message));
         }
       });
-  }
-
-  getMonthName(monthNumber: number): string {
-    const month = this.months.find(m => m.value === monthNumber);
-    return month ? month.name : monthNumber.toString();
-  }
-
-  getStudentById(id: number): Student | undefined {
-    return this.students.find(s => s.id === id);
   }
 
   formatCurrency(amount: number): string {
@@ -314,13 +222,22 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     }).format(amount);
   }
 
-  parseFloat(value: string): number {
-    return parseFloat(value);
-  }
-
   getCollectionRate(): number {
     if (this.summary.totalExpected === 0) return 0;
     return (this.summary.totalReceived / this.summary.totalExpected) * 100;
+  }
+
+  getStudentById(id: number): Student | undefined {
+    return this.students.find(s => s.id === id);
+  }
+
+  getMonthName(monthNumber: number): string {
+    const month = this.months.find(m => m.value === monthNumber);
+    return month ? month.name : monthNumber.toString();
+  }
+
+  parseFloat(value: string): number {
+    return parseFloat(value);
   }
 
   getActiveStudentsCount(): number {

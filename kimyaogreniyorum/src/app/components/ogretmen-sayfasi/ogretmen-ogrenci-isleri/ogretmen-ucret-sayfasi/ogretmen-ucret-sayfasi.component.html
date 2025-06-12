@@ -1,260 +1,217 @@
-<div class="ucret-sayfasi-container">
-  <!-- Header -->
-  <div class="page-header">
-    <h2><i class="bi bi-cash-stack"></i> Ücret Yönetimi</h2>
-    <button class="btn btn-primary" (click)="openPaymentForm()">
-      <i class="bi bi-plus-circle"></i> Yeni Ödeme Kaydı
-    </button>
+<div class="container-fluid p-4">
+  <!-- Başlık -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <h2><i class="bi bi-cash-coin text-success"></i> Ücret Yönetimi</h2>
+      <p class="text-muted">Öğrenci ödemelerini takip edin ve yeni ödeme kayıtları ekleyin.</p>
+    </div>
   </div>
 
-  <!-- Loading -->
-  <div *ngIf="isLoading" class="loading-container">
+  <!-- Yükleme durumu -->
+  <div *ngIf="isLoading" class="text-center py-5">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Yükleniyor...</span>
     </div>
-    <p>Ücret verileri yükleniyor...</p>
+    <p class="mt-2 text-muted">Veriler yükleniyor...</p>
   </div>
 
-  <!-- Error -->
-  <div *ngIf="error" class="alert alert-danger">
-    <i class="bi bi-exclamation-triangle"></i>
-    {{ error }}
-    <button class="btn btn-sm btn-outline-danger ms-2" (click)="loadPaymentData()">
+  <!-- Hata durumu -->
+  <div *ngIf="error && !isLoading" class="alert alert-danger">
+    <i class="bi bi-exclamation-triangle"></i> {{ error }}
+    <button class="btn btn-sm btn-outline-danger ms-2" (click)="loadData()">
       Tekrar Dene
     </button>
   </div>
 
-  <!-- Main Content -->
+  <!-- Ana içerik -->
   <div *ngIf="!isLoading && !error">
-    
-    <!-- Summary Cards -->
-    <div class="summary-grid">
-      <div class="summary-card expected">
-        <div class="card-icon">
-          <i class="bi bi-calculator"></i>
-        </div>
-        <div class="card-content">
-          <h3>Bu Ay Beklenen</h3>
-          <p class="amount">{{ formatCurrency(summary.totalExpected) }}</p>
-          <span class="subtitle">{{ getActiveStudentsCount() }} aktif öğrenci</span>
+
+    <!-- Özet kartları -->
+    <div class="row mb-4">
+      <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card border-success">
+          <div class="card-body text-center">
+            <h5 class="card-title text-success">Beklenen Gelir</h5>
+            <h3 class="text-success">{{ formatCurrency(summary.totalExpected) }}</h3>
+          </div>
         </div>
       </div>
-
-      <div class="summary-card received">
-        <div class="card-icon">
-          <i class="bi bi-check-circle"></i>
-        </div>
-        <div class="card-content">
-          <h3>Bu Ay Alınan</h3>
-          <p class="amount">{{ formatCurrency(summary.totalReceived) }}</p>
-          <span class="subtitle">{{ summary.studentsWhoPayThis.length }} öğrenci ödedi</span>
+      <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card border-primary">
+          <div class="card-body text-center">
+            <h5 class="card-title text-primary">Alınan Gelir</h5>
+            <h3 class="text-primary">{{ formatCurrency(summary.totalReceived) }}</h3>
+          </div>
         </div>
       </div>
-
-      <div class="summary-card yearly">
-        <div class="card-icon">
-          <i class="bi bi-calendar-year"></i>
-        </div>
-        <div class="card-content">
-          <h3>Yıllık Toplam</h3>
-          <p class="amount">{{ formatCurrency(summary.yearlyTotal) }}</p>
-          <span class="subtitle">{{ summary.currentYear }} yılı</span>
+      <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card border-warning">
+          <div class="card-body text-center">
+            <h5 class="card-title text-warning">Toplama Oranı</h5>
+            <h3 class="text-warning">%{{ getCollectionRate().toFixed(1) }}</h3>
+          </div>
         </div>
       </div>
-
-      <div class="summary-card rate">
-        <div class="card-icon">
-          <i class="bi bi-graph-up"></i>
-        </div>
-        <div class="card-content">
-          <h3>Toplama Oranı</h3>
-          <p class="amount">%{{ getCollectionRate().toFixed(1) }}</p>
-          <span class="subtitle">Bu ay için</span>
+      <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card border-info">
+          <div class="card-body text-center">
+            <h5 class="card-title text-info">Bu Ay Ödeme</h5>
+            <h3 class="text-info">{{ payments.length }}</h3>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Progress Bar -->
-    <div class="progress-section">
-      <div class="progress-header">
-        <span>Bu Ay Tahsilat Durumu</span>
-        <span>{{ formatCurrency(summary.totalReceived) }} / {{ formatCurrency(summary.totalExpected) }}</span>
+    <!-- Ödeme yapan öğrenciler -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="mb-0">
+          <i class="bi bi-check-circle text-success"></i> 
+          Bu Ay Ödeme Yapan Öğrenciler ({{ summary.studentsWhoPayThis.length }})
+        </h5>
       </div>
-      <div class="progress">
-        <div class="progress-bar bg-success" 
-             [style.width.%]="getCollectionRate()">
+      <div class="card-body">
+        <div class="row" *ngIf="summary.studentsWhoPayThis.length > 0">
+          <div class="col-md-6 col-lg-4 mb-3" *ngFor="let student of summary.studentsWhoPayThis">
+            <div class="card border-success">
+              <div class="card-body">
+                <h6 class="card-title">{{ student.adi_soyadi }}</h6>
+                <p class="card-text small text-muted">{{ student.email }}</p>
+                <span class="badge bg-success">{{ formatCurrency(parseFloat(student.ucret || '0')) }}</span>
+                <button class="btn btn-sm btn-outline-primary ms-2" (click)="openPaymentForm(student)">
+                  Ek Ödeme
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="summary.studentsWhoPayThis.length === 0" class="text-center text-muted">
+          <i class="bi bi-inbox fs-1"></i>
+          <p>Bu ay henüz ödeme yapan öğrenci yok.</p>
         </div>
       </div>
     </div>
 
-    <!-- Students Who Paid This Month -->
-    <div class="students-section">
-      <h3><i class="bi bi-check-circle text-success"></i> Bu Ay Ödeme Yapan Öğrenciler ({{ summary.studentsWhoPayThis.length }})</h3>
-      <div class="students-grid" *ngIf="summary.studentsWhoPayThis.length > 0">
-        <div class="student-card paid" *ngFor="let student of summary.studentsWhoPayThis">
-          <div class="student-info">
-            <div class="student-avatar">
-              <i class="bi bi-person-circle"></i>
+    <!-- Ödeme yapmayan öğrenciler -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="mb-0">
+          <i class="bi bi-x-circle text-danger"></i> 
+          Bu Ay Ödeme Yapmayan Öğrenciler ({{ summary.studentsWhoDidntPay.length }})
+        </h5>
+      </div>
+      <div class="card-body">
+        <div class="row" *ngIf="summary.studentsWhoDidntPay.length > 0">
+          <div class="col-md-6 col-lg-4 mb-3" *ngFor="let student of summary.studentsWhoDidntPay">
+            <div class="card border-danger">
+              <div class="card-body">
+                <h6 class="card-title">{{ student.adi_soyadi }}</h6>
+                <p class="card-text small text-muted">{{ student.email }}</p>
+                <span class="badge bg-warning">{{ formatCurrency(parseFloat(student.ucret || '0')) }}</span>
+                <button class="btn btn-sm btn-success ms-2" (click)="openPaymentForm(student)">
+                  Ödeme Al
+                </button>
+              </div>
             </div>
-            <div class="student-details">
-              <h4>{{ student.adi_soyadi }}</h4>
-              <p>{{ student.email }}</p>
-              <span class="group-badge" *ngIf="student.grubu">{{ student.grubu }}</span>
-            </div>
-          </div>
-          <div class="payment-info">
-            <span class="amount">{{ formatCurrency(parseFloat(student.ucret || '0')) }}</span>
-            <button class="btn btn-sm btn-outline-primary" (click)="openPaymentForm(student)">
-              <i class="bi bi-plus"></i> Ek Ödeme
-            </button>
           </div>
         </div>
-      </div>
-      <div *ngIf="summary.studentsWhoPayThis.length === 0" class="empty-state">
-        <i class="bi bi-inbox"></i>
-        <p>Bu ay henüz ödeme yapan öğrenci yok.</p>
+        <div *ngIf="summary.studentsWhoDidntPay.length === 0" class="text-center text-success">
+          <i class="bi bi-check-circle fs-1"></i>
+          <p>Tüm öğrenciler bu ay ödemelerini yapmış!</p>
+        </div>
       </div>
     </div>
 
-    <!-- Students Who Didn't Pay -->
-    <div class="students-section">
-      <h3><i class="bi bi-x-circle text-danger"></i> Bu Ay Ödeme Yapmayan Öğrenciler ({{ summary.studentsWhoDidntPay.length }})</h3>
-      <div class="students-grid" *ngIf="summary.studentsWhoDidntPay.length > 0">
-        <div class="student-card unpaid" *ngFor="let student of summary.studentsWhoDidntPay">
-          <div class="student-info">
-            <div class="student-avatar">
-              <i class="bi bi-person-circle"></i>
-            </div>
-            <div class="student-details">
-              <h4>{{ student.adi_soyadi }}</h4>
-              <p>{{ student.email }}</p>
-              <span class="group-badge" *ngIf="student.grubu">{{ student.grubu }}</span>
-            </div>
-          </div>
-          <div class="payment-info">
-            <span class="amount pending">{{ formatCurrency(parseFloat(student.ucret || '0')) }}</span>
-            <button class="btn btn-sm btn-success" (click)="openPaymentForm(student)">
-              <i class="bi bi-cash"></i> Ödeme Al
-            </button>
-          </div>
-        </div>
+    <!-- Bu ayın ödemeleri -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="mb-0">
+          <i class="bi bi-clock-history"></i> 
+          Bu Ay Yapılan Ödemeler ({{ payments.length }})
+        </h5>
       </div>
-      <div *ngIf="summary.studentsWhoDidntPay.length === 0" class="empty-state success">
-        <i class="bi bi-check-circle text-success"></i>
-        <p>Tüm öğrenciler bu ay ödemelerini yapmış!</p>
+      <div class="card-body">
+        <div class="table-responsive" *ngIf="payments.length > 0">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Öğrenci</th>
+                <th>Tutar</th>
+                <th>Tarih</th>
+                <th>Açıklama</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let payment of payments">
+                <td>{{ payment.ogrenci_adi }}</td>
+                <td>{{ formatCurrency(payment.tutar) }}</td>
+                <td>{{ payment.odeme_tarihi | date:'dd/MM/yyyy' }}</td>
+                <td>{{ payment.aciklama || '-' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div *ngIf="payments.length === 0" class="text-center text-muted">
+          <i class="bi bi-receipt fs-1"></i>
+          <p>Bu ay henüz ödeme kaydı yok.</p>
+        </div>
       </div>
     </div>
 
-    <!-- Recent Payments -->
-    <div class="payments-section">
-      <h3><i class="bi bi-clock-history"></i> Bu Ay Yapılan Ödemeler ({{ payments.length }})</h3>
-      <div class="payments-table" *ngIf="payments.length > 0">
-        <div class="payment-row header">
-          <div>Öğrenci</div>
-          <div>Tutar</div>
-          <div>Tarih</div>
-          <div>Açıklama</div>
-        </div>
-        <div class="payment-row" *ngFor="let payment of payments">
-          <div class="student-name">{{ payment.ogrenci_adi }}</div>
-          <div class="amount">{{ formatCurrency(payment.tutar) }}</div>
-          <div class="date">{{ payment.odeme_tarihi | date:'dd/MM/yyyy HH:mm' }}</div>
-          <div class="description">{{ payment.aciklama || '-' }}</div>
-        </div>
-      </div>
-      <div *ngIf="payments.length === 0" class="empty-state">
-        <i class="bi bi-inbox"></i>
-        <p>Bu ay henüz ödeme kaydı yok.</p>
-      </div>
+    <!-- Yeni ödeme butonu -->
+    <div class="text-center">
+      <button class="btn btn-primary btn-lg" (click)="openPaymentForm()">
+        <i class="bi bi-plus-circle"></i> Yeni Ödeme Kaydı
+      </button>
     </div>
   </div>
 
-  <!-- Payment Form Modal -->
-  <div class="modal-overlay" *ngIf="showPaymentForm" (click)="closePaymentForm()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <h3>
-          <i class="bi bi-cash"></i>
-          {{ selectedStudent ? selectedStudent.adi_soyadi + ' - Ödeme Kaydı' : 'Yeni Ödeme Kaydı' }}
-        </h3>
-        <button class="btn-close" (click)="closePaymentForm()">
-          <i class="bi bi-x"></i>
-        </button>
-      </div>
-
-      <div class="modal-body">
-        <form (ngSubmit)="submitPayment()">
-          <div class="form-group" *ngIf="!selectedStudent">
-            <label>Öğrenci Seç</label>
-            <select class="form-control" [(ngModel)]="paymentForm.ogrenci_id" name="ogrenci_id" required>
-              <option value="0">Öğrenci seçin...</option>
-              <option *ngFor="let student of students" [value]="student.id">
-                {{ student.adi_soyadi }} - {{ formatCurrency(parseFloat(student.ucret || '0')) }}
-              </option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Ödeme Tutarı (TL)</label>
-            <input type="number" 
-                   class="form-control" 
-                   [(ngModel)]="paymentForm.tutar" 
-                   name="tutar" 
-                   step="0.01" 
-                   min="0" 
-                   required>
-          </div>
-
-          <div class="form-group">
-            <label>Ödeme Tarihi</label>
-            <input type="date" 
-                   class="form-control" 
-                   [(ngModel)]="paymentForm.odeme_tarihi" 
-                   name="odeme_tarihi" 
-                   required>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label>Ay</label>
-              <select class="form-control" [(ngModel)]="paymentForm.ay" name="ay" required>
-                <option *ngFor="let month of months" [value]="month.value">
-                  {{ month.name }}
+  <!-- Ödeme formu modal -->
+  <div class="modal" [class.show]="showPaymentForm" [style.display]="showPaymentForm ? 'block' : 'none'">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            {{ selectedStudent ? 'Ödeme Kaydet: ' + selectedStudent.adi_soyadi : 'Yeni Ödeme Kaydı' }}
+          </h5>
+          <button type="button" class="btn-close" (click)="closePaymentForm()"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3" *ngIf="!selectedStudent">
+              <label class="form-label">Öğrenci</label>
+              <select class="form-select" [(ngModel)]="paymentForm.ogrenci_id" name="ogrenci_id">
+                <option value="0">Öğrenci seçin</option>
+                <option *ngFor="let student of students" [value]="student.id">
+                  {{ student.adi_soyadi }}
                 </option>
               </select>
             </div>
 
-            <div class="form-group">
-              <label>Yıl</label>
-              <input type="number" 
-                     class="form-control" 
-                     [(ngModel)]="paymentForm.yil" 
-                     name="yil" 
-                     min="2020" 
-                     max="2030" 
-                     required>
+            <div class="mb-3">
+              <label class="form-label">Tutar (₺)</label>
+              <input type="number" class="form-control" [(ngModel)]="paymentForm.tutar" name="tutar" step="0.01">
             </div>
-          </div>
 
-          <div class="form-group">
-            <label>Açıklama (İsteğe bağlı)</label>
-            <textarea class="form-control" 
-                      [(ngModel)]="paymentForm.aciklama" 
-                      name="aciklama" 
-                      rows="3" 
-                      placeholder="Ödeme ile ilgili not..."></textarea>
-          </div>
+            <div class="mb-3">
+              <label class="form-label">Ödeme Tarihi</label>
+              <input type="date" class="form-control" [(ngModel)]="paymentForm.odeme_tarihi" name="odeme_tarihi">
+            </div>
 
-          <div class="form-actions">
-            <button type="button" class="btn btn-secondary" (click)="closePaymentForm()">
-              İptal
-            </button>
-            <button type="submit" class="btn btn-success">
-              <i class="bi bi-check"></i> Ödeme Kaydını Kaydet
-            </button>
-          </div>
-        </form>
+            <div class="mb-3">
+              <label class="form-label">Açıklama (Opsiyonel)</label>
+              <textarea class="form-control" [(ngModel)]="paymentForm.aciklama" name="aciklama" rows="2"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closePaymentForm()">İptal</button>
+          <button type="button" class="btn btn-primary" (click)="submitPayment()">Kaydet</button>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- Modal backdrop -->
+  <div class="modal-backdrop" [class.show]="showPaymentForm" *ngIf="showPaymentForm"></div>
 </div>
