@@ -1,9 +1,9 @@
 
 <?php
-// Hata raporlamayı tamamen devre dışı bırak
-error_reporting(0);
-ini_set('display_errors', 0);
-ini_set('display_startup_errors', 0);
+// Hata raporlamayı geçici olarak aç (debugging için)
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
 ini_set('log_errors', 1);
 
 // Output buffer'ı temizle
@@ -34,9 +34,17 @@ try {
     $user = authorize();
     $conn = getConnection();
     
+    // Debug: kullanıcı bilgilerini logla
+    error_log("User data: " . json_encode($user));
+    
     // Kullanıcının öğretmen olduğunu kontrol et
     if ($user['rutbe'] !== 'ogretmen') {
         errorResponse('Bu işlem için yetkiniz yok. Sadece öğretmenler ücret yönetimi yapabilir.', 403);
+    }
+    
+    // Öğretmen bilgilerini doğru şekilde al
+    if (!isset($user['adi_soyadi']) || empty($user['adi_soyadi'])) {
+        errorResponse('Öğretmen bilgileri eksik veya hatalı.', 400);
     }
     
     // Tablo varlık kontrolü
@@ -63,8 +71,13 @@ try {
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         // Öğretmenin ücret bilgilerini getir
         
-        $teacherId = $user['id'];
-        $teacherName = $user['adi_soyadi'];
+        $teacherId = $user['id'] ?? null;
+        $teacherName = $user['adi_soyadi'] ?? null;
+        
+        if (!$teacherId || !$teacherName) {
+            errorResponse('Öğretmen bilgileri eksik. ID: ' . $teacherId . ', Name: ' . $teacherName, 400);
+        }
+        
         $currentYear = date('Y');
         $currentMonth = date('m');
         

@@ -73,6 +73,9 @@ function authorize() {
             $stmt = $conn->prepare("SELECT ogretmen_id as id, ogrt_adi_soyadi as adi_soyadi, ogrt_email as email, 'ogretmen' as rutbe, aktif FROM ogretmenler WHERE ogrt_email = ?");
             $stmt->execute([$token]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            // Debug: öğretmen verilerini logla
+            error_log("Teacher query result: " . json_encode($user));
         }
 
         if (!$user) {
