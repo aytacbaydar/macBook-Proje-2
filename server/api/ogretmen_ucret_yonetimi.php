@@ -1,18 +1,26 @@
 
 <?php
+// Hata raporlamayı etkinleştir
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 require_once '../config.php';
 
 // CORS ayarları
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
 
 // Preflight request için
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
 }
+
+// Debug için request bilgilerini logla
+error_log("ogretmen_ucret_yonetimi.php - Request Method: " . $_SERVER['REQUEST_METHOD']);
+error_log("ogretmen_ucret_yonetimi.php - Headers: " . json_encode(getallheaders()));
 
 try {
     // Kullanıcıyı doğrula

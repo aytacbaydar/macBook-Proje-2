@@ -118,17 +118,47 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     this.http.get<any>('./server/api/ogretmen_ucret_yonetimi', { headers })
       .subscribe({
         next: (response) => {
-          if (response.success) {
-            this.students = response.data.students;
-            this.payments = response.data.thisMonthPayments;
-            this.summary = response.data.summary;
+          console.log('API Response:', response);
+          if (response && response.success) {
+            this.students = response.students || [];
+            this.payments = response.payments || [];
+            this.summary = response.summary || {};
           } else {
-            this.error = response.message || 'Veri yüklenirken hata oluştu.';
+            this.error = response?.message || 'Veri yüklenirken hata oluştu.';
           }
           this.isLoading = false;
         },
         error: (error) => {
-          this.error = 'Sunucu hatası: ' + (error.error?.message || error.message);
+          console.error('Full API Error:', error);
+          console.error('Error status:', error.status);
+          console.error('Error body:', error.error);
+
+          let errorMessage = 'Sunucu hatası: ';
+
+          if (error.status === 0) {
+            errorMessage += 'Sunucuya bağlanılamadı. Ağ bağlantınızı kontrol edin.';
+          } else if (error.status === 500) {
+            errorMessage += 'Sunucu iç hatası. Lütfen daha sonra tekrar deneyin.';
+          } else if (error.status === 404) {
+            errorMessage += 'API endpoint bulunamadı.';
+          } else if (error.error) {
+            if (typeof error.error === 'string') {
+              // HTML yanıt gelmiş olabilir
+              if (error.error.includes('<html>') || error.error.includes('<!DOCTYPE')) {
+                errorMessage += 'Sunucu HTML yanıtı döndürdü (PHP hatası olabilir)';
+              } else {
+                errorMessage += error.error;
+              }
+            } else if (error.error.message) {
+              errorMessage += error.error.message;
+            } else {
+              errorMessage += 'Bilinmeyen hata';
+            }
+          } else {
+            errorMessage += error.message || 'Bilinmeyen hata';
+          }
+
+          this.error = errorMessage;
           this.isLoading = false;
         }
       });
@@ -181,16 +211,33 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     this.http.post<any>('./server/api/ogretmen_ucret_yonetimi.php', this.paymentForm, { headers })
       .subscribe({
         next: (response) => {
-          if (response.success) {
+          console.log('Payment save response:', response);
+          if (response && response.success) {
             this.toastr.success('Ödeme kaydı başarıyla eklendi.');
             this.closePaymentForm();
             this.loadPaymentData();
           } else {
-            this.toastr.error(response.message || 'Ödeme kaydı eklenirken hata oluştu.');
+            this.toastr.error(response?.message || 'Ödeme kaydı eklenirken hata oluştu.');
           }
         },
         error: (error) => {
-          this.toastr.error('Sunucu hatası: ' + (error.error?.message || error.message));
+          console.error('Payment Save Error Details:', error);
+
+          let errorMessage = 'Ödeme kaydedilirken hata oluştu: ';
+
+          if (error.status === 0) {
+            errorMessage += 'Sunucuya bağlanılamadı.';
+          } else if (error.error) {
+            if (typeof error.error === 'string' && error.error.includes('<html>')) {
+              errorMessage += 'Sunucu PHP hatası döndürdü';
+            } else {
+              errorMessage += error.error?.message || error.error || error.message;
+            }
+          } else {
+            errorMessage += error.message || 'Bilinmeyen hata';
+          }
+
+          this.toastr.error(errorMessage);
         }
       });
   }

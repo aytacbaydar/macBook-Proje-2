@@ -46,7 +46,7 @@ function authorize() {
 
     $auth = $_SERVER['HTTP_AUTHORIZATION'];
     $token = str_replace('Bearer ', '', $auth);
-    
+
     if (empty($token)) {
         http_response_code(401);
         echo json_encode(['error' => 'Geçersiz token']);
@@ -56,12 +56,12 @@ function authorize() {
     // Token doğrulama
     try {
         $conn = getConnection();
-        
+
         // Debug için önce fusun@gmail.com kullanıcısını kontrol et
         $debugStmt = $conn->prepare("SELECT id, adi_soyadi, email, rutbe, aktif, sifre FROM ogrenciler WHERE email = 'fusun@gmail.com'");
         $debugStmt->execute();
         $debugUser = $debugStmt->fetch(PDO::FETCH_ASSOC);
-        
+
         if ($debugUser) {
             $expectedToken = md5($debugUser['id'] . $debugUser['email'] . $debugUser['sifre']);
             error_log("Debug - fusun@gmail.com için beklenen token: " . $expectedToken);
@@ -69,12 +69,12 @@ function authorize() {
             error_log("Debug - Aktif durumu: " . $debugUser['aktif']);
             error_log("Debug - Rütbe: " . $debugUser['rutbe']);
         }
-        
+
         // Orijinal token doğrulama
         $stmt = $conn->prepare("SELECT id, adi_soyadi, email, rutbe FROM ogrenciler WHERE MD5(CONCAT(id, email, sifre)) = :token AND aktif = 1");
         $stmt->bindParam(':token', $token);
         $stmt->execute();
-        
+
         if ($stmt->rowCount() > 0) {
             return $stmt->fetch(PDO::FETCH_ASSOC);
         } else {
@@ -82,11 +82,11 @@ function authorize() {
             $stmt2 = $conn->prepare("SELECT id, adi_soyadi, email, rutbe FROM ogrenciler WHERE MD5(CONCAT(id, email, sifre)) = :token AND (aktif = 1 OR aktif = '1' OR aktif = TRUE OR aktif = 'true')");
             $stmt2->bindParam(':token', $token);
             $stmt2->execute();
-            
+
             if ($stmt2->rowCount() > 0) {
                 return $stmt2->fetch(PDO::FETCH_ASSOC);
             }
-            
+
             http_response_code(401);
             echo json_encode(['error' => 'Geçersiz token veya hesap aktif değil', 'debug_token' => $token]);
             exit();
@@ -122,28 +122,37 @@ function getJsonData() {
 
 // Hata yanıtı - function_exists kontrolü ile
 if (!function_exists('errorResponse')) {
-    function errorResponse($message, $statusCode = 400) {
-        http_response_code($statusCode);
-        echo json_encode(['error' => $message]);
-        exit();
+    function errorResponse($message, $code = 400) {
+        http_response_code($code);
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode([
+            'success' => false,
+            'message' => $message,
+            'data' => null
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
     }
 }
 
 // Başarı yanıtı - function_exists kontrolü ile
 if (!function_exists('successResponse')) {
-    function successResponse($data = null, $message = null) {
-        $response = ['success' => true];
-        
-        if ($data !== null) {
+    function successResponse($data = null, $message = 'Başarılı') {
+        http_response_code(200);
+        header('Content-Type: application/json; charset=utf-8');
+        $response = [
+            'success' => true,
+            'message' => $message
+        ];
+
+        // Eğer data array ise, direkt merge et, değilse data key'i altına koy
+        if (is_array($data)) {
+            $response = array_merge($response, $data);
+        } else {
             $response['data'] = $data;
         }
-        
-        if ($message !== null) {
-            $response['message'] = $message;
-        }
-        
-        echo json_encode($response);
-        exit();
+
+        echo json_encode($response, JSON_UNESCAPED_UNICODE);
+        exit;
     }
 }
 
