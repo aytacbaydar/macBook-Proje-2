@@ -178,7 +178,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
       'Content-Type': 'application/json'
     });
 
-    this.http.post<any>('./server/api/ogretmen_ucret_yonetimi', this.paymentForm, { headers })
+    this.http.post<any>('./server/api/ogretmen_ucret_yonetimi.php', this.paymentForm, { headers })
       .subscribe({
         next: (response) => {
           if (response.success) {

@@ -46,7 +46,7 @@ export class OgretmenSidebarSayfasiComponent {
     {
       icon: 'bi-credit-card-2-back',
       label: 'Ücretler',
-      link: 'ogretmen-sayfasi/',
+      link: 'ogretmen-sayfasi/ogretmen-ucret-sayfasi',
     },
     {
       icon: 'bi-clipboard-check',
