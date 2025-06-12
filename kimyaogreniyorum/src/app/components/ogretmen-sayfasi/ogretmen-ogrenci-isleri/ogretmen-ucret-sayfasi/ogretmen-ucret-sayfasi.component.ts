@@ -109,7 +109,11 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
 
     try {
       const user = JSON.parse(userStr);
-      console.log('User data parsed, has token:', !!user.token);
+      console.log('User data:', {
+        hasToken: !!user.token,
+        rutbe: user.rutbe,
+        name: user.adi_soyadi
+      });
 
       if (!user.token) {
         console.error('No token found in user data - redirecting to login');
@@ -117,12 +121,15 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
         return {};
       }
 
-      console.log('Token found:', user.token.substring(0, 10) + '...');
-
-      return {
+      const headers = new HttpHeaders({
         'Authorization': `Bearer ${user.token}`,
         'Content-Type': 'application/json'
-      };
+      });
+
+      console.log('Token found:', user.token.substring(0, 10) + '...');
+      console.log('Headers created successfully');
+
+      return headers;
     } catch (error) {
       console.error('Error parsing user data:', error);
       this.redirectToLogin();
@@ -146,29 +153,29 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     this.isLoading = true;
     this.error = null;
 
-    // API URL'ini düzelt
-    const apiUrl = 'https://www.kimyaogreniyorum.com/server/api/ogretmen_ucret_yonetimi';
-    const token = localStorage.getItem('token');
-
-    console.log('API URL:', apiUrl);
-    console.log('Token mevcut:', !!token);
-
-    if (!token) {
-      this.error = 'Oturum süresi dolmuş. Lütfen tekrar giriş yapın.';
+    const headers = this.getAuthHeaders();
+    
+    // Headers boşsa giriş sayfasına yönlendirilmiş olacak
+    if (!headers || Object.keys(headers).length === 0) {
       this.isLoading = false;
       return;
     }
 
-    const headers = this.getAuthHeaders();
+    console.log('Making API request with headers:', headers);
 
     this.http.get<any>('./server/api/ogretmen_ucret_yonetimi', { headers })
       .subscribe({
         next: (response) => {
           console.log('API Response:', response);
           if (response && response.success) {
-            this.students = response.students || [];
-            this.payments = response.payments || [];
-            this.summary = response.summary || {};
+            this.students = response.data?.students || [];
+            this.payments = response.data?.thisMonthPayments || [];
+            this.summary = response.data?.summary || {};
+            console.log('Parsed data:', {
+              studentsCount: this.students.length,
+              paymentsCount: this.payments.length,
+              summary: this.summary
+            });
           } else {
             this.error = response?.message || 'Veri yüklenirken hata oluştu.';
           }

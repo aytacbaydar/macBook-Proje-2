@@ -43,72 +43,38 @@ function getConnection() {
 
 // Oturum yetkilendirme
 function authorize() {
-    // Authorization header'ı kontrol et
     $headers = getallheaders();
-    $authHeader = null;
-    
-    // Case-insensitive header kontrolü
-    foreach ($headers as $name => $value) {
-        if (strtolower($name) === 'authorization') {
-            $authHeader = $value;
-            break;
-        }
-    }
-    
-    if (!$authHeader && isset($_SERVER['HTTP_AUTHORIZATION'])) {
-        $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
-    }
-    
-    if (!$authHeader) {
-        error_log("Authorization - Header bulunamadı. Mevcut headers: " . json_encode($headers));
-        http_response_code(401);
-        echo json_encode(['error' => 'Oturum süresi dolmuş. Lütfen tekrar giriş yapın.']);
-        exit();
+
+    if (!isset($headers['Authorization'])) {
+        error_log("Authorization header missing. Available headers: " . json_encode(array_keys($headers)));
+        errorResponse('Token gerekli', 401);
     }
 
-    $token = str_replace('Bearer ', '', $authHeader);
-    $token = trim($token);
+    $token = str_replace('Bearer ', '', $headers['Authorization']);
+    error_log("Received token: " . substr($token, 0, 20) . "...");
 
-    if (empty($token)) {
-        error_log("Authorization - Token boş");
-        http_response_code(401);
-        echo json_encode(['error' => 'Oturum süresi dolmuş. Lütfen tekrar giriş yapın.']);
-        exit();
+    $conn = getConnection();
+
+    // Token'ı veritabanında ara
+    $stmt = $conn->prepare("SELECT * FROM ogrenciler WHERE token = :token AND token IS NOT NULL");
+    $stmt->bindParam(':token', $token);
+    $stmt->execute();
+
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user) {
+        error_log("Token not found in database: " . $token);
+        // Token'ın veritabanında var olup olmadığını kontrol et
+        $checkStmt = $conn->prepare("SELECT COUNT(*) as count FROM ogrenciler WHERE token IS NOT NULL");
+        $checkStmt->execute();
+        $tokenCount = $checkStmt->fetch(PDO::FETCH_ASSOC);
+        error_log("Total tokens in database: " . $tokenCount['count']);
+        errorResponse('Geçersiz token', 401);
     }
 
-    // Token doğrulama
-    try {
-        $conn = getConnection();
+    error_log("User found: " . $user['adi_soyadi'] . " (ID: " . $user['id'] . ", Rutbe: " . $user['rutbe'] . ")");
 
-        // Token ile kullanıcı bul
-        $stmt = $conn->prepare("
-            SELECT id, adi_soyadi, email, rutbe, aktif 
-            FROM ogrenciler 
-            WHERE MD5(CONCAT(id, email, sifre)) = :token 
-            AND aktif = 1
-        ");
-        $stmt->bindParam(':token', $token);
-        $stmt->execute();
-
-        error_log("Authorization - Token: " . substr($token, 0, 10) . "... Query rowCount: " . $stmt->rowCount());
-
-        if ($stmt->rowCount() === 0) {
-            error_log("Authorization - Token veritabanında bulunamadı veya kullanıcı aktif değil");
-            http_response_code(401);
-            echo json_encode(['error' => 'Oturum süresi dolmuş. Lütfen tekrar giriş yapın.']);
-            exit();
-        }
-
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        error_log("Authorization - Başarılı giriş: " . $user['email']);
-
-        return $user;
-    } catch (PDOException $e) {
-        error_log("Authorization - Veritabanı hatası: " . $e->getMessage());
-        http_response_code(500);
-        echo json_encode(['error' => 'Sistem hatası. Lütfen tekrar deneyin.']);
-        exit();
-    }
+    return $user;
 }
 
 // Admin yetkisini kontrol

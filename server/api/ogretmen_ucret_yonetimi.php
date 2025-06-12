@@ -167,6 +167,13 @@ try {
             ]
         ];
         
+        // Debug için response'u logla
+        error_log("ogretmen_ucret_yonetimi.php - Response data: " . json_encode([
+            'students_count' => count($students),
+            'payments_count' => count($thisMonthPayments),
+            'teacher_name' => $user['adi_soyadi']
+        ]));
+        
         successResponse($response);
         
     } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
