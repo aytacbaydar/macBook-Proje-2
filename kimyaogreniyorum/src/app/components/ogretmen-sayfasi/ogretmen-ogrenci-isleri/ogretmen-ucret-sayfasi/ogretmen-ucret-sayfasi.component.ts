@@ -154,7 +154,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     this.error = null;
 
     const headers = this.getAuthHeaders();
-    
+
     // Headers boşsa giriş sayfasına yönlendirilmiş olacak
     if (!headers || Object.keys(headers).length === 0) {
       this.isLoading = false;
@@ -186,39 +186,18 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
         error: (error) => {
           console.error('Full API Error:', error);
           console.error('Error status:', error.status);
-          console.error('Error body:', error.error);
+          console.error('Error response:', error.error);
+          this.isLoading = false;
 
-          let errorMessage = 'Sunucu hatası: ';
+          let errorMessage = 'Veriler yüklenirken hata oluştu!';
 
-          if (error.status === 200 && error.error && error.error.text) {
-            // Status 200 ama JSON parse hatası - HTML gelmiş
-            errorMessage += 'Sunucu JSON yerine HTML döndürdü. PHP hatası olabilir.';
-            console.error('HTML Response:', error.error.text.substring(0, 500));
-          } else if (error.status === 0) {
-            errorMessage += 'Sunucuya bağlanılamadı. Ağ bağlantınızı kontrol edin.';
-          } else if (error.status === 500) {
-            errorMessage += 'Sunucu iç hatası. Lütfen daha sonra tekrar deneyin.';
-          } else if (error.status === 404) {
-            errorMessage += 'API endpoint bulunamadı.';
-          } else if (error.error) {
-            if (typeof error.error === 'string') {
-              // HTML yanıt gelmiş olabilir
-              if (error.error.includes('<html>') || error.error.includes('<!DOCTYPE')) {
-                errorMessage += 'Sunucu HTML yanıtı döndürdü (PHP hatası olabilir)';
-              } else {
-                errorMessage += error.error;
-              }
-            } else if (error.error.message) {
-              errorMessage += error.error.message;
-            } else {
-              errorMessage += 'Bilinmeyen hata';
-            }
-          } else {
-            errorMessage += error.message || 'Bilinmeyen hata';
+          if (error.status === 403) {
+            errorMessage = 'Bu işlem için yetkiniz yok!';
+          } else if (error.error && error.error.message) {
+            errorMessage = error.error.message;
           }
 
-          this.error = errorMessage;
-          this.isLoading = false;
+          alert(errorMessage);
         }
       });
   }

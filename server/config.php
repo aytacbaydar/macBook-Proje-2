@@ -41,40 +41,59 @@ function getConnection() {
     }
 }
 
-// Oturum yetkilendirme
+// Kullanıcı kimlik doğrulama
 function authorize() {
     $headers = getallheaders();
+    $token = null;
 
-    if (!isset($headers['Authorization'])) {
-        error_log("Authorization header missing. Available headers: " . json_encode(array_keys($headers)));
-        errorResponse('Token gerekli', 401);
+    // Authorization header'ından token'ı al
+    if (isset($headers['Authorization'])) {
+        $authHeader = $headers['Authorization'];
+        if (preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
+            $token = $matches[1];
+        }
     }
 
-    $token = str_replace('Bearer ', '', $headers['Authorization']);
-    error_log("Received token: " . substr($token, 0, 20) . "...");
-
-    $conn = getConnection();
-
-    // Token'ı veritabanında ara
-    $stmt = $conn->prepare("SELECT * FROM ogrenciler WHERE token = :token AND token IS NOT NULL");
-    $stmt->bindParam(':token', $token);
-    $stmt->execute();
-
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$user) {
-        error_log("Token not found in database: " . $token);
-        // Token'ın veritabanında var olup olmadığını kontrol et
-        $checkStmt = $conn->prepare("SELECT COUNT(*) as count FROM ogrenciler WHERE token IS NOT NULL");
-        $checkStmt->execute();
-        $tokenCount = $checkStmt->fetch(PDO::FETCH_ASSOC);
-        error_log("Total tokens in database: " . $tokenCount['count']);
-        errorResponse('Geçersiz token', 401);
+    if (!$token) {
+        http_response_code(401);
+        echo json_encode(['error' => 'Token bulunamadı']);
+        exit();
     }
 
-    error_log("User found: " . $user['adi_soyadi'] . " (ID: " . $user['id'] . ", Rutbe: " . $user['rutbe'] . ")");
+    try {
+        $conn = getConnection();
 
-    return $user;
+        // Önce öğrenciler tablosunda ara (email ile)
+        $stmt = $conn->prepare("SELECT id, adi_soyadi, email, rutbe, aktif FROM ogrenciler WHERE email = ?");
+        $stmt->execute([$token]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Eğer öğrencilerde bulunamazsa, öğretmenler tablosunda ara
+        if (!$user) {
+            $stmt = $conn->prepare("SELECT ogretmen_id as id, ogrt_adi_soyadi as adi_soyadi, ogrt_email as email, 'ogretmen' as rutbe, aktif FROM ogretmenler WHERE ogrt_email = ?");
+            $stmt->execute([$token]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+
+        if (!$user) {
+            http_response_code(401);
+            echo json_encode(['error' => 'Geçersiz token']);
+            exit();
+        }
+
+        if (!$user['aktif']) {
+            http_response_code(403);
+            echo json_encode(['error' => 'Hesabınız aktif değil']);
+            exit();
+        }
+
+        return $user;
+
+    } catch (PDOException $e) {
+        http_response_code(500);
+        echo json_encode(['error' => 'Veritabanı hatası: ' . $e->getMessage()]);
+        exit();
+    }
 }
 
 // Admin yetkisini kontrol

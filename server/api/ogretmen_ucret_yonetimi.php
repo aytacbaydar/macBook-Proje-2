@@ -70,29 +70,17 @@ try {
         
         error_log("Teacher info - ID: $teacherId, Name: $teacherName");
         
-        // 1. Öğretmenin öğrencilerini ve ücret bilgilerini getir (ID ile eşleştirme)
+        // 1. Öğretmenin öğrencilerini ve ücret bilgilerini getir (ogretmen_ogrencileri.php'deki gibi)
         $studentQuery = "
-            SELECT 
-                o.id,
-                o.adi_soyadi,
-                o.email,
-                o.cep_telefonu,
-                o.aktif,
-                o.avatar,
-                ob.ucret,
-                ob.ders_gunu,
-                ob.ders_saati,
-                ob.grubu,
-                ob.okulu,
-                ob.sinifi,
-                ob.veli_adi,
-                ob.veli_cep
+            SELECT o.id, o.adi_soyadi, o.email, o.cep_telefonu, o.rutbe, o.aktif, o.avatar, o.brans, o.ogretmeni, o.created_at,
+                   ob.okulu, ob.sinifi, ob.grubu, ob.ders_gunu, ob.ders_saati, ob.ucret,
+                   ob.veli_adi, ob.veli_cep,
+                   og.ogrt_adi_soyadi as ogretmen_adi
             FROM ogrenciler o
             LEFT JOIN ogrenci_bilgileri ob ON o.id = ob.ogrenci_id
-            WHERE o.ogretmeni = :teacher_id 
-            AND o.rutbe = 'ogrenci'
-            AND o.aktif = 1
-            ORDER BY o.adi_soyadi
+            LEFT JOIN ogretmenler og ON o.ogretmeni = og.ogretmen_id
+            WHERE o.ogretmeni = :teacher_id
+            ORDER BY o.created_at DESC
         ";
         
         $stmt = $conn->prepare($studentQuery);
@@ -222,14 +210,12 @@ try {
             errorResponse('Ödeme tutarı sıfırdan büyük olmalıdır.', 400);
         }
         
-        // Öğrencinin bu öğretmene ait olduğunu kontrol et (ID ile)
+        // Öğrencinin bu öğretmene ait olduğunu kontrol et
         $checkQuery = "
             SELECT COUNT(*) as count, o.adi_soyadi
             FROM ogrenciler o 
             WHERE o.id = :ogrenci_id 
             AND o.ogretmeni = :teacher_id
-            AND o.rutbe = 'ogrenci'
-            AND o.aktif = 1
         ";
         
         $stmt = $conn->prepare($checkQuery);
