@@ -34,6 +34,11 @@ try {
     $user = authorize();
     $conn = getConnection();
     
+    // Kullanıcının öğretmen olduğunu kontrol et
+    if ($user['rutbe'] !== 'ogretmen') {
+        errorResponse('Bu işlem için yetkiniz yok. Sadece öğretmenler ücret yönetimi yapabilir.', 403);
+    }
+    
     // Tablo varlık kontrolü
     $checkTable = $conn->query("SHOW TABLES LIKE 'ogrenci_odemeler'");
     if ($checkTable->rowCount() == 0) {
@@ -58,32 +63,44 @@ try {
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         // Öğretmenin ücret bilgilerini getir
         
+        $teacherId = $user['id'];
         $teacherName = $user['adi_soyadi'];
         $currentYear = date('Y');
         $currentMonth = date('m');
         
-        // 1. Öğretmenin öğrencilerini ve ücret bilgilerini getir
+        error_log("Teacher info - ID: $teacherId, Name: $teacherName");
+        
+        // 1. Öğretmenin öğrencilerini ve ücret bilgilerini getir (ID ile eşleştirme)
         $studentQuery = "
             SELECT 
                 o.id,
                 o.adi_soyadi,
                 o.email,
+                o.cep_telefonu,
                 o.aktif,
+                o.avatar,
                 ob.ucret,
                 ob.ders_gunu,
                 ob.ders_saati,
-                ob.grubu
+                ob.grubu,
+                ob.okulu,
+                ob.sinifi,
+                ob.veli_adi,
+                ob.veli_cep
             FROM ogrenciler o
             LEFT JOIN ogrenci_bilgileri ob ON o.id = ob.ogrenci_id
-            WHERE o.ogretmeni = :teacher_name 
+            WHERE o.ogretmeni = :teacher_id 
             AND o.rutbe = 'ogrenci'
+            AND o.aktif = 1
             ORDER BY o.adi_soyadi
         ";
         
         $stmt = $conn->prepare($studentQuery);
-        $stmt->bindParam(':teacher_name', $teacherName);
+        $stmt->bindParam(':teacher_id', $teacherId, PDO::PARAM_INT);
         $stmt->execute();
         $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        error_log("Found " . count($students) . " students for teacher ID: $teacherId");
         
         // 2. Bu ay ödeme yapan öğrencileri getir
         $paymentsQuery = "
@@ -98,16 +115,16 @@ try {
                 o.adi_soyadi as ogrenci_adi
             FROM ogrenci_odemeler op
             INNER JOIN ogrenciler o ON op.ogrenci_id = o.id
-            WHERE o.ogretmeni = :teacher_name
+            WHERE o.ogretmeni = :teacher_id
             AND op.yil = :current_year
             AND op.ay = :current_month
             ORDER BY op.odeme_tarihi DESC
         ";
         
         $stmt = $conn->prepare($paymentsQuery);
-        $stmt->bindParam(':teacher_name', $teacherName);
-        $stmt->bindParam(':current_year', $currentYear);
-        $stmt->bindParam(':current_month', $currentMonth);
+        $stmt->bindParam(':teacher_id', $teacherId, PDO::PARAM_INT);
+        $stmt->bindParam(':current_year', $currentYear, PDO::PARAM_INT);
+        $stmt->bindParam(':current_month', $currentMonth, PDO::PARAM_INT);
         $stmt->execute();
         $thisMonthPayments = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
@@ -116,13 +133,13 @@ try {
             SELECT SUM(op.tutar) as toplam_yillik
             FROM ogrenci_odemeler op
             INNER JOIN ogrenciler o ON op.ogrenci_id = o.id
-            WHERE o.ogretmeni = :teacher_name
+            WHERE o.ogretmeni = :teacher_id
             AND op.yil = :current_year
         ";
         
         $stmt = $conn->prepare($yearlyQuery);
-        $stmt->bindParam(':teacher_name', $teacherName);
-        $stmt->bindParam(':current_year', $currentYear);
+        $stmt->bindParam(':teacher_id', $teacherId, PDO::PARAM_INT);
+        $stmt->bindParam(':current_year', $currentYear, PDO::PARAM_INT);
         $stmt->execute();
         $yearlyResult = $stmt->fetch(PDO::FETCH_ASSOC);
         $yearlyTotal = $yearlyResult['toplam_yillik'] ?? 0;
@@ -137,7 +154,7 @@ try {
         $paidStudentIds = array_column($thisMonthPayments, 'ogrenci_id');
         
         foreach ($students as $student) {
-            if ($student['aktif'] == 1 && !empty($student['ucret'])) {
+            if (!empty($student['ucret']) && $student['ucret'] > 0) {
                 $expectedAmount = (float) $student['ucret'];
                 $totalExpected += $expectedAmount;
                 
@@ -170,10 +187,13 @@ try {
         ];
         
         // Debug için response'u logla
-        error_log("ogretmen_ucret_yonetimi.php - Response data: " . json_encode([
+        error_log("ogretmen_ucret_yonetimi.php - Response summary: " . json_encode([
             'students_count' => count($students),
             'payments_count' => count($thisMonthPayments),
-            'teacher_name' => $user['adi_soyadi']
+            'teacher_id' => $teacherId,
+            'teacher_name' => $teacherName,
+            'total_expected' => $totalExpected,
+            'total_received' => $totalReceived
         ]));
         
         successResponse($response);
@@ -181,7 +201,10 @@ try {
     } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Yeni ödeme kaydı ekleme
         
-        $data = json_decode(file_get_contents('php://input'), true);
+        $input = file_get_contents('php://input');
+        $data = json_decode($input, true);
+        
+        error_log("POST data received: " . $input);
         
         if (!$data || !isset($data['ogrenci_id']) || !isset($data['tutar'])) {
             errorResponse('Geçersiz veri. Öğrenci ID ve tutar gerekli.', 400);
@@ -194,22 +217,29 @@ try {
         $ay = (int) ($data['ay'] ?? date('m'));
         $yil = (int) ($data['yil'] ?? date('Y'));
         
-        // Öğrencinin bu öğretmene ait olduğunu kontrol et
+        // Tutar kontrolü
+        if ($tutar <= 0) {
+            errorResponse('Ödeme tutarı sıfırdan büyük olmalıdır.', 400);
+        }
+        
+        // Öğrencinin bu öğretmene ait olduğunu kontrol et (ID ile)
         $checkQuery = "
-            SELECT COUNT(*) as count 
-            FROM ogrenciler 
-            WHERE id = :ogrenci_id 
-            AND ogretmeni = :teacher_name
+            SELECT COUNT(*) as count, o.adi_soyadi
+            FROM ogrenciler o 
+            WHERE o.id = :ogrenci_id 
+            AND o.ogretmeni = :teacher_id
+            AND o.rutbe = 'ogrenci'
+            AND o.aktif = 1
         ";
         
         $stmt = $conn->prepare($checkQuery);
-        $stmt->bindParam(':ogrenci_id', $ogrenci_id);
-        $stmt->bindParam(':teacher_name', $user['adi_soyadi']);
+        $stmt->bindParam(':ogrenci_id', $ogrenci_id, PDO::PARAM_INT);
+        $stmt->bindParam(':teacher_id', $user['id'], PDO::PARAM_INT);
         $stmt->execute();
         
         $checkResult = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($checkResult['count'] == 0) {
-            errorResponse('Bu öğrenciye ödeme kaydı ekleme yetkiniz yok.', 403);
+            errorResponse('Bu öğrenciye ödeme kaydı ekleme yetkiniz yok veya öğrenci bulunamadı.', 403);
         }
         
         // Ödeme kaydını ekle
@@ -221,17 +251,27 @@ try {
         ";
         
         $stmt = $conn->prepare($insertQuery);
-        $stmt->bindParam(':ogrenci_id', $ogrenci_id);
+        $stmt->bindParam(':ogrenci_id', $ogrenci_id, PDO::PARAM_INT);
         $stmt->bindParam(':tutar', $tutar);
         $stmt->bindParam(':odeme_tarihi', $odeme_tarihi);
         $stmt->bindParam(':aciklama', $aciklama);
-        $stmt->bindParam(':ay', $ay);
-        $stmt->bindParam(':yil', $yil);
+        $stmt->bindParam(':ay', $ay, PDO::PARAM_INT);
+        $stmt->bindParam(':yil', $yil, PDO::PARAM_INT);
         
         if ($stmt->execute()) {
             $paymentId = $conn->lastInsertId();
-            successResponse(['id' => $paymentId], 'Ödeme kaydı başarıyla eklendi.');
+            
+            error_log("Payment added successfully - ID: $paymentId, Student: {$checkResult['adi_soyadi']}, Amount: $tutar");
+            
+            successResponse([
+                'id' => $paymentId,
+                'ogrenci_adi' => $checkResult['adi_soyadi'],
+                'tutar' => $tutar,
+                'ay' => $ay,
+                'yil' => $yil
+            ], 'Ödeme kaydı başarıyla eklendi.');
         } else {
+            error_log("Payment insertion failed for student ID: $ogrenci_id");
             errorResponse('Ödeme kaydı eklenirken hata oluştu.', 500);
         }
         
@@ -246,5 +286,3 @@ try {
     error_log("General error in ogretmen_ucret_yonetimi.php: " . $e->getMessage());
     errorResponse('Beklenmeyen bir hata oluştu: ' . $e->getMessage(), 500);
 }
-
-
