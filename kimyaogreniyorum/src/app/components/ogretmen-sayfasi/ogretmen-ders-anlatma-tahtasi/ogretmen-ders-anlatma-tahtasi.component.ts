@@ -72,7 +72,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
   // Öğrenci gruplarını API'den çekme fonksiyonu
   getOgrenciGruplari(): void {
     // Tüm öğrencileri listeleyen API
-    const apiUrl = './server/api/ogrenciler_listesi.php';
+    const apiUrl = '/server/api/ogrenciler_listesi.php';
 
     console.log('Öğrenci grupları yükleniyor...');
 
@@ -1317,8 +1317,8 @@ export class OgretmenDersAnlatmaTahtasiComponent
 
         // ADIM 11: API URL'ini belirle
         console.log('ADIM 11: API URL hazırlanıyor...');
-        // Relative path kullanmak daha güvenilir
-        const apiUrl = './server/api/konu_anlatim_kaydet.php';
+        // API URL'ini tam path ile belirle
+        const apiUrl = '/server/api/konu_anlatim_kaydet.php';
         console.log('API URL:', apiUrl);
 
         // ADIM 12: HTTP isteğini gönder - daha sağlam yapılandırma ile
@@ -1356,7 +1356,6 @@ export class OgretmenDersAnlatmaTahtasiComponent
               'Cache-Control': 'no-cache',
               Pragma: 'no-cache',
             },
-            responseType: 'json',
           })
           .subscribe({
             next: (event: any) => {
@@ -1374,26 +1373,49 @@ export class OgretmenDersAnlatmaTahtasiComponent
                   );
                 }
               } else if (event.type === 4) {
-                // Yanıt alındı - ekstra güvenlik için try-catch bloğu içinde işliyoruz
+                // Yanıt alındı - HttpResponse event'i
                 console.log('ADIM 13: Yanıt alındı - ham veri:', event.body);
+                console.log('HTTP Status:', event.status);
+                console.log('HTTP OK:', event.ok);
 
                 try {
-                  // Yanıt zaten JSON objesi ise doğrudan kullan, string ise parse et
-                  const jsonResponse = event.body;
-
-                  if (jsonResponse && jsonResponse.success === true) {
-                    console.log('İşlem başarılı:', jsonResponse);
-                    alert(
-                      `Konu anlatımı "${this.secilenGrup}" için başarıyla kaydedildi!`
-                    );
+                  // HTTP status kontrolü
+                  if (event.status === 200 && event.ok) {
+                    const jsonResponse = event.body;
+                    
+                    if (jsonResponse && jsonResponse.success === true) {
+                      console.log('İşlem başarılı:', jsonResponse);
+                      alert(
+                        `Konu anlatımı "${this.secilenGrup}" için başarıyla kaydedildi!`
+                      );
+                    } else {
+                      console.warn('Sunucu hatası:', jsonResponse);
+                      alert(
+                        `Kaydetme hatası: ${
+                          jsonResponse?.error ||
+                          'Sunucu yanıtı beklenmeyen formatta'
+                        }`
+                      );
+                    }
                   } else {
-                    console.warn('Sunucu hatası:', jsonResponse);
-                    alert(
-                      `Kaydetme hatası: ${
-                        jsonResponse?.error ||
-                        'Sunucu yanıtı beklenmeyen formatta'
-                      }`
-                    );
+                    // HTTP hatası
+                    console.error('HTTP Hatası - Status:', event.status);
+                    console.error('Response body:', event.body);
+                    
+                    // Yanıt string ise parse etmeyi dene
+                    let errorMessage = 'HTTP hatası oluştu';
+                    if (typeof event.body === 'string') {
+                      try {
+                        const parsed = JSON.parse(event.body);
+                        errorMessage = parsed.error || errorMessage;
+                      } catch (e) {
+                        errorMessage = event.body.substring(0, 200) + '...';
+                      }
+                    } else if (event.body && event.body.error) {
+                      errorMessage = event.body.error;
+                    }
+                    
+                    alert(`Kaydetme hatası: ${errorMessage}`);
                   }
                 } catch (e) {
                   console.error('Yanıt işleme hatası:', e);
