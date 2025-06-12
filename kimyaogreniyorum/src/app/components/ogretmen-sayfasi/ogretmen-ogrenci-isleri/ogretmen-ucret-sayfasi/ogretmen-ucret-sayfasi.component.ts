@@ -135,7 +135,11 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
 
           let errorMessage = 'Sunucu hatası: ';
 
-          if (error.status === 0) {
+          if (error.status === 200 && error.error && error.error.text) {
+            // Status 200 ama JSON parse hatası - HTML gelmiş
+            errorMessage += 'Sunucu JSON yerine HTML döndürdü. PHP hatası olabilir.';
+            console.error('HTML Response:', error.error.text.substring(0, 500));
+          } else if (error.status === 0) {
             errorMessage += 'Sunucuya bağlanılamadı. Ağ bağlantınızı kontrol edin.';
           } else if (error.status === 500) {
             errorMessage += 'Sunucu iç hatası. Lütfen daha sonra tekrar deneyin.';
@@ -208,7 +212,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
       'Content-Type': 'application/json'
     });
 
-    this.http.post<any>('./server/api/ogretmen_ucret_yonetimi.php', this.paymentForm, { headers })
+    this.http.post<any>('./server/api/ogretmen_ucret_yonetimi', this.paymentForm, { headers })
       .subscribe({
         next: (response) => {
           console.log('Payment save response:', response);

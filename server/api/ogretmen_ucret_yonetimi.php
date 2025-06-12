@@ -1,8 +1,9 @@
 
 <?php
-// Hata raporlamayı etkinleştir
+// Hata raporlamayı devre dışı bırak ve sadece loglara yaz
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
 
 require_once '../config.php';
 
@@ -20,12 +21,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // Debug için request bilgilerini logla
 error_log("ogretmen_ucret_yonetimi.php - Request Method: " . $_SERVER['REQUEST_METHOD']);
-error_log("ogretmen_ucret_yonetimi.php - Headers: " . json_encode(getallheaders()));
+error_log("ogretmen_ucret_yonetimi.php - Request URI: " . $_SERVER['REQUEST_URI']);
 
 try {
     // Kullanıcıyı doğrula
     $user = authorize();
     $conn = getConnection();
+    
+    // Tablo varlık kontrolü
+    $checkTable = $conn->query("SHOW TABLES LIKE 'ogrenci_odemeler'");
+    if ($checkTable->rowCount() == 0) {
+        // Tablo yoksa oluştur
+        $createTable = "
+            CREATE TABLE IF NOT EXISTS ogrenci_odemeler (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                ogrenci_id INT NOT NULL,
+                tutar DECIMAL(10,2) NOT NULL,
+                odeme_tarihi DATETIME NOT NULL,
+                aciklama TEXT,
+                ay INT NOT NULL,
+                yil INT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (ogrenci_id) REFERENCES ogrenciler(id)
+            )
+        ";
+        $conn->exec($createTable);
+        error_log("ogrenci_odemeler tablosu oluşturuldu");
+    }
     
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         // Öğretmenin ücret bilgilerini getir
