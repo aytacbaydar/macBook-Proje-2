@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $conn = getConnection();
         $teacherName = $user['adi_soyadi'];
         
-        // 1. Öğretmenin öğrencilerini getir (ogrenci_listesi.php gibi)
+        // 1. Öğretmenin öğrencilerini getir
         $studentsQuery = "
             SELECT o.id, o.adi_soyadi, o.email, o.cep_telefonu, o.rutbe, o.aktif,
                    ob.okulu, ob.sinifi, ob.grubu, ob.ders_adi, ob.ders_gunu, ob.ders_saati, 
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             }
         }
         
-        $response = [
+        $responseData = [
             'students' => $students,
             'payments' => $payments,
             'summary' => [
@@ -99,7 +99,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             ]
         ];
         
-        successResponse($response);
+        // Doğru response formatı
+        successResponse($responseData);
         
     } catch (Exception $e) {
         errorResponse('Veri getirme hatası: ' . $e->getMessage(), 500);

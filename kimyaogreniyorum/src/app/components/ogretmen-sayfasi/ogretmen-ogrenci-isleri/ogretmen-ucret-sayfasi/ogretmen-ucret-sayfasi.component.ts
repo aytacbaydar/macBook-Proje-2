@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
@@ -75,7 +76,6 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
   }
 
   private getAuthHeaders(): HttpHeaders {
-    // ogretmen-ogrenci-detay-sayfasi.component.ts'deki gibi
     let token = '';
     const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
     if (userStr) {
@@ -93,21 +93,31 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     this.isLoading = true;
     const headers = this.getAuthHeaders();
 
+    console.log('API çağrısı yapılıyor...');
+
     this.http.get<any>('./server/api/ucret_yonetimi.php', { headers })
       .subscribe({
         next: (response) => {
+          console.log('API Response:', response);
+          
           if (response && response.success) {
             this.students = response.data.students || [];
             this.payments = response.data.payments || [];
             this.summary = response.data.summary || this.summary;
-            console.log('Ödeme verileri yüklendi:', response.data);
+            
+            console.log('Yüklenen veriler:', {
+              students: this.students.length,
+              payments: this.payments.length,
+              summary: this.summary
+            });
           } else {
+            console.error('API başarısız response:', response);
             this.toastr.error('Veri yüklenemedi: ' + (response?.message || 'Bilinmeyen hata'));
           }
           this.isLoading = false;
         },
         error: (error) => {
-          console.error('Veri yükleme hatası:', error);
+          console.error('API Error:', error);
           this.toastr.error('Bağlantı hatası: ' + (error.message || 'Bilinmeyen hata'));
           this.isLoading = false;
         }
@@ -171,8 +181,8 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     }).format(amount);
   }
 
-  getCollectionRate(): number {
-    if (this.summary.totalExpected === 0) return 0;
-    return (this.summary.totalReceived / this.summary.totalExpected) * 100;
+  // parseFloat metodunu template'te kullanabilmek için
+  parseFloat(value: string): number {
+    return parseFloat(value);
   }
 }
