@@ -1,0 +1,64 @@
+
+✘ [ERROR] NG9: Property 'error' does not exist on type 'OgretmenUcretSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:19:14:
+      19 │   <div *ngIf="error && !isLoading" class="alert alert-danger">
+         ╵               ~~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:41:15:
+      41 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'error' does not exist on type 'OgretmenUcretSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:20:50:
+      20 │     <i class="bi bi-exclamation-triangle"></i> {{ error }}
+         ╵                                                   ~~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:41:15:
+      41 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'loadData' does not exist on type 'OgretmenUcretSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:21:64:
+      21 │ ...n class="btn btn-sm btn-outline-danger ms-2" (click)="loadData()">
+         ╵                                                          ~~~~~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:41:15:
+      41 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'error' does not exist on type 'OgretmenUcretSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:27:29:
+      27 │   <div *ngIf="!isLoading && !error">
+         ╵                              ~~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:41:15:
+      41 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'getCollectionRate' does not exist on type 'OgretmenUcretSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:51:41:
+      51 │ ...h3 class="text-warning">%{{ getCollectionRate().toFixed(1) }}</h3>
+         ╵                                ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:41:15:
+      41 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
