@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
@@ -42,7 +41,7 @@ interface PaymentSummary {
   styleUrl: './ogretmen-ucret-sayfasi.component.scss'
 })
 export class OgretmenUcretSayfasiComponent implements OnInit {
-  
+
   students: Student[] = [];
   payments: Payment[] = [];
   summary: PaymentSummary = {
@@ -54,10 +53,10 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     currentMonth: new Date().getMonth() + 1,
     currentYear: new Date().getFullYear()
   };
-  
+
   isLoading: boolean = true;
   error: string | null = null;
-  
+
   // Form variables
   showPaymentForm: boolean = false;
   selectedStudent: Student | null = null;
@@ -69,11 +68,11 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     ay: new Date().getMonth() + 1,
     yil: new Date().getFullYear()
   };
-  
+
   // Filter variables
   selectedMonth: number = new Date().getMonth() + 1;
   selectedYear: number = new Date().getFullYear();
-  
+
   months = [
     { value: 1, name: 'Ocak' },
     { value: 2, name: 'Şubat' },
@@ -145,12 +144,12 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
       this.paymentForm.ogrenci_id = 0;
       this.paymentForm.tutar = 0;
     }
-    
+
     this.paymentForm.aciklama = '';
     this.paymentForm.odeme_tarihi = new Date().toISOString().split('T')[0];
     this.paymentForm.ay = this.selectedMonth;
     this.paymentForm.yil = this.selectedYear;
-    
+
     this.showPaymentForm = true;
   }
 
