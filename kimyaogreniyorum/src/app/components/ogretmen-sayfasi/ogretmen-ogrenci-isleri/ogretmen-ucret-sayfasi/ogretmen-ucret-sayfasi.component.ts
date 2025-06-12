@@ -115,7 +115,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
       'Authorization': `Bearer ${token}`
     });
 
-    this.http.get<any>('./server/api/ogretmen_ucret_yonetimi.php', { headers })
+    this.http.get<any>('./server/api/ogretmen_ucret_yonetimi', { headers })
       .subscribe({
         next: (response) => {
           if (response.success) {
@@ -178,7 +178,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
       'Content-Type': 'application/json'
     });
 
-    this.http.post<any>('./server/api/ogretmen_ucret_yonetimi.php', this.paymentForm, { headers })
+    this.http.post<any>('./server/api/ogretmen_ucret_yonetimi', this.paymentForm, { headers })
       .subscribe({
         next: (response) => {
           if (response.success) {
@@ -209,6 +209,10 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
       style: 'currency',
       currency: 'TRY'
     }).format(amount);
+  }
+
+  parseFloat(value: string): number {
+    return parseFloat(value);
   }
 
   getCollectionRate(): number {

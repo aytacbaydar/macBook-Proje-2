@@ -81,6 +81,10 @@ if (strpos($requestUri, $basePath) === 0) {
             require_once 'door_control.php';
             break;
             
+        case 'ogretmen_ucret_yonetimi':
+            require_once 'api/ogretmen_ucret_yonetimi.php';
+            break;
+            
         default:
             http_response_code(404);
             echo json_encode(['error' => 'API endpoint bulunamadı']);
