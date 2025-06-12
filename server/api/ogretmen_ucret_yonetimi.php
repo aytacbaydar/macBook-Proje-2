@@ -74,17 +74,15 @@ try {
         $studentQuery = "
             SELECT o.id, o.adi_soyadi, o.email, o.cep_telefonu, o.rutbe, o.aktif, o.avatar, o.brans, o.ogretmeni, o.created_at,
                    ob.okulu, ob.sinifi, ob.grubu, ob.ders_gunu, ob.ders_saati, ob.ucret,
-                   ob.veli_adi, ob.veli_cep,
-                   og.ogrt_adi_soyadi as ogretmen_adi
+                   ob.veli_adi, ob.veli_cep
             FROM ogrenciler o
             LEFT JOIN ogrenci_bilgileri ob ON o.id = ob.ogrenci_id
-            LEFT JOIN ogretmenler og ON o.ogretmeni = og.ogretmen_id
-            WHERE o.ogretmeni = :teacher_id
+            WHERE o.ogretmeni = :teacher_name
             ORDER BY o.created_at DESC
         ";
         
         $stmt = $conn->prepare($studentQuery);
-        $stmt->bindParam(':teacher_id', $teacherId, PDO::PARAM_INT);
+        $stmt->bindParam(':teacher_name', $teacherName, PDO::PARAM_STR);
         $stmt->execute();
         $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
@@ -103,14 +101,14 @@ try {
                 o.adi_soyadi as ogrenci_adi
             FROM ogrenci_odemeler op
             INNER JOIN ogrenciler o ON op.ogrenci_id = o.id
-            WHERE o.ogretmeni = :teacher_id
+            WHERE o.ogretmeni = :teacher_name
             AND op.yil = :current_year
             AND op.ay = :current_month
             ORDER BY op.odeme_tarihi DESC
         ";
         
         $stmt = $conn->prepare($paymentsQuery);
-        $stmt->bindParam(':teacher_id', $teacherId, PDO::PARAM_INT);
+        $stmt->bindParam(':teacher_name', $teacherName, PDO::PARAM_STR);
         $stmt->bindParam(':current_year', $currentYear, PDO::PARAM_INT);
         $stmt->bindParam(':current_month', $currentMonth, PDO::PARAM_INT);
         $stmt->execute();
@@ -121,12 +119,12 @@ try {
             SELECT SUM(op.tutar) as toplam_yillik
             FROM ogrenci_odemeler op
             INNER JOIN ogrenciler o ON op.ogrenci_id = o.id
-            WHERE o.ogretmeni = :teacher_id
+            WHERE o.ogretmeni = :teacher_name
             AND op.yil = :current_year
         ";
         
         $stmt = $conn->prepare($yearlyQuery);
-        $stmt->bindParam(':teacher_id', $teacherId, PDO::PARAM_INT);
+        $stmt->bindParam(':teacher_name', $teacherName, PDO::PARAM_STR);
         $stmt->bindParam(':current_year', $currentYear, PDO::PARAM_INT);
         $stmt->execute();
         $yearlyResult = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -215,12 +213,12 @@ try {
             SELECT COUNT(*) as count, o.adi_soyadi
             FROM ogrenciler o 
             WHERE o.id = :ogrenci_id 
-            AND o.ogretmeni = :teacher_id
+            AND o.ogretmeni = :teacher_name
         ";
         
         $stmt = $conn->prepare($checkQuery);
         $stmt->bindParam(':ogrenci_id', $ogrenci_id, PDO::PARAM_INT);
-        $stmt->bindParam(':teacher_id', $user['id'], PDO::PARAM_INT);
+        $stmt->bindParam(':teacher_name', $user['adi_soyadi'], PDO::PARAM_STR);
         $stmt->execute();
         
         $checkResult = $stmt->fetch(PDO::FETCH_ASSOC);
