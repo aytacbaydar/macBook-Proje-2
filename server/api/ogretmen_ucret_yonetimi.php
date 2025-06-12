@@ -6,10 +6,12 @@ ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
 ini_set('log_errors', 1);
 
-require_once '../config.php';
+// Output buffer'ı temizle
+if (ob_get_level()) {
+    ob_end_clean();
+}
 
-// Output buffering başlat
-ob_start();
+require_once '../config.php';
 
 // CORS ayarları
 header('Access-Control-Allow-Origin: *');
@@ -238,18 +240,11 @@ try {
     }
     
 } catch (PDOException $e) {
-    // Output buffer'ı temizle
-    if (ob_get_level()) ob_clean();
     error_log("Database error in ogretmen_ucret_yonetimi.php: " . $e->getMessage());
     errorResponse('Veritabanı hatası: ' . $e->getMessage(), 500);
 } catch (Exception $e) {
-    // Output buffer'ı temizle
-    if (ob_get_level()) ob_clean();
     error_log("General error in ogretmen_ucret_yonetimi.php: " . $e->getMessage());
     errorResponse('Beklenmeyen bir hata oluştu: ' . $e->getMessage(), 500);
 }
 
-// Output buffer'ı temizle ve içeriği gönder
-if (ob_get_level()) {
-    ob_end_clean();
-}
+

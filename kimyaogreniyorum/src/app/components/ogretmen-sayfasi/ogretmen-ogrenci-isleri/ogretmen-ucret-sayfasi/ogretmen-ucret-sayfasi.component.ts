@@ -161,9 +161,11 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
       return;
     }
 
+    const apiUrl = 'https://www.kimyaogreniyorum.com/server/api/ogretmen_ucret_yonetimi.php';
+    console.log('API URL:', apiUrl);
     console.log('Making API request with headers:', headers);
 
-    this.http.get<any>('./server/api/ogretmen_ucret_yonetimi', { headers })
+    this.http.get<any>(apiUrl, { headers })
       .subscribe({
         next: (response) => {
           console.log('API Response:', response);
@@ -254,7 +256,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     const headers = this.getAuthHeaders();
     console.log('Sending payment with headers:', headers);
 
-    this.http.post<any>('./server/api/ogretmen_ucret_yonetimi', this.paymentForm, { headers })
+    this.http.post<any>('https://www.kimyaogreniyorum.com/server/api/ogretmen_ucret_yonetimi.php', this.paymentForm, { headers })
       .subscribe({
         next: (response) => {
           console.log('Payment save response:', response);
