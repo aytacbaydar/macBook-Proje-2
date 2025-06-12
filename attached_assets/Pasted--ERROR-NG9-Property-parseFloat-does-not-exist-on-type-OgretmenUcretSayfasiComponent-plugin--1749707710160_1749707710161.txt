@@ -1,0 +1,37 @@
+ [ERROR] NG9: Property 'parseFloat' does not exist on type 'OgretmenUcretSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:107:51:
+      107 │ ...amount">{{ formatCurrency(parseFloat(student.ucret || '0')) }}...
+          ╵                              ~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:40:15:
+      40 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'parseFloat' does not exist on type 'OgretmenUcretSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:136:59:
+      136 │ ...ending">{{ formatCurrency(parseFloat(student.ucret || '0')) }}...
+          ╵                              ~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:40:15:
+      40 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'parseFloat' does not exist on type 'OgretmenUcretSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:193:61:
+      193 │ ...oyadi }} - {{ formatCurrency(parseFloat(student.ucret || '0')) }}
+          ╵                                 ~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:40:15:
+      40 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
