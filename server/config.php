@@ -68,9 +68,9 @@ function authorize() {
         $stmt->execute([$token]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Eğer öğrencilerde bulunamazsa, öğretmenler tablosunda ara
+        // Eğer öğrencilerde bulunamazsa ve rutbe kontrolü yapılmamışsa, öğretmen olarak ara
         if (!$user) {
-            $stmt = $conn->prepare("SELECT ogretmen_id as id, ogrt_adi_soyadi as adi_soyadi, ogrt_email as email, 'ogretmen' as rutbe, aktif FROM ogretmenler WHERE ogrt_email = ?");
+            $stmt = $conn->prepare("SELECT id, adi_soyadi, email, rutbe, aktif FROM ogrenciler WHERE email = ? AND rutbe = 'ogretmen'");
             $stmt->execute([$token]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
             

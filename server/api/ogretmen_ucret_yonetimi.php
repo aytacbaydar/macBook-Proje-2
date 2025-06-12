@@ -83,14 +83,14 @@ try {
         
         error_log("Teacher info - ID: $teacherId, Name: $teacherName");
         
-        // 1. Öğretmenin öğrencilerini ve ücret bilgilerini getir (ogretmen_ogrencileri.php'deki gibi)
+        // 1. Öğretmenin öğrencilerini ve ücret bilgilerini getir
         $studentQuery = "
             SELECT o.id, o.adi_soyadi, o.email, o.cep_telefonu, o.rutbe, o.aktif, o.avatar, o.brans, o.ogretmeni, o.created_at,
                    ob.okulu, ob.sinifi, ob.grubu, ob.ders_gunu, ob.ders_saati, ob.ucret,
                    ob.veli_adi, ob.veli_cep
             FROM ogrenciler o
             LEFT JOIN ogrenci_bilgileri ob ON o.id = ob.ogrenci_id
-            WHERE o.ogretmeni = :teacher_name
+            WHERE o.ogretmeni = :teacher_name AND o.rutbe = 'ogrenci'
             ORDER BY o.created_at DESC
         ";
         
@@ -114,7 +114,7 @@ try {
                 o.adi_soyadi as ogrenci_adi
             FROM ogrenci_odemeler op
             INNER JOIN ogrenciler o ON op.ogrenci_id = o.id
-            WHERE o.ogretmeni = :teacher_name
+            WHERE o.ogretmeni = :teacher_name AND o.rutbe = 'ogrenci'
             AND op.yil = :current_year
             AND op.ay = :current_month
             ORDER BY op.odeme_tarihi DESC
@@ -132,7 +132,7 @@ try {
             SELECT SUM(op.tutar) as toplam_yillik
             FROM ogrenci_odemeler op
             INNER JOIN ogrenciler o ON op.ogrenci_id = o.id
-            WHERE o.ogretmeni = :teacher_name
+            WHERE o.ogretmeni = :teacher_name AND o.rutbe = 'ogrenci'
             AND op.yil = :current_year
         ";
         
@@ -227,6 +227,7 @@ try {
             FROM ogrenciler o 
             WHERE o.id = :ogrenci_id 
             AND o.ogretmeni = :teacher_name
+            AND o.rutbe = 'ogrenci'
         ";
         
         $stmt = $conn->prepare($checkQuery);
