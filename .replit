@@ -1,5 +1,5 @@
 modules = ["nodejs-20", "web", "php-8.2"]
-run = "node index.js"
+run = "node server/index.ts"
 
 [nix]
 channel = "stable-24_05"
@@ -47,4 +47,4 @@ task = "shell.exec"
 args = "ng serve --ssl --host 0.0.0.0 --port 4200"
 
 [deployment]
-run = ["sh", "-c", "node index.js"]
+run = ["sh", "-c", "node server/index.ts"]
