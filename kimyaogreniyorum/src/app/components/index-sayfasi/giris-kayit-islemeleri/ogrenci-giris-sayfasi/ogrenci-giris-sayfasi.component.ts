@@ -80,15 +80,20 @@ export class OgrenciGirisSayfasiComponent implements OnInit {
             this.spinner.show();
 
             // Store user info in localStorage if remember me is checked
+            const userData = response.data || response;
+            console.log('Storing user data:', userData);
+            
             if (this.loginForm.value.remember) {
-              localStorage.setItem('user', JSON.stringify(response.data));
+              localStorage.setItem('user', JSON.stringify(userData));
             } else {
-              sessionStorage.setItem('user', JSON.stringify(response.data));
+              sessionStorage.setItem('user', JSON.stringify(userData));
             }
 
             // Navigate to appropriate page based on user role
             setTimeout(() => {
-              const rutbe = response.data.rutbe;
+              console.log('Response data:', response.data);
+              const rutbe = response.data?.rutbe || response.rutbe;
+              console.log('User rutbe:', rutbe);
 
               if (rutbe === 'admin') {
                 this.router.navigate(['/yonetici-sayfasi']);
@@ -97,6 +102,7 @@ export class OgrenciGirisSayfasiComponent implements OnInit {
               } else if (rutbe === 'ogrenci') {
                 this.router.navigate(['/ogrenci-sayfasi']);
               } else {
+                console.log('Rutbe tanımsız veya bilinmeyen, onay sayfasına yönlendiriliyor');
                 this.router.navigate(['/onay-sayfasi']);
               }
               this.spinner.hide();
