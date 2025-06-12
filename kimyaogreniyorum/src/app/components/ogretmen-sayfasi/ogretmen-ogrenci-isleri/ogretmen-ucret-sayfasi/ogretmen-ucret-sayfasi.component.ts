@@ -95,6 +95,32 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadPaymentData();
+    this.loadStudentsForPayment();
+  }
+
+  loadStudentsForPayment(): void {
+    const headers = this.getAuthHeaders();
+
+    if (!headers || Object.keys(headers).length === 0) {
+      return;
+    }
+
+    // Öğretmenin öğrencilerini getir
+    this.http.get<any>('./server/api/ogrenciler_listesi.php', { headers })
+      .subscribe({
+        next: (response) => {
+          if (response && response.success) {
+            // Sadece öğrencileri filtrele (öğretmenleri değil)
+            this.students = response.data.filter((student: any) => student.rutbe === 'ogrenci');
+            console.log('Payment form için öğrenciler yüklendi:', this.students.length);
+          } else {
+            console.error('Öğrenci listesi alınamadı:', response?.message);
+          }
+        },
+        error: (error) => {
+          console.error('Öğrenci listesi yüklenirken hata:', error);
+        }
+      });
   }
 
   private getAuthHeaders() {
@@ -203,6 +229,9 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
   }
 
   openPaymentForm(student?: Student): void {
+    // Form açılırken öğrencileri tekrar yükle
+    this.loadStudentsForPayment();
+
     if (student) {
       this.selectedStudent = student;
       this.paymentForm.ogrenci_id = student.id;
