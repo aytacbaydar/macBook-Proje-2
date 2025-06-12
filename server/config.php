@@ -1,4 +1,9 @@
 <?php
+// Hata çıktılarını tamamen devre dışı bırak
+error_reporting(0);
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
