@@ -56,6 +56,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
   showPaymentForm = false;
   selectedStudent: Student | null = null;
   isLoading = true;
+  error: string | null = null;
 
   paymentForm = {
     ogrenci_id: 0,
@@ -112,13 +113,15 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
             });
           } else {
             console.error('API başarısız response:', response);
-            this.toastr.error('Veri yüklenemedi: ' + (response?.message || 'Bilinmeyen hata'));
+            this.error = 'Veri yüklenemedi: ' + (response?.message || 'Bilinmeyen hata');
+            this.toastr.error(this.error);
           }
           this.isLoading = false;
         },
         error: (error) => {
           console.error('API Error:', error);
-          this.toastr.error('Bağlantı hatası: ' + (error.message || 'Bilinmeyen hata'));
+          this.error = 'Bağlantı hatası: ' + (error.message || 'Bilinmeyen hata');
+          this.toastr.error(this.error);
           this.isLoading = false;
         }
       });
@@ -184,5 +187,16 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
   // parseFloat metodunu template'te kullanabilmek için
   parseFloat(value: string): number {
     return parseFloat(value);
+  }
+
+  // Template'te kullanılan metodlar
+  loadData(): void {
+    this.error = null;
+    this.loadPaymentData();
+  }
+
+  getCollectionRate(): number {
+    if (this.summary.totalExpected === 0) return 0;
+    return (this.summary.totalReceived / this.summary.totalExpected) * 100;
   }
 }
