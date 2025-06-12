@@ -6,6 +6,9 @@ require_once 'config.php';
 $requestUri = $_SERVER['REQUEST_URI'];
 $basePath = '/server/api/';
 
+// Debug için URL'yi logla
+error_log("Request URI: " . $requestUri);
+
 // /server/api/ ile başlayan URL'leri işle
 if (strpos($requestUri, $basePath) === 0) {
     $endpoint = substr($requestUri, strlen($basePath));
@@ -82,16 +85,22 @@ if (strpos($requestUri, $basePath) === 0) {
             break;
             
         case 'ogretmen_ucret_yonetimi':
+            error_log("ogretmen_ucret_yonetimi endpoint'i çağrıldı");
             require_once 'api/ogretmen_ucret_yonetimi.php';
             break;
             
         default:
+            error_log("Bilinmeyen endpoint: " . $endpoint);
             http_response_code(404);
-            echo json_encode(['error' => 'API endpoint bulunamadı']);
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode(['error' => 'API endpoint bulunamadı: ' . $endpoint]);
             break;
     }
 } else {
-    // API dışındaki istekler için 404 dön
+    // API dışındaki istekler için JSON yanıt dön
+    error_log("API dışı istek: " . $requestUri);
     http_response_code(404);
-    echo json_encode(['error' => 'Sayfa bulunamadı']);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(['error' => 'API endpoint bulunamadı: ' . $requestUri]);
+} bulunamadı']);
 }

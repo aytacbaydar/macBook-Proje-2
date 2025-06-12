@@ -101,18 +101,23 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     this.isLoading = true;
     this.error = null;
 
-    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
-    if (!userStr) {
-      this.error = 'Kullanıcı bilgisi bulunamadı';
+    // API URL'ini düzelt
+    const apiUrl = 'https://www.kimyaogreniyorum.com/server/api/ogretmen_ucret_yonetimi';
+    const token = localStorage.getItem('token');
+
+    console.log('API URL:', apiUrl);
+    console.log('Token mevcut:', !!token);
+
+    if (!token) {
+      this.error = 'Oturum süresi dolmuş. Lütfen tekrar giriş yapın.';
       this.isLoading = false;
       return;
     }
 
-    const user = JSON.parse(userStr);
-    const token = user.token || '';
-
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
     });
 
     this.http.get<any>('./server/api/ogretmen_ucret_yonetimi', { headers })
