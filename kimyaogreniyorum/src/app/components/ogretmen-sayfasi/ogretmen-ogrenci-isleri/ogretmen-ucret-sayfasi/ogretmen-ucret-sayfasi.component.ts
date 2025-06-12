@@ -97,6 +97,32 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     this.loadPaymentData();
   }
 
+  private getAuthHeaders(): any {
+    // localStorage veya sessionStorage'dan kullanıcı bilgilerini al
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        console.log('User data for auth:', user);
+
+        if (user.token) {
+          return {
+            'Authorization': `Bearer ${user.token}`,
+            'Content-Type': 'application/json'
+          };
+        }
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+      }
+    }
+
+    console.warn('No valid token found');
+    return {
+      'Content-Type': 'application/json'
+    };
+  }
+
   loadPaymentData(): void {
     this.isLoading = true;
     this.error = null;
@@ -114,11 +140,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
       return;
     }
 
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    });
+    const headers = this.getAuthHeaders();
 
     this.http.get<any>('./server/api/ogretmen_ucret_yonetimi', { headers })
       .subscribe({
@@ -203,19 +225,8 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
       return;
     }
 
-    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
-    if (!userStr) {
-      this.toastr.error('Kullanıcı bilgisi bulunamadı');
-      return;
-    }
-
-    const user = JSON.parse(userStr);
-    const token = user.token || '';
-
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
+    const headers = this.getAuthHeaders();
+    console.log('Sending payment with headers:', headers);
 
     this.http.post<any>('./server/api/ogretmen_ucret_yonetimi', this.paymentForm, { headers })
       .subscribe({

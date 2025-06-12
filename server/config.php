@@ -76,26 +76,30 @@ function authorize() {
         }
 
         // Orijinal token doğrulama
-        $stmt = $conn->prepare("SELECT id, adi_soyadi, email, rutbe FROM ogrenciler WHERE MD5(CONCAT(id, email, sifre)) = :token AND aktif = 1");
+        $stmt = $conn->prepare("SELECT id, adi_soyadi, email, rutbe, aktif FROM ogrenciler WHERE MD5(CONCAT(id, email, sifre)) = :token");
         $stmt->bindParam(':token', $token);
         $stmt->execute();
 
-        if ($stmt->rowCount() > 0) {
-            return $stmt->fetch(PDO::FETCH_ASSOC);
-        } else {
-            // Aktif durumu farklı değerler de deneyebilir
-            $stmt2 = $conn->prepare("SELECT id, adi_soyadi, email, rutbe FROM ogrenciler WHERE MD5(CONCAT(id, email, sifre)) = :token AND (aktif = 1 OR aktif = '1' OR aktif = TRUE OR aktif = 'true')");
-            $stmt2->bindParam(':token', $token);
-            $stmt2->execute();
+        error_log("Authorization - Token doğrulama sorgusu çalıştırıldı. Bulunan kayıt sayısı: " . $stmt->rowCount());
 
-            if ($stmt2->rowCount() > 0) {
-                return $stmt2->fetch(PDO::FETCH_ASSOC);
-            }
-
+        if ($stmt->rowCount() === 0) {
+            error_log("Authorization - Token veritabanında bulunamadı");
             http_response_code(401);
-            echo json_encode(['error' => 'Geçersiz token veya hesap aktif değil', 'debug_token' => $token]);
+            echo json_encode(['error' => 'Geçersiz veya süresi dolmuş token', 'debug' => 'Token veritabanında bulunamadı']);
             exit();
         }
+
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        error_log("Authorization - Bulunan kullanıcı: " . json_encode($user));
+
+        if ($user['aktif'] != 1) {
+            error_log("Authorization - Kullanıcı aktif değil");
+            http_response_code(401);
+            echo json_encode(['error' => 'Hesap aktif değil', 'debug' => 'Kullanıcı aktif değil']);
+            exit();
+        }
+
+        return $user;
     } catch (PDOException $e) {
         http_response_code(500);
         echo json_encode(['error' => 'Veritabanı hatası: ' . $e->getMessage()]);

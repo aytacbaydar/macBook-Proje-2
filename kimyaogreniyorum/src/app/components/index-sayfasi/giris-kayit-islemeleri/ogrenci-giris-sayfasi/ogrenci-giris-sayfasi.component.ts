@@ -82,11 +82,22 @@ export class OgrenciGirisSayfasiComponent implements OnInit {
             // Store user info in localStorage if remember me is checked
             const userData = response.data || response;
             console.log('Storing user data:', userData);
+            console.log('Token in response:', userData.token);
+            
+            // Token kontrolü
+            if (!userData.token) {
+              console.error('Token bulunamadı!', userData);
+              this.toastr.error('Giriş sırasında token alınamadı!', 'Hata');
+              this.spinner.hide();
+              return;
+            }
             
             if (this.loginForm.value.remember) {
               localStorage.setItem('user', JSON.stringify(userData));
+              console.log('User data saved to localStorage with token');
             } else {
               sessionStorage.setItem('user', JSON.stringify(userData));
+              console.log('User data saved to sessionStorage with token');
             }
 
             // Navigate to appropriate page based on user role
