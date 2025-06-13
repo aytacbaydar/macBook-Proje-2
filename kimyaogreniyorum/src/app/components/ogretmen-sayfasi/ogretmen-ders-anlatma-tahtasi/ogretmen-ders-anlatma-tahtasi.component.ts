@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, HostListener } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
 import * as fabric from 'fabric';
 import { FormsModule } from '@angular/forms';
 import { NgIf, NgFor } from '@angular/common';
@@ -13,7 +13,7 @@ import * as pdfjsLib from 'pdfjs-dist';
   styleUrl: './ogretmen-ders-anlatma-tahtasi.component.scss',
 })
 export class OgretmenDersAnlatmaTahtasiComponent
-  implements OnInit, AfterViewInit
+  implements OnInit, AfterViewInit, OnDestroy
 {
   canvasInstances: fabric.Canvas[] = [];
   sayfalar: any[] = [{}]; // Başlangıçta bir sayfa olsun
@@ -1379,42 +1379,18 @@ export class OgretmenDersAnlatmaTahtasiComponent
                 console.log('HTTP OK:', event.ok);
 
                 try {
-                  // HTTP status kontrolü
-                  if (event.status === 200 && event.ok) {
-                    const jsonResponse = event.body;
-                    
-                    if (jsonResponse && jsonResponse.success === true) {
-                      console.log('İşlem başarılı:', jsonResponse);
-                      alert(
-                        `Konu anlatımı "${this.secilenGrup}" için başarıyla kaydedildi!`
-                      );
-                    } else {
-                      console.warn('Sunucu hatası:', jsonResponse);
-                      alert(
-                        `Kaydetme hatası: ${
-                          jsonResponse?.error ||
-                          'Sunucu yanıtı beklenmeyen formatta'
-                        }`
-                      );
-                    }
+                  // Yanıtı kontrol et
+                  const jsonResponse = event.body;
+                  console.log('İşlem yanıtı:', jsonResponse);
+                  
+                  if (jsonResponse && jsonResponse.success === true) {
+                    console.log('İşlem başarılı:', jsonResponse);
+                    alert(
+                      `Konu anlatımı "${this.secilenGrup}" için başarıyla kaydedildi!`
+                    );
                   } else {
-                    // HTTP hatası
-                    console.error('HTTP Hatası - Status:', event.status);
-                    console.error('Response body:', event.body);
-                    
-                    // Yanıt string ise parse etmeyi dene
-                    let errorMessage = 'HTTP hatası oluştu';
-                    if (typeof event.body === 'string') {
-                      try {
-                        const parsed = JSON.parse(event.body);
-                        errorMessage = parsed.error || errorMessage;
-                      } catch (e) {
-                        errorMessage = event.body.substring(0, 200) + '...';
-                      }
-                    } else if (event.body && event.body.error) {
-                      errorMessage = event.body.error;
-                    }
-                    
+                    console.warn('Sunucu hatası:', jsonResponse);
+                    const errorMessage = jsonResponse?.error || 'Sunucu yanıtı beklenmeyen formatta';
                     alert(`Kaydetme hatası: ${errorMessage}`);
                   }
                 } catch (e) {
@@ -1533,6 +1509,25 @@ export class OgretmenDersAnlatmaTahtasiComponent
       return event.returnValue;
     }
     return true;
+  }
+
+  ngOnDestroy(): void {
+    // Body'den tüm tahta CSS sınıflarını temizle
+    document.body.classList.remove(
+      'kalem-aktif',
+      'silgi-aktif',
+      'el-imleci-aktif',
+      'sekil-ciz-aktif',
+      'fosforlu-kalem-aktif'
+    );
+
+    // Canvas instance'larını temizle
+    this.canvasInstances.forEach(canvas => {
+      if (canvas) {
+        canvas.dispose();
+      }
+    });
+    this.canvasInstances = [];
   }
 
   // Tam ekran modu fonksiyonu

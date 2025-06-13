@@ -193,7 +193,16 @@ file_put_contents($log_file, $validation_log, FILE_APPEND);
 if (!empty($errors)) {
     // Hatayı logla
     file_put_contents($log_file, "Hatalar: " . print_r($errors, true) . "\n", FILE_APPEND);
-    errorResponse("Gerekli alanlar eksik: " . implode(', ', $errors));
+    
+    // Output buffer'ı temizle
+    ob_clean();
+    
+    http_response_code(400);
+    echo json_encode([
+        'success' => false,
+        'error' => "Gerekli alanlar eksik: " . implode(', ', $errors)
+    ]);
+    exit();
 }
 
 // Verileri al
@@ -289,12 +298,21 @@ try {
     $stmt->execute();
     $kayitId = $conn->lastInsertId();
 
-    // Başarılı yanıt
-    successResponse([
-        'kayit_id' => $kayitId,
-        'pdf_yolu' => 'dosyalar/pdf/' . $pdfDosyaAdi,
-        'cizim_yolu' => $cizimDosyaAdi ? 'dosyalar/cizimler/' . $cizimDosyaAdi : null
-    ], 'Konu anlatım kaydı başarıyla oluşturuldu');
+    // Output buffer'ı temizle
+    ob_clean();
+    
+    // Başarılı yanıt - HTTP status code'unu da ekle
+    http_response_code(200);
+    echo json_encode([
+        'success' => true,
+        'message' => 'Konu anlatım kaydı başarıyla oluşturuldu',
+        'data' => [
+            'kayit_id' => $kayitId,
+            'pdf_yolu' => 'dosyalar/pdf/' . $pdfDosyaAdi,
+            'cizim_yolu' => $cizimDosyaAdi ? 'dosyalar/cizimler/' . $cizimDosyaAdi : null
+        ]
+    ]);
+    exit();
 
 } catch (PDOException $e) {
     // Veritabanı hatasını logla
