@@ -882,3 +882,312 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
+// Öğrenci İstatistikleri Bölümü
+.stats-section {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+
+  .section-header {
+    margin-bottom: 1.5rem;
+
+    h5 {
+      color: #1e293b;
+      font-weight: 600;
+      margin: 0 0 0.25rem 0;
+
+      i {
+        color: #4f46e5;
+        margin-right: 0.5rem;
+      }
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+  }
+
+  .student-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 1rem;
+
+    .student-stat-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 1.25rem;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        border-color: #cbd5e1;
+      }
+
+      .student-info {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+
+        .student-avatar {
+          width: 45px;
+          height: 45px;
+          border-radius: 50%;
+          object-fit: cover;
+          margin-right: 0.75rem;
+        }
+
+        .student-details {
+          h6 {
+            margin: 0;
+            font-weight: 600;
+            color: #1e293b;
+          }
+
+          small {
+            color: #64748b;
+          }
+        }
+      }
+
+      .attendance-stats {
+        .stat-row {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 0.75rem;
+
+          .stat-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+
+            &:not(:last-child) {
+              margin-right: 1rem;
+            }
+
+            .stat-label {
+              font-size: 0.8rem;
+              color: #64748b;
+              margin-bottom: 0.25rem;
+            }
+
+            .stat-value {
+              font-weight: 600;
+              font-size: 0.9rem;
+            }
+          }
+        }
+      }
+
+      .student-actions {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e2e8f0;
+        text-align: center;
+
+        .btn {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+// Detay Modal Stilleri
+.large-modal {
+  max-width: 800px;
+  width: 90vw;
+}
+
+.stats-overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+
+  .overview-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .overview-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+
+      &.bg-primary {
+        background: linear-gradient(135deg, #4f46e5, #3b82f6);
+      }
+
+      &.bg-danger {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+      }
+
+      &.bg-success {
+        background: linear-gradient(135deg, #10b981, #059669);
+      }
+
+      &.bg-info {
+        background: linear-gradient(135deg, #06b6d4, #0891b2);
+      }
+    }
+
+    .overview-content {
+      h3 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e293b;
+      }
+
+      p {
+        margin: 0;
+        font-size: 0.875rem;
+        color: #64748b;
+      }
+    }
+  }
+}
+
+.payment-status-section, .recent-attendance-section {
+  margin-bottom: 2rem;
+
+  h5 {
+    color: #1e293b;
+    font-weight: 600;
+    margin-bottom: 1rem;
+
+    i {
+      color: #4f46e5;
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+.payment-details {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.5rem;
+
+  .payment-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .payment-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+
+      &:not(:last-child) {
+        margin-right: 2rem;
+      }
+
+      label {
+        font-size: 0.875rem;
+        color: #64748b;
+        margin-bottom: 0.25rem;
+        font-weight: 500;
+      }
+
+      .value {
+        font-weight: 600;
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+.attendance-timeline {
+  max-height: 300px;
+  overflow-y: auto;
+
+  .timeline-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f1f5f9;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .timeline-marker {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      color: white;
+
+      &.present {
+        background: #10b981;
+      }
+
+      &.absent {
+        background: #ef4444;
+      }
+    }
+
+    .timeline-content {
+      .timeline-date {
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 0.25rem;
+      }
+
+      .timeline-status {
+        font-size: 0.875rem;
+      }
+    }
+  }
+}
+
+// Mobil uyumluluk
+@media (max-width: 768px) {
+  .student-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-overview {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .payment-row {
+    flex-direction: column;
+
+    .payment-item {
+      margin-right: 0 !important;
+      margin-bottom: 1rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-overview {
+    grid-template-columns: 1fr;
+  }
+}

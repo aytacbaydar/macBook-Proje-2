@@ -531,17 +531,71 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
         ? Math.round((presentCount / totalLessons) * 100) 
         : 0;
 
+      // Ödeme hesaplamaları
+      const ucret = parseFloat(student.ucret || '0');
+      const expectedPaymentCycles = Math.floor(presentCount / 4);
+      const expectedTotalAmount = expectedPaymentCycles * ucret;
+      const lessonsUntilNextPayment = presentCount > 0 ? 4 - (presentCount % 4) : 4;
+
       return {
         id: student.id,
         name: student.adi_soyadi,
         email: student.email,
         avatar: student.avatar,
+        ucret: ucret,
         presentCount: presentCount,
         absentCount: absentCount,
         totalLessons: totalLessons,
-        attendancePercentage: attendancePercentage
+        attendancePercentage: attendancePercentage,
+        expectedPaymentCycles: expectedPaymentCycles,
+        expectedTotalAmount: expectedTotalAmount,
+        lessonsUntilNextPayment: lessonsUntilNextPayment === 4 ? 0 : lessonsUntilNextPayment
       };
     }).sort((a, b) => b.attendancePercentage - a.attendancePercentage); // Katılım oranına göre sırala
+  }
+
+  // Detaylı öğrenci istatistiklerini getir
+  selectedStudentStats: any = null;
+  showStudentStatsModal = false;
+
+  async loadStudentDetailedStats(studentId: number) {
+    if (!this.selectedGroup) return;
+
+    try {
+      const response = await this.http.get<any>(`./server/api/ogrenci_detay_istatistik.php`, {
+        headers: this.getAuthHeaders(),
+        params: {
+          grup: this.selectedGroup,
+          ogrenci_id: studentId.toString()
+        }
+      }).toPromise();
+
+      if (response.success) {
+        this.selectedStudentStats = response.data;
+        this.showStudentStatsModal = true;
+      } else {
+        this.toastr.error('Öğrenci istatistikleri yüklenemedi', 'Hata');
+      }
+    } catch (error) {
+      console.error('Öğrenci istatistikleri yüklenirken hata:', error);
+      this.toastr.error('İstatistikler yüklenirken hata oluştu', 'Hata');
+    }
+  }
+
+  closeStudentStatsModal() {
+    this.showStudentStatsModal = false;
+    this.selectedStudentStats = null;
+  }
+
+  formatCurrency(amount: number): string {
+    return new Intl.NumberFormat('tr-TR', {
+      style: 'currency',
+      currency: 'TRY'
+    }).format(amount);
+  }
+
+  formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleDateString('tr-TR');
   }
 
   private initializeAttendanceRecords() {
