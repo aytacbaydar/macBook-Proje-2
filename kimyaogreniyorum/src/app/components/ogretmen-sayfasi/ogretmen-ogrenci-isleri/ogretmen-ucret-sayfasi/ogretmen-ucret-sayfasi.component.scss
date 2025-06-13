@@ -856,111 +856,16 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-// Aylık Gelir Durumu Header Stilleri
-.monthly-income-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 8px;
+// Aylık Gelir Durumu Stilleri
+.aylik-gelir-durumu {
+  background: white;
+  border: 1px solid #e2e8f0;
   padding: 1.5rem;
+  border-radius: 8px;
   margin-bottom: 1.5rem;
-  color: white;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
-  .income-header-title {
-    margin-bottom: 1.5rem;
-    
-    h3 {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: white;
-      
-      i {
-        color: #ffd700;
-      }
-    }
-    
-    p {
-      color: rgba(255, 255, 255, 0.9);
-      margin: 0;
-    }
-  }
-
-  .monthly-income-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-
-    .income-month-card {
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-      border-radius: 8px;
-      padding: 1rem;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      transition: all 0.3s ease;
-
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-        background: rgba(255, 255, 255, 0.2);
-      }
-
-      &.current-month {
-        border: 2px solid #ffd700;
-        background: rgba(255, 215, 0, 0.2);
-      }
-
-      .month-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 0.75rem;
-
-        .month-name {
-          font-weight: 600;
-          font-size: 1rem;
-          color: white;
-        }
-
-        .month-year {
-          font-size: 0.875rem;
-          color: rgba(255, 255, 255, 0.8);
-        }
-      }
-
-      .month-amount {
-        font-size: 1.125rem;
-        font-weight: 700;
-        color: #ffd700;
-        margin-bottom: 0.5rem;
-      }
-
-      .month-details {
-        .payment-count {
-          font-size: 0.8rem;
-          color: rgba(255, 255, 255, 0.9);
-          display: flex;
-          align-items: center;
-          gap: 0.25rem;
-        }
-      }
-
-      .income-progress {
-        margin-top: 0.75rem;
-        height: 4px;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 2px;
-        overflow: hidden;
-
-        .progress-bar {
-          height: 100%;
-          background: #ffd700;
-          transition: width 0.3s ease;
-        }
-      }
-    }
-  }
-
-  .header-title {
+  .durum-title {
     font-size: 1.25rem;
     font-weight: 600;
     margin-bottom: 1.5rem;
@@ -973,12 +878,12 @@
     }
   }
 
-  .gelir-kartlari {
+  .durum-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
 
-    .gelir-karti {
+    .durum-item {
       background: #f8fafc;
       border: 1px solid #e2e8f0;
       border-radius: 8px;
@@ -991,39 +896,17 @@
         border-color: #cbd5e1;
       }
 
-      .ay-bilgisi {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 0.75rem;
-
-        .ay-adi {
-          font-size: 1rem;
-          font-weight: 600;
-          color: #1e293b;
-        }
-
-        .yil {
-          font-size: 0.875rem;
-          color: #64748b;
-        }
+      .durum-label {
+        font-size: 0.875rem;
+        color: #64748b;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
       }
 
-      .tutar-bilgisi {
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-
-        .tutar {
-          font-size: 1.125rem;
-          font-weight: 700;
-          color: #059669;
-        }
-
-        .odeme-sayisi {
-          font-size: 0.8rem;
-          color: #64748b;
-        }
+      .durum-value {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: #059669;
       }
     }
   }
