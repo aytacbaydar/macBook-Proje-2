@@ -92,6 +92,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         
         $sql .= " ORDER BY dk.tarih DESC, o.adi_soyadi ASC";
         
+        // Tüm kayıtları getirmek için LIMIT yok
+        error_log("Executing SQL: " . $sql);
+        error_log("Parameters: " . json_encode($params));
+        
         $stmt = $conn->prepare($sql);
         foreach ($params as $key => $value) {
             $stmt->bindValue($key, $value);
