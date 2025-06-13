@@ -449,7 +449,11 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
             this.groupedAttendanceByDate = response.data.tarihlere_gore || [];
 
             console.log('Toplam tüm kayıt:', this.historicalAttendance.length);
-            console.log('Kayıtlar:', this.historicalAttendance);
+            console.log('Gruplandırılmış tarih sayısı:', this.groupedAttendanceByDate.length);
+            console.log('API yanıtı toplam_kayit:', response.data.toplam_kayit);
+            console.log('Seçilen grup:', this.selectedGroup);
+            console.log('İlk 5 kayıt:', this.historicalAttendance.slice(0, 5));
+            console.log('Son 5 kayıt:', this.historicalAttendance.slice(-5));
 
             // Tarih inputlarını temizle
             this.startDate = '';

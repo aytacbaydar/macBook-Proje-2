@@ -92,9 +92,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         
         $sql .= " ORDER BY dk.tarih DESC, o.adi_soyadi ASC";
         
+        // LIMIT kontrolü - herhangi bir LIMIT olup olmadığını kontrol et
+        if (strpos(strtoupper($sql), 'LIMIT') !== false) {
+            error_log("UYARI: SQL sorgusunda LIMIT bulundu: " . $sql);
+        }
+        
         // Tüm kayıtları getirmek için LIMIT yok
         error_log("Executing SQL: " . $sql);
         error_log("Parameters: " . json_encode($params));
+        error_log("Grup: " . $grup . ", Ogretmen ID: " . $user['id']);
         
         $stmt = $conn->prepare($sql);
         foreach ($params as $key => $value) {
@@ -103,6 +109,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $stmt->execute();
         
         $records = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Toplam kayıt sayısını ayrıca kontrol et
+        $countSql = "
+            SELECT COUNT(*) as toplam_kayit
+            FROM devamsizlik_kayitlari dk
+            WHERE dk.ogretmen_id = :ogretmen_id 
+            AND dk.grup = :grup
+        ";
+        
+        $countParams = [
+            ':ogretmen_id' => $user['id'],
+            ':grup' => $grup
+        ];
+        
+        // Tarih filtresi varsa count sorgusuna da ekle
+        if (!empty($tarih)) {
+            $countSql .= " AND dk.tarih = :tarih";
+            $countParams[':tarih'] = $tarih;
+        } elseif (!empty($baslangic_tarih) && !empty($bitis_tarih)) {
+            $countSql .= " AND dk.tarih BETWEEN :baslangic_tarih AND :bitis_tarih";
+            $countParams[':baslangic_tarih'] = $baslangic_tarih;
+            $countParams[':bitis_tarih'] = $bitis_tarih;
+        }
+        
+        $countStmt = $conn->prepare($countSql);
+        foreach ($countParams as $key => $value) {
+            $countStmt->bindValue($key, $value);
+        }
+        $countStmt->execute();
+        $totalCount = $countStmt->fetch(PDO::FETCH_ASSOC)['toplam_kayit'];
+        
+        error_log("Toplam veritabanında kayıt sayısı: " . $totalCount);
+        error_log("Döndürülen kayıt sayısı: " . count($records));
         
         // Tarihlere göre grupla
         $groupedByDate = [];
