@@ -240,7 +240,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
           if (response.success && response.data) {
             this.historicalAttendance = response.data.kayitlar || [];
             this.groupedAttendanceByDate = response.data.tarihlere_gore || [];
-            
+
             // Eksik katılmayan öğrenci listelerini hesapla
             this.groupedAttendanceByDate.forEach(dateGroup => {
               // Eğer katilmayanlar listesi boş ama katilmayan_sayisi > 0 ise, hesapla
@@ -249,23 +249,23 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
                 const dateRecords = this.historicalAttendance.filter(record => 
                   record.tarih === dateGroup.tarih
                 );
-                
+
                 // Katılan öğrenci ID'lerini al
                 const presentStudentIds = dateRecords
                   .filter(record => record.durum === 'present')
                   .map(record => record.ogrenci_id);
-                
+
                 // Katılmayan öğrenci ID'lerini al
                 const absentStudentIds = dateRecords
                   .filter(record => record.durum === 'absent')
                   .map(record => record.ogrenci_id);
-                
+
                 // Katılmayan öğrencilerin detaylarını bul
                 dateGroup.katilmayanlar = this.groupStudents.filter(student => 
                   absentStudentIds.includes(student.id)
                 );
               }
-              
+
               console.log(`${dateGroup.tarih} tarihinde:`, {
                 katilan_sayisi: dateGroup.katilan_sayisi,
                 katilmayan_sayisi: dateGroup.katilmayan_sayisi,
@@ -318,7 +318,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
           if (response.success && response.data) {
             this.historicalAttendance = response.data.kayitlar || [];
             this.groupedAttendanceByDate = response.data.tarihlere_gore || [];
-            
+
             if (this.groupedAttendanceByDate.length === 0) {
               this.toastr.info('Seçilen tarih aralığında kayıt bulunamadı', 'Bilgi');
             } else {
@@ -375,7 +375,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
 
     this.startDate = startDate.toISOString().split('T')[0];
     this.endDate = endDate.toISOString().split('T')[0];
-    
+
     console.log('Son 1 hafta filtrelendi:', this.startDate, 'to', this.endDate);
     this.loadHistoricalAttendanceByDateRange();
   }
@@ -387,7 +387,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
 
     this.startDate = startDate.toISOString().split('T')[0];
     this.endDate = endDate.toISOString().split('T')[0];
-    
+
     console.log('Son 1 ay filtrelendi:', this.startDate, 'to', this.endDate);
     this.loadHistoricalAttendanceByDateRange();
   }
@@ -399,7 +399,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
 
     this.startDate = startDate.toISOString().split('T')[0];
     this.endDate = endDate.toISOString().split('T')[0];
-    
+
     console.log('Bu ay filtrelendi:', this.startDate, 'to', this.endDate);
     this.loadHistoricalAttendanceByDateRange();
   }
@@ -411,7 +411,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
 
     this.startDate = startDate.toISOString().split('T')[0];
     this.endDate = endDate.toISOString().split('T')[0];
-    
+
     console.log('Bu yıl filtrelendi:', this.startDate, 'to', this.endDate);
     this.loadHistoricalAttendanceByDateRange();
   }
@@ -421,7 +421,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     if (!this.selectedGroup) return;
 
     console.log('Bütün devamsızlık kayıtları yükleniyor...');
-    
+
     this.http
       .get<any>(`./server/api/devamsizlik_kayitlari.php`, {
         headers: this.getAuthHeaders(),
@@ -436,11 +436,11 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
           if (response.success && response.data) {
             this.historicalAttendance = response.data.kayitlar || [];
             this.groupedAttendanceByDate = response.data.tarihlere_gore || [];
-            
+
             // Tarih inputlarını temizle
             this.startDate = '';
             this.endDate = '';
-            
+
             this.toastr.success('Tüm devamsızlık kayıtları yüklendi', 'Başarılı');
           } else {
             this.historicalAttendance = [];
@@ -593,13 +593,17 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       if (response && response.success) {
         this.selectedStudentStats = response.data;
         this.showStudentStatsModal = true;
+
+        // Body scroll'u kapat
+        document.body.style.overflow = 'hidden';
+
         console.log('Modal açılıyor, seçilen öğrenci stats:', this.selectedStudentStats);
       } else {
         this.toastr.error(response?.message || 'Öğrenci istatistikleri yüklenemedi', 'Hata');
       }
     } catch (error: any) {
       console.error('Öğrenci istatistikleri yüklenirken hata:', error);
-      
+
       // HTML response kontrolü
       if (error.error && typeof error.error.text === 'string' && error.error.text.includes('<!doctype html>')) {
         console.error('Server HTML döndürdü, muhtemelen PHP hatası var');
@@ -617,6 +621,9 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
   closeStudentStatsModal() {
     this.showStudentStatsModal = false;
     this.selectedStudentStats = null;
+
+    // Body scroll'u tekrar aç
+    document.body.style.overflow = 'auto';
   }
 
   formatCurrency(amount: number): string {
@@ -859,16 +866,16 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     const selectedDateObj = new Date(this.selectedDate);
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Bugünün başlangıcına ayarla
-    
+
     if (selectedDateObj < today) {
       // Geçmiş tarih için onay iste
       const confirmMessage = `Seçilen tarih (${this.formatDate(this.selectedDate)}) geçmiş bir tarih. Geçmiş tarihli yoklama kaydı yapmak istediğinizden emin misiniz?`;
-      
+
       if (!confirm(confirmMessage)) {
         this.toastr.info('Yoklama kaydı iptal edildi', 'Bilgi');
         return;
       }
-      
+
       this.toastr.warning('Geçmiş tarihli kayıt yapılıyor...', 'Uyarı');
     }
 
@@ -912,14 +919,14 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           console.log('Devamsızlık kaydet API yanıtı:', response);
-          
+
           if (response.success) {
             this.toastr.success(
               `${attendanceData.length} öğrencinin devamsızlık kaydı başarıyla kaydedildi`,
               'Başarılı'
             );
             this.hasChanges = false;
-            
+
             // Geçmiş verileri yeniden yükle
             this.loadHistoricalAttendance();
           } else {
@@ -942,6 +949,8 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     const pastWeekDate = new Date();
     pastWeekDate.setDate(pastWeekDate.getDate() - 7);
     const formattedPastWeekDate = pastWeekDate.toISOString().split('T')[0];
+
+    The code adds scroll control to the body element when the student stats modal is opened and closed to prevent scrolling of the main page when the modal is active.```text
 
     this.http
       .get<any>(
