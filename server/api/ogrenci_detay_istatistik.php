@@ -1,5 +1,12 @@
 
 <?php
+// Error handling için output buffering başlat
+ob_start();
+
+// Hata raporlamasını kapat
+error_reporting(0);
+ini_set('display_errors', 0);
+
 require_once '../config.php';
 
 // CORS headers
@@ -7,6 +14,9 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Content-Type: application/json; charset=UTF-8");
+
+// Output buffer'ı temizle
+ob_clean();
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -149,5 +159,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 } else {
     errorResponse('Sadece GET istekleri kabul edilir', 405);
+}
+
+// PHP hatalarını yakalayıp JSON formatında döndür
+if (ob_get_length()) {
+    ob_clean();
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'PHP execution error occurred',
+        'error' => 'Internal server error'
+    ]);
 }
 ?>

@@ -584,7 +584,8 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
         params: {
           grup: this.selectedGroup,
           ogrenci_id: studentId.toString()
-        }
+        },
+        responseType: 'json'
       }).toPromise();
 
       console.log('Öğrenci detay istatistik API yanıtı:', response);
@@ -596,9 +597,18 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       } else {
         this.toastr.error(response?.message || 'Öğrenci istatistikleri yüklenemedi', 'Hata');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Öğrenci istatistikleri yüklenirken hata:', error);
-      this.toastr.error('İstatistikler yüklenirken hata oluştu', 'Hata');
+      
+      // HTML response kontrolü
+      if (error.error && typeof error.error.text === 'string' && error.error.text.includes('<!doctype html>')) {
+        console.error('Server HTML döndürdü, muhtemelen PHP hatası var');
+        this.toastr.error('Server hatası: API PHP hatası döndürüyor', 'Hata');
+      } else if (error.status === 200 && error.error?.error) {
+        this.toastr.error('JSON parse hatası: ' + error.error.error.message, 'Hata');
+      } else {
+        this.toastr.error('İstatistikler yüklenirken hata oluştu', 'Hata');
+      }
     } finally {
       this.isLoading = false;
     }
