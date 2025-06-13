@@ -894,311 +894,257 @@
   background: #94a3b8;
 }
 
-// Öğrenci İstatistikleri Bölümü
-.stats-section {
-  background: white;
-  border-radius: 8px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e2e8f0;
+// Öğrenci Bilgi Kartları
+.ogrenci-bilgi-kartlari {
+  margin-top: 2rem;
 
-  .section-header {
-    margin-bottom: 1.5rem;
-
-    h5 {
-      color: #1e293b;
-      font-weight: 600;
-      margin: 0 0 0.25rem 0;
-
-      i {
-        color: #4f46e5;
-        margin-right: 0.5rem;
-      }
-    }
-
-    p {
-      margin: 0;
-      font-size: 0.875rem;
-      color: #64748b;
-    }
+  .bilgi-kartlari-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
   }
 
-  .student-stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-    gap: 1rem;
+  .ogrenci-bilgi-karti {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border-radius: 16px;
+    padding: 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    overflow: hidden;
 
-    .student-stat-card {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 1.25rem;
-      transition: all 0.3s ease;
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+      border-color: #3b82f6;
+    }
 
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-        border-color: #cbd5e1;
+    .kart-header {
+      display: flex;
+      align-items: center;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+
+      .ogrenci-avatar {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        margin-right: 1rem;
+        object-fit: cover;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       }
 
-      .student-info {
+      .ogrenci-bilgileri {
+        flex: 1;
+
+        .ogrenci-adi {
+          margin: 0 0 0.25rem 0;
+          font-size: 1.25rem;
+          font-weight: 700;
+          color: white;
+        }
+
+        .ogrenci-email {
+          margin: 0 0 0.75rem 0;
+          color: rgba(255, 255, 255, 0.8);
+          font-size: 0.875rem;
+        }
+
+        .katilim-badge {
+          display: inline-block;
+          padding: 0.25rem 0.75rem;
+          border-radius: 20px;
+          font-size: 0.75rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+
+          &.yuksek {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+          }
+
+          &.orta {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+          }
+
+          &.dusuk {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+          }
+        }
+      }
+    }
+
+    .kart-istatistikler {
+      padding: 1.5rem;
+
+      .istatistik-satiri {
         display: flex;
-        align-items: center;
-        margin-bottom: 1rem;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
 
-        .student-avatar {
-          width: 45px;
-          height: 45px;
-          border-radius: 50%;
-          object-fit: cover;
-          margin-right: 0.75rem;
-        }
+        .istatistik-kutusu {
+          flex: 1;
+          text-align: center;
+          padding: 1rem;
+          border-radius: 12px;
+          transition: all 0.2s ease;
 
-        .student-details {
-          h6 {
-            margin: 0;
-            font-weight: 600;
-            color: #1e293b;
+          &.katildi {
+            background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+            border: 1px solid #10b981;
+
+            .istatistik-sayi {
+              color: #059669;
+            }
           }
 
-          small {
+          &.katilmadi {
+            background: linear-gradient(135deg, #fef2f2, #fecaca);
+            border: 1px solid #ef4444;
+
+            .istatistik-sayi {
+              color: #dc2626;
+            }
+          }
+
+          .istatistik-sayi {
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 0.25rem;
+          }
+
+          .istatistik-etiket {
+            font-size: 0.75rem;
+            font-weight: 600;
             color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
           }
         }
       }
 
-      .attendance-stats {
-        .stat-row {
+      .odeme-bilgileri {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1rem;
+        border: 1px solid #e2e8f0;
+
+        .odeme-satiri {
           display: flex;
           justify-content: space-between;
+          align-items: center;
           margin-bottom: 0.75rem;
 
-          .stat-item {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
+          .odeme-etiket {
+            color: #64748b;
+            font-size: 0.875rem;
+            font-weight: 500;
+          }
 
-            &:not(:last-child) {
-              margin-right: 1rem;
-            }
+          .odeme-tutar {
+            font-weight: 700;
+            color: #7c3aed;
+            font-size: 1.1rem;
+          }
+        }
 
-            .stat-label {
-              font-size: 0.8rem;
-              color: #64748b;
-              margin-bottom: 0.25rem;
-            }
+        .sonraki-odeme, .odeme-zamani {
+          display: flex;
+          align-items: center;
+          font-size: 0.875rem;
 
-            .stat-value {
-              font-weight: 600;
-              font-size: 0.9rem;
-            }
+          i {
+            margin-right: 0.5rem;
+          }
+        }
+
+        .sonraki-odeme {
+          color: #ea580c;
+
+          i {
+            color: #f59e0b;
+          }
+        }
+
+        .odeme-zamani {
+          color: #dc2626;
+          font-weight: 600;
+          animation: pulse 2s infinite;
+
+          i {
+            color: #ef4444;
+          }
+        }
+      }
+    }
+
+    .kart-footer {
+      padding: 1rem 1.5rem;
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+
+      .detay-goster {
+        text-align: center;
+        color: #64748b;
+        font-size: 0.875rem;
+        font-weight: 500;
+
+        i {
+          margin-right: 0.5rem;
+          color: #3b82f6;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .ogrenci-bilgi-kartlari {
+    .bilgi-kartlari-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .ogrenci-bilgi-karti {
+      .kart-header {
+        padding: 1rem;
+
+        .ogrenci-avatar {
+          width: 56px;
+          height: 56px;
+        }
+
+        .ogrenci-bilgileri {
+          .ogrenci-adi {
+            font-size: 1.1rem;
           }
         }
       }
 
-      .student-actions {
-        margin-top: 1rem;
-        padding-top: 1rem;
-        border-top: 1px solid #e2e8f0;
-        text-align: center;
+      .kart-istatistikler {
+        padding: 1rem;
 
-        .btn {
-          width: 100%;
+        .istatistik-satiri {
+          .istatistik-kutusu {
+            padding: 0.75rem;
+
+            .istatistik-sayi {
+              font-size: 1.5rem;
+            }
+          }
         }
       }
     }
-  }
-}
-
-// Detay Modal Stilleri
-.large-modal {
-  max-width: 800px;
-  width: 90vw;
-}
-
-.stats-overview {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
-
-  .overview-card {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 1.25rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-
-    .overview-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 20px;
-
-      &.bg-primary {
-        background: linear-gradient(135deg, #4f46e5, #3b82f6);
-      }
-
-      &.bg-danger {
-        background: linear-gradient(135deg, #ef4444, #dc2626);
-      }
-
-      &.bg-success {
-        background: linear-gradient(135deg, #10b981, #059669);
-      }
-
-      &.bg-info {
-        background: linear-gradient(135deg, #06b6d4, #0891b2);
-      }
-    }
-
-    .overview-content {
-      h3 {
-        margin: 0;
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #1e293b;
-      }
-
-      p {
-        margin: 0;
-        font-size: 0.875rem;
-        color: #64748b;
-      }
-    }
-  }
-}
-
-.payment-status-section, .recent-attendance-section {
-  margin-bottom: 2rem;
-
-  h5 {
-    color: #1e293b;
-    font-weight: 600;
-    margin-bottom: 1rem;
-
-    i {
-      color: #4f46e5;
-      margin-right: 0.5rem;
-    }
-  }
-}
-
-.payment-details {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 1.5rem;
-
-  .payment-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-
-    .payment-item {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-
-      &:not(:last-child) {
-        margin-right: 2rem;
-      }
-
-      label {
-        font-size: 0.875rem;
-        color: #64748b;
-        margin-bottom: 0.25rem;
-        font-weight: 500;
-      }
-
-      .value {
-        font-weight: 600;
-        font-size: 1rem;
-      }
-    }
-  }
-}
-
-.attendance-timeline {
-  max-height: 300px;
-  overflow-y: auto;
-
-  .timeline-item {
-    display: flex;
-    align-items: center;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid #f1f5f9;
-
-    &:last-child {
-      border-bottom: none;
-    }
-
-    .timeline-marker {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 1rem;
-      color: white;
-
-      &.present {
-        background: #10b981;
-      }
-
-      &.absent {
-        background: #ef4444;
-      }
-    }
-
-    .timeline-content {
-      .timeline-date {
-        font-weight: 600;
-        color: #1e293b;
-        margin-bottom: 0.25rem;
-      }
-
-      .timeline-status {
-        font-size: 0.875rem;
-      }
-    }
-  }
-}
-
-// Mobil uyumluluk
-@media (max-width: 768px) {
-  .student-stats-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .stats-overview {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .payment-row {
-    flex-direction: column;
-
-    .payment-item {
-      margin-right: 0 !important;
-      margin-bottom: 1rem;
-    }
-  }
-}
-
-@media (max-width: 480px) {
-  .stats-overview {
-    grid-template-columns: 1fr;
   }
 }

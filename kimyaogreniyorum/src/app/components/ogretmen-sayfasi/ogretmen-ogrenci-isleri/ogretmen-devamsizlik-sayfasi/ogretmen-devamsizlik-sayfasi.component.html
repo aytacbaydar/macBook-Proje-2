@@ -259,49 +259,66 @@
     </div>
   </div>
 
-  <!-- Student Statistics -->
-  <div class="student-stats-card" *ngIf="getStudentAttendanceStats().length > 0">
-    <div class="card-header">
-      <h3><i class="bi bi-graph-up"></i> Öğrenci İstatistikleri</h3>
-    </div>
-    <div class="card-body">
-      <div class="student-stats-grid">
-        <div class="student-stat-item" *ngFor="let studentStat of getStudentAttendanceStats()">
-          <div class="student-info">
-            <img [src]="studentStat.avatar || getDefaultAvatar(studentStat.name)" 
-                 [alt]="studentStat.name" class="student-avatar">
-            <div class="student-details">
-              <h4>{{ studentStat.name }}</h4>
-              <p>{{ studentStat.email }}</p>
+  <!-- Öğrenci Bilgi Kartları -->
+    <div class="ogrenci-bilgi-kartlari" *ngIf="selectedGroup && !viewHistoricalData">
+      <h3 class="section-title">
+        <i class="bi bi-people-fill"></i>
+        Öğrenci Bilgi Kartları
+      </h3>
+      <div class="bilgi-kartlari-grid">
+        <div class="ogrenci-bilgi-karti" *ngFor="let stats of getStudentAttendanceStats()" (click)="loadStudentDetailedStats(stats.id)">
+          <div class="kart-header">
+            <img [src]="stats.avatar || getDefaultAvatar(stats.name)" 
+                 class="ogrenci-avatar" 
+                 alt="Avatar">
+            <div class="ogrenci-bilgileri">
+              <h5 class="ogrenci-adi">{{ stats.name }}</h5>
+              <p class="ogrenci-email">{{ stats.email }}</p>
+              <div class="katilim-badge" [class.yuksek]="stats.attendancePercentage >= 80" 
+                   [class.orta]="stats.attendancePercentage >= 60 && stats.attendancePercentage < 80"
+                   [class.dusuk]="stats.attendancePercentage < 60">
+                %{{ stats.attendancePercentage }} Katılım
+              </div>
             </div>
           </div>
 
-          <div class="attendance-metrics">
-            <div class="metric">
-              <span class="metric-value">{{ studentStat.presentCount }}</span>
-              <span class="metric-label">Katılım</span>
+          <div class="kart-istatistikler">
+            <div class="istatistik-satiri">
+              <div class="istatistik-kutusu katildi">
+                <div class="istatistik-sayi">{{ stats.presentCount }}</div>
+                <div class="istatistik-etiket">Katıldı</div>
+              </div>
+              <div class="istatistik-kutusu katilmadi">
+                <div class="istatistik-sayi">{{ stats.absentCount }}</div>
+                <div class="istatistik-etiket">Katılmadı</div>
+              </div>
             </div>
-            <div class="metric">
-              <span class="metric-value">{{ studentStat.absentCount }}</span>
-              <span class="metric-label">Devamsızlık</span>
-            </div>
-            <div class="metric">
-              <span class="metric-value">{{ studentStat.totalLessons }}</span>
-              <span class="metric-label">Toplam Ders</span>
-            </div>
-            <div class="metric">
-              <span class="metric-value">{{ studentStat.attendancePercentage }}%</span>
-              <span class="metric-label">Katılım Oranı</span>
+
+            <div class="odeme-bilgileri">
+              <div class="odeme-satiri">
+                <span class="odeme-etiket">Beklenen Ödeme:</span>
+                <span class="odeme-tutar">{{ formatCurrency(stats.expectedTotalAmount) }}</span>
+              </div>
+              <div class="sonraki-odeme" *ngIf="stats.lessonsUntilNextPayment > 0">
+                <i class="bi bi-clock"></i>
+                Sonraki ödemeye {{ stats.lessonsUntilNextPayment }} ders kaldı
+              </div>
+              <div class="odeme-zamani" *ngIf="stats.lessonsUntilNextPayment === 0">
+                <i class="bi bi-exclamation-circle"></i>
+                Ödeme Zamanı!
+              </div>
             </div>
           </div>
 
-          <div class="progress-bar">
-            <div class="progress-fill" [style.width.%]="studentStat.attendancePercentage"></div>
+          <div class="kart-footer">
+            <div class="detay-goster">
+              <i class="bi bi-info-circle"></i>
+              Detaylı Bilgi İçin Tıklayın
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
   <!-- Empty State -->
   <div class="empty-state" *ngIf="!selectedGroup">
