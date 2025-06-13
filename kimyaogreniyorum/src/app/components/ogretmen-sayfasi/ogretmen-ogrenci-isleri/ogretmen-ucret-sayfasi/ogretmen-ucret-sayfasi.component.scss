@@ -846,7 +846,107 @@
     max-width: 50%;
   }
 }
-/* Aylık Gelir Header Stilleri */
+// Aylık Gelir Header Stilleri
+.aylik-gelir-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 32px;
+  color: white;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+
+  .header-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+
+    i {
+      color: #ffd700;
+    }
+  }
+
+  .gelir-kartlari {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+  }
+
+  .gelir-karti {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .ay-bilgisi {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+
+      .ay-adi {
+        font-weight: 600;
+        font-size: 16px;
+      }
+
+      .yil {
+        font-size: 14px;
+        opacity: 0.8;
+      }
+    }
+
+    .tutar-bilgisi {
+      .tutar {
+        display: block;
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 4px;
+        color: #ffd700;
+      }
+
+      .odeme-sayisi {
+        font-size: 12px;
+        opacity: 0.9;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .aylik-gelir-header {
+    padding: 16px;
+    margin-bottom: 20px;
+
+    .header-title {
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+
+    .gelir-kartlari {
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+    }
+
+    .gelir-karti {
+      padding: 12px;
+
+      .tutar-bilgisi .tutar {
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+// Ödeme formu modal stilleri
 .monthly-income-header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 20px;
