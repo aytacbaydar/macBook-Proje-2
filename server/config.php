@@ -1,9 +1,4 @@
 <?php
-// Hata çıktılarını tamamen devre dışı bırak
-error_reporting(0);
-ini_set('display_errors', 0);
-ini_set('display_startup_errors', 0);
-
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
@@ -41,57 +36,61 @@ function getConnection() {
     }
 }
 
-// Kullanıcı kimlik doğrulama
+// Oturum yetkilendirme
 function authorize() {
-    $headers = getallheaders();
-    $token = null;
-
-    // Authorization header'ından token'ı al
-    if (isset($headers['Authorization'])) {
-        $authHeader = $headers['Authorization'];
-        if (preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
-            $token = $matches[1];
-        }
-    }
-
-    if (!$token) {
+    if (!isset($_SERVER['HTTP_AUTHORIZATION'])) {
         http_response_code(401);
-        echo json_encode(['error' => 'Token bulunamadı']);
+        echo json_encode(['error' => 'Yetkilendirme gerekli']);
         exit();
     }
 
+    $auth = $_SERVER['HTTP_AUTHORIZATION'];
+    $token = str_replace('Bearer ', '', $auth);
+    
+    if (empty($token)) {
+        http_response_code(401);
+        echo json_encode(['error' => 'Geçersiz token']);
+        exit();
+    }
+
+    // Token doğrulama
     try {
         $conn = getConnection();
-
-        // Önce öğrenciler tablosunda ara (email ile)
-        $stmt = $conn->prepare("SELECT id, adi_soyadi, email, rutbe, aktif FROM ogrenciler WHERE email = ?");
-        $stmt->execute([$token]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        // Eğer öğrencilerde bulunamazsa ve rutbe kontrolü yapılmamışsa, öğretmen olarak ara
-        if (!$user) {
-            $stmt = $conn->prepare("SELECT id, adi_soyadi, email, rutbe, aktif FROM ogrenciler WHERE email = ? AND rutbe = 'ogretmen'");
-            $stmt->execute([$token]);
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        // Debug için önce fusun@gmail.com kullanıcısını kontrol et
+        $debugStmt = $conn->prepare("SELECT id, adi_soyadi, email, rutbe, aktif, sifre FROM ogrenciler WHERE email = 'fusun@gmail.com'");
+        $debugStmt->execute();
+        $debugUser = $debugStmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($debugUser) {
+            $expectedToken = md5($debugUser['id'] . $debugUser['email'] . $debugUser['sifre']);
+            error_log("Debug - fusun@gmail.com için beklenen token: " . $expectedToken);
+            error_log("Debug - Gelen token: " . $token);
+            error_log("Debug - Aktif durumu: " . $debugUser['aktif']);
+            error_log("Debug - Rütbe: " . $debugUser['rutbe']);
+        }
+        
+        // Orijinal token doğrulama
+        $stmt = $conn->prepare("SELECT id, adi_soyadi, email, rutbe FROM ogrenciler WHERE MD5(CONCAT(id, email, sifre)) = :token AND aktif = 1");
+        $stmt->bindParam(':token', $token);
+        $stmt->execute();
+        
+        if ($stmt->rowCount() > 0) {
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } else {
+            // Aktif durumu farklı değerler de deneyebilir
+            $stmt2 = $conn->prepare("SELECT id, adi_soyadi, email, rutbe FROM ogrenciler WHERE MD5(CONCAT(id, email, sifre)) = :token AND (aktif = 1 OR aktif = '1' OR aktif = TRUE OR aktif = 'true')");
+            $stmt2->bindParam(':token', $token);
+            $stmt2->execute();
             
-            // Debug: öğretmen verilerini logla
-            error_log("Teacher query result: " . json_encode($user));
-        }
-
-        if (!$user) {
+            if ($stmt2->rowCount() > 0) {
+                return $stmt2->fetch(PDO::FETCH_ASSOC);
+            }
+            
             http_response_code(401);
-            echo json_encode(['error' => 'Geçersiz token']);
+            echo json_encode(['error' => 'Geçersiz token veya hesap aktif değil', 'debug_token' => $token]);
             exit();
         }
-
-        if (!$user['aktif']) {
-            http_response_code(403);
-            echo json_encode(['error' => 'Hesabınız aktif değil']);
-            exit();
-        }
-
-        return $user;
-
     } catch (PDOException $e) {
         http_response_code(500);
         echo json_encode(['error' => 'Veritabanı hatası: ' . $e->getMessage()]);
@@ -123,45 +122,27 @@ function getJsonData() {
 
 // Hata yanıtı - function_exists kontrolü ile
 if (!function_exists('errorResponse')) {
-    function errorResponse($message, $code = 400) {
-        // Output buffer'ı temizle
-        if (ob_get_level()) ob_clean();
-        http_response_code($code);
-        header('Content-Type: application/json; charset=utf-8');
-        echo json_encode([
-            'success' => false,
-            'message' => $message,
-            'data' => null
-        ], JSON_UNESCAPED_UNICODE);
-        exit;
+    function errorResponse($message, $statusCode = 400) {
+        http_response_code($statusCode);
+        echo json_encode(['error' => $message]);
+        exit();
     }
 }
 
 // Başarı yanıtı - function_exists kontrolü ile
 if (!function_exists('successResponse')) {
-    function successResponse($data = null, $message = 'Başarılı') {
-        // Output buffer'ı temizle
-        if (ob_get_level()) ob_clean();
-        http_response_code(200);
-        header('Content-Type: application/json; charset=utf-8');
-        $response = [
-            'success' => true,
-            'message' => $message
-        ];
-
-        // Eğer data array ise, direkt merge et, değilse data key'i altına koy
-        if (is_array($data)) {
-            $response = array_merge($response, $data);
-        } else {
+    function successResponse($data = null, $message = null) {
+        $response = ['success' => true];
+        
+        if ($data !== null) {
             $response['data'] = $data;
         }
-
-        echo json_encode($response, JSON_UNESCAPED_UNICODE);
-        exit;
+        
+        if ($message !== null) {
+            $response['message'] = $message;
+        }
+        
+        echo json_encode($response);
+        exit();
     }
-}
-
-// Arduino Bridge URL'si (Arduino bağlı bilgisayar PUBLIC IP'si)
-if (!defined('LOCAL_ARDUINO_BRIDGE_URL')) {
-    define('LOCAL_ARDUINO_BRIDGE_URL', 'http://77.245.149.70:8080'); // PUBLIC IP KULLANIN
 }

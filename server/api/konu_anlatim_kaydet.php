@@ -46,18 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // config.php'den gelen fonksiyonları kullanacağız
-// Yanıt fonksiyonları
-function errorResponse($message) {
-    http_response_code(400);
-    echo json_encode(['success' => false, 'error' => $message]);
-    exit();
-}
-
-function successResponse($data, $message = 'İşlem başarılı') {
-    http_response_code(200);
-    echo json_encode(['success' => true, 'message' => $message, 'data' => $data]);
-    exit();
-}
+// errorResponse ve successResponse fonksiyonları config.php'de tanımlı
 
 // POST isteği kontrol et
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

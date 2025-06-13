@@ -20,10 +20,8 @@ try {
 
     // Kullanıcı bilgilerini kontrol et (detay bilgileriyle birlikte)
     $stmt = $conn->prepare("
-        SELECT o.id, o.adi_soyadi, o.email, o.sifre, 
-               COALESCE(o.rutbe, 'ogrenci') as rutbe, 
-               o.avatar, o.ogretmeni, o.aktif,
-               ob.sinifi,
+        SELECT o.id, o.adi_soyadi, o.email, o.sifre, o.rutbe, o.avatar, o.ogretmeni,
+             ob.sinifi,
              COALESCE(ob.ders_adi, 'Kimya') as ders_adi, 
              ob.grubu
         FROM ogrenciler o
@@ -57,15 +55,6 @@ try {
     // Kullanıcı bilgilerini döndür (şifre hariç)
     unset($user['sifre']);
     $user['token'] = $token;
-    
-    // Rutbe alanının mevcut olduğundan emin ol
-    if (empty($user['rutbe'])) {
-        $user['rutbe'] = 'ogrenci'; // Default değer
-    }
-
-    // Debug için kullanıcı bilgilerini logla
-    error_log("Login response - User data: " . json_encode($user));
-    error_log("Login response - Rutbe: " . $user['rutbe']);
 
     successResponse($user, 'Giriş başarılı');
 
