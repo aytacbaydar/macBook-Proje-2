@@ -312,6 +312,17 @@
 }
 
 .student-card {
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-color: #007bff;
+  }
+}
+
+.student-card {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
