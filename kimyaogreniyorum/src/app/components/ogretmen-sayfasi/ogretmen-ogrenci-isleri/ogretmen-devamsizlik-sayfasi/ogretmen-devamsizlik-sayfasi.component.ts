@@ -209,9 +209,15 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
   onDateChange() {
     if (this.selectedGroup && this.selectedDate) {
       console.log('Tarih değişti:', this.selectedDate);
-      this.initializeAttendanceRecords();
-      this.loadAttendanceData();
+      
+      // Önce değişiklikleri sıfırla
       this.hasChanges = false;
+      
+      // Kayıtları başlat
+      this.initializeAttendanceRecords();
+      
+      // Mevcut verileri yükle
+      this.loadAttendanceData();
     }
   }
 
@@ -663,7 +669,9 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           if (response.success && response.data) {
-            // Update attendance records with saved data
+            console.log('Mevcut yoklama verileri yüklendi:', response.data);
+            
+            // Mevcut kayıtları güncelle
             response.data.forEach((record: any) => {
               if (this.attendanceRecords.has(record.ogrenci_id)) {
                 this.attendanceRecords.set(record.ogrenci_id, {
@@ -674,11 +682,25 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
                 });
               }
             });
+            
+            // Veri yüklendikten sonra hasChanges'i false yap
+            this.hasChanges = false;
+            
+            if (response.data.length > 0) {
+              console.log(`${this.selectedDate} tarihinde ${response.data.length} kayıt bulundu`);
+            } else {
+              console.log(`${this.selectedDate} tarihinde kayıt bulunamadı, yeni yoklama alınabilir`);
+            }
+          } else {
+            console.log(`${this.selectedDate} tarihinde mevcut yoklama kaydı yok`);
+            // Veri yoksa da hasChanges false olmalı
+            this.hasChanges = false;
           }
           this.isLoading = false;
         },
         error: (error) => {
           console.error('Devamsızlık verileri yüklenirken hata:', error);
+          this.hasChanges = false;
           this.isLoading = false;
         },
       });
@@ -802,13 +824,19 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     method: 'manual' | 'qr' = 'manual'
   ) {
     if (this.attendanceRecords.has(studentId)) {
-      this.attendanceRecords.set(studentId, {
-        student_id: studentId,
-        status: status,
-        timestamp: new Date(),
-        method: method,
-      });
-      this.hasChanges = true;
+      const currentRecord = this.attendanceRecords.get(studentId);
+      
+      // Eğer durum gerçekten değişiyorsa hasChanges'i true yap
+      if (!currentRecord || currentRecord.status !== status) {
+        this.attendanceRecords.set(studentId, {
+          student_id: studentId,
+          status: status,
+          timestamp: new Date(),
+          method: method,
+        });
+        this.hasChanges = true;
+        console.log(`Öğrenci ${studentId} durumu ${status} olarak güncellendi`);
+      }
     }
   }
 
