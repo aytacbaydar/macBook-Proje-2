@@ -311,9 +311,13 @@
           </div>
 
           <div class="kart-footer">
-            <button class="detay-buton" (click)="loadStudentDetailedStats(stats.id)">
-              <i class="bi bi-info-circle"></i>
-              Detay Bilgisi İçin Tıklayınız
+            <button type="button" 
+                    class="detay-buton" 
+                    (click)="loadStudentDetailedStats(stats.id)"
+                    [disabled]="isLoading">
+              <i class="bi bi-info-circle-fill"></i>
+              <span *ngIf="!isLoading">Detaylı İstatistikleri Gör</span>
+              <span *ngIf="isLoading">Yükleniyor...</span>
             </button>
           </div>
         </div>

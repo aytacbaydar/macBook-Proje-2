@@ -1122,7 +1122,7 @@
           width: 100%;
           background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
           color: white;
-          border: none;
+          border: none,
           border-radius: 8px;
           padding: 0.75rem 1rem;
           font-size: 0.875rem;
@@ -1191,4 +1191,58 @@
       }
     }
   }
+}
+
+/* Genel Stil Düzeltmeleri ve İyileştirmeler */
+/* Detay butonunun tasarımını iyileştir */
+.kart-footer {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.detay-buton {
+  width: 100%;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.2);
+}
+
+.detay-buton:hover {
+  background: linear-gradient(135deg, #4338ca, #6d28d9);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(79, 70, 229, 0.3);
+}
+
+.detay-buton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.2);
+}
+
+.detay-buton i {
+  font-size: 14px;
+}
+
+.detay-buton:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.detay-buton:disabled:hover {
+  background: #94a3b8;
+  transform: none;
+  box-shadow: none;
 }
