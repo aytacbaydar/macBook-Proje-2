@@ -206,6 +206,15 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     this.hasChanges = false;
   }
 
+  onDateChange() {
+    if (this.selectedGroup && this.selectedDate) {
+      console.log('Tarih değişti:', this.selectedDate);
+      this.initializeAttendanceRecords();
+      this.loadAttendanceData();
+      this.hasChanges = false;
+    }
+  }
+
   loadHistoricalAttendance() {
     if (!this.selectedGroup) return;
 
@@ -818,18 +827,38 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
   saveAttendance() {
     if (!this.selectedGroup || !this.hasChanges) return;
 
+    // Seçilen tarihi kontrol et
+    if (!this.selectedDate) {
+      this.toastr.error('Lütfen tarih seçiniz', 'Hata');
+      return;
+    }
+
+    // Kayıt edilecek veri var mı kontrol et
+    const recordsToSave = Array.from(this.attendanceRecords.values())
+      .filter((record) => record.status !== 'pending');
+
+    if (recordsToSave.length === 0) {
+      this.toastr.warning('Kaydedilecek devamsızlık kaydı bulunamadı', 'Uyarı');
+      return;
+    }
+
     this.isLoading = true;
 
-    const attendanceData = Array.from(this.attendanceRecords.values())
-      .filter((record) => record.status !== 'pending')
-      .map((record) => ({
-        ogrenci_id: record.student_id,
-        grup: this.selectedGroup,
-        tarih: this.selectedDate,
-        durum: record.status,
-        zaman: record.timestamp.toISOString(),
-        yontem: record.method,
-      }));
+    const attendanceData = recordsToSave.map((record) => ({
+      ogrenci_id: record.student_id,
+      grup: this.selectedGroup,
+      tarih: this.selectedDate,
+      durum: record.status,
+      zaman: record.timestamp.toISOString(),
+      yontem: record.method,
+    }));
+
+    console.log('Kaydedilecek devamsızlık verisi:', {
+      grup: this.selectedGroup,
+      tarih: this.selectedDate,
+      kayit_sayisi: attendanceData.length,
+      data: attendanceData
+    });
 
     this.http
       .post<any>(
@@ -843,14 +872,19 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (response) => {
+          console.log('Devamsızlık kaydet API yanıtı:', response);
+          
           if (response.success) {
             this.toastr.success(
-              'Devamsızlık kaydı başarıyla kaydedildi',
+              `${attendanceData.length} öğrencinin devamsızlık kaydı başarıyla kaydedildi`,
               'Başarılı'
             );
             this.hasChanges = false;
+            
+            // Geçmiş verileri yeniden yükle
+            this.loadHistoricalAttendance();
           } else {
-            this.toastr.error('Kayıt sırasında hata oluştu', 'Hata');
+            this.toastr.error(response.message || 'Kayıt sırasında hata oluştu', 'Hata');
           }
           this.isLoading = false;
         },

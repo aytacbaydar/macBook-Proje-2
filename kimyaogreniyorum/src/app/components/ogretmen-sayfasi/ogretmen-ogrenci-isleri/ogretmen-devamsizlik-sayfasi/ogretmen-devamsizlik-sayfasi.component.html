@@ -266,7 +266,7 @@
         Öğrenci Bilgi Kartları
       </h3>
       <div class="bilgi-kartlari-grid">
-        <div class="ogrenci-bilgi-karti" *ngFor="let stats of getStudentAttendanceStats()" (click)="loadStudentDetailedStats(stats.id)">
+        <div class="ogrenci-bilgi-karti" *ngFor="let stats of getStudentAttendanceStats()">
           <div class="kart-header">
             <img [src]="stats.avatar || getDefaultAvatar(stats.name)" 
                  class="ogrenci-avatar" 
@@ -311,10 +311,10 @@
           </div>
 
           <div class="kart-footer">
-            <div class="detay-goster">
+            <button class="detay-buton" (click)="loadStudentDetailedStats(stats.id)">
               <i class="bi bi-info-circle"></i>
-              Detaylı Bilgi İçin Tıklayın
-            </div>
+              Detay Bilgisi İçin Tıklayınız
+            </button>
           </div>
         </div>
       </div>
