@@ -668,31 +668,44 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (response) => {
-          if (response.success && response.data) {
-            console.log('Mevcut yoklama verileri yüklendi:', response.data);
+          console.log('API yanıtı tam yapısı:', response);
+          
+          if (response.success) {
+            // Veri yapısını kontrol et
+            let attendanceData = [];
+            
+            if (response.data && Array.isArray(response.data)) {
+              attendanceData = response.data;
+            } else if (response.kayitlar && Array.isArray(response.kayitlar)) {
+              attendanceData = response.kayitlar;
+            } else if (Array.isArray(response.data)) {
+              attendanceData = response.data;
+            }
+            
+            console.log('Mevcut yoklama verileri yüklendi:', attendanceData);
             
             // Mevcut kayıtları güncelle
-            response.data.forEach((record: any) => {
-              if (this.attendanceRecords.has(record.ogrenci_id)) {
-                this.attendanceRecords.set(record.ogrenci_id, {
-                  student_id: record.ogrenci_id,
-                  status: record.durum,
-                  timestamp: new Date(record.zaman),
-                  method: record.yontem,
-                });
-              }
-            });
-            
-            // Veri yüklendikten sonra hasChanges'i false yap
-            this.hasChanges = false;
-            
-            if (response.data.length > 0) {
-              console.log(`${this.selectedDate} tarihinde ${response.data.length} kayıt bulundu`);
+            if (attendanceData && attendanceData.length > 0) {
+              attendanceData.forEach((record: any) => {
+                if (this.attendanceRecords.has(record.ogrenci_id)) {
+                  this.attendanceRecords.set(record.ogrenci_id, {
+                    student_id: record.ogrenci_id,
+                    status: record.durum,
+                    timestamp: new Date(record.zaman),
+                    method: record.yontem,
+                  });
+                }
+              });
+              
+              console.log(`${this.selectedDate} tarihinde ${attendanceData.length} kayıt bulundu`);
             } else {
               console.log(`${this.selectedDate} tarihinde kayıt bulunamadı, yeni yoklama alınabilir`);
             }
+            
+            // Veri yüklendikten sonra hasChanges'i false yap
+            this.hasChanges = false;
           } else {
-            console.log(`${this.selectedDate} tarihinde mevcut yoklama kaydı yok`);
+            console.log(`${this.selectedDate} tarihinde mevcut yoklama kaydı yok veya hata:`, response.message || 'Bilinmeyen hata');
             // Veri yoksa da hasChanges false olmalı
             this.hasChanges = false;
           }
