@@ -241,4 +241,23 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     if (this.incomeOverview.aylik_gelirler.length === 0) return 0;
     return Math.max(...this.incomeOverview.aylik_gelirler.map(m => m.toplam_gelir));
   }
+
+  isCurrentMonth(ay: number, yil: number): boolean {
+    const now = new Date();
+    return ay === (now.getMonth() + 1) && yil === now.getFullYear();
+  }
+
+  getCurrentMonthIncome(): string {
+    const now = new Date();
+    const currentMonth = now.getMonth() + 1;
+    const currentYear = now.getFullYear();
+    
+    const currentMonthData = this.incomeOverview.aylik_gelirler.find(
+      m => m.ay === currentMonth && m.yil === currentYear
+    );
+    
+    return currentMonthData 
+      ? this.formatCurrency(currentMonthData.toplam_gelir)
+      : this.formatCurrency(0);
+  }
 }

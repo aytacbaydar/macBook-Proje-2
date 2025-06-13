@@ -1,4 +1,3 @@
-
 .ucret-sayfasi-container {
   padding: 20px;
   max-width: 1400px;
@@ -10,11 +9,11 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
-  
+
   h2 {
     margin: 0;
     color: #2c3e50;
-    
+
     i {
       margin-right: 10px;
       color: #27ae60;
@@ -25,7 +24,7 @@
 .loading-container {
   text-align: center;
   padding: 50px;
-  
+
   p {
     margin-top: 15px;
     color: #6c757d;
@@ -48,41 +47,41 @@
   align-items: center;
   border-left: 4px solid;
   transition: transform 0.2s ease;
-  
+
   &:hover {
     transform: translateY(-2px);
   }
-  
+
   &.expected {
     border-left-color: #3498db;
-    
+
     .card-icon {
       background: rgba(52, 152, 219, 0.1);
       color: #3498db;
     }
   }
-  
+
   &.received {
     border-left-color: #27ae60;
-    
+
     .card-icon {
       background: rgba(39, 174, 96, 0.1);
       color: #27ae60;
     }
   }
-  
+
   &.yearly {
     border-left-color: #9b59b6;
-    
+
     .card-icon {
       background: rgba(155, 89, 182, 0.1);
       color: #9b59b6;
     }
   }
-  
+
   &.rate {
     border-left-color: #f39c12;
-    
+
     .card-icon {
       background: rgba(243, 156, 18, 0.1);
       color: #f39c12;
@@ -98,7 +97,7 @@
   align-items: center;
   justify-content: center;
   margin-right: 20px;
-  
+
   i {
     font-size: 24px;
   }
@@ -112,14 +111,14 @@
     text-transform: uppercase;
     font-weight: 600;
   }
-  
+
   .amount {
     margin: 0 0 5px 0;
     font-size: 24px;
     font-weight: bold;
     color: #2c3e50;
   }
-  
+
   .subtitle {
     font-size: 12px;
     color: #95a5a6;
@@ -139,12 +138,12 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
-  
+
   span:first-child {
     font-weight: 600;
     color: #2c3e50;
   }
-  
+
   span:last-child {
     font-weight: bold;
     color: #27ae60;
@@ -165,13 +164,13 @@
 
 .students-section {
   margin-bottom: 40px;
-  
+
   h3 {
     margin-bottom: 20px;
     color: #2c3e50;
     border-bottom: 2px solid #ecf0f1;
     padding-bottom: 10px;
-    
+
     i {
       margin-right: 10px;
     }
@@ -193,11 +192,11 @@
   justify-content: space-between;
   align-items: center;
   border-left: 4px solid;
-  
+
   &.paid {
     border-left-color: #27ae60;
   }
-  
+
   &.unpaid {
     border-left-color: #e74c3c;
   }
@@ -218,7 +217,7 @@
   align-items: center;
   justify-content: center;
   margin-right: 15px;
-  
+
   i {
     font-size: 24px;
     color: #7f8c8d;
@@ -231,7 +230,7 @@
     font-size: 16px;
     color: #2c3e50;
   }
-  
+
   p {
     margin: 0 0 5px 0;
     font-size: 14px;
@@ -250,14 +249,14 @@
 
 .payment-info {
   text-align: right;
-  
+
   .amount {
     display: block;
     font-size: 18px;
     font-weight: bold;
     color: #27ae60;
     margin-bottom: 10px;
-    
+
     &.pending {
       color: #e74c3c;
     }
@@ -270,7 +269,7 @@
     color: #2c3e50;
     border-bottom: 2px solid #ecf0f1;
     padding-bottom: 10px;
-    
+
     i {
       margin-right: 10px;
     }
@@ -289,32 +288,32 @@
   grid-template-columns: 2fr 1fr 1fr 1.5fr;
   padding: 15px 20px;
   border-bottom: 1px solid #ecf0f1;
-  
+
   &.header {
     background: #f8f9fa;
     font-weight: 600;
     color: #2c3e50;
   }
-  
+
   &:last-child {
     border-bottom: none;
   }
-  
+
   .student-name {
     font-weight: 500;
     color: #2c3e50;
   }
-  
+
   .amount {
     font-weight: bold;
     color: #27ae60;
   }
-  
+
   .date {
     color: #7f8c8d;
     font-size: 14px;
   }
-  
+
   .description {
     color: #7f8c8d;
     font-size: 14px;
@@ -325,13 +324,13 @@
   text-align: center;
   padding: 50px;
   color: #7f8c8d;
-  
+
   i {
     font-size: 48px;
     margin-bottom: 15px;
     display: block;
   }
-  
+
   &.success {
     color: #27ae60;
   }
@@ -367,17 +366,17 @@
   align-items: center;
   padding: 20px 25px;
   border-bottom: 1px solid #ecf0f1;
-  
+
   h3 {
     margin: 0;
     color: #2c3e50;
-    
+
     i {
       margin-right: 10px;
       color: #27ae60;
     }
   }
-  
+
   .btn-close {
     background: none;
     border: none;
@@ -385,7 +384,7 @@
     color: #7f8c8d;
     cursor: pointer;
     padding: 5px;
-    
+
     &:hover {
       color: #e74c3c;
     }
@@ -398,14 +397,14 @@
 
 .form-group {
   margin-bottom: 20px;
-  
+
   label {
     display: block;
     margin-bottom: 8px;
     font-weight: 600;
     color: #2c3e50;
   }
-  
+
   .form-control {
     width: 100%;
     padding: 12px;
@@ -413,7 +412,7 @@
     border-radius: 8px;
     font-size: 14px;
     transition: border-color 0.3s ease;
-    
+
     &:focus {
       border-color: #3498db;
       outline: none;
@@ -443,55 +442,55 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  
+
   &.btn-primary {
     background: #3498db;
     color: white;
-    
+
     &:hover {
       background: #2980b9;
     }
   }
-  
+
   &.btn-success {
     background: #27ae60;
     color: white;
-    
+
     &:hover {
       background: #219a52;
     }
   }
-  
+
   &.btn-secondary {
     background: #95a5a6;
     color: white;
-    
+
     &:hover {
       background: #7f8c8d;
     }
   }
-  
+
   &.btn-sm {
     padding: 6px 12px;
     font-size: 12px;
   }
-  
+
   &.btn-outline-primary {
     background: transparent;
     color: #3498db;
     border: 1px solid #3498db;
-    
+
     &:hover {
       background: #3498db;
       color: white;
     }
   }
-  
+
   &.btn-outline-danger {
     background: transparent;
     color: #e74c3c;
     border: 1px solid #e74c3c;
-    
+
     &:hover {
       background: #e74c3c;
       color: white;
@@ -504,46 +503,46 @@
   .ucret-sayfasi-container {
     padding: 15px;
   }
-  
+
   .page-header {
     flex-direction: column;
     gap: 15px;
     text-align: center;
   }
-  
+
   .summary-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .students-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .student-card {
     flex-direction: column;
     text-align: center;
     gap: 15px;
   }
-  
+
   .payment-row {
     grid-template-columns: 1fr;
     gap: 5px;
-    
+
     &.header {
       display: none;
     }
-    
+
     div::before {
       content: attr(data-label) ": ";
       font-weight: bold;
       color: #2c3e50;
     }
   }
-  
+
   .form-row {
     grid-template-columns: 1fr;
   }
-  
+
   .modal-content {
     width: 95%;
     margin: 20px;
@@ -558,27 +557,27 @@
     padding: 1rem;
     text-align: center;
     transition: all 0.3s ease;
-    
+
     &:hover {
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       border-color: #3b82f6;
     }
-    
+
     .month-name {
       font-size: 0.75rem;
       color: #64748b;
       font-weight: 600;
       margin-bottom: 0.5rem;
     }
-    
+
     .month-amount {
       font-size: 1rem;
       font-weight: 700;
       color: #1e293b;
       margin-bottom: 0.25rem;
     }
-    
+
     .month-payments {
       font-size: 0.7rem;
       color: #94a3b8;
@@ -620,12 +619,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  
+
   .modal-title-section {
     display: flex;
     align-items: center;
     gap: 1rem;
-    
+
     .modal-icon {
       width: 48px;
       height: 48px;
@@ -636,14 +635,14 @@
       justify-content: center;
       font-size: 1.5rem;
     }
-    
+
     .modal-title-text {
       h4 {
         margin: 0;
         font-size: 1.5rem;
         font-weight: 700;
       }
-      
+
       p {
         margin: 0.25rem 0 0 0;
         opacity: 0.9;
@@ -651,7 +650,7 @@
       }
     }
   }
-  
+
   .modern-close-btn {
     width: 40px;
     height: 40px;
@@ -662,7 +661,7 @@
     font-size: 1.5rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    
+
     &:hover {
       background: rgba(255, 255, 255, 0.3);
       transform: scale(1.05);
@@ -679,12 +678,12 @@
 .modern-form {
   .form-group {
     margin-bottom: 1.5rem;
-    
+
     &:last-child {
       margin-bottom: 0;
     }
   }
-  
+
   .modern-label {
     display: flex;
     align-items: center;
@@ -693,12 +692,12 @@
     color: #374151;
     margin-bottom: 0.75rem;
     font-size: 0.9rem;
-    
+
     i {
       color: #3b82f6;
     }
   }
-  
+
   .modern-input, .modern-select, .modern-textarea {
     width: 100%;
     padding: 0.875rem 1rem;
@@ -707,26 +706,26 @@
     font-size: 1rem;
     transition: all 0.3s ease;
     background: #f9fafb;
-    
+
     &:focus {
       outline: none;
       border-color: #3b82f6;
       background: white;
       box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
-    
+
     &::placeholder {
       color: #9ca3af;
     }
   }
-  
+
   .input-with-icon {
     position: relative;
-    
+
     .modern-input {
       padding-right: 3rem;
     }
-    
+
     .input-icon {
       position: absolute;
       right: 1rem;
@@ -736,7 +735,7 @@
       font-weight: 600;
     }
   }
-  
+
   .modern-textarea {
     resize: vertical;
     min-height: 100px;
@@ -763,21 +762,21 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  
+
   &.modern-btn-secondary {
     background: #f3f4f6;
     color: #6b7280;
-    
+
     &:hover {
       background: #e5e7eb;
       color: #374151;
     }
   }
-  
+
   &.modern-btn-primary {
     background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
     color: white;
-    
+
     &:hover {
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
@@ -812,38 +811,251 @@
     width: 95%;
     margin: 1rem;
   }
-  
+
   .modern-modal-header {
     padding: 1.5rem;
-    
+
     .modal-title-section {
       .modal-icon {
         width: 40px;
         height: 40px;
         font-size: 1.25rem;
       }
-      
+
       .modal-title-text h4 {
         font-size: 1.25rem;
       }
     }
   }
-  
+
   .modern-modal-body {
     padding: 1.5rem;
   }
-  
+
   .modern-modal-footer {
     padding: 1rem 1.5rem;
     flex-direction: column;
   }
-  
+
   .modern-btn {
     justify-content: center;
   }
-  
+
   .monthly-income-chart .row .col-6 {
     flex: 0 0 50%;
     max-width: 50%;
+  }
+}
+/* Aylık Gelir Header Stilleri */
+.monthly-income-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
+  padding: 30px;
+  color: white;
+  box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+  margin-bottom: 30px;
+
+  .income-header-title {
+    text-align: center;
+    margin-bottom: 30px;
+
+    h3 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+      i {
+        margin-right: 15px;
+        color: #ffd700;
+      }
+    }
+
+    p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      margin: 0;
+    }
+  }
+}
+
+.monthly-income-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.income-month-card {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 15px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+
+  &.current-month {
+    background: rgba(255, 215, 0, 0.3);
+    border: 2px solid #ffd700;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+
+    &::before {
+      content: "Bu Ay";
+      position: absolute;
+      top: -5px;
+      right: -15px;
+      background: #ffd7 золотой;
+      color: #333;
+      padding: 5px 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      border-radius: 0 0 10px 10px;
+      transform: rotate(15deg);
+    }
+  }
+
+  .month-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+
+    .month-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .month-year {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 4px 8px;
+      border-radius: 10px;
+    }
+  }
+
+  .month-amount {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    color: #ffd700;
+  }
+
+  .month-details {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-bottom: 15px;
+
+    .payment-count {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+
+      i {
+        color: #ffd700;
+      }
+    }
+  }
+
+  .income-progress {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    overflow: hidden;
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #ffd700, #ffed4e);
+      border-radius: 2px;
+      transition: width 0.8s ease;
+    }
+  }
+}
+
+.income-summary-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.summary-item {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 15px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+
+  .summary-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    font-size: 1.3rem;
+    color: white;
+
+    &.bg-primary {
+      background: linear-gradient(45deg, #007bff, #0056b3);
+    }
+
+    &.bg-info {
+      background: linear-gradient(45deg, #17a2b8, #138496);
+    }
+
+    &.bg-success {
+      background: linear-gradient(45deg, #28a745, #1e7e34);
+    }
+
+    &.bg-warning {
+      background: linear-gradient(45deg, #ffc107, #d39e00);
+    }
+  }
+
+  .summary-content {
+    flex: 1;
+
+    .summary-value {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 2px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .summary-label {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
   }
 }
