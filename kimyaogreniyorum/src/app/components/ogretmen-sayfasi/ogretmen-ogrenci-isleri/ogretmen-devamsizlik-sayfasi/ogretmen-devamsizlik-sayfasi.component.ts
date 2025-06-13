@@ -569,7 +569,14 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
   showStudentStatsModal = false;
 
   async loadStudentDetailedStats(studentId: number) {
-    if (!this.selectedGroup) return;
+    if (!this.selectedGroup) {
+      this.toastr.error('Lütfen önce bir grup seçiniz', 'Hata');
+      return;
+    }
+
+    console.log('Öğrenci detay istatistikleri yükleniyor:', { studentId, grup: this.selectedGroup });
+
+    this.isLoading = true;
 
     try {
       const response = await this.http.get<any>(`./server/api/ogrenci_detay_istatistik.php`, {
@@ -580,15 +587,20 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
         }
       }).toPromise();
 
-      if (response.success) {
+      console.log('Öğrenci detay istatistik API yanıtı:', response);
+
+      if (response && response.success) {
         this.selectedStudentStats = response.data;
         this.showStudentStatsModal = true;
+        console.log('Modal açılıyor, seçilen öğrenci stats:', this.selectedStudentStats);
       } else {
-        this.toastr.error('Öğrenci istatistikleri yüklenemedi', 'Hata');
+        this.toastr.error(response?.message || 'Öğrenci istatistikleri yüklenemedi', 'Hata');
       }
     } catch (error) {
       console.error('Öğrenci istatistikleri yüklenirken hata:', error);
       this.toastr.error('İstatistikler yüklenirken hata oluştu', 'Hata');
+    } finally {
+      this.isLoading = false;
     }
   }
 
@@ -831,6 +843,23 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     if (!this.selectedDate) {
       this.toastr.error('Lütfen tarih seçiniz', 'Hata');
       return;
+    }
+
+    // Eski tarih kontrolü
+    const selectedDateObj = new Date(this.selectedDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Bugünün başlangıcına ayarla
+    
+    if (selectedDateObj < today) {
+      // Geçmiş tarih için onay iste
+      const confirmMessage = `Seçilen tarih (${this.formatDate(this.selectedDate)}) geçmiş bir tarih. Geçmiş tarihli yoklama kaydı yapmak istediğinizden emin misiniz?`;
+      
+      if (!confirm(confirmMessage)) {
+        this.toastr.info('Yoklama kaydı iptal edildi', 'Bilgi');
+        return;
+      }
+      
+      this.toastr.warning('Geçmiş tarihli kayıt yapılıyor...', 'Uyarı');
     }
 
     // Kayıt edilecek veri var mı kontrol et
