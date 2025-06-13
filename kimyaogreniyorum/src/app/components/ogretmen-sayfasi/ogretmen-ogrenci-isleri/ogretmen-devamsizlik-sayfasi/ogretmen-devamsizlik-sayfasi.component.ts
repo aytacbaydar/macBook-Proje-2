@@ -99,6 +99,8 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     });
 
     this.loadGroups();
+    this.setTodayDate();
+    this.restoreLastState();
   }
 
   ngOnDestroy() {
@@ -196,6 +198,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       this.loadAttendanceData();
       this.loadPastWeekAttendance();
       this.loadHistoricalAttendance();
+      this.saveLastState(); // Save the state on group change
     } else {
       this.groupStudents = [];
       this.attendanceRecords.clear();
@@ -209,15 +212,16 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
   onDateChange() {
     if (this.selectedGroup && this.selectedDate) {
       console.log('Tarih değişti:', this.selectedDate);
-      
+
       // Önce değişiklikleri sıfırla
       this.hasChanges = false;
-      
+
       // Kayıtları başlat
       this.initializeAttendanceRecords();
-      
+
       // Mevcut verileri yükle
       this.loadAttendanceData();
+      this.saveLastState(); // Save the state on date change
     }
   }
 
@@ -246,7 +250,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
           if (response.success && response.data) {
             this.historicalAttendance = response.data.kayitlar || [];
             this.groupedAttendanceByDate = response.data.tarihlere_gore || [];
-            
+
             // Eksik katılmayan öğrenci listelerini hesapla
             this.groupedAttendanceByDate.forEach(dateGroup => {
               // Eğer katilmayanlar listesi boş ama katilmayan_sayisi > 0 ise, hesapla
@@ -255,23 +259,23 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
                 const dateRecords = this.historicalAttendance.filter(record => 
                   record.tarih === dateGroup.tarih
                 );
-                
+
                 // Katılan öğrenci ID'lerini al
                 const presentStudentIds = dateRecords
                   .filter(record => record.durum === 'present')
                   .map(record => record.ogrenci_id);
-                
+
                 // Katılmayan öğrenci ID'lerini al
                 const absentStudentIds = dateRecords
                   .filter(record => record.durum === 'absent')
                   .map(record => record.ogrenci_id);
-                
+
                 // Katılmayan öğrencilerin detaylarını bul
                 dateGroup.katilmayanlar = this.groupStudents.filter(student => 
                   absentStudentIds.includes(student.id)
                 );
               }
-              
+
               console.log(`${dateGroup.tarih} tarihinde:`, {
                 katilan_sayisi: dateGroup.katilan_sayisi,
                 katilmayan_sayisi: dateGroup.katilmayan_sayisi,
@@ -324,7 +328,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
           if (response.success && response.data) {
             this.historicalAttendance = response.data.kayitlar || [];
             this.groupedAttendanceByDate = response.data.tarihlere_gore || [];
-            
+
             if (this.groupedAttendanceByDate.length === 0) {
               this.toastr.info('Seçilen tarih aralığında kayıt bulunamadı', 'Bilgi');
             } else {
@@ -381,7 +385,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
 
     this.startDate = startDate.toISOString().split('T')[0];
     this.endDate = endDate.toISOString().split('T')[0];
-    
+
     console.log('Son 1 hafta filtrelendi:', this.startDate, 'to', this.endDate);
     this.loadHistoricalAttendanceByDateRange();
   }
@@ -393,7 +397,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
 
     this.startDate = startDate.toISOString().split('T')[0];
     this.endDate = endDate.toISOString().split('T')[0];
-    
+
     console.log('Son 1 ay filtrelendi:', this.startDate, 'to', this.endDate);
     this.loadHistoricalAttendanceByDateRange();
   }
@@ -405,7 +409,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
 
     this.startDate = startDate.toISOString().split('T')[0];
     this.endDate = endDate.toISOString().split('T')[0];
-    
+
     console.log('Bu ay filtrelendi:', this.startDate, 'to', this.endDate);
     this.loadHistoricalAttendanceByDateRange();
   }
@@ -417,7 +421,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
 
     this.startDate = startDate.toISOString().split('T')[0];
     this.endDate = endDate.toISOString().split('T')[0];
-    
+
     console.log('Bu yıl filtrelendi:', this.startDate, 'to', this.endDate);
     this.loadHistoricalAttendanceByDateRange();
   }
@@ -427,7 +431,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     if (!this.selectedGroup) return;
 
     console.log('Bütün devamsızlık kayıtları yükleniyor...');
-    
+
     this.http
       .get<any>(`./server/api/devamsizlik_kayitlari.php`, {
         headers: this.getAuthHeaders(),
@@ -442,11 +446,11 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
           if (response.success && response.data) {
             this.historicalAttendance = response.data.kayitlar || [];
             this.groupedAttendanceByDate = response.data.tarihlere_gore || [];
-            
+
             // Tarih inputlarını temizle
             this.startDate = '';
             this.endDate = '';
-            
+
             this.toastr.success('Tüm devamsızlık kayıtları yüklendi', 'Başarılı');
           } else {
             this.historicalAttendance = [];
@@ -605,7 +609,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       }
     } catch (error: any) {
       console.error('Öğrenci istatistikleri yüklenirken hata:', error);
-      
+
       // HTML response kontrolü
       if (error.error && typeof error.error.text === 'string' && error.error.text.includes('<!doctype html>')) {
         console.error('Server HTML döndürdü, muhtemelen PHP hatası var');
@@ -669,11 +673,11 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           console.log('API yanıtı tam yapısı:', response);
-          
+
           if (response.success) {
             // Veri yapısını kontrol et
             let attendanceData = [];
-            
+
             if (response.data && Array.isArray(response.data)) {
               attendanceData = response.data;
             } else if (response.kayitlar && Array.isArray(response.kayitlar)) {
@@ -681,9 +685,9 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
             } else if (Array.isArray(response.data)) {
               attendanceData = response.data;
             }
-            
+
             console.log('Mevcut yoklama verileri yüklendi:', attendanceData);
-            
+
             // Mevcut kayıtları güncelle
             if (attendanceData && attendanceData.length > 0) {
               attendanceData.forEach((record: any) => {
@@ -696,12 +700,12 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
                   });
                 }
               });
-              
+
               console.log(`${this.selectedDate} tarihinde ${attendanceData.length} kayıt bulundu`);
             } else {
               console.log(`${this.selectedDate} tarihinde kayıt bulunamadı, yeni yoklama alınabilir`);
             }
-            
+
             // Veri yüklendikten sonra hasChanges'i false yap
             this.hasChanges = false;
           } else {
@@ -838,7 +842,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
   ) {
     if (this.attendanceRecords.has(studentId)) {
       const currentRecord = this.attendanceRecords.get(studentId);
-      
+
       // Eğer durum gerçekten değişiyorsa hasChanges'i true yap
       if (!currentRecord || currentRecord.status !== status) {
         this.attendanceRecords.set(studentId, {
@@ -900,16 +904,16 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     const selectedDateObj = new Date(this.selectedDate);
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Bugünün başlangıcına ayarla
-    
+
     if (selectedDateObj < today) {
       // Geçmiş tarih için onay iste
       const confirmMessage = `Seçilen tarih (${this.formatDate(this.selectedDate)}) geçmiş bir tarih. Geçmiş tarihli yoklama kaydı yapmak istediğinizden emin misiniz?`;
-      
+
       if (!confirm(confirmMessage)) {
         this.toastr.info('Yoklama kaydı iptal edildi', 'Bilgi');
         return;
       }
-      
+
       this.toastr.warning('Geçmiş tarihli kayıt yapılıyor...', 'Uyarı');
     }
 
@@ -953,16 +957,18 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           console.log('Devamsızlık kaydet API yanıtı:', response);
-          
+
           if (response.success) {
             this.toastr.success(
               `${attendanceData.length} öğrencinin devamsızlık kaydı başarıyla kaydedildi`,
               'Başarılı'
             );
             this.hasChanges = false;
-            
+
             // Geçmiş verileri yeniden yükle
             this.loadHistoricalAttendance();
+            this.saveLastState(); //Save the state after the save
+            this.loadAttendanceData();// Load attendance data after save
           } else {
             this.toastr.error(response.message || 'Kayıt sırasında hata oluştu', 'Hata');
           }
@@ -1073,5 +1079,31 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     ];
     const index = groupName.length % colors.length;
     return colors[index];
+  }
+
+  private saveLastState() {
+    const state = {
+      selectedGroup: this.selectedGroup,
+      selectedDate: this.selectedDate,
+    };
+    localStorage.setItem('attendanceState', JSON.stringify(state));
+  }
+
+  private restoreLastState() {
+    const storedState = localStorage.getItem('attendanceState');
+    if (storedState) {
+      const state = JSON.parse(storedState);
+      this.selectedGroup = state.selectedGroup;
+      this.selectedDate = state.selectedDate;
+      if (this.selectedGroup) {
+        this.onGroupChange();
+      }
+      if (this.selectedDate) {
+        this.onDateChange();
+      }
+    }
+  }
+  setTodayDate() {
+    this.selectedDate = new Date().toISOString().split('T')[0];
   }
 }
