@@ -197,6 +197,48 @@
       </div>
     </div>
 
+    <!-- Upcoming Payments -->
+    <div class="admin-container grid-4">
+      <div class="card-header">
+        <h3>Yaklaşan Ödemeler</h3>
+        <div class="card-actions">
+          <a href="/ogretmen-sayfasi/ogretmen-ucret-sayfasi" class="btn-primary btn-sm">Tümünü Gör</a>
+        </div>
+      </div>
+      <div class="card-body">
+        <div *ngIf="isLoadingPayments" class="text-center py-3">
+          <div class="spinner-border spinner-border-sm text-primary" role="status">
+            <span class="visually-hidden">Yükleniyor...</span>
+          </div>
+        </div>
+        
+        <div class="payment-list" *ngIf="!isLoadingPayments">
+          <div class="payment-item" *ngFor="let payment of upcomingPayments.slice(0, 3)">
+            <div class="payment-info">
+              <div class="student-details">
+                <h4>{{ payment.adi_soyadi }}</h4>
+                <p>{{ payment.grubu }} • {{ payment.ders_sayisi }} ders</p>
+              </div>
+              <div class="payment-amount">
+                <span class="amount">{{ formatCurrency(payment.ucret) }}</span>
+                <span class="due-date" *ngIf="payment.son_odeme_tarihi">
+                  {{ payment.son_odeme_tarihi | date:'dd/MM' }}
+                </span>
+              </div>
+            </div>
+            <div class="payment-status pending">
+              <i class="bi bi-clock"></i>
+            </div>
+          </div>
+          
+          <div *ngIf="upcomingPayments.length === 0" class="no-payments">
+            <i class="bi bi-check-circle text-success"></i>
+            <p>Tüm ödemeler tamamlandı!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Upcoming Classes -->
     <div class="admin-container grid-4">
       <div class="card-header">

@@ -29,6 +29,16 @@ interface Group {
   studentCount: number;
   color: string;
 }
+
+interface UpcomingPayment {
+  id: number;
+  adi_soyadi: string;
+  email: string;
+  ucret: string;
+  grubu: string;
+  ders_sayisi: number;
+  son_odeme_tarihi?: string;
+}
 @Component({
   selector: 'app-ogretmen-ana-sayfasi',
   standalone: false,
@@ -40,6 +50,10 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
   isLoading: boolean = true;
   error: string | null = null;
   searchQuery: string = '';
+  
+  // Yaklaşan ödemeler için
+  upcomingPayments: UpcomingPayment[] = [];
+  isLoadingPayments: boolean = false;
 
   // Grup renkleri
   groupColors = [
@@ -61,6 +75,7 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadStudents();
+    this.loadUpcomingPayments();
   }
 
   loadStudents(): void {
@@ -323,5 +338,44 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
       const savedState = localStorage.getItem('sidebarOpen');
       this.isSidebarOpen = savedState ? JSON.parse(savedState) : true;
     }
+  }
+
+  loadUpcomingPayments(): void {
+    this.isLoadingPayments = true;
+    
+    let token = '';
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      token = user.token || '';
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    this.http.get<any>('./server/api/yaklasan_odemeler.php', { headers })
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.upcomingPayments = response.data || [];
+          } else {
+            console.error('Yaklaşan ödemeler yüklenirken hata:', response.message);
+          }
+          this.isLoadingPayments = false;
+        },
+        error: (error) => {
+          console.error('Yaklaşan ödemeler API hatası:', error);
+          this.isLoadingPayments = false;
+        }
+      });
+  }
+
+  formatCurrency(amount: string | number): string {
+    const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+    return new Intl.NumberFormat('tr-TR', {
+      style: 'currency',
+      currency: 'TRY'
+    }).format(numAmount || 0);
   }
 }
