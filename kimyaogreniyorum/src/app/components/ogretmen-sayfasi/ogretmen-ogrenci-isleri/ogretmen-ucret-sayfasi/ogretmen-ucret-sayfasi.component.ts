@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
@@ -121,12 +120,12 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
       .subscribe({
         next: (response) => {
           console.log('API Response:', response);
-          
+
           if (response && response.success) {
             this.students = response.data.students || [];
             this.payments = response.data.payments || [];
             this.summary = response.data.summary || this.summary;
-            
+
             console.log('Yüklenen veriler:', {
               students: this.students.length,
               payments: this.payments.length,
@@ -223,8 +222,27 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
 
   loadIncomeOverview(): void {
     const headers = this.getAuthHeaders();
-    
-    this.http.get<any>('./server/api/aylik_gelir_ozeti.php', { headers })
+
+    // Giriş yapan öğretmenin adını localStorage'dan al
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    let ogretmenAdi = '';
+
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        ogretmenAdi = user.adi_soyadi || '';
+      } catch (error) {
+        console.error('Kullanıcı bilgileri alınamadı:', error);
+        return;
+      }
+    }
+
+    if (!ogretmenAdi) {
+      console.error('Öğretmen adı bulunamadı');
+      return;
+    }
+
+    this.http.post<any>('./server/api/aylik_gelir_ozeti.php', { ogretmen_adi: ogretmenAdi }, { headers })
       .subscribe({
         next: (response) => {
           if (response && response.success) {
@@ -251,11 +269,11 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     const now = new Date();
     const currentMonth = now.getMonth() + 1;
     const currentYear = now.getFullYear();
-    
+
     const currentMonthData = this.incomeOverview.aylik_gelirler.find(
       m => m.ay === currentMonth && m.yil === currentYear
     );
-    
+
     return currentMonthData 
       ? this.formatCurrency(currentMonthData.toplam_gelir)
       : this.formatCurrency(0);

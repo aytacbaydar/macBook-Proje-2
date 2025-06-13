@@ -12,9 +12,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require_once '../config.php';
 
 try {
-    // Öğretmen adını session'dan veya başka bir yöntemle al
-    // Şimdilik test için sabit bir değer kullanıyoruz
-    $ogretmen_adi = 'Ayta Baydar'; // Bu değeri dinamik olarak almanız gerekecek
+    // POST veya GET ile gelen öğretmen adını al
+    $input = json_decode(file_get_contents('php://input'), true);
+    $ogretmen_adi = $input['ogretmen_adi'] ?? $_GET['ogretmen_adi'] ?? null;
+    
+    if (!$ogretmen_adi) {
+        throw new Exception('Öğretmen adı belirtilmedi');
+    }
 
     // Son 12 ayın gelir özetini al
     $stmt = $pdo->prepare("
