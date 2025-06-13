@@ -279,4 +279,40 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
       ? this.formatCurrency(currentMonthData.toplam_gelir)
       : this.formatCurrency(0);
   }
+
+  private calculateSummary() {
+    const currentMonth = new Date().getMonth() + 1;
+    const currentYear = new Date().getFullYear();
+
+    // Payments array kontrolü
+    if (!Array.isArray(this.payments)) {
+      this.payments = [];
+    }
+
+    // Students array kontrolü
+    if (!Array.isArray(this.students)) {
+      this.students = [];
+    }
+
+    // Bu ayın ödemelerini filtrele
+    this.payments = this.payments.filter(payment => {
+      if (!payment || !payment.odeme_tarihi) return false;
+
+      const paymentDate = new Date(payment.odeme_tarihi);
+      return paymentDate.getMonth() + 1 === currentMonth && 
+             paymentDate.getFullYear() === currentYear;
+    });
+
+    // Bu ay ödeme yapan öğrencilerin ID'lerini al
+    const paidStudentIds = this.payments.map(payment => payment.ogrenci_id);
+
+    // Öğrencileri ödeme durumuna göre ayır
+    this.summary.studentsWhoPayThis = this.students.filter(student => 
+      paidStudentIds.includes(student.id)
+    );
+
+    this.summary.studentsWhoDidntPay = this.students.filter(student => 
+      !paidStudentIds.includes(student.id)
+    );
+  }
 }

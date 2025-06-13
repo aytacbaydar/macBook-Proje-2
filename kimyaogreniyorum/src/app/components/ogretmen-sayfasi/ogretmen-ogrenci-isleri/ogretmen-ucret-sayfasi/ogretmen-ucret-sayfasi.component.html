@@ -38,7 +38,7 @@
         </div>
       </div>
     </div>-->
-    <div class="monthly-income-header mb-4" *ngIf="incomeOverview.aylik_gelirler.length > 0">
+    <div class="monthly-income-header mb-4" *ngIf="incomeOverview && incomeOverview.aylik_gelirler && incomeOverview.aylik_gelirler.length > 0">
       <div class="income-header-title">
         <h3><i class="bi bi-calendar-month"></i> Aylık Gelir Durumu</h3>
       </div>
@@ -318,7 +318,7 @@
             </label>
             <select class="modern-select" [(ngModel)]="paymentForm.ogrenci_id" name="ogrenci_id">
               <option value="0">Öğrenci seçin</option>
-              <option *ngFor="let student of students" [value]="student.id">
+              <option *ngFor="let student of (students || [])" [value]="student.id">
                 {{ student.adi_soyadi }}
               </option>
             </select>
