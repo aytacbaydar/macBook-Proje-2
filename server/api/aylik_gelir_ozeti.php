@@ -13,40 +13,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require_once '../config.php';
 
 try {
-    // Token kontrolü
-    $headers = getallheaders();
-    $authHeader = $headers['Authorization'] ?? '';
+    // POST verisinden öğretmen adını al
+    $input = json_decode(file_get_contents('php://input'), true);
+    $ogretmen_adi = $input['ogretmen_adi'] ?? null;
     
-    if (strpos($authHeader, 'Bearer ') !== 0) {
-        throw new Exception('Geçersiz token formatı');
+    if (!$ogretmen_adi) {
+        throw new Exception('Öğretmen adı belirtilmedi');
     }
+
+    $conn = getConnection();
     
-    $token = substr($authHeader, 7);
-    
-    // Token'dan kullanıcı bilgilerini al
-    $stmt = $pdo->prepare("SELECT * FROM kullanicilar WHERE token = ?");
-    $stmt->execute([$token]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-    if (!$user || $user['rutbe'] !== 'ogretmen') {
-        throw new Exception('Yetkisiz erişim');
-    }
-    
-    // Son 12 ayın gelir özetini al
-    $stmt = $pdo->prepare("
+    // Son 12 ayın gelir özetini al (doğru tablo yapısı ile)
+    $stmt = $conn->prepare("
         SELECT 
-            YEAR(odeme_tarihi) as yil,
-            MONTH(odeme_tarihi) as ay,
-            SUM(tutar) as toplam_gelir,
+            YEAR(op.odeme_tarihi) as yil,
+            MONTH(op.odeme_tarihi) as ay,
+            SUM(op.tutar) as toplam_gelir,
             COUNT(*) as odeme_sayisi
-        FROM odemeler o
-        INNER JOIN kullanicilar k ON o.ogrenci_id = k.id
-        WHERE k.ogretmeni = ? 
-        AND odeme_tarihi >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
-        GROUP BY YEAR(odeme_tarihi), MONTH(odeme_tarihi)
+        FROM ogrenci_odemeler op
+        INNER JOIN ogrenciler o ON op.ogrenci_id = o.id
+        WHERE o.ogretmeni = ? 
+        AND op.odeme_tarihi >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
+        GROUP BY YEAR(op.odeme_tarihi), MONTH(op.odeme_tarihi)
         ORDER BY yil DESC, ay DESC
     ");
-    $stmt->execute([$user['adi_soyadi']]);
+    $stmt->execute([$ogretmen_adi]);
     $aylik_gelirler = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     // Ay isimlerini ekle
@@ -61,7 +52,7 @@ try {
         $gelir['toplam_gelir'] = floatval($gelir['toplam_gelir']);
     }
     
-    // Toplam gelir
+    // Toplam gelir hesapla
     $toplam_gelir = array_sum(array_column($aylik_gelirler, 'toplam_gelir'));
     
     echo json_encode([

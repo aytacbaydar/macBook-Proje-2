@@ -66,6 +66,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     currentYear: new Date().getFullYear()
   };
 
+  // Aylık gelir özeti için yeni özellikler
   incomeOverview: IncomeOverview = {
     aylik_gelirler: [],
     toplam_gelir: 0,
