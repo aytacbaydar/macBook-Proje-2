@@ -35,6 +35,20 @@ interface PaymentSummary {
   currentYear: number;
 }
 
+interface MonthlyIncome {
+  yil: number;
+  ay: number;
+  ay_adi: string;
+  toplam_gelir: number;
+  odeme_sayisi: number;
+}
+
+interface IncomeOverview {
+  aylik_gelirler: MonthlyIncome[];
+  toplam_gelir: number;
+  son_12_ay_ortalama: number;
+}
+
 @Component({
   selector: 'app-ogretmen-ucret-sayfasi',
   standalone: false,
@@ -51,6 +65,12 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     studentsWhoDidntPay: [],
     currentMonth: new Date().getMonth() + 1,
     currentYear: new Date().getFullYear()
+  };
+
+  incomeOverview: IncomeOverview = {
+    aylik_gelirler: [],
+    toplam_gelir: 0,
+    son_12_ay_ortalama: 0
   };
 
   showPaymentForm = false;
@@ -74,6 +94,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadPaymentData();
+    this.loadIncomeOverview();
   }
 
   private getAuthHeaders(): HttpHeaders {
@@ -198,5 +219,26 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
   getCollectionRate(): number {
     if (this.summary.totalExpected === 0) return 0;
     return (this.summary.totalReceived / this.summary.totalExpected) * 100;
+  }
+
+  loadIncomeOverview(): void {
+    const headers = this.getAuthHeaders();
+    
+    this.http.get<any>('./server/api/aylik_gelir_ozeti.php', { headers })
+      .subscribe({
+        next: (response) => {
+          if (response && response.success) {
+            this.incomeOverview = response.data;
+          }
+        },
+        error: (error) => {
+          console.error('Aylık gelir özeti yüklenirken hata:', error);
+        }
+      });
+  }
+
+  getHighestMonthlyIncome(): number {
+    if (this.incomeOverview.aylik_gelirler.length === 0) return 0;
+    return Math.max(...this.incomeOverview.aylik_gelirler.map(m => m.toplam_gelir));
   }
 }
