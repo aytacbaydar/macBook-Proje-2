@@ -854,60 +854,29 @@
   border-radius: 8px;
   margin-bottom: 1.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
 
-// Aylık Gelir Durumu Stilleri
-.aylik-gelir-durumu {
-  background: white;
-  border: 1px solid #e2e8f0;
-  padding: 1.5rem;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-
-  .durum-title {
+  .header-title {
     font-size: 1.25rem;
     font-weight: 600;
     margin-bottom: 1.5rem;
+    color: #1e293b;
     display: flex;
     align-items: center;
-    color: #1e293b;
 
     i {
-      color: #3b82f6;
+      color: #059669;
     }
   }
 
-  .durum-grid {
+  .gelir-kartlari {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
 
-    .durum-item {
+    .gelir-karti {
       background: #f8fafc;
       border: 1px solid #e2e8f0;
       border-radius: 8px;
-      padding: 1rem;
-      transition: all 0.3s ease;
-
-      &:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        border-color: #cbd5e1;
-      }
-
-      .durum-label {
-        font-size: 0.875rem;
-        color: #64748b;
-        margin-bottom: 0.5rem;
-        font-weight: 500;
-      }
-
-      .durum-value {
-        font-size: 1.125rem;
-        font-weight: 700;
-        color: #059669;
-      }
     }
   }
 }
