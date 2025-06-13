@@ -19,6 +19,7 @@ interface Student {
   okulu: string;
   grubu: string;
   aktif: boolean;
+  ucret?: string; // Öğrencinin ücreti (opsiyonel)
 }
 
 interface Group {
@@ -353,9 +354,9 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     return days[day];
   }
 
-  formatDate(date: string): string {
-    return new Date(date).toLocaleDateString('tr-TR');
-  }
+  //  formatDate(date: string): string {
+  //    return new Date(date).toLocaleDateString('tr-TR');
+  //  }
 
   // Hızlı tarih filtreleri
   setDateRangeLastWeek() {
