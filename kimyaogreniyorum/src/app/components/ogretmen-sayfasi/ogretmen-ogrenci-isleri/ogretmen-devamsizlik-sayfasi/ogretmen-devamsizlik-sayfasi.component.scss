@@ -1246,3 +1246,159 @@
   transform: none;
   box-shadow: none;
 }
+}
+
+// Öğrenci Detay Modal Stilleri
+.large-modal {
+  max-width: 900px !important;
+  width: 90% !important;
+}
+
+.student-basic-info {
+  .info-card {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #e9ecef;
+
+    h6 {
+      color: #495057;
+      font-weight: 600;
+      margin-bottom: 15px;
+
+      i {
+        color: #007bff;
+      }
+    }
+
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #e9ecef;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .label {
+        font-weight: 500;
+        color: #6c757d;
+      }
+
+      .value {
+        font-weight: 600;
+        color: #212529;
+      }
+    }
+  }
+}
+
+.payment-stats {
+  .info-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 20px;
+
+    h6 {
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .stat-item {
+      text-align: center;
+
+      .stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+
+        &.text-danger {
+          color: #ff6b6b !important;
+        }
+      }
+
+      .stat-label {
+        font-size: 0.85rem;
+        opacity: 0.9;
+      }
+    }
+  }
+}
+
+.recent-attendance {
+  .info-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #e9ecef;
+
+    h6 {
+      color: #495057;
+      font-weight: 600;
+      margin-bottom: 20px;
+
+      i {
+        color: #17a2b8;
+      }
+    }
+  }
+
+  .attendance-timeline {
+    .timeline-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #f1f3f4;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .timeline-marker {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+
+        &.present {
+          background: #d4edda;
+          color: #155724;
+        }
+
+        &.absent {
+          background: #f8d7da;
+          color: #721c24;
+        }
+
+        i {
+          font-size: 1.2rem;
+        }
+      }
+
+      .timeline-content {
+        flex: 1;
+
+        .timeline-date {
+          font-weight: 600;
+          color: #212529;
+          margin-bottom: 2px;
+        }
+
+        .timeline-status {
+          font-weight: 500;
+          margin-bottom: 2px;
+        }
+
+        .timeline-time {
+          font-size: 0.8rem;
+        }
+      }
+    }
+  }
+}
