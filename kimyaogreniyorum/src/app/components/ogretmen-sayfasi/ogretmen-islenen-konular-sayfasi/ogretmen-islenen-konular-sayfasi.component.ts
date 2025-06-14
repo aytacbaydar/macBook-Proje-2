@@ -252,7 +252,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
 
   getMinClassLevelInGroup(students: any[]): string {
     const classLevels = students
-      .map(student => student.sinif_seviyesi || student.sinif || '9')
+      .map(student => student.sinif_seviyesi || student.sinif || '9.Sınıf')
       .filter(level => level);
 
     // Mezun varsa tüm konuları göster
@@ -260,10 +260,14 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
       return 'Mezun';
     }
 
-    // En düşük sınıf seviyesini bul
+    // Sınıf seviyelerini parse et ('12.Sınıf' -> 12)
     const numericLevels = classLevels
-      .filter(level => !isNaN(parseInt(level)))
-      .map(level => parseInt(level))
+      .map(level => {
+        // '12.Sınıf' formatından sayıyı çıkar
+        const match = level.match(/^(\d+)\.Sınıf$/);
+        return match ? parseInt(match[1]) : parseInt(level);
+      })
+      .filter(level => !isNaN(level))
       .sort((a, b) => a - b);
 
     return numericLevels.length > 0 ? numericLevels[0].toString() : '9';
@@ -271,7 +275,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
 
   getMaxClassLevelInGroup(students: any[]): string {
     const classLevels = students
-      .map(student => student.sinif_seviyesi || student.sinif || '9')
+      .map(student => student.sinif_seviyesi || student.sinif || '9.Sınıf')
       .filter(level => level);
 
     // Mezun varsa tüm konuları göster
@@ -279,10 +283,14 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
       return 'Mezun';
     }
 
-    // En yüksek sınıf seviyesini bul
+    // Sınıf seviyelerini parse et ('12.Sınıf' -> 12)
     const numericLevels = classLevels
-      .filter(level => !isNaN(parseInt(level)))
-      .map(level => parseInt(level))
+      .map(level => {
+        // '12.Sınıf' formatından sayıyı çıkar
+        const match = level.match(/^(\d+)\.Sınıf$/);
+        return match ? parseInt(match[1]) : parseInt(level);
+      })
+      .filter(level => !isNaN(level))
       .sort((a, b) => b - a);
 
     return numericLevels.length > 0 ? numericLevels[0].toString() : '9';
@@ -326,17 +334,21 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
   }
 
   getAllowedClassLevels(maxLevel: string): string[] {
-    const levels = ['9', '10', '11', '12'];
-    const maxIndex = levels.indexOf(maxLevel);
-    return maxIndex !== -1 ? levels.slice(0, maxIndex + 1) : ['9'];
+    const levels = ['9.Sınıf', '10.Sınıf', '11.Sınıf', '12.Sınıf'];
+    const numericLevels = ['9', '10', '11', '12'];
+    const maxIndex = numericLevels.indexOf(maxLevel);
+    return maxIndex !== -1 ? levels.slice(0, maxIndex + 1) : ['9.Sınıf'];
   }
 
   getUnitesBySpecificClassLevel(classLevel: string): any[] {
     const uniteler = new Map();
     
+    // Sınıf seviyesini veritabanı formatına çevir ('11' -> '11.Sınıf')
+    const dbFormat = classLevel === 'Mezun' ? 'Mezun' : `${classLevel}.Sınıf`;
+    
     // Sadece belirtilen sınıf seviyesindeki konuları getir
     this.konular
-      .filter(konu => konu.sinif_seviyesi === classLevel)
+      .filter(konu => konu.sinif_seviyesi === dbFormat)
       .forEach(konu => {
         if (!uniteler.has(konu.unite_adi)) {
           uniteler.set(konu.unite_adi, {
