@@ -42,7 +42,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
   konuForm: any = {
     unite_adi: '',
     konu_adi: '',
-    sinif_seviyesi: '9',
+    sinif_seviyesi: '',
     aciklama: '',
   };
 
