@@ -47,10 +47,10 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
   };
 
   sinifSeviyeleri = [
-    { value: '9', label: '9. Sınıf' },
-    { value: '10', label: '10. Sınıf' },
-    { value: '11', label: '11. Sınıf' },
-    { value: '12', label: '12. Sınıf' },
+    { value: '9', label: '9.Sınıf' },
+    { value: '10', label: '10.Sınıf' },
+    { value: '11', label: '11.Sınıf' },
+    { value: '12', label: '12.Sınıf' },
   ];
 
   // Grup renkleri
@@ -445,7 +445,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
     this.konuForm = {
       unite_adi: '',
       konu_adi: '',
-      sinif_seviyesi: '9',
+      sinif_seviyesi: '',
       aciklama: '',
     };
     this.showKonuModal = true;
