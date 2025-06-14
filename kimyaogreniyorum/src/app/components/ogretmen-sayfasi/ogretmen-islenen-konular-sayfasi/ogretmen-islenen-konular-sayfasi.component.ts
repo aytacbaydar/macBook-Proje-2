@@ -75,6 +75,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
   ngOnInit() {
     this.loadKonular();
     this.loadGroups();
+    this.loadIslenenKonular();
   }
 
   loadGroups() {
