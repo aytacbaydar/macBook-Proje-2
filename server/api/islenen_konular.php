@@ -12,6 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require_once '../config.php';
 
 try {
+    $pdo = getConnection();
+    
     $ogretmen_id = $_GET['ogretmen_id'] ?? null;
     
     if (!$ogretmen_id) {
@@ -37,6 +39,11 @@ try {
     echo json_encode([
         'success' => false,
         'message' => $e->getMessage()
+    ]);
+} catch (PDOException $e) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Veritabanı hatası: ' . $e->getMessage()
     ]);
 }
 ?>

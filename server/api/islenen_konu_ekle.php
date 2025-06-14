@@ -12,6 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require_once '../config.php';
 
 try {
+    $pdo = getConnection();
+    
     $input = json_decode(file_get_contents('php://input'), true);
     
     $konu_id = $input['konu_id'] ?? null;
@@ -49,6 +51,11 @@ try {
     echo json_encode([
         'success' => false,
         'message' => $e->getMessage()
+    ]);
+} catch (PDOException $e) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Veritabanı hatası: ' . $e->getMessage()
     ]);
 }
 ?>

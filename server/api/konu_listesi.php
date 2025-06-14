@@ -12,6 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require_once '../config.php';
 
 try {
+    $pdo = getConnection();
+    
     $sql = "SELECT id, unite_adi, konu_adi, sinif_seviyesi, aciklama, olusturma_tarihi 
             FROM konular 
             ORDER BY sinif_seviyesi ASC, unite_adi ASC, konu_adi ASC";
@@ -29,6 +31,11 @@ try {
     echo json_encode([
         'success' => false,
         'message' => 'Konular yüklenirken hata oluştu: ' . $e->getMessage()
+    ]);
+} catch (Exception $e) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Genel hata: ' . $e->getMessage()
     ]);
 }
 ?>
