@@ -161,9 +161,66 @@
   padding: 40px 20px;
 }
 
+.uniteler-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.unite-group {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.unite-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.unite-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+
+  i {
+    margin-right: 0.5rem;
+  }
+}
+
+.konu-count {
+  background: rgba(255,255,255,0.2);
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+}
+
+.konular-list {
+  padding: 0;
+}
+
 .konular-grid {
   display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
+}
+
+.unite-group .konu-item {
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: #f8f9ff;
+  }
 }
 
 .konu-item {
@@ -177,6 +234,37 @@
 .konu-item:hover {
   border-color: #4f46e5;
   transform: translateY(-1px);
+}
+
+.unite-group .konu-content {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.unite-group .konu-info {
+  flex: 1;
+}
+
+.unite-group .konu-adi {
+  margin: 0 0 0.25rem 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.unite-group .konu-aciklama {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.4;
+}
+
+.unite-group .konu-status {
+  padding: 0.5rem 1rem;
+  background: #f0f9ff;
+  border-top: 1px solid #e0f2fe;
 }
 
 .konu-header {
@@ -801,6 +889,19 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 16px;
+}
+
+.unite-group .konu-item {
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: #f8f9ff;
+  }
 }
 
 .konu-item {

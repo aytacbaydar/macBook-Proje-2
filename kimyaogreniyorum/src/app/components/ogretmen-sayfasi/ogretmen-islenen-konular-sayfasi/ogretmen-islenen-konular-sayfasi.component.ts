@@ -180,6 +180,11 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
     const userData = JSON.parse(localStorage.getItem('userData') || '{}');
     const ogretmenId = userData.id;
 
+    if (!ogretmenId) {
+      console.error('Öğretmen ID bulunamadı');
+      return;
+    }
+
     this.http
       .get<any>(
         `${this.apiUrl}/islenen_konular.php?ogretmen_id=${ogretmenId}`,
@@ -189,6 +194,8 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
         next: (response) => {
           if (response.success) {
             this.islenenKonular = response.islenen_konular || [];
+          } else {
+            console.error('İşlenen konular yüklenirken hata:', response.message);
           }
         },
         error: (error) => {
@@ -199,6 +206,23 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
 
   getKonularBySinif(sinifSeviyesi: string): Konu[] {
     return this.konular.filter((konu) => konu.sinif_seviyesi === sinifSeviyesi);
+  }
+
+  getUnitesBySinif(sinifSeviyesi: string): any[] {
+    const konularBySinif = this.getKonularBySinif(sinifSeviyesi);
+    const uniteler = new Map();
+
+    konularBySinif.forEach(konu => {
+      if (!uniteler.has(konu.unite_adi)) {
+        uniteler.set(konu.unite_adi, {
+          unite_adi: konu.unite_adi,
+          konular: []
+        });
+      }
+      uniteler.get(konu.unite_adi).konular.push(konu);
+    });
+
+    return Array.from(uniteler.values());
   }
 
   konuIslendi(konuId: number, grupAdi: string): boolean {
@@ -229,12 +253,20 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
     const userData = JSON.parse(localStorage.getItem('userData') || '{}');
     const ogretmenId = userData.id;
 
+    if (!konuId || !grupAdi || !ogretmenId) {
+      this.error = 'Konu ID, grup adı ve öğretmen ID gerekli';
+      console.error('Eksik veri:', { konuId, grupAdi, ogretmenId });
+      return;
+    }
+
     const data = {
       konu_id: konuId,
       grup_adi: grupAdi,
       ogretmen_id: ogretmenId,
       isleme_tarihi: new Date().toISOString().split('T')[0],
     };
+
+    console.log('Gönderilen veri:', data);
 
     this.http
       .post<any>(`${this.apiUrl}/islenen_konu_ekle.php`, data, {
@@ -244,8 +276,10 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
         next: (response) => {
           if (response.success) {
             this.loadIslenenKonular();
+            this.error = '';
           } else {
             this.error = response.message || 'Konu işaretlenirken hata oluştu';
+            console.error('API hatası:', response.message);
           }
         },
         error: (error) => {
