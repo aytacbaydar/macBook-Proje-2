@@ -226,6 +226,86 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
     return Array.from(uniteler.values());
   }
 
+  getFilteredUnitesByGroup(grupAdi: string): any[] {
+    const grup = this.groups.find(g => g.name === grupAdi);
+    if (!grup || !grup.students || grup.students.length === 0) {
+      return [];
+    }
+
+    // Grupta bulunan en düşük sınıf seviyesini bul
+    const minClassLevel = this.getMinClassLevelInGroup(grup.students);
+    
+    // Eğer 12. sınıf veya mezun varsa tüm konuları getir
+    if (minClassLevel === '12' || minClassLevel === 'Mezun') {
+      return this.getAllUnites();
+    }
+
+    // Belirlenen sınıf seviyesine göre konuları getir
+    return this.getUnitesByClassLevel(minClassLevel);
+  }
+
+  getMinClassLevelInGroup(students: any[]): string {
+    const classLevels = students
+      .map(student => student.sinif_seviyesi || student.sinif || '9')
+      .filter(level => level);
+
+    // Mezun varsa tüm konuları göster
+    if (classLevels.includes('Mezun')) {
+      return 'Mezun';
+    }
+
+    // En düşük sınıf seviyesini bul
+    const numericLevels = classLevels
+      .filter(level => !isNaN(parseInt(level)))
+      .map(level => parseInt(level))
+      .sort((a, b) => a - b);
+
+    return numericLevels.length > 0 ? numericLevels[0].toString() : '9';
+  }
+
+  getAllUnites(): any[] {
+    const uniteler = new Map();
+
+    this.konular.forEach(konu => {
+      if (!uniteler.has(konu.unite_adi)) {
+        uniteler.set(konu.unite_adi, {
+          unite_adi: konu.unite_adi,
+          konular: []
+        });
+      }
+      uniteler.get(konu.unite_adi).konular.push(konu);
+    });
+
+    return Array.from(uniteler.values());
+  }
+
+  getUnitesByClassLevel(classLevel: string): any[] {
+    const uniteler = new Map();
+    
+    // Belirtilen sınıf seviyesi ve altındaki tüm konuları getir
+    const allowedLevels = this.getAllowedClassLevels(classLevel);
+    
+    this.konular
+      .filter(konu => allowedLevels.includes(konu.sinif_seviyesi))
+      .forEach(konu => {
+        if (!uniteler.has(konu.unite_adi)) {
+          uniteler.set(konu.unite_adi, {
+            unite_adi: konu.unite_adi,
+            konular: []
+          });
+        }
+        uniteler.get(konu.unite_adi).konular.push(konu);
+      });
+
+    return Array.from(uniteler.values());
+  }
+
+  getAllowedClassLevels(maxLevel: string): string[] {
+    const levels = ['9', '10', '11', '12'];
+    const maxIndex = levels.indexOf(maxLevel);
+    return maxIndex !== -1 ? levels.slice(0, maxIndex + 1) : ['9'];
+  }
+
   konuIslendi(konuId: number, grupAdi: string): boolean {
     return this.islenenKonular.some(
       (islenen) => islenen.konu_id === konuId && islenen.grup_adi === grupAdi

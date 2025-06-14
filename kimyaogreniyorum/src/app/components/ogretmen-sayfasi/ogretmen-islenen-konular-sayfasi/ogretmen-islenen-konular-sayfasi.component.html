@@ -1,4 +1,3 @@
-
 <div class="modern-page-container">
   <!-- Page Header -->
   <div class="page-header">
@@ -45,7 +44,7 @@
            *ngFor="let group of groups" 
            (click)="selectGroup(group.name)"
            [class.selected]="selectedGrup === group.name">
-        
+
         <!-- Group Header -->
         <div class="group-header" [style.background-color]="group.color">
           <div class="group-title">
@@ -105,50 +104,64 @@
       <div class="all-topics-container">
         <div *ngIf="konular.length === 0" class="empty-state">
           <i class="bi bi-journal-x fs-1 text-muted"></i>
-          <p class="text-muted">Henüz konu eklenmemiş</p>
+          <p class="text-muted">Henüz konu eklenmemiş.</p>
+          <button class="btn btn-primary" (click)="openKonuModal()">
+            <i class="bi bi-plus-circle me-2"></i>
+            İlk Konuyu Ekle
+          </button>
         </div>
 
-        <div class="topics-table" *ngIf="konular.length > 0">
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>Durum</th>
-                <th>Sınıf</th>
-                <th>Ünite</th>
-                <th>Konu</th>
-                <th>Açıklama</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let konu of konular">
-                <td>
-                  <button 
-                    class="status-btn"
-                    [class.completed]="konuIslendi(konu.id!, selectedGrup)"
-                    (click)="toggleKonuDurumu(konu, selectedGrup)"
-                    [title]="konuIslendi(konu.id!, selectedGrup) ? 'İşlenmemiş olarak işaretle' : 'İşlenmiş olarak işaretle'">
-                    <i class="bi" 
-                       [class.bi-check-circle-fill]="konuIslendi(konu.id!, selectedGrup)" 
-                       [class.bi-circle]="!konuIslendi(konu.id!, selectedGrup)"></i>
-                  </button>
-                </td>
-                <td>
-                  <span class="grade-badge grade-{{ konu.sinif_seviyesi }}">
-                    {{ konu.sinif_seviyesi }}. Sınıf
-                  </span>
-                </td>
-                <td>
-                  <span class="unit-name">{{ konu.unite_adi }}</span>
-                </td>
-                <td>
-                  <span class="topic-name">{{ konu.konu_adi }}</span>
-                </td>
-                <td>
-                  <span class="topic-description">{{ konu.aciklama || '-' }}</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div *ngIf="konular.length > 0" class="topics-hierarchical">
+          <div class="group-info-header" *ngIf="selectedGrup">
+            <h4>{{ selectedGrup }} Grubuna Uygun Konular</h4>
+            <p class="group-description">Bu gruptaki öğrencilerin sınıf seviyelerine göre uygun konular gösterilmektedir.</p>
+          </div>
+
+          <div class="unite-hierarchy">
+            <div *ngFor="let unite of getFilteredUnitesByGroup(selectedGrup); let uniteIndex = index" class="unite-section">
+              <div class="unite-header">
+                <div class="unite-title">
+                  <i class="bi bi-folder-fill me-2"></i>
+                  <span class="unite-number">{{ uniteIndex + 1 }}.</span>
+                  <span class="unite-name">{{ unite.unite_adi }}</span>
+                </div>
+                <span class="unite-topic-count">{{ unite.konular.length }} konu</span>
+              </div>
+
+              <div class="konular-hierarchy">
+                <div *ngFor="let konu of unite.konular; let konuIndex = index" class="konu-item-hierarchical">
+                  <div class="konu-structure">
+                    <div class="konu-hierarchy-info">
+                      <span class="konu-number">{{ konuIndex + 1 }}. Konu :</span>
+                      <span class="konu-name">{{ konu.konu_adi }}</span>
+                      <span class="konu-class-badge">{{ konu.sinif_seviyesi }}. Sınıf</span>
+                    </div>
+
+                    <div class="konu-actions">
+                      <button 
+                        class="btn-toggle-konu-hierarchical"
+                        [class.completed]="konuIslendi(konu.id, selectedGrup)"
+                        (click)="toggleKonuDurumu(konu, selectedGrup)"
+                        [title]="konuIslendi(konu.id, selectedGrup) ? 'İşlenmiş konuyu kaldır' : 'Konuyu işlenmiş olarak işaretle'">
+                        <i class="bi" [class.bi-check-circle-fill]="konuIslendi(konu.id, selectedGrup)" 
+                           [class.bi-circle]="!konuIslendi(konu.id, selectedGrup)"></i>
+                        {{ konuIslendi(konu.id, selectedGrup) ? 'İşlendi' : 'İşaretle' }}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="konu-description" *ngIf="konu.aciklama">
+                    <small class="text-muted">{{ konu.aciklama }}</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="getFilteredUnitesByGroup(selectedGrup).length === 0" class="no-topics-message">
+            <i class="bi bi-info-circle me-2"></i>
+            <span>Bu grup için uygun konu bulunamadı. Önce konular eklenmelidir.</span>
+          </div>
         </div>
       </div>
     </div>
