@@ -75,7 +75,7 @@
           <div class="konular-grid" *ngIf="getKonularBySinif(seviye.value).length > 0">
             <div class="konu-item" *ngFor="let konu of getKonularBySinif(seviye.value)">
               <div class="konu-header">
-                <h5 class="konu-baslik">{{ konu.baslik }}</h5>
+                <h5 class="konu-baslik">{{ konu.unite_adi }} - {{ konu.konu_adi }}</h5>
                 <div class="konu-actions" *ngIf="selectedGrup">
                   <button 
                     class="tik-btn"
@@ -168,14 +168,27 @@
         <form class="modern-form">
           <div class="form-group">
             <label class="modern-label">
-              <i class="bi bi-journal-text"></i>
-              Konu Başlığı
+              <i class="bi bi-book"></i>
+              Ünite Adı
             </label>
             <input type="text" 
                    class="modern-input" 
-                   [(ngModel)]="konuForm.baslik" 
-                   name="baslik" 
-                   placeholder="Örn: Atom Yapısı ve Periyodik Sistem"
+                   [(ngModel)]="konuForm.unite_adi" 
+                   name="unite_adi" 
+                   placeholder="Örn: Atom ve Periyodik Sistem"
+                   required>
+          </div>
+
+          <div class="form-group">
+            <label class="modern-label">
+              <i class="bi bi-journal-text"></i>
+              Konu Adı
+            </label>
+            <input type="text" 
+                   class="modern-input" 
+                   [(ngModel)]="konuForm.konu_adi" 
+                   name="konu_adi" 
+                   placeholder="Örn: Atom Yapısı ve Elektronik Dağılım"
                    required>
           </div>
 
@@ -217,7 +230,7 @@
         <button type="button" 
                 class="modern-btn modern-btn-primary" 
                 (click)="submitKonu()"
-                [disabled]="isLoading || !konuForm.baslik.trim()">
+                [disabled]="isLoading || !konuForm.unite_adi.trim() || !konuForm.konu_adi.trim()">
           <i class="bi bi-check-circle"></i>
           {{ isLoading ? 'Kaydediliyor...' : 'Konu Ekle' }}
         </button>

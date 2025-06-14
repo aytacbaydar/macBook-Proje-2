@@ -4,7 +4,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 interface Konu {
   id?: number;
-  baslik: string;
+  unite_adi: string;
+  konu_adi: string;
   sinif_seviyesi: string;
   aciklama?: string;
   olusturma_tarihi?: string;
@@ -42,7 +43,8 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
   selectedGrup = '';
   
   konuForm: Konu = {
-    baslik: '',
+    unite_adi: '',
+    konu_adi: '',
     sinif_seviyesi: '9',
     aciklama: ''
   };
@@ -199,7 +201,8 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
 
   openKonuModal() {
     this.konuForm = {
-      baslik: '',
+      unite_adi: '',
+      konu_adi: '',
       sinif_seviyesi: '9',
       aciklama: ''
     };
@@ -212,8 +215,13 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
   }
 
   submitKonu() {
-    if (!this.konuForm.baslik.trim()) {
-      this.error = 'Konu başlığı zorunludur';
+    if (!this.konuForm.unite_adi.trim()) {
+      this.error = 'Ünite adı zorunludur';
+      return;
+    }
+    
+    if (!this.konuForm.konu_adi.trim()) {
+      this.error = 'Konu adı zorunludur';
       return;
     }
 
@@ -244,7 +252,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
         const konu = this.konular.find(k => k.id === islenen.konu_id);
         return {
           ...islenen,
-          konu_baslik: konu?.baslik || 'Bilinmeyen Konu',
+          konu_baslik: konu ? `${konu.unite_adi} - ${konu.konu_adi}` : 'Bilinmeyen Konu',
           sinif_seviyesi: konu?.sinif_seviyesi || ''
         };
       });

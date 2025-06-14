@@ -3,15 +3,21 @@
 require_once 'config.php';
 
 try {
-    // Konular tablosu
+    // Konular tablosu - eski tablo varsa önce sil
+    $pdo->exec("DROP TABLE IF EXISTS islenen_konular");
+    $pdo->exec("DROP TABLE IF EXISTS konular");
+    
+    // Yeni konular tablosu
     $sql1 = "CREATE TABLE IF NOT EXISTS konular (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        baslik VARCHAR(500) NOT NULL,
+        unite_adi VARCHAR(500) NOT NULL,
+        konu_adi VARCHAR(500) NOT NULL,
         sinif_seviyesi VARCHAR(10) NOT NULL,
         aciklama TEXT,
         olusturma_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         INDEX idx_sinif_seviyesi (sinif_seviyesi),
-        INDEX idx_baslik (baslik)
+        INDEX idx_unite_adi (unite_adi),
+        INDEX idx_konu_adi (konu_adi)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
     
     $pdo->exec($sql1);
