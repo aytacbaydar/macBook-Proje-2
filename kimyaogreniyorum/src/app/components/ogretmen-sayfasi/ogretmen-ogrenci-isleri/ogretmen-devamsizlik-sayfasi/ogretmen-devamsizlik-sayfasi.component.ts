@@ -934,7 +934,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       return;
     }
 
-    ```text
+
     this.isLoading = true;
 
     const attendanceData = recordsToSave.map((record) => ({
