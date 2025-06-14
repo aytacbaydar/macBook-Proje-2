@@ -1,1 +1,227 @@
-<p>ogretmen-islenen-konular-sayfasi works!</p>
+
+<div class="modern-page-container">
+  <!-- Page Header -->
+  <div class="modern-page-header">
+    <div class="header-content">
+      <div class="header-text">
+        <h1 class="modern-page-title">
+          <i class="bi bi-check2-square me-2"></i>
+          İşlenen Konular
+        </h1>
+        <p class="modern-page-description">
+          Hangi gruplarınızla hangi konuları işlediğinizi takip edin
+        </p>
+      </div>
+      <div class="header-actions">
+        <button class="modern-btn modern-btn-primary" (click)="openKonuModal()">
+          <i class="bi bi-plus-circle"></i>
+          Yeni Konu Ekle
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Yükleniyor...</span>
+    </div>
+    <p class="mt-2 text-muted">Veriler yükleniyor...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="alert alert-danger">
+    <i class="bi bi-exclamation-triangle"></i> {{ error }}
+    <button class="btn btn-sm btn-outline-danger ms-2" (click)="loadKonular()">
+      Tekrar Dene
+    </button>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!isLoading && !error" class="content-wrapper">
+    
+    <!-- Grup Seçimi -->
+    <div class="controls-section mb-4">
+      <div class="control-group">
+        <label class="control-label">Grup Seçin:</label>
+        <select class="modern-select" [(ngModel)]="selectedGrup">
+          <option value="">Tüm Gruplar</option>
+          <option *ngFor="let group of groups" [value]="group.name">
+            {{ group.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Sınıf Seviyelerine Göre Konular -->
+    <div class="sinif-seviyeleri-container">
+      <div class="sinif-seviyesi-card" *ngFor="let seviye of sinifSeviyeleri">
+        <div class="card-header">
+          <h3>
+            <i class="bi bi-book"></i>
+            {{ seviye.label }} Konuları
+          </h3>
+          <div class="konu-sayisi">
+            {{ getKonularBySinif(seviye.value).length }} Konu
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div *ngIf="getKonularBySinif(seviye.value).length === 0" class="empty-state">
+            <i class="bi bi-journal-x fs-1 text-muted"></i>
+            <p class="text-muted">Bu seviye için henüz konu eklenmemiş</p>
+          </div>
+
+          <div class="konular-grid" *ngIf="getKonularBySinif(seviye.value).length > 0">
+            <div class="konu-item" *ngFor="let konu of getKonularBySinif(seviye.value)">
+              <div class="konu-header">
+                <h5 class="konu-baslik">{{ konu.baslik }}</h5>
+                <div class="konu-actions" *ngIf="selectedGrup">
+                  <button 
+                    class="tik-btn"
+                    [class.completed]="konuIslendi(konu.id!, selectedGrup)"
+                    (click)="toggleKonuDurumu(konu, selectedGrup)"
+                    [title]="konuIslendi(konu.id!, selectedGrup) ? 'İşlenmemiş olarak işaretle' : 'İşlenmiş olarak işaretle'">
+                    <i class="bi" [class.bi-check-circle-fill]="konuIslendi(konu.id!, selectedGrup)" 
+                       [class.bi-circle]="!konuIslendi(konu.id!, selectedGrup)"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <div class="konu-content" *ngIf="konu.aciklama">
+                <p class="konu-aciklama">{{ konu.aciklama }}</p>
+              </div>
+
+              <!-- Grup Bazında İşlenme Durumu -->
+              <div class="grup-durumu" *ngIf="!selectedGrup">
+                <div class="grup-item" *ngFor="let group of groups">
+                  <div class="grup-info">
+                    <span class="grup-adi">{{ group.name }}</span>
+                    <div class="durum-icon">
+                      <i class="bi" 
+                         [class.bi-check-circle-fill]="konuIslendi(konu.id!, group.name)"
+                         [class.bi-circle]="!konuIslendi(konu.id!, group.name)"
+                         [class.text-success]="konuIslendi(konu.id!, group.name)"
+                         [class.text-muted]="!konuIslendi(konu.id!, group.name)"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grup Bazında İstatistikler -->
+    <div class="istatistikler-section" *ngIf="groups.length > 0">
+      <h3><i class="bi bi-bar-chart"></i> Grup İstatistikleri</h3>
+      
+      <div class="grup-istatistikleri">
+        <div class="grup-istatistik-card" *ngFor="let group of groups">
+          <div class="grup-header">
+            <h5>{{ group.name }}</h5>
+            <div class="toplam-konu">
+              {{ getToplamIslenenKonu(group.name) }} / {{ konular.length }} Konu
+            </div>
+          </div>
+          
+          <div class="progress-bar-container">
+            <div class="progress-bar" 
+                 [style.width.%]="(getToplamIslenenKonu(group.name) / konular.length) * 100">
+            </div>
+          </div>
+
+          <div class="islenen-konular-liste" *ngIf="getIslenenKonularByGrup(group.name).length > 0">
+            <h6>Son İşlenen Konular:</h6>
+            <div class="mini-konu-liste">
+              <div class="mini-konu-item" *ngFor="let islenen of getIslenenKonularByGrup(group.name).slice(0, 3)">
+                <span class="mini-konu-baslik">{{ islenen.konu_baslik }}</span>
+                <span class="mini-konu-tarih">{{ formatDate(islenen.isleme_tarihi) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Konu Ekleme Modalı -->
+  <div class="modern-modal-overlay" *ngIf="showKonuModal" (click)="closeKonuModal()">
+    <div class="modern-modal-content" (click)="$event.stopPropagation()">
+      <div class="modern-modal-header">
+        <div class="modal-title-section">
+          <div class="modal-icon">
+            <i class="bi bi-plus-circle"></i>
+          </div>
+          <div class="modal-title-text">
+            <h4>Yeni Konu Ekle</h4>
+            <p>Müfredata yeni bir konu ekleyin</p>
+          </div>
+        </div>
+        <button type="button" class="modern-close-btn" (click)="closeKonuModal()">
+          <i class="bi bi-x"></i>
+        </button>
+      </div>
+
+      <div class="modern-modal-body">
+        <form class="modern-form">
+          <div class="form-group">
+            <label class="modern-label">
+              <i class="bi bi-journal-text"></i>
+              Konu Başlığı
+            </label>
+            <input type="text" 
+                   class="modern-input" 
+                   [(ngModel)]="konuForm.baslik" 
+                   name="baslik" 
+                   placeholder="Örn: Atom Yapısı ve Periyodik Sistem"
+                   required>
+          </div>
+
+          <div class="form-group">
+            <label class="modern-label">
+              <i class="bi bi-mortarboard"></i>
+              Sınıf Seviyesi
+            </label>
+            <select class="modern-select" [(ngModel)]="konuForm.sinif_seviyesi" name="sinif_seviyesi">
+              <option *ngFor="let seviye of sinifSeviyeleri" [value]="seviye.value">
+                {{ seviye.label }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="modern-label">
+              <i class="bi bi-card-text"></i>
+              Açıklama (Opsiyonel)
+            </label>
+            <textarea class="modern-textarea" 
+                      [(ngModel)]="konuForm.aciklama" 
+                      name="aciklama" 
+                      rows="3"
+                      placeholder="Konu hakkında kısa açıklama yazabilirsiniz..."></textarea>
+          </div>
+        </form>
+
+        <div *ngIf="error" class="alert alert-danger mt-3">
+          {{ error }}
+        </div>
+      </div>
+
+      <div class="modern-modal-footer">
+        <button type="button" class="modern-btn modern-btn-secondary" (click)="closeKonuModal()">
+          <i class="bi bi-x-circle"></i>
+          İptal
+        </button>
+        <button type="button" 
+                class="modern-btn modern-btn-primary" 
+                (click)="submitKonu()"
+                [disabled]="isLoading || !konuForm.baslik.trim()">
+          <i class="bi bi-check-circle"></i>
+          {{ isLoading ? 'Kaydediliyor...' : 'Konu Ekle' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
