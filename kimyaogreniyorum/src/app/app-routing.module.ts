@@ -28,6 +28,7 @@ import { OgrenciTaslakSayfasiComponent } from './components/ogrenci-sayfasi/temp
 import { OgretmenTaaslakSayfasiComponent } from './components/ogretmen-sayfasi/template/ogretmen-taaslak-sayfasi/ogretmen-taaslak-sayfasi.component';
 import { OgretmenSinavlarSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-sinavlar-sayfasi.component';
 import { OgretmenUcretSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component';
+import { OgretmenIslenenKonularSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-islenen-konular-sayfasi/ogretmen-islenen-konular-sayfasi.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/giris-sayfasi', pathMatch: 'full' },
@@ -131,6 +132,10 @@ const routes: Routes = [
       {
         path: 'ogretmen-ders-anlatma-tahtasi-sayfasi',
         component: OgretmenDersAnlatmaTahtasiComponent,
+      },
+      {
+        path: 'ogretmen-islenen-konular-sayfasi',
+        component: OgretmenIslenenKonularSayfasiComponent,
       },
       {
         path: 'qr-generator',

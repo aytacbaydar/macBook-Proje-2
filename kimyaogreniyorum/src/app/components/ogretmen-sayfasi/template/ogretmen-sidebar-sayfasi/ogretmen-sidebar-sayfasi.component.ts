@@ -41,7 +41,7 @@ export class OgretmenSidebarSayfasiComponent {
     {
       icon: 'bi-filetype-pdf',
       label: 'İşlenen Konular',
-      link: 'ogretmen-sayfasi/',
+      link: 'ogretmen-sayfasi/ogretmen-islenen-konular-sayfasi',
     },
     {
       icon: 'bi-credit-card-2-back',
