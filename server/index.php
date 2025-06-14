@@ -10,53 +10,81 @@ $basePath = '/server/api/';
 if (strpos($requestUri, $basePath) === 0) {
     $endpoint = substr($requestUri, strlen($basePath));
     $endpoint = strtok($endpoint, '?'); // Query parametrelerini kaldır
-    
+
     // Endpoint'e göre yönlendirme
     switch ($endpoint) {
         case 'ogrenci_kayit':
             require_once 'api/ogrenci_kayit.php';
             break;
-            
+
         case 'ogrenci_girisi':
             require_once 'api/ogrenci_girisi.php';
             break;
-            
+
         case 'yonetici_bilgileri':
             require_once 'api/yonetici_bilgileri.php';
             break;
-            
+
         case 'ogrenci_bilgileri':
             require_once 'api/ogrenci_bilgileri.php';
             break;
-            
+
         case 'ogrenci_profil':
             require_once 'api/ogrenci_profil.php';
             break;
-            
+
         case 'ogrenci_guncelle':
             require_once 'api/ogrenci_guncelle.php';
             break;
-            
+
         case 'tum_ogrencileri_onayla':
             require_once 'api/tum_ogrencileri_onayla.php';
             break;
-            
+
         case 'konu_anlatim_kaydet.php':
             require_once 'api/konu_anlatim_kaydet.php';
             break;
-        
+
         case 'ogretmenler_listesi':
             require_once 'api/ogretmenler_listesi.php';
             break;
-            
+
         case 'devamsizlik_kayitlari':
             require_once 'api/devamsizlik_kayitlari.php';
             break;
-            
+
         case 'devamsizlik_kaydet':
             require_once 'api/devamsizlik_kaydet.php';
             break;
-            
+
+        case 'yaklasan_odemeler':
+            require_once 'api/yaklasan_odemeler.php';
+            break;
+
+        case 'konu_listesi':
+            require_once 'api/konu_listesi.php';
+            break;
+
+        case 'konu_ekle':
+            require_once 'api/konu_ekle.php';
+            break;
+
+        case 'islenen_konular':
+            require_once 'api/islenen_konular.php';
+            break;
+
+        case 'islenen_konu_ekle':
+            require_once 'api/islenen_konu_ekle.php';
+            break;
+
+        case 'islenen_konu_sil':
+            require_once 'api/islenen_konu_sil.php';
+            break;
+
+        case 'create_konular_tables':
+            require_once 'api/create_konular_tables.php';
+            break;
+
         default:
             http_response_code(404);
             echo json_encode(['error' => 'API endpoint bulunamadı']);
