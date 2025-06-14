@@ -12,9 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require_once '../config.php';
 
 try {
-    $sql = "SELECT id, baslik, sinif_seviyesi, aciklama, olusturma_tarihi 
+    $sql = "SELECT id, unite_adi, konu_adi, sinif_seviyesi, aciklama, olusturma_tarihi 
             FROM konular 
-            ORDER BY sinif_seviyesi ASC, baslik ASC";
+            ORDER BY sinif_seviyesi ASC, unite_adi ASC, konu_adi ASC";
     
     $stmt = $pdo->prepare($sql);
     $stmt->execute();

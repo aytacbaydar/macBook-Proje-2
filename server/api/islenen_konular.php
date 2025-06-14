@@ -18,7 +18,7 @@ try {
         throw new Exception('Öğretmen ID gerekli');
     }
     
-    $sql = "SELECT ik.*, k.baslik as konu_baslik, k.sinif_seviyesi 
+    $sql = "SELECT ik.*, k.unite_adi, k.konu_adi, k.sinif_seviyesi 
             FROM islenen_konular ik
             JOIN konular k ON ik.konu_id = k.id
             WHERE ik.ogretmen_id = ?
