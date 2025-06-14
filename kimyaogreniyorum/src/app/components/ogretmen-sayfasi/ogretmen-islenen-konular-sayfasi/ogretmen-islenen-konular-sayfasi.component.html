@@ -1,20 +1,21 @@
+
 <div class="modern-page-container">
   <!-- Page Header -->
-  <div class="modern-page-header">
+  <div class="page-header">
     <div class="header-content">
       <div class="header-text">
-        <h1 class="modern-page-title">
+        <h1 class="page-title">
           <i class="bi bi-check2-square me-2"></i>
           İşlenen Konular
         </h1>
-        <p class="modern-page-description">
+        <p class="page-description">
           Hangi gruplarınızla hangi konuları işlediğinizi takip edin
         </p>
       </div>
       <div class="header-actions">
         <button class="modern-btn modern-btn-primary" (click)="openKonuModal()">
           <i class="bi bi-plus-circle"></i>
-          Yeni Konu Ekle
+          Konu Ekle
         </button>
       </div>
     </div>
@@ -36,75 +37,119 @@
     </button>
   </div>
 
-  <!-- Main Content -->
+  <!-- Main Content - Gruplar -->
   <div *ngIf="!isLoading && !error" class="content-wrapper">
-
-    <!-- Grup Seçimi -->
-    <div class="controls-section mb-4">
-      <div class="control-group">
-        <label class="control-label">Grup Seçin:</label>
-        <select class="modern-select" [(ngModel)]="selectedGrup">
-          <option value="">Tüm Gruplar</option>
-          <option *ngFor="let group of groups" [value]="group.name">
+    <!-- Gruplar Grid -->
+    <div class="groups-grid">
+      <div class="group-card" 
+           *ngFor="let group of groups" 
+           (click)="selectGroup(group.name)"
+           [class.selected]="selectedGrup === group.name">
+        
+        <!-- Group Header -->
+        <div class="group-header" [style.background-color]="group.color">
+          <div class="group-title">
+            <i class="bi bi-people-fill me-2"></i>
             {{ group.name }}
-          </option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Sınıf Seviyelerine Göre Konular -->
-    <div class="sinif-seviyeleri-container">
-      <div class="sinif-seviyesi-card" *ngFor="let seviye of sinifSeviyeleri">
-        <div class="card-header">
-          <h3>
-            <i class="bi bi-book"></i>
-            {{ seviye.label }} Konuları
-          </h3>
-          <div class="konu-sayisi">
-            {{ getKonularBySinif(seviye.value).length }} Konu
+          </div>
+          <div class="group-stats">
+            <span class="student-count">{{ group.students.length }} öğrenci</span>
           </div>
         </div>
 
-        <div class="card-body">
-          <div *ngIf="getKonularBySinif(seviye.value).length === 0" class="empty-state">
-            <i class="bi bi-journal-x fs-1 text-muted"></i>
-            <p class="text-muted">Bu seviye için henüz konu eklenmemiş</p>
+        <!-- Group Body -->
+        <div class="group-body">
+          <div class="konu-progress">
+            <div class="progress-info">
+              <span class="progress-text">İşlenen Konular</span>
+              <span class="progress-count">{{ getToplamIslenenKonu(group.name) }} / {{ konular.length }}</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar" 
+                   [style.width.%]="konular.length > 0 ? (getToplamIslenenKonu(group.name) / konular.length) * 100 : 0"
+                   [style.background-color]="group.color">
+              </div>
+            </div>
+            <div class="progress-percentage">
+              %{{ konular.length > 0 ? ((getToplamIslenenKonu(group.name) / konular.length) * 100).toFixed(0) : 0 }}
+            </div>
           </div>
 
-          <div class="konular-grid" *ngIf="getKonularBySinif(seviye.value).length > 0">
-            <div class="konu-item" *ngFor="let konu of getKonularBySinif(seviye.value)">
-              <div class="konu-header">
-                <h5 class="konu-baslik">{{ konu.unite_adi }} - {{ konu.konu_adi }}</h5>
-                <div class="konu-actions" *ngIf="selectedGrup">
-                  <button 
-                    class="tik-btn"
-                    [class.completed]="konuIslendi(konu.id!, selectedGrup)"
-                    (click)="toggleKonuDurumu(konu, selectedGrup)"
-                    [title]="konuIslendi(konu.id!, selectedGrup) ? 'İşlenmemiş olarak işaretle' : 'İşlenmiş olarak işaretle'">
-                    <i class="bi" [class.bi-check-circle-fill]="konuIslendi(konu.id!, selectedGrup)" 
-                       [class.bi-circle]="!konuIslendi(konu.id!, selectedGrup)"></i>
-                  </button>
-                </div>
+          <!-- Son İşlenen Konular -->
+          <div class="last-topics" *ngIf="getIslenenKonularByGrup(group.name).length > 0">
+            <h6>Son İşlenen:</h6>
+            <div class="topic-list">
+              <div class="topic-item" *ngFor="let islenen of getIslenenKonularByGrup(group.name).slice(0, 2)">
+                <i class="bi bi-check-circle-fill text-success me-1"></i>
+                <span>{{ islenen.konu_baslik }}</span>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-              <div class="konu-content" *ngIf="konu.aciklama">
-                <p class="konu-aciklama">{{ konu.aciklama }}</p>
-              </div>
+    <!-- Seçilen Grup Detayları -->
+    <div *ngIf="selectedGrup" class="selected-group-details">
+      <div class="group-detail-header">
+        <h3>
+          <i class="bi bi-people-fill me-2"></i>
+          {{ selectedGrup }} - Konu Detayları
+        </h3>
+        <button class="close-detail-btn" (click)="selectedGrup = ''">
+          <i class="bi bi-x"></i>
+        </button>
+      </div>
 
-              <!-- Grup Bazında İşlenme Durumu -->
-              <div class="grup-durumu" *ngIf="!selectedGrup">
-                <div class="grup-item" *ngFor="let group of groups">
-                  <div class="grup-info">
-                    <span class="grup-adi">{{ group.name }}</span>
-                    <div class="durum-icon">
+      <!-- Sınıf Seviyelerine Göre Konular -->
+      <div class="sinif-seviyeleri-container">
+        <div class="sinif-seviyesi-card" *ngFor="let seviye of sinifSeviyeleri">
+          <div class="card-header">
+            <h4>
+              <i class="bi bi-book"></i>
+              {{ seviye.label }}
+            </h4>
+            <div class="konu-sayisi">
+              {{ getKonularBySinif(seviye.value).length }} Konu
+            </div>
+          </div>
+
+          <div class="card-body">
+            <div *ngIf="getKonularBySinif(seviye.value).length === 0" class="empty-state">
+              <i class="bi bi-journal-x fs-1 text-muted"></i>
+              <p class="text-muted">Bu seviye için henüz konu eklenmemiş</p>
+            </div>
+
+            <div class="konular-grid" *ngIf="getKonularBySinif(seviye.value).length > 0">
+              <div class="konu-item" *ngFor="let konu of getKonularBySinif(seviye.value)">
+                <div class="konu-header">
+                  <div class="konu-info">
+                    <h5 class="konu-baslik">{{ konu.unite_adi }}</h5>
+                    <p class="konu-alt-baslik">{{ konu.konu_adi }}</p>
+                  </div>
+                  <div class="konu-actions">
+                    <button 
+                      class="tik-btn"
+                      [class.completed]="konuIslendi(konu.id!, selectedGrup)"
+                      (click)="toggleKonuDurumu(konu, selectedGrup)"
+                      [title]="konuIslendi(konu.id!, selectedGrup) ? 'İşlenmemiş olarak işaretle' : 'İşlenmiş olarak işaretle'">
                       <i class="bi" 
-                         [class.bi-check-circle-fill]="konuIslendi(konu.id!, group.name)"
-                         [class.bi-circle]="!konuIslendi(konu.id!, group.name)"
-                         [class.text-success]="konuIslendi(konu.id!, group.name)"
-                         [class.text-muted]="!konuIslendi(konu.id!, group.name)"></i>
-                    </div>
+                         [class.bi-check-circle-fill]="konuIslendi(konu.id!, selectedGrup)" 
+                         [class.bi-circle]="!konuIslendi(konu.id!, selectedGrup)"></i>
+                    </button>
                   </div>
                 </div>
+
+                <div class="konu-content" *ngIf="konu.aciklama">
+                  <p class="konu-aciklama">{{ konu.aciklama }}</p>
+                </div>
+
+                <div class="konu-footer" *ngIf="konuIslendi(konu.id!, selectedGrup)">
+                  <small class="text-success">
+                    <i class="bi bi-check-circle me-1"></i>
+                    İşlenmiş
+                  </small>
+                </div>
               </div>
             </div>
           </div>
@@ -112,36 +157,20 @@
       </div>
     </div>
 
-    <!-- Grup Bazında İstatistikler -->
-    <div class="istatistikler-section" *ngIf="groups.length > 0">
-      <h3><i class="bi bi-bar-chart"></i> Grup İstatistikleri</h3>
-
-      <div class="grup-istatistikleri">
-        <div class="grup-istatistik-card" *ngFor="let group of groups">
-          <div class="grup-header">
-            <h5>{{ group.name }}</h5>
-            <div class="toplam-konu">
-              {{ getToplamIslenenKonu(group.name) }} / {{ konular.length }} Konu
-            </div>
-          </div>
-
-          <div class="progress-bar-container">
-            <div class="progress-bar" 
-                 [style.width.%]="(getToplamIslenenKonu(group.name) / konular.length) * 100">
-            </div>
-          </div>
-
-          <div class="islenen-konular-liste" *ngIf="getIslenenKonularByGrup(group.name).length > 0">
-            <h6>Son İşlenen Konular:</h6>
-            <div class="mini-konu-liste">
-              <div class="mini-konu-item" *ngFor="let islenen of getIslenenKonularByGrup(group.name).slice(0, 3)">
-                <span class="mini-konu-baslik">{{ islenen.konu_baslik }}</span>
-                <span class="mini-konu-tarih">{{ formatDate(islenen.isleme_tarihi) }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
+    <!-- Grup Seçilmediğinde Gösterilecek Mesaj -->
+    <div *ngIf="!selectedGrup && groups.length > 0" class="no-group-selected">
+      <div class="selection-prompt">
+        <i class="bi bi-hand-index fs-1 text-muted"></i>
+        <h4>Grup Seçin</h4>
+        <p class="text-muted">Konuları görüntülemek ve işlemek için yukarıdan bir grup seçin</p>
       </div>
+    </div>
+
+    <!-- Hiç Grup Yoksa -->
+    <div *ngIf="groups.length === 0" class="empty-state">
+      <i class="bi bi-people fs-1 text-muted"></i>
+      <h4>Henüz Grup Bulunmuyor</h4>
+      <p class="text-muted">Henüz hiç öğrenci grubunuz yok. Öğrenciler otomatik olarak gruplarına göre burada görünecektir.</p>
     </div>
   </div>
 

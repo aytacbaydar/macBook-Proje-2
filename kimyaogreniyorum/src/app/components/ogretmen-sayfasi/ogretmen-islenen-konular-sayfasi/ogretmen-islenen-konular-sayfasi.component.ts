@@ -33,15 +33,13 @@ interface Grup {
 export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
   konular: Konu[] = [];
   islenenKonular: IslenenKonu[] = [];
-  groups: Grup[] = [];
+  groups: any[] = [];
+  selectedGrup: string = '';
+  isLoading: boolean = false;
+  error: string = '';
 
-  showKonuModal = false;
-  showIslenenKonuModal = false;
-
-  selectedSinifSeviyesi = '';
-  selectedGrup = '';
-
-  konuForm: Konu = {
+  showKonuModal: boolean = false;
+  konuForm: any = {
     unite_adi: '',
     konu_adi: '',
     sinif_seviyesi: '9',
@@ -55,17 +53,85 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
     { value: '12', label: '12. Sınıf' }
   ];
 
-  isLoading = false;
-  error = '';
+  // Grup renkleri
+  groupColors = [
+    '#4f46e5', '#06b6d4', '#10b981', '#f59e0b', 
+    '#ef4444', '#8b5cf6', '#ec4899', '#84cc16',
+    '#f97316', '#6366f1', '#14b8a6', '#eab308'
+  ];
 
-  private apiUrl = 'https://www.kimyaogreniyorum.com/server/api';
-
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   ngOnInit() {
     this.loadKonular();
-    this.loadIslenenKonular();
     this.loadGroups();
+  }
+
+  loadGroups() {
+    // Token'ı al
+    let token = '';
+    let loggedInUser: any = null;
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (userStr) {
+      loggedInUser = JSON.parse(userStr);
+      token = loggedInUser.token || '';
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    this.http.get<any>('./server/api/ogrenciler_listesi.php', { headers })
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.organizeStudentsByGroups(response.data, loggedInUser?.adi_soyadi || '');
+          }
+        },
+        error: (error) => {
+          console.error('Gruplar yüklenirken hata:', error);
+        }
+      });
+  }
+
+  organizeStudentsByGroups(students: any[], loggedInTeacherName: string) {
+    const groupMap = new Map<string, any[]>();
+
+    // Sadece öğrencileri filtrele
+    const actualStudents = students.filter(
+      (student) =>
+        student.rutbe === 'ogrenci' && student.ogretmeni === loggedInTeacherName
+    );
+
+    // Öğrencileri gruplara ayır
+    actualStudents.forEach((student) => {
+      const groupName = student.grubu || 'Grup Atanmamış';
+      if (!groupMap.has(groupName)) {
+        groupMap.set(groupName, []);
+      }
+      groupMap.get(groupName)!.push(student);
+    });
+
+    // Grup objelerini oluştur
+    this.groups = Array.from(groupMap.entries()).map(
+      ([name, students], index) => ({
+        name,
+        students,
+        studentCount: students.length,
+        color: this.groupColors[index % this.groupColors.length],
+      })
+    );
+
+    // Grupları sırala
+    this.groups.sort((a, b) => {
+      if (a.name === 'Grup Atanmamış') return 1;
+      if (b.name === 'Grup Atanmamış') return -1;
+      return a.name.localeCompare(b.name);
+    });
+  }
+
+  selectGroup(groupName: string) {
+    this.selectedGrup = groupName;
   }
 
   private getHeaders(): HttpHeaders {
@@ -105,23 +171,6 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
         },
         error: (error) => {
           console.error('İşlenen konular yüklenirken hata:', error);
-        }
-      });
-  }
-
-  loadGroups() {
-    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-    const ogretmenId = userData.id;
-
-    this.http.get<any>(`${this.apiUrl}/ogretmen_ogrencileri.php?ogretmen_id=${ogretmenId}`, { headers: this.getHeaders() })
-      .subscribe({
-        next: (response) => {
-          if (response.success && response.groups) {
-            this.groups = response.groups.map((group: string) => ({ name: group }));
-          }
-        },
-        error: (error) => {
-          console.error('Gruplar yüklenirken hata:', error);
         }
       });
   }
