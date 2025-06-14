@@ -28,7 +28,7 @@ interface Grup {
   selector: 'app-ogretmen-islenen-konular-sayfasi',
   standalone: false,
   templateUrl: './ogretmen-islenen-konular-sayfasi.component.html',
-  styleUrl: './ogretmen-islenen-konular-sayfasi.component.scss'
+  styleUrl: './ogretmen-islenen-konular-sayfasi.component.scss',
 })
 export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
   konular: Konu[] = [];
@@ -43,24 +43,34 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
     unite_adi: '',
     konu_adi: '',
     sinif_seviyesi: '9',
-    aciklama: ''
+    aciklama: '',
   };
 
   sinifSeviyeleri = [
     { value: '9', label: '9. Sınıf' },
     { value: '10', label: '10. Sınıf' },
     { value: '11', label: '11. Sınıf' },
-    { value: '12', label: '12. Sınıf' }
+    { value: '12', label: '12. Sınıf' },
   ];
 
   // Grup renkleri
   groupColors = [
-    '#4f46e5', '#06b6d4', '#10b981', '#f59e0b', 
-    '#ef4444', '#8b5cf6', '#ec4899', '#84cc16',
-    '#f97316', '#6366f1', '#14b8a6', '#eab308'
+    '#4f46e5',
+    '#06b6d4',
+    '#10b981',
+    '#f59e0b',
+    '#ef4444',
+    '#8b5cf6',
+    '#ec4899',
+    '#84cc16',
+    '#f97316',
+    '#6366f1',
+    '#14b8a6',
+    '#eab308',
   ];
 
-  constructor(private http: HttpClient) { }
+  apiUrl = './server/api';
+  constructor(private http: HttpClient) {}
 
   ngOnInit() {
     this.loadKonular();
@@ -71,26 +81,31 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
     // Token'ı al
     let token = '';
     let loggedInUser: any = null;
-    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    const userStr =
+      localStorage.getItem('user') || sessionStorage.getItem('user');
     if (userStr) {
       loggedInUser = JSON.parse(userStr);
       token = loggedInUser.token || '';
     }
 
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     });
 
-    this.http.get<any>('./server/api/ogrenciler_listesi.php', { headers })
+    this.http
+      .get<any>('./server/api/ogrenciler_listesi.php', { headers })
       .subscribe({
         next: (response) => {
           if (response.success) {
-            this.organizeStudentsByGroups(response.data, loggedInUser?.adi_soyadi || '');
+            this.organizeStudentsByGroups(
+              response.data,
+              loggedInUser?.adi_soyadi || ''
+            );
           }
         },
         error: (error) => {
           console.error('Gruplar yüklenirken hata:', error);
-        }
+        },
       });
   }
 
@@ -136,13 +151,16 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
 
   private getHeaders(): HttpHeaders {
     return new HttpHeaders({
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     });
   }
 
   loadKonular() {
     this.isLoading = true;
-    this.http.get<any>(`${this.apiUrl}/konu_listesi.php`, { headers: this.getHeaders() })
+    this.http
+      .get<any>(`${this.apiUrl}/konu_listesi.php`, {
+        headers: this.getHeaders(),
+      })
       .subscribe({
         next: (response) => {
           if (response.success) {
@@ -154,7 +172,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
           console.error('Konular yüklenirken hata:', error);
           this.error = 'Konular yüklenirken hata oluştu';
           this.isLoading = false;
-        }
+        },
       });
   }
 
@@ -162,7 +180,11 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
     const userData = JSON.parse(localStorage.getItem('userData') || '{}');
     const ogretmenId = userData.id;
 
-    this.http.get<any>(`${this.apiUrl}/islenen_konular.php?ogretmen_id=${ogretmenId}`, { headers: this.getHeaders() })
+    this.http
+      .get<any>(
+        `${this.apiUrl}/islenen_konular.php?ogretmen_id=${ogretmenId}`,
+        { headers: this.getHeaders() }
+      )
       .subscribe({
         next: (response) => {
           if (response.success) {
@@ -171,17 +193,17 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
         },
         error: (error) => {
           console.error('İşlenen konular yüklenirken hata:', error);
-        }
+        },
       });
   }
 
   getKonularBySinif(sinifSeviyesi: string): Konu[] {
-    return this.konular.filter(konu => konu.sinif_seviyesi === sinifSeviyesi);
+    return this.konular.filter((konu) => konu.sinif_seviyesi === sinifSeviyesi);
   }
 
   konuIslendi(konuId: number, grupAdi: string): boolean {
-    return this.islenenKonular.some(islenen => 
-      islenen.konu_id === konuId && islenen.grup_adi === grupAdi
+    return this.islenenKonular.some(
+      (islenen) => islenen.konu_id === konuId && islenen.grup_adi === grupAdi
     );
   }
 
@@ -190,8 +212,8 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
 
     if (islendi) {
       // İşlenmiş konuyu kaldır
-      const islenenKonu = this.islenenKonular.find(islenen => 
-        islenen.konu_id === konu.id && islenen.grup_adi === grupAdi
+      const islenenKonu = this.islenenKonular.find(
+        (islenen) => islenen.konu_id === konu.id && islenen.grup_adi === grupAdi
       );
 
       if (islenenKonu) {
@@ -211,10 +233,13 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
       konu_id: konuId,
       grup_adi: grupAdi,
       ogretmen_id: ogretmenId,
-      isleme_tarihi: new Date().toISOString().split('T')[0]
+      isleme_tarihi: new Date().toISOString().split('T')[0],
     };
 
-    this.http.post<any>(`${this.apiUrl}/islenen_konu_ekle.php`, data, { headers: this.getHeaders() })
+    this.http
+      .post<any>(`${this.apiUrl}/islenen_konu_ekle.php`, data, {
+        headers: this.getHeaders(),
+      })
       .subscribe({
         next: (response) => {
           if (response.success) {
@@ -226,24 +251,28 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
         error: (error) => {
           console.error('Konu işaretlenirken hata:', error);
           this.error = 'Konu işaretlenirken hata oluştu';
-        }
+        },
       });
   }
 
   removeIslenenKonu(islenenKonuId: number) {
-    this.http.delete<any>(`${this.apiUrl}/islenen_konu_sil.php?id=${islenenKonuId}`, { headers: this.getHeaders() })
+    this.http
+      .delete<any>(`${this.apiUrl}/islenen_konu_sil.php?id=${islenenKonuId}`, {
+        headers: this.getHeaders(),
+      })
       .subscribe({
         next: (response) => {
           if (response.success) {
             this.loadIslenenKonular();
           } else {
-            this.error = response.message || 'Konu işareti kaldırılırken hata oluştu';
+            this.error =
+              response.message || 'Konu işareti kaldırılırken hata oluştu';
           }
         },
         error: (error) => {
           console.error('Konu işareti kaldırılırken hata:', error);
           this.error = 'Konu işareti kaldırılırken hata oluştu';
-        }
+        },
       });
   }
 
@@ -252,7 +281,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
       unite_adi: '',
       konu_adi: '',
       sinif_seviyesi: '9',
-      aciklama: ''
+      aciklama: '',
     };
     this.showKonuModal = true;
   }
@@ -274,7 +303,10 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
     }
 
     this.isLoading = true;
-    this.http.post<any>(`${this.apiUrl}/konu_ekle.php`, this.konuForm, { headers: this.getHeaders() })
+    this.http
+      .post<any>(`${this.apiUrl}/konu_ekle.php`, this.konuForm, {
+        headers: this.getHeaders(),
+      })
       .subscribe({
         next: (response) => {
           if (response.success) {
@@ -289,25 +321,28 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
           console.error('Konu eklenirken hata:', error);
           this.error = 'Konu eklenirken hata oluştu';
           this.isLoading = false;
-        }
+        },
       });
   }
 
   getIslenenKonularByGrup(grupAdi: string): any[] {
     return this.islenenKonular
-      .filter(islenen => islenen.grup_adi === grupAdi)
-      .map(islenen => {
-        const konu = this.konular.find(k => k.id === islenen.konu_id);
+      .filter((islenen) => islenen.grup_adi === grupAdi)
+      .map((islenen) => {
+        const konu = this.konular.find((k) => k.id === islenen.konu_id);
         return {
           ...islenen,
-          konu_baslik: konu ? `${konu.unite_adi} - ${konu.konu_adi}` : 'Bilinmeyen Konu',
-          sinif_seviyesi: konu?.sinif_seviyesi || ''
+          konu_baslik: konu
+            ? `${konu.unite_adi} - ${konu.konu_adi}`
+            : 'Bilinmeyen Konu',
+          sinif_seviyesi: konu?.sinif_seviyesi || '',
         };
       });
   }
 
   getToplamIslenenKonu(grupAdi: string): number {
-    return this.islenenKonular.filter(islenen => islenen.grup_adi === grupAdi).length;
+    return this.islenenKonular.filter((islenen) => islenen.grup_adi === grupAdi)
+      .length;
   }
 
   formatDate(dateString: string): string {
