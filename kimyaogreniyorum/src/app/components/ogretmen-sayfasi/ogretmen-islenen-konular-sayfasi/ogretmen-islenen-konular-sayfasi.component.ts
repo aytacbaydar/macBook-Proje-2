@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
@@ -35,27 +34,27 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
   konular: Konu[] = [];
   islenenKonular: IslenenKonu[] = [];
   groups: Grup[] = [];
-  
+
   showKonuModal = false;
   showIslenenKonuModal = false;
-  
+
   selectedSinifSeviyesi = '';
   selectedGrup = '';
-  
+
   konuForm: Konu = {
     unite_adi: '',
     konu_adi: '',
     sinif_seviyesi: '9',
     aciklama: ''
   };
-  
+
   sinifSeviyeleri = [
     { value: '9', label: '9. Sınıf' },
     { value: '10', label: '10. Sınıf' },
     { value: '11', label: '11. Sınıf' },
     { value: '12', label: '12. Sınıf' }
   ];
-  
+
   isLoading = false;
   error = '';
 
@@ -96,7 +95,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
   loadIslenenKonular() {
     const userData = JSON.parse(localStorage.getItem('userData') || '{}');
     const ogretmenId = userData.id;
-    
+
     this.http.get<any>(`${this.apiUrl}/islenen_konular.php?ogretmen_id=${ogretmenId}`, { headers: this.getHeaders() })
       .subscribe({
         next: (response) => {
@@ -113,7 +112,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
   loadGroups() {
     const userData = JSON.parse(localStorage.getItem('userData') || '{}');
     const ogretmenId = userData.id;
-    
+
     this.http.get<any>(`${this.apiUrl}/ogretmen_ogrencileri.php?ogretmen_id=${ogretmenId}`, { headers: this.getHeaders() })
       .subscribe({
         next: (response) => {
@@ -139,13 +138,13 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
 
   toggleKonuDurumu(konu: Konu, grupAdi: string) {
     const islendi = this.konuIslendi(konu.id!, grupAdi);
-    
+
     if (islendi) {
       // İşlenmiş konuyu kaldır
       const islenenKonu = this.islenenKonular.find(islenen => 
         islenen.konu_id === konu.id && islenen.grup_adi === grupAdi
       );
-      
+
       if (islenenKonu) {
         this.removeIslenenKonu(islenenKonu.id!);
       }
@@ -158,7 +157,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
   addIslenenKonu(konuId: number, grupAdi: string) {
     const userData = JSON.parse(localStorage.getItem('userData') || '{}');
     const ogretmenId = userData.id;
-    
+
     const data = {
       konu_id: konuId,
       grup_adi: grupAdi,
@@ -219,7 +218,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
       this.error = 'Ünite adı zorunludur';
       return;
     }
-    
+
     if (!this.konuForm.konu_adi.trim()) {
       this.error = 'Konu adı zorunludur';
       return;
