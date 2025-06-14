@@ -296,16 +296,22 @@
 
             <div class="odeme-bilgileri">
               <div class="odeme-satiri">
-                <span class="odeme-etiket">Beklenen Ödeme:</span>
-                <span class="odeme-tutar">{{ formatCurrency(stats.expectedTotalAmount) }}</span>
+                <span class="odeme-etiket">Borç:</span>
+                <span class="odeme-tutar" [class.text-danger]="stats.debt > 0" [class.text-success]="stats.debt === 0">
+                  {{ formatCurrency(stats.debt || 0) }}
+                </span>
               </div>
-              <div class="sonraki-odeme" *ngIf="stats.lessonsUntilNextPayment > 0">
+              <div class="sonraki-odeme" *ngIf="stats.lessonsUntilNextPayment > 0 && stats.debt === 0">
                 <i class="bi bi-clock"></i>
                 Sonraki ödemeye {{ stats.lessonsUntilNextPayment }} ders kaldı
               </div>
-              <div class="odeme-zamani" *ngIf="stats.lessonsUntilNextPayment === 0">
-                <i class="bi bi-exclamation-circle"></i>
-                Ödeme Zamanı!
+              <div class="odeme-zamani" *ngIf="stats.debt > 0">
+                <i class="bi bi-exclamation-triangle text-danger"></i>
+                Borcu Var!
+              </div>
+              <div class="odeme-tamam" *ngIf="stats.debt === 0">
+                <i class="bi bi-check-circle text-success"></i>
+                Ödemeler Güncel
               </div>
             </div>
           </div>
@@ -420,24 +426,24 @@
                 <div class="stat-label">Beklenen Dönem</div>
               </div>
             </div>
-            <div class="col-md-3">
-              <div class="stat-item">
-                <div class="stat-value">{{ formatCurrency(selectedStudentStats.payment_stats.expected_total_amount) }}</div>
-                <div class="stat-label">Beklenen Tutar</div>
-              </div>
-            </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <div class="stat-item">
                 <div class="stat-value">{{ formatCurrency(selectedStudentStats.payment_stats.total_paid) }}</div>
                 <div class="stat-label">Ödenen Tutar</div>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <div class="stat-item">
-                <div class="stat-value" [class.text-danger]="selectedStudentStats.payment_stats.debt > 0">
+                <div class="stat-value" [class.text-danger]="selectedStudentStats.payment_stats.debt > 0" [class.text-success]="selectedStudentStats.payment_stats.debt === 0">
                   {{ formatCurrency(selectedStudentStats.payment_stats.debt) }}
                 </div>
-                <div class="stat-label">Borç</div>
+                <div class="stat-label">Borç Durumu</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="stat-item">
+                <div class="stat-value">{{ selectedStudentStats.payment_stats.expected_payment_cycles }}</div>
+                <div class="stat-label">Ödeme Dönemi</div>
               </div>
             </div>
           </div>
