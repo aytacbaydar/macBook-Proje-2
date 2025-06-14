@@ -178,8 +178,14 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
   }
 
   loadIslenenKonular() {
-    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-    const ogretmenId = userData.id;
+    let ogretmenId = null;
+    
+    // localStorage'dan user bilgisini al
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (userStr) {
+      const userData = JSON.parse(userStr);
+      ogretmenId = userData.id;
+    }
 
     if (!ogretmenId) {
       console.error('Öğretmen ID bulunamadı');
@@ -331,8 +337,14 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
   }
 
   addIslenenKonu(konuId: number, grupAdi: string) {
-    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-    const ogretmenId = userData.id;
+    let ogretmenId = null;
+    
+    // localStorage'dan user bilgisini al
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (userStr) {
+      const userData = JSON.parse(userStr);
+      ogretmenId = userData.id;
+    }
 
     if (!konuId || !grupAdi || !ogretmenId) {
       this.error = 'Konu ID, grup adı ve öğretmen ID gerekli';
