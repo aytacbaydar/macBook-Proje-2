@@ -246,8 +246,8 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
       return this.getAllUnites();
     }
 
-    // Belirlenen sınıf seviyesine göre konuları getir
-    return this.getUnitesByClassLevel(maxClassLevel);
+    // 11. sınıf için sadece 11. sınıf konularını, 10. sınıf için sadece 10. sınıf konularını getir
+    return this.getUnitesBySpecificClassLevel(maxClassLevel);
   }
 
   getMinClassLevelInGroup(students: any[]): string {
@@ -329,6 +329,25 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
     const levels = ['9', '10', '11', '12'];
     const maxIndex = levels.indexOf(maxLevel);
     return maxIndex !== -1 ? levels.slice(0, maxIndex + 1) : ['9'];
+  }
+
+  getUnitesBySpecificClassLevel(classLevel: string): any[] {
+    const uniteler = new Map();
+    
+    // Sadece belirtilen sınıf seviyesindeki konuları getir
+    this.konular
+      .filter(konu => konu.sinif_seviyesi === classLevel)
+      .forEach(konu => {
+        if (!uniteler.has(konu.unite_adi)) {
+          uniteler.set(konu.unite_adi, {
+            unite_adi: konu.unite_adi,
+            konular: []
+          });
+        }
+        uniteler.get(konu.unite_adi).konular.push(konu);
+      });
+
+    return Array.from(uniteler.values());
   }
 
   konuIslendi(konuId: number, grupAdi: string): boolean {
