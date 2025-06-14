@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
-require_once 'config.php';
+require_once '../config.php';
 
 try {
     $ogretmen_id = $_GET['ogretmen_id'] ?? null;

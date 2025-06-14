@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
-require_once 'config.php';
+require_once '../config.php';
 
 try {
     $sql = "SELECT id, baslik, sinif_seviyesi, aciklama, olusturma_tarihi 
