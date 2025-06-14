@@ -238,16 +238,16 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
       return [];
     }
 
-    // Grupta bulunan en düşük sınıf seviyesini bul
-    const minClassLevel = this.getMinClassLevelInGroup(grup.students);
+    // Grupta bulunan en yüksek sınıf seviyesini bul
+    const maxClassLevel = this.getMaxClassLevelInGroup(grup.students);
     
     // Eğer 12. sınıf veya mezun varsa tüm konuları getir
-    if (minClassLevel === '12' || minClassLevel === 'Mezun') {
+    if (maxClassLevel === '12' || maxClassLevel === 'Mezun') {
       return this.getAllUnites();
     }
 
     // Belirlenen sınıf seviyesine göre konuları getir
-    return this.getUnitesByClassLevel(minClassLevel);
+    return this.getUnitesByClassLevel(maxClassLevel);
   }
 
   getMinClassLevelInGroup(students: any[]): string {
@@ -265,6 +265,25 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
       .filter(level => !isNaN(parseInt(level)))
       .map(level => parseInt(level))
       .sort((a, b) => a - b);
+
+    return numericLevels.length > 0 ? numericLevels[0].toString() : '9';
+  }
+
+  getMaxClassLevelInGroup(students: any[]): string {
+    const classLevels = students
+      .map(student => student.sinif_seviyesi || student.sinif || '9')
+      .filter(level => level);
+
+    // Mezun varsa tüm konuları göster
+    if (classLevels.includes('Mezun')) {
+      return 'Mezun';
+    }
+
+    // En yüksek sınıf seviyesini bul
+    const numericLevels = classLevels
+      .filter(level => !isNaN(parseInt(level)))
+      .map(level => parseInt(level))
+      .sort((a, b) => b - a);
 
     return numericLevels.length > 0 ? numericLevels[0].toString() : '9';
   }
