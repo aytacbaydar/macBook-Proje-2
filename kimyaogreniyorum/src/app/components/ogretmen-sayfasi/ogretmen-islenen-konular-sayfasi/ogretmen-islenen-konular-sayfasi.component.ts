@@ -159,7 +159,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
   loadKonular() {
     this.isLoading = true;
     this.http
-      .get<any>(`${this.apiUrl}/konu_listesi.php`, {
+      .get<any>('./server/api/konu_listesi.php', {
         headers: this.getHeaders(),
       })
       .subscribe({
@@ -194,7 +194,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
 
     this.http
       .get<any>(
-        `${this.apiUrl}/islenen_konular.php?ogretmen_id=${ogretmenId}`,
+        './server/api/islenen_konular.php?ogretmen_id=${ogretmenId}',
         { headers: this.getHeaders() }
       )
       .subscribe({
@@ -423,7 +423,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
     console.log('Gönderilen veri:', data);
 
     this.http
-      .post<any>(`${this.apiUrl}/islenen_konu_ekle.php`, data, {
+      .post<any>('./server/api/islenen_konu_ekle.php', data, {
         headers: this.getHeaders(),
       })
       .subscribe({
@@ -445,7 +445,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
 
   removeIslenenKonu(islenenKonuId: number) {
     this.http
-      .delete<any>(`${this.apiUrl}/islenen_konu_sil.php?id=${islenenKonuId}`, {
+      .delete<any>('./server/api/islenen_konu_sil.php?id=${islenenKonuId}', {
         headers: this.getHeaders(),
       })
       .subscribe({
@@ -492,7 +492,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
 
     this.isLoading = true;
     this.http
-      .post<any>(`${this.apiUrl}/konu_ekle.php`, this.konuForm, {
+      .post<any>('./server/api/konu_ekle.php', this.konuForm, {
         headers: this.getHeaders(),
       })
       .subscribe({
