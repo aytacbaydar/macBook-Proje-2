@@ -112,11 +112,6 @@
         </div>
 
         <div *ngIf="konular.length > 0" class="topics-hierarchical">
-          <div class="group-info-header" *ngIf="selectedGrup">
-            <h4>{{ selectedGrup }} Grubuna Uygun Konular</h4>
-            <p class="group-description">Bu gruptaki öğrencilerin sınıf seviyelerine göre uygun konular gösterilmektedir.</p>
-          </div>
-
           <div class="unite-hierarchy">
             <div *ngFor="let unite of getFilteredUnitesByGroup(selectedGrup); let uniteIndex = index" class="unite-section">
               <div class="unite-header">
