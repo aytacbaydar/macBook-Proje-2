@@ -72,6 +72,20 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
   apiUrl = './server/api';
   constructor(private http: HttpClient) {}
 
+  // Helper method for getting current user data
+  private getCurrentUser(): any {
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (userStr) {
+      try {
+        return JSON.parse(userStr);
+      } catch (error) {
+        console.error('User data parse error:', error);
+        return null;
+      }
+    }
+    return null;
+  }
+
   ngOnInit() {
     this.loadKonular();
     this.loadGroups();
@@ -177,6 +191,9 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
       });
   }
 
+  // Math objesini component'te kullanılabilir hale getir
+  Math = Math;
+
   loadIslenenKonular() {
     let ogretmenId = null;
     
@@ -194,7 +211,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
 
     this.http
       .get<any>(
-        './server/api/islenen_konular.php?ogretmen_id=${ogretmenId}',
+        `./server/api/islenen_konular.php?ogretmen_id=${ogretmenId}`,
         { headers: this.getHeaders() }
       )
       .subscribe({
@@ -445,7 +462,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
 
   removeIslenenKonu(islenenKonuId: number) {
     this.http
-      .delete<any>('./server/api/islenen_konu_sil.php?id=${islenenKonuId}', {
+      .delete<any>(`./server/api/islenen_konu_sil.php?id=${islenenKonuId}`, {
         headers: this.getHeaders(),
       })
       .subscribe({
