@@ -241,12 +241,16 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
     // Grupta bulunan en yüksek sınıf seviyesini bul
     const maxClassLevel = this.getMaxClassLevelInGroup(grup.students);
     
+    console.log('Grup:', grupAdi, 'Max Sınıf Seviyesi:', maxClassLevel);
+    
     // Eğer 12. sınıf veya mezun varsa tüm konuları getir
     if (maxClassLevel === '12' || maxClassLevel === 'Mezun') {
+      console.log('Tüm konular getiriliyor...');
       return this.getAllUnites();
     }
 
     // 11. sınıf için sadece 11. sınıf konularını, 10. sınıf için sadece 10. sınıf konularını getir
+    console.log('Belirli sınıf konuları getiriliyor:', maxClassLevel);
     return this.getUnitesBySpecificClassLevel(maxClassLevel);
   }
 
@@ -346,20 +350,27 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
     // Sınıf seviyesini veritabanı formatına çevir ('11' -> '11.Sınıf')
     const dbFormat = classLevel === 'Mezun' ? 'Mezun' : `${classLevel}.Sınıf`;
     
+    console.log('Aranan sınıf seviyesi:', classLevel, 'DB Format:', dbFormat);
+    console.log('Mevcut konular:', this.konular.length);
+    console.log('Konulardaki sınıf seviyeleri:', this.konular.map(k => k.sinif_seviyesi));
+    
     // Sadece belirtilen sınıf seviyesindeki konuları getir
-    this.konular
-      .filter(konu => konu.sinif_seviyesi === dbFormat)
-      .forEach(konu => {
-        if (!uniteler.has(konu.unite_adi)) {
-          uniteler.set(konu.unite_adi, {
-            unite_adi: konu.unite_adi,
-            konular: []
-          });
-        }
-        uniteler.get(konu.unite_adi).konular.push(konu);
-      });
+    const filteredKonular = this.konular.filter(konu => konu.sinif_seviyesi === dbFormat);
+    console.log('Filtrelenmiş konular:', filteredKonular.length);
+    
+    filteredKonular.forEach(konu => {
+      if (!uniteler.has(konu.unite_adi)) {
+        uniteler.set(konu.unite_adi, {
+          unite_adi: konu.unite_adi,
+          konular: []
+        });
+      }
+      uniteler.get(konu.unite_adi).konular.push(konu);
+    });
 
-    return Array.from(uniteler.values());
+    const result = Array.from(uniteler.values());
+    console.log('Dönen üniteler:', result.length);
+    return result;
   }
 
   konuIslendi(konuId: number, grupAdi: string): boolean {
