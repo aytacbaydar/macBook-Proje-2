@@ -1,4 +1,3 @@
-
 <?php
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
@@ -13,23 +12,29 @@ require_once '../config.php';
 
 try {
     $conn = getConnection();
-    
+
     $ogretmen_id = $_GET['ogretmen_id'] ?? null;
-    
+
     if (!$ogretmen_id) {
         throw new Exception('Öğretmen ID gerekli');
     }
-    
-    $sql = "SELECT ik.*, k.unite_adi, k.konu_adi as konu_baslik, k.sinif_seviyesi 
-            FROM islenen_konular ik
-            JOIN konular k ON ik.konu_id = k.id
-            WHERE ik.ogretmen_id = ?
-            ORDER BY ik.id ASC";
-    
-    $stmt = $conn->prepare($sql);
-    $stmt->execute([$ogretmen_id]);
+
+    $stmt = $conn->prepare("
+        SELECT 
+            ik.*,
+            k.konu_adi,
+            k.konu_adi as konu_baslik,
+            k.unite_adi,
+            k.sinif_seviyesi
+        FROM islenen_konular ik
+        LEFT JOIN konular k ON ik.konu_id = k.id
+        WHERE ik.ogretmen_id = :ogretmen_id
+        ORDER BY ik.isleme_tarihi DESC
+    ");
+
+    $stmt->execute([':ogretmen_id' => $ogretmen_id]);
     $islenen_konular = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
     echo json_encode([
         'success' => true,
         'islenen_konular' => $islenen_konular,
@@ -39,7 +44,7 @@ try {
             'sample_fields' => !empty($islenen_konular) ? array_keys($islenen_konular[0]) : []
         ]
     ]);
-    
+
 } catch (Exception $e) {
     echo json_encode([
         'success' => false,

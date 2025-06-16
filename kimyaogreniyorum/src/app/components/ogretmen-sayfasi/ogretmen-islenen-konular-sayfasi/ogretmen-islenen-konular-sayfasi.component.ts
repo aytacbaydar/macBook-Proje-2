@@ -441,6 +441,10 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit, OnDestroy
       return dateB.getTime() - dateA.getTime(); // En yeni tarih önce
     });
     console.log(`${grup} grubu için işlenen konular:`, sorted);
+    console.log(`${grup} grubu için ilk konunun field'ları:`, sorted[0] ? Object.keys(sorted[0]) : 'Boş array');
+    if (sorted.length > 0) {
+      console.log(`${grup} grubu için ilk konu verisi:`, sorted[0]);
+    }
     return sorted;
   }
 
