@@ -20,7 +20,7 @@ try {
         throw new Exception('Öğretmen ID gerekli');
     }
     
-    $sql = "SELECT ik.*, k.unite_adi, k.konu_adi, k.sinif_seviyesi 
+    $sql = "SELECT ik.*, k.unite_adi, k.konu_adi as konu_baslik, k.sinif_seviyesi 
             FROM islenen_konular ik
             JOIN konular k ON ik.konu_id = k.id
             WHERE ik.ogretmen_id = ?
@@ -32,7 +32,12 @@ try {
     
     echo json_encode([
         'success' => true,
-        'islenen_konular' => $islenen_konular
+        'islenen_konular' => $islenen_konular,
+        'debug_info' => [
+            'ogretmen_id' => $ogretmen_id,
+            'total_records' => count($islenen_konular),
+            'sample_fields' => !empty($islenen_konular) ? array_keys($islenen_konular[0]) : []
+        ]
     ]);
     
 } catch (Exception $e) {
