@@ -211,18 +211,22 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
       });
   }
 
-  // FİLTRELEME TAMAMEN KALDIRILDI - TÜM KONULAR GÖSTERİLİYOR
+  // FİLTRELEME TAMAMEN KALDIRILDI - TÜM KONULAR ID'YE GÖRE SIRALANARAK GÖSTERİLİYOR
   getUnitesByGroup(grupAdi: string): any[] {
     console.log('=== DEĞIŞIKLIK YAPILDI Aytaç ===');
     console.log('Grup:', grupAdi);
     console.log('Toplam veritabanındaki konu sayısı:', this.konular.length);
     console.log('Bütün konular şu kadar sayı:', this.konular.length);
-    console.log('Hiçbir filtreleme işlemi YOK - Tüm konular gösteriliyor');
+    console.log('Hiçbir filtreleme işlemi YOK - Tüm konular ID sırasına göre gösteriliyor');
+    
+    // ÖNCE KONULARI ID'YE GÖRE SIRALA (Küçükten büyüğe)
+    const sortedKonular = [...this.konular].sort((a, b) => (a.id || 0) - (b.id || 0));
+    console.log('Konular ID sırasına göre sıralandı:', sortedKonular.map(k => k.id));
     
     const uniteler = new Map();
 
-    // TAMAMEN FİLTRELEMESİZ - TÜM KONULARI GÖSTER
-    this.konular.forEach(konu => {
+    // SIRALANMIŞ KONULARI GÖSTER
+    sortedKonular.forEach(konu => {
       if (!uniteler.has(konu.unite_adi)) {
         uniteler.set(konu.unite_adi, {
           unite_adi: konu.unite_adi,
@@ -234,8 +238,8 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
 
     const result = Array.from(uniteler.values());
     console.log('Filtreleme YOK - Dönen ünite sayısı:', result.length);
-    console.log('Konulardaki BÜTÜN sınıf seviyeleri:', this.konular.map(k => k.sinif_seviyesi));
-    console.log('=== ARTIK FİLTRELEME YOK ===');
+    console.log('Konulardaki BÜTÜN sınıf seviyeleri:', sortedKonular.map(k => k.sinif_seviyesi));
+    console.log('=== KONULAR ID SIRASINA GÖRE DÜZENLENDİ ===');
     
     return result;
   }
