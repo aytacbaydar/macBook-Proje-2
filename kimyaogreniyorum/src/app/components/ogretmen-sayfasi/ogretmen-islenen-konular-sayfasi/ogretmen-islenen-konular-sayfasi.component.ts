@@ -409,4 +409,24 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
     const date = new Date(dateString);
     return date.toLocaleDateString('tr-TR');
   }
+
+  getGroupClassLevels(grupAdi: string): string {
+    const group = this.groups.find(g => g.name === grupAdi);
+    if (!group || !group.students || group.students.length === 0) {
+      return 'Sınıf bilgisi yok';
+    }
+
+    // Gruptaki öğrencilerin sınıf seviyelerini topla
+    const classLevels = group.students
+      .map(student => student.sinif_seviyesi)
+      .filter(level => level) // Boş olanları filtrele
+      .filter((level, index, arr) => arr.indexOf(level) === index) // Tekrarları kaldır
+      .sort(); // Sırala
+
+    if (classLevels.length === 0) {
+      return 'Sınıf bilgisi yok';
+    }
+
+    return classLevels.join(', ') + ' Sınıf';
+  }
 }
