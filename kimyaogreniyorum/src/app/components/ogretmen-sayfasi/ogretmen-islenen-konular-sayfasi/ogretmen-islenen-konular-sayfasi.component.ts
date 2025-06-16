@@ -229,7 +229,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
     // sinifSeviyesi '9.Sınıf' formatında gelirse '9' formatına çevir
     const dbFormat = sinifSeviyesi.includes('.Sınıf') ? 
       sinifSeviyesi.replace('.Sınıf', '') : sinifSeviyesi;
-    
+
     const konularBySinif = this.konular.filter((konu) => konu.sinif_seviyesi === dbFormat);
     const uniteler = new Map();
 
@@ -254,9 +254,9 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
 
     // Grupta bulunan en yüksek sınıf seviyesini bul
     const maxClassLevel = this.getMaxClassLevelInGroup(grup.students);
-    
+
     console.log('Grup:', grupAdi, 'Max Sınıf Seviyesi:', maxClassLevel);
-    
+
     // Eğer 12. sınıf veya mezun varsa tüm konuları getir
     if (maxClassLevel === '12' || maxClassLevel === 'Mezun') {
       console.log('Tüm konular getiriliyor...');
@@ -332,10 +332,10 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
 
   getUnitesByClassLevel(classLevel: string): any[] {
     const uniteler = new Map();
-    
+
     // Belirtilen sınıf seviyesi ve altındaki tüm konuları getir
     const allowedLevels = this.getAllowedClassLevelsForDB(classLevel);
-    
+
     this.konular
       .filter(konu => allowedLevels.includes(konu.sinif_seviyesi))
       .forEach(konu => {
@@ -366,18 +366,18 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
 
   getUnitesBySpecificClassLevel(classLevel: string): any[] {
     const uniteler = new Map();
-    
+
     // Veritabanında sınıf seviyeleri sadece sayı olarak saklandığı için direkt classLevel kullan
     const dbFormat = classLevel === 'Mezun' ? 'Mezun' : classLevel;
-    
+
     console.log('Aranan sınıf seviyesi:', classLevel, 'DB Format:', dbFormat);
     console.log('Mevcut konular:', this.konular.length);
     console.log('Konulardaki sınıf seviyeleri:', this.konular.map(k => k.sinif_seviyesi));
-    
+
     // Sadece belirtilen sınıf seviyesindeki konuları getir
     const filteredKonular = this.konular.filter(konu => konu.sinif_seviyesi === dbFormat);
     console.log('Filtrelenmiş konular:', filteredKonular.length);
-    
+
     filteredKonular.forEach(konu => {
       if (!uniteler.has(konu.unite_adi)) {
         uniteler.set(konu.unite_adi, {
