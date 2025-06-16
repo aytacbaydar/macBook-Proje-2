@@ -211,22 +211,62 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
       });
   }
 
-  // FİLTRELEME TAMAMEN KALDIRILDI - TÜM KONULAR ID'YE GÖRE SIRALANARAK GÖSTERİLİYOR
+  // GRUPUN SINIF SEVİYESİNE GÖRE KONULARI FİLTRELE
   getUnitesByGroup(grupAdi: string): any[] {
-    console.log('=== DEĞIŞIKLIK YAPILDI Aytaç ===');
+    console.log('=== SINIF SEVİYESİNE GÖRE FİLTRELEME ===');
     console.log('Grup:', grupAdi);
-    console.log('Toplam veritabanındaki konu sayısı:', this.konular.length);
-    console.log('Bütün konular şu kadar sayı:', this.konular.length);
-    console.log('Hiçbir filtreleme işlemi YOK - Tüm konular ID sırasına göre gösteriliyor');
+    
+    // Grubun sınıf seviyelerini al
+    const group = this.groups.find(g => g.name === grupAdi);
+    let groupClassLevels: string[] = [];
+    
+    if (group && group.students && group.students.length > 0) {
+      groupClassLevels = group.students
+        .map(student => student.sinifi || student.sinif_seviyesi || student.sinif)
+        .filter(level => level)
+        .filter((level, index, arr) => arr.indexOf(level) === index); // Tekrarları kaldır
+    }
+    
+    console.log('Grubun sınıf seviyeleri:', groupClassLevels);
 
-    // ÖNCE KONULARI ID'YE GÖRE SIRALA (Küçükten büyüğe)
+    // ÖNCE TÜM KONULARI ID'YE GÖRE SIRALA (Küçükten büyüğe)
     const sortedKonular = [...this.konular].sort((a, b) => (a.id || 0) - (b.id || 0));
-    console.log('Konular ID sırasına göre sıralandı:', sortedKonular.map(k => k.id));
+    
+    let filteredKonular: Konu[] = [];
+
+    // Mezun veya 12.Sınıf varsa tüm konuları göster
+    const hasMezunOr12 = groupClassLevels.some(level => 
+      level.toLowerCase().includes('mezun') || level === '12' || level === '12.Sınıf'
+    );
+
+    if (hasMezunOr12) {
+      console.log('Grup Mezun veya 12.Sınıf içeriyor - TÜM KONULAR gösteriliyor');
+      filteredKonular = sortedKonular;
+    } else if (groupClassLevels.length > 0) {
+      // Grubun sınıf seviyelerine uygun konuları filtrele
+      filteredKonular = sortedKonular.filter(konu => {
+        // Konu sınıf seviyesi grup sınıf seviyelerinden biriyle eşleşiyor mu?
+        return groupClassLevels.some(groupLevel => {
+          const konuSinif = konu.sinif_seviyesi;
+          return konuSinif === groupLevel || 
+                 konuSinif === groupLevel + '.Sınıf' ||
+                 konuSinif + '.Sınıf' === groupLevel ||
+                 konuSinif.replace('.Sınıf', '') === groupLevel.replace('.Sınıf', '');
+        });
+      });
+      console.log(`Grup sınıf seviyelerine (${groupClassLevels.join(', ')}) göre filtrelendi`);
+    } else {
+      console.log('Grup sınıf seviyesi bulunamadı - TÜM KONULAR gösteriliyor');
+      filteredKonular = sortedKonular;
+    }
+
+    console.log('Filtrelemeden önce:', sortedKonular.length, 'konu');
+    console.log('Filtrelemeden sonra:', filteredKonular.length, 'konu');
 
     const uniteler = new Map();
 
-    // SIRALANMIŞ KONULARI GÖSTER
-    sortedKonular.forEach(konu => {
+    // FİLTRELENMİŞ KONULARI ÜNİTELERE GÖRE GRUPLANDI
+    filteredKonular.forEach(konu => {
       if (!uniteler.has(konu.unite_adi)) {
         uniteler.set(konu.unite_adi, {
           unite_adi: konu.unite_adi,
@@ -237,9 +277,8 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
     });
 
     const result = Array.from(uniteler.values());
-    console.log('Filtreleme YOK - Dönen ünite sayısı:', result.length);
-    console.log('Konulardaki BÜTÜN sınıf seviyeleri:', sortedKonular.map(k => k.sinif_seviyesi));
-    console.log('=== KONULAR ID SIRASINA GÖRE DÜZENLENDİ ===');
+    console.log('Dönen ünite sayısı:', result.length);
+    console.log('=== SINIF SEVİYESİNE GÖRE FİLTRELEME TAMAMLANDI ===');
 
     return result;
   }
