@@ -213,13 +213,11 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
 
   // Tüm konuları filtresi olmadan döndürür
   getUnitesByGroup(grupAdi: string): any[] {
-    console.log('Grup:', grupAdi, '- Tüm konular gösteriliyor');
-    return this.getAllUnites();
-  }
-
-  getAllUnites(): any[] {
+    console.log('Grup:', grupAdi, '- Tüm konular filtresiz gösteriliyor. Toplam konu sayısı:', this.konular.length);
+    
     const uniteler = new Map();
 
+    // Tüm konuları filtresiz olarak işle
     this.konular.forEach(konu => {
       if (!uniteler.has(konu.unite_adi)) {
         uniteler.set(konu.unite_adi, {
@@ -230,8 +228,10 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
       uniteler.get(konu.unite_adi).konular.push(konu);
     });
 
-    // ID sırasını korumak için sıralama yapmıyoruz
-    return Array.from(uniteler.values());
+    const result = Array.from(uniteler.values());
+    console.log('Döndürülen ünite sayısı:', result.length);
+    
+    return result;
   }
 
   
