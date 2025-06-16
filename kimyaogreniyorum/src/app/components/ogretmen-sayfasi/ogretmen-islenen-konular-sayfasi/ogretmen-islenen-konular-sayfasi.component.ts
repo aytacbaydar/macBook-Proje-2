@@ -168,7 +168,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit, OnDestroy
   loadKonular() {
     this.isLoading = true;
     this.error = ''; // Clear previous errors
-    
+
     this.http
       .get<any>('./server/api/konu_listesi.php', {
         headers: this.getHeaders(),
@@ -242,17 +242,17 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit, OnDestroy
     // Grubun sınıf seviyelerini al
     const group = this.groups.find(g => g.name === grupAdi);
     let groupClassLevels: string[] = [];
-    
+
     if (group && group.students && group.students.length > 0) {
       groupClassLevels = group.students
         .map((student: any) => student.sinifi || student.sinif_seviyesi || student.sinif)
         .filter((level: string) => level)
         .filter((level: string, index: number, arr: string[]) => arr.indexOf(level) === index); // Tekrarları kaldır
     }
-    
+
    // ÖNCE TÜM KONULARI ID'YE GÖRE SIRALA (Küçükten büyüğe)
     const sortedKonular = [...this.konular].sort((a, b) => (a.id || 0) - (b.id || 0));
-    
+
     let filteredKonular: Konu[] = [];
 
     // Mezun veya 12.Sınıf varsa tüm konuları göster
@@ -432,19 +432,10 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit, OnDestroy
       });
   }
 
-  getIslenenKonularByGrup(grupAdi: string): any[] {
-    return this.islenenKonular
-      .filter((islenen) => islenen.grup_adi === grupAdi)
-      .map((islenen) => {
-        const konu = this.konular.find((k) => k.id === islenen.konu_id);
-        return {
-          ...islenen,
-          konu_baslik: konu
-            ? `${konu.unite_adi} - ${konu.konu_adi}`
-            : 'Bilinmeyen Konu',
-          sinif_seviyesi: konu?.sinif_seviyesi || '',
-        };
-      });
+  getIslenenKonularByGrup(grup: string): any[] {
+    const filtered = this.islenenKonular.filter(konu => konu.grup_adi === grup);
+    console.log(`${grup} grubu için işlenen konular:`, filtered);
+    return filtered;
   }
 
   getToplamIslenenKonu(grupAdi: string): number {
@@ -475,6 +466,14 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit, OnDestroy
     }
 
     return classLevels.join();
+  }
+
+  getUniqueGroups(): string[] {
+    const groups = [...new Set(this.islenenKonular.map(konu => konu.grup_adi))];
+    const filteredGroups = groups.filter(group => group && group.trim() !== '');
+    console.log('Unique groups found:', filteredGroups);
+    console.log('All islenen konular:', this.islenenKonular);
+    return filteredGroups;
   }
 
   ngOnDestroy(): void {
