@@ -219,11 +219,18 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
   }
 
   getKonularBySinif(sinifSeviyesi: string): Konu[] {
-    return this.konular.filter((konu) => konu.sinif_seviyesi === sinifSeviyesi);
+    // sinifSeviyesi '9.Sınıf' formatında gelirse '9' formatına çevir
+    const dbFormat = sinifSeviyesi.includes('.Sınıf') ? 
+      sinifSeviyesi.replace('.Sınıf', '') : sinifSeviyesi;
+    return this.konular.filter((konu) => konu.sinif_seviyesi === dbFormat);
   }
 
   getUnitesBySinif(sinifSeviyesi: string): any[] {
-    const konularBySinif = this.getKonularBySinif(sinifSeviyesi);
+    // sinifSeviyesi '9.Sınıf' formatında gelirse '9' formatına çevir
+    const dbFormat = sinifSeviyesi.includes('.Sınıf') ? 
+      sinifSeviyesi.replace('.Sınıf', '') : sinifSeviyesi;
+    
+    const konularBySinif = this.konular.filter((konu) => konu.sinif_seviyesi === dbFormat);
     const uniteler = new Map();
 
     konularBySinif.forEach(konu => {
@@ -327,7 +334,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
     const uniteler = new Map();
     
     // Belirtilen sınıf seviyesi ve altındaki tüm konuları getir
-    const allowedLevels = this.getAllowedClassLevels(classLevel);
+    const allowedLevels = this.getAllowedClassLevelsForDB(classLevel);
     
     this.konular
       .filter(konu => allowedLevels.includes(konu.sinif_seviyesi))
@@ -351,11 +358,17 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
     return maxIndex !== -1 ? levels.slice(0, maxIndex + 1) : ['9.Sınıf'];
   }
 
+  getAllowedClassLevelsForDB(maxLevel: string): string[] {
+    const levels = ['9', '10', '11', '12'];
+    const maxIndex = levels.indexOf(maxLevel);
+    return maxIndex !== -1 ? levels.slice(0, maxIndex + 1) : ['9'];
+  }
+
   getUnitesBySpecificClassLevel(classLevel: string): any[] {
     const uniteler = new Map();
     
-    // Sınıf seviyesini veritabanı formatına çevir ('11' -> '11.Sınıf')
-    const dbFormat = classLevel === 'Mezun' ? 'Mezun' : `${classLevel}.Sınıf`;
+    // Veritabanında sınıf seviyeleri sadece sayı olarak saklandığı için direkt classLevel kullan
+    const dbFormat = classLevel === 'Mezun' ? 'Mezun' : classLevel;
     
     console.log('Aranan sınıf seviyesi:', classLevel, 'DB Format:', dbFormat);
     console.log('Mevcut konular:', this.konular.length);
