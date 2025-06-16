@@ -16,7 +16,7 @@ try {
     
     $sql = "SELECT id, unite_adi, konu_adi, sinif_seviyesi, aciklama, olusturma_tarihi 
             FROM konular 
-            ORDER BY sinif_seviyesi ASC, unite_adi ASC, konu_adi ASC";
+            ORDER BY id ASC";
     
     $stmt = $pdo->prepare($sql);
     $stmt->execute();

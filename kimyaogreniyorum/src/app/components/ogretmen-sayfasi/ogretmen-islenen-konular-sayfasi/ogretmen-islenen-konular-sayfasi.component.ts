@@ -263,7 +263,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
       return this.getAllUnites();
     }
 
-    // 11. sınıf için sadece 11. sınıf konularını, 10. sınıf için sadece 10. sınıf konularını getir
+    // Diğer sınıflar için sadece o sınıfın konularını getir
     console.log('Belirli sınıf konuları getiriliyor:', maxClassLevel);
     return this.getUnitesBySpecificClassLevel(maxClassLevel);
   }
