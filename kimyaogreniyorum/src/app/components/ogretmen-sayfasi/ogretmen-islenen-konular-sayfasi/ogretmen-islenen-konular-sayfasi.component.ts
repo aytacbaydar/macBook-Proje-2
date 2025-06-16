@@ -213,9 +213,6 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
 
   // GRUPUN SINIF SEVİYESİNE GÖRE KONULARI FİLTRELE
   getUnitesByGroup(grupAdi: string): any[] {
-    console.log('=== SINIF SEVİYESİNE GÖRE FİLTRELEME ===');
-    console.log('Grup:', grupAdi);
-    
     // Grubun sınıf seviyelerini al
     const group = this.groups.find(g => g.name === grupAdi);
     let groupClassLevels: string[] = [];
@@ -227,9 +224,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
         .filter((level: string, index: number, arr: string[]) => arr.indexOf(level) === index); // Tekrarları kaldır
     }
     
-    console.log('Grubun sınıf seviyeleri:', groupClassLevels);
-
-    // ÖNCE TÜM KONULARI ID'YE GÖRE SIRALA (Küçükten büyüğe)
+   // ÖNCE TÜM KONULARI ID'YE GÖRE SIRALA (Küçükten büyüğe)
     const sortedKonular = [...this.konular].sort((a, b) => (a.id || 0) - (b.id || 0));
     
     let filteredKonular: Konu[] = [];
@@ -240,7 +235,6 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
     );
 
     if (hasMezunOr12) {
-      console.log('Grup Mezun veya 12.Sınıf içeriyor - TÜM KONULAR gösteriliyor');
       filteredKonular = sortedKonular;
     } else if (groupClassLevels.length > 0) {
       // Grubun sınıf seviyelerine uygun konuları filtrele
@@ -254,15 +248,9 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
                  konuSinif.replace('.Sınıf', '') === groupLevel.replace('.Sınıf', '');
         });
       });
-      console.log(`Grup sınıf seviyelerine (${groupClassLevels.join(', ')}) göre filtrelendi`);
     } else {
-      console.log('Grup sınıf seviyesi bulunamadı - TÜM KONULAR gösteriliyor');
       filteredKonular = sortedKonular;
     }
-
-    console.log('Filtrelemeden önce:', sortedKonular.length, 'konu');
-    console.log('Filtrelemeden sonra:', filteredKonular.length, 'konu');
-
     const uniteler = new Map();
 
     // FİLTRELENMİŞ KONULARI ÜNİTELERE GÖRE GRUPLANDI
@@ -277,9 +265,6 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
     });
 
     const result = Array.from(uniteler.values());
-    console.log('Dönen ünite sayısı:', result.length);
-    console.log('=== SINIF SEVİYESİNE GÖRE FİLTRELEME TAMAMLANDI ===');
-
     return result;
   }
 
@@ -325,9 +310,6 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
       ogretmen_id: ogretmenId,
       isleme_tarihi: new Date().toISOString().split('T')[0],
     };
-
-    console.log('Gönderilen veri:', data);
-
     this.http
       .post<any>('./server/api/islenen_konu_ekle.php', data, {
         headers: this.getHeaders(),
