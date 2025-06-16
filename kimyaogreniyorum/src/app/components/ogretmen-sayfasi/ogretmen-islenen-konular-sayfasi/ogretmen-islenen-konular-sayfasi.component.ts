@@ -218,11 +218,11 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
     console.log('Toplam veritabanındaki konu sayısı:', this.konular.length);
     console.log('Bütün konular şu kadar sayı:', this.konular.length);
     console.log('Hiçbir filtreleme işlemi YOK - Tüm konular ID sırasına göre gösteriliyor');
-    
+
     // ÖNCE KONULARI ID'YE GÖRE SIRALA (Küçükten büyüğe)
     const sortedKonular = [...this.konular].sort((a, b) => (a.id || 0) - (b.id || 0));
     console.log('Konular ID sırasına göre sıralandı:', sortedKonular.map(k => k.id));
-    
+
     const uniteler = new Map();
 
     // SIRALANMIŞ KONULARI GÖSTER
@@ -240,11 +240,11 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
     console.log('Filtreleme YOK - Dönen ünite sayısı:', result.length);
     console.log('Konulardaki BÜTÜN sınıf seviyeleri:', sortedKonular.map(k => k.sinif_seviyesi));
     console.log('=== KONULAR ID SIRASINA GÖRE DÜZENLENDİ ===');
-    
+
     return result;
   }
 
-  
+
 
   konuIslendi(konuId: number, grupAdi: string): boolean {
     return this.islenenKonular.some(
@@ -412,25 +412,21 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
 
   getGroupClassLevels(grupAdi: string): string {
     const group = this.groups.find(g => g.name === grupAdi);
+    if (!group || !group.students || group.students.length === 0) {
+      return 'Sınıf bilgisi yok';
+    }
 
-
-    console.log('Grup:', grupAdi);
-    console.log('Grup öğrencileri:', group.students);
-    console.log('İlk öğrenci özellikleri:', Object.keys(group.students[0] || {}));
-
-    // Gruptaki öğrencilerin sınıf seviyelerini topla - hem sinif_seviyesi hem sinifi kontrol et
+    // Gruptaki öğrencilerin sınıf seviyelerini topla
     const classLevels = group.students
-      .map((student: any) =>  student.sinifi)
-      .filter((level: string) => level) // Boş olanları filtrele
-      .filter((level: string, index: number, arr: string[]) => arr.indexOf(level) === index) // Tekrarları kaldır
+      .map(student => student.sinifi || student.sinif_seviyesi || student.sinif)
+      .filter(level => level) // Boş olanları filtrele
+      .filter((level, index, arr) => arr.indexOf(level) === index) // Tekrarları kaldır
       .sort(); // Sırala
-
-    console.log('Bulunan sınıf seviyeleri:', classLevels);
 
     if (classLevels.length === 0) {
       return 'Sınıf bilgisi yok';
     }
 
-    return classLevels.join(', ');
+    return classLevels.join(', ') + '. Sınıf';
   }
 }
