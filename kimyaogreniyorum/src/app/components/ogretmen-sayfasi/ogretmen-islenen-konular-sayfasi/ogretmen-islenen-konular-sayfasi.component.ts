@@ -439,7 +439,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
 
     // Gruptaki öğrencilerin sınıf seviyelerini topla
     const classLevels = group.students
-      .map((student: any) => student.sinifi || student.sinif_seviyesi || student.sinif)
+      .map((student: any) => student.sinifi)
       .filter((level: string) => level) // Boş olanları filtrele
       .filter((level: string, index: number, arr: string[]) => arr.indexOf(level) === index) // Tekrarları kaldır
       .sort(); // Sırala
@@ -448,6 +448,6 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
       return 'Sınıf bilgisi yok';
     }
 
-    return classLevels.join(', ') + '. Sınıf';
+    return classLevels.join();
   }
 }
