@@ -434,8 +434,14 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit, OnDestroy
 
   getIslenenKonularByGrup(grup: string): any[] {
     const filtered = this.islenenKonular.filter(konu => konu.grup_adi === grup);
-    console.log(`${grup} grubu için işlenen konular:`, filtered);
-    return filtered;
+    // En son işlenen konuları önce göstermek için tarihe göre sırala
+    const sorted = filtered.sort((a, b) => {
+      const dateA = new Date(a.isleme_tarihi || a.kayit_tarihi);
+      const dateB = new Date(b.isleme_tarihi || b.kayit_tarihi);
+      return dateB.getTime() - dateA.getTime(); // En yeni tarih önce
+    });
+    console.log(`${grup} grubu için işlenen konular:`, sorted);
+    return sorted;
   }
 
   getToplamIslenenKonu(grupAdi: string): number {
