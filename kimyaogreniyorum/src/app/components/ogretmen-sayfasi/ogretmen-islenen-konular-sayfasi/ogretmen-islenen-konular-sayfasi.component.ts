@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 interface Konu {
   id?: number;
@@ -29,8 +31,10 @@ interface Grup {
   standalone: false,
   templateUrl: './ogretmen-islenen-konular-sayfasi.component.html',
   styleUrl: './ogretmen-islenen-konular-sayfasi.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
+export class OgretmenIslenenKonularSayfasiComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
   konular: Konu[] = [];
   islenenKonular: IslenenKonu[] = [];
   groups: any[] = [];
@@ -63,7 +67,10 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
   ];
 
   apiUrl = './server/api';
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   // Helper method for getting current user data
   private getCurrentUser(): any {
@@ -160,6 +167,8 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
 
   loadKonular() {
     this.isLoading = true;
+    this.error = ''; // Clear previous errors
+    
     this.http
       .get<any>('./server/api/konu_listesi.php', {
         headers: this.getHeaders(),
@@ -168,12 +177,14 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
         next: (response) => {
           if (response.success) {
             this.konular = response.konular || [];
+          } else {
+            this.error = response.message || 'Konular yüklenemedi';
           }
           this.isLoading = false;
         },
         error: (error) => {
           console.error('Konular yüklenirken hata:', error);
-          this.error = 'Konular yüklenirken hata oluştu';
+          this.error = 'Sunucu ile bağlantı kurulamadı. Lütfen tekrar deneyin.';
           this.isLoading = false;
         },
       });
@@ -449,5 +460,10 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
     }
 
     return classLevels.join();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
