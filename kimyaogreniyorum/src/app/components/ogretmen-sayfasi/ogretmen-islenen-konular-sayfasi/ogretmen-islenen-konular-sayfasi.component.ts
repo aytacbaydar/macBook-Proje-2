@@ -89,19 +89,12 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
   ngOnInit() {
     this.loadKonular();
     this.loadGroups();
-    this.loadIslenenKonular();
+    // loadIslenenKonular() will be called after groups are loaded
   }
 
   loadGroups() {
-    // Token'ı al
-    let token = '';
-    let loggedInUser: any = null;
-    const userStr =
-      localStorage.getItem('user') || sessionStorage.getItem('user');
-    if (userStr) {
-      loggedInUser = JSON.parse(userStr);
-      token = loggedInUser.token || '';
-    }
+    const loggedInUser = this.getCurrentUser();
+    const token = loggedInUser?.token || '';
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
@@ -116,6 +109,8 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
               response.data,
               loggedInUser?.adi_soyadi || ''
             );
+            // Load islenen konular after groups are loaded
+            this.loadIslenenKonular();
           }
         },
         error: (error) => {
@@ -195,17 +190,12 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
   Math = Math;
 
   loadIslenenKonular() {
-    let ogretmenId = null;
-    
-    // localStorage'dan user bilgisini al
-    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
-    if (userStr) {
-      const userData = JSON.parse(userStr);
-      ogretmenId = userData.id;
-    }
+    const userData = this.getCurrentUser();
+    const ogretmenId = userData?.id;
 
     if (!ogretmenId) {
       console.error('Öğretmen ID bulunamadı');
+      this.error = 'Kullanıcı bilgileri bulunamadı. Lütfen tekrar giriş yapın.';
       return;
     }
 
@@ -415,14 +405,8 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
   }
 
   addIslenenKonu(konuId: number, grupAdi: string) {
-    let ogretmenId = null;
-    
-    // localStorage'dan user bilgisini al
-    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
-    if (userStr) {
-      const userData = JSON.parse(userStr);
-      ogretmenId = userData.id;
-    }
+    const userData = this.getCurrentUser();
+    const ogretmenId = userData?.id;
 
     if (!konuId || !grupAdi || !ogretmenId) {
       this.error = 'Konu ID, grup adı ve öğretmen ID gerekli';
