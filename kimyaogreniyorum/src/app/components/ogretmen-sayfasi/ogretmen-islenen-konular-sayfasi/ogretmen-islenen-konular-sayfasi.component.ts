@@ -243,6 +243,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
       uniteler.get(konu.unite_adi).konular.push(konu);
     });
 
+    // ID sırasını korumak için sıralama yapmıyoruz
     return Array.from(uniteler.values());
   }
 
@@ -327,6 +328,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
       uniteler.get(konu.unite_adi).konular.push(konu);
     });
 
+    // ID sırasını korumak için sıralama yapmıyoruz
     return Array.from(uniteler.values());
   }
 
@@ -387,6 +389,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
       uniteler.get(konu.unite_adi).konular.push(konu);
     });
 
+    // ID sırasını korumak için sıralama yapmıyoruz
     const result = Array.from(uniteler.values());
     console.log('Dönen üniteler:', result.length);
     return result;
