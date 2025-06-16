@@ -368,14 +368,13 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
     const uniteler = new Map();
 
     // Veritabanında sınıf seviyeleri sadece sayı olarak saklandığı için direkt classLevel kullan
-    const dbFormat = classLevel === 'Mezun' ? 'Mezun' : classLevel;
-
-    console.log('Aranan sınıf seviyesi:', classLevel, 'DB Format:', dbFormat);
+    // Hiçbir format dönüşümü yapmadan doğrudan classLevel'ı kullan
+    console.log('Aranan sınıf seviyesi:', classLevel, 'DB Format:', classLevel);
     console.log('Mevcut konular:', this.konular.length);
     console.log('Konulardaki sınıf seviyeleri:', this.konular.map(k => k.sinif_seviyesi));
 
     // Sadece belirtilen sınıf seviyesindeki konuları getir
-    const filteredKonular = this.konular.filter(konu => konu.sinif_seviyesi === dbFormat);
+    const filteredKonular = this.konular.filter(konu => konu.sinif_seviyesi === classLevel);
     console.log('Filtrelenmiş konular:', filteredKonular.length);
 
     filteredKonular.forEach(konu => {
