@@ -254,32 +254,10 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
       return [];
     }
 
-    // Grupta bulunan en yüksek sınıf seviyesini bul
-    const maxClassLevel = this.getMaxClassLevelInGroup(grup.students);
-
-    console.log('Grup:', grupAdi, 'Max Sınıf Seviyesi:', maxClassLevel);
-
-    // Eğer 12. sınıf veya mezun varsa tüm konuları getir
-    if (maxClassLevel === '12' || maxClassLevel === 'Mezun') {
-      console.log('12. sınıf veya mezun var, tüm konular getiriliyor...');
-      return this.getAllUnites();
-    }
-
-    // 11. sınıf için 9, 10, 11. sınıf konularını getir
-    if (maxClassLevel === '11') {
-      console.log('11. sınıf max seviye, 9-11 arası konular getiriliyor...');
-      return this.getUnitesByClassLevel(maxClassLevel);
-    }
-
-    // 10. sınıf için 9, 10. sınıf konularını getir  
-    if (maxClassLevel === '10') {
-      console.log('10. sınıf max seviye, 9-10 arası konular getiriliyor...');
-      return this.getUnitesByClassLevel(maxClassLevel);
-    }
-
-    // 9. sınıf için sadece 9. sınıf konularını getir
-    console.log('9. sınıf max seviye, sadece 9. sınıf konuları getiriliyor...');
-    return this.getUnitesBySpecificClassLevel(maxClassLevel);
+    console.log('Grup:', grupAdi, '- Tüm konular gösteriliyor (filtreleme kaldırıldı)');
+    
+    // Tüm konuları döndür, hiçbir filtreleme yapma
+    return this.getAllUnites();
   }
 
   getMinClassLevelInGroup(students: any[]): string {
