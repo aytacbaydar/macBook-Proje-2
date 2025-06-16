@@ -412,9 +412,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
 
   getGroupClassLevels(grupAdi: string): string {
     const group = this.groups.find(g => g.name === grupAdi);
-    if (!group || !group.students || group.students.length === 0) {
-      return 'Sınıf bilgisi yok';
-    }
+
 
     console.log('Grup:', grupAdi);
     console.log('Grup öğrencileri:', group.students);
@@ -422,9 +420,9 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
 
     // Gruptaki öğrencilerin sınıf seviyelerini topla - hem sinif_seviyesi hem sinifi kontrol et
     const classLevels = group.students
-      .map(student => student.sinif_seviyesi || student.sinifi || student.sinif)
-      .filter(level => level) // Boş olanları filtrele
-      .filter((level, index, arr) => arr.indexOf(level) === index) // Tekrarları kaldır
+      .map((student: any) =>  student.sinifi)
+      .filter((level: string) => level) // Boş olanları filtrele
+      .filter((level: string, index: number, arr: string[]) => arr.indexOf(level) === index) // Tekrarları kaldır
       .sort(); // Sırala
 
     console.log('Bulunan sınıf seviyeleri:', classLevels);
