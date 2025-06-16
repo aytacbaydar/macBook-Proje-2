@@ -250,6 +250,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
   getFilteredUnitesByGroup(grupAdi: string): any[] {
     const grup = this.groups.find(g => g.name === grupAdi);
     if (!grup || !grup.students || grup.students.length === 0) {
+      console.log('Grup bulunamadı veya öğrenci yok:', grupAdi);
       return [];
     }
 
@@ -260,12 +261,24 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
 
     // Eğer 12. sınıf veya mezun varsa tüm konuları getir
     if (maxClassLevel === '12' || maxClassLevel === 'Mezun') {
-      console.log('Tüm konular getiriliyor...');
+      console.log('12. sınıf veya mezun var, tüm konular getiriliyor...');
       return this.getAllUnites();
     }
 
-    // Diğer sınıflar için sadece o sınıfın konularını getir
-    console.log('Belirli sınıf konuları getiriliyor:', maxClassLevel);
+    // 11. sınıf için 9, 10, 11. sınıf konularını getir
+    if (maxClassLevel === '11') {
+      console.log('11. sınıf max seviye, 9-11 arası konular getiriliyor...');
+      return this.getUnitesByClassLevel(maxClassLevel);
+    }
+
+    // 10. sınıf için 9, 10. sınıf konularını getir  
+    if (maxClassLevel === '10') {
+      console.log('10. sınıf max seviye, 9-10 arası konular getiriliyor...');
+      return this.getUnitesByClassLevel(maxClassLevel);
+    }
+
+    // 9. sınıf için sadece 9. sınıf konularını getir
+    console.log('9. sınıf max seviye, sadece 9. sınıf konuları getiriliyor...');
     return this.getUnitesBySpecificClassLevel(maxClassLevel);
   }
 
@@ -293,26 +306,44 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
   }
 
   getMaxClassLevelInGroup(students: any[]): string {
+    console.log('Grup öğrencileri:', students.map(s => ({ 
+      name: s.adi_soyadi, 
+      sinif: s.sinif_seviyesi || s.sinif 
+    })));
+
     const classLevels = students
       .map(student => student.sinif_seviyesi || student.sinif || '9.Sınıf')
       .filter(level => level);
 
+    console.log('Bulunan sınıf seviyeleri:', classLevels);
+
     // Mezun varsa tüm konuları göster
     if (classLevels.includes('Mezun')) {
+      console.log('Mezun öğrenci bulundu, tüm konular gösterilecek');
       return 'Mezun';
     }
 
-    // Sınıf seviyelerini parse et ('12.Sınıf' -> 12)
+    // Sınıf seviyelerini parse et ('12.Sınıf' -> 12 veya sadece '12' -> 12)
     const numericLevels = classLevels
       .map(level => {
         // '12.Sınıf' formatından sayıyı çıkar
         const match = level.match(/^(\d+)\.Sınıf$/);
-        return match ? parseInt(match[1]) : parseInt(level);
+        if (match) {
+          return parseInt(match[1]);
+        }
+        // Sadece sayı formatında ise direkt parse et
+        const numericLevel = parseInt(level);
+        return !isNaN(numericLevel) ? numericLevel : 9;
       })
-      .filter(level => !isNaN(level))
+      .filter(level => !isNaN(level) && level >= 9 && level <= 12)
       .sort((a, b) => b - a);
 
-    return numericLevels.length > 0 ? numericLevels[0].toString() : '9.Sınıf';
+    console.log('Parse edilmiş sınıf seviyeleri:', numericLevels);
+    
+    const maxLevel = numericLevels.length > 0 ? numericLevels[0].toString() : '9';
+    console.log('Bulunan max sınıf seviyesi:', maxLevel);
+    
+    return maxLevel;
   }
 
   getAllUnites(): any[] {
