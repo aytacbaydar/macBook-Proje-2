@@ -113,7 +113,7 @@
 
         <div *ngIf="konular.length > 0" class="topics-hierarchical">
           <div class="unite-hierarchy">
-            <div *ngFor="let unite of getFilteredUnitesByGroup(selectedGrup); let uniteIndex = index" class="unite-section">
+            <div *ngFor="let unite of getUnitesByGroup(selectedGrup); let uniteIndex = index" class="unite-section">
               <div class="unite-header">
                 <div class="unite-title">
                   <i class="bi bi-folder-fill me-2"></i>
@@ -153,7 +153,7 @@
             </div>
           </div>
 
-          <div *ngIf="getFilteredUnitesByGroup(selectedGrup).length === 0" class="no-topics-message">
+          <div *ngIf="getUnitesByGroup(selectedGrup).length === 0" class="no-topics-message">
             <i class="bi bi-info-circle me-2"></i>
             <span>Bu grup için uygun konu bulunamadı. Önce konular eklenmelidir.</span>
           </div>
