@@ -1,8 +1,8 @@
 <?php
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
+header('Access-Control-Allow-Headers: Content-Type');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
@@ -11,20 +11,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require_once '../config.php';
 
 try {
-    // Veritabanı bağlantısı
-    $pdo = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8", $username, $password);
+    $pdo = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8mb4", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Hiçbir filtreleme yapmadan tüm konuları getir
+    // Tüm konuları ID sırasına göre getir - hiçbir filtreleme yok
     $stmt = $pdo->prepare("SELECT * FROM konular ORDER BY id ASC");
     $stmt->execute();
-
     $konular = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     echo json_encode([
         'success' => true,
         'konular' => $konular,
-        'count' => count($konular)
+        'total_count' => count($konular),
+        'message' => 'Tüm konular filtresiz olarak getirildi'
     ]);
 
 } catch(PDOException $e) {

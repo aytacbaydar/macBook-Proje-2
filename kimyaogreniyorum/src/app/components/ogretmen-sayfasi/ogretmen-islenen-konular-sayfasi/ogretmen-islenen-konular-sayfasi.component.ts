@@ -211,13 +211,13 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
       });
   }
 
-  // Tüm konuları filtresi olmadan döndürür
+  // Tüm konuları hiçbir filtre olmadan döndürür
   getUnitesByGroup(grupAdi: string): any[] {
-    console.log('Grup:', grupAdi, '- Tüm konular filtresiz gösteriliyor. Toplam konu sayısı:', this.konular.length);
+    console.log('Grup:', grupAdi, '- Tüm konular tamamen filtresiz. Toplam konu sayısı:', this.konular.length);
     
     const uniteler = new Map();
 
-    // Tüm konuları filtresiz olarak işle
+    // Hiçbir filtreleme yapmadan tüm konuları işle
     this.konular.forEach(konu => {
       if (!uniteler.has(konu.unite_adi)) {
         uniteler.set(konu.unite_adi, {
@@ -229,7 +229,8 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
     });
 
     const result = Array.from(uniteler.values());
-    console.log('Döndürülen ünite sayısı:', result.length);
+    console.log('Hiçbir filtreleme olmadan döndürülen ünite sayısı:', result.length);
+    console.log('Tüm konular:', this.konular.map(k => k.sinif_seviyesi));
     
     return result;
   }
