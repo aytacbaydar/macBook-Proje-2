@@ -288,7 +288,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
       .filter(level => !isNaN(level))
       .sort((a, b) => a - b);
 
-    return numericLevels.length > 0 ? numericLevels[0].toString() : '9';
+    return numericLevels.length > 0 ? numericLevels[0].toString() : '9.Sınıf';
   }
 
   getMaxClassLevelInGroup(students: any[]): string {
@@ -311,7 +311,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
       .filter(level => !isNaN(level))
       .sort((a, b) => b - a);
 
-    return numericLevels.length > 0 ? numericLevels[0].toString() : '9';
+    return numericLevels.length > 0 ? numericLevels[0].toString() : '9.Sınıf';
   }
 
   getAllUnites(): any[] {
