@@ -48,3 +48,7 @@ args = "ng serve --ssl --host 0.0.0.0 --port 4200"
 
 [deployment]
 run = ["sh", "-c", "node server/server/server/server/index.ts"]
+
+[[ports]]
+localPort = 8000
+externalPort = 80

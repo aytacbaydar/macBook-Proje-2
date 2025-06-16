@@ -175,17 +175,20 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit, OnDestroy
       })
       .subscribe({
         next: (response) => {
+          console.log('Konular API response:', response);
           if (response.success) {
             this.konular = response.konular || [];
           } else {
             this.error = response.message || 'Konular yüklenemedi';
           }
           this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: (error) => {
           console.error('Konular yüklenirken hata:', error);
           this.error = 'Sunucu ile bağlantı kurulamadı. Lütfen tekrar deneyin.';
           this.isLoading = false;
+          this.cdr.detectChanges();
         },
       });
   }
@@ -200,8 +203,12 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit, OnDestroy
     if (!ogretmenId) {
       console.error('Öğretmen ID bulunamadı');
       this.error = 'Kullanıcı bilgileri bulunamadı. Lütfen tekrar giriş yapın.';
+      this.isLoading = false;
+      this.cdr.detectChanges();
       return;
     }
+
+    console.log('İşlenen konular yükleniyor, öğretmen ID:', ogretmenId);
 
     this.http
       .get<any>(
@@ -210,14 +217,22 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit, OnDestroy
       )
       .subscribe({
         next: (response) => {
+          console.log('İşlenen konular API response:', response);
           if (response.success) {
             this.islenenKonular = response.islenen_konular || [];
+            this.error = '';
           } else {
             console.error('İşlenen konular yüklenirken hata:', response.message);
+            this.error = response.message || 'İşlenen konular yüklenemedi';
           }
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: (error) => {
           console.error('İşlenen konular yüklenirken hata:', error);
+          this.error = 'Sunucu ile bağlantı kurulamadı. Lütfen tekrar deneyin.';
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
       });
   }
