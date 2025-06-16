@@ -230,9 +230,10 @@
               Sınıf Seviyesi
             </label>
             <select class="modern-select" [(ngModel)]="konuForm.sinif_seviyesi" name="sinif_seviyesi">
-              <option *ngFor="let seviye of sinifSeviyeleri" [value]="seviye.value">
-                {{ seviye.label }}
-              </option>
+              <option value="9">9. Sınıf</option>
+              <option value="10">10. Sınıf</option>
+              <option value="11">11. Sınıf</option>
+              <option value="12">12. Sınıf</option>
             </select>
           </div>
 
@@ -262,7 +263,7 @@
         <button type="button" 
                 class="modern-btn modern-btn-primary" 
                 (click)="submitKonu()"
-                [disabled]="isLoading || !konuForm.unite_adi.trim() || !konuForm.konu_adi.trim()">
+                [disabled]="isLoading || !konuForm.unite_adi.trim() || !konuForm.konu_adi.trim() || !konuForm.sinif_seviyesi">
           <i class="bi bi-check-circle"></i>
           {{ isLoading ? 'Kaydediliyor...' : 'Konu Ekle' }}
         </button>

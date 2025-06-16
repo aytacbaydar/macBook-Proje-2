@@ -42,6 +42,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
   konuForm: any = {
     unite_adi: '',
     konu_adi: '',
+    sinif_seviyesi: '',
     aciklama: '',
   };
 
@@ -324,6 +325,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
     this.konuForm = {
       unite_adi: '',
       konu_adi: '',
+      sinif_seviyesi: '',
       aciklama: '',
     };
     this.showKonuModal = true;
@@ -342,6 +344,11 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
 
     if (!this.konuForm.konu_adi.trim()) {
       this.error = 'Konu adı zorunludur';
+      return;
+    }
+
+    if (!this.konuForm.sinif_seviyesi) {
+      this.error = 'Sınıf seviyesi seçimi zorunludur';
       return;
     }
 
