@@ -416,17 +416,23 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
       return 'Sınıf bilgisi yok';
     }
 
-    // Gruptaki öğrencilerin sınıf seviyelerini topla
+    console.log('Grup:', grupAdi);
+    console.log('Grup öğrencileri:', group.students);
+    console.log('İlk öğrenci özellikleri:', Object.keys(group.students[0] || {}));
+
+    // Gruptaki öğrencilerin sınıf seviyelerini topla - hem sinif_seviyesi hem sinifi kontrol et
     const classLevels = group.students
-      .map(student => student.sinif_seviyesi)
+      .map(student => student.sinif_seviyesi || student.sinifi || student.sinif)
       .filter(level => level) // Boş olanları filtrele
       .filter((level, index, arr) => arr.indexOf(level) === index) // Tekrarları kaldır
       .sort(); // Sırala
+
+    console.log('Bulunan sınıf seviyeleri:', classLevels);
 
     if (classLevels.length === 0) {
       return 'Sınıf bilgisi yok';
     }
 
-    return classLevels.join(', ') + ' Sınıf';
+    return classLevels.join(', ');
   }
 }
