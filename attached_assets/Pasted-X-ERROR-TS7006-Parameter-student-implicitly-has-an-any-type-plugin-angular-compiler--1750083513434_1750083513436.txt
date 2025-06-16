@@ -1,0 +1,67 @@
+X [ERROR] TS7006: Parameter 'student' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-islenen-konular-sayfasi/ogretmen-islenen-konular-sayfasi.component.ts:225:13:
+      225 │         .map(student => student.sinifi || student.sinif_seviyesi ...
+          ╵              ~~~~~~~
+
+
+X [ERROR] TS7006: Parameter 'level' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-islenen-konular-sayfasi/ogretmen-islenen-konular-sayfasi.component.ts:226:16:
+      226 │         .filter(level => level)
+          ╵                 ~~~~~
+
+
+X [ERROR] TS7006: Parameter 'level' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-islenen-konular-sayfasi/ogretmen-islenen-konular-sayfasi.component.ts:227:17:
+      227 │         .filter((level, index, arr) => arr.indexOf(level) === ind...
+          ╵                  ~~~~~
+
+
+X [ERROR] TS7006: Parameter 'index' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-islenen-konular-sayfasi/ogretmen-islenen-konular-sayfasi.component.ts:227:24:
+      227 │         .filter((level, index, arr) => arr.indexOf(level) === ind...
+          ╵                         ~~~~~
+
+
+X [ERROR] TS7006: Parameter 'arr' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-islenen-konular-sayfasi/ogretmen-islenen-konular-sayfasi.component.ts:227:31:
+      227 │         .filter((level, index, arr) => arr.indexOf(level) === ind...
+          ╵                                ~~~
+
+
+X [ERROR] TS7006: Parameter 'student' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-islenen-konular-sayfasi/ogretmen-islenen-konular-sayfasi.component.ts:460:11:
+      460 │       .map(student => student.sinifi || student.sinif_seviyesi ||...
+          ╵            ~~~~~~~
+
+
+X [ERROR] TS7006: Parameter 'level' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-islenen-konular-sayfasi/ogretmen-islenen-konular-sayfasi.component.ts:461:14:
+      461 │       .filter(level => level) // Boş olanları filtrele
+          ╵               ~~~~~
+
+
+X [ERROR] TS7006: Parameter 'level' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-islenen-konular-sayfasi/ogretmen-islenen-konular-sayfasi.component.ts:462:15:
+      462 │       .filter((level, index, arr) => arr.indexOf(level) === index...
+          ╵                ~~~~~
+
+
+X [ERROR] TS7006: Parameter 'index' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-islenen-konular-sayfasi/ogretmen-islenen-konular-sayfasi.component.ts:462:22:
+      462 │       .filter((level, index, arr) => arr.indexOf(level) === index...
+          ╵                       ~~~~~
+
+
+X [ERROR] TS7006: Parameter 'arr' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-islenen-konular-sayfasi/ogretmen-islenen-konular-sayfasi.component.ts:462:29:
+      462 │       .filter((level, index, arr) => arr.indexOf(level) === index...
