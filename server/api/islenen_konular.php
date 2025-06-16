@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require_once '../config.php';
 
 try {
-    $pdo = getConnection();
+    $conn = getConnection();
     
     $ogretmen_id = $_GET['ogretmen_id'] ?? null;
     
@@ -26,7 +26,7 @@ try {
             WHERE ik.ogretmen_id = ?
             ORDER BY ik.id ASC";
     
-    $stmt = $pdo->prepare($sql);
+    $stmt = $conn->prepare($sql);
     $stmt->execute([$ogretmen_id]);
     $islenen_konular = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
