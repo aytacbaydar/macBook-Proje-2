@@ -1,21 +1,11 @@
 <?php
-header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
-
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    exit(0);
-}
-
 require_once '../config.php';
 
 try {
-    $pdo = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8mb4", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
+    $conn = getConnection();
+    
     // Tüm konuları ID sırasına göre getir - hiçbir filtreleme yok
-    $stmt = $pdo->prepare("SELECT * FROM konular ORDER BY id ASC");
+    $stmt = $conn->prepare("SELECT * FROM konular ORDER BY id ASC");
     $stmt->execute();
     $konular = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
