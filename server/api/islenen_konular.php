@@ -24,7 +24,7 @@ try {
             FROM islenen_konular ik
             JOIN konular k ON ik.konu_id = k.id
             WHERE ik.ogretmen_id = ?
-            ORDER BY ik.isleme_tarihi DESC";
+            ORDER BY ik.id ASC";
     
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$ogretmen_id]);
