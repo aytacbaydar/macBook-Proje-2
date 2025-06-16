@@ -213,7 +213,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
 
   // FİLTRELEME TAMAMEN KALDIRILDI - TÜM KONULAR GÖSTERİLİYOR
   getUnitesByGroup(grupAdi: string): any[] {
-    console.log('=== DEĞIŞIKLIK YAPILDI ===');
+    console.log('=== DEĞIŞIKLIK YAPILDI Aytaç ===');
     console.log('Grup:', grupAdi);
     console.log('Toplam veritabanındaki konu sayısı:', this.konular.length);
     console.log('Bütün konular şu kadar sayı:', this.konular.length);
