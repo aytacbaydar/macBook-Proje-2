@@ -222,9 +222,9 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
     
     if (group && group.students && group.students.length > 0) {
       groupClassLevels = group.students
-        .map(student => student.sinifi || student.sinif_seviyesi || student.sinif)
-        .filter(level => level)
-        .filter((level, index, arr) => arr.indexOf(level) === index); // Tekrarları kaldır
+        .map((student: any) => student.sinifi || student.sinif_seviyesi || student.sinif)
+        .filter((level: string) => level)
+        .filter((level: string, index: number, arr: string[]) => arr.indexOf(level) === index); // Tekrarları kaldır
     }
     
     console.log('Grubun sınıf seviyeleri:', groupClassLevels);
@@ -457,9 +457,9 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit {
 
     // Gruptaki öğrencilerin sınıf seviyelerini topla
     const classLevels = group.students
-      .map(student => student.sinifi || student.sinif_seviyesi || student.sinif)
-      .filter(level => level) // Boş olanları filtrele
-      .filter((level, index, arr) => arr.indexOf(level) === index) // Tekrarları kaldır
+      .map((student: any) => student.sinifi || student.sinif_seviyesi || student.sinif)
+      .filter((level: string) => level) // Boş olanları filtrele
+      .filter((level: string, index: number, arr: string[]) => arr.indexOf(level) === index) // Tekrarları kaldır
       .sort(); // Sırala
 
     if (classLevels.length === 0) {
