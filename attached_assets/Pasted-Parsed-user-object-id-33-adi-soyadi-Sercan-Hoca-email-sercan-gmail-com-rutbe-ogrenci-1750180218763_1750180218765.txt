@@ -1,0 +1,160 @@
+Parsed user object: 
+{id: 33, adi_soyadi: 'Sercan Hoca', email: 'sercan@gmail.com', rutbe: 'ogrenci', avatar: 'avatar/Melih_Kurt_AYTAC-BAYDAR.jpg', …}
+adi_soyadi
+: 
+"Sercan Hoca"
+avatar
+: 
+"avatar/Melih_Kurt_AYTAC-BAYDAR.jpg"
+ders_adi
+: 
+"Kimya"
+email
+: 
+"sercan@gmail.com"
+grubu
+: 
+"FAC"
+id
+: 
+33
+loginTime
+: 
+"2025-06-17T16:57:25.080Z"
+ogretmeni
+: 
+"Aytaç Baydar"
+rutbe
+: 
+"ogrenci"
+sinifi
+: 
+"11.Sınıf"
+token
+: 
+"b59920573b2c42b10e9a01203bc870a6"
+[[Prototype]]
+: 
+Object
+main-VZMFUAWM.js:604 Öğrenci bilgileri yüklendi: 
+{id: 33, name: 'Sercan Hoca', class: '11.Sınıf', teacher: 'Aytaç Baydar', avatar: 'avatar/Melih_Kurt_AYTAC-BAYDAR.jpg', …}
+main-VZMFUAWM.js:604 Token found: Yes
+main-VZMFUAWM.js:604 Student info loaded: 
+{id: 33, adi_soyadi: 'Sercan Hoca', email: 'sercan@gmail.com', cep_telefonu: '12345678', rutbe: 'ogrenci', …}
+main-VZMFUAWM.js:604 Grup bilgisi yok, işlenen konular yüklenmeyecek
+main-VZMFUAWM.js:604 Konular API response: 
+{success: true, konular: Array(31), total_count: 31, message: 'Tüm konular filtresiz olarak getirildi'}
+konular
+: 
+Array(31)
+0
+: 
+{id: 1, unite_adi: 'Kimya Bilimi', konu_adi: 'Simyadan Kimyaya', sinif_seviyesi: '9.Sınıf', aciklama: '', …}
+1
+: 
+{id: 2, unite_adi: 'Kimya Bilimi', konu_adi: 'Kimya Disiplinleri ve Kimyacıların Çalışma Alanları', sinif_seviyesi: '9.Sınıf', aciklama: '', …}
+2
+: 
+{id: 3, unite_adi: 'Kimya Bilimi', konu_adi: 'Kimyanın Sembolik Dili', sinif_seviyesi: '9.Sınıf', aciklama: '', …}
+3
+: 
+{id: 4, unite_adi: 'Kimya Bilimi', konu_adi: 'Kimya Uygulamalarında İş Sağlığı ve Güvenliği', sinif_seviyesi: '9.Sınıf', aciklama: '', …}
+4
+: 
+{id: 5, unite_adi: 'Atomun Yapısı', konu_adi: 'Atom Modelleri', sinif_seviyesi: '9.Sınıf', aciklama: '', …}
+5
+: 
+{id: 6, unite_adi: 'Atomun Yapısı', konu_adi: 'Atom Altı Parçacıklar', sinif_seviyesi: '9.Sınıf', aciklama: '', …}
+6
+: 
+{id: 7, unite_adi: 'Periyodik Sistem', konu_adi: 'Periyodik Sistem', sinif_seviyesi: '9.Sınıf', aciklama: '', …}
+7
+: 
+{id: 8, unite_adi: 'Periyodik Sistem', konu_adi: 'Periyodik Tablodaki Grupların Özellikleri', sinif_seviyesi: '9.Sınıf', aciklama: '', …}
+8
+: 
+{id: 9, unite_adi: 'Kimyasal Türler Arası Etkileşimler', konu_adi: 'Kimyasal Tür', sinif_seviyesi: '9.Sınıf', aciklama: '', …}
+9
+: 
+{id: 10, unite_adi: 'Kimyasal Türler Arası Etkileşimler', konu_adi: 'Güçlü Etkileşimler', sinif_seviyesi: '9.Sınıf', aciklama: '', …}
+10
+: 
+{id: 11, unite_adi: 'Kimyasal Türler Arası Etkileşimler', konu_adi: 'Zayıf Etkileşimler', sinif_seviyesi: '9.Sınıf', aciklama: '', …}
+11
+: 
+{id: 12, unite_adi: 'Kimyasal Türler Arası Etkileşimler', konu_adi: 'Fiziksel ve Kimyasal Değişmeler', sinif_seviyesi: '9.Sınıf', aciklama: '', …}
+12
+: 
+{id: 13, unite_adi: 'Maddenin Halleri', konu_adi: 'Katılar', sinif_seviyesi: '9.Sınıf', aciklama: '', …}
+13
+: 
+{id: 14, unite_adi: 'Maddenin Halleri', konu_adi: 'Sıvılar', sinif_seviyesi: '9.Sınıf', aciklama: '', …}
+14
+: 
+{id: 15, unite_adi: 'Maddenin Halleri', konu_adi: 'Gazlar', sinif_seviyesi: '9.Sınıf', aciklama: '', …}
+15
+: 
+{id: 16, unite_adi: 'Maddenin Halleri', konu_adi: 'Plazma', sinif_seviyesi: '9.Sınıf', aciklama: '', …}
+16
+: 
+{id: 17, unite_adi: 'Kimyanın Temel Kanunları', konu_adi: 'Kütlenin Korunumu', sinif_seviyesi: '10.Sınıf', aciklama: '', …}
+17
+: 
+{id: 18, unite_adi: 'Kimyanın Temel Kanunları', konu_adi: 'Sabit Oranlar', sinif_seviyesi: '10.Sınıf', aciklama: '', …}
+18
+: 
+{id: 19, unite_adi: 'Kimyanın Temel Kanunları', konu_adi: 'Katlı Oranlar', sinif_seviyesi: '10.Sınıf', aciklama: '', …}
+19
+: 
+{id: 20, unite_adi: 'Mol Kavramı', konu_adi: 'Mol Kavramı', sinif_seviyesi: '10.Sınıf', aciklama: '', …}
+20
+: 
+{id: 21, unite_adi: 'Mol Kavramı', konu_adi: 'Bağıl atom kütlesi ve mol kütlesi', sinif_seviyesi: '10.Sınıf', aciklama: '', …}
+21
+: 
+{id: 22, unite_adi: 'Kimyasal Tepkimeler ve Denklemler', konu_adi: 'Kimyasal Tepkime Türleri', sinif_seviyesi: '10', aciklama: '', …}
+22
+: 
+{id: 23, unite_adi: 'Kimyasal Tepkimeler ve Denklemler', konu_adi: 'Kimyasal Tepkimelerde Hesaplamalar', sinif_seviyesi: '10.Sınıf', aciklama: '', …}
+23
+: 
+{id: 24, unite_adi: 'Karışımlar', konu_adi: 'Homojen ve Heterojen Karışımlar', sinif_seviyesi: '10.Sınıf', aciklama: '', …}
+24
+: 
+{id: 25, unite_adi: 'Karışımlar', konu_adi: 'Ayırma ve Saflaştırma Teknikleri', sinif_seviyesi: '10.Sınıf', aciklama: '', …}
+25
+: 
+{id: 26, unite_adi: 'Asitler, Bazlar veTuzlar', konu_adi: 'Asit ve Bazların Özellikleri', sinif_seviyesi: '10.Sınıf', aciklama: '', …}
+26
+: 
+{id: 27, unite_adi: 'Asitler, Bazlar veTuzlar', konu_adi: 'pH Kavramı', sinif_seviyesi: '10.Sınıf', aciklama: '', …}
+27
+: 
+{id: 28, unite_adi: 'Asitler, Bazlar veTuzlar', konu_adi: 'Asitlerin ve Bazların Tepkimeleri', sinif_seviyesi: '10.Sınıf', aciklama: '', …}
+28
+: 
+{id: 29, unite_adi: 'Asitler, Bazlar veTuzlar', konu_adi: 'Hayatımızda Asitler ve Bazlar', sinif_seviyesi: '10.Sınıf', aciklama: '', …}
+29
+: 
+{id: 30, unite_adi: 'Asitler, Bazlar veTuzlar', konu_adi: 'Tuzlar', sinif_seviyesi: '10.Sınıf', aciklama: '', …}
+30
+: 
+{id: 31, unite_adi: 'Modern Atom Teorisi', konu_adi: 'Atomun Kuantum Modeli', sinif_seviyesi: '11.Sınıf', aciklama: '', …}
+length
+: 
+31
+[[Prototype]]
+: 
+Array(0)
+message
+: 
+"Tüm konular filtresiz olarak getirildi"
+success
+: 
+true
+total_count
+: 
+31
+[[Prototype]]
+: 
+Object
