@@ -130,6 +130,82 @@
           </div>
         </div>
   
+        <!-- Son İşlenen Konular Bölümü -->
+        <div class="row g-3 mb-4">
+          <div class="col-12">
+            <div class="card shadow-sm">
+              <div class="card-header bg-gradient-success text-white">
+                <h5 class="card-title mb-0 d-flex align-items-center">
+                  <i class="bi bi-bookmark-check-fill me-2"></i>
+                  Son İşlenen Konular
+                </h5>
+              </div>
+              <div class="card-body">
+                <!-- Loading State -->
+                <div *ngIf="isLoadingTopics" class="text-center py-3">
+                  <div class="spinner-border spinner-border-sm text-success" role="status">
+                    <span class="visually-hidden">Yükleniyor...</span>
+                  </div>
+                  <p class="text-muted mt-2 mb-0">Konular yükleniyor...</p>
+                </div>
+
+                <!-- Error State -->
+                <div *ngIf="topicsError && !isLoadingTopics" class="text-center py-3">
+                  <i class="bi bi-exclamation-triangle text-warning"></i>
+                  <p class="text-muted mb-2">{{ topicsError }}</p>
+                  <button class="btn btn-sm btn-outline-success" (click)="loadRecentTopics()">
+                    <i class="bi bi-arrow-clockwise me-1"></i>
+                    Tekrar Dene
+                  </button>
+                </div>
+
+                <!-- Son İşlenen Konular Listesi -->
+                <div *ngIf="!isLoadingTopics && !topicsError && recentTopics.length > 0" class="recent-topics-list">
+                  <div class="topic-item-recent" 
+                       *ngFor="let topic of recentTopics; let i = index"
+                       [style.animation-delay]="i * 0.1 + 's'">
+                    <div class="topic-status-icon">
+                      <i class="bi bi-check-circle-fill text-success"></i>
+                    </div>
+                    <div class="topic-content-recent">
+                      <div class="topic-header-recent">
+                        <h6 class="topic-title-recent">{{ topic.konu_adi }}</h6>
+                        <span class="topic-class-badge-recent">{{ topic.sinif_seviyesi }}</span>
+                      </div>
+                      <div class="topic-meta-recent">
+                        <span class="topic-unit">
+                          <i class="bi bi-folder me-1"></i>
+                          {{ topic.unite_adi }}
+                        </span>
+                        <span class="topic-date">
+                          <i class="bi bi-calendar-check me-1"></i>
+                          {{ formatDate(topic.isleme_tarihi) }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Boş Durum -->
+                <div *ngIf="!isLoadingTopics && !topicsError && recentTopics.length === 0" class="text-center py-4">
+                  <i class="bi bi-journal-x text-muted" style="font-size: 2rem;"></i>
+                  <p class="text-muted mt-2 mb-0">Henüz işlenen konu bulunmuyor</p>
+                  <small class="text-muted">Öğretmeniniz konuları işledikçe burada görünecek</small>
+                </div>
+
+                <!-- Tümünü Gör Butonu -->
+                <div *ngIf="!isLoadingTopics && !topicsError && recentTopics.length > 0" class="text-center mt-3">
+                  <a routerLink="/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi" 
+                     class="btn btn-outline-success btn-sm">
+                    <i class="bi bi-arrow-right me-1"></i>
+                    Tüm Konuları Gör
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Progress Charts Row -->
         <div class="row g-3">
           <!-- Devamsızlık Grafiği -->

@@ -1,77 +1,76 @@
-
 .student-dashboard-container {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
-  
+
   // Sidebar Styles
   .sidebar {
     width: 280px;
     background: linear-gradient(180deg, #28a745 0%, #20c997 100%);
     transition: all 0.3s ease;
     position: relative;
-    
+
     &.collapsed {
       width: 70px;
-      
+
       .sidebar-header {
         padding: 1rem 0.5rem;
       }
-      
+
       .user-info {
         display: none;
       }
     }
   }
-  
+
   .sidebar-header {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
   }
-  
+
   .sidebar-menu {
     .nav-link {
       color: rgba(255, 255, 255, 0.8);
       transition: all 0.3s ease;
-      
+
       &:hover {
         background: rgba(255, 255, 255, 0.1);
         color: white;
         transform: translateX(4px);
       }
-      
+
       &.active {
         background: rgba(255, 255, 255, 0.15);
         color: white;
         font-weight: 500;
       }
-      
+
       i {
         font-size: 1.1rem;
       }
     }
   }
-  
+
   // Header Styles
   .header {
     backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
   }
-  
+
   // Card Styles
   .card {
     border: none;
     transition: all 0.3s ease;
-    
+
     &:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
     }
-    
+
     &.border-start {
       border-left-width: 4px !important;
     }
   }
-  
+
   .icon-bg {
     width: 50px;
     height: 50px;
@@ -79,38 +78,38 @@
     align-items: center;
     justify-content: center;
   }
-  
+
   // Gradient Backgrounds
   .bg-gradient-primary {
     background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
   }
-  
+
   .bg-gradient-success {
     background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
   }
-  
+
   // Progress Bar Animations
   .progress-bar {
     transition: width 1s ease-in-out;
   }
-  
+
   // Button Styles
   .btn {
     border-radius: 8px;
     font-weight: 500;
     transition: all 0.3s ease;
-    
+
     &:hover {
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
   }
-  
+
   // Content Animations
   .content {
     animation: fadeInUp 0.6s ease-out;
   }
-  
+
   @keyframes fadeInUp {
     from {
       opacity: 0;
@@ -121,57 +120,224 @@
       transform: translateY(0);
     }
   }
-  
+
   // Responsive Design
   @media (max-width: 768px) {
     .sidebar {
       position: fixed;
       z-index: 1000;
       height: 100vh;
-      
+
       &.collapsed {
         transform: translateX(-100%);
       }
     }
-    
+
     .main-content {
       margin-left: 0;
     }
-    
+
     .header {
       h4 {
         font-size: 1.1rem;
       }
     }
   }
-  
+
   // Color Variants
   .bg-success-subtle {
     background-color: rgba(25, 135, 84, 0.1);
   }
-  
+
   .bg-primary-subtle {
     background-color: rgba(13, 110, 253, 0.1);
   }
-  
+
   .bg-warning-subtle {
     background-color: rgba(255, 193, 7, 0.1);
   }
-  
+
   .bg-info-subtle {
     background-color: rgba(13, 202, 240, 0.1);
   }
-  
+
   // Badge Styles
   .badge {
     font-size: 0.75rem;
     padding: 0.5rem 1rem;
     border-radius: 20px;
   }
-  
+
   // Card Header Enhancements
   .card-header {
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
     font-weight: 600;
   }
-  
+
+// Son İşlenen Konular Stilleri
+.recent-topics-list {
+  .topic-item-recent {
+    display: flex;
+    align-items: flex-start;
+    padding: 12px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    border-left: 3px solid #28a745;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    animation: slideInFromLeft 0.5s ease-out forwards;
+    opacity: 0;
+    transform: translateX(-20px);
+
+    &:hover {
+      background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .topic-status-icon {
+      margin-right: 12px;
+      margin-top: 2px;
+
+      i {
+        font-size: 18px;
+        color: #28a745;
+      }
+    }
+
+    .topic-content-recent {
+      flex: 1;
+      min-width: 0;
+
+      .topic-header-recent {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 6px;
+
+        .topic-title-recent {
+          font-size: 14px;
+          font-weight: 600;
+          color: #2c3e50;
+          margin: 0;
+          line-height: 1.3;
+          flex: 1;
+          min-width: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .topic-class-badge-recent {
+          background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+          color: white;
+          font-size: 11px;
+          font-weight: 600;
+          padding: 2px 8px;
+          border-radius: 12px;
+          margin-left: 8px;
+          white-space: nowrap;
+        }
+      }
+
+      .topic-meta-recent {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        font-size: 12px;
+        color: #6c757d;
+
+        .topic-unit,
+        .topic-date {
+          display: flex;
+          align-items: center;
+
+          i {
+            font-size: 11px;
+            opacity: 0.7;
+          }
+        }
+
+        .topic-unit {
+          color: #17a2b8;
+          font-weight: 500;
+        }
+
+        .topic-date {
+          color: #28a745;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}
+
+// Animasyonlar
+@keyframes slideInFromLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Responsive tasarım
+@media (max-width: 768px) {
+  .recent-topics-list {
+    .topic-item-recent {
+      padding: 10px;
+
+      .topic-content-recent {
+        .topic-header-recent {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 4px;
+
+          .topic-class-badge-recent {
+            margin-left: 0;
+            align-self: flex-start;
+          }
+        }
+
+        .topic-meta-recent {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 4px;
+        }
+      }
+    }
+  }
+}
+
+// Koyu tema için
+@media (prefers-color-scheme: dark) {
+  .recent-topics-list {
+    .topic-item-recent {
+      background: linear-gradient(135deg, #343a40 0%, #495057 100%);
+      border-left-color: #28a745;
+
+      &:hover {
+        background: linear-gradient(135deg, #495057 0%, #6c757d 100%);
+      }
+
+      .topic-content-recent {
+        .topic-header-recent {
+          .topic-title-recent {
+            color: #f8f9fa;
+          }
+        }
+
+        .topic-meta-recent {
+          color: #adb5bd;
+        }
+      }
+    }
+  }
+}
