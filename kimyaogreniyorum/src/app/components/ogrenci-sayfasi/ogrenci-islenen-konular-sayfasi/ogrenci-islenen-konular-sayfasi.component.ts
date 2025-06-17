@@ -161,8 +161,10 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
       // Grup bilgisini farklı fieldlardan kontrol et
       const grupBilgisi = this.studentInfo?.grup || this.studentInfo?.grubu;
       if (!grupBilgisi) {
-        console.log('Grup bilgisi yok, işlenen konular yüklenmeyecek');
+        console.log('=== GRUP BİLGİSİ YOK ===');
         console.log('StudentInfo:', this.studentInfo);
+        console.log('StudentInfo grup field:', this.studentInfo?.grup);
+        console.log('StudentInfo grubu field:', this.studentInfo?.grubu);
         resolve();
         return;
       }
@@ -183,35 +185,59 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      // Doğrudan grup bilgisi ile işlenen konuları çek (öğretmen sayfası gibi)
-      console.log(`${grupBilgisi} grubu için işlenen konular yükleniyor`);
+      // API URL'ini logla
+      const apiUrl = `${this.apiBaseUrl}/islenen_konular.php?grup=${encodeURIComponent(grupBilgisi)}`;
+      console.log(`=== ${grupBilgisi} GRUBU İŞLENEN KONULAR API ÇEKİLİYOR ===`);
+      console.log('API URL:', apiUrl);
+      console.log('Headers:', headers);
       
-      this.http.get<any>(`${this.apiBaseUrl}/islenen_konular.php?grup=${encodeURIComponent(grupBilgisi)}`, { headers }).subscribe({
+      this.http.get<any>(apiUrl, { headers }).subscribe({
         next: (response) => {
-          console.log(`${grupBilgisi} grubu için İşlenen konular API response:`, response);
+          console.log(`=== ${grupBilgisi} GRUBU API RESPONSE ===`);
+          console.log('Full Response:', response);
+          console.log('Response success:', response.success);
+          console.log('Response message:', response.message);
+          console.log('Response islenen_konular array:', response.islenen_konular);
+          
           if (response.success && response.islenen_konular) {
             this.islenenKonular = response.islenen_konular;
             
-            // Detaylı loglama (öğretmen sayfası gibi)
-            if (this.islenenKonular.length > 0) {
-              console.log(`${grupBilgisi} grubu için ilk konunun field'ları:`, Object.keys(this.islenenKonular[0]));
-              console.log(`${grupBilgisi} grubu için ilk konu verisi:`, this.islenenKonular[0]);
-              console.log(`${grupBilgisi} grubu için işlenen konular:`, this.islenenKonular);
-              
-              // Sınıf seviyelerini kontrol et
-              const sinifSeviyeleri = [...new Set(this.islenenKonular.map(k => k.sinif_seviyesi).filter(s => s))];
-              console.log(`${grupBilgisi} grubu sınıf seviyeleri:`, sinifSeviyeleri);
-            }
+            console.log(`=== ${grupBilgisi} GRUBU VERİ ANALİZİ ===`);
+            console.log('İşlenen konular array length:', this.islenenKonular.length);
             
-            console.log(`${grupBilgisi} grubu için işlenen konular yüklendi:`, this.islenenKonular.length);
+            // Her bir konuyu detayıyla logla
+            this.islenenKonular.forEach((konu, index) => {
+              console.log(`Konu ${index + 1}:`, konu);
+              console.log(`  - ID: ${konu.id}`);
+              console.log(`  - Konu ID: ${konu.konu_id}`);
+              console.log(`  - Grup: ${konu.grup_adi}`);
+              console.log(`  - Konu Adı: ${konu.konu_adi || konu.konu_baslik}`);
+              console.log(`  - Sınıf: ${konu.sinif_seviyesi}`);
+              console.log(`  - Tarih: ${konu.isleme_tarihi}`);
+            });
+            
+            // Sınıf seviyelerini kontrol et
+            const sinifSeviyeleri = [...new Set(this.islenenKonular.map(k => k.sinif_seviyesi).filter(s => s))];
+            console.log(`${grupBilgisi} grubu sınıf seviyeleri:`, sinifSeviyeleri);
+            
+            // Konu ID'lerini listele
+            const konuIdleri = this.islenenKonular.map(k => k.konu_id);
+            console.log(`${grupBilgisi} grubu işlenen konu ID'leri:`, konuIdleri);
+            
           } else {
-            console.log(`${grupBilgisi} grubu için işlenen konu bulunamadı veya API hatası`);
+            console.log(`=== ${grupBilgisi} GRUBU - VERİ BULUNAMADI ===`);
+            console.log('API Success Status:', response.success);
+            console.log('API Message:', response.message);
             this.islenenKonular = [];
           }
           resolve();
         },
         error: (error) => {
-          console.error(`${grupBilgisi} grubu için işlenen konular yüklenirken hata:`, error);
+          console.error(`=== ${grupBilgisi} GRUBU - API HATASI ===`);
+          console.error('Full Error:', error);
+          console.error('Error Status:', error.status);
+          console.error('Error Message:', error.message);
+          console.error('Error Response:', error.error);
           this.islenenKonular = [];
           resolve();
         }
@@ -287,10 +313,20 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
   // Konu işlenmiş mi kontrol et
   konuIslendi(konuId: number): boolean {
     const grupBilgisi = this.studentInfo?.grup || this.studentInfo?.grubu;
-    if (!grupBilgisi) return false;
-    return this.islenenKonular.some(
+    if (!grupBilgisi) {
+      console.log(`Konu ${konuId} - grup bilgisi yok`);
+      return false;
+    }
+    
+    const islendi = this.islenenKonular.some(
       islenen => islenen.konu_id === konuId && islenen.grup_adi === grupBilgisi
     );
+    
+    console.log(`Konu ${konuId} işlenmiş mi? ${islendi}`);
+    console.log(`Grup: ${grupBilgisi}`);
+    console.log(`İşlenen konular:`, this.islenenKonular.map(k => ({ konu_id: k.konu_id, grup: k.grup_adi })));
+    
+    return islendi;
   }
 
   // İşlenen konunun tarihini al

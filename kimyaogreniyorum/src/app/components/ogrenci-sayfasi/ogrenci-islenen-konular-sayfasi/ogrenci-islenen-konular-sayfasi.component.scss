@@ -1,6 +1,6 @@
 .student-processed-topics-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #f8f9fa;
   color: #333;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
@@ -10,7 +10,7 @@
     align-items: center;
     justify-content: center;
     min-height: 50vh;
-    color: white;
+    color: #6c757d;
 
     .spinner-border {
       width: 3rem;
@@ -305,7 +305,7 @@
   .empty-state {
     text-align: center;
     padding: 4rem 2rem;
-    color: white;
+    color: #6c757d;
 
     .empty-content {
       max-width: 400px;
