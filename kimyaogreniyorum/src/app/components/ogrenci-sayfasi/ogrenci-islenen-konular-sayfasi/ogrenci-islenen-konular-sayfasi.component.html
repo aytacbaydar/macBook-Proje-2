@@ -61,13 +61,13 @@
               <i class="bi bi-mortarboard me-1"></i>
               {{ studentInfo.sinifi }}
             </span>
-            <span class="meta-item" *ngIf="studentInfo.grup">
+            <span class="meta-item" *ngIf="studentInfo.grup || studentInfo.grubu">
               <i class="bi bi-people me-1"></i>
-              {{ studentInfo.grup }}
+              {{ studentInfo.grup || studentInfo.grubu }}
             </span>
-            <span class="meta-item" *ngIf="studentInfo.okulu">
-              <i class="bi bi-building me-1"></i>
-              {{ studentInfo.okulu }}
+            <span class="meta-item" *ngIf="studentInfo.ogretmeni">
+              <i class="bi bi-person-badge me-1"></i>
+              {{ studentInfo.ogretmeni }}
             </span>
           </div>
         </div>
@@ -203,7 +203,7 @@
         
         <div class="stat-card">
           <div class="stat-icon">
-            <i class="bi bi-folder-fill"></i>
+            <i class="bi bi-folder-check"></i>
           </div>
           <div class="stat-content">
             <h4>{{ getUnitesByGroup().length }}</h4>
