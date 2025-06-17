@@ -40,8 +40,8 @@
   }
 }
 
-.page-header {
-  .modern-btn {
+// Modern Button Styles
+.modern-btn {
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 6px;
@@ -161,13 +161,13 @@
         background: #3b82f6;
         border-radius: 20px;
         transition: width 0.3s ease;
-      }
 
-      .progress-fill {
-        height: 100%;
-        background: #3b82f6;
-        border-radius: 20px;
-        transition: width 0.3s ease;
+        .progress-fill {
+          height: 100%;
+          background: #3b82f6;
+          border-radius: 20px;
+          transition: width 0.3s ease;
+        }
       }
     }
   }
@@ -198,5 +198,4 @@
       }
     }
   }
-}
 }
