@@ -75,8 +75,8 @@
     </div>
 
     <!-- Topics by Units -->
-    <div class="topics-container" *ngIf="groupedTopics.length > 0">
-      <div class="unit-section" *ngFor="let unit of groupedTopics; let unitIndex = index">
+    <div class="topics-container" *ngIf="getUnitesByGroup().length > 0">
+      <div class="unit-section" *ngFor="let unit of getUnitesByGroup(); let unitIndex = index">
         
         <!-- Unit Header -->
         <div class="unit-header">
@@ -86,7 +86,6 @@
             </div>
             <div class="unit-info">
               <h4>{{ unitIndex + 1 }}. {{ unit.unite_adi }}</h4>
-              <p class="unit-description" *ngIf="unit.aciklama">{{ unit.aciklama }}</p>
             </div>
           </div>
           <div class="unit-stats">
@@ -114,42 +113,42 @@
         <!-- Topics List -->
         <div class="topics-list">
           <div class="topic-item" 
-               *ngFor="let topic of unit.konular; let topicIndex = index"
-               [class.completed]="isTopicProcessed(topic.id)">
+               *ngFor="let konu of unit.konular; let topicIndex = index"
+               [class.completed]="konuIslendi(konu.id)">
             
-            <!-- Topic Status Icon -->
+            <!-- Topic Status -->
             <div class="topic-status">
               <i class="bi" 
-                 [class.bi-check-circle-fill]="isTopicProcessed(topic.id)"
-                 [class.bi-circle]="!isTopicProcessed(topic.id)"
-                 [class.text-success]="isTopicProcessed(topic.id)"
-                 [class.text-muted]="!isTopicProcessed(topic.id)"></i>
+                 [class.bi-check-circle-fill]="konuIslendi(konu.id)"
+                 [class.bi-circle]="!konuIslendi(konu.id)"
+                 [class.text-success]="konuIslendi(konu.id)"
+                 [class.text-muted]="!konuIslendi(konu.id)"></i>
             </div>
 
             <!-- Topic Content -->
             <div class="topic-content">
               <div class="topic-header">
                 <h5 class="topic-title">
-                  {{ topicIndex + 1 }}. {{ topic.konu_adi }}
+                  {{ topicIndex + 1 }}. {{ konu.konu_adi }}
                 </h5>
-                <span class="topic-class-badge">{{ topic.sinif_seviyesi }}</span>
+                <span class="topic-class-badge">{{ konu.sinif_seviyesi }}</span>
               </div>
               
-              <p class="topic-description" *ngIf="topic.aciklama">
-                {{ topic.aciklama }}
+              <p class="topic-description" *ngIf="konu.aciklama">
+                {{ konu.aciklama }}
               </p>
 
               <!-- Topic Processing Date -->
-              <div class="topic-meta" *ngIf="isTopicProcessed(topic.id)">
+              <div class="topic-meta" *ngIf="konuIslendi(konu.id)">
                 <small class="processed-date">
                   <i class="bi bi-calendar-check me-1"></i>
-                  {{ getTopicProcessedDate(topic.id) | date:'dd MMMM yyyy' }}
+                  {{ formatDate(getKonuIslemeTarihi(konu.id)!) }}
                 </small>
               </div>
             </div>
 
             <!-- Topic Actions -->
-            <div class="topic-actions" *ngIf="isTopicProcessed(topic.id)">
+            <div class="topic-actions" *ngIf="konuIslendi(konu.id)">
               <span class="completed-badge">
                 <i class="bi bi-check-lg me-1"></i>
                 Tamamlandı
@@ -161,7 +160,7 @@
     </div>
 
     <!-- Empty State -->
-    <div *ngIf="!isLoading && !error && groupedTopics.length === 0" class="empty-state">
+    <div *ngIf="!isLoading && !error && getUnitesByGroup().length === 0" class="empty-state">
       <div class="empty-content">
         <i class="bi bi-journal-x"></i>
         <h3>Henüz İşlenen Konu Yok</h3>
@@ -170,7 +169,7 @@
     </div>
 
     <!-- Summary Stats -->
-    <div class="summary-stats" *ngIf="groupedTopics.length > 0">
+    <div class="summary-stats" *ngIf="getUnitesByGroup().length > 0">
       <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-icon">
@@ -207,7 +206,7 @@
             <i class="bi bi-folder-fill"></i>
           </div>
           <div class="stat-content">
-            <h4>{{ groupedTopics.length }}</h4>
+            <h4>{{ getUnitesByGroup().length }}</h4>
             <p>Ünite</p>
           </div>
         </div>
