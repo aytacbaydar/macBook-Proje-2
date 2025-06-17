@@ -1,1 +1,292 @@
 <p>ogretmen-konu-islemleri-sayfasi works!</p>
+<div class="konu-islemleri-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h2>
+        <i class="bi bi-journal-text me-2"></i>
+        Konu Yönetimi
+      </h2>
+      <p class="text-muted">Konuları ekleyin, düzenleyin ve yönetin</p>
+    </div>
+    <button class="btn btn-primary" (click)="openKonuModal()">
+      <i class="bi bi-plus-circle me-2"></i>
+      Yeni Konu Ekle
+    </button>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <div class="row g-3">
+      <div class="col-md-4">
+        <div class="search-box">
+          <i class="bi bi-search"></i>
+          <input 
+            type="text" 
+            class="form-control" 
+            placeholder="Konu veya ünite ara..." 
+            [(ngModel)]="searchQuery"
+            (input)="onSearchChange()">
+        </div>
+      </div>
+      <div class="col-md-3">
+        <select class="form-select" [(ngModel)]="selectedSinif" (change)="onSinifChange()">
+          <option value="">Tüm sınıflar</option>
+          <option *ngFor="let sinif of sinifOptions" [value]="sinif">{{ sinif }}. Sınıf</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select class="form-select" [(ngModel)]="selectedUnite" (change)="onUniteChange()">
+          <option value="">Tüm üniteler</option>
+          <option *ngFor="let unite of uniteOptions" [value]="unite">{{ unite }}</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-outline-secondary w-100" (click)="clearFilters()">
+          <i class="bi bi-funnel me-1"></i>
+          Temizle
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistics -->
+  <div class="stats-section">
+    <div class="row g-3">
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-icon bg-primary">
+            <i class="bi bi-journal-text"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ konular.length }}</h3>
+            <p>Toplam Konu</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-icon bg-success">
+            <i class="bi bi-search"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ filteredKonular.length }}</h3>
+            <p>Görüntülenen</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-icon bg-info">
+            <i class="bi bi-collection"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ uniteOptions.length }}</h3>
+            <p>Toplam Ünite</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-icon bg-warning">
+            <i class="bi bi-mortarboard"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ sinifOptions.length }}</h3>
+            <p>Sınıf Seviyesi</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="loading-section">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Yükleniyor...</span>
+    </div>
+    <p class="mt-2 text-muted">Konular yükleniyor...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error && !isLoading" class="alert alert-danger" role="alert">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    {{ error }}
+    <button class="btn btn-outline-danger btn-sm ms-2" (click)="loadKonular()">
+      <i class="bi bi-arrow-clockwise me-1"></i>
+      Tekrar Dene
+    </button>
+  </div>
+
+  <!-- Konular Listesi -->
+  <div *ngIf="!isLoading && !error" class="konular-section">
+    <div class="konular-grid" *ngIf="filteredKonular.length > 0">
+      <div class="konu-card" *ngFor="let konu of filteredKonular">
+        <div class="konu-header">
+          <div class="konu-badge">
+            <span class="sinif-badge">{{ konu.sinif_seviyesi }}. Sınıf</span>
+          </div>
+          <div class="konu-actions">
+            <button class="action-btn edit-btn" (click)="openKonuModal(konu)" title="Düzenle">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="action-btn delete-btn" (click)="openDeleteModal(konu)" title="Sil">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div class="konu-content">
+          <h4 class="konu-title">{{ konu.konu_adi }}</h4>
+          <p class="konu-unite">
+            <i class="bi bi-collection me-1"></i>
+            {{ konu.unite_adi }}
+          </p>
+          <p class="konu-description" *ngIf="konu.aciklama">
+            {{ konu.aciklama }}
+          </p>
+        </div>
+        
+        <div class="konu-footer">
+          <small class="text-muted">
+            <i class="bi bi-calendar me-1"></i>
+            {{ formatDate(konu.olusturma_tarihi) }}
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="filteredKonular.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <i class="bi bi-journal-x"></i>
+      </div>
+      <h3>Konu Bulunamadı</h3>
+      <p class="text-muted">
+        <span *ngIf="searchQuery || selectedSinif || selectedUnite">
+          Arama kriterinize uygun konu bulunamadı.
+        </span>
+        <span *ngIf="!searchQuery && !selectedSinif && !selectedUnite">
+          Henüz hiç konu eklenmemiş.
+        </span>
+      </p>
+      <button class="btn btn-primary" (click)="openKonuModal()">
+        <i class="bi bi-plus-circle me-2"></i>
+        İlk Konuyu Ekle
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Konu Modal -->
+<div class="modal fade" [class.show]="showKonuModal" [style.display]="showKonuModal ? 'block' : 'none'" 
+     tabindex="-1" [attr.aria-hidden]="!showKonuModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-journal-plus me-2"></i>
+          {{ editingKonu ? 'Konu Düzenle' : 'Yeni Konu Ekle' }}
+        </h5>
+        <button type="button" class="btn-close" (click)="closeKonuModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="row g-3">
+            <div class="col-md-8">
+              <label for="konuAdi" class="form-label">Konu Adı *</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="konuAdi"
+                [(ngModel)]="formData.konu_adi"
+                name="konuAdi"
+                placeholder="Örn: Atomun Yapısı"
+                required>
+            </div>
+            <div class="col-md-4">
+              <label for="sinifSeviyesi" class="form-label">Sınıf Seviyesi *</label>
+              <select 
+                class="form-select" 
+                id="sinifSeviyesi"
+                [(ngModel)]="formData.sinif_seviyesi"
+                name="sinifSeviyesi"
+                required>
+                <option *ngFor="let sinif of sinifOptions" [value]="sinif">{{ sinif }}. Sınıf</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label for="uniteAdi" class="form-label">Ünite Adı *</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="uniteAdi"
+                [(ngModel)]="formData.unite_adi"
+                name="uniteAdi"
+                placeholder="Örn: Atom ve Periyodik Sistem"
+                required>
+            </div>
+            <div class="col-12">
+              <label for="aciklama" class="form-label">Açıklama</label>
+              <textarea 
+                class="form-control" 
+                id="aciklama"
+                [(ngModel)]="formData.aciklama"
+                name="aciklama"
+                rows="3"
+                placeholder="Konu hakkında kısa açıklama..."></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeKonuModal()">İptal</button>
+        <button type="button" class="btn btn-primary" (click)="saveKonu()">
+          <i class="bi bi-check-lg me-1"></i>
+          {{ editingKonu ? 'Güncelle' : 'Kaydet' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" [class.show]="showDeleteModal" [style.display]="showDeleteModal ? 'block' : 'none'" 
+     tabindex="-1" [attr.aria-hidden]="!showDeleteModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger">
+          <i class="bi bi-exclamation-triangle me-2"></i>
+          Konu Sil
+        </h5>
+        <button type="button" class="btn-close" (click)="closeDeleteModal()"></button>
+      </div>
+      <div class="modal-body">
+        <p>Bu konuyu silmek istediğinizden emin misiniz?</p>
+        <div class="alert alert-warning" *ngIf="deletingKonu">
+          <strong>{{ deletingKonu.konu_adi }}</strong><br>
+          <small>{{ deletingKonu.unite_adi }} - {{ deletingKonu.sinif_seviyesi }}. Sınıf</small>
+        </div>
+        <p class="text-muted small">
+          <i class="bi bi-info-circle me-1"></i>
+          Bu işlem geri alınamaz!
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeDeleteModal()">İptal</button>
+        <button type="button" class="btn btn-danger" (click)="deleteKonu()">
+          <i class="bi bi-trash me-1"></i>
+          Sil
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Backdrop -->
+<div class="modal-backdrop fade" 
+     [class.show]="showKonuModal || showDeleteModal" 
+     *ngIf="showKonuModal || showDeleteModal"
+     (click)="showKonuModal ? closeKonuModal() : closeDeleteModal()">
+</div>
