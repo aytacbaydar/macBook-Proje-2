@@ -1,1 +1,217 @@
-<p>ogrenci-islenen-konular-sayfasi works!</p>
+
+<div class="student-processed-topics-page">
+  <!-- Header Section -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="page-title-section">
+        <h1 class="page-title">
+          <i class="bi bi-check2-square me-2"></i>
+          İşlenen Konular
+        </h1>
+        <p class="page-subtitle">Ders sürecinde işlediğimiz konuları burada takip edebilirsin</p>
+      </div>
+      <div class="progress-card">
+        <div class="progress-info">
+          <span class="progress-label">Genel İlerleme</span>
+          <span class="progress-percentage">{{ getOverallProgress() }}%</span>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="getOverallProgress()"></div>
+          </div>
+        </div>
+        <small class="progress-text">
+          {{ getTotalProcessedTopics() }} / {{ getTotalTopics() }} konu tamamlandı
+        </small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-section">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Yükleniyor...</span>
+    </div>
+    <p class="mt-3 text-muted">Konular yükleniyor...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="alert alert-danger">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    {{ error }}
+    <button class="btn btn-sm btn-outline-danger ms-3" (click)="loadData()">
+      <i class="bi bi-arrow-clockwise me-1"></i>
+      Tekrar Dene
+    </button>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!isLoading && !error" class="main-content">
+    
+    <!-- Student Info Card -->
+    <div class="student-info-card" *ngIf="studentInfo">
+      <div class="student-details">
+        <div class="student-avatar">
+          <i class="bi bi-person-circle"></i>
+        </div>
+        <div class="student-text">
+          <h3>{{ studentInfo.adi_soyadi }}</h3>
+          <div class="student-meta">
+            <span class="meta-item">
+              <i class="bi bi-mortarboard me-1"></i>
+              {{ studentInfo.sinifi }}
+            </span>
+            <span class="meta-item" *ngIf="studentInfo.grup">
+              <i class="bi bi-people me-1"></i>
+              {{ studentInfo.grup }}
+            </span>
+            <span class="meta-item" *ngIf="studentInfo.okulu">
+              <i class="bi bi-building me-1"></i>
+              {{ studentInfo.okulu }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Topics by Units -->
+    <div class="topics-container" *ngIf="groupedTopics.length > 0">
+      <div class="unit-section" *ngFor="let unit of groupedTopics; let unitIndex = index">
+        
+        <!-- Unit Header -->
+        <div class="unit-header">
+          <div class="unit-title">
+            <div class="unit-icon">
+              <i class="bi bi-folder-fill"></i>
+            </div>
+            <div class="unit-info">
+              <h4>{{ unitIndex + 1 }}. {{ unit.unite_adi }}</h4>
+              <p class="unit-description" *ngIf="unit.aciklama">{{ unit.aciklama }}</p>
+            </div>
+          </div>
+          <div class="unit-stats">
+            <div class="stat-item">
+              <span class="stat-number">{{ getProcessedTopicsInUnit(unit) }}</span>
+              <span class="stat-label">İşlenen</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">{{ unit.konular.length }}</span>
+              <span class="stat-label">Toplam</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-percentage">{{ getUnitProgress(unit) }}%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Unit Progress Bar -->
+        <div class="unit-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="getUnitProgress(unit)"></div>
+          </div>
+        </div>
+
+        <!-- Topics List -->
+        <div class="topics-list">
+          <div class="topic-item" 
+               *ngFor="let topic of unit.konular; let topicIndex = index"
+               [class.completed]="isTopicProcessed(topic.id)">
+            
+            <!-- Topic Status Icon -->
+            <div class="topic-status">
+              <i class="bi" 
+                 [class.bi-check-circle-fill]="isTopicProcessed(topic.id)"
+                 [class.bi-circle]="!isTopicProcessed(topic.id)"
+                 [class.text-success]="isTopicProcessed(topic.id)"
+                 [class.text-muted]="!isTopicProcessed(topic.id)"></i>
+            </div>
+
+            <!-- Topic Content -->
+            <div class="topic-content">
+              <div class="topic-header">
+                <h5 class="topic-title">
+                  {{ topicIndex + 1 }}. {{ topic.konu_adi }}
+                </h5>
+                <span class="topic-class-badge">{{ topic.sinif_seviyesi }}</span>
+              </div>
+              
+              <p class="topic-description" *ngIf="topic.aciklama">
+                {{ topic.aciklama }}
+              </p>
+
+              <!-- Topic Processing Date -->
+              <div class="topic-meta" *ngIf="isTopicProcessed(topic.id)">
+                <small class="processed-date">
+                  <i class="bi bi-calendar-check me-1"></i>
+                  {{ getTopicProcessedDate(topic.id) | date:'dd MMMM yyyy' }}
+                </small>
+              </div>
+            </div>
+
+            <!-- Topic Actions -->
+            <div class="topic-actions" *ngIf="isTopicProcessed(topic.id)">
+              <span class="completed-badge">
+                <i class="bi bi-check-lg me-1"></i>
+                Tamamlandı
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && !error && groupedTopics.length === 0" class="empty-state">
+      <div class="empty-content">
+        <i class="bi bi-journal-x"></i>
+        <h3>Henüz İşlenen Konu Yok</h3>
+        <p>Öğretmeniniz konuları işledikçe burada görünecek. Sabırlı ol! 📚</p>
+      </div>
+    </div>
+
+    <!-- Summary Stats -->
+    <div class="summary-stats" *ngIf="groupedTopics.length > 0">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="bi bi-bookmark-check-fill"></i>
+          </div>
+          <div class="stat-content">
+            <h4>{{ getTotalProcessedTopics() }}</h4>
+            <p>İşlenen Konu</p>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="bi bi-journal-text"></i>
+          </div>
+          <div class="stat-content">
+            <h4>{{ getTotalTopics() }}</h4>
+            <p>Toplam Konu</p>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="bi bi-graph-up"></i>
+          </div>
+          <div class="stat-content">
+            <h4>{{ getOverallProgress() }}%</h4>
+            <p>İlerleme</p>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="bi bi-folder-fill"></i>
+          </div>
+          <div class="stat-content">
+            <h4>{{ groupedTopics.length }}</h4>
+            <p>Ünite</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
