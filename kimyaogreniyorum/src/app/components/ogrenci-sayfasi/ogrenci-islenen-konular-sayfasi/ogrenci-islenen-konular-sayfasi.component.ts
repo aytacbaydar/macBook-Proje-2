@@ -186,7 +186,7 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
       }
 
       // API URL'ini logla
-      const apiUrl = `${this.apiBaseUrl}/islenen_konular.php?grup=${encodeURIComponent(grupBilgisi)}`;
+      const apiUrl = `${this.apiBaseUrl}/ogrenci_islenen_konular.php?grup=${encodeURIComponent(grupBilgisi)}`;
       console.log(`=== ${grupBilgisi} GRUBU İŞLENEN KONULAR API ÇEKİLİYOR ===`);
       console.log('API URL:', apiUrl);
       console.log('Headers:', headers);
