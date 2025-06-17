@@ -101,7 +101,7 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
         return;
       }
 
-      this.http.get<any>(`${this.apiBaseUrl}/ogrenci_profil.php`, {
+      this.http.post<any>(`${this.apiBaseUrl}/ogrenci_profil.php`, {}, {
         headers: { 'Authorization': `Bearer ${token}` }
       }).subscribe({
         next: (response) => {
