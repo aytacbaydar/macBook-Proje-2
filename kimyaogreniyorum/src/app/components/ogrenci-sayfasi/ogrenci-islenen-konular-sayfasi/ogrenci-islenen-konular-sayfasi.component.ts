@@ -87,7 +87,7 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
         try {
           const user = JSON.parse(userStr);
           token = user.token || '';
-          console.log('Token found:', token ? 'Yes' : 'No');
+          
         } catch (error) {
           console.error('Error parsing user data:', error);
         }
@@ -105,7 +105,7 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
         next: (response) => {
           if (response.success) {
             this.studentInfo = response.data;
-            console.log('Student info loaded:', this.studentInfo);
+            
             resolve();
           } else {
             reject(response.message || 'Öğrenci bilgileri alınamadı');
@@ -139,10 +139,8 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
 
       this.http.get<any>(`${this.apiBaseUrl}/konu_listesi.php`, { headers }).subscribe({
         next: (response) => {
-          console.log('Konular API response:', response);
           if (response.success) {
             this.konular = response.konular || [];
-            console.log('Topics loaded:', this.konular.length);
             resolve();
           } else {
             reject(response.message || 'Konular yüklenemedi');
@@ -161,10 +159,6 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
       // Grup bilgisini farklı fieldlardan kontrol et
       const grupBilgisi = this.studentInfo?.grup || this.studentInfo?.grubu;
       if (!grupBilgisi) {
-        console.log('=== GRUP BİLGİSİ YOK ===');
-        console.log('StudentInfo:', this.studentInfo);
-        console.log('StudentInfo grup field:', this.studentInfo?.grup);
-        console.log('StudentInfo grubu field:', this.studentInfo?.grubu);
         resolve();
         return;
       }
@@ -185,59 +179,18 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      // API URL'ini logla
       const apiUrl = `${this.apiBaseUrl}/ogrenci_islenen_konular.php?grup=${encodeURIComponent(grupBilgisi)}`;
-      console.log(`=== ${grupBilgisi} GRUBU İŞLENEN KONULAR API ÇEKİLİYOR ===`);
-      console.log('API URL:', apiUrl);
-      console.log('Headers:', headers);
       
       this.http.get<any>(apiUrl, { headers }).subscribe({
         next: (response) => {
-          console.log(`=== ${grupBilgisi} GRUBU API RESPONSE ===`);
-          console.log('Full Response:', response);
-          console.log('Response success:', response.success);
-          console.log('Response message:', response.message);
-          console.log('Response islenen_konular array:', response.islenen_konular);
-          
           if (response.success && response.islenen_konular) {
             this.islenenKonular = response.islenen_konular;
-            
-            console.log(`=== ${grupBilgisi} GRUBU VERİ ANALİZİ ===`);
-            console.log('İşlenen konular array length:', this.islenenKonular.length);
-            
-            // Her bir konuyu detayıyla logla
-            this.islenenKonular.forEach((konu, index) => {
-              console.log(`Konu ${index + 1}:`, konu);
-              console.log(`  - ID: ${konu.id}`);
-              console.log(`  - Konu ID: ${konu.konu_id}`);
-              console.log(`  - Grup: ${konu.grup_adi}`);
-              console.log(`  - Konu Adı: ${konu.konu_adi || konu.konu_baslik}`);
-              console.log(`  - Sınıf: ${konu.sinif_seviyesi}`);
-              console.log(`  - Tarih: ${konu.isleme_tarihi}`);
-            });
-            
-            // Sınıf seviyelerini kontrol et
-            const sinifSeviyeleri = [...new Set(this.islenenKonular.map(k => k.sinif_seviyesi).filter(s => s))];
-            console.log(`${grupBilgisi} grubu sınıf seviyeleri:`, sinifSeviyeleri);
-            
-            // Konu ID'lerini listele
-            const konuIdleri = this.islenenKonular.map(k => k.konu_id);
-            console.log(`${grupBilgisi} grubu işlenen konu ID'leri:`, konuIdleri);
-            
           } else {
-            console.log(`=== ${grupBilgisi} GRUBU - VERİ BULUNAMADI ===`);
-            console.log('API Success Status:', response.success);
-            console.log('API Message:', response.message);
             this.islenenKonular = [];
           }
           resolve();
         },
         error: (error) => {
-          console.error(`=== ${grupBilgisi} GRUBU - API HATASI ===`);
-          console.error('Full Error:', error);
-          console.error('Error Status:', error.status);
-          console.error('Error Message:', error.message);
-          console.error('Error Response:', error.error);
           this.islenenKonular = [];
           resolve();
         }
@@ -259,8 +212,6 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
     // Öğrencinin sınıf seviyesini al
     const studentClassLevel = this.studentInfo ? this.studentInfo.sinifi : '';
 
-    console.log(`${grupBilgisi} grubu - Öğrenci sınıf seviyesi: ${studentClassLevel}`);
-
     // Mezun veya 12.Sınıf ise tüm konuları göster
     const isMezunOr12 = studentClassLevel && (
       studentClassLevel.toLowerCase().includes('mezun') || 
@@ -270,7 +221,6 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
 
     if (isMezunOr12) {
       filteredKonular = sortedKonular;
-      console.log(`${grupBilgisi} grubu - 12.Sınıf/Mezun - tüm konular gösteriliyor:`, filteredKonular.length);
     } else if (studentClassLevel) {
       // Belirli sınıf seviyesi için konuları filtrele
       filteredKonular = sortedKonular.filter(konu => {
@@ -283,16 +233,8 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
                konuSinif === studentClassLevel + '.Sınıf' ||
                konuSinif + '.Sınıf' === studentClassLevel;
       });
-      console.log(`${grupBilgisi} grubu - Sınıf seviyesi filtrelemesi yapıldı:`, filteredKonular.length);
     } else {
       filteredKonular = sortedKonular;
-      console.log(`${grupBilgisi} grubu - Sınıf seviyesi yok, tüm konular gösteriliyor:`, filteredKonular.length);
-    }
-
-    // Sınıf seviyesi bilgisini logla
-    if (filteredKonular.length > 0) {
-      const sinifSeviyeleri = [...new Set(filteredKonular.map(k => k.sinif_seviyesi).filter(s => s))];
-      console.log(`${grupBilgisi} grubu sınıf seviyeleri:`, sinifSeviyeleri);
     }
 
     // Ünitelere göre grupla
@@ -314,19 +256,12 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
   konuIslendi(konuId: number): boolean {
     const grupBilgisi = this.studentInfo?.grup || this.studentInfo?.grubu;
     if (!grupBilgisi) {
-      console.log(`Konu ${konuId} - grup bilgisi yok`);
       return false;
     }
     
-    const islendi = this.islenenKonular.some(
+    return this.islenenKonular.some(
       islenen => islenen.konu_id === konuId && islenen.grup_adi === grupBilgisi
     );
-    
-    console.log(`Konu ${konuId} işlenmiş mi? ${islendi}`);
-    console.log(`Grup: ${grupBilgisi}`);
-    console.log(`İşlenen konular:`, this.islenenKonular.map(k => ({ konu_id: k.konu_id, grup: k.grup_adi })));
-    
-    return islendi;
   }
 
   // İşlenen konunun tarihini al
