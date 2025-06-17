@@ -7,7 +7,8 @@ interface StudentInfo {
   adi_soyadi: string;
   email: string;
   sinifi: string;
-  grup: string;
+  grup?: string;
+  grubu?: string;
   okulu: string;
   ogretmeni?: string;
 }
@@ -157,7 +158,8 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
 
   private loadIslenenKonular(): Promise<void> {
     return new Promise((resolve) => {
-      if (!this.studentInfo?.grup) {
+      const grupAdi = this.studentInfo?.grup || this.studentInfo?.grubu;
+      if (!grupAdi) {
         console.log('Grup bilgisi yok, işlenen konular yüklenmeyecek');
         resolve();
         return;
@@ -180,34 +182,34 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
       }
 
       // Doğrudan grup bilgisi ile işlenen konuları çek (öğretmen sayfası gibi)
-      console.log(`${this.studentInfo.grup} grubu için işlenen konular yükleniyor`);
+      console.log(`${grupAdi} grubu için işlenen konular yükleniyor`);
       
-      this.http.get<any>(`${this.apiBaseUrl}/islenen_konular.php?grup=${encodeURIComponent(this.studentInfo.grup)}`, { headers }).subscribe({
+      this.http.get<any>(`${this.apiBaseUrl}/islenen_konular.php?grup=${encodeURIComponent(grupAdi)}`, { headers }).subscribe({
         next: (response) => {
-          console.log(`${this.studentInfo.grup} grubu için İşlenen konular API response:`, response);
+          console.log(`${grupAdi} grubu için İşlenen konular API response:`, response);
           if (response.success && response.islenen_konular) {
             this.islenenKonular = response.islenen_konular;
             
             // Detaylı loglama (öğretmen sayfası gibi)
             if (this.islenenKonular.length > 0) {
-              console.log(`${this.studentInfo.grup} grubu için ilk konunun field'ları:`, Object.keys(this.islenenKonular[0]));
-              console.log(`${this.studentInfo.grup} grubu için ilk konu verisi:`, this.islenenKonular[0]);
-              console.log(`${this.studentInfo.grup} grubu için işlenen konular:`, this.islenenKonular);
+              console.log(`${grupAdi} grubu için ilk konunun field'ları:`, Object.keys(this.islenenKonular[0]));
+              console.log(`${grupAdi} grubu için ilk konu verisi:`, this.islenenKonular[0]);
+              console.log(`${grupAdi} grubu için işlenen konular:`, this.islenenKonular);
               
               // Sınıf seviyelerini kontrol et
               const sinifSeviyeleri = [...new Set(this.islenenKonular.map(k => k.sinif_seviyesi).filter(s => s))];
-              console.log(`${this.studentInfo.grup} grubu sınıf seviyeleri:`, sinifSeviyeleri);
+              console.log(`${grupAdi} grubu sınıf seviyeleri:`, sinifSeviyeleri);
             }
             
-            console.log(`${this.studentInfo.grup} grubu için işlenen konular yüklendi:`, this.islenenKonular.length);
+            console.log(`${grupAdi} grubu için işlenen konular yüklendi:`, this.islenenKonular.length);
           } else {
-            console.log(`${this.studentInfo.grup} grubu için işlenen konu bulunamadı veya API hatası`);
+            console.log(`${grupAdi} grubu için işlenen konu bulunamadı veya API hatası`);
             this.islenenKonular = [];
           }
           resolve();
         },
         error: (error) => {
-          console.error(`${this.studentInfo.grup} grubu için işlenen konular yüklenirken hata:`, error);
+          console.error(`${grupAdi} grubu için işlenen konular yüklenirken hata:`, error);
           this.islenenKonular = [];
           resolve();
         }
@@ -217,7 +219,8 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
 
   // Grup sınıf seviyesine göre konuları filtrele (öğretmen sayfasından alındı)
   getUnitesByGroup(): any[] {
-    if (!this.studentInfo?.grup) {
+    const grupAdi = this.studentInfo?.grup || this.studentInfo?.grubu;
+    if (!grupAdi) {
       return [];
     }
 
@@ -228,7 +231,7 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
     // Öğrencinin sınıf seviyesini al
     const studentClassLevel = this.studentInfo.sinifi;
 
-    console.log(`${this.studentInfo.grup} grubu - Öğrenci sınıf seviyesi: ${studentClassLevel}`);
+    console.log(`${grupAdi} grubu - Öğrenci sınıf seviyesi: ${studentClassLevel}`);
 
     // Mezun veya 12.Sınıf ise tüm konuları göster
     const isMezunOr12 = studentClassLevel && (
@@ -239,7 +242,7 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
 
     if (isMezunOr12) {
       filteredKonular = sortedKonular;
-      console.log(`${this.studentInfo.grup} grubu - 12.Sınıf/Mezun - tüm konular gösteriliyor:`, filteredKonular.length);
+      console.log(`${grupAdi} grubu - 12.Sınıf/Mezun - tüm konular gösteriliyor:`, filteredKonular.length);
     } else if (studentClassLevel) {
       // Belirli sınıf seviyesi için konuları filtrele
       filteredKonular = sortedKonular.filter(konu => {
@@ -252,16 +255,16 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
                konuSinif === studentClassLevel + '.Sınıf' ||
                konuSinif + '.Sınıf' === studentClassLevel;
       });
-      console.log(`${this.studentInfo.grup} grubu - Sınıf seviyesi filtrelemesi yapıldı:`, filteredKonular.length);
+      console.log(`${grupAdi} grubu - Sınıf seviyesi filtrelemesi yapıldı:`, filteredKonular.length);
     } else {
       filteredKonular = sortedKonular;
-      console.log(`${this.studentInfo.grup} grubu - Sınıf seviyesi yok, tüm konular gösteriliyor:`, filteredKonular.length);
+      console.log(`${grupAdi} grubu - Sınıf seviyesi yok, tüm konular gösteriliyor:`, filteredKonular.length);
     }
 
     // Sınıf seviyesi bilgisini logla
     if (filteredKonular.length > 0) {
       const sinifSeviyeleri = [...new Set(filteredKonular.map(k => k.sinif_seviyesi).filter(s => s))];
-      console.log(`${this.studentInfo.grup} grubu sınıf seviyeleri:`, sinifSeviyeleri);
+      console.log(`${grupAdi} grubu sınıf seviyeleri:`, sinifSeviyeleri);
     }
 
     // Ünitelere göre grupla
@@ -281,17 +284,19 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
 
   // Konu işlenmiş mi kontrol et
   konuIslendi(konuId: number): boolean {
-    if (!this.studentInfo?.grup) return false;
+    const grupAdi = this.studentInfo?.grup || this.studentInfo?.grubu;
+    if (!grupAdi) return false;
     return this.islenenKonular.some(
-      islenen => islenen.konu_id === konuId && islenen.grup_adi === this.studentInfo!.grup
+      islenen => islenen.konu_id === konuId && islenen.grup_adi === grupAdi
     );
   }
 
   // İşlenen konunun tarihini al
   getKonuIslemeTarihi(konuId: number): string | null {
-    if (!this.studentInfo?.grup) return null;
+    const grupAdi = this.studentInfo?.grup || this.studentInfo?.grubu;
+    if (!grupAdi) return null;
     const islenenKonu = this.islenenKonular.find(
-      islenen => islenen.konu_id === konuId && islenen.grup_adi === this.studentInfo!.grup
+      islenen => islenen.konu_id === konuId && islenen.grup_adi === grupAdi
     );
     return islenenKonu ? islenenKonu.isleme_tarihi : null;
   }
@@ -315,9 +320,10 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
 
   // Toplam işlenen konu sayısı
   getTotalProcessedTopics(): number {
-    if (!this.studentInfo?.grup) return 0;
+    const grupAdi = this.studentInfo?.grup || this.studentInfo?.grubu;
+    if (!grupAdi) return 0;
     return this.islenenKonular.filter(
-      islenen => islenen.grup_adi === this.studentInfo!.grup
+      islenen => islenen.grup_adi === grupAdi
     ).length;
   }
 
