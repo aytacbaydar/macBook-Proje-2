@@ -12,6 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require_once '../config.php';
 
 try {
+    $conn = getConnection();
+    
     $id = $_GET['id'] ?? null;
     
     if (!$id) {
@@ -19,7 +21,7 @@ try {
     }
     
     $sql = "DELETE FROM islenen_konular WHERE id = ?";
-    $stmt = $pdo->prepare($sql);
+    $stmt = $conn->prepare($sql);
     $stmt->execute([$id]);
     
     if ($stmt->rowCount() > 0) {
