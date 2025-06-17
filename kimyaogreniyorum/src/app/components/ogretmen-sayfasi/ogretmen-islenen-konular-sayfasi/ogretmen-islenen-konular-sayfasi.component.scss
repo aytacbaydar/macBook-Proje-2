@@ -199,3 +199,380 @@
     }
   }
 }
+
+// Content Wrapper
+.content-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+// Selected Group Details Styles
+.selected-group-details {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  margin-top: 2rem;
+
+  .group-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+
+    h3 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+
+      i {
+        margin-right: 0.5rem;
+      }
+    }
+
+    .close-detail-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.1);
+      }
+
+      i {
+        font-size: 1.2rem;
+      }
+    }
+  }
+}
+
+// All Topics Container
+.all-topics-container {
+  padding: 1.5rem;
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6b7280;
+
+    i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    p {
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+
+      &.small {
+        font-size: 0.875rem;
+      }
+    }
+  }
+}
+
+// Topics Hierarchical Structure
+.topics-hierarchical {
+  .unite-hierarchy {
+    .unite-section {
+      margin-bottom: 2rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      overflow: hidden;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .unite-header {
+        background: #f8fafc;
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .unite-title {
+          display: flex;
+          align-items: center;
+          font-weight: 600;
+          color: #1e293b;
+
+          i {
+            color: #3b82f6;
+            margin-right: 0.5rem;
+          }
+
+          .unite-number {
+            font-weight: 700;
+            margin-right: 0.5rem;
+          }
+
+          .unite-name {
+            font-size: 1.1rem;
+          }
+        }
+
+        .unite-topic-count {
+          background: #e0e7ff;
+          color: #3730a3;
+          padding: 0.25rem 0.75rem;
+          border-radius: 20px;
+          font-size: 0.8rem;
+          font-weight: 600;
+        }
+      }
+
+      .konular-hierarchy {
+        .konu-item-hierarchical {
+          padding: 1rem 1.25rem;
+          border-bottom: 1px solid #f1f5f9;
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          &:hover {
+            background: #f8fafc;
+          }
+
+          .konu-structure {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+
+            .konu-hierarchy-info {
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+              gap: 0.25rem;
+
+              .konu-number {
+                font-size: 0.8rem;
+                color: #6b7280;
+                font-weight: 500;
+              }
+
+              .konu-name {
+                font-size: 1rem;
+                font-weight: 600;
+                color: #1e293b;
+                line-height: 1.4;
+              }
+
+              .konu-class-badge {
+                background: #dbeafe;
+                color: #1e40af;
+                padding: 0.125rem 0.5rem;
+                border-radius: 12px;
+                font-size: 0.75rem;
+                font-weight: 600;
+                align-self: flex-start;
+              }
+            }
+
+            .konu-actions {
+              margin-left: 1rem;
+
+              .btn-toggle-konu-hierarchical {
+                padding: 0.5rem 1rem;
+                border: 2px solid #e5e7eb;
+                border-radius: 6px;
+                background: white;
+                color: #6b7280;
+                font-size: 0.875rem;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+
+                i {
+                  font-size: 1rem;
+                }
+
+                &:hover {
+                  border-color: #3b82f6;
+                  color: #3b82f6;
+                  transform: translateY(-1px);
+                }
+
+                &.completed {
+                  background: #dcfce7;
+                  border-color: #16a34a;
+                  color: #15803d;
+
+                  &:hover {
+                    background: #bbf7d0;
+                    transform: translateY(-1px);
+                  }
+                }
+              }
+            }
+          }
+
+          .konu-description {
+            padding-left: 0;
+            margin-top: 0.5rem;
+
+            small {
+              color: #6b7280;
+              font-style: italic;
+              line-height: 1.4;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .no-topics-message {
+    text-align: center;
+    padding: 2rem;
+    color: #6b7280;
+    font-style: italic;
+
+    i {
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+// No Group Selected State
+.no-group-selected {
+  text-align: center;
+  padding: 4rem 2rem;
+
+  .selection-prompt {
+    i {
+      color: #9ca3af;
+      margin-bottom: 1rem;
+    }
+
+    h4 {
+      color: #374151;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    p {
+      color: #6b7280;
+      font-size: 1rem;
+    }
+  }
+}
+
+// Loading and Error States
+.loading-container {
+  text-align: center;
+  padding: 3rem;
+
+  .spinner-border {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  p {
+    margin-top: 1rem;
+    color: #6b7280;
+  }
+}
+
+.alert {
+  margin: 1.5rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  i {
+    margin-right: 0.5rem;
+  }
+
+  .btn {
+    margin-left: auto;
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .groups-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .minimal-navbar {
+    padding: 1rem;
+
+    .navbar-content {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .page-info .page-title {
+      font-size: 1.25rem;
+    }
+  }
+
+  .content-wrapper {
+    padding: 0 1rem;
+  }
+
+  .selected-group-details {
+    margin-top: 1rem;
+
+    .group-detail-header {
+      padding: 1rem;
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+
+      h3 {
+        font-size: 1.1rem;
+      }
+    }
+  }
+
+  .all-topics-container {
+    padding: 1rem;
+  }
+
+  .unite-section .unite-header {
+    padding: 0.75rem 1rem;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+
+  .konu-item-hierarchical {
+    padding: 0.75rem 1rem !important;
+
+    .konu-structure {
+      flex-direction: column;
+      gap: 1rem;
+
+      .konu-actions {
+        margin-left: 0;
+        align-self: flex-start;
+      }
+    }
+  }
+}
