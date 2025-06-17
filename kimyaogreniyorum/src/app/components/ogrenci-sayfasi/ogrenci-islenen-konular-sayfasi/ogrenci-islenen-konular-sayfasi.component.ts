@@ -179,23 +179,35 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      // Doğrudan grup bilgisi ile işlenen konuları çek
-      console.log('İşlenen konular yükleniyor, grup:', this.studentInfo.grup);
+      // Doğrudan grup bilgisi ile işlenen konuları çek (öğretmen sayfası gibi)
+      console.log(`${this.studentInfo.grup} grubu için işlenen konular yükleniyor`);
       
       this.http.get<any>(`${this.apiBaseUrl}/islenen_konular.php?grup=${encodeURIComponent(this.studentInfo.grup)}`, { headers }).subscribe({
         next: (response) => {
-          console.log('İşlenen konular API response:', response);
+          console.log(`${this.studentInfo.grup} grubu için İşlenen konular API response:`, response);
           if (response.success && response.islenen_konular) {
             this.islenenKonular = response.islenen_konular;
-            console.log('İşlenen konular yüklendi:', this.islenenKonular.length);
+            
+            // Detaylı loglama (öğretmen sayfası gibi)
+            if (this.islenenKonular.length > 0) {
+              console.log(`${this.studentInfo.grup} grubu için ilk konunun field'ları:`, Object.keys(this.islenenKonular[0]));
+              console.log(`${this.studentInfo.grup} grubu için ilk konu verisi:`, this.islenenKonular[0]);
+              console.log(`${this.studentInfo.grup} grubu için işlenen konular:`, this.islenenKonular);
+              
+              // Sınıf seviyelerini kontrol et
+              const sinifSeviyeleri = [...new Set(this.islenenKonular.map(k => k.sinif_seviyesi).filter(s => s))];
+              console.log(`${this.studentInfo.grup} grubu sınıf seviyeleri:`, sinifSeviyeleri);
+            }
+            
+            console.log(`${this.studentInfo.grup} grubu için işlenen konular yüklendi:`, this.islenenKonular.length);
           } else {
-            console.log('İşlenen konu bulunamadı veya API hatası');
+            console.log(`${this.studentInfo.grup} grubu için işlenen konu bulunamadı veya API hatası`);
             this.islenenKonular = [];
           }
           resolve();
         },
         error: (error) => {
-          console.error('İşlenen konular yüklenirken hata:', error);
+          console.error(`${this.studentInfo.grup} grubu için işlenen konular yüklenirken hata:`, error);
           this.islenenKonular = [];
           resolve();
         }
@@ -216,7 +228,7 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
     // Öğrencinin sınıf seviyesini al
     const studentClassLevel = this.studentInfo.sinifi;
 
-    console.log(`Öğrenci sınıf seviyesi: ${studentClassLevel}`);
+    console.log(`${this.studentInfo.grup} grubu - Öğrenci sınıf seviyesi: ${studentClassLevel}`);
 
     // Mezun veya 12.Sınıf ise tüm konuları göster
     const isMezunOr12 = studentClassLevel && (
@@ -227,7 +239,7 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
 
     if (isMezunOr12) {
       filteredKonular = sortedKonular;
-      console.log('12.Sınıf/Mezun - tüm konular gösteriliyor:', filteredKonular.length);
+      console.log(`${this.studentInfo.grup} grubu - 12.Sınıf/Mezun - tüm konular gösteriliyor:`, filteredKonular.length);
     } else if (studentClassLevel) {
       // Belirli sınıf seviyesi için konuları filtrele
       filteredKonular = sortedKonular.filter(konu => {
@@ -240,10 +252,16 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
                konuSinif === studentClassLevel + '.Sınıf' ||
                konuSinif + '.Sınıf' === studentClassLevel;
       });
-      console.log('Sınıf seviyesi filtrelemesi yapıldı:', filteredKonular.length);
+      console.log(`${this.studentInfo.grup} grubu - Sınıf seviyesi filtrelemesi yapıldı:`, filteredKonular.length);
     } else {
       filteredKonular = sortedKonular;
-      console.log('Sınıf seviyesi yok, tüm konular gösteriliyor:', filteredKonular.length);
+      console.log(`${this.studentInfo.grup} grubu - Sınıf seviyesi yok, tüm konular gösteriliyor:`, filteredKonular.length);
+    }
+
+    // Sınıf seviyesi bilgisini logla
+    if (filteredKonular.length > 0) {
+      const sinifSeviyeleri = [...new Set(filteredKonular.map(k => k.sinif_seviyesi).filter(s => s))];
+      console.log(`${this.studentInfo.grup} grubu sınıf seviyeleri:`, sinifSeviyeleri);
     }
 
     // Ünitelere göre grupla
