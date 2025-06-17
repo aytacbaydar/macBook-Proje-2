@@ -1,32 +1,6 @@
 
 <div class="student-processed-topics-page">
   <!-- Header Section -->
-  <div class="page-header">
-    <div class="header-content">
-      <div class="page-title-section">
-        <h1 class="page-title">
-          <i class="bi bi-check2-square me-2"></i>
-          İşlenen Konular
-        </h1>
-        <p class="page-subtitle">Ders sürecinde işlediğimiz konuları burada takip edebilirsin</p>
-      </div>
-      <div class="progress-card">
-        <div class="progress-info">
-          <span class="progress-label">Genel İlerleme</span>
-          <span class="progress-percentage">{{ getOverallProgress() }}%</span>
-        </div>
-        <div class="progress-bar-container">
-          <div class="progress-bar">
-            <div class="progress-fill" [style.width.%]="getOverallProgress()"></div>
-          </div>
-        </div>
-        <small class="progress-text">
-          {{ getTotalProcessedTopics() }} / {{ getTotalTopics() }} konu tamamlandı
-        </small>
-      </div>
-    </div>
-  </div>
-
   <!-- Loading State -->
   <div *ngIf="isLoading" class="loading-section">
     <div class="spinner-border text-primary" role="status">
@@ -46,7 +20,7 @@
   </div>
 
   <!-- Main Content -->
-  <div *ngIf="!isLoading && !error" class="main-content">
+  <div *ngIf="!isLoading && !error">
     
     <!-- Student Info Card -->
     <div class="student-info-card" *ngIf="studentInfo">

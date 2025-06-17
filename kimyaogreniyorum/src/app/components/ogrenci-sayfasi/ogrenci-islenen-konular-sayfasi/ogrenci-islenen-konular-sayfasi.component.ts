@@ -231,7 +231,7 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
     let filteredKonular: Konu[] = [];
 
     // Öğrencinin sınıf seviyesini al
-    const studentClassLevel = this.studentInfo.sinifi;
+    const studentClassLevel = this.studentInfo ? this.studentInfo.sinifi : '';
 
     console.log(`${grupBilgisi} grubu - Öğrenci sınıf seviyesi: ${studentClassLevel}`);
 

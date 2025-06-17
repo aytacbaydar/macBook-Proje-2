@@ -194,15 +194,9 @@
         <form>
           <div class="row g-3">
             <div class="col-md-8">
-              <label for="konuAdi" class="form-label">Konu Adı *</label>
-              <input 
-                type="text" 
-                class="form-control" 
-                id="konuAdi"
-                [(ngModel)]="formData.konu_adi"
-                name="konuAdi"
-                placeholder="Örn: Atomun Yapısı"
-                required>
+              <label for="uniteAdi" class="form-label">Ünite Adı *</label>
+              <input type="text" class="form-control" id="uniteAdi" [(ngModel)]="formData.unite_adi" name="uniteAdi"
+                placeholder="Örn: Atom ve Periyodik Sistem" required>
             </div>
             <div class="col-md-4">
               <label for="sinifSeviyesi" class="form-label">Sınıf Seviyesi *</label>
@@ -212,19 +206,12 @@
                 [(ngModel)]="formData.sinif_seviyesi"
                 name="sinifSeviyesi"
                 required>
-                <option *ngFor="let sinif of sinifOptions" [value]="sinif">{{ sinif }}. Sınıf</option>
+                <option *ngFor="let sinif of sinifOptions" [value]="sinif +'.Sınıf'">{{ sinif }}.Sınıf</option>
               </select>
             </div>
-            <div class="col-12">
-              <label for="uniteAdi" class="form-label">Ünite Adı *</label>
-              <input 
-                type="text" 
-                class="form-control" 
-                id="uniteAdi"
-                [(ngModel)]="formData.unite_adi"
-                name="uniteAdi"
-                placeholder="Örn: Atom ve Periyodik Sistem"
-                required>
+            <div class="col-12"><label for="konuAdi" class="form-label">Konu Adı *</label>
+            <input type="text" class="form-control" id="konuAdi" [(ngModel)]="formData.konu_adi" name="konuAdi"
+              placeholder="Örn: Atomun Yapısı" required>
             </div>
             <div class="col-12">
               <label for="aciklama" class="form-label">Açıklama</label>
