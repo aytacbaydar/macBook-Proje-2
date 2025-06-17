@@ -14,7 +14,8 @@ interface Konu {
 @Component({
   selector: 'app-ogretmen-konu-islemleri-sayfasi',
   templateUrl: './ogretmen-konu-islemleri-sayfasi.component.html',
-  styleUrl: './ogretmen-konu-islemleri-sayfasi.component.scss'
+  styleUrl: './ogretmen-konu-islemleri-sayfasi.component.scss',
+  standalone: false
 })
 export class OgretmenKonuIslemleriSayfasiComponent implements OnInit {
   konular: Konu[] = [];
