@@ -47,7 +47,7 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
   isLoading = true;
   error: string | null = null;
 
-  private apiBaseUrl = 'https://www.kimyaogreniyorum.com/server/api';
+  private apiBaseUrl = './server/api';
 
   constructor(private http: HttpClient) {}
 
@@ -199,13 +199,14 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
         }
       }
 
-      const headers = token
-        ? { 'Authorization': `Bearer ${token}` }
-        : undefined;
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
 
       this.http.get<any>(
         `${this.apiBaseUrl}/islenen_konular.php?grup=${encodeURIComponent(this.studentInfo.grup)}`,
-        headers ? { headers } : {}
+        { headers }
       ).subscribe({
         next: (response) => {
           if (response.success && response.data) {
