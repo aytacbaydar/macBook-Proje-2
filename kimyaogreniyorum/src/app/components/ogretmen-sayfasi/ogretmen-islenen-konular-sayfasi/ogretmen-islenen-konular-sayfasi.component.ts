@@ -463,6 +463,11 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit, OnDestroy
       .length;
   }
 
+  getToplamKonuSayisiByGroup(grupAdi: string): number {
+    const unites = this.getUnitesByGroup(grupAdi);
+    return unites.reduce((total, unite) => total + unite.konular.length, 0);
+  }
+
   formatDate(dateString: string): string {
     const date = new Date(dateString);
     return date.toLocaleDateString('tr-TR');

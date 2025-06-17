@@ -63,13 +63,18 @@
         <div class="group-body">
           <div class="konu-progress">
             <div class="progress-info">
-              <span class="progress-text">İşlenen Konular</span>
-              <span class="progress-count">{{ getToplamIslenenKonu(group.name) }} / {{ konular.length }}</span>
+              <span class="progress-text">
+                {{ getToplamIslenenKonu(group.name) }} / {{ getToplamKonuSayisiByGroup(group.name) }} konu işlendi
+              </span>
+              <span class="progress-percentage">
+                {{ Math.round((getToplamIslenenKonu(group.name) / getToplamKonuSayisiByGroup(group.name)) * 100) || 0 }}%
+              </span>
             </div>
             <div class="progress-bar-container">
-              <div class="progress-bar" 
-                   [style.width.%]="konular.length > 0 ? (getToplamIslenenKonu(group.name) / konular.length) * 100 : 0"
-                   [style.background-color]="group.color">
+              <div class="progress-bar">
+                <div class="progress-fill" 
+                     [style.width.%]="(getToplamIslenenKonu(group.name) / getToplamKonuSayisiByGroup(group.name)) * 100">
+                </div>
               </div>
             </div>
             <div class="progress-percentage">
