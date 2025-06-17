@@ -1,24 +1,15 @@
 <div class="modern-page-container">
-  <!-- Page Header -->
-  <div class="page-header">
-    <div class="header-content">
-      <div class="header-text">
+  <!-- Minimal Navbar -->
+  <div class="minimal-navbar">
+    <div class="navbar-content">
+      <div class="page-info">
         <h1 class="page-title">
           <i class="bi bi-check2-square me-2"></i>
           İşlenen Konular
         </h1>
-        <p class="page-description">
-          Hangi gruplarınızla hangi konuları işlediğinizi takip edin
-        </p>
       </div>
-      <div class="header-actions">
+      <div class="navbar-actions">
         <button class="modern-btn modern-btn-primary" 
-                (click)="openKonuModal()"
-                aria-label="Yeni konu ekle">
-          <i class="bi bi-plus-circle" aria-hidden="true"></i>
-          Konu Ekle
-        </button>
-        <button class="modern-btn modern-btn-secondary" 
                 routerLink="../konular"
                 aria-label="Konu işlemleri sayfasına git">
           <i class="bi bi-gear-fill" aria-hidden="true"></i>
@@ -115,10 +106,7 @@
         <div *ngIf="konular.length === 0" class="empty-state">
           <i class="bi bi-journal-x fs-1 text-muted"></i>
           <p class="text-muted">Henüz konu eklenmemiş.</p>
-          <button class="btn btn-primary" (click)="openKonuModal()">
-            <i class="bi bi-plus-circle me-2"></i>
-            İlk Konuyu Ekle
-          </button>
+          <p class="text-muted small">Konuları "Konu İşlemleri" sayfasından ekleyebilirsiniz.</p>
         </div>
 
         <div *ngIf="konular.length > 0" class="topics-hierarchical">
@@ -188,96 +176,5 @@
     </div>
   </div>
 
-  <!-- Konu Ekleme Modalı -->
-  <div class="modern-modal-overlay" *ngIf="showKonuModal" (click)="closeKonuModal()">
-    <div class="modern-modal-content" (click)="$event.stopPropagation()">
-      <div class="modern-modal-header">
-        <div class="modal-title-section">
-          <div class="modal-icon">
-            <i class="bi bi-plus-circle"></i>
-          </div>
-          <div class="modal-title-text">
-            <h4>Yeni Konu Ekle</h4>
-            <p>Müfredata yeni bir konu ekleyin</p>
-          </div>
-        </div>
-        <button type="button" class="modern-close-btn" (click)="closeKonuModal()">
-          <i class="bi bi-x"></i>
-        </button>
-      </div>
-
-      <div class="modern-modal-body">
-        <form class="modern-form">
-          <div class="form-group">
-            <label class="modern-label">
-              <i class="bi bi-book"></i>
-              Ünite Adı
-            </label>
-            <input type="text" 
-                   class="modern-input" 
-                   [(ngModel)]="konuForm.unite_adi" 
-                   name="unite_adi" 
-                   placeholder="Örn: Atom ve Periyodik Sistem"
-                   required>
-          </div>
-
-          <div class="form-group">
-            <label class="modern-label">
-              <i class="bi bi-journal-text"></i>
-              Konu Adı
-            </label>
-            <input type="text" 
-                   class="modern-input" 
-                   [(ngModel)]="konuForm.konu_adi" 
-                   name="konu_adi" 
-                   placeholder="Örn: Atom Yapısı ve Elektronik Dağılım"
-                   required>
-          </div>
-
-          <div class="form-group">
-            <label class="modern-label">
-              <i class="bi bi-mortarboard"></i>
-              Sınıf Seviyesi
-            </label>
-            <select class="modern-select" [(ngModel)]="konuForm.sinif_seviyesi" name="sinif_seviyesi">
-              <option value="9.Sınıf">9.Sınıf</option>
-              <option value="10.Sınıf">10.Sınıf</option>
-              <option value="11.Sınıf">11.Sınıf</option>
-              <option value="12.Sınıf">12.Sınıf</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label class="modern-label">
-              <i class="bi bi-card-text"></i>
-              Açıklama (Opsiyonel)
-            </label>
-            <textarea class="modern-textarea" 
-                      [(ngModel)]="konuForm.aciklama" 
-                      name="aciklama" 
-                      rows="3"
-                      placeholder="Konu hakkında kısa açıklama yazabilirsiniz..."></textarea>
-          </div>
-        </form>
-
-        <div *ngIf="error" class="alert alert-danger mt-3">
-          {{ error }}
-        </div>
-      </div>
-
-      <div class="modern-modal-footer">
-        <button type="button" class="modern-btn modern-btn-secondary" (click)="closeKonuModal()">
-          <i class="bi bi-x-circle"></i>
-          İptal
-        </button>
-        <button type="button" 
-                class="modern-btn modern-btn-primary" 
-                (click)="submitKonu()"
-                [disabled]="isLoading || !konuForm.unite_adi.trim() || !konuForm.konu_adi.trim() || !konuForm.sinif_seviyesi">
-          <i class="bi bi-check-circle"></i>
-          {{ isLoading ? 'Kaydediliyor...' : 'Konu Ekle' }}
-        </button>
-      </div>
-    </div>
-  </div>
+  
 </div>

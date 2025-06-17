@@ -42,13 +42,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit, OnDestroy
   isLoading: boolean = false;
   error: string = '';
 
-  showKonuModal: boolean = false;
-  konuForm: any = {
-    unite_adi: '',
-    konu_adi: '',
-    sinif_seviyesi: '',
-    aciklama: '',
-  };
+  
 
   // Grup renkleri
   groupColors = [
@@ -388,59 +382,7 @@ export class OgretmenIslenenKonularSayfasiComponent implements OnInit, OnDestroy
       });
   }
 
-  openKonuModal() {
-    this.konuForm = {
-      unite_adi: '',
-      konu_adi: '',
-      sinif_seviyesi: '',
-      aciklama: '',
-    };
-    this.showKonuModal = true;
-  }
-
-  closeKonuModal() {
-    this.showKonuModal = false;
-    this.error = '';
-  }
-
-  submitKonu() {
-    if (!this.konuForm.unite_adi.trim()) {
-      this.error = 'Ünite adı zorunludur';
-      return;
-    }
-
-    if (!this.konuForm.konu_adi.trim()) {
-      this.error = 'Konu adı zorunludur';
-      return;
-    }
-
-    if (!this.konuForm.sinif_seviyesi) {
-      this.error = 'Sınıf seviyesi seçimi zorunludur';
-      return;
-    }
-
-    this.isLoading = true;
-    this.http
-      .post<any>('./server/api/konu_ekle.php', this.konuForm, {
-        headers: this.getHeaders(),
-      })
-      .subscribe({
-        next: (response) => {
-          if (response.success) {
-            this.loadKonular();
-            this.closeKonuModal();
-          } else {
-            this.error = response.message || 'Konu eklenirken hata oluştu';
-          }
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('Konu eklenirken hata:', error);
-          this.error = 'Konu eklenirken hata oluştu';
-          this.isLoading = false;
-        },
-      });
-  }
+  
 
   getIslenenKonularByGrup(grup: string): any[] {
     const filtered = this.islenenKonular.filter(konu => konu.grup_adi === grup);
