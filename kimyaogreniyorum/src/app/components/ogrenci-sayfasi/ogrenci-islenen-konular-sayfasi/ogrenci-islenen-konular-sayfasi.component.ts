@@ -162,11 +162,13 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
       }
 
       let token = '';
+      let ogretmenId = '';
       const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
       if (userStr) {
         try {
           const user = JSON.parse(userStr);
           token = user.token || '';
+          // Öğrencinin öğretmeninin ID'sini al (öğretmen adı ile eşleştirme gerekebilir)
         } catch (error) {
           console.error('Error parsing user data:', error);
         }
@@ -177,18 +179,46 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      // Use the same API endpoint as teacher but filter by group
-      this.http.get<any>(`${this.apiBaseUrl}/islenen_konular.php?grup=${encodeURIComponent(this.studentInfo.grup)}`, { headers }).subscribe({
-        next: (response) => {
-          console.log('İşlenen konular API response:', response);
-          if (response.success) {
-            this.islenenKonular = response.islenen_konular || [];
-            console.log('Processed topics loaded:', this.islenenKonular.length);
+      // Önce öğretmen ID'sini bul
+      this.http.get<any>(`${this.apiBaseUrl}/ogretmenler_listesi.php`, { headers }).subscribe({
+        next: (teachersResponse) => {
+          if (teachersResponse.success) {
+            const teacher = teachersResponse.data.find((t: any) => 
+              t.adi_soyadi === this.studentInfo!.ogretmeni
+            );
+            
+            if (teacher) {
+              ogretmenId = teacher.id;
+              
+              // Şimdi işlenen konuları çek
+              this.http.get<any>(`${this.apiBaseUrl}/islenen_konular.php?ogretmen_id=${ogretmenId}`, { headers }).subscribe({
+                next: (response) => {
+                  console.log('İşlenen konular API response:', response);
+                  if (response.success) {
+                    // Sadece öğrencinin grubuna ait olan işlenen konuları filtrele
+                    this.islenenKonular = (response.islenen_konular || []).filter((islenen: any) => 
+                      islenen.grup_adi === this.studentInfo!.grup
+                    );
+                    console.log('Filtered processed topics for group:', this.islenenKonular.length);
+                  }
+                  resolve();
+                },
+                error: (error) => {
+                  console.error('Error loading processed topics:', error);
+                  resolve();
+                }
+              });
+            } else {
+              console.error('Öğretmen bulunamadı:', this.studentInfo!.ogretmeni);
+              resolve();
+            }
+          } else {
+            console.error('Öğretmenler listesi alınamadı');
+            resolve();
           }
-          resolve();
         },
         error: (error) => {
-          console.error('Error loading processed topics:', error);
+          console.error('Error loading teachers:', error);
           resolve();
         }
       });
