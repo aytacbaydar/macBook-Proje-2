@@ -213,16 +213,15 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
       }
 
       this.http
-        .get<any>(
-          `./server/api/islenen_konular.php?grup=${encodeURIComponent(
-            this.studentInfo.grup
-          )}`,
+        .post<any>(
+          `./server/api/ogrenci_bilgileri.php`,
+          { action: 'get_processed_topics', grup: this.studentInfo.grup },
           { headers }
         )
         .subscribe({
           next: (response) => {
-            if (response.success && response.data) {
-              this.processedTopics = response.data;
+            if (response.success && response.islenen_konular) {
+              this.processedTopics = response.islenen_konular;
               console.log('Processed topics loaded:', this.processedTopics);
             }
             resolve(); // Always resolve, even if no processed topics
