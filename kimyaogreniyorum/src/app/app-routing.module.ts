@@ -30,6 +30,7 @@ import { OgretmenSinavlarSayfasiComponent } from './components/ogretmen-sayfasi/
 import { OgretmenUcretSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component';
 import { OgretmenIslenenKonularSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-islenen-konular-sayfasi/ogretmen-islenen-konular-sayfasi.component';
 import { OgretmenKonuIslemleriSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-islenen-konular-sayfasi/ogretmen-konu-islemleri-sayfasi/ogretmen-konu-islemleri-sayfasi.component';
+import { OgrenciIslenenKonularSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-sayfasi.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/giris-sayfasi', pathMatch: 'full' },
@@ -85,6 +86,10 @@ const routes: Routes = [
       {
         path: '',
         component: OgrenciAnaSayfasiComponent,
+      },
+      {
+        path: 'ogrenci-islene_konular-sayfasi',
+        component: OgrenciIslenenKonularSayfasiComponent,
       },
       {
         path: 'ogrenci-qr-kod-sayfasi',
