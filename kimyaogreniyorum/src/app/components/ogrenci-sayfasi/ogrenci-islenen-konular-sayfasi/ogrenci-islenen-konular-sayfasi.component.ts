@@ -101,23 +101,29 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
         return;
       }
 
-      this.http.post<any>(`${this.apiBaseUrl}/ogrenci_profil.php`, {}, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      }).subscribe({
-        next: (response) => {
-          if (response.success) {
-            this.studentInfo = response.data;
-            console.log('Student info loaded:', this.studentInfo);
-            resolve();
-          } else {
-            reject(response.message || 'Öğrenci bilgileri alınamadı');
+      this.http
+        .post<any>(
+          `./server/api/ogrenci_profil.php`,
+          {},
+          {
+            headers: { Authorization: `Bearer ${token}` },
           }
-        },
-        error: (error) => {
-          console.error('Error loading student info:', error);
-          reject('Öğrenci bilgileri yüklenemedi');
-        }
-      });
+        )
+        .subscribe({
+          next: (response) => {
+            if (response.success) {
+              this.studentInfo = response.data;
+              console.log('Student info loaded:', this.studentInfo);
+              resolve();
+            } else {
+              reject(response.message || 'Öğrenci bilgileri alınamadı');
+            }
+          },
+          error: (error) => {
+            console.error('Error loading student info:', error);
+            reject('Öğrenci bilgileri yüklenemedi');
+          },
+        });
     });
   }
 
@@ -140,43 +146,45 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      this.http.get<any>(`${this.apiBaseUrl}/konu_listesi.php`, { headers }).subscribe({
-        next: (response) => {
-          if (response.success && response.data) {
-            // Group topics by unite
-            const topicsMap = new Map<number, Unit>();
-            
-            response.data.forEach((topic: any) => {
-              if (!topicsMap.has(topic.unite_id)) {
-                topicsMap.set(topic.unite_id, {
-                  id: topic.unite_id,
-                  unite_adi: topic.unite_adi,
-                  aciklama: topic.unite_aciklama || '',
-                  konular: []
-                });
-              }
-              
-              topicsMap.get(topic.unite_id)?.konular.push({
-                id: topic.id,
-                konu_adi: topic.konu_adi,
-                aciklama: topic.aciklama || '',
-                sinif_seviyesi: topic.sinif_seviyesi,
-                unite_id: topic.unite_id
-              });
-            });
+      this.http
+        .get<any>(`./server/api/konu_listesi.php`, { headers })
+        .subscribe({
+          next: (response) => {
+            if (response.success && response.data) {
+              // Group topics by unite
+              const topicsMap = new Map<number, Unit>();
 
-            this.groupedTopics = Array.from(topicsMap.values());
-            console.log('Topics loaded:', this.groupedTopics);
-            resolve();
-          } else {
-            reject('Konular yüklenemedi');
-          }
-        },
-        error: (error) => {
-          console.error('Error loading topics:', error);
-          reject('Konular yüklenirken hata oluştu');
-        }
-      });
+              response.data.forEach((topic: any) => {
+                if (!topicsMap.has(topic.unite_id)) {
+                  topicsMap.set(topic.unite_id, {
+                    id: topic.unite_id,
+                    unite_adi: topic.unite_adi,
+                    aciklama: topic.unite_aciklama || '',
+                    konular: [],
+                  });
+                }
+
+                topicsMap.get(topic.unite_id)?.konular.push({
+                  id: topic.id,
+                  konu_adi: topic.konu_adi,
+                  aciklama: topic.aciklama || '',
+                  sinif_seviyesi: topic.sinif_seviyesi,
+                  unite_id: topic.unite_id,
+                });
+              });
+
+              this.groupedTopics = Array.from(topicsMap.values());
+              console.log('Topics loaded:', this.groupedTopics);
+              resolve();
+            } else {
+              reject('Konular yüklenemedi');
+            }
+          },
+          error: (error) => {
+            console.error('Error loading topics:', error);
+            reject('Konular yüklenirken hata oluştu');
+          },
+        });
     });
   }
 
@@ -204,22 +212,26 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      this.http.get<any>(
-        `${this.apiBaseUrl}/islenen_konular.php?grup=${encodeURIComponent(this.studentInfo.grup)}`,
-        { headers }
-      ).subscribe({
-        next: (response) => {
-          if (response.success && response.data) {
-            this.processedTopics = response.data;
-            console.log('Processed topics loaded:', this.processedTopics);
-          }
-          resolve(); // Always resolve, even if no processed topics
-        },
-        error: (error) => {
-          console.error('Error loading processed topics:', error);
-          resolve(); // Don't reject, just resolve with empty processed topics
-        }
-      });
+      this.http
+        .get<any>(
+          `./server/api/islenen_konular.php?grup=${encodeURIComponent(
+            this.studentInfo.grup
+          )}`,
+          { headers }
+        )
+        .subscribe({
+          next: (response) => {
+            if (response.success && response.data) {
+              this.processedTopics = response.data;
+              console.log('Processed topics loaded:', this.processedTopics);
+            }
+            resolve(); // Always resolve, even if no processed topics
+          },
+          error: (error) => {
+            console.error('Error loading processed topics:', error);
+            resolve(); // Don't reject, just resolve with empty processed topics
+          },
+        });
     });
   }
 

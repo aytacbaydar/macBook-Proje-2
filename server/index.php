@@ -85,6 +85,10 @@ if (strpos($requestUri, $basePath) === 0) {
             require_once 'api/create_konular_tables.php';
             break;
 
+        case 'ogrenci_profil':
+            require_once 'api/ogrenci_profil.php';
+            break;
+
         default:
             http_response_code(404);
             echo json_encode(['error' => 'API endpoint bulunamadı']);
