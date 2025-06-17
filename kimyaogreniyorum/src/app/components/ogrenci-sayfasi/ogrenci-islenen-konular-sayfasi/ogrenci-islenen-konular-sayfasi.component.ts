@@ -82,7 +82,19 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
 
   private loadStudentInfo(): Promise<void> {
     return new Promise((resolve, reject) => {
-      const token = localStorage.getItem('token');
+      // Token'ı localStorage veya sessionStorage'dan al
+      let token = '';
+      const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          token = user.token || '';
+          console.log('Token found:', token ? 'Yes' : 'No');
+        } catch (error) {
+          console.error('Error parsing user data:', error);
+        }
+      }
+
       if (!token) {
         this.error = 'Oturum bulunamadı. Lütfen tekrar giriş yapın.';
         reject('No token');
@@ -95,6 +107,7 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
         next: (response) => {
           if (response.success) {
             this.studentInfo = response.data;
+            console.log('Student info loaded:', this.studentInfo);
             resolve();
           } else {
             reject(response.message || 'Öğrenci bilgileri alınamadı');
@@ -110,7 +123,21 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
 
   private loadTopics(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.http.get<any>(`${this.apiBaseUrl}/konu_listesi.php`).subscribe({
+      // Token'ı ekle
+      let token = '';
+      const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          token = user.token || '';
+        } catch (error) {
+          console.error('Error parsing user data:', error);
+        }
+      }
+
+      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+
+      this.http.get<any>(`${this.apiBaseUrl}/konu_listesi.php`, { headers }).subscribe({
         next: (response) => {
           if (response.success && response.data) {
             // Group topics by unite
@@ -136,6 +163,7 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
             });
 
             this.groupedTopics = Array.from(topicsMap.values());
+            console.log('Topics loaded:', this.groupedTopics);
             resolve();
           } else {
             reject('Konular yüklenemedi');
@@ -156,10 +184,25 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
         return;
       }
 
-      this.http.get<any>(`${this.apiBaseUrl}/islenen_konular.php?grup=${encodeURIComponent(this.studentInfo.grup)}`).subscribe({
+      // Token'ı ekle
+      let token = '';
+      const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          token = user.token || '';
+        } catch (error) {
+          console.error('Error parsing user data:', error);
+        }
+      }
+
+      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+
+      this.http.get<any>(`${this.apiBaseUrl}/islenen_konular.php?grup=${encodeURIComponent(this.studentInfo.grup)}`, { headers }).subscribe({
         next: (response) => {
           if (response.success && response.data) {
             this.processedTopics = response.data;
+            console.log('Processed topics loaded:', this.processedTopics);
           }
           resolve(); // Always resolve, even if no processed topics
         },
