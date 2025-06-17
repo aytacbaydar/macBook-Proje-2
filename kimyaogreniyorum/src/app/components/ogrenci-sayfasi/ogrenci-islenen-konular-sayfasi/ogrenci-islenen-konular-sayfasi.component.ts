@@ -9,6 +9,7 @@ interface StudentInfo {
   sinifi: string;
   grup: string;
   okulu: string;
+  ogretmeni?: string;
 }
 
 interface Konu {
@@ -155,20 +156,19 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
   }
 
   private loadIslenenKonular(): Promise<void> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       if (!this.studentInfo?.grup) {
+        console.log('Grup bilgisi yok, işlenen konular yüklenmeyecek');
         resolve();
         return;
       }
 
       let token = '';
-      let ogretmenId = '';
       const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
       if (userStr) {
         try {
           const user = JSON.parse(userStr);
           token = user.token || '';
-          // Öğrencinin öğretmeninin ID'sini al (öğretmen adı ile eşleştirme gerekebilir)
         } catch (error) {
           console.error('Error parsing user data:', error);
         }
@@ -179,46 +179,24 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      // Önce öğretmen ID'sini bul
-      this.http.get<any>(`${this.apiBaseUrl}/ogretmenler_listesi.php`, { headers }).subscribe({
-        next: (teachersResponse) => {
-          if (teachersResponse.success) {
-            const teacher = teachersResponse.data.find((t: any) => 
-              t.adi_soyadi === this.studentInfo!.ogretmeni
-            );
-            
-            if (teacher) {
-              ogretmenId = teacher.id;
-              
-              // Şimdi işlenen konuları çek
-              this.http.get<any>(`${this.apiBaseUrl}/islenen_konular.php?ogretmen_id=${ogretmenId}`, { headers }).subscribe({
-                next: (response) => {
-                  console.log('İşlenen konular API response:', response);
-                  if (response.success) {
-                    // Sadece öğrencinin grubuna ait olan işlenen konuları filtrele
-                    this.islenenKonular = (response.islenen_konular || []).filter((islenen: any) => 
-                      islenen.grup_adi === this.studentInfo!.grup
-                    );
-                    console.log('Filtered processed topics for group:', this.islenenKonular.length);
-                  }
-                  resolve();
-                },
-                error: (error) => {
-                  console.error('Error loading processed topics:', error);
-                  resolve();
-                }
-              });
-            } else {
-              console.error('Öğretmen bulunamadı:', this.studentInfo!.ogretmeni);
-              resolve();
-            }
+      // Doğrudan grup bilgisi ile işlenen konuları çek
+      console.log('İşlenen konular yükleniyor, grup:', this.studentInfo.grup);
+      
+      this.http.get<any>(`${this.apiBaseUrl}/islenen_konular.php?grup=${encodeURIComponent(this.studentInfo.grup)}`, { headers }).subscribe({
+        next: (response) => {
+          console.log('İşlenen konular API response:', response);
+          if (response.success && response.islenen_konular) {
+            this.islenenKonular = response.islenen_konular;
+            console.log('İşlenen konular yüklendi:', this.islenenKonular.length);
           } else {
-            console.error('Öğretmenler listesi alınamadı');
-            resolve();
+            console.log('İşlenen konu bulunamadı veya API hatası');
+            this.islenenKonular = [];
           }
+          resolve();
         },
         error: (error) => {
-          console.error('Error loading teachers:', error);
+          console.error('İşlenen konular yüklenirken hata:', error);
+          this.islenenKonular = [];
           resolve();
         }
       });
