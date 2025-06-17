@@ -135,7 +135,10 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
         }
       }
 
-      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
 
       this.http.get<any>(`${this.apiBaseUrl}/konu_listesi.php`, { headers }).subscribe({
         next: (response) => {
@@ -196,9 +199,14 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
         }
       }
 
-      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+      const headers = token
+        ? { 'Authorization': `Bearer ${token}` }
+        : undefined;
 
-      this.http.get<any>(`${this.apiBaseUrl}/islenen_konular.php?grup=${encodeURIComponent(this.studentInfo.grup)}`, { headers }).subscribe({
+      this.http.get<any>(
+        `${this.apiBaseUrl}/islenen_konular.php?grup=${encodeURIComponent(this.studentInfo.grup)}`,
+        headers ? { headers } : {}
+      ).subscribe({
         next: (response) => {
           if (response.success && response.data) {
             this.processedTopics = response.data;
