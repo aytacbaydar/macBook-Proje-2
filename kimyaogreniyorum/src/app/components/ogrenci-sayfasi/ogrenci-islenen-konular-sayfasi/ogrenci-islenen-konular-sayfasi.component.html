@@ -48,6 +48,52 @@
       </div>
     </div>
 
+        <!-- Summary Stats -->
+        <div class="summary-stats" *ngIf="getUnitesByGroup().length > 0">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="bi bi-bookmark-check-fill"></i>
+              </div>
+              <div class="stat-content">
+                <h4>{{ getTotalProcessedTopics() }}</h4>
+                <p>İşlenen Konu</p>
+              </div>
+            </div>
+        
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="bi bi-journal-text"></i>
+              </div>
+              <div class="stat-content">
+                <h4>{{ getTotalTopics() }}</h4>
+                <p>Toplam Konu</p>
+              </div>
+            </div>
+        
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="bi bi-graph-up"></i>
+              </div>
+              <div class="stat-content">
+                <h4>{{ getOverallProgress() }}%</h4>
+                <p>İlerleme</p>
+              </div>
+            </div>
+        
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="bi bi-folder-check"></i>
+              </div>
+              <div class="stat-content">
+                <h4>{{ getUnitesByGroup().length }}</h4>
+                <p>Ünite</p>
+              </div>
+            </div>
+          </div>
+          </div>
+
+          
     <!-- Topics by Units -->
     <div class="topics-container" *ngIf="getUnitesByGroup().length > 0">
       <div class="unit-section" *ngFor="let unit of getUnitesByGroup(); let unitIndex = index">
@@ -139,51 +185,6 @@
         <i class="bi bi-journal-x"></i>
         <h3>Henüz İşlenen Konu Yok</h3>
         <p>Öğretmeniniz konuları işledikçe burada görünecek. Sabırlı ol! 📚</p>
-      </div>
-    </div>
-
-    <!-- Summary Stats -->
-    <div class="summary-stats" *ngIf="getUnitesByGroup().length > 0">
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="bi bi-bookmark-check-fill"></i>
-          </div>
-          <div class="stat-content">
-            <h4>{{ getTotalProcessedTopics() }}</h4>
-            <p>İşlenen Konu</p>
-          </div>
-        </div>
-        
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="bi bi-journal-text"></i>
-          </div>
-          <div class="stat-content">
-            <h4>{{ getTotalTopics() }}</h4>
-            <p>Toplam Konu</p>
-          </div>
-        </div>
-        
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="bi bi-graph-up"></i>
-          </div>
-          <div class="stat-content">
-            <h4>{{ getOverallProgress() }}%</h4>
-            <p>İlerleme</p>
-          </div>
-        </div>
-        
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="bi bi-folder-check"></i>
-          </div>
-          <div class="stat-content">
-            <h4>{{ getUnitesByGroup().length }}</h4>
-            <p>Ünite</p>
-          </div>
-        </div>
       </div>
     </div>
   </div>
