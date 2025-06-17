@@ -10,6 +10,7 @@ import { OgrenciAnaSayfasiComponent } from './ogrenci-ana-sayfasi/ogrenci-ana-sa
 import { OgrenciTaslakSayfasiComponent } from './template/ogrenci-taslak-sayfasi/ogrenci-taslak-sayfasi.component';
 import { OgrenciNavbarSayfasiComponent } from './template/ogrenci-navbar-sayfasi/ogrenci-navbar-sayfasi.component';
 import { OgrenciSidebarSayfasiComponent } from './template/ogrenci-sidebar-sayfasi/ogrenci-sidebar-sayfasi.component';
+import { OgrenciIslenenKonularSayfasiComponent } from './ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-sayfasi.component';
 
 
 
@@ -21,6 +22,7 @@ import { OgrenciSidebarSayfasiComponent } from './template/ogrenci-sidebar-sayfa
     OgrenciTaslakSayfasiComponent,
     OgrenciNavbarSayfasiComponent,
     OgrenciSidebarSayfasiComponent,
+    OgrenciIslenenKonularSayfasiComponent,
   ],
   imports: [
     CommonModule,
