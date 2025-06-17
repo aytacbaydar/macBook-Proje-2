@@ -11,6 +11,7 @@ import { OgrenciTaslakSayfasiComponent } from './template/ogrenci-taslak-sayfasi
 import { OgrenciNavbarSayfasiComponent } from './template/ogrenci-navbar-sayfasi/ogrenci-navbar-sayfasi.component';
 import { OgrenciSidebarSayfasiComponent } from './template/ogrenci-sidebar-sayfasi/ogrenci-sidebar-sayfasi.component';
 import { OgrenciIslenenKonularSayfasiComponent } from './ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-sayfasi.component';
+import { OgrenciIslenenKonularPdfSayfasiComponent } from './ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component';
 
 
 
@@ -23,6 +24,7 @@ import { OgrenciIslenenKonularSayfasiComponent } from './ogrenci-islenen-konular
     OgrenciNavbarSayfasiComponent,
     OgrenciSidebarSayfasiComponent,
     OgrenciIslenenKonularSayfasiComponent,
+    OgrenciIslenenKonularPdfSayfasiComponent,
   ],
   imports: [
     CommonModule,

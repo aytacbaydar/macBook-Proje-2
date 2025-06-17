@@ -31,6 +31,7 @@ import { OgretmenUcretSayfasiComponent } from './components/ogretmen-sayfasi/ogr
 import { OgretmenIslenenKonularSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-islenen-konular-sayfasi/ogretmen-islenen-konular-sayfasi.component';
 import { OgretmenKonuIslemleriSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-islenen-konular-sayfasi/ogretmen-konu-islemleri-sayfasi/ogretmen-konu-islemleri-sayfasi.component';
 import { OgrenciIslenenKonularSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-sayfasi.component';
+import { OgrenciIslenenKonularPdfSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/giris-sayfasi', pathMatch: 'full' },
@@ -88,8 +89,12 @@ const routes: Routes = [
         component: OgrenciAnaSayfasiComponent,
       },
       {
-        path: 'ogrenci-islene_konular-sayfasi',
+        path: 'islenen-konular',
         component: OgrenciIslenenKonularSayfasiComponent,
+      },
+      {
+        path: 'islenen-konular-pdf',
+        component: OgrenciIslenenKonularPdfSayfasiComponent,
       },
       {
         path: 'ogrenci-qr-kod-sayfasi',

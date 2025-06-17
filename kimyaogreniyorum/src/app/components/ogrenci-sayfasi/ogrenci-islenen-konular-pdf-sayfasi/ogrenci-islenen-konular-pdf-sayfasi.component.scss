@@ -1,0 +1,493 @@
+
+.modern-page-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.minimal-navbar {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  .navbar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .page-info {
+    .page-title {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #2d3748;
+      display: flex;
+      align-items: center;
+
+      i {
+        color: #e53e3e;
+      }
+    }
+
+    .page-subtitle {
+      margin: 0.25rem 0 0 0;
+      font-size: 0.9rem;
+      color: #718096;
+    }
+  }
+
+  .modern-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+    &.modern-btn-secondary {
+      background: #e2e8f0;
+      color: #4a5568;
+
+      &:hover {
+        background: #cbd5e0;
+        transform: translateY(-1px);
+      }
+    }
+  }
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.content-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.student-info-card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+  .student-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .student-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5rem;
+    }
+
+    .student-details {
+      h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #2d3748;
+      }
+
+      .student-group {
+        margin: 0.25rem 0;
+        font-size: 0.9rem;
+        color: #667eea;
+        font-weight: 500;
+      }
+
+      .student-email {
+        margin: 0;
+        font-size: 0.85rem;
+        color: #718096;
+      }
+    }
+  }
+}
+
+.lessons-section {
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+
+    h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #2d3748;
+      flex: 1;
+    }
+
+    i {
+      color: #667eea;
+      font-size: 1.25rem;
+    }
+
+    .lessons-count {
+      background: #667eea;
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+  i {
+    color: #a0aec0;
+    margin-bottom: 1rem;
+  }
+
+  h4 {
+    color: #4a5568;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.lessons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.lesson-card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  }
+
+  .lesson-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+
+    .lesson-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #e53e3e 0%, #ff6b6b 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .lesson-title {
+      flex: 1;
+
+      h3 {
+        margin: 0 0 0.25rem 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2d3748;
+        line-height: 1.3;
+      }
+
+      .lesson-type {
+        font-size: 0.8rem;
+        color: #718096;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .lesson-info {
+    margin-bottom: 1.5rem;
+
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .label {
+        font-size: 0.85rem;
+        color: #718096;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+
+        i {
+          color: #a0aec0;
+        }
+      }
+
+      .value {
+        font-size: 0.85rem;
+        color: #2d3748;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .lesson-actions {
+    display: flex;
+    gap: 0.75rem;
+
+    .action-btn {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      font-size: 0.9rem;
+
+      &.view-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+
+        &:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        &:disabled {
+          background: #e2e8f0;
+          color: #a0aec0;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+}
+
+// PDF Modal Styles
+.pdf-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.pdf-modal-content {
+  background: white;
+  border-radius: 12px;
+  width: 90vw;
+  height: 85vh;
+  max-width: 1000px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.pdf-modal-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8fafc;
+
+  h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2d3748;
+    display: flex;
+    align-items: center;
+
+    i {
+      color: #e53e3e;
+    }
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 0.5rem;
+
+    .header-action-btn {
+      padding: 0.5rem 1rem;
+      border: 1px solid #e2e8f0;
+      background: white;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      color: #4a5568;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: #f7fafc;
+        border-color: #cbd5e0;
+      }
+    }
+
+    .close-btn {
+      padding: 0.5rem;
+      border: none;
+      background: #fed7d7;
+      color: #c53030;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: #feb2b2;
+      }
+    }
+  }
+}
+
+.pdf-viewer {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  iframe {
+    width: 100%;
+    height: 100%;
+  }
+
+  .pdf-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    color: #718096;
+  }
+
+  .pdf-fallback {
+    .fallback-content {
+      text-align: center;
+      color: #718096;
+
+      .pdf-icon {
+        font-size: 3rem;
+        color: #e2e8f0;
+        margin-bottom: 1rem;
+      }
+
+      h4 {
+        margin-bottom: 0.5rem;
+        color: #4a5568;
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .minimal-navbar {
+    padding: 1rem;
+
+    .navbar-content {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+  }
+
+  .content-wrapper {
+    padding: 1rem;
+  }
+
+  .lessons-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .student-info-card {
+    .student-header {
+      flex-direction: column;
+      text-align: center;
+      gap: 1rem;
+    }
+  }
+
+  .pdf-modal-overlay {
+    padding: 0.5rem;
+  }
+
+  .pdf-modal-content {
+    width: 95vw;
+    height: 90vh;
+  }
+
+  .pdf-modal-header {
+    padding: 1rem;
+
+    .modal-actions {
+      flex-wrap: wrap;
+      gap: 0.25rem;
+
+      .header-action-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+      }
+    }
+  }
+}

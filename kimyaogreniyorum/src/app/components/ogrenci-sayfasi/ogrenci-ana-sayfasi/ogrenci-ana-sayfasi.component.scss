@@ -341,3 +341,46 @@
     }
   }
 }
+
+.action-buttons {
+    display: flex;
+    gap: 0.75rem;
+
+    .view-all-btn, .pdf-btn {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      font-size: 0.9rem;
+
+      &:hover {
+        transform: translateY(-2px);
+      }
+    }
+
+    .view-all-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+
+      &:hover {
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      }
+    }
+
+    .pdf-btn {
+      background: linear-gradient(135deg, #e53e3e 0%, #ff6b6b 100%);
+      color: white;
+
+      &:hover {
+        box-shadow: 0 4px 15px rgba(229, 62, 62, 0.4);
+      }
+    }
+  }

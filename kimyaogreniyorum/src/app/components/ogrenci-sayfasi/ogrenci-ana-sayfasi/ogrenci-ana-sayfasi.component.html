@@ -1,5 +1,4 @@
-
-    <!-- Dashboard Content -->
+<!-- Dashboard Content -->
         <!-- Quick Stats Cards -->
         <div class="row g-3 mb-4">
           <!-- Devamsızlık Card -->
@@ -21,7 +20,7 @@
               </div>
             </div>
           </div>
-  
+
           <!-- Ders İlerlemesi Card -->
           <div class="col-md-3 col-sm-6">
             <div class="card h-100 border-primary border-start border-4 rounded-lg shadow-sm">
@@ -41,7 +40,7 @@
               </div>
             </div>
           </div>
-  
+
           <!-- Sınav Başarısı Card -->
           <div class="col-md-3 col-sm-6">
             <div class="card h-100 border-warning border-start border-4 rounded-lg shadow-sm">
@@ -61,7 +60,7 @@
               </div>
             </div>
           </div>
-  
+
           <!-- Not Ortalaması Card -->
           <div class="col-md-3 col-sm-6">
             <div class="card h-100 border-info border-start border-4 rounded-lg shadow-sm">
@@ -82,7 +81,7 @@
             </div>
           </div>
         </div>
-  
+
         <!-- Quick Actions Row -->
         <div class="row g-3 mb-4">
           <!-- QR Kod Kartı -->
@@ -106,7 +105,7 @@
               </div>
             </div>
           </div>
-  
+
           <!-- Dersler Kartı -->
           <div class="col-md-6">
             <div class="card h-100 shadow-sm">
@@ -129,7 +128,7 @@
             </div>
           </div>
         </div>
-  
+
         <!-- Son İşlenen Konular Bölümü -->
         <div class="row g-3 mb-4">
           <div class="col-12">
@@ -195,11 +194,16 @@
 
                 <!-- Tümünü Gör Butonu -->
                 <div *ngIf="!isLoadingTopics && !topicsError && recentTopics.length > 0" class="text-center mt-3">
-                  <a routerLink="/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi" 
-                     class="btn btn-outline-success btn-sm">
-                    <i class="bi bi-arrow-right me-1"></i>
-                    Tüm Konuları Gör
-                  </a>
+                  <div class="action-buttons">
+            <button class="view-all-btn" routerLink="../islenen-konular">
+              <i class="bi bi-list-ul"></i>
+              Tümünü Görüntüle
+            </button>
+            <button class="pdf-btn" routerLink="../islenen-konular-pdf">
+              <i class="bi bi-file-earmark-pdf"></i>
+              Ders Notları
+            </button>
+          </div>
                 </div>
               </div>
             </div>
@@ -226,7 +230,7 @@
               </div>
             </div>
           </div>
-  
+
           <!-- Ders İlerlemesi Grafiği -->
           <div class="col-md-6">
             <div class="card shadow-sm  ">
@@ -246,5 +250,5 @@
             </div>
           </div>
         </div>
-    
+
       <!-- Dashboard Content -->
