@@ -89,11 +89,11 @@ const routes: Routes = [
         component: OgrenciAnaSayfasiComponent,
       },
       {
-        path: 'islenen-konular',
+        path: 'ogrenci-islene-konular-sayfasi',
         component: OgrenciIslenenKonularSayfasiComponent,
       },
       {
-        path: 'islenen-konular-pdf',
+        path: 'ogrenci-islene-konularin-pdf-sayfasi',
         component: OgrenciIslenenKonularPdfSayfasiComponent,
       },
       {

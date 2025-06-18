@@ -21,7 +21,7 @@ export class OgrenciSidebarSayfasiComponent {
     { icon: 'bi-archive', label: 'Testler' },
     { icon: 'bi-diagram-3', label: 'Yol Haritası' },
     { icon: 'bi-graph-up-arrow', label: 'Konu Analizi' },
-    { icon: 'bi-filetype-pdf', label: 'İşlenen Konular', link: 'ogrenci-sayfasi/ogrenci-islene_konular-sayfasi' },
+    { icon: 'bi-filetype-pdf', label: 'İşlenen Konular', link: 'ogrenci-sayfasi/ogrenci-islene-konular-sayfasi' },
     { icon: 'bi-credit-card-2-back', label: 'Ücretler' },
   ];
 
