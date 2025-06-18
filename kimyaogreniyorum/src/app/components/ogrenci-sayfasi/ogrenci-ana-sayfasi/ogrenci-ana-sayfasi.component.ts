@@ -20,7 +20,10 @@ interface RecentTopic {
 export class OgrenciAnaSayfasiComponent implements OnInit {
   // Sidebar state
   isSidebarOpen: boolean = true;
-  // Add this property to your component class
+  // Math object for template use
+  Math = Math;
+  
+  // Current student property
   public currentStudent: string | null = null;
   // Student information
   studentName: string = '';
@@ -69,6 +72,7 @@ export class OgrenciAnaSayfasiComponent implements OnInit {
 
         // Kullanıcı bilgilerini al (API'den gelen response.data formatına uygun)
         this.studentName = user.adi_soyadi || 'Öğrenci';
+        this.currentStudent = this.studentName; // Set currentStudent property
         this.studentClass = user.sinif || 'Sınıf Bilgisi Yok';
         this.studentTeacher = user.ogretmeni || 'Öğretmen Bilgisi Yok';
         this.studentGroup = user.grup || user.grubu || '';
@@ -152,8 +156,8 @@ export class OgrenciAnaSayfasiComponent implements OnInit {
 
   // Son işlenen konuları yükle
   loadRecentTopics(): void {
-    if (!this.studentGroup) {
-      this.topicsError = 'Grup bilgisi bulunamadı';
+    if (!this.hasValidGroup()) {
+      this.topicsError = 'Grup bilgisi bulunamadı. Lütfen öğretmeninizle iletişime geçin.';
       return;
     }
 
@@ -238,5 +242,16 @@ export class OgrenciAnaSayfasiComponent implements OnInit {
       minute: '2-digit',
     };
     return now.toLocaleTimeString('tr-TR', options);
+  }
+
+  // Retry method for better error handling
+  retryLoadTopics(): void {
+    this.topicsError = '';
+    this.loadRecentTopics();
+  }
+
+  // Helper method for safe navigation
+  hasValidGroup(): boolean {
+    return !!(this.studentGroup && this.studentGroup.trim());
   }
 }

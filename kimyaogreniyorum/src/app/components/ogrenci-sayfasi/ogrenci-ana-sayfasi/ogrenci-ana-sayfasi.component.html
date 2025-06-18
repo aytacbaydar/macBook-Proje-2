@@ -12,7 +12,7 @@
   <div *ngIf="topicsError && !isLoadingTopics" class="alert alert-danger">
     <i class="bi bi-exclamation-triangle me-2"></i>
     {{ topicsError }}
-    <button class="btn btn-sm btn-outline-danger ms-3" (click)="loadRecentTopics()">
+    <button class="btn btn-sm btn-outline-danger ms-3" (click)="retryLoadTopics()">
       <i class="bi bi-arrow-clockwise me-1"></i>
       Tekrar Dene
     </button>
@@ -195,30 +195,21 @@
           </div>
         </div>
 
-          <div *ngIf="recentTopics.length > 0" class="topics-actions">
-            <div class="action-buttons">
-              <button class="view-all-btn" routerLink="../islenen-konular"></button>
+          
 
-                <!-- Boş Durum -->
-                <div *ngIf="!isLoadingTopics && !topicsError && recentTopics.length === 0" class="text-center py-4">
-                  <i class="bi bi-journal-x text-muted" style="font-size: 2rem;"></i>
-                  <p class="text-muted mt-2 mb-0">Henüz işlenen konu bulunmuyor</p>
-                  <small class="text-muted">Öğretmeniniz konuları işledikçe burada görünecek</small>
-                </div>
-
-                <!-- Tümünü Gör Butonu -->
-                <div *ngIf="!isLoadingTopics && !topicsError && recentTopics.length > 0" class="text-center mt-3">
-                  <div class="action-buttons">
-                    <button class="view-all-btn" routerLink="ogrenci-islene-konular-sayfasi">
-                      <i class="bi bi-list-ul"></i>
-                      Tümünü Görüntüle
-                    </button>
-                    <button class="pdf-btn" routerLink="ogrenci-islene-konularin-pdf-sayfasi">
-                      <i class="bi bi-file-earmark-pdf"></i>
-                      Ders Notları
-                    </button>
-                  </div>
-                </div>
+                <!-- Topics Actions -->
+        <div *ngIf="recentTopics.length > 0" class="topics-actions">
+          <div class="action-buttons">
+            <button class="view-all-btn" routerLink="ogrenci-islene-konular-sayfasi">
+              <i class="bi bi-list-ul"></i>
+              Tümünü Görüntüle
+            </button>
+            <button class="pdf-btn" routerLink="ogrenci-islene-konularin-pdf-sayfasi">
+              <i class="bi bi-file-earmark-pdf"></i>
+              Ders Notları
+            </button>
+          </div>
+        </div>
             </div>
           </div>
 
