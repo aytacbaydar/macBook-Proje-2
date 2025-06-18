@@ -15,13 +15,13 @@ interface RecentTopic {
   selector: 'app-ogrenci-ana-sayfasi',
   standalone: false,
   templateUrl: './ogrenci-ana-sayfasi.component.html',
-  styleUrl: './ogrenci-ana-sayfasi.component.scss'
+  styleUrl: './ogrenci-ana-sayfasi.component.scss',
 })
 export class OgrenciAnaSayfasiComponent implements OnInit {
-
   // Sidebar state
   isSidebarOpen: boolean = true;
-
+  // Add this property to your component class
+  public currentStudent: string | null = null;
   // Student information
   studentName: string = '';
   studentAvatar: string = '';
@@ -46,7 +46,7 @@ export class OgrenciAnaSayfasiComponent implements OnInit {
 
   private apiBaseUrl = './server/api';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     this.loadStudentInfo();
@@ -60,35 +60,37 @@ export class OgrenciAnaSayfasiComponent implements OnInit {
 
   private loadStudentInfo(): void {
     // localStorage veya sessionStorage'dan giriş yapan kullanıcı bilgilerini al
-    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
-    
+    const userStr =
+      localStorage.getItem('user') || sessionStorage.getItem('user');
+
     if (userStr) {
       try {
         const user = JSON.parse(userStr);
-        
+
         // Kullanıcı bilgilerini al (API'den gelen response.data formatına uygun)
         this.studentName = user.adi_soyadi || 'Öğrenci';
         this.studentClass = user.sinif || 'Sınıf Bilgisi Yok';
         this.studentTeacher = user.ogretmeni || 'Öğretmen Bilgisi Yok';
         this.studentGroup = user.grup || user.grubu || '';
-        
+
         // Avatar kontrolü - API'den gelen avatar alanını kullan
         if (user.avatar && user.avatar.trim() !== '') {
           this.studentAvatar = user.avatar;
         } else {
           // Avatar yoksa UI Avatars ile dinamik oluştur
-          this.studentAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(this.studentName)}&background=28a745&color=fff&size=40&font-size=0.6&rounded=true`;
+          this.studentAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+            this.studentName
+          )}&background=28a745&color=fff&size=40&font-size=0.6&rounded=true`;
         }
-        
+
         console.log('Öğrenci bilgileri yüklendi:', {
           id: user.id,
           name: this.studentName,
           class: this.studentClass,
           teacher: this.studentTeacher,
           avatar: this.studentAvatar,
-          userRole: user.rutbe
+          userRole: user.rutbe,
         });
-        
       } catch (error) {
         console.error('Kullanıcı bilgileri ayrıştırılırken hata:', error);
         this.setDefaultStudentInfo();
@@ -103,7 +105,8 @@ export class OgrenciAnaSayfasiComponent implements OnInit {
     this.studentName = 'Öğrenci';
     this.studentClass = 'Sınıf Bilgisi Yok';
     this.studentTeacher = 'Öğretmen Bilgisi Yok';
-    this.studentAvatar = 'https://ui-avatars.com/api/?name=Öğrenci&background=6c757d&color=fff&size=40&font-size=0.6&rounded=true';
+    this.studentAvatar =
+      'https://ui-avatars.com/api/?name=Öğrenci&background=6c757d&color=fff&size=40&font-size=0.6&rounded=true';
   }
 
   private loadStudentStats(): void {
@@ -157,14 +160,22 @@ export class OgrenciAnaSayfasiComponent implements OnInit {
     this.isLoadingTopics = true;
     this.topicsError = '';
 
-    const apiUrl = `${this.apiBaseUrl}/ogrenci_islenen_konular.php?grup=${encodeURIComponent(this.studentGroup)}`;
+    const apiUrl = `${
+      this.apiBaseUrl
+    }/ogrenci_islenen_konular.php?grup=${encodeURIComponent(
+      this.studentGroup
+    )}`;
 
     this.http.get<any>(apiUrl).subscribe({
       next: (response) => {
         if (response.success && response.islenen_konular) {
           // Son 5 konuyu al ve tarihe göre sırala
           this.recentTopics = response.islenen_konular
-            .sort((a: any, b: any) => new Date(b.isleme_tarihi).getTime() - new Date(a.isleme_tarihi).getTime())
+            .sort(
+              (a: any, b: any) =>
+                new Date(b.isleme_tarihi).getTime() -
+                new Date(a.isleme_tarihi).getTime()
+            )
             .slice(0, 5);
         } else {
           this.recentTopics = [];
@@ -175,7 +186,7 @@ export class OgrenciAnaSayfasiComponent implements OnInit {
         console.error('Son konular yüklenirken hata:', error);
         this.topicsError = 'Konular yüklenirken hata oluştu';
         this.isLoadingTopics = false;
-      }
+      },
     });
   }
 
@@ -196,15 +207,36 @@ export class OgrenciAnaSayfasiComponent implements OnInit {
     }
     // Bu hafta mı?
     else {
-      const daysDiff = Math.floor((today.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+      const daysDiff = Math.floor(
+        (today.getTime() - date.getTime()) / (1000 * 60 * 60 * 24)
+      );
       if (daysDiff <= 7) {
         return `${daysDiff} gün önce`;
       } else {
-        return date.toLocaleDateString('tr-TR', { 
-          day: 'numeric', 
-          month: 'short' 
+        return date.toLocaleDateString('tr-TR', {
+          day: 'numeric',
+          month: 'short',
         });
       }
     }
+  }
+
+  getCurrentDate(): string {
+    const today = new Date();
+    const options: Intl.DateTimeFormatOptions = {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    };
+    return today.toLocaleDateString('tr-TR', options);
+  }
+
+  getCurrentTime(): string {
+    const now = new Date();
+    const options: Intl.DateTimeFormatOptions = {
+      hour: '2-digit',
+      minute: '2-digit',
+    };
+    return now.toLocaleTimeString('tr-TR', options);
   }
 }

@@ -1,189 +1,203 @@
-<!-- Dashboard Content -->
-        <!-- Quick Stats Cards -->
-        <div class="row g-3 mb-4">
-          <!-- Devamsızlık Card -->
-          <div class="col-md-3 col-sm-6">
-            <div class="card h-100 border-success border-start border-4 rounded-lg shadow-sm">
-              <div class="card-body p-3">
-                <div class="d-flex align-items-center">
-                  <div class="icon-bg rounded-circle bg-success-subtle p-2 me-3">
-                    <i class="bi bi-calendar-check fs-4 text-success"></i>
-                  </div>
-                  <div>
-                    <h6 class="text-muted mb-0 small">Bu Hafta Devam</h6>
-                    <h4 class="mb-0">{{ thisWeekAttendance }}/5</h4>
-                    <div class="small text-success mt-1">
-                      %{{ getAttendancePercentage() }} Devam
-                    </div>
-                  </div>
-                </div>
-              </div>
+
+<div class="student-dashboard-page">
+  <!-- Loading State -->
+  <div *ngIf="isLoadingTopics" class="loading-section">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Yükleniyor...</span>
+    </div>
+    <p class="mt-3 text-muted">Veriler yükleniyor...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="topicsError && !isLoadingTopics" class="alert alert-danger">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    {{ topicsError }}
+    <button class="btn btn-sm btn-outline-danger ms-3" (click)="loadRecentTopics()">
+      <i class="bi bi-arrow-clockwise me-1"></i>
+      Tekrar Dene
+    </button>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!isLoadingTopics && !topicsError">
+
+    <!-- Student Info Card -->
+    <div class="student-info-card">
+      <div class="student-details">
+        <div class="student-avatar">
+          <i class="bi bi-person-circle"></i>
+        </div>
+        <div class="student-text">
+          <h3>{{ currentStudent || 'Öğrenci Paneli' }}</h3>
+          <div class="student-meta">
+            <span class="meta-item">
+              <i class="bi bi-calendar-check me-1"></i>
+              Bugün: {{ getCurrentDate() }}
+            </span>
+            <span class="meta-item">
+              <i class="bi bi-clock me-1"></i>
+              {{ getCurrentTime() }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary Stats -->
+    <div class="summary-stats">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="bi bi-calendar-check"></i>
+          </div>
+          <div class="stat-content">
+            <h4>{{ thisWeekAttendance }}/5</h4>
+            <p>Bu Hafta Devam</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="bi bi-book"></i>
+          </div>
+          <div class="stat-content">
+            <h4>{{ completedLessons }}/{{ totalLessons }}</h4>
+            <p>Ders İlerlemesi</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="bi bi-clipboard-check"></i>
+          </div>
+          <div class="stat-content">
+            <h4>{{ passedExams }}/{{ totalExams }}</h4>
+            <p>Sınav Başarısı</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="bi bi-trophy"></i>
+          </div>
+          <div class="stat-content">
+            <h4>{{ currentGrade }}</h4>
+            <p>Genel Ortalama</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions Section -->
+    <div class="actions-container">
+      <div class="action-section">
+
+        <!-- QR Kod Kartı -->
+        <div class="action-header">
+          <div class="action-title">
+            <div class="action-icon">
+              <i class="bi bi-qr-code"></i>
+            </div>
+            <div class="action-info">
+              <h4>QR Kod İşlemleri</h4>
+              <p>Sınıfa giriş/çıkış işlemleri için QR kodunu kullanın</p>
             </div>
           </div>
-
-          <!-- Ders İlerlemesi Card -->
-          <div class="col-md-3 col-sm-6">
-            <div class="card h-100 border-primary border-start border-4 rounded-lg shadow-sm">
-              <div class="card-body p-3">
-                <div class="d-flex align-items-center">
-                  <div class="icon-bg rounded-circle bg-primary-subtle p-2 me-3">
-                    <i class="bi bi-book fs-4 text-primary"></i>
-                  </div>
-                  <div>
-                    <h6 class="text-muted mb-0 small">Ders İlerlemesi</h6>
-                    <h4 class="mb-0">{{ completedLessons }}/{{ totalLessons }}</h4>
-                    <div class="small text-primary mt-1">
-                      %{{ getLessonProgress() }} Tamamlandı
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Sınav Başarısı Card -->
-          <div class="col-md-3 col-sm-6">
-            <div class="card h-100 border-warning border-start border-4 rounded-lg shadow-sm">
-              <div class="card-body p-3">
-                <div class="d-flex align-items-center">
-                  <div class="icon-bg rounded-circle bg-warning-subtle p-2 me-3">
-                    <i class="bi bi-clipboard-check fs-4 text-warning"></i>
-                  </div>
-                  <div>
-                    <h6 class="text-muted mb-0 small">Sınav Başarısı</h6>
-                    <h4 class="mb-0">{{ passedExams }}/{{ totalExams }}</h4>
-                    <div class="small text-warning mt-1">
-                      %{{ getExamSuccessRate() }} Başarı
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Not Ortalaması Card -->
-          <div class="col-md-3 col-sm-6">
-            <div class="card h-100 border-info border-start border-4 rounded-lg shadow-sm">
-              <div class="card-body p-3">
-                <div class="d-flex align-items-center">
-                  <div class="icon-bg rounded-circle bg-info-subtle p-2 me-3">
-                    <i class="bi bi-trophy fs-4 text-info"></i>
-                  </div>
-                  <div>
-                    <h6 class="text-muted mb-0 small">Genel Ortalama</h6>
-                    <h4 class="mb-0">{{ currentGrade }}</h4>
-                    <div class="small text-info mt-1">
-                      Mükemmel
-                    </div>
-                  </div>
-                </div>
-              </div>
+          <div class="action-stats">
+            <div class="stat-item">
+              <span class="stat-label">Hızlı Erişim</span>
             </div>
           </div>
         </div>
 
-        <!-- Quick Actions Row -->
-        <div class="row g-3 mb-4">
-          <!-- QR Kod Kartı -->
-          <div class="col-md-6">
-            <div class="card h-100 shadow-sm">
-              <div class="card-header bg-gradient-primary text-white">
-                <h5 class="card-title mb-0 d-flex align-items-center">
-                  <i class="bi bi-qr-code me-2"></i>
-                  QR Kod İşlemleri
-                </h5>
-              </div>
-              <div class="card-body p-4">
-                <p class="text-muted mb-3">Sınıfa giriş/çıkış işlemleri için QR kodunu kullanın.</p>
-                <div class="d-grid">
-                  <a routerLink="/ogrenci-sayfasi/ogrenci-qr-kod-sayfasi" 
-                     class="btn btn-primary btn-lg">
-                    <i class="bi bi-qr-code me-2"></i>
-                    QR Kod Sayfası
-                  </a>
-                </div>
-              </div>
+        <!-- QR Action Button -->
+        <div class="action-content">
+          <div class="action-button-container">
+            <a routerLink="/ogrenci-sayfasi/ogrenci-qr-kod-sayfasi" class="action-button qr-button">
+              <i class="bi bi-qr-code me-2"></i>
+              QR Kod Sayfası
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Son İşlenen Konular Section -->
+    <div class="topics-container">
+      <div class="topics-section">
+
+        <!-- Topics Header -->
+        <div class="topics-header">
+          <div class="topics-title">
+            <div class="topics-icon">
+              <i class="bi bi-bookmark-check-fill"></i>
+            </div>
+            <div class="topics-info">
+              <h4>Son İşlenen Konular</h4>
             </div>
           </div>
-
-          <!-- Dersler Kartı -->
-          <div class="col-md-6">
-            <div class="card h-100 shadow-sm">
-              <div class="card-header bg-gradient-success text-white">
-                <h5 class="card-title mb-0 d-flex align-items-center">
-                  <i class="bi bi-book me-2"></i>
-                  Ders Programı
-                </h5>
-              </div>
-              <div class="card-body p-4">
-                <p class="text-muted mb-2">Bir sonraki ders:</p>
-                <h6 class="fw-bold text-success mb-3">{{ nextLesson }}</h6>
-                <div class="d-grid">
-                  <button class="btn btn-outline-success btn-lg">
-                    <i class="bi bi-calendar-event me-2"></i>
-                    Ders Programını Gör
-                  </button>
-                </div>
-              </div>
+          <div class="topics-stats">
+            <div class="stat-item">
+              <span class="stat-number">{{ recentTopics.length }}</span>
+              <span class="stat-label">Son Konu</span>
             </div>
           </div>
         </div>
 
-        <!-- Son İşlenen Konular Bölümü -->
-        <div class="row g-3 mb-4">
-          <div class="col-12">
-            <div class="card shadow-sm">
-              <div class="card-header bg-gradient-success text-white">
-                <h5 class="card-title mb-0 d-flex align-items-center">
-                  <i class="bi bi-bookmark-check-fill me-2"></i>
-                  Son İşlenen Konular
+        <!-- Topics List -->
+        <div class="topics-list" *ngIf="recentTopics.length > 0">
+          <div class="topic-item" *ngFor="let topic of recentTopics; let topicIndex = index"
+            [style.animation-delay]="topicIndex * 0.1 + 's'">
+
+            <!-- Topic Status -->
+            <div class="topic-status">
+              <i class="bi bi-check-circle-fill text-success"></i>
+            </div>
+
+            <!-- Topic Content -->
+            <div class="topic-content">
+              <div class="topic-header">
+                <h5 class="topic-title">
+                  {{ topicIndex + 1 }}. {{ topic.konu_adi }}
                 </h5>
+                <span class="topic-class-badge">{{ topic.sinif_seviyesi }}</span>
               </div>
-              <div class="card-body">
-                <!-- Loading State -->
-                <div *ngIf="isLoadingTopics" class="text-center py-3">
-                  <div class="spinner-border spinner-border-sm text-success" role="status">
-                    <span class="visually-hidden">Yükleniyor...</span>
-                  </div>
-                  <p class="text-muted mt-2 mb-0">Konular yükleniyor...</p>
-                </div>
 
-                <!-- Error State -->
-                <div *ngIf="topicsError && !isLoadingTopics" class="text-center py-3">
-                  <i class="bi bi-exclamation-triangle text-warning"></i>
-                  <p class="text-muted mb-2">{{ topicsError }}</p>
-                  <button class="btn btn-sm btn-outline-success" (click)="loadRecentTopics()">
-                    <i class="bi bi-arrow-clockwise me-1"></i>
-                    Tekrar Dene
-                  </button>
-                </div>
+              <!-- Topic Meta -->
+              <div class="topic-meta">
+                <span class="topic-unit">
+                  <i class="bi bi-folder me-1"></i>
+                  {{ topic.unite_adi }}
+                </span>
+                <span class="topic-date">
+                  <i class="bi bi-calendar-check me-1"></i>
+                  {{ formatDate(topic.isleme_tarihi) }}
+                </span>
+              </div>
+            </div>
 
-                <!-- Son İşlenen Konular Listesi -->
-                <div *ngIf="!isLoadingTopics && !topicsError && recentTopics.length > 0" class="recent-topics-list">
-                  <div class="topic-item-recent" 
-                       *ngFor="let topic of recentTopics; let i = index"
-                       [style.animation-delay]="i * 0.1 + 's'">
-                    <div class="topic-status-icon">
-                      <i class="bi bi-check-circle-fill text-success"></i>
-                    </div>
-                    <div class="topic-content-recent">
-                      <div class="topic-header-recent">
-                        <h6 class="topic-title-recent">{{ topic.konu_adi }}</h6>
-                        <span class="topic-class-badge-recent">{{ topic.sinif_seviyesi }}</span>
-                      </div>
-                      <div class="topic-meta-recent">
-                        <span class="topic-unit">
-                          <i class="bi bi-folder me-1"></i>
-                          {{ topic.unite_adi }}
-                        </span>
-                        <span class="topic-date">
-                          <i class="bi bi-calendar-check me-1"></i>
-                          {{ formatDate(topic.isleme_tarihi) }}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            <!-- Topic Actions -->
+            <div class="topic-actions">
+              <span class="completed-badge">
+                <i class="bi bi-check-lg me-1"></i>
+                Tamamlandı
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="recentTopics.length === 0" class="empty-state-topics">
+          <div class="empty-content">
+            <i class="bi bi-journal-x"></i>
+            <h3>Henüz İşlenen Konu Yok</h3>
+            <p>Öğretmeniniz konuları işledikçe burada görünecek 📚</p>
+          </div>
+        </div>
+
+          <div *ngIf="recentTopics.length > 0" class="topics-actions">
+            <div class="action-buttons">
+              <button class="view-all-btn" routerLink="../islenen-konular"></button>
 
                 <!-- Boş Durum -->
                 <div *ngIf="!isLoadingTopics && !topicsError && recentTopics.length === 0" class="text-center py-4">
@@ -195,60 +209,69 @@
                 <!-- Tümünü Gör Butonu -->
                 <div *ngIf="!isLoadingTopics && !topicsError && recentTopics.length > 0" class="text-center mt-3">
                   <div class="action-buttons">
-            <button class="view-all-btn" routerLink="ogrenci-islene-konular-sayfasi">
-              <i class="bi bi-list-ul"></i>
-              Tümünü Görüntüle
-            </button>
-            <button class="pdf-btn" routerLink="ogrenci-islene-konularin-pdf-sayfasi">
-              <i class="bi bi-file-earmark-pdf"></i>
-              Ders Notları
-            </button>
-          </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Progress Charts Row -->
-        <div class="row g-3">
-          <!-- Devamsızlık Grafiği -->
-          <div class="col-md-6">
-            <div class="card shadow-sm">
-              <div class="card-header  bg-gradient-primary ">
-                <h5 class="card-title mb-0">Haftalık Devam Durumu</h5>
-              </div>
-              <div class="card-body">
-                <div class="progress mb-2" style="height: 20px;">
-                  <div class="progress-bar bg-success" 
-                       [style.width.%]="getAttendancePercentage()"
-                       role="progressbar">
-                    %{{ getAttendancePercentage() }}
+                    <button class="view-all-btn" routerLink="ogrenci-islene-konular-sayfasi">
+                      <i class="bi bi-list-ul"></i>
+                      Tümünü Görüntüle
+                    </button>
+                    <button class="pdf-btn" routerLink="ogrenci-islene-konularin-pdf-sayfasi">
+                      <i class="bi bi-file-earmark-pdf"></i>
+                      Ders Notları
+                    </button>
                   </div>
                 </div>
-                <small class="text-muted">Bu hafta {{ thisWeekAttendance }} gün devam ettiniz</small>
-              </div>
             </div>
           </div>
 
-          <!-- Ders İlerlemesi Grafiği -->
-          <div class="col-md-6">
-            <div class="card shadow-sm  ">
-              <div class="card-header bg-gradient-primary">
-                <h5 class="card-title mb-0">Ders İlerlemesi</h5>
-              </div>
-              <div class="card-body">
-                <div class="progress mb-2" style="height: 20px;">
-                  <div class="progress-bar bg-primary" 
-                       [style.width.%]="getLessonProgress()"
-                       role="progressbar">
-                    %{{ getLessonProgress() }}
+          <!-- Progress Section -->
+          <div class="progress-container">
+            <div class="progress-section">
+
+              <!-- Progress Header -->
+              <div class="progress-header">
+                <div class="progress-title">
+                  <div class="progress-icon">
+                    <i class="bi bi-graph-up"></i>
+                  </div>
+                  <div class="progress-info">
+                    <h4>İlerleme Durumu</h4>
                   </div>
                 </div>
-                <small class="text-muted">{{ completedLessons }}/{{ totalLessons }} ders tamamlandı</small>
+              </div>
+
+              <!-- Progress Cards -->
+              <div class="progress-cards">
+                <!-- Devamsızlık Progress -->
+                <div class="progress-card">
+                  <div class="progress-card-header">
+                    <h5>Haftalık Devam</h5>
+                    <span class="progress-percentage">{{ getAttendancePercentage() }}%</span>
+                  </div>
+                  <div class="progress-bar-container">
+                    <div class="progress-bar">
+                      <div class="progress-fill attendance-fill" [style.width.%]="getAttendancePercentage()">
+                      </div>
+                    </div>
+                  </div>
+                  <p class="progress-text">{{ thisWeekAttendance }}/5 gün devam</p>
+                </div>
+
+                <!-- Ders İlerlemesi Progress -->
+                <div class="progress-card">
+                  <div class="progress-card-header">
+                    <h5>Ders İlerlemesi</h5>
+                    <span class="progress-percentage">{{ getLessonProgress() }}%</span>
+                  </div>
+                  <div class="progress-bar-container">
+                    <div class="progress-bar">
+                      <div class="progress-fill lesson-fill" [style.width.%]="getLessonProgress()">
+                      </div>
+                    </div>
+                  </div>
+                  <p class="progress-text">{{ completedLessons }}/{{ totalLessons }} ders tamamlandı</p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-      <!-- Dashboard Content -->
+      </div>
+    </div>
