@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
@@ -46,7 +46,8 @@ export class OgrenciKayitSayfasiComponent implements OnInit {
     private fb: FormBuilder,
     private http: HttpClient,
     private router: Router,
-    private toast: ToastrService
+    private toast: ToastrService,
+    private cdr: ChangeDetectorRef
   ) {}
   ngOnInit(): void {
     this.registrationForm = this.fb.group({
@@ -186,6 +187,8 @@ export class OgrenciKayitSayfasiComponent implements OnInit {
             console.log('Yüklenen öğretmenler: ', response.data);
             console.log('Teachers array length: ', this.teachers.length);
             console.log('Teachers array: ', this.teachers);
+             // Manually trigger change detection
+             this.cdr.detectChanges();
           } else {
             this.toast.error(
               'Hata',

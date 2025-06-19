@@ -91,12 +91,20 @@
                     <select
                         id="ogretmeni"
                         formControlName="ogretmeni"
+                        [disabled]="isLoadingTeachers"
                         >
-                        <option value="">Öğretmen seçiniz...</option>
-                        <option *ngFor="let teacher of teachers" [value]="teacher.adi_soyadi" style="color: blue;">
-                            {{ teacher.adi_soyadi }}
+                        <option value="">
+                            {{ isLoadingTeachers ? 'Öğretmenler yükleniyor...' : 'Öğretmen seçiniz...' }}
+                        </option>
+                        <option *ngFor="let teacher of teachers; trackBy: trackByTeacherId" [value]="teacher.adi_soyadi">
+                            {{ teacher.adi_soyadi }}{{ teacher.brans ? ' - ' + teacher.brans : '' }}
                         </option>
                     </select>
+
+                    <!-- Debug bilgisi ekleyelim -->
+                    <div class="text-muted small mt-1" *ngIf="!isLoadingTeachers">
+                        Toplam {{ teachers?.length || 0 }} öğretmen bulundu
+                    </div>
                 </div>
                 <div class="error-message" *ngIf="submitted && f['ogretmeni'].errors">
                     <span *ngIf="f['ogretmeni'].errors['required']">Öğretmen seçimi zorunludur</span>
