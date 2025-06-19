@@ -210,7 +210,7 @@ function getSinavDetaySonuc($conn, $sinav_id, $ogrenci_id) {
             'sinav_id' => $sinavSonucu['sinav_id'],
             'sinav_adi' => $sinavSonucu['sinav_adi'],
             'sinav_turu' => $sinavSonucu['sinav_turu'],
-            'sinav_tarihi' => $sinavSonucu['sinav_tarihi'],
+            'sinav_tarihi' => isset($sinavSonucu['sinav_tarihi']) ? $sinavSonucu['sinav_tarihi'] : $sinavSonucu['gonderim_tarihi'],
             'dogru_sayisi' => $dogruSayisi,
             'yanlis_sayisi' => $yanlisSayisi,
             'bos_sayisi' => $bosSayisi,
