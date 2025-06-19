@@ -18,7 +18,19 @@ try {
 
     // Get all teachers from ogrenciler table (as teachers are stored there with rutbe='ogretmen')
     $stmt = $pdo->prepare("
-        SELECT * FROM ogretmenler
+        SELECT 
+            id,
+            adi_soyadi,
+            email,
+            cep_telefonu as telefon,
+            brans,
+            rutbe,
+            aktif,
+            avatar,
+            kayit_tarihi as tarih
+        FROM ogrenciler 
+        WHERE rutbe = 'ogretmen' OR rutbe = 'admin'
+        ORDER BY adi_soyadi ASC
     ");
     
     $stmt->execute();
