@@ -27,7 +27,7 @@ try {
             rutbe,
             aktif,
             avatar,
-            kayit_tarihi
+            kayit_tarihi as tarih
         FROM ogrenciler 
         WHERE rutbe = 'ogretmen' OR rutbe = 'admin'
         ORDER BY adi_soyadi ASC
