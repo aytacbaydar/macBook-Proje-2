@@ -66,27 +66,44 @@ function getSinavDetaySonuc($conn, $sinav_id, $ogrenci_id) {
         error_log("DEBUG STEP 8: Sınav sonucu bulundu");
 
         // Öğrencinin cevaplarını al
-        error_log("DEBUG STEP 9: Preparing ogrenci_cevaplari query");
+        error_log("DEBUG STEP 9: Preparing sinav_cevaplari query");
         $stmt = $conn->prepare("
-            SELECT soru_no, secilen_cevap 
-            FROM ogrenci_cevaplari 
+            SELECT cevaplar 
+            FROM sinav_cevaplari 
             WHERE sinav_id = ? AND ogrenci_id = ?
-            ORDER BY soru_no
         ");
         
         if (!$stmt) {
-            error_log("DEBUG ERROR: ogrenci_cevaplari prepare failed: " . print_r($conn->errorInfo(), true));
+            error_log("DEBUG ERROR: sinav_cevaplari prepare failed: " . print_r($conn->errorInfo(), true));
             return ['success' => false, 'message' => 'Öğrenci cevapları SQL prepare hatası'];
         }
         
         $executeResult = $stmt->execute([$sinav_id, $ogrenci_id]);
         if (!$executeResult) {
-            error_log("DEBUG ERROR: ogrenci_cevaplari execute failed: " . print_r($stmt->errorInfo(), true));
+            error_log("DEBUG ERROR: sinav_cevaplari execute failed: " . print_r($stmt->errorInfo(), true));
             return ['success' => false, 'message' => 'Öğrenci cevapları SQL execute hatası'];
         }
         error_log("DEBUG STEP 10: Öğrenci cevapları query executed");
         
-        $ogrenciCevaplari = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $ogrenciCevaplariData = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        // Cevapları parse et
+        $ogrenciCevaplari = [];
+        if ($ogrenciCevaplariData && $ogrenciCevaplariData['cevaplar']) {
+            $cevaplarJson = json_decode($ogrenciCevaplariData['cevaplar'], true);
+            if ($cevaplarJson) {
+                // JSON formatını dönüştür (soru1 -> 1, soru2 -> 2, etc.)
+                foreach ($cevaplarJson as $key => $value) {
+                    if (strpos($key, 'soru') === 0) {
+                        $soruNo = str_replace('soru', '', $key);
+                        $ogrenciCevaplari[] = [
+                            'soru_no' => $soruNo,
+                            'secilen_cevap' => $value
+                        ];
+                    }
+                }
+            }
+        }
         
         error_log("DEBUG STEP 11: Öğrenci cevapları count: " . count($ogrenciCevaplari));
 
