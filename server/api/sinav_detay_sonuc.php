@@ -67,6 +67,15 @@ function getSinavDetaySonuc($conn, $sinav_id, $ogrenci_id) {
 
         // Öğrencinin cevaplarını al
         error_log("DEBUG STEP 9: Preparing sinav_cevaplari query");
+        error_log("DEBUG: sinav_id = $sinav_id, ogrenci_id = $ogrenci_id");
+        
+        // Önce sinav_cevaplari tablosunda bu sinav_id ile kaç kayıt olduğunu kontrol et
+        $checkStmt = $conn->prepare("SELECT COUNT(*) as total, GROUP_CONCAT(DISTINCT ogrenci_id) as ogrenci_ids FROM sinav_cevaplari WHERE sinav_id = ?");
+        $checkStmt->execute([$sinav_id]);
+        $checkResult = $checkStmt->fetch(PDO::FETCH_ASSOC);
+        error_log("DEBUG: sinav_cevaplari tablosunda sinav_id=$sinav_id için toplam kayıt: " . $checkResult['total']);
+        error_log("DEBUG: Bu sınavdaki öğrenci ID'leri: " . $checkResult['ogrenci_ids']);
+        
         $stmt = $conn->prepare("
             SELECT cevaplar 
             FROM sinav_cevaplari 

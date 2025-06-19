@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -65,7 +64,7 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
 
     // localStorage veya sessionStorage'dan öğrenci ID'sini al
     const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
-    
+
     if (!userStr) {
       this.loading = false;
       this.error = 'Kullanıcı oturum bilgisi bulunamadı';
@@ -121,17 +120,12 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
   }
 
   selectSinav(sinav: SinavSonucu) {
-    this.selectedSinav = sinav;
-    this.loadSinavDetails(sinav);
-  }
-
-  loadSinavDetails(sinav: SinavSonucu) {
     this.loadingDetails = true;
-    this.selectedSinavDetails = null;
+    this.selectedSinav = sinav;
 
     // localStorage veya sessionStorage'dan öğrenci ID'sini al
     const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
-    
+
     if (!userStr) {
       this.loadingDetails = false;
       console.error('Kullanıcı oturum bilgisi bulunamadı');
@@ -156,7 +150,7 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
         if (response.success && response.data) {
           this.selectedSinavDetails = response.data;
           console.log('Sınav detayları yüklendi:', this.selectedSinavDetails);
-          
+
           // Grafik güncelleme
           setTimeout(() => this.createChart(), 100);
         } else {
