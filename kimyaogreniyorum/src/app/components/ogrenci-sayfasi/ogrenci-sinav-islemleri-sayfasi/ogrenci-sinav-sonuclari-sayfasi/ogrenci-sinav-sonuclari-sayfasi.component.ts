@@ -40,9 +40,13 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // URL'den gelen sınav ID'sini kontrol et
+    // URL'den gelen parametreleri kontrol et
     this.route.queryParams.subscribe(params => {
-      const sinavId = params['sinavId'];
+      const sinavId = params['sinavId'] ? parseInt(params['sinavId']) : undefined;
+      const ogrenciId = params['ogrenciId'] ? parseInt(params['ogrenciId']) : undefined;
+      
+      console.log('Query params:', { sinavId, ogrenciId });
+      
       this.loadAllSinavSonuclari(sinavId);
     });
   }
@@ -66,17 +70,25 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
         next: (response) => {
           this.loading = false;
           if (response.success && response.data) {
-            this.sinavSonuclari = response.data;
+            // Sınav sonuçları listesini al
+            this.sinavSonuclari = response.data.sinav_sonuclari || [];
+            
+            console.log('Tüm sınav sonuçları yüklendi:', this.sinavSonuclari);
 
             // Eğer belirli bir sınav ID'si varsa, onu seç
             if (selectedSinavId) {
               this.selectedSinav = this.sinavSonuclari.find(s => s.sinav_id == selectedSinavId) || null;
+              
+              // Eğer seçilen sınav bulunamadıysa, ilk sınavı seç
+              if (!this.selectedSinav && this.sinavSonuclari.length > 0) {
+                this.selectedSinav = this.sinavSonuclari[0];
+              }
             } else if (this.sinavSonuclari.length > 0) {
               // İlk sınavı varsayılan olarak seç
               this.selectedSinav = this.sinavSonuclari[0];
             }
           } else {
-            this.error = response.message || 'Sınav sonucu bulunamadı';
+            this.error = response.message || 'Henüz sınav sonucunuz bulunmuyor';
           }
         },
         error: (error) => {
@@ -170,6 +182,10 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
   }
 
   goBackToExams() {
+    this.router.navigate(['/ogrenci-sayfasi/sinav-islemleri']);
+  }
+
+  goToExams() {
     this.router.navigate(['/ogrenci-sayfasi/sinav-islemleri']);
   }
 }

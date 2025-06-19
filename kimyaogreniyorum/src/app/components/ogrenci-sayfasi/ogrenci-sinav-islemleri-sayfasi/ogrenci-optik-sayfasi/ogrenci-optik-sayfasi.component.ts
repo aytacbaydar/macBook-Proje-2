@@ -126,15 +126,19 @@ export class OgrenciOptikSayfasiComponent implements OnInit {
             this.error = null;
             console.log('Cevaplar kaydedildi:', response);
 
-            // 2 saniye sonra sonuçlar sayfasına yönlendir
+            // Başarılı kayıt sonrası sınav sonuçları sayfasına yönlendir
             setTimeout(() => {
+              // localStorage'dan öğrenci ID'sini al
+              const userData = JSON.parse(localStorage.getItem('user') || '{}');
+              const ogrenciId = userData.id;
+
               this.router.navigate(['/ogrenci-sayfasi/sinav-sonuclari'], {
                 queryParams: {
                   sinavId: this.sinavId,
-                  ogrenciId: this.getOgrenciId()
+                  ogrenciId: ogrenciId
                 }
               });
-            }, 2000);
+            }, 1500);
           } else {
           this.error =
             response.message || 'Cevaplar kaydedilirken hata oluştu.';
