@@ -13,11 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 require_once '../config.php';
 
 try {
-    // Database connection
-    $pdo = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // Use getConnection function from config.php
+    $pdo = getConnection();
 
-    // Get all teachers
+    // Get all teachers from ogrenciler table (as teachers are stored there with rutbe='ogretmen')
     $stmt = $pdo->prepare("
         SELECT 
             id,
@@ -29,8 +28,8 @@ try {
             aktif,
             avatar,
             kayit_tarihi
-        FROM kullanicilar 
-        WHERE rutbe = 'ogretmen'
+        FROM ogrenciler 
+        WHERE rutbe = 'ogretmen' OR rutbe = 'admin'
         ORDER BY adi_soyadi ASC
     ");
     
