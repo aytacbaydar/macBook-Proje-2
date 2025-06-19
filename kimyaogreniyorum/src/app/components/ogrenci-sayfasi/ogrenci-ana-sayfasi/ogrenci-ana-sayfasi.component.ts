@@ -190,20 +190,98 @@ export class OgrenciAnaSayfasiComponent implements OnInit {
   private loadLessonStats(): void {
     if (!this.hasValidGroup()) return;
 
-    const apiUrl = `${this.apiBaseUrl}/ogrenci_islenen_konular.php?grup=${encodeURIComponent(this.studentGroup)}`;
-    
-    this.http.get<any>(apiUrl).subscribe({
-      next: (response) => {
-        if (response.success && response.islenen_konular) {
-          this.completedLessons = response.islenen_konular.length;
-          this.totalLessons = this.completedLessons + 10; // Tahmini kalan ders sayısı
-          
-          console.log('Ders istatistikleri yüklendi:', response.islenen_konular);
+    // Önce tüm konuları yükle
+    this.loadAllTopics().then((allTopics) => {
+      // Sonra işlenen konuları yükle
+      const apiUrl = `${this.apiBaseUrl}/ogrenci_islenen_konular.php?grup=${encodeURIComponent(this.studentGroup)}`;
+      
+      this.http.get<any>(apiUrl).subscribe({
+        next: (response) => {
+          if (response.success && response.islenen_konular) {
+            this.completedLessons = response.islenen_konular.length;
+            this.totalLessons = allTopics.length;
+            
+            console.log('Ders istatistikleri yüklendi:', {
+              toplamKonu: this.totalLessons,
+              islenenKonu: this.completedLessons,
+              ilerlemeyuzdesi: this.getLessonProgress()
+            });
+          }
+        },
+        error: (error) => {
+          console.error('Ders istatistikleri yüklenirken hata:', error);
         }
-      },
-      error: (error) => {
-        console.error('Ders istatistikleri yüklenirken hata:', error);
+      });
+    }).catch((error) => {
+      console.error('Konu listesi yüklenirken hata:', error);
+    });
+  }
+
+  // Öğrencinin sınıf seviyesine göre filtrelenmiş tüm konuları yükle
+  private loadAllTopics(): Promise<any[]> {
+    return new Promise((resolve, reject) => {
+      const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+      if (!userStr) {
+        reject('Kullanıcı bilgisi bulunamadı');
+        return;
       }
+
+      let token = '';
+      let studentClass = '';
+      try {
+        const user = JSON.parse(userStr);
+        token = user.token || '';
+        studentClass = user.sinif || '';
+      } catch (error) {
+        console.error('Kullanıcı bilgileri ayrıştırılırken hata:', error);
+        reject('Kullanıcı bilgileri ayrıştırılamadı');
+        return;
+      }
+
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      this.http.get<any>(`${this.apiBaseUrl}/konu_listesi.php`, { headers }).subscribe({
+        next: (response) => {
+          if (response.success && response.konular) {
+            let filteredTopics = response.konular;
+
+            // Sınıf seviyesine göre filtrele
+            if (studentClass) {
+              // Mezun veya 12.Sınıf ise tüm konuları göster
+              const isMezunOr12 = studentClass && (
+                studentClass.toLowerCase().includes('mezun') || 
+                studentClass === '12' || 
+                studentClass === '12.Sınıf'
+              );
+
+              if (!isMezunOr12) {
+                // Belirli sınıf seviyesi için konuları filtrele
+                filteredTopics = response.konular.filter((konu: any) => {
+                  const konuSinif = konu.sinif_seviyesi;
+                  const normalizedKonuSinif = konuSinif.replace('.Sınıf', '');
+                  const normalizedStudentLevel = studentClass.replace('.Sınıf', '');
+                  
+                  return normalizedKonuSinif === normalizedStudentLevel || 
+                         konuSinif === studentClass ||
+                         konuSinif === studentClass + '.Sınıf' ||
+                         konuSinif + '.Sınıf' === studentClass;
+                });
+              }
+            }
+
+            resolve(filteredTopics);
+          } else {
+            reject('Konular yüklenemedi');
+          }
+        },
+        error: (error) => {
+          console.error('Konu listesi yüklenirken hata:', error);
+          reject('Konu listesi yüklenemedi');
+        }
+      });
     });
   }
 
