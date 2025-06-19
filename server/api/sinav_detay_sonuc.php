@@ -16,6 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 require_once '../config.php';
 
+// Veritabanı bağlantısını kur
+$conn = getConnection();
+
 function getSinavDetaySonuc($conn, $sinav_id, $ogrenci_id) {
     try {
         error_log("DEBUG STEP 1: Function called with sinav_id=$sinav_id, ogrenci_id=$ogrenci_id");
