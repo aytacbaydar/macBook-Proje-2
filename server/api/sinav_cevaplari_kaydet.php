@@ -1,4 +1,3 @@
-
 <?php
 // Hata raporlamayı etkinleştir
 error_reporting(E_ALL);
@@ -30,39 +29,39 @@ try {
     // Get raw input for debugging
     $raw_input = file_get_contents('php://input');
     error_log('Raw input: ' . $raw_input);
-    
+
     // Get JSON input
     $input = json_decode($raw_input, true);
-    
+
     if (!$input) {
         $json_error = json_last_error_msg();
         throw new Exception('Geçersiz veri formatı. JSON hatası: ' . $json_error . '. Ham veri: ' . substr($raw_input, 0, 200));
     }
-    
+
     error_log('Parsed input: ' . print_r($input, true));
-    
+
     $sinav_id = $input['sinav_id'] ?? 0;
     $ogrenci_id = $input['ogrenci_id'] ?? 0;
     $cevaplar = $input['cevaplar'] ?? [];
     $sinav_adi = $input['sinav_adi'] ?? '';
     $sinav_turu = $input['sinav_turu'] ?? '';
     $soru_sayisi = $input['soru_sayisi'] ?? 0;
-    
+
     error_log("Extracted data - sinav_id: $sinav_id, ogrenci_id: $ogrenci_id, cevaplar count: " . count($cevaplar));
-    
+
     if (!$sinav_id || !$ogrenci_id || empty($cevaplar)) {
         throw new Exception("Eksik veri: Sınav ID ($sinav_id), öğrenci ID ($ogrenci_id) ve cevaplar (" . count($cevaplar) . ") gerekli");
     }
-    
+
     // Veritabanı bağlantısını kur
     $conn = getConnection();
-    
+
     if (!$conn) {
         throw new Exception('Veritabanı bağlantısı kurulamadı');
     }
-    
+
     error_log('Database connection OK');
-    
+
     // Tablo oluşturma (eğer yoksa)
     $createTableSQL = "
         CREATE TABLE IF NOT EXISTS sinav_cevaplari (
@@ -79,14 +78,14 @@ try {
             INDEX idx_gonderim_tarihi (gonderim_tarihi)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
     ";
-    
+
     try {
         $conn->exec($createTableSQL);
         error_log('Table creation/check successful');
     } catch (PDOException $e) {
         throw new Exception('Tablo oluşturma hatası: ' . $e->getMessage());
     }
-    
+
     // Sınav sonuçları tablosunu oluştur (eğer yoksa)
     $createResultsTableSQL = "
         CREATE TABLE IF NOT EXISTS sinav_sonuclari (
@@ -111,32 +110,51 @@ try {
             UNIQUE KEY unique_sinav_ogrenci (sinav_id, ogrenci_id)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
     ";
-    
+
     try {
         $conn->exec($createResultsTableSQL);
         error_log('Results table creation/check successful');
     } catch (PDOException $e) {
         throw new Exception('Sonuçlar tablosu oluşturma hatası: ' . $e->getMessage());
     }
-    
-    // Cevap anahtarını al
-    $cevapAnahtariSQL = "SELECT cevaplar FROM cevapAnahtari WHERE id = ?";
-    $cevapStmt = $conn->prepare($cevapAnahtariSQL);
-    $cevapStmt->execute([$sinav_id]);
-    $cevapAnahtari = $cevapStmt->fetch(PDO::FETCH_ASSOC);
-    
+
+    // Cevap anahtarını al - önce hangi tablonun var olduğunu kontrol et
+    $cevapAnahtari = null;
+
+    // Önce cevapAnahtari tablosuna bak
+    try {
+        $cevapAnahtariSQL = "SELECT cevaplar, sinav_adi, sinav_turu, soru_sayisi FROM cevapAnahtari WHERE id = ? AND aktiflik = 1";
+        $cevapStmt = $conn->prepare($cevapAnahtariSQL);
+        $cevapStmt->execute([$sinav_id]);
+        $cevapAnahtari = $cevapStmt->fetch(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log('cevapAnahtari tablosu bulunamadı: ' . $e->getMessage());
+    }
+
+    // Eğer cevapAnahtari tablosunda bulunamadıysa cevap_anahtarlari tablosuna bak
+    if (!$cevapAnahtari) {
+        try {
+            $cevapAnahtariSQL = "SELECT cevaplar, sinav_adi, sinav_turu, soru_sayisi FROM cevap_anahtarlari WHERE id = ? AND aktiflik = 1";
+            $cevapStmt = $conn->prepare($cevapAnahtariSQL);
+            $cevapStmt->execute([$sinav_id]);
+            $cevapAnahtari = $cevapStmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log('cevap_anahtarlari tablosu bulunamadı: ' . $e->getMessage());
+        }
+    }
+
     // Sonuçları hesapla
     $dogru_sayisi = 0;
     $yanlis_sayisi = 0;
     $bos_sayisi = 0;
-    
+
     if ($cevapAnahtari) {
         $dogruCevaplar = json_decode($cevapAnahtari['cevaplar'], true);
-        
+
         for ($i = 1; $i <= $soru_sayisi; $i++) {
             $ogrenciCevap = $cevaplar["soru{$i}"] ?? '';
             $dogruCevap = $dogruCevaplar["ca{$i}"] ?? '';
-            
+
             if (empty($ogrenciCevap)) {
                 $bos_sayisi++;
             } elseif ($ogrenciCevap === $dogruCevap) {
@@ -150,20 +168,20 @@ try {
         $bos_sayisi = $soru_sayisi;
         error_log("Warning: Cevap anahtarı bulunamadı. Sinav ID: $sinav_id");
     }
-    
+
     // Net, puan ve yüzde hesaplama
     $net_sayisi = $dogru_sayisi - ($yanlis_sayisi / 4);
     $net_sayisi = max(0, $net_sayisi); // Negatif olamaz
     $puan = $net_sayisi; // Basit puan sistemi
     $yuzde = $soru_sayisi > 0 ? ($dogru_sayisi / $soru_sayisi) * 100 : 0;
-    
+
     error_log("Calculated results - Doğru: $dogru_sayisi, Yanlış: $yanlis_sayisi, Boş: $bos_sayisi, Net: $net_sayisi");
-    
+
     // Önceki cevabı kontrol et
     $checkSQL = "SELECT id FROM sinav_cevaplari WHERE sinav_id = ? AND ogrenci_id = ?";
     $checkStmt = $conn->prepare($checkSQL);
     $checkStmt->execute([$sinav_id, $ogrenci_id]);
-    
+
     if ($checkStmt->fetch()) {
         // Cevapları güncelle
         $updateSQL = "
@@ -180,7 +198,7 @@ try {
             $sinav_id,
             $ogrenci_id
         ]);
-        
+
         // Sonuçları güncelle
         $updateResultsSQL = "
             UPDATE sinav_sonuclari 
@@ -211,7 +229,7 @@ try {
             $soru_sayisi,
             json_encode($cevaplar, JSON_UNESCAPED_UNICODE)
         ]);
-        
+
         // Yeni sonuç kaydı
         $insertResultsSQL = "
             INSERT INTO sinav_sonuclari (sinav_id, ogrenci_id, sinav_adi, sinav_turu, soru_sayisi,
@@ -224,7 +242,7 @@ try {
             $dogru_sayisi, $yanlis_sayisi, $bos_sayisi, $net_sayisi, $puan, $yuzde
         ]);
     }
-    
+
     echo json_encode([
         'success' => true,
         'message' => 'Cevaplar ve sonuçlar başarıyla kaydedildi',
@@ -242,7 +260,7 @@ try {
             ]
         ]
     ], JSON_UNESCAPED_UNICODE);
-    
+
 } catch (PDOException $e) {
     error_log('PDO Exception: ' . $e->getMessage());
     echo json_encode([
