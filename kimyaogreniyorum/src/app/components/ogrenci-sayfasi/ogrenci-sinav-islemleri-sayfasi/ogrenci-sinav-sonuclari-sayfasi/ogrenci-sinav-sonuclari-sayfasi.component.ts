@@ -1,17 +1,27 @@
+
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 
 interface SinavSonucu {
+  id: number;
   sinav_id: number;
   sinav_adi: string;
   sinav_turu: string;
+  sinav_tarihi: string;
   dogru_sayisi: number;
   yanlis_sayisi: number;
   bos_sayisi: number;
-  net_sayisi: number;
-  gonderim_tarihi: string;
   soru_sayisi?: number;
+}
+
+interface DetaySinavSonucu extends SinavSonucu {
+  sorular: {
+    soru_no: number;
+    ogrenci_cevabi: string;
+    dogru_cevap: string;
+    konu_id?: number;
+  }[];
 }
 
 @Component({
@@ -23,7 +33,9 @@ interface SinavSonucu {
 export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
   sinavSonuclari: SinavSonucu[] = [];
   selectedSinav: SinavSonucu | null = null;
+  selectedSinavDetails: DetaySinavSonucu | null = null;
   loading = true;
+  loadingDetails = false;
   error: string | null = null;
 
   sinavTurleri: any = {
@@ -43,10 +55,6 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
     // URL'den gelen parametreleri kontrol et
     this.route.queryParams.subscribe(params => {
       const sinavId = params['sinavId'] ? parseInt(params['sinavId']) : undefined;
-      const ogrenciId = params['ogrenciId'] ? parseInt(params['ogrenciId']) : undefined;
-
-      console.log('Query params:', { sinavId, ogrenciId });
-
       this.loadAllSinavSonuclari(sinavId);
     });
   }
@@ -68,42 +76,65 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
     console.log('Sınav sonuçları yükleniyor:', { ogrenciId, selectedSinavId });
 
     this.http.get<any>(`./server/api/ogrenci_tum_sinav_sonuclari.php?ogrenci_id=${ogrenciId}`).subscribe({
-        next: (response) => {
-          this.loading = false;
-          if (response.success && response.data) {
-            // Sınav sonuçları listesini al
-            this.sinavSonuclari = response.data.sinav_sonuclari || [];
+      next: (response) => {
+        this.loading = false;
+        if (response.success && response.data) {
+          // Sınav sonuçları listesini al
+          this.sinavSonuclari = response.data.sinav_sonuclari || [];
 
-            console.log('Tüm sınav sonuçları yüklendi:', this.sinavSonuclari);
+          console.log('Tüm sınav sonuçları yüklendi:', this.sinavSonuclari);
 
-            // Eğer belirli bir sınav ID'si varsa, onu seç
-            if (selectedSinavId) {
-              this.selectedSinav = this.sinavSonuclari.find(s => s.sinav_id == selectedSinavId) || null;
-
-              // Eğer seçilen sınav bulunamadıysa, ilk sınavı seç
-              if (!this.selectedSinav && this.sinavSonuclari.length > 0) {
-                this.selectedSinav = this.sinavSonuclari[0];
-              }
-            } else if (this.sinavSonuclari.length > 0) {
-              // İlk sınavı varsayılan olarak seç
-              this.selectedSinav = this.sinavSonuclari[0];
+          // Eğer belirli bir sınav ID'si varsa, onu otomatik seç
+          if (selectedSinavId) {
+            const targetSinav = this.sinavSonuclari.find(s => s.sinav_id == selectedSinavId);
+            if (targetSinav) {
+              this.selectSinav(targetSinav);
             }
-          } else {
-            this.error = response.message || 'Henüz sınav sonucunuz bulunmuyor';
           }
-        },
-        error: (error) => {
-          this.loading = false;
-          this.error = 'Sınav sonuçları yüklenirken hata oluştu: ' + error.message;
-          console.error('Sınav sonuçları yükleme hatası:', error);
+        } else {
+          this.error = response.message || 'Henüz sınav sonucunuz bulunmuyor';
         }
-      });
+      },
+      error: (error) => {
+        this.loading = false;
+        this.error = 'Sınav sonuçları yüklenirken hata oluştu: ' + error.message;
+        console.error('Sınav sonuçları yükleme hatası:', error);
+      }
+    });
   }
 
   selectSinav(sinav: SinavSonucu) {
     this.selectedSinav = sinav;
-    // Grafik güncelleme
-    setTimeout(() => this.createChart(), 100);
+    this.loadSinavDetails(sinav);
+  }
+
+  loadSinavDetails(sinav: SinavSonucu) {
+    this.loadingDetails = true;
+    this.selectedSinavDetails = null;
+
+    // localStorage'dan öğrenci ID'sini al
+    const userData = JSON.parse(localStorage.getItem('user') || '{}');
+    const ogrenciId = userData.id;
+
+    // Sınav detaylarını yükle (öğrenci cevapları + doğru cevaplar)
+    this.http.get<any>(`./server/api/sinav_detay_sonuc.php?sinav_id=${sinav.sinav_id}&ogrenci_id=${ogrenciId}`).subscribe({
+      next: (response) => {
+        this.loadingDetails = false;
+        if (response.success && response.data) {
+          this.selectedSinavDetails = response.data;
+          console.log('Sınav detayları yüklendi:', this.selectedSinavDetails);
+          
+          // Grafik güncelleme
+          setTimeout(() => this.createChart(), 100);
+        } else {
+          console.error('Sınav detayları yüklenemedi:', response.message);
+        }
+      },
+      error: (error) => {
+        this.loadingDetails = false;
+        console.error('Sınav detayları yükleme hatası:', error);
+      }
+    });
   }
 
   getSinavTuruColor(sinavTuru: string): string {
@@ -126,7 +157,7 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
   }
 
   createChart() {
-    if (!this.selectedSinav) return;
+    if (!this.selectedSinavDetails) return;
 
     const ctx = document.getElementById('resultChart') as HTMLCanvasElement;
     if (!ctx) return;
@@ -143,9 +174,9 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
         labels: ['Doğru', 'Yanlış', 'Boş'],
         datasets: [{
           data: [
-            this.selectedSinav.dogru_sayisi,
-            this.selectedSinav.yanlis_sayisi,
-            this.selectedSinav.bos_sayisi
+            this.selectedSinavDetails.dogru_sayisi,
+            this.selectedSinavDetails.yanlis_sayisi,
+            this.selectedSinavDetails.bos_sayisi
           ],
           backgroundColor: ['#28a745', '#dc3545', '#6c757d'],
           borderWidth: 2,
@@ -164,22 +195,27 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
     });
   }
 
-  retakeExam() {
-    if (!this.selectedSinav) return;
-
+  retakeExam(sinav: SinavSonucu) {
     this.router.navigate(['/ogrenci-sayfasi/optik'], {
       queryParams: {
-        sinavId: this.selectedSinav.sinav_id,
-        sinavAdi: this.selectedSinav.sinav_adi,
-        sinavTuru: this.selectedSinav.sinav_turu,
-        soruSayisi: this.selectedSinav.soru_sayisi || (this.selectedSinav.dogru_sayisi + this.selectedSinav.yanlis_sayisi + this.selectedSinav.bos_sayisi)
+        sinavId: sinav.sinav_id,
+        sinavAdi: sinav.sinav_adi,
+        sinavTuru: sinav.sinav_turu,
+        soruSayisi: sinav.soru_sayisi || (sinav.dogru_sayisi + sinav.yanlis_sayisi + sinav.bos_sayisi)
       }
     });
   }
 
-  analyzeResults() {
-    // Gelecekte detaylı analiz sayfası için
-    console.log('Detaylı analiz özelliği yakında eklenecek');
+  watchVideo(konuId: number | undefined, soruNo: number) {
+    if (konuId) {
+      // Konu videosu sayfasına git
+      console.log(`Konu ${konuId} videosu açılacak - Soru ${soruNo}`);
+      // Bu bölümü gelecekte video sayfası oluşturulduğunda implement edilebilir
+      alert(`Soru ${soruNo} için konu videosu yakında eklenecek!`);
+    } else {
+      console.log(`Soru ${soruNo} için video bulunamadı`);
+      alert(`Soru ${soruNo} için video bulunamadı.`);
+    }
   }
 
   goBackToExams() {

@@ -1,4 +1,20 @@
-<div class="sonuclar-container">
+
+<div class="sinav-sonuclari-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <i class="bi bi-trophy"></i>
+        Sınav Sonuçlarım
+      </h1>
+      <p class="page-subtitle">Geçmiş sınav performansınızı inceleyin</p>
+    </div>
+    <button class="btn btn-outline-primary" (click)="goToExams()">
+      <i class="bi bi-arrow-left me-1"></i>
+      Sınavlara Dön
+    </button>
+  </div>
+
   <!-- Loading State -->
   <div *ngIf="loading" class="loading-container">
     <div class="loading-spinner">
@@ -10,51 +26,150 @@
   <!-- Error State -->
   <div *ngIf="error && !loading" class="error-container">
     <div class="error-card">
-      <i class="bi bi-exclamation-triangle-fill error-icon"></i>
+      <i class="bi bi-exclamation-triangle-fill"></i>
       <h3>Hata Oluştu</h3>
       <p>{{ error }}</p>
-      <button class="retry-button" (click)="loadSinavSonuclari()">
+      <button class="btn btn-primary" (click)="loadAllSinavSonuclari()">
         <i class="bi bi-arrow-clockwise me-1"></i>
         Tekrar Dene
       </button>
     </div>
   </div>
 
-  <!-- Results List -->
-  <div *ngIf="!loading && !error && sinavSonuclari.length > 0" class="results-list">
-    <div class="result-card" *ngFor="let sonuc of sinavSonuclari" (click)="selectSinav(sonuc)">
-      <div class="result-header">
-        <h3>{{ sonuc.sinav_adi }}</h3>
-        <span class="exam-type" [class]="'type-' + sonuc.sinav_turu.toLowerCase()">
-          {{ getSinavTuruLabel(sonuc.sinav_turu) }}
-        </span>
+  <!-- Exam Results Cards -->
+  <div *ngIf="!loading && !error && sinavSonuclari.length > 0" class="exam-results-grid">
+    <div class="exam-card" *ngFor="let sinav of sinavSonuclari" (click)="selectSinav(sinav)">
+      <div class="exam-card-header" [style.background]="getSinavTuruColor(sinav.sinav_turu)">
+        <div class="exam-type-badge">{{ getSinavTuruLabel(sinav.sinav_turu) }}</div>
+        <div class="exam-score">{{ getSuccessPercentage(sinav) }}%</div>
       </div>
-      <div class="result-stats">
-        <div class="stat">
-          <span class="label">Doğru:</span>
-          <span class="value correct">{{ sonuc.dogru_sayisi }}</span>
+      
+      <div class="exam-card-content">
+        <h3 class="exam-title">{{ sinav.sinav_adi }}</h3>
+        <div class="exam-date">
+          <i class="bi bi-calendar3"></i>
+          {{ formatDate(sinav.sinav_tarihi) }}
         </div>
-        <div class="stat">
-          <span class="label">Yanlış:</span>
-          <span class="value wrong">{{ sonuc.yanlis_sayisi }}</span>
+        
+        <div class="exam-stats">
+          <div class="stat-item correct">
+            <i class="bi bi-check-circle-fill"></i>
+            <span>{{ sinav.dogru_sayisi }} Doğru</span>
+          </div>
+          <div class="stat-item wrong">
+            <i class="bi bi-x-circle-fill"></i>
+            <span>{{ sinav.yanlis_sayisi }} Yanlış</span>
+          </div>
+          <div class="stat-item empty">
+            <i class="bi bi-circle"></i>
+            <span>{{ sinav.bos_sayisi }} Boş</span>
+          </div>
         </div>
-        <div class="stat">
-          <span class="label">Boş:</span>
-          <span class="value empty">{{ sonuc.bos_sayisi }}</span>
-        </div>
-        <div class="stat">
-          <span class="label">Net:</span>
-          <span class="value net">{{ sonuc.net_sayisi }}</span>
+
+        <div class="exam-actions">
+          <button class="btn btn-sm btn-outline-primary" (click)="retakeExam(sinav); $event.stopPropagation()">
+            <i class="bi bi-arrow-clockwise me-1"></i>
+            Tekrar Çöz
+          </button>
         </div>
       </div>
-      <div class="result-percentage">
-        <div class="percentage-circle">
-          <span>{{ getSuccessPercentage(sonuc) }}%</span>
+    </div>
+  </div>
+
+  <!-- Detailed Exam View Modal -->
+  <div class="exam-detail-modal" *ngIf="selectedSinav" (click)="selectedSinav = null">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ selectedSinav.sinav_adi }} - Detaylı Sonuç</h2>
+        <button class="btn-close" (click)="selectedSinav = null">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <!-- Loading Detailed Results -->
+      <div *ngIf="loadingDetails" class="loading-section">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="mt-2">Detaylı sonuçlar yükleniyor...</p>
+      </div>
+
+      <!-- Detailed Results Content -->
+      <div *ngIf="!loadingDetails && selectedSinavDetails" class="modal-body">
+        <!-- Summary Stats -->
+        <div class="summary-stats">
+          <div class="stat-card correct">
+            <div class="stat-number">{{ selectedSinavDetails.dogru_sayisi }}</div>
+            <div class="stat-label">Doğru</div>
+          </div>
+          <div class="stat-card wrong">
+            <div class="stat-number">{{ selectedSinavDetails.yanlis_sayisi }}</div>
+            <div class="stat-label">Yanlış</div>
+          </div>
+          <div class="stat-card empty">
+            <div class="stat-number">{{ selectedSinavDetails.bos_sayisi }}</div>
+            <div class="stat-label">Boş</div>
+          </div>
+          <div class="stat-card score">
+            <div class="stat-number">{{ getSuccessPercentage(selectedSinavDetails) }}%</div>
+            <div class="stat-label">Başarı</div>
+          </div>
+        </div>
+
+        <!-- Question by Question Analysis -->
+        <div class="question-analysis">
+          <h3>Soru Analizi</h3>
+          <div class="questions-grid">
+            <div 
+              class="question-item" 
+              *ngFor="let question of selectedSinavDetails.sorular; let i = index"
+              [class.correct]="question.ogrenci_cevabi === question.dogru_cevap"
+              [class.wrong]="question.ogrenci_cevabi !== question.dogru_cevap && question.ogrenci_cevabi"
+              [class.empty]="!question.ogrenci_cevabi"
+            >
+              <div class="question-number">{{ i + 1 }}</div>
+              <div class="question-content">
+                <div class="answer-comparison">
+                  <div class="student-answer">
+                    <span class="label">Cevabınız:</span>
+                    <span class="answer">{{ question.ogrenci_cevabi || 'Boş' }}</span>
+                  </div>
+                  <div class="correct-answer">
+                    <span class="label">Doğru Cevap:</span>
+                    <span class="answer">{{ question.dogru_cevap }}</span>
+                  </div>
+                </div>
+                <div class="question-actions" *ngIf="question.ogrenci_cevabi !== question.dogru_cevap">
+                  <button class="btn btn-sm btn-outline-info video-btn" (click)="watchVideo(question.konu_id, i + 1)">
+                    <i class="bi bi-play-circle me-1"></i>
+                    Konu Videosu
+                  </button>
+                </div>
+              </div>
+              <div class="question-status">
+                <i *ngIf="question.ogrenci_cevabi === question.dogru_cevap" class="bi bi-check-circle-fill text-success"></i>
+                <i *ngIf="question.ogrenci_cevabi !== question.dogru_cevap && question.ogrenci_cevabi" class="bi bi-x-circle-fill text-danger"></i>
+                <i *ngIf="!question.ogrenci_cevabi" class="bi bi-circle text-muted"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="chart-section">
+          <h3>Sonuç Grafiği</h3>
+          <div class="chart-container">
+            <canvas id="resultChart" width="300" height="300"></canvas>
+          </div>
         </div>
       </div>
-      <div class="result-date">
-        <i class="bi bi-calendar3"></i>
-        {{ formatDate(sonuc.gonderim_tarihi) }}
+
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" (click)="selectedSinav = null">
+          Kapat
+        </button>
+        <button class="btn btn-primary" (click)="retakeExam(selectedSinav)">
+          <i class="bi bi-arrow-clockwise me-1"></i>
+          Sınavı Tekrar Çöz
+        </button>
       </div>
     </div>
   </div>
@@ -62,61 +177,15 @@
   <!-- Empty State -->
   <div *ngIf="!loading && !error && sinavSonuclari.length === 0" class="empty-state">
     <div class="empty-content">
-      <i class="bi bi-clipboard-data"></i>
+      <div class="empty-icon">
+        <i class="bi bi-clipboard-x"></i>
+      </div>
       <h3>Henüz Sınav Sonucunuz Yok</h3>
-      <p>Sınav çözdükten sonra sonuçlarınız burada görünecek.</p>
-      <button class="btn-primary" (click)="goToExams()">
+      <p>Sınav çözmeye başladığınızda sonuçlarınız burada görünecektir.</p>
+      <button class="btn btn-primary" (click)="goToExams()">
         <i class="bi bi-pencil-square me-1"></i>
-        Sınav Çöz
+        Sınava Başla
       </button>
-    </div>
-  </div>
-
-  <!-- Detail Modal -->
-  <div class="modal" [class.active]="selectedSinav" *ngIf="selectedSinav">
-    <div class="modal-backdrop" (click)="selectedSinav = null"></div>
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>{{ selectedSinav.sinav_adi }} - Detaylı Sonuç</h3>
-        <button class="modal-close" (click)="selectedSinav = null">
-          <i class="bi bi-x"></i>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="chart-container">
-          <canvas id="resultChart"></canvas>
-        </div>
-        <div class="detailed-stats">
-          <div class="stat-item">
-            <label>Toplam Soru:</label>
-            <span>{{ selectedSinav.soru_sayisi }}</span>
-          </div>
-          <div class="stat-item">
-            <label>Doğru Cevap:</label>
-            <span class="correct">{{ selectedSinav.dogru_sayisi }}</span>
-          </div>
-          <div class="stat-item">
-            <label>Yanlış Cevap:</label>
-            <span class="wrong">{{ selectedSinav.yanlis_sayisi }}</span>
-          </div>
-          <div class="stat-item">
-            <label>Boş Cevap:</label>
-            <span class="empty">{{ selectedSinav.bos_sayisi }}</span>
-          </div>
-          <div class="stat-item">
-            <label>Net Sayısı:</label>
-            <span class="net">{{ selectedSinav.net_sayisi }}</span>
-          </div>
-          <div class="stat-item">
-            <label>Başarı Oranı:</label>
-            <span class="percentage">{{ getSuccessPercentage(selectedSinav) }}%</span>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn-secondary" (click)="selectedSinav = null">Kapat</button>
-        <button class="btn-primary" (click)="retakeExam()">Tekrar Çöz</button>
-      </div>
     </div>
   </div>
 </div>
