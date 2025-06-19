@@ -1,4 +1,5 @@
 
+<old_str>
 <div class="sonuclar-container">
   <!-- Loading State -->
   <div *ngIf="loading" class="loading-container">
@@ -40,133 +41,160 @@
 
     <!-- Performance Summary -->
     <div class="performance-summary">
-      <div class="performance-card main-score">
-        <div class="score-circle" [style.background]="'conic-gradient(' + getSinavTuruColor() + ' ' + (sinavSonucu.yuzde * 3.6) + 'deg, #e9ecef 0deg)'">
-          <div class="score-inner">
-            <span class="score-value">{{ sinavSonucu.yuzde }}%</span>
-            <span class="score-label">Başarı</span>
-          </div>
-        </div>
-        <div class="performance-level" [style.color]="getPerformanceLevel().color">
-          <i class="{{ getPerformanceLevel().icon }}"></i>
-          {{ getPerformanceLevel().text }}
-        </div>
-      </div>
-
-      <div class="stats-grid">
-        <div class="stat-card correct">
-          <div class="stat-icon">
-            <i class="bi bi-check-circle-fill"></i>
-          </div>
-          <div class="stat-content">
-            <span class="stat-number">{{ sinavSonucu.dogru_sayisi }}</span>
-            <span class="stat-label">Doğru</span>
-          </div>
-        </div>
-
-        <div class="stat-card wrong">
-          <div class="stat-icon">
-            <i class="bi bi-x-circle-fill"></i>
-          </div>
-          <div class="stat-content">
-            <span class="stat-number">{{ sinavSonucu.yanlis_sayisi }}</span>
-            <span class="stat-label">Yanlış</span>
-          </div>
-        </div>
-
-        <div class="stat-card empty">
-          <div class="stat-icon">
-            <i class="bi bi-dash-circle-fill"></i>
-          </div>
-          <div class="stat-content">
-            <span class="stat-number">{{ sinavSonucu.bos_sayisi }}</span>
-            <span class="stat-label">Boş</span>
-          </div>
-        </div>
-
-        <div class="stat-card total">
-          <div class="stat-icon">
-            <i class="bi bi-list-ol"></i>
-          </div>
-          <div class="stat-content">
-            <span class="stat-number">{{ sinavSonucu.soru_sayisi }}</span>
-            <span class="stat-label">Toplam</span>
-          </div>
-        </div>
-      </div>
+      <div class="performance-card main-</old_str>
+<new_str>
+<div class="sonuclar-container">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Sınav sonuçları yükleniyor...</p>
     </div>
+  </div>
 
-    <!-- Chart Section -->
-    <div class="chart-section">
-      <h3>
-        <i class="bi bi-pie-chart-fill me-2"></i>
-        Sonuç Dağılımı
-      </h3>
-      <div class="chart-container">
-        <canvas id="resultChart" width="400" height="400"></canvas>
-      </div>
-    </div>
-
-    <!-- Question Details -->
-    <div class="question-details">
-      <h3>
-        <i class="bi bi-list-check me-2"></i>
-        Soru Detayları
-      </h3>
-      <div class="questions-grid">
-        <div class="question-item" *ngFor="let soruNo of getSorular()">
-          <div class="question-number">{{ soruNo }}</div>
-          <div class="question-status" [style.color]="getQuestionStatus(soruNo).color">
-            <i class="{{ getQuestionStatus(soruNo).icon }}"></i>
-            <span>{{ getQuestionStatus(soruNo).status }}</span>
-          </div>
-          <div class="question-answers" *ngIf="sinavSonucu.detaylar && sinavSonucu.detaylar['soru' + soruNo]">
-            <span class="student-answer" *ngIf="sinavSonucu.detaylar['soru' + soruNo].ogrenci_cevap">
-              Cevabınız: <strong>{{ sinavSonucu.detaylar['soru' + soruNo].ogrenci_cevap }}</strong>
-            </span>
-            <span class="correct-answer" *ngIf="sinavSonucu.detaylar['soru' + soruNo].dogru_cevap">
-              Doğru: <strong>{{ sinavSonucu.detaylar['soru' + soruNo].dogru_cevap }}</strong>
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="action-buttons">
-      <button class="action-btn retake" (click)="retakeExam()">
-        <i class="bi bi-arrow-clockwise me-1"></i>
-        Sınavı Tekrar Çöz
-      </button>
-      <button class="action-btn back" (click)="goBackToExams()">
-        <i class="bi bi-list me-1"></i>
-        Tüm Sınavları Gör
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-container">
+    <div class="error-card">
+      <i class="bi bi-exclamation-triangle-fill error-icon"></i>
+      <h3>Hata Oluştu</h3>
+      <p>{{ error }}</p>
+      <button class="retry-button" (click)="goBackToExams()">
+        <i class="bi bi-arrow-left me-1"></i>
+        Sınavlara Dön
       </button>
     </div>
   </div>
-</div>
 
-<!-- Chart.js Script -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-  // Chart will be created by the component
-  setTimeout(() => {
-    if (window.Chart && document.getElementById('resultChart')) {
-      const ctx = document.getElementById('resultChart').getContext('2d');
-      const chartData = JSON.parse('{{ chartData | json }}');
-      new Chart(ctx, {
-        type: 'doughnut',
-        data: chartData,
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'bottom'
-            }
-          }
-        }
-      });
-    }
-  }, 1000);
-</script>
+  <!-- No Results State -->
+  <div *ngIf="!loading && !error && sinavSonuclari.length === 0" class="empty-state">
+    <div class="empty-content">
+      <div class="empty-icon">
+        <i class="bi bi-clipboard-x"></i>
+      </div>
+      <h3>Henüz Sınav Sonucu Yok</h3>
+      <p>Henüz herhangi bir sınavı tamamlamadınız.</p>
+      <button class="retry-button" (click)="goBackToExams()">
+        <i class="bi bi-arrow-left me-1"></i>
+        Sınavlara Dön
+      </button>
+    </div>
+  </div>
+
+  <!-- Results Content -->
+  <div *ngIf="!loading && !error && sinavSonuclari.length > 0" class="results-content">
+    <!-- Header -->
+    <div class="results-header">
+      <div class="header-content">
+        <h1>
+          <i class="bi bi-clipboard-data me-2"></i>
+          Sınav Sonuçlarım
+        </h1>
+        <p class="header-description">{{ sinavSonuclari.length }} sınav sonucunuz bulunuyor</p>
+      </div>
+      <button class="back-btn" (click)="goBackToExams()">
+        <i class="bi bi-arrow-left"></i>
+        Sınavlara Dön
+      </button>
+    </div>
+
+    <div class="results-layout">
+      <!-- Exams List -->
+      <div class="exams-sidebar">
+        <h3>Sınav Listesi</h3>
+        <div class="exam-list">
+          <div 
+            class="exam-item" 
+            *ngFor="let sinav of sinavSonuclari"
+            [class.active]="selectedSinav?.sinav_id === sinav.sinav_id"
+            (click)="selectSinav(sinav)">
+            <div class="exam-item-header">
+              <span class="exam-type-badge" [style.background]="getSinavTuruColor(sinav.sinav_turu)">
+                {{ getSinavTuruLabel(sinav.sinav_turu) }}
+              </span>
+              <span class="exam-date">{{ formatDate(sinav.gonderim_tarihi) }}</span>
+            </div>
+            <h4 class="exam-name">{{ sinav.sinav_adi }}</h4>
+            <div class="exam-score">
+              <span class="net-score">{{ sinav.net_sayisi }} Net</span>
+              <span class="percentage">%{{ getSuccessPercentage(sinav) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Selected Exam Details -->
+      <div class="exam-details" *ngIf="selectedSinav">
+        <div class="detail-header" [style.background]="'linear-gradient(135deg, ' + getSinavTuruColor(selectedSinav.sinav_turu) + ' 0%, ' + getSinavTuruColor(selectedSinav.sinav_turu) + 'aa 100%)'">
+          <h2>{{ selectedSinav.sinav_adi }}</h2>
+          <div class="detail-meta">
+            <span class="detail-type">{{ getSinavTuruLabel(selectedSinav.sinav_turu) }}</span>
+            <span class="detail-date">{{ formatDate(selectedSinav.gonderim_tarihi) }}</span>
+          </div>
+        </div>
+
+        <!-- Performance Cards -->
+        <div class="performance-summary">
+          <div class="performance-card correct">
+            <div class="card-icon">
+              <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <div class="card-content">
+              <h3>{{ selectedSinav.dogru_sayisi }}</h3>
+              <p>Doğru</p>
+            </div>
+          </div>
+
+          <div class="performance-card wrong">
+            <div class="card-icon">
+              <i class="bi bi-x-circle-fill"></i>
+            </div>
+            <div class="card-content">
+              <h3>{{ selectedSinav.yanlis_sayisi }}</h3>
+              <p>Yanlış</p>
+            </div>
+          </div>
+
+          <div class="performance-card empty">
+            <div class="card-icon">
+              <i class="bi bi-circle"></i>
+            </div>
+            <div class="card-content">
+              <h3>{{ selectedSinav.bos_sayisi }}</h3>
+              <p>Boş</p>
+            </div>
+          </div>
+
+          <div class="performance-card net">
+            <div class="card-icon">
+              <i class="bi bi-award-fill"></i>
+            </div>
+            <div class="card-content">
+              <h3>{{ selectedSinav.net_sayisi }}</h3>
+              <p>Net</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chart Container -->
+        <div class="chart-container">
+          <h3>Performans Grafiği</h3>
+          <div class="chart-wrapper">
+            <canvas id="resultChart" width="300" height="300"></canvas>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button class="action-btn retake" (click)="retakeExam()">
+            <i class="bi bi-arrow-clockwise me-1"></i>
+            Sınavı Tekrar Çöz
+          </button>
+          <button class="action-btn analyze" (click)="analyzeResults()">
+            <i class="bi bi-graph-up me-1"></i>
+            Detaylı Analiz
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></new_str>
