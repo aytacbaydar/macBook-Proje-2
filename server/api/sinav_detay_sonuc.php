@@ -100,15 +100,18 @@ function getSinavDetaySonuc($conn, $sinav_id, $ogrenci_id) {
         $ogrenciCevaplari = [];
         if ($ogrenciCevaplariData && $ogrenciCevaplariData['cevaplar']) {
             $cevaplarJson = json_decode($ogrenciCevaplariData['cevaplar'], true);
+            error_log("DEBUG: Parsed öğrenci cevapları JSON: " . json_encode($cevaplarJson));
             if ($cevaplarJson) {
-                // JSON formatını dönüştür (soru1 -> 1, soru2 -> 2, etc.)
+                // JSON formatını dönüştür (soru1 -> ca1, soru2 -> ca2, etc.)
                 foreach ($cevaplarJson as $key => $value) {
                     if (strpos($key, 'soru') === 0) {
                         $soruNo = str_replace('soru', '', $key);
+                        $cevapKey = 'ca' . $soruNo; // ca1, ca2 formatına çevir
                         $ogrenciCevaplari[] = [
-                            'soru_no' => $soruNo,
+                            'soru_no' => $cevapKey,
                             'secilen_cevap' => $value
                         ];
+                        error_log("DEBUG: Mapped soru$soruNo -> $cevapKey = $value");
                     }
                 }
             }
@@ -182,6 +185,9 @@ function getSinavDetaySonuc($conn, $sinav_id, $ogrenci_id) {
         foreach ($ogrenciCevaplari as $cevap) {
             $ogrenciCevapIndex[$cevap['soru_no']] = $cevap['secilen_cevap'];
         }
+        
+        error_log("DEBUG: Öğrenci cevap indeksi: " . json_encode($ogrenciCevapIndex));
+        error_log("DEBUG: Doğru cevaplar: " . json_encode($dogruCevaplar));
 
         // Soru bazında karşılaştırma yap
         $sorular = [];
@@ -192,6 +198,8 @@ function getSinavDetaySonuc($conn, $sinav_id, $ogrenci_id) {
         foreach ($dogruCevaplar as $soruNo => $dogruCevap) {
             $ogrenciCevabi = isset($ogrenciCevapIndex[$soruNo]) ? $ogrenciCevapIndex[$soruNo] : '';
             $videoUrl = isset($videolar[$soruNo]) ? $videolar[$soruNo] : '';
+            
+            error_log("DEBUG: Soru $soruNo - Öğrenci: '$ogrenciCevabi', Doğru: '$dogruCevap'");
             
             $soru = [
                 'soru_no' => $soruNo,
