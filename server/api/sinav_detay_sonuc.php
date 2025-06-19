@@ -33,7 +33,7 @@ function getSinavDetaySonuc($conn, $sinav_id, $ogrenci_id) {
         // Önce sınav sonucu genel bilgilerini al
         error_log("DEBUG STEP 3: Preparing sinav_sonuclari query");
         $stmt = $conn->prepare("
-            SELECT ss.*, ca.sinav_adi, ca.sinav_turu, ss.sinav_tarihi
+            SELECT ss.*, ca.sinav_adi, ca.sinav_turu, ss.gonderim_tarihi 
             FROM sinav_sonuclari ss
             LEFT JOIN cevapAnahtari ca ON ss.sinav_id = ca.id
             WHERE ss.sinav_id = ? AND ss.ogrenci_id = ?
