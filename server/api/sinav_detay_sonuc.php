@@ -13,6 +13,8 @@ require_once '../config.php';
 
 function getSinavDetaySonuc($conn, $sinav_id, $ogrenci_id) {
     try {
+        error_log("DEBUG: getSinavDetaySonuc called with sinav_id=$sinav_id, ogrenci_id=$ogrenci_id");
+        
         // Önce sınav sonucu genel bilgilerini al
         $stmt = $conn->prepare("
             SELECT ss.*, ca.sinav_adi, ca.sinav_turu, ss.sinav_tarihi
@@ -23,7 +25,10 @@ function getSinavDetaySonuc($conn, $sinav_id, $ogrenci_id) {
         $stmt->execute([$sinav_id, $ogrenci_id]);
         $sinavSonucu = $stmt->fetch(PDO::FETCH_ASSOC);
         
+        error_log("DEBUG: Sınav sonucu query result: " . json_encode($sinavSonucu));
+        
         if (!$sinavSonucu) {
+            error_log("DEBUG: Sınav sonucu bulunamadı");
             return [
                 'success' => false,
                 'message' => 'Sınav sonucu bulunamadı'
@@ -39,17 +44,22 @@ function getSinavDetaySonuc($conn, $sinav_id, $ogrenci_id) {
         ");
         $stmt->execute([$sinav_id, $ogrenci_id]);
         $ogrenciCevaplari = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        error_log("DEBUG: Öğrenci cevapları count: " . count($ogrenciCevaplari));
 
         // Cevap anahtarını al
         $stmt = $conn->prepare("
-            SELECT cevaplar 
+            SELECT cevaplar, videolar 
             FROM cevapAnahtari 
             WHERE id = ?
         ");
         $stmt->execute([$sinav_id]);
         $cevapAnahtari = $stmt->fetch(PDO::FETCH_ASSOC);
 
+        error_log("DEBUG: Cevap anahtarı: " . json_encode($cevapAnahtari));
+
         if (!$cevapAnahtari) {
+            error_log("DEBUG: Cevap anahtarı bulunamadı");
             return [
                 'success' => false,
                 'message' => 'Cevap anahtarı bulunamadı'
@@ -58,6 +68,15 @@ function getSinavDetaySonuc($conn, $sinav_id, $ogrenci_id) {
 
         // Cevap anahtarını parse et
         $dogruCevaplar = json_decode($cevapAnahtari['cevaplar'], true);
+        $videolar = json_decode($cevapAnahtari['videolar'], true);
+        
+        if (!$dogruCevaplar) {
+            error_log("DEBUG: Cevaplar JSON parse edilemedi");
+            return [
+                'success' => false,
+                'message' => 'Cevap anahtarı formatı hatalı'
+            ];
+        }
         
         // Öğrenci cevaplarını indeksle
         $ogrenciCevapIndex = [];
@@ -73,12 +92,14 @@ function getSinavDetaySonuc($conn, $sinav_id, $ogrenci_id) {
 
         foreach ($dogruCevaplar as $soruNo => $dogruCevap) {
             $ogrenciCevabi = isset($ogrenciCevapIndex[$soruNo]) ? $ogrenciCevapIndex[$soruNo] : '';
+            $videoUrl = isset($videolar[$soruNo]) ? $videolar[$soruNo] : '';
             
             $soru = [
                 'soru_no' => $soruNo,
                 'ogrenci_cevabi' => $ogrenciCevabi,
                 'dogru_cevap' => $dogruCevap,
-                'konu_id' => null // Gelecekte konu tablosu bağlantısı için
+                'video_url' => $videoUrl,
+                'is_correct' => (!empty($ogrenciCevabi) && $ogrenciCevabi === $dogruCevap)
             ];
 
             // İstatistik hesapla
@@ -103,15 +124,20 @@ function getSinavDetaySonuc($conn, $sinav_id, $ogrenci_id) {
             'dogru_sayisi' => $dogruSayisi,
             'yanlis_sayisi' => $yanlisSayisi,
             'bos_sayisi' => $bosSayisi,
+            'toplam_soru' => count($sorular),
+            'basari_yuzdesi' => count($sorular) > 0 ? round(($dogruSayisi / count($sorular)) * 100, 2) : 0,
             'sorular' => $sorular
         ];
 
+        error_log("DEBUG: Başarıyla sonuç döndürülüyor");
         return [
             'success' => true,
             'data' => $detaySonuc
         ];
 
     } catch (Exception $e) {
+        error_log("ERROR in getSinavDetaySonuc: " . $e->getMessage());
+        error_log("ERROR Stack trace: " . $e->getTraceAsString());
         return [
             'success' => false,
             'message' => 'Veritabanı hatası: ' . $e->getMessage()
@@ -121,23 +147,37 @@ function getSinavDetaySonuc($conn, $sinav_id, $ogrenci_id) {
 
 // GET request işlemi
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $sinav_id = isset($_GET['sinav_id']) ? (int)$_GET['sinav_id'] : 0;
-    $ogrenci_id = isset($_GET['ogrenci_id']) ? (int)$_GET['ogrenci_id'] : 0;
+    try {
+        $sinav_id = isset($_GET['sinav_id']) ? (int)$_GET['sinav_id'] : 0;
+        $ogrenci_id = isset($_GET['ogrenci_id']) ? (int)$_GET['ogrenci_id'] : 0;
 
-    if ($sinav_id <= 0 || $ogrenci_id <= 0) {
+        error_log("DEBUG: Received request with sinav_id=$sinav_id, ogrenci_id=$ogrenci_id");
+
+        if ($sinav_id <= 0 || $ogrenci_id <= 0) {
+            error_log("DEBUG: Invalid parameters");
+            echo json_encode([
+                'success' => false,
+                'message' => 'Geçersiz sınav ID veya öğrenci ID'
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        $result = getSinavDetaySonuc($conn, $sinav_id, $ogrenci_id);
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+        
+    } catch (Exception $e) {
+        error_log("FATAL ERROR in main request: " . $e->getMessage());
+        http_response_code(500);
         echo json_encode([
             'success' => false,
-            'message' => 'Geçersiz sınav ID veya öğrenci ID'
-        ]);
-        exit;
+            'message' => 'Sunucu hatası: ' . $e->getMessage()
+        ], JSON_UNESCAPED_UNICODE);
     }
-
-    $result = getSinavDetaySonuc($conn, $sinav_id, $ogrenci_id);
-    echo json_encode($result, JSON_UNESCAPED_UNICODE);
 } else {
+    http_response_code(405);
     echo json_encode([
         'success' => false,
         'message' => 'Sadece GET metodu destekleniyor'
-    ]);
+    ], JSON_UNESCAPED_UNICODE);
 }
 ?>
