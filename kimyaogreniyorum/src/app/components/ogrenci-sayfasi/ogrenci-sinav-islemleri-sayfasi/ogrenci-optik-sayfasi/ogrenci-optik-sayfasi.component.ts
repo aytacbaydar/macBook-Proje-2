@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -121,18 +120,22 @@ export class OgrenciOptikSayfasiComponent implements OnInit {
 
     this.http.post('./server/api/sinav_cevaplari_kaydet.php', data).subscribe({
       next: (response: any) => {
-        this.submitting = false;
         if (response.success) {
-          this.successMessage = 'Sınav cevaplarınız başarıyla kaydedildi!';
-          setTimeout(() => {
-            this.router.navigate(['/ogrenci/sinav-islemleri/sonuclar'], {
-              queryParams: {
-                sinavId: this.sinavId,
-                ogrenciId: studentId,
-              },
-            });
-          }, 2000);
-        } else {
+            this.submitting = false;
+            this.successMessage = 'Cevaplarınız başarıyla kaydedildi! Sonuçlar sayfasına yönlendiriliyorsunuz...';
+            this.error = null;
+            console.log('Cevaplar kaydedildi:', response);
+
+            // 2 saniye sonra sonuçlar sayfasına yönlendir
+            setTimeout(() => {
+              this.router.navigate(['/ogrenci-sayfasi/sinav-sonuclari'], {
+                queryParams: {
+                  sinavId: this.sinavId,
+                  ogrenciId: this.getOgrenciId()
+                }
+              });
+            }, 2000);
+          } else {
           this.error =
             response.message || 'Cevaplar kaydedilirken hata oluştu.';
         }
@@ -169,5 +172,26 @@ export class OgrenciOptikSayfasiComponent implements OnInit {
   getCompletionPercent(): number {
     if (!this.soruSayisi || this.soruSayisi === 0) return 0;
     return Math.round((this.getAnsweredCount() / this.soruSayisi) * 100);
+  }
+
+  formatTime(seconds: number): string {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+  }
+
+  private getOgrenciId(): number {
+    // localStorage'dan öğrenci bilgilerini al
+    const userDataString = localStorage.getItem('userData');
+    if (userDataString) {
+      try {
+        const userData = JSON.parse(userDataString);
+        return userData.id || 0;
+      } catch (error) {
+        console.error('Öğrenci ID alınamadı:', error);
+        return 0;
+      }
+    }
+    return 0;
   }
 }

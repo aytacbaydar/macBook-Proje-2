@@ -156,13 +156,13 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
   }
 
   goBackToExams() {
-    this.router.navigate(['/ogrenci/sinav-islemleri']);
+    this.router.navigate(['/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi']);
   }
 
   retakeExam() {
     if (!this.sinavSonucu) return;
     
-    this.router.navigate(['/ogrenci/sinav-islemleri/optik'], {
+    this.router.navigate(['/ogrenci-sayfasi/optik'], {
       queryParams: {
         sinavId: this.sinavSonucu.sinav_id,
         sinavAdi: this.sinavSonucu.sinav_adi,

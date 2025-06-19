@@ -34,6 +34,7 @@ import { OgrenciIslenenKonularSayfasiComponent } from './components/ogrenci-sayf
 import { OgrenciIslenenKonularPdfSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component';
 import { OgrenciSinavIslemleriSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-islemleri-sayfasi.component';
 import { OgrenciOptikSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-optik-sayfasi/ogrenci-optik-sayfasi.component';
+import { OgrenciSinavSonuclariSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/giris-sayfasi', pathMatch: 'full' },
@@ -109,6 +110,10 @@ const routes: Routes = [
       {
         path: 'optik',
         component: OgrenciOptikSayfasiComponent,
+      },
+      {
+        path: 'sinav-sonuclari',
+        component: OgrenciSinavSonuclariSayfasiComponent,
       },
     ],
   },
