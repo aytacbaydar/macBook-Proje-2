@@ -182,8 +182,10 @@ export class OgrenciKayitSayfasiComponent implements OnInit {
         next: (response) => {
           console.log('API yanıtı:', response);
           if (response.success) {
-            this.teachers = response.data;
-            console.log('Yüklenen öğretmenler:', this.teachers);
+            this.teachers = response.data || [];
+            console.log('Yüklenen öğretmenler: ', response.data);
+            console.log('Teachers array length: ', this.teachers.length);
+            console.log('Teachers array: ', this.teachers);
           } else {
             this.toast.error(
               'Hata',
