@@ -87,9 +87,9 @@
         </div>
       </div>
     </div>
-
+    <div class="anasayfa-grid">
     <!-- Quick Actions Section -->
-    <div class="actions-container">
+    <div class="actions-container anasayfa-card grid-4">
       <div class="action-section">
 
         <!-- QR Kod Kartı -->
@@ -123,7 +123,7 @@
     </div>
 
     <!-- Son İşlenen Konular Section -->
-    <div class="topics-container">
+    <div class="topics-container anasayfa-card grid-8">
       <div class="topics-section">
 
         <!-- Topics Header -->
@@ -211,58 +211,58 @@
           </div>
         </div>
             </div>
+    </div>
+
+    <!-- Progress Section -->
+    <div class="progress-container anasayfa-card grid-12">
+      <div class="progress-section">
+
+        <!-- Progress Header -->
+        <div class="progress-header">
+          <div class="progress-title">
+            <div class="progress-icon">
+              <i class="bi bi-graph-up"></i>
+            </div>
+            <div class="progress-info">
+              <h4>İlerleme Durumu</h4>
+            </div>
           </div>
+        </div>
 
-          <!-- Progress Section -->
-          <div class="progress-container">
-            <div class="progress-section">
-
-              <!-- Progress Header -->
-              <div class="progress-header">
-                <div class="progress-title">
-                  <div class="progress-icon">
-                    <i class="bi bi-graph-up"></i>
-                  </div>
-                  <div class="progress-info">
-                    <h4>İlerleme Durumu</h4>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Progress Cards -->
-              <div class="progress-cards">
-                <!-- Devamsızlık Progress -->
-                <div class="progress-card">
-                  <div class="progress-card-header">
-                    <h5>Haftalık Devam</h5>
-                    <span class="progress-percentage">{{ getAttendancePercentage() }}%</span>
-                  </div>
-                  <div class="progress-bar-container">
-                    <div class="progress-bar">
-                      <div class="progress-fill attendance-fill" [style.width.%]="getAttendancePercentage()">
-                      </div>
-                    </div>
-                  </div>
-                  <p class="progress-text">{{ thisWeekAttendance }}/5 gün devam</p>
-                </div>
-
-                <!-- Ders İlerlemesi Progress -->
-                <div class="progress-card">
-                  <div class="progress-card-header">
-                    <h5>Ders İlerlemesi</h5>
-                    <span class="progress-percentage">{{ getLessonProgress() }}%</span>
-                  </div>
-                  <div class="progress-bar-container">
-                    <div class="progress-bar">
-                      <div class="progress-fill lesson-fill" [style.width.%]="getLessonProgress()">
-                      </div>
-                    </div>
-                  </div>
-                  <p class="progress-text">{{ completedLessons }}/{{ totalLessons }} ders tamamlandı</p>
+        <!-- Progress Cards -->
+        <div class="progress-cards">
+          <!-- Devamsızlık Progress -->
+          <div class="progress-card">
+            <div class="progress-card-header">
+              <h5>Haftalık Devam</h5>
+              <span class="progress-percentage">{{ getAttendancePercentage() }}%</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar">
+                <div class="progress-fill attendance-fill" [style.width.%]="getAttendancePercentage()">
                 </div>
               </div>
             </div>
+            <p class="progress-text">{{ thisWeekAttendance }}/5 gün devam</p>
           </div>
 
+          <!-- Ders İlerlemesi Progress -->
+          <div class="progress-card">
+            <div class="progress-card-header">
+              <h5>Ders İlerlemesi</h5>
+              <span class="progress-percentage">{{ getLessonProgress() }}%</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar">
+                <div class="progress-fill lesson-fill" [style.width.%]="getLessonProgress()">
+                </div>
+              </div>
+            </div>
+            <p class="progress-text">{{ completedLessons }}/{{ totalLessons }} ders tamamlandı</p>
+          </div>
+        </div>
       </div>
     </div>
+  </div>
+</div>
+</div>

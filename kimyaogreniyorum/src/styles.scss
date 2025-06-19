@@ -12,12 +12,72 @@
   }
 }
 
+// Dashboard Grid
+.anasayfa-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 24px;
+
+  @media (max-width: 1200px) {
+    gap: 20px;
+  }
+
+  @media (max-width: 768px) {
+    gap: 16px;
+    grid-template-columns: 1fr;
+  }
+}
+
+.anasayfa-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  &.grid-4 {
+    grid-column: span 4;
+
+    @media (max-width: 768px) {
+      grid-column: span 1;
+    }
+  }
+
+  &.grid-6 {
+    grid-column: span 6;
+
+    @media (max-width: 768px) {
+      grid-column: span 1;
+    }
+  }
+
+  &.grid-8 {
+    grid-column: span 8;
+
+    @media (max-width: 768px) {
+      grid-column: span 1;
+    }
+  }
+
+  &.grid-12 {
+    grid-column: span 4;
+
+    @media (max-width: 768px) {
+      grid-column: span 1;
+    }
+  }
+
+}
 
 /* QR Kodlar */
 .page-header {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  border-radius: 20px;
+  border-radius: 8px;
   padding: 10px;
   margin-bottom: 25px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
@@ -51,7 +111,7 @@
 
       .stat-card {
       background: white;
-      border-radius: 15px;
+      border-radius: 8px;
       padding: 20px;
       display: flex;
       align-items: center;
@@ -66,7 +126,7 @@
       .stat-icon {
           width: 60px;
           height: 60px;
-          border-radius: 15px;
+          border-radius: 8px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -140,7 +200,7 @@
 .controls-section {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  border-radius: 15px;
+  border-radius: 8px;
   padding: 25px;
   margin-bottom: 25px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -164,7 +224,7 @@
   .form-select,
   .form-control {
       border: 2px solid #e2e8f0;
-      border-radius: 10px;
+      border-radius: 8px;
       padding: 12px 15px;
       font-size: 1rem;
       transition: all 0.3s ease;
@@ -178,7 +238,7 @@
 
   .btn {
       padding: 12px 20px;
-      border-radius: 10px;
+      border-radius: 8px;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -226,7 +286,7 @@
 .qr-scanner-section {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  border-radius: 15px;
+  border-radius: 8px;
   padding: 30px;
   margin-bottom: 25px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -238,7 +298,7 @@
 
   .scanner-video {
       width: 100%;
-      border-radius: 15px;
+      border-radius: 8px;
       background: #000;
   }
 
@@ -253,14 +313,14 @@
       align-items: center;
       justify-content: center;
       background: rgba(0, 0, 0, 0.3);
-      border-radius: 15px;
+      border-radius: 8px;
 
       .scanner-frame {
       position: relative;
       width: 250px;
       height: 250px;
       border: 2px dashed #667eea;
-      border-radius: 15px;
+      border-radius: 8px;
 
       .scanner-corner {
           position: absolute;
@@ -273,7 +333,7 @@
           left: -3px;
           border-right: none;
           border-bottom: none;
-          border-radius: 15px 0 0 0;
+          border-radius: 8px 0 0 0;
           }
 
           &.top-right {
@@ -281,7 +341,7 @@
           right: -3px;
           border-left: none;
           border-bottom: none;
-          border-radius: 0 15px 0 0;
+          border-radius: 0 8px 0 0;
           }
 
           &.bottom-left {
@@ -289,7 +349,7 @@
           left: -3px;
           border-right: none;
           border-top: none;
-          border-radius: 0 0 0 15px;
+          border-radius: 0 0 0 8px;
           }
 
           &.bottom-right {
@@ -297,7 +357,7 @@
           right: -3px;
           border-left: none;
           border-top: none;
-          border-radius: 0 0 15px 0;
+          border-radius: 0 0 8px 0;
           }
       }
       }
@@ -327,7 +387,7 @@
 .no-group-selected {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  border-radius: 15px;
+  border-radius: 8px;
   padding: 60px 30px;
   text-align: center;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -357,7 +417,7 @@
 .loading-section {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  border-radius: 15px;
+  border-radius: 8px;
   padding: 50px 30px;
   text-align: center;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
