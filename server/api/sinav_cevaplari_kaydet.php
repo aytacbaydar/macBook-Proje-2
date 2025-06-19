@@ -120,7 +120,7 @@ try {
     }
     
     // Cevap anahtarını al
-    $cevapAnahtariSQL = "SELECT cevaplar FROM cevap_anahtarlari WHERE id = ?";
+    $cevapAnahtariSQL = "SELECT cevaplar FROM cevapAnahtari WHERE id = ?";
     $cevapStmt = $conn->prepare($cevapAnahtariSQL);
     $cevapStmt->execute([$sinav_id]);
     $cevapAnahtari = $cevapStmt->fetch(PDO::FETCH_ASSOC);
