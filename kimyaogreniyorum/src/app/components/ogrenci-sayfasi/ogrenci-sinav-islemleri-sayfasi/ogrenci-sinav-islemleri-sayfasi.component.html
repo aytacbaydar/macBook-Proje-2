@@ -1,1 +1,84 @@
-<p>ogrenci-sinav-islemleri-sayfasi works!</p>
+
+<div class="sinav-islemleri-container">
+  <!-- Header -->
+  <div class="page-header">
+    <h1>
+      <i class="bi bi-clipboard-check me-2"></i>
+      Sınav İşlemleri
+    </h1>
+    <p class="page-description">Mevcut sınavları görebilir ve sınava katılabilirsiniz.</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Sınavlar yükleniyor...</p>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-container">
+    <div class="error-card">
+      <i class="bi bi-exclamation-triangle-fill error-icon"></i>
+      <h3>Hata Oluştu</h3>
+      <p>{{ error }}</p>
+      <button class="retry-button" (click)="loadSinavlar()">
+        <i class="bi bi-arrow-clockwise me-1"></i>
+        Tekrar Dene
+      </button>
+    </div>
+  </div>
+
+  <!-- Exam Types Grid -->
+  <div *ngIf="!loading && !error" class="exam-types-grid">
+    <div class="exam-type-section" *ngFor="let tip of sinavTurleri">
+      <div class="section-header" [style.background]="'linear-gradient(135deg, ' + tip.color + ' 0%, ' + tip.color + 'aa 100%)'">
+        <i class="{{ tip.icon }} section-icon"></i>
+        <h2>{{ tip.label }}</h2>
+        <span class="exam-count">{{ getSinavlarByType(tip.id).length }} sınav</span>
+      </div>
+
+      <div class="exams-grid" *ngIf="getSinavlarByType(tip.id).length > 0">
+        <div class="exam-card" *ngFor="let sinav of getSinavlarByType(tip.id)">
+          <div class="exam-image" *ngIf="sinav.sinav_kapagi">
+            <img [src]="'/uploads/' + sinav.sinav_kapagi" alt="Sınav Kapağı" class="exam-cover">
+          </div>
+          <div class="exam-content">
+            <h3 class="exam-title">{{ sinav.sinav_adi }}</h3>
+            <div class="exam-details">
+              <div class="detail-item">
+                <i class="bi bi-list-ol"></i>
+                <span>{{ sinav.soru_sayisi }} Soru</span>
+              </div>
+              <div class="detail-item">
+                <i class="bi bi-calendar3"></i>
+                <span>{{ formatDate(sinav.tarih) }}</span>
+              </div>
+            </div>
+            <button class="start-exam-btn" (click)="startExam(sinav)">
+              <i class="bi bi-play-circle-fill me-1"></i>
+              Sınava Başla
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="empty-section" *ngIf="getSinavlarByType(tip.id).length === 0">
+        <i class="bi bi-inbox empty-icon"></i>
+        <p>Henüz {{ tip.label }} bulunmamaktadır.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Exams State -->
+  <div *ngIf="!loading && !error && sinavlar.length === 0" class="empty-state">
+    <div class="empty-content">
+      <div class="empty-icon">
+        <i class="bi bi-clipboard-x"></i>
+      </div>
+      <h3>Henüz Sınav Bulunmuyor</h3>
+      <p>Şu anda katılabileceğiniz aktif bir sınav bulunmamaktadır.</p>
+    </div>
+  </div>
+</div>
