@@ -63,13 +63,30 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    // localStorage'dan öğrenci ID'sini al
-    const userData = JSON.parse(localStorage.getItem('user') || '{}');
+    // localStorage veya sessionStorage'dan öğrenci ID'sini al
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    
+    if (!userStr) {
+      this.loading = false;
+      this.error = 'Kullanıcı oturum bilgisi bulunamadı';
+      return;
+    }
+
+    let userData;
+    try {
+      userData = JSON.parse(userStr);
+      console.log('User data parsed:', userData);
+    } catch (error) {
+      this.loading = false;
+      this.error = 'Kullanıcı bilgileri ayrıştırılamadı';
+      return;
+    }
+
     const ogrenciId = userData.id;
 
     if (!ogrenciId) {
       this.loading = false;
-      this.error = 'Öğrenci bilgisi bulunamadı';
+      this.error = 'Öğrenci ID\'si bulunamadı';
       return;
     }
 
@@ -112,8 +129,24 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
     this.loadingDetails = true;
     this.selectedSinavDetails = null;
 
-    // localStorage'dan öğrenci ID'sini al
-    const userData = JSON.parse(localStorage.getItem('user') || '{}');
+    // localStorage veya sessionStorage'dan öğrenci ID'sini al
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    
+    if (!userStr) {
+      this.loadingDetails = false;
+      console.error('Kullanıcı oturum bilgisi bulunamadı');
+      return;
+    }
+
+    let userData;
+    try {
+      userData = JSON.parse(userStr);
+    } catch (error) {
+      this.loadingDetails = false;
+      console.error('Kullanıcı bilgileri ayrıştırılamadı:', error);
+      return;
+    }
+
     const ogrenciId = userData.id;
 
     // Sınav detaylarını yükle (öğrenci cevapları + doğru cevaplar)
