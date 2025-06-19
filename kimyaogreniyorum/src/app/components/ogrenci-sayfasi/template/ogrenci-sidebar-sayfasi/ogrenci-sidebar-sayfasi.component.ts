@@ -17,7 +17,7 @@ export class OgrenciSidebarSayfasiComponent {
       link: 'ogrenci-sayfasi/ogrenci-qr-kod-sayfasi',
     },
     { icon: 'bi-camera-reels', label: 'Konu Anlatımı' },
-    { icon: 'bi-pencil-square', label: 'Sınavlar' },
+    { icon: 'bi-pencil-square', label: 'Sınavlar', link: 'ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi' },
     { icon: 'bi-archive', label: 'Testler' },
     { icon: 'bi-diagram-3', label: 'Yol Haritası' },
     { icon: 'bi-graph-up-arrow', label: 'Konu Analizi' },
