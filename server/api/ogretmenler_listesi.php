@@ -22,7 +22,7 @@ try {
             id,
             adi_soyadi,
             email,
-            telefon,
+            cep_telefonu as telefon,
             brans,
             rutbe,
             aktif,
