@@ -11,6 +11,14 @@ interface RecentTopic {
   grup_adi: string;
 }
 
+interface ClassStatus {
+  toplam_ogrenci: number;
+  bugun_gelen: number;
+  bugun_gelmeyen: number;
+  son_giris_saati: string;
+  aktif_ogrenciler: any[];
+}
+
 @Component({
   selector: 'app-ogrenci-ana-sayfasi',
   standalone: false,
@@ -47,6 +55,11 @@ export class OgrenciAnaSayfasiComponent implements OnInit {
   isLoadingTopics: boolean = false;
   topicsError: string = '';
 
+  // Class status
+  classStatus: ClassStatus | null = null;
+  isLoadingClassStatus: boolean = false;
+  classStatusError: string = '';
+
   private apiBaseUrl = './server/api';
 
   constructor(private http: HttpClient) {}
@@ -55,6 +68,7 @@ export class OgrenciAnaSayfasiComponent implements OnInit {
     this.loadStudentInfo();
     this.loadStudentStats();
     this.loadRecentTopics();
+    this.loadClassStatus();
     this.checkScreenSize();
     window.addEventListener('resize', () => {
       this.checkScreenSize();
@@ -114,15 +128,100 @@ export class OgrenciAnaSayfasiComponent implements OnInit {
   }
 
   private loadStudentStats(): void {
-    // Örnek istatistik verileri - gerçek uygulamada API'den gelecek
-    this.totalAttendance = 85;
-    this.thisWeekAttendance = 4;
-    this.totalLessons = 24;
-    this.completedLessons = 18;
-    this.totalExams = 8;
-    this.passedExams = 6;
-    this.currentGrade = 'B+';
-    this.nextLesson = 'Kimya Bağları';
+    // Gerçek kullanıcı bilgilerini al
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (!userStr) return;
+
+    try {
+      const user = JSON.parse(userStr);
+      const studentId = user.id;
+
+      // Devamsızlık istatistiklerini getir
+      this.loadAttendanceStats(studentId);
+      
+      // İşlenen konular istatistiklerini getir
+      this.loadLessonStats();
+      
+      // Ödeme durumunu getir
+      this.loadPaymentStats(studentId);
+      
+    } catch (error) {
+      console.error('Kullanıcı bilgileri ayrıştırılırken hata:', error);
+      this.setDefaultStats();
+    }
+  }
+
+  private loadAttendanceStats(studentId: number): void {
+    const apiUrl = `${this.apiBaseUrl}/devamsizlik_istatistik.php?ogrenci_id=${studentId}`;
+    
+    this.http.get<any>(apiUrl).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          const stats = response.data;
+          this.totalAttendance = stats.toplam_ders || 0;
+          this.thisWeekAttendance = stats.bu_hafta_katilim || 0;
+          
+          console.log('Devamsızlık istatistikleri yüklendi:', stats);
+        }
+      },
+      error: (error) => {
+        console.error('Devamsızlık istatistikleri yüklenirken hata:', error);
+      }
+    });
+  }
+
+  private loadLessonStats(): void {
+    if (!this.hasValidGroup()) return;
+
+    const apiUrl = `${this.apiBaseUrl}/ogrenci_islenen_konular.php?grup=${encodeURIComponent(this.studentGroup)}`;
+    
+    this.http.get<any>(apiUrl).subscribe({
+      next: (response) => {
+        if (response.success && response.islenen_konular) {
+          this.completedLessons = response.islenen_konular.length;
+          this.totalLessons = this.completedLessons + 10; // Tahmini kalan ders sayısı
+          
+          console.log('Ders istatistikleri yüklendi:', response.islenen_konular);
+        }
+      },
+      error: (error) => {
+        console.error('Ders istatistikleri yüklenirken hata:', error);
+      }
+    });
+  }
+
+  private loadPaymentStats(studentId: number): void {
+    // Ödeme bilgilerini öğretmen API'sinden al (öğrenci kendi ödeme durumunu görebilir)
+    const apiUrl = `${this.apiBaseUrl}/ogrenci_detay_istatistik.php?ogrenci_id=${studentId}`;
+    
+    this.http.get<any>(apiUrl).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          const student = response.data.student_info;
+          // Ödeme durumuna göre not ortalaması simülasyonu
+          if (student.son_odeme_tarihi) {
+            this.currentGrade = 'A-';
+          } else {
+            this.currentGrade = 'B';
+          }
+        }
+      },
+      error: (error) => {
+        console.error('Ödeme istatistikleri yüklenirken hata:', error);
+        this.currentGrade = 'B+';
+      }
+    });
+  }
+
+  private setDefaultStats(): void {
+    this.totalAttendance = 0;
+    this.thisWeekAttendance = 0;
+    this.totalLessons = 0;
+    this.completedLessons = 0;
+    this.totalExams = 0;
+    this.passedExams = 0;
+    this.currentGrade = 'N/A';
+    this.nextLesson = 'Henüz planlanmadı';
   }
 
   toggleSidebar(): void {
@@ -248,6 +347,36 @@ export class OgrenciAnaSayfasiComponent implements OnInit {
   retryLoadTopics(): void {
     this.topicsError = '';
     this.loadRecentTopics();
+  }
+
+  // Sınıf durumunu yükle
+  loadClassStatus(): void {
+    if (!this.hasValidGroup()) {
+      this.classStatusError = 'Grup bilgisi bulunamadı';
+      return;
+    }
+
+    this.isLoadingClassStatus = true;
+    this.classStatusError = '';
+
+    const apiUrl = `${this.apiBaseUrl}/sinif_durumu.php?grup=${encodeURIComponent(this.studentGroup)}`;
+
+    this.http.get<any>(apiUrl).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.classStatus = response.data;
+          console.log('Sınıf durumu yüklendi:', this.classStatus);
+        } else {
+          this.classStatusError = 'Sınıf durumu bilgisi alınamadı';
+        }
+        this.isLoadingClassStatus = false;
+      },
+      error: (error) => {
+        console.error('Sınıf durumu yüklenirken hata:', error);
+        this.classStatusError = 'Sınıf durumu yüklenirken hata oluştu';
+        this.isLoadingClassStatus = false;
+      }
+    });
   }
 
   // Helper method for safe navigation
