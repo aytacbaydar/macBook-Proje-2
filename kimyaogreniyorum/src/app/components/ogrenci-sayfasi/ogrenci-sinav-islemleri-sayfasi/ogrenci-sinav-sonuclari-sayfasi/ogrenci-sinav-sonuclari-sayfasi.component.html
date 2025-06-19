@@ -81,6 +81,108 @@
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h2>{{ selectedSinav.sinav_adi }} - Detaylı Sonuç</h2>
+        <button class="close-btn" (click)="selectedSinav = null">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      
+      <div class="modal-body">
+        <!-- Summary Stats -->
+        <div class="summary-stats">
+          <div class="stat-card correct">
+            <div class="stat-icon">
+              <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number">{{ selectedSinavDetails?.dogru_sayisi || 0 }}</div>
+              <div class="stat-label">Doğru</div>
+            </div>
+          </div>
+          
+          <div class="stat-card wrong">
+            <div class="stat-icon">
+              <i class="bi bi-x-circle-fill"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number">{{ selectedSinavDetails?.yanlis_sayisi || 0 }}</div>
+              <div class="stat-label">Yanlış</div>
+            </div>
+          </div>
+          
+          <div class="stat-card empty">
+            <div class="stat-icon">
+              <i class="bi bi-circle"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number">{{ selectedSinavDetails?.bos_sayisi || 0 }}</div>
+              <div class="stat-label">Boş</div>
+            </div>
+          </div>
+          
+          <div class="stat-card success">
+            <div class="stat-icon">
+              <i class="bi bi-award-fill"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number">{{ selectedSinavDetails?.basari_yuzdesi || 0 }}%</div>
+              <div class="stat-label">Başarı</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-section">
+          <!-- Doughnut Chart -->
+          <div class="chart-container">
+            <h3>Sonuç Dağılımı</h3>
+            <canvas id="resultChart" width="300" height="300"></canvas>
+          </div>
+          
+          <!-- Bar Chart -->
+          <div class="chart-container">
+            <h3>Sonuç Analizi</h3>
+            <canvas id="barChart" width="400" height="300"></canvas>
+          </div>
+        </div>
+
+        <!-- Question Details -->
+        <div class="questions-section" *ngIf="selectedSinavDetails?.sorular">
+          <h3>Soru Bazında Analiz</h3>
+          <div class="questions-grid">
+            <div class="question-item" *ngFor="let soru of selectedSinavDetails.sorular"
+                 [class.correct]="soru.is_correct"
+                 [class.wrong]="!soru.is_correct && soru.ogrenci_cevabi"
+                 [class.empty]="!soru.ogrenci_cevabi">
+              <div class="question-header">
+                <span class="question-number">{{ soru.soru_no }}</span>
+                <span class="question-status">
+                  <i class="bi" 
+                     [class.bi-check-circle-fill]="soru.is_correct"
+                     [class.bi-x-circle-fill]="!soru.is_correct && soru.ogrenci_cevabi"
+                     [class.bi-circle]="!soru.ogrenci_cevabi"></i>
+                </span>
+              </div>
+              <div class="question-details">
+                <div class="answer-row">
+                  <span class="label">Verdiğiniz:</span>
+                  <span class="answer">{{ soru.ogrenci_cevabi || 'Boş' }}</span>
+                </div>
+                <div class="answer-row">
+                  <span class="label">Doğru Cevap:</span>
+                  <span class="answer correct">{{ soru.dogru_cevap }}</span>
+                </div>
+                <button *ngIf="soru.video_url" class="video-btn" (click)="openVideo(soru.video_url)">
+                  <i class="bi bi-play-circle"></i>
+                  Video İzle
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>nt.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ selectedSinav.sinav_adi }} - Detaylı Sonuç</h2>
         <button class="btn-close" (click)="selectedSinav = null">
           <i class="bi bi-x-lg"></i>
         </button>

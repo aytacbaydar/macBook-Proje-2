@@ -186,6 +186,13 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
   createChart() {
     if (!this.selectedSinavDetails) return;
 
+    this.createDoughnutChart();
+    this.createBarChart();
+  }
+
+  createDoughnutChart() {
+    if (!this.selectedSinavDetails) return;
+
     const ctx = document.getElementById('resultChart') as HTMLCanvasElement;
     if (!ctx) return;
 
@@ -222,13 +229,123 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
     });
   }
 
+  createBarChart() {
+    if (!this.selectedSinavDetails) return;
+
+    const barCtx = document.getElementById('barChart') as HTMLCanvasElement;
+    if (!barCtx) return;
+
+    // Eski grafik varsa temizle
+    const existingBarChart = (window as any).Chart.getChart(barCtx);
+    if (existingBarChart) {
+      existingBarChart.destroy();
+    }
+
+    new (window as any).Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Doğru', 'Yanlış', 'Boş'],
+        datasets: [{
+          label: 'Soru Sayıları',
+          data: [
+            this.selectedSinavDetails.dogru_sayisi,
+            this.selectedSinavDetails.yanlis_sayisi,
+            this.selectedSinavDetails.bos_sayisi
+          ],
+          backgroundColor: [
+            'rgba(40, 167, 69, 0.8)',
+            'rgba(220, 53, 69, 0.8)',
+            'rgba(108, 117, 125, 0.8)'
+          ],
+          borderColor: [
+            'rgba(40, 167, 69, 1)',
+            'rgba(220, 53, 69, 1)',
+            'rgba(108, 117, 125, 1)'
+          ],
+          borderWidth: 2,
+          borderRadius: 6,
+          borderSkipped: false
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            callbacks: {
+              label: (context: any) => {
+                const total = this.selectedSinavDetails!.toplam_soru;
+                const percentage = ((context.parsed.y / total) * 100).toFixed(1);
+                return `${context.parsed.y} soru (${percentage}%)`;
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: this.selectedSinavDetails.toplam_soru,
+            ticks: {
+              stepSize: 1
+            },
+            title: {
+              display: true,
+              text: 'Soru Sayısı'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Sonuç Türü'
+            }
+          }
+        }
+      }
+    });
+  }
+
   retakeExam(sinav: SinavSonucu) {
+    // Sınavın daha önce çözülüp çözülmediğini kontrol et
+    if (this.isExamAlreadySolved(sinav.sinav_id)) {
+      // Uyarı mesajı göster
+      const shouldContinue = confirm(
+        `"${sinav.sinav_adi}" sınavını daha önce çözmüşsünüz.\n\n` +
+        `Önceki sonucunuz:\n` +
+        `• Doğru: ${sinav.dogru_sayisi}\n` +
+        `• Yanlış: ${sinav.yanlis_sayisi}\n` +
+        `• Boş: ${sinav.bos_sayisi}\n` +
+        `• Başarı: ${this.getSuccessPercentage(sinav)}%\n\n` +
+        `Tekrar çözmek istediğinize emin misiniz? Bu işlem önceki sonucunuzu değiştirecektir.`
+      );
+      
+      if (!shouldContinue) {
+        return;
+      }
+    }
+
     this.router.navigate(['/ogrenci-sayfasi/optik'], {
       queryParams: {
         sinavId: sinav.sinav_id,
         sinavAdi: sinav.sinav_adi,
         sinavTuru: sinav.sinav_turu,
-        soruSayisi: sinav.soru_sayisi || (sinav.dogru_sayisi + sinav.yanlis_sayisi + sinav.bos_sayisi)
+        soruSayisi: sinav.soru_sayisi || sinav.toplam_soru || 0,
+        retake: 'true' // Tekrar çözüldüğünü belirt
+      }
+    });
+  }
+
+  isExamAlreadySolved(sinavId: number): boolean {
+    return this.sinavSonuclari.some(sonuc => sonuc.sinav_id === sinavId);
+  }
+
+  openVideo(videoUrl: string) {
+    if (videoUrl) {
+      window.open(videoUrl, '_blank');
+    }
+  }inav.dogru_sayisi + sinav.yanlis_sayisi + sinav.bos_sayisi)
       }
     });
   }

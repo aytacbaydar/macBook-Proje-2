@@ -25,6 +25,8 @@ export class OgrenciOptikSayfasiComponent implements OnInit {
   submitting = false;
   error: string | null = null;
   successMessage = '';
+  message: string = '';
+  messageType: 'success' | 'info' | 'warning' | 'error' = 'info';
 
   constructor(
     private route: ActivatedRoute,
@@ -33,11 +35,17 @@ export class OgrenciOptikSayfasiComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.queryParams.subscribe((params) => {
-      this.sinavId = parseInt(params['sinavId']) || 0;
+    // URL parametrelerini al
+    this.route.queryParams.subscribe(params => {
+      this.sinavId = +params['sinavId'] || 0;
       this.sinavAdi = params['sinavAdi'] || '';
       this.sinavTuru = params['sinavTuru'] || '';
-      this.soruSayisi = parseInt(params['soruSayisi']) || 0;
+      this.soruSayisi = +params['soruSayisi'] || 0;
+      const isRetake = params['retake'] === 'true';
+
+      if (isRetake) {
+        this.showRetakeWarning();
+      }
 
       if (!this.sinavId || !this.soruSayisi) {
         this.router.navigate(['/ogrenci/sinav-islemleri']);
@@ -165,12 +173,22 @@ export class OgrenciOptikSayfasiComponent implements OnInit {
 
   getSinavTuruColor(): string {
     const colors: { [key: string]: string } = {
-      TYT: '#667eea',
-      AYT: '#4facfe',
-      TAR: '#43e97b',
-      TEST: '#fa709a',
+      'TYT': '#667eea',
+      'AYT': '#4facfe',
+      'TAR': '#43e97b',
+      'TEST': '#fa709a'
     };
     return colors[this.sinavTuru] || '#6c757d';
+  }
+
+  showRetakeWarning() {
+    this.message = `Bu sınavı daha önce çözmüştünüz. Yeni cevaplarınız önceki sonuçlarınızın yerine geçecektir.`;
+    this.messageType = 'warning';
+
+    // Mesajı 5 saniye sonra gizle
+    setTimeout(() => {
+      this.message = '';
+    }, 5000);
   }
 
   getCompletionPercent(): number {
