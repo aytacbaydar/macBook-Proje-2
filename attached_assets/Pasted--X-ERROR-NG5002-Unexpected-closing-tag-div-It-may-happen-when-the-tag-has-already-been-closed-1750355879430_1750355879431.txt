@@ -1,0 +1,286 @@
+
+X [ERROR] NG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.html:293:0:
+      293 │ </div>
+          ╵ ~~~~~~
+
+  Error occurs in the template of component OgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogrenci-sinav-sonuclari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2339: Property 'toplam_soru' does not exist on type 'DetaySinavSonucu'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:280:57:
+      280 │ ...            const total = this.selectedSinavDetails!.toplam_soru;
+          ╵                                                         ~~~~~~~~~~~
+
+
+X [ERROR] TS2339: Property 'toplam_soru' does not exist on type 'DetaySinavSonucu'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:290:43:
+      290 │             max: this.selectedSinavDetails.toplam_soru,
+          ╵                                            ~~~~~~~~~~~
+
+
+X [ERROR] TS2339: Property 'toplam_soru' does not exist on type 'SinavSonucu'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:334:47:
+      334 │         soruSayisi: sinav.soru_sayisi || sinav.toplam_soru || 0,
+          ╵                                                ~~~~~~~~~~~
+
+
+X [ERROR] TS1434: Unexpected keyword or identifier. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:348:3:
+      348 │   }inav.dogru_sayisi + sinav.yanlis_sayisi + sinav.bos_sayisi)
+          ╵    ~~~~
+
+
+X [ERROR] TS7008: Member 'inav' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:348:3:
+      348 │   }inav.dogru_sayisi + sinav.yanlis_sayisi + sinav.bos_sayisi)
+          ╵    ~~~~
+
+
+X [ERROR] Expected ";" but found "."
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:348:7:
+      348 │   }inav.dogru_sayisi + sinav.yanlis_sayisi + sinav.bos_sayisi)
+          │        ^
+          ╵        ;
+
+
+X [ERROR] TS1068: Unexpected token. A constructor, method, accessor, or property was expected. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:348:7:
+      348 │   }inav.dogru_sayisi + sinav.yanlis_sayisi + sinav.bos_sayisi)
+          ╵        ^
+
+
+X [ERROR] TS1434: Unexpected keyword or identifier. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:348:8:
+      348 │   }inav.dogru_sayisi + sinav.yanlis_sayisi + sinav.bos_sayisi)
+          ╵         ~~~~~~~~~~~~
+
+
+X [ERROR] TS7008: Member 'dogru_sayisi' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:348:8:
+      348 │   }inav.dogru_sayisi + sinav.yanlis_sayisi + sinav.bos_sayisi)
+          ╵         ~~~~~~~~~~~~
+
+
+X [ERROR] TS1068: Unexpected token. A constructor, method, accessor, or property was expected. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:348:21:
+      348 │   }inav.dogru_sayisi + sinav.yanlis_sayisi + sinav.bos_sayisi)
+          ╵                      ^
+
+
+X [ERROR] TS2304: Cannot find name 'sinav'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:348:23:
+      348 │   }inav.dogru_sayisi + sinav.yanlis_sayisi + sinav.bos_sayisi)
+          ╵                        ~~~~~
+
+
+X [ERROR] TS2304: Cannot find name 'sinav'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:348:45:
+      348 │   }inav.dogru_sayisi + sinav.yanlis_sayisi + sinav.bos_sayisi)
+          ╵                                              ~~~~~
+
+
+X [ERROR] TS1005: ';' expected. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:348:61:
+      348 │   }inav.dogru_sayisi + sinav.yanlis_sayisi + sinav.bos_sayisi)
+          ╵                                                              ^
+
+
+X [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:349:6:
+      349 │       }
+          ╵       ^
+
+
+X [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:350:4:
+      350 │     });
+          ╵     ^
+
+
+X [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:350:5:
+      350 │     });
+          ╵      ^
+
+
+X [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:351:2:
+      351 │   }
+          ╵   ^
+
+
+X [ERROR] TS2304: Cannot find name 'watchVideo'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:353:2:
+      353 │   watchVideo(konuId: number | undefined, soruNo: number) {
+          ╵   ~~~~~~~~~~
+
+
+X [ERROR] TS2304: Cannot find name 'konuId'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:353:13:
+      353 │   watchVideo(konuId: number | undefined, soruNo: number) {
+          ╵              ~~~~~~
+
+
+X [ERROR] TS1005: ',' expected. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:353:19:
+      353 │   watchVideo(konuId: number | undefined, soruNo: number) {
+          ╵                    ^
+
+
+X [ERROR] TS2693: 'number' only refers to a type, but is being used as a value here. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:353:21:
+      353 │   watchVideo(konuId: number | undefined, soruNo: number) {
+          ╵                      ~~~~~~
+
+
+X [ERROR] TS18050: The value 'undefined' cannot be used here. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:353:30:
+      353 │   watchVideo(konuId: number | undefined, soruNo: number) {
+          ╵                               ~~~~~~~~~
+
+
+X [ERROR] TS2304: Cannot find name 'soruNo'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:353:41:
+      353 │   watchVideo(konuId: number | undefined, soruNo: number) {
+          ╵                                          ~~~~~~
+
+
+X [ERROR] TS1005: ',' expected. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:353:47:
+      353 │   watchVideo(konuId: number | undefined, soruNo: number) {
+          ╵                                                ^
+
+
+X [ERROR] TS2693: 'number' only refers to a type, but is being used as a value here. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:353:49:
+      353 │   watchVideo(konuId: number | undefined, soruNo: number) {
+          ╵                                                  ~~~~~~
+
+
+X [ERROR] TS1005: ';' expected. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:353:57:
+      353 │   watchVideo(konuId: number | undefined, soruNo: number) {
+          ╵                                                          ^
+
+
+X [ERROR] TS2304: Cannot find name 'konuId'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:354:8:
+      354 │     if (konuId) {
+          ╵         ~~~~~~
+
+
+X [ERROR] TS2304: Cannot find name 'konuId'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:356:26:
+      356 │       console.log(`Konu ${konuId} videosu açılacak - Soru ${sor...
+          ╵                           ~~~~~~
+
+
+X [ERROR] TS2304: Cannot find name 'soruNo'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:356:60:
+      356 │ ...onsole.log(`Konu ${konuId} videosu açılacak - Soru ${soruNo}`);
+          ╵                                                       ~~~~~~
+
+
+X [ERROR] TS2304: Cannot find name 'soruNo'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:358:20:
+      358 │       alert(`Soru ${soruNo} için konu videosu yakında eklenecek...
+          ╵                     ~~~~~~
+
+
+X [ERROR] TS2304: Cannot find name 'soruNo'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:360:26:
+      360 │       console.log(`Soru ${soruNo} için video bulunamadı`);
+          ╵                           ~~~~~~
+
+
+X [ERROR] TS2304: Cannot find name 'soruNo'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:361:20:
+      361 │       alert(`Soru ${soruNo} için video bulunamadı.`);
+          ╵                     ~~~~~~
+
+
+X [ERROR] TS2304: Cannot find name 'goBackToExams'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:365:2:
+      365 │   goBackToExams() {
+          ╵   ~~~~~~~~~~~~~
+
+
+X [ERROR] TS1005: ';' expected. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:365:18:
+      365 │   goBackToExams() {
+          ╵                   ^
+
+
+X [ERROR] TS2532: Object is possibly 'undefined'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:366:4:
+      366 │     this.router.navigate(['/ogrenci-sayfasi/ogrenci-sinav-islemle...
+          ╵     ~~~~
+
+
+X [ERROR] TS2304: Cannot find name 'goToExams'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:369:2:
+      369 │   goToExams() {
+          ╵   ~~~~~~~~~
+
+
+X [ERROR] TS1005: ';' expected. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:369:14:
+      369 │   goToExams() {
+          ╵               ^
+
+
+X [ERROR] TS2532: Object is possibly 'undefined'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:370:4:
+      370 │     this.router.navigate(['/ogrenci-sayfasi/ogrenci-sinav-islemle...
+          ╵     ~~~~
+
+
+X [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:372:0:
+      372 │ }
+          ╵ ^
