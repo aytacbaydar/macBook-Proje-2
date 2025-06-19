@@ -1,1 +1,172 @@
-<p>ogrenci-sinav-sonuclari-sayfasi works!</p>
+
+<div class="sonuclar-container">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Sınav sonucu yükleniyor...</p>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-container">
+    <div class="error-card">
+      <i class="bi bi-exclamation-triangle-fill error-icon"></i>
+      <h3>Hata Oluştu</h3>
+      <p>{{ error }}</p>
+      <button class="retry-button" (click)="goBackToExams()">
+        <i class="bi bi-arrow-left me-1"></i>
+        Sınavlara Dön
+      </button>
+    </div>
+  </div>
+
+  <!-- Results Content -->
+  <div *ngIf="!loading && !error && sinavSonucu" class="results-content">
+    <!-- Header -->
+    <div class="results-header" [style.background]="'linear-gradient(135deg, ' + getSinavTuruColor() + ' 0%, ' + getSinavTuruColor() + 'aa 100%)'">
+      <div class="header-content">
+        <h1>{{ sinavSonucu.sinav_adi }}</h1>
+        <div class="exam-meta">
+          <span class="exam-type">{{ sinavSonucu.sinav_turu }}</span>
+          <span class="exam-date">{{ formatDate(sinavSonucu.gonderim_tarihi) }}</span>
+        </div>
+      </div>
+      <button class="back-btn" (click)="goBackToExams()">
+        <i class="bi bi-arrow-left"></i>
+        Sınavlara Dön
+      </button>
+    </div>
+
+    <!-- Performance Summary -->
+    <div class="performance-summary">
+      <div class="performance-card main-score">
+        <div class="score-circle" [style.background]="'conic-gradient(' + getSinavTuruColor() + ' ' + (sinavSonucu.yuzde * 3.6) + 'deg, #e9ecef 0deg)'">
+          <div class="score-inner">
+            <span class="score-value">{{ sinavSonucu.yuzde }}%</span>
+            <span class="score-label">Başarı</span>
+          </div>
+        </div>
+        <div class="performance-level" [style.color]="getPerformanceLevel().color">
+          <i class="{{ getPerformanceLevel().icon }}"></i>
+          {{ getPerformanceLevel().text }}
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card correct">
+          <div class="stat-icon">
+            <i class="bi bi-check-circle-fill"></i>
+          </div>
+          <div class="stat-content">
+            <span class="stat-number">{{ sinavSonucu.dogru_sayisi }}</span>
+            <span class="stat-label">Doğru</span>
+          </div>
+        </div>
+
+        <div class="stat-card wrong">
+          <div class="stat-icon">
+            <i class="bi bi-x-circle-fill"></i>
+          </div>
+          <div class="stat-content">
+            <span class="stat-number">{{ sinavSonucu.yanlis_sayisi }}</span>
+            <span class="stat-label">Yanlış</span>
+          </div>
+        </div>
+
+        <div class="stat-card empty">
+          <div class="stat-icon">
+            <i class="bi bi-dash-circle-fill"></i>
+          </div>
+          <div class="stat-content">
+            <span class="stat-number">{{ sinavSonucu.bos_sayisi }}</span>
+            <span class="stat-label">Boş</span>
+          </div>
+        </div>
+
+        <div class="stat-card total">
+          <div class="stat-icon">
+            <i class="bi bi-list-ol"></i>
+          </div>
+          <div class="stat-content">
+            <span class="stat-number">{{ sinavSonucu.soru_sayisi }}</span>
+            <span class="stat-label">Toplam</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart Section -->
+    <div class="chart-section">
+      <h3>
+        <i class="bi bi-pie-chart-fill me-2"></i>
+        Sonuç Dağılımı
+      </h3>
+      <div class="chart-container">
+        <canvas id="resultChart" width="400" height="400"></canvas>
+      </div>
+    </div>
+
+    <!-- Question Details -->
+    <div class="question-details">
+      <h3>
+        <i class="bi bi-list-check me-2"></i>
+        Soru Detayları
+      </h3>
+      <div class="questions-grid">
+        <div class="question-item" *ngFor="let soruNo of getSorular()">
+          <div class="question-number">{{ soruNo }}</div>
+          <div class="question-status" [style.color]="getQuestionStatus(soruNo).color">
+            <i class="{{ getQuestionStatus(soruNo).icon }}"></i>
+            <span>{{ getQuestionStatus(soruNo).status }}</span>
+          </div>
+          <div class="question-answers" *ngIf="sinavSonucu.detaylar && sinavSonucu.detaylar['soru' + soruNo]">
+            <span class="student-answer" *ngIf="sinavSonucu.detaylar['soru' + soruNo].ogrenci_cevap">
+              Cevabınız: <strong>{{ sinavSonucu.detaylar['soru' + soruNo].ogrenci_cevap }}</strong>
+            </span>
+            <span class="correct-answer" *ngIf="sinavSonucu.detaylar['soru' + soruNo].dogru_cevap">
+              Doğru: <strong>{{ sinavSonucu.detaylar['soru' + soruNo].dogru_cevap }}</strong>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button class="action-btn retake" (click)="retakeExam()">
+        <i class="bi bi-arrow-clockwise me-1"></i>
+        Sınavı Tekrar Çöz
+      </button>
+      <button class="action-btn back" (click)="goBackToExams()">
+        <i class="bi bi-list me-1"></i>
+        Tüm Sınavları Gör
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Chart.js Script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Chart will be created by the component
+  setTimeout(() => {
+    if (window.Chart && document.getElementById('resultChart')) {
+      const ctx = document.getElementById('resultChart').getContext('2d');
+      const chartData = JSON.parse('{{ chartData | json }}');
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: chartData,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
+    }
+  }, 1000);
+</script>
