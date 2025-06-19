@@ -87,13 +87,85 @@ try {
         throw new Exception('Tablo oluşturma hatası: ' . $e->getMessage());
     }
     
+    // Sınav sonuçları tablosunu oluştur (eğer yoksa)
+    $createResultsTableSQL = "
+        CREATE TABLE IF NOT EXISTS sinav_sonuclari (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            sinav_id INT NOT NULL,
+            ogrenci_id INT NOT NULL,
+            sinav_adi VARCHAR(255) NOT NULL,
+            sinav_turu VARCHAR(50) NOT NULL,
+            soru_sayisi INT NOT NULL,
+            dogru_sayisi INT NOT NULL DEFAULT 0,
+            yanlis_sayisi INT NOT NULL DEFAULT 0,
+            bos_sayisi INT NOT NULL DEFAULT 0,
+            net_sayisi DECIMAL(5,2) NOT NULL DEFAULT 0,
+            puan DECIMAL(6,2) NOT NULL DEFAULT 0,
+            yuzde DECIMAL(5,2) NOT NULL DEFAULT 0,
+            gonderim_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            guncelleme_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_sinav_ogrenci (sinav_id, ogrenci_id),
+            INDEX idx_ogrenci_id (ogrenci_id),
+            INDEX idx_sinav_turu (sinav_turu),
+            INDEX idx_gonderim_tarihi (gonderim_tarihi),
+            UNIQUE KEY unique_sinav_ogrenci (sinav_id, ogrenci_id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    ";
+    
+    try {
+        $conn->exec($createResultsTableSQL);
+        error_log('Results table creation/check successful');
+    } catch (PDOException $e) {
+        throw new Exception('Sonuçlar tablosu oluşturma hatası: ' . $e->getMessage());
+    }
+    
+    // Cevap anahtarını al
+    $cevapAnahtariSQL = "SELECT cevaplar FROM cevap_anahtarlari WHERE id = ?";
+    $cevapStmt = $conn->prepare($cevapAnahtariSQL);
+    $cevapStmt->execute([$sinav_id]);
+    $cevapAnahtari = $cevapStmt->fetch(PDO::FETCH_ASSOC);
+    
+    // Sonuçları hesapla
+    $dogru_sayisi = 0;
+    $yanlis_sayisi = 0;
+    $bos_sayisi = 0;
+    
+    if ($cevapAnahtari) {
+        $dogruCevaplar = json_decode($cevapAnahtari['cevaplar'], true);
+        
+        for ($i = 1; $i <= $soru_sayisi; $i++) {
+            $ogrenciCevap = $cevaplar["soru{$i}"] ?? '';
+            $dogruCevap = $dogruCevaplar["ca{$i}"] ?? '';
+            
+            if (empty($ogrenciCevap)) {
+                $bos_sayisi++;
+            } elseif ($ogrenciCevap === $dogruCevap) {
+                $dogru_sayisi++;
+            } else {
+                $yanlis_sayisi++;
+            }
+        }
+    } else {
+        // Cevap anahtarı yoksa tüm sorular boş sayılsın
+        $bos_sayisi = $soru_sayisi;
+        error_log("Warning: Cevap anahtarı bulunamadı. Sinav ID: $sinav_id");
+    }
+    
+    // Net, puan ve yüzde hesaplama
+    $net_sayisi = $dogru_sayisi - ($yanlis_sayisi / 4);
+    $net_sayisi = max(0, $net_sayisi); // Negatif olamaz
+    $puan = $net_sayisi; // Basit puan sistemi
+    $yuzde = $soru_sayisi > 0 ? ($dogru_sayisi / $soru_sayisi) * 100 : 0;
+    
+    error_log("Calculated results - Doğru: $dogru_sayisi, Yanlış: $yanlis_sayisi, Boş: $bos_sayisi, Net: $net_sayisi");
+    
     // Önceki cevabı kontrol et
     $checkSQL = "SELECT id FROM sinav_cevaplari WHERE sinav_id = ? AND ogrenci_id = ?";
     $checkStmt = $conn->prepare($checkSQL);
     $checkStmt->execute([$sinav_id, $ogrenci_id]);
     
     if ($checkStmt->fetch()) {
-        // Güncelle
+        // Cevapları güncelle
         $updateSQL = "
             UPDATE sinav_cevaplari 
             SET cevaplar = ?, sinav_adi = ?, sinav_turu = ?, soru_sayisi = ?, gonderim_tarihi = CURRENT_TIMESTAMP
@@ -108,8 +180,24 @@ try {
             $sinav_id,
             $ogrenci_id
         ]);
+        
+        // Sonuçları güncelle
+        $updateResultsSQL = "
+            UPDATE sinav_sonuclari 
+            SET sinav_adi = ?, sinav_turu = ?, soru_sayisi = ?, 
+                dogru_sayisi = ?, yanlis_sayisi = ?, bos_sayisi = ?,
+                net_sayisi = ?, puan = ?, yuzde = ?, guncelleme_tarihi = CURRENT_TIMESTAMP
+            WHERE sinav_id = ? AND ogrenci_id = ?
+        ";
+        $resultStmt = $conn->prepare($updateResultsSQL);
+        $resultStmt->execute([
+            $sinav_adi, $sinav_turu, $soru_sayisi,
+            $dogru_sayisi, $yanlis_sayisi, $bos_sayisi,
+            $net_sayisi, $puan, $yuzde,
+            $sinav_id, $ogrenci_id
+        ]);
     } else {
-        // Yeni kayıt
+        // Yeni cevap kaydı
         $insertSQL = "
             INSERT INTO sinav_cevaplari (sinav_id, ogrenci_id, sinav_adi, sinav_turu, soru_sayisi, cevaplar)
             VALUES (?, ?, ?, ?, ?, ?)
@@ -123,15 +211,35 @@ try {
             $soru_sayisi,
             json_encode($cevaplar, JSON_UNESCAPED_UNICODE)
         ]);
+        
+        // Yeni sonuç kaydı
+        $insertResultsSQL = "
+            INSERT INTO sinav_sonuclari (sinav_id, ogrenci_id, sinav_adi, sinav_turu, soru_sayisi,
+                                       dogru_sayisi, yanlis_sayisi, bos_sayisi, net_sayisi, puan, yuzde)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ";
+        $resultStmt = $conn->prepare($insertResultsSQL);
+        $resultStmt->execute([
+            $sinav_id, $ogrenci_id, $sinav_adi, $sinav_turu, $soru_sayisi,
+            $dogru_sayisi, $yanlis_sayisi, $bos_sayisi, $net_sayisi, $puan, $yuzde
+        ]);
     }
     
     echo json_encode([
         'success' => true,
-        'message' => 'Cevaplar başarıyla kaydedildi',
+        'message' => 'Cevaplar ve sonuçlar başarıyla kaydedildi',
         'data' => [
             'sinav_id' => $sinav_id,
             'ogrenci_id' => $ogrenci_id,
-            'cevap_sayisi' => count($cevaplar)
+            'cevap_sayisi' => count($cevaplar),
+            'sonuclar' => [
+                'dogru_sayisi' => $dogru_sayisi,
+                'yanlis_sayisi' => $yanlis_sayisi,
+                'bos_sayisi' => $bos_sayisi,
+                'net_sayisi' => round($net_sayisi, 2),
+                'puan' => round($puan, 2),
+                'yuzde' => round($yuzde, 1)
+            ]
         ]
     ], JSON_UNESCAPED_UNICODE);
     
