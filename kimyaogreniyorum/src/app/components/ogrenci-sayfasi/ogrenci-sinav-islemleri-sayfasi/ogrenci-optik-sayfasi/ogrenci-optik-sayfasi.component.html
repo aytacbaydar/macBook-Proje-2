@@ -35,7 +35,7 @@
       <div class="progress-bar" [style.width.%]="(getAnsweredCount() / soruSayisi) * 100"></div>
     </div>
     <div class="progress-text">
-      %{{ Math.round((getAnsweredCount() / soruSayisi) * 100) }} Tamamlandı
+      %{{ getCompletionPercent() }} Tamamlandı
     </div>
   </div>
 

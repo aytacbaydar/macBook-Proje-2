@@ -11,18 +11,18 @@ interface OptikCevap {
   selector: 'app-ogrenci-optik-sayfasi',
   standalone: false,
   templateUrl: './ogrenci-optik-sayfasi.component.html',
-  styleUrl: './ogrenci-optik-sayfasi.component.scss'
+  styleUrl: './ogrenci-optik-sayfasi.component.scss',
 })
 export class OgrenciOptikSayfasiComponent implements OnInit {
   sinavId: number = 0;
   sinavAdi: string = '';
   sinavTuru: string = '';
   soruSayisi: number = 0;
-  
+
   cevaplar: OptikCevap = {};
   siklar = ['A', 'B', 'C', 'D', 'E'];
   sorular: number[] = [];
-  
+
   submitting = false;
   error: string | null = null;
   successMessage = '';
@@ -34,23 +34,25 @@ export class OgrenciOptikSayfasiComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       this.sinavId = parseInt(params['sinavId']) || 0;
       this.sinavAdi = params['sinavAdi'] || '';
       this.sinavTuru = params['sinavTuru'] || '';
       this.soruSayisi = parseInt(params['soruSayisi']) || 0;
-      
+
       if (!this.sinavId || !this.soruSayisi) {
         this.router.navigate(['/ogrenci/sinav-islemleri']);
         return;
       }
-      
+
       this.initializeSorular();
     });
   }
 
   initializeSorular() {
-    this.sorular = Array(this.soruSayisi).fill(0).map((_, i) => i + 1);
+    this.sorular = Array(this.soruSayisi)
+      .fill(0)
+      .map((_, i) => i + 1);
     // Initialize all answers as empty
     for (let i = 1; i <= this.soruSayisi; i++) {
       this.cevaplar[`soru${i}`] = '';
@@ -66,7 +68,7 @@ export class OgrenciOptikSayfasiComponent implements OnInit {
   }
 
   getAnsweredCount(): number {
-    return Object.values(this.cevaplar).filter(cevap => cevap !== '').length;
+    return Object.values(this.cevaplar).filter((cevap) => cevap !== '').length;
   }
 
   getUnansweredCount(): number {
@@ -79,7 +81,9 @@ export class OgrenciOptikSayfasiComponent implements OnInit {
 
   submitAnswers() {
     if (this.getUnansweredCount() > 0) {
-      const result = confirm(`${this.getUnansweredCount()} soru boş kaldı. Yine de sınavı bitirmek istiyor musunuz?`);
+      const result = confirm(
+        `${this.getUnansweredCount()} soru boş kaldı. Yine de sınavı bitirmek istiyor musunuz?`
+      );
       if (!result) return;
     }
 
@@ -88,7 +92,8 @@ export class OgrenciOptikSayfasiComponent implements OnInit {
     this.successMessage = '';
 
     // Get student info
-    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    const userStr =
+      localStorage.getItem('user') || sessionStorage.getItem('user');
     if (!userStr) {
       this.error = 'Öğrenci bilgisi bulunamadı.';
       this.submitting = false;
@@ -111,49 +116,58 @@ export class OgrenciOptikSayfasiComponent implements OnInit {
       cevaplar: this.cevaplar,
       sinav_adi: this.sinavAdi,
       sinav_turu: this.sinavTuru,
-      soru_sayisi: this.soruSayisi
+      soru_sayisi: this.soruSayisi,
     };
 
-    this.http.post('./server/api/sinav_cevaplari_kaydet.php', data)
-      .subscribe({
-        next: (response: any) => {
-          this.submitting = false;
-          if (response.success) {
-            this.successMessage = 'Sınav cevaplarınız başarıyla kaydedildi!';
-            setTimeout(() => {
-              this.router.navigate(['/ogrenci/sinav-islemleri/sonuclar'], {
-                queryParams: {
-                  sinavId: this.sinavId,
-                  ogrenciId: studentId
-                }
-              });
-            }, 2000);
-          } else {
-            this.error = response.message || 'Cevaplar kaydedilirken hata oluştu.';
-          }
-        },
-        error: (error) => {
-          this.submitting = false;
-          this.error = 'Sunucu hatası: ' + (error.message || 'Bağlantı hatası');
-          console.error('Cevap kaydetme hatası:', error);
+    this.http.post('./server/api/sinav_cevaplari_kaydet.php', data).subscribe({
+      next: (response: any) => {
+        this.submitting = false;
+        if (response.success) {
+          this.successMessage = 'Sınav cevaplarınız başarıyla kaydedildi!';
+          setTimeout(() => {
+            this.router.navigate(['/ogrenci/sinav-islemleri/sonuclar'], {
+              queryParams: {
+                sinavId: this.sinavId,
+                ogrenciId: studentId,
+              },
+            });
+          }, 2000);
+        } else {
+          this.error =
+            response.message || 'Cevaplar kaydedilirken hata oluştu.';
         }
-      });
+      },
+      error: (error) => {
+        this.submitting = false;
+        this.error = 'Sunucu hatası: ' + (error.message || 'Bağlantı hatası');
+        console.error('Cevap kaydetme hatası:', error);
+      },
+    });
   }
 
   goBack() {
-    const result = confirm('Sınavdan çıkmak istediğinize emin misiniz? Cevaplarınız kaydedilmeyecek!');
+    const result = confirm(
+      'Sınavdan çıkmak istediğinize emin misiniz? Cevaplarınız kaydedilmeyecek!'
+    );
     if (result) {
-      this.router.navigate(['/ogrenci/sinav-islemleri']);
+      this.router.navigate([
+        '/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi',
+      ]);
     }
   }
 
   getSinavTuruColor(): string {
     const colors: { [key: string]: string } = {
-      'TYT': '#667eea',
-      'AYT': '#4facfe',
-      'TAR': '#43e97b',
-      'TEST': '#fa709a'
+      TYT: '#667eea',
+      AYT: '#4facfe',
+      TAR: '#43e97b',
+      TEST: '#fa709a',
     };
     return colors[this.sinavTuru] || '#6c757d';
+  }
+
+  getCompletionPercent(): number {
+    if (!this.soruSayisi || this.soruSayisi === 0) return 0;
+    return Math.round((this.getAnsweredCount() / this.soruSayisi) * 100);
   }
 }

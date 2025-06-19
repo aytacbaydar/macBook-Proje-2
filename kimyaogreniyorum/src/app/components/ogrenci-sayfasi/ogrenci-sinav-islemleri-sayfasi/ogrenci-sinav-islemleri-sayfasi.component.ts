@@ -75,14 +75,17 @@ export class OgrenciSinavIslemleriSayfasiComponent implements OnInit {
 
   startExam(sinav: Sinav) {
     // Optik sayfasına sınav bilgilerini gönder
-    this.router.navigate(['/ogrenci/sinav-islemleri/optik'], {
-      queryParams: {
-        sinavId: sinav.id,
-        sinavAdi: sinav.sinav_adi,
-        sinavTuru: sinav.sinav_turu,
-        soruSayisi: sinav.soru_sayisi
+    this.router.navigate(
+      ['/ogrenci-sayfasi/optik'],
+      {
+        queryParams: {
+          sinavId: sinav.id,
+          sinavAdi: sinav.sinav_adi,
+          sinavTuru: sinav.sinav_turu,
+          soruSayisi: sinav.soru_sayisi,
+        },
       }
-    });
+    );
   }
 
   formatDate(dateString: string): string {
