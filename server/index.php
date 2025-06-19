@@ -93,6 +93,10 @@ if (strpos($requestUri, $basePath) === 0) {
             require_once 'api/sinav_cevaplari_kaydet.php';
             break;
 
+        case 'sinav_detay_sonuc':
+            require_once 'api/sinav_detay_sonuc.php';
+            break;
+
         default:
             http_response_code(404);
             echo json_encode(['error' => 'API endpoint bulunamadı']);
