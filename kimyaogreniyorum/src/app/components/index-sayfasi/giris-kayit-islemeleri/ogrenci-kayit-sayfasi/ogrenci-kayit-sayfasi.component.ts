@@ -6,7 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 
 interface Teacher {
   id: number;
-  adi_soyadi: string;
+  ogrt_adi_soyadi: string;
   email: string;
   brans: string;
   aktif: boolean;
@@ -57,7 +57,7 @@ export class OgrenciKayitSayfasiComponent implements OnInit {
       sifre: ['', [Validators.required, Validators.minLength(6)]],
       rutbe: ['yeni'],
       aktiflik_durumu: [false],
-      ogretmeni: ['', [Validators.required]]
+      ogretmeni: ['', [Validators.required]],
     });
     // Listen to password changes for strength calculation
     this.registrationForm.get('sifre')?.valueChanges.subscribe((password) => {
@@ -85,6 +85,9 @@ export class OgrenciKayitSayfasiComponent implements OnInit {
     event.stopPropagation();
 
     this.isDragActive = event.type === 'dragenter' || event.type === 'dragover';
+  }
+  trackByTeacherId(index: number, teacher: any): any {
+    return teacher.id || teacher.adi_soyadi;
   }
   handleDrop(event: DragEvent): void {
     event.preventDefault();
@@ -178,34 +181,20 @@ export class OgrenciKayitSayfasiComponent implements OnInit {
 
   loadTeachers(): void {
     console.log('Öğretmenler yükleniyor...');
-    this.http.get<any>('./server/api/ogretmenler_listesi.php')
-      .subscribe({
-        next: (response) => {
-          console.log('API yanıtı:', response);
-          if (response.success) {
-            this.teachers = response.data || [];
-            console.log('Yüklenen öğretmenler: ', response.data);
-            console.log('Teachers array length: ', this.teachers.length);
-            console.log('Teachers array: ', this.teachers);
-             // Manually trigger change detection
-             this.cdr.detectChanges();
-          } else {
-            this.toast.error(
-              'Hata',
-              response.message || 'Öğretmenler yüklenemedi',
-              {
-                timeOut: 3000,
-                progressBar: true,
-                closeButton: true,
-              }
-            );
-          }
-        },
-        error: (error) => {
-          console.error('Öğretmenler yüklenirken hata:', error);
+    this.http.get<any>('./server/api/ogretmenler_listesi.php').subscribe({
+      next: (response) => {
+        console.log('API yanıtı:', response);
+        if (response.success) {
+          this.teachers = response.data || [];
+          console.log('Yüklenen öğretmenler: ', response.data);
+          console.log('Teachers array length: ', this.teachers.length);
+          console.log('Teachers array: ', this.teachers);
+          // Manually trigger change detection
+          this.cdr.detectChanges();
+        } else {
           this.toast.error(
             'Hata',
-            error.message || 'Öğretmenler yüklenirken hata oluştu',
+            response.message || 'Öğretmenler yüklenemedi',
             {
               timeOut: 3000,
               progressBar: true,
@@ -213,7 +202,20 @@ export class OgrenciKayitSayfasiComponent implements OnInit {
             }
           );
         }
-      });
+      },
+      error: (error) => {
+        console.error('Öğretmenler yüklenirken hata:', error);
+        this.toast.error(
+          'Hata',
+          error.message || 'Öğretmenler yüklenirken hata oluştu',
+          {
+            timeOut: 3000,
+            progressBar: true,
+            closeButton: true,
+          }
+        );
+      },
+    });
   }
 
   onSubmit(): void {
@@ -241,7 +243,6 @@ export class OgrenciKayitSayfasiComponent implements OnInit {
     formData.append('avatar', this.selectedFile);
 
     formData.append('ogretmeni', this.registrationForm.get('ogretmeni')?.value);
-
 
     // Send to server
     this.http.post<any>('./server/api/ogrenci_kayit.php', formData).subscribe({
