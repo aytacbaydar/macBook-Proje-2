@@ -118,30 +118,11 @@ try {
         throw new Exception('Sonuçlar tablosu oluşturma hatası: ' . $e->getMessage());
     }
 
-    // Cevap anahtarını al - önce hangi tablonun var olduğunu kontrol et
-    $cevapAnahtari = null;
-
-    // Önce cevapAnahtari tablosuna bak
-    try {
-        $cevapAnahtariSQL = "SELECT cevaplar, sinav_adi, sinav_turu, soru_sayisi FROM cevapAnahtari WHERE id = ? AND aktiflik = 1";
-        $cevapStmt = $conn->prepare($cevapAnahtariSQL);
-        $cevapStmt->execute([$sinav_id]);
-        $cevapAnahtari = $cevapStmt->fetch(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        error_log('cevapAnahtari tablosu bulunamadı: ' . $e->getMessage());
-    }
-
-    // Eğer cevapAnahtari tablosunda bulunamadıysa cevap_anahtarlari tablosuna bak
-    if (!$cevapAnahtari) {
-        try {
-            $cevapAnahtariSQL = "SELECT cevaplar, sinav_adi, sinav_turu, soru_sayisi FROM cevap_anahtarlari WHERE id = ? AND aktiflik = 1";
-            $cevapStmt = $conn->prepare($cevapAnahtariSQL);
-            $cevapStmt->execute([$sinav_id]);
-            $cevapAnahtari = $cevapStmt->fetch(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            error_log('cevap_anahtarlari tablosu bulunamadı: ' . $e->getMessage());
-        }
-    }
+    // Cevap anahtarını al
+    $cevapAnahtariSQL = "SELECT cevaplar FROM cevapAnahtari WHERE id = ?";
+    $cevapStmt = $conn->prepare($cevapAnahtariSQL);
+    $cevapStmt->execute([$sinav_id]);
+    $cevapAnahtari = $cevapStmt->fetch(PDO::FETCH_ASSOC);
 
     // Sonuçları hesapla
     $dogru_sayisi = 0;
