@@ -19,6 +19,17 @@ interface ClassStatus {
   aktif_ogrenciler: any[];
 }
 
+interface WeeklyPerformance {
+  hafta: number;
+  yil: number;
+  hafta_baslangic: string;
+  hafta_adi: string;
+  katilim_sayisi: number;
+  gelen_gun: number;
+  gelmeyen_gun: number;
+  basari_orani: number;
+}
+
 @Component({
   selector: 'app-ogrenci-ana-sayfasi',
   standalone: false,
@@ -60,6 +71,11 @@ export class OgrenciAnaSayfasiComponent implements OnInit {
   isLoadingClassStatus: boolean = false;
   classStatusError: string = '';
 
+  // Weekly performance
+  weeklyPerformance: WeeklyPerformance[] = [];
+  isLoadingPerformance: boolean = false;
+  performanceError: string = '';
+
   private apiBaseUrl = './server/api';
 
   constructor(private http: HttpClient) {}
@@ -69,6 +85,7 @@ export class OgrenciAnaSayfasiComponent implements OnInit {
     this.loadStudentStats();
     this.loadRecentTopics();
     this.loadClassStatus();
+    this.loadWeeklyPerformance();
     this.checkScreenSize();
     window.addEventListener('resize', () => {
       this.checkScreenSize();
@@ -382,5 +399,53 @@ export class OgrenciAnaSayfasiComponent implements OnInit {
   // Helper method for safe navigation
   hasValidGroup(): boolean {
     return !!(this.studentGroup && this.studentGroup.trim());
+  }
+
+  // Haftalık performansı yükle
+  loadWeeklyPerformance(): void {
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (!userStr) return;
+
+    try {
+      const user = JSON.parse(userStr);
+      const studentId = user.id;
+
+      this.isLoadingPerformance = true;
+      this.performanceError = '';
+
+      const apiUrl = `${this.apiBaseUrl}/haftalik_performans.php?ogrenci_id=${studentId}&hafta_sayisi=4`;
+
+      this.http.get<any>(apiUrl).subscribe({
+        next: (response) => {
+          if (response.success && response.data) {
+            this.weeklyPerformance = response.data.haftalik_performans || [];
+            console.log('Haftalık performans yüklendi:', this.weeklyPerformance);
+          } else {
+            this.performanceError = 'Performans verileri alınamadı';
+          }
+          this.isLoadingPerformance = false;
+        },
+        error: (error) => {
+          console.error('Haftalık performans yüklenirken hata:', error);
+          this.performanceError = 'Performans verileri yüklenirken hata oluştu';
+          this.isLoadingPerformance = false;
+        }
+      });
+    } catch (error) {
+      console.error('Kullanıcı bilgileri ayrıştırılırken hata:', error);
+      this.isLoadingPerformance = false;
+    }
+  }
+
+  // Chart yardımcı metotları
+  getMaxPerformance(): number {
+    if (this.weeklyPerformance.length === 0) return 100;
+    return Math.max(...this.weeklyPerformance.map(w => w.basari_orani), 100);
+  }
+
+  getAveragePerformance(): number {
+    if (this.weeklyPerformance.length === 0) return 0;
+    const total = this.weeklyPerformance.reduce((sum, w) => sum + w.basari_orani, 0);
+    return Math.round(total / this.weeklyPerformance.length);
   }
 }

@@ -247,8 +247,58 @@
             </div>
     </div>
 
+    <!-- Weekly Performance Chart -->
+    <div class="performance-chart-container anasayfa-card grid-8">
+      <div class="performance-section">
+        <!-- Performance Header -->
+        <div class="performance-header">
+          <div class="performance-title">
+            <div class="performance-icon">
+              <i class="bi bi-bar-chart-line-fill"></i>
+            </div>
+            <div class="performance-info">
+              <h4>Haftalık Performans</h4>
+              <p>Son 4 haftanın devam durumu</p>
+            </div>
+          </div>
+          <div class="performance-stats">
+            <div class="stat-item">
+              <span class="stat-number">{{ getAveragePerformance() }}%</span>
+              <span class="stat-label">Ortalama</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Performance Chart -->
+        <div class="performance-chart" *ngIf="!isLoadingPerformance && weeklyPerformance.length > 0">
+          <div class="chart-bars">
+            <div class="chart-bar" *ngFor="let week of weeklyPerformance" 
+                 [style.height.%]="(week.basari_orani / getMaxPerformance()) * 100">
+              <div class="bar-fill" [style.height.%]="week.basari_orani">
+                <span class="bar-value">{{ week.basari_orani }}%</span>
+              </div>
+              <span class="bar-label">{{ week.hafta_adi }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loading State -->
+        <div *ngIf="isLoadingPerformance" class="chart-loading">
+          <div class="skeleton-bars">
+            <div class="skeleton-bar" *ngFor="let i of [1,2,3,4]"></div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="!isLoadingPerformance && weeklyPerformance.length === 0" class="chart-empty">
+          <i class="bi bi-graph-down text-muted"></i>
+          <p>Henüz performans verisi yok</p>
+        </div>
+      </div>
+    </div>
+
     <!-- Progress Section -->
-    <div class="progress-container anasayfa-card grid-12">
+    <div class="progress-container anasayfa-card grid-4">
       <div class="progress-section">
 
         <!-- Progress Header -->
