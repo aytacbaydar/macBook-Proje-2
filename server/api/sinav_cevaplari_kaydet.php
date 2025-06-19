@@ -54,9 +54,11 @@ try {
         throw new Exception("Eksik veri: Sınav ID ($sinav_id), öğrenci ID ($ogrenci_id) ve cevaplar (" . count($cevaplar) . ") gerekli");
     }
     
-    // Veritabanı bağlantısını kontrol et
-    if (!isset($conn) || !$conn) {
-        throw new Exception('Veritabanı bağlantısı yok');
+    // Veritabanı bağlantısını kur
+    $conn = getConnection();
+    
+    if (!$conn) {
+        throw new Exception('Veritabanı bağlantısı kurulamadı');
     }
     
     error_log('Database connection OK');
