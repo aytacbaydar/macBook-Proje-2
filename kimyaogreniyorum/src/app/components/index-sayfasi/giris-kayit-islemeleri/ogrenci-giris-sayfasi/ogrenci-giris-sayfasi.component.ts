@@ -2,9 +2,16 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-
-import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
+
+interface Teacher {
+  id: number;
+  adi_soyadi: string;
+  email: string;
+  brans: string;
+  aktif: boolean;
+}
 
 @Component({
   selector: 'app-ogrenci-giris-sayfasi',
@@ -83,7 +90,7 @@ export class OgrenciGirisSayfasiComponent implements OnInit {
             const userData = response.data || response;
             console.log('Storing user data:', userData);
             console.log('Token in response:', userData.token);
-            
+
             // Token kontrolü
             if (!userData.token || userData.token.trim() === '') {
               console.error('Token bulunamadı veya boş!', userData);
@@ -91,13 +98,13 @@ export class OgrenciGirisSayfasiComponent implements OnInit {
               this.spinner.hide();
               return;
             }
-            
+
             // Veriyi kaydet
             const storageData = {
               ...userData,
               loginTime: new Date().toISOString() // Giriş zamanını da kaydet
             };
-            
+
             if (this.loginForm.value.remember) {
               localStorage.setItem('user', JSON.stringify(storageData));
               console.log('User data saved to localStorage with token:', userData.token.substring(0, 10) + '...');
@@ -105,7 +112,7 @@ export class OgrenciGirisSayfasiComponent implements OnInit {
               sessionStorage.setItem('user', JSON.stringify(storageData));
               console.log('User data saved to sessionStorage with token:', userData.token.substring(0, 10) + '...');
             }
-            
+
             // Hemen test et
             const testUser = localStorage.getItem('user') || sessionStorage.getItem('user');
             if (testUser) {

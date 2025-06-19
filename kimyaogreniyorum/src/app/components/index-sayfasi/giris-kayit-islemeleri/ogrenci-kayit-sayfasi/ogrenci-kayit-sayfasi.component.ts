@@ -4,6 +4,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
+interface Teacher {
+  id: number;
+  adi_soyadi: string;
+  email: string;
+  brans: string;
+  aktif: boolean;
+}
+
 @Component({
   selector: 'app-ogrenci-kayit-sayfasi',
   standalone: false,
@@ -21,7 +29,8 @@ export class OgrenciKayitSayfasiComponent implements OnInit {
   submitted: boolean = false;
   isSubmitting: boolean = false;
   avatarError: string = '';
-  teachers: any[] = [];
+  teachers: Teacher[] = [];
+  isLoadingTeachers: boolean = false;
 
   showToast: boolean = false;
   toastTitle: string = '';
