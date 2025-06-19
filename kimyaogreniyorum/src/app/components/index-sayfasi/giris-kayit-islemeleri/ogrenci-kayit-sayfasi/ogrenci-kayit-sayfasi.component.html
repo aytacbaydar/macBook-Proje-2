@@ -93,7 +93,7 @@
                         formControlName="ogretmeni"
                         >
                         <option value="">Öğretmen seçiniz...</option>
-                        <option *ngFor="let teacher of teachers" [value]="teacher.adi_soyadi">
+                        <option *ngFor="let teacher of teachers" [value]="teacher.adi_soyadi" style="color: blue;">
                             {{ teacher.adi_soyadi }}
                         </option>
                     </select>
