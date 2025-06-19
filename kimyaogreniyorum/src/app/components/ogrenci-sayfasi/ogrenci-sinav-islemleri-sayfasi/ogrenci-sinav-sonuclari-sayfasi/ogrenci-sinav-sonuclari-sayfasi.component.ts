@@ -44,9 +44,9 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       const sinavId = params['sinavId'] ? parseInt(params['sinavId']) : undefined;
       const ogrenciId = params['ogrenciId'] ? parseInt(params['ogrenciId']) : undefined;
-      
+
       console.log('Query params:', { sinavId, ogrenciId });
-      
+
       this.loadAllSinavSonuclari(sinavId);
     });
   }
@@ -60,25 +60,26 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
     const ogrenciId = userData.id;
 
     if (!ogrenciId) {
-      this.error = 'Öğrenci bilgisi bulunamadı';
       this.loading = false;
+      this.error = 'Öğrenci bilgisi bulunamadı';
       return;
     }
 
-    this.http.get<any>(`./server/api/ogrenci_tum_sinav_sonuclari.php?ogrenci_id=${ogrenciId}`)
-      .subscribe({
+    console.log('Sınav sonuçları yükleniyor:', { ogrenciId, selectedSinavId });
+
+    this.http.get<any>(`./server/api/ogrenci_tum_sinav_sonuclari.php?ogrenci_id=${ogrenciId}`).subscribe({
         next: (response) => {
           this.loading = false;
           if (response.success && response.data) {
             // Sınav sonuçları listesini al
             this.sinavSonuclari = response.data.sinav_sonuclari || [];
-            
+
             console.log('Tüm sınav sonuçları yüklendi:', this.sinavSonuclari);
 
             // Eğer belirli bir sınav ID'si varsa, onu seç
             if (selectedSinavId) {
               this.selectedSinav = this.sinavSonuclari.find(s => s.sinav_id == selectedSinavId) || null;
-              
+
               // Eğer seçilen sınav bulunamadıysa, ilk sınavı seç
               if (!this.selectedSinav && this.sinavSonuclari.length > 0) {
                 this.selectedSinav = this.sinavSonuclari[0];
