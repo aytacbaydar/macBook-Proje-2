@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Chart } from 'chart.js/auto';
 
 interface SinavSonucu {
   id: number;
@@ -195,10 +196,10 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
       this.chart.destroy();
     }
 
-    const total = this.selectedSinavDetails.toplam_soru;
     const dogru = this.selectedSinavDetails.dogru_sayisi;
     const yanlis = this.selectedSinavDetails.yanlis_sayisi;
     const bos = this.selectedSinavDetails.bos_sayisi;
+    const total = dogru + yanlis + bos;
 
     this.chart = new Chart(ctx, {
       type: 'bar',
