@@ -252,10 +252,10 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
   }
 
   goBackToExams() {
-    this.router.navigate(['/ogrenci-sayfasi/sinav-islemleri']);
+    this.router.navigate(['/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi']);
   }
 
   goToExams() {
-    this.router.navigate(['/ogrenci-sayfasi/sinav-islemleri']);
+    this.router.navigate(['/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi']);
   }
 }
