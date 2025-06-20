@@ -349,16 +349,57 @@
     padding: 20px;
   }
 }
-.question-details {
-  margin-top: 30px;
+// Modal stilleri
+.modal {
+  z-index: 1050;
+}
 
-  h3 {
-    color: #2c3e50;
-    margin-bottom: 25px;
-    font-size: 1.5rem;
-    display: flex;
-    align-items: center;
+.modal-dialog {
+  max-width: 800px;
+  margin: 1.75rem auto;
+}
+
+.modal-content {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  border-bottom: 1px solid #e9ecef;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 15px 15px 0 0;
+
+  .modal-title {
     font-weight: 600;
+    font-size: 1.2rem;
+  }
+
+  .btn-close {
+    filter: brightness(0) invert(1);
+  }
+}
+
+.modal-body {
+  padding: 2rem;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.modal-footer {
+  border-top: 1px solid #e9ecef;
+  padding: 1rem 2rem;
+}
+
+// Soru detayları
+.question-details {
+  margin-top: 20px;
+
+  h5 {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 1rem;
 
     i {
       color: #3498db;
@@ -369,42 +410,50 @@
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    
+
     .table {
       margin-bottom: 0;
-      
+
       thead th {
-        border-bottom: none;
+        border-bottom: 2px solid #dee2e6;
         font-weight: 600;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-        font-size: 0.85rem;
+        font-size: 0.9rem;
+        text-align: center;
+        background-color: #f8f9fa;
       }
-      
+
       tbody tr {
         transition: all 0.2s ease;
-        
+
         &:hover {
-          transform: translateY(-1px);
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+          background-color: rgba(0, 123, 255, 0.05);
         }
-        
+
         td {
           vertical-align: middle;
-          padding: 15px 12px;
+          padding: 12px;
+          text-align: center;
           border-top: 1px solid #e9ecef;
-          
+
           .badge {
             font-weight: 600;
-            border-radius: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            border-radius: 6px;
+
+            &.fs-6 {
+              font-size: 0.9rem !important;
+            }
           }
         }
       }
-      
+
       &.table-striped tbody tr:nth-of-type(odd) {
-        background-color: rgba(0, 0, 0, 0.02);
+        background-color: rgba(0, 0, 0, 0.025);
+      }
+
+      &.table-hover tbody tr:hover {
+        background-color: rgba(0, 123, 255, 0.05);
       }
     }
   }
