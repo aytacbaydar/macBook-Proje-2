@@ -151,63 +151,15 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit, AfterViewI
     });
   }
 
-  selectSinav(sinav: SinavSonucu) {
-    this.loadingDetails = true;
+  selectSinav(sinav: any) {
     this.selectedSinav = sinav;
+    this.selectedSinavDetails = null;
+    this.loadingDetails = true;
 
-    // localStorage veya sessionStorage'dan öğrenci ID'sini al
-    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    // Body scroll'unu engelle
+    document.body.style.overflow = 'hidden';
 
-    if (!userStr) {
-      this.loadingDetails = false;
-      console.error('Kullanıcı oturum bilgisi bulunamadı');
-      return;
-    }
-
-    let userData;
-    try {
-      userData = JSON.parse(userStr);
-    } catch (error) {
-      this.loadingDetails = false;
-      console.error('Kullanıcı bilgileri ayrıştırılamadı:', error);
-      return;
-    }
-
-    const ogrenciId = userData.id;
-
-    // Sınav detaylarını yükle (öğrenci cevapları + doğru cevaplar)
-    this.http.get<any>(`./server/api/sinav_detay_sonuc.php?sinav_id=${sinav.sinav_id}&ogrenci_id=${ogrenciId}`).subscribe({
-      next: (response) => {
-        this.loadingDetails = false;
-        if (response.success && response.data) {
-          this.selectedSinavDetails = response.data;
-
-          // Başarı yüzdesini hesapla
-          if (this.selectedSinavDetails) {
-            const total = this.selectedSinavDetails.dogru_sayisi + this.selectedSinavDetails.yanlis_sayisi + this.selectedSinavDetails.bos_sayisi;
-            this.selectedSinavDetails.basari_yuzdesi = total > 0 ? Math.round((this.selectedSinavDetails.dogru_sayisi / total) * 100) : 0;
-
-            // Sorulara is_correct property'sini ekle
-            if (this.selectedSinavDetails.sorular) {
-              this.selectedSinavDetails.sorular.forEach(soru => {
-                soru.is_correct = soru.ogrenci_cevabi === soru.dogru_cevap;
-              });
-            }
-          }
-
-          console.log('Sınav detayları yüklendi:', this.selectedSinavDetails);
-
-          // Grafik güncelleme
-          setTimeout(() => this.createChart(), 100);
-        } else {
-          console.error('Sınav detayları yüklenemedi:', response.message);
-        }
-      },
-      error: (error) => {
-        this.loadingDetails = false;
-        console.error('Sınav detayları yükleme hatası:', error);
-      }
-    });
+    this.loadSinavDetails(sinav);
   }
 
   getSinavTuruColor(sinavTuru: string): string {
@@ -548,5 +500,13 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit, AfterViewI
           console.error('Detaylı sonuçlar yüklenirken hata:', error);
         }
       });
+  }
+
+    // Other methods remain unchanged
+
+  closeModal() {
+    // Body scroll'unu geri aç
+      document.body.style.overflow = 'auto';
+      this.selectedSinav = null;
   }
 }

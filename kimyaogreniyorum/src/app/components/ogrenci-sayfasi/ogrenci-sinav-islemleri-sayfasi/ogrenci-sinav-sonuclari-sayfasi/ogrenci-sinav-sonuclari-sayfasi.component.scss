@@ -682,22 +682,40 @@
 }
 
 .modal-body {
-  padding: 30px;
-  overflow-y: auto;
-  flex: 1;
-  max-height: calc(90vh - 180px);
-  min-height: 0;
-}
+    padding: 30px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex: 1;
+    min-height: 0; /* Flexbox scroll için gerekli */
+
+    /* Webkit scroll bar özelleştirmesi */
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 4px;
+
+      &:hover {
+        background: #a8a8a8;
+      }
+    }
+  }
 
 .modal-footer {
-  padding: 20px 30px;
-  background: #f8f9fa;
-  border-radius: 0 0 20px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-top: 1px solid #e9ecef;
-  flex-shrink: 0;
+    padding: 20px 30px;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #e9ecef;
+    flex-shrink: 0;
 
   .btn {
     padding: 12px 25px;
