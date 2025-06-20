@@ -1,10 +1,10 @@
+
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Chart } from 'chart.js/auto';
 
 interface SinavSonucu {
-  id: number;
   sinav_id: number;
   sinav_adi: string;
   sinav_turu: string;
@@ -12,15 +12,25 @@ interface SinavSonucu {
   dogru_sayisi: number;
   yanlis_sayisi: number;
   bos_sayisi: number;
-  soru_sayisi?: number;
+  soru_sayisi: number;
 }
 
-interface DetaySinavSonucu extends SinavSonucu {
+interface DetaySinavSonucu {
+  sinav_id: number;
+  sinav_adi: string;
+  sinav_turu: string;
+  sinav_tarihi: string;
+  dogru_sayisi: number;
+  yanlis_sayisi: number;
+  bos_sayisi: number;
+  basari_yuzdesi: number;
   sorular: {
     soru_no: number;
     ogrenci_cevabi: string;
     dogru_cevap: string;
     konu_id?: number;
+    is_correct: boolean;
+    video_url?: string;
   }[];
 }
 
@@ -151,6 +161,20 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
         this.loadingDetails = false;
         if (response.success && response.data) {
           this.selectedSinavDetails = response.data;
+          
+          // Başarı yüzdesini hesapla
+          if (this.selectedSinavDetails) {
+            const total = this.selectedSinavDetails.dogru_sayisi + this.selectedSinavDetails.yanlis_sayisi + this.selectedSinavDetails.bos_sayisi;
+            this.selectedSinavDetails.basari_yuzdesi = total > 0 ? Math.round((this.selectedSinavDetails.dogru_sayisi / total) * 100) : 0;
+            
+            // Sorulara is_correct property'sini ekle
+            if (this.selectedSinavDetails.sorular) {
+              this.selectedSinavDetails.sorular.forEach(soru => {
+                soru.is_correct = soru.ogrenci_cevabi === soru.dogru_cevap;
+              });
+            }
+          }
+          
           console.log('Sınav detayları yüklendi:', this.selectedSinavDetails);
 
           // Grafik güncelleme
@@ -188,7 +212,7 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
   createChart() {
     if (!this.selectedSinavDetails) return;
 
-    const ctx = document.getElementById('performanceChart') as HTMLCanvasElement;
+    const ctx = document.getElementById('resultChart') as HTMLCanvasElement;
     if (!ctx) return;
 
     // Destroy existing chart if it exists
@@ -231,6 +255,65 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
         }
       }
     });
+  }
+
+  retakeExam(sinav: SinavSonucu | null) {
+    if (!sinav) return;
+
+    // Öğrenci daha önce bu sınavı çözmüş mü kontrol et
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (!userStr) {
+      alert('Kullanıcı oturum bilgisi bulunamadı');
+      return;
+    }
+
+    let userData;
+    try {
+      userData = JSON.parse(userStr);
+    } catch (error) {
+      alert('Kullanıcı bilgileri ayrıştırılamadı');
+      return;
+    }
+
+    const ogrenciId = userData.id;
+
+    // Daha önce çözülmüş sınav kontrolü
+    this.http.get<any>(`./server/api/sinav_sonucu_getir.php?sinav_id=${sinav.sinav_id}&ogrenci_id=${ogrenciId}`).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          // Daha önce çözülmüş
+          alert('Bu sınavı daha önce çözmüşsünüz. Tekrar çözemezsiniz.');
+        } else {
+          // Sınava git
+          this.router.navigate(['/ogrenci-sayfasi/optik'], {
+            queryParams: {
+              sinavId: sinav.sinav_id,
+              sinavAdi: sinav.sinav_adi,
+              sinavTuru: sinav.sinav_turu,
+              soruSayisi: sinav.soru_sayisi || sinav.dogru_sayisi + sinav.yanlis_sayisi + sinav.bos_sayisi
+            }
+          });
+        }
+      },
+      error: (error) => {
+        console.error('Sınav kontrolü hatası:', error);
+        // Hata durumunda da sınava gitmeye izin ver
+        this.router.navigate(['/ogrenci-sayfasi/optik'], {
+          queryParams: {
+            sinavId: sinav.sinav_id,
+            sinavAdi: sinav.sinav_adi,
+            sinavTuru: sinav.sinav_turu,
+            soruSayisi: sinav.soru_sayisi || sinav.dogru_sayisi + sinav.yanlis_sayisi + sinav.bos_sayisi
+          }
+        });
+      }
+    });
+  }
+
+  openVideo(videoUrl: string) {
+    if (videoUrl) {
+      window.open(videoUrl, '_blank');
+    }
   }
 
   watchVideo(konuId: number | undefined, soruNo: number) {
