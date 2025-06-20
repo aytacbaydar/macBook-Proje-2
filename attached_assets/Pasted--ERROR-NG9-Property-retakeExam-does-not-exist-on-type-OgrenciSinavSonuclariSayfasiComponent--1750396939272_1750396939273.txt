@@ -1,0 +1,158 @@
+
+✘ [ERROR] NG9: Property 'retakeExam' does not exist on type 'OgrenciSinavSonuclariSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.html:70:66:
+      70 │ ...-outline-primary" (click)="retakeExam(sinav); $event.stopPropag...
+         ╵                               ~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogrenci-sinav-sonuclari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'basari_yuzdesi' does not exist on type 'DetaySinavSonucu'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.html:127:64:
+      127 │ ...at-number">{{ selectedSinavDetails?.basari_yuzdesi || 0 }}%</div>
+          ╵                                        ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogrenci-sinav-sonuclari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG1: Object is possibly 'null'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.html:152:80:
+      152 │ ..."question-item" *ngFor="let soru of selectedSinavDetails.sorular"
+          ╵                                                             ~~~~~~~
+
+  Error occurs in the template of component OgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogrenci-sinav-sonuclari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'is_correct' does not exist on type '{ soru_no: number; ogrenci_cevabi: string; dogru_cevap: string; konu_id?: number | undefined; }'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.html:153:39:
+      153 │                  [class.correct]="soru.is_correct"
+          ╵                                        ~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogrenci-sinav-sonuclari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'is_correct' does not exist on type '{ soru_no: number; ogrenci_cevabi: string; dogru_cevap: string; konu_id?: number | undefined; }'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.html:154:38:
+      154 │ ...          [class.wrong]="!soru.is_correct && soru.ogrenci_cevabi"
+          ╵                                   ~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogrenci-sinav-sonuclari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'is_correct' does not exist on type '{ soru_no: number; ogrenci_cevabi: string; dogru_cevap: string; konu_id?: number | undefined; }'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.html:160:56:
+      160 │                      [class.bi-check-circle-fill]="soru.is_correct"
+          ╵                                                         ~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogrenci-sinav-sonuclari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'is_correct' does not exist on type '{ soru_no: number; ogrenci_cevabi: string; dogru_cevap: string; konu_id?: number | undefined; }'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.html:161:53:
+      161 │ ...class.bi-x-circle-fill]="!soru.is_correct && soru.ogrenci_cevabi"
+          ╵                                   ~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogrenci-sinav-sonuclari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'video_url' does not exist on type '{ soru_no: number; ogrenci_cevabi: string; dogru_cevap: string; konu_id?: number | undefined; }'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.html:174:36:
+      174 │ ...       <button *ngIf="soru.video_url" class="video-btn" (click...
+          ╵                               ~~~~~~~~~
+
+  Error occurs in the template of component OgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogrenci-sinav-sonuclari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'openVideo' does not exist on type 'OgrenciSinavSonuclariSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.html:174:74:
+      174 │ ...video_url" class="video-btn" (click)="openVideo(soru.video_url)">
+          ╵                                          ~~~~~~~~~
+
+  Error occurs in the template of component OgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogrenci-sinav-sonuclari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'video_url' does not exist on type '{ soru_no: number; ogrenci_cevabi: string; dogru_cevap: string; konu_id?: number | undefined; }'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.html:174:89:
+      174 │ ...video_url" class="video-btn" (click)="openVideo(soru.video_url)">
+          ╵                                                         ~~~~~~~~~
+
+  Error occurs in the template of component OgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogrenci-sinav-sonuclari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'retakeExam' does not exist on type 'OgrenciSinavSonuclariSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.html:271:49:
+      271 │ ...tton class="btn btn-primary" (click)="retakeExam(selectedSinav)">
+          ╵                                          ~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:30:15:
+      30 │   templateUrl: './ogrenci-sinav-sonuclari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] Could not resolve "chart.js/auto"
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:4:22:
+      4 │ import { Chart } from 'chart.js/auto';
+        ╵                       ~~~~~~~~~~~~~~~
+
+  You can mark the path "chart.js/auto" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+
+✘ [ERROR] TS2307: Cannot find module 'chart.js/auto' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:4:22:
+      4 │ import { Chart } from 'chart.js/auto';
+        ╵                       ~~~~~~~~~~~~~~~
