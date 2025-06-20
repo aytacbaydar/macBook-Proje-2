@@ -158,6 +158,8 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit, AfterViewI
 
     // Body scroll'unu engelle
     document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
 
     this.loadSinavDetails(sinav);
   }
@@ -506,7 +508,9 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit, AfterViewI
 
   closeModal() {
     // Body scroll'unu geri aç
-    document.body.style.overflow = 'auto';
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.width = '';
     this.selectedSinav = null;
     this.selectedSinavDetails = null;
     this.loadingDetails = false;
