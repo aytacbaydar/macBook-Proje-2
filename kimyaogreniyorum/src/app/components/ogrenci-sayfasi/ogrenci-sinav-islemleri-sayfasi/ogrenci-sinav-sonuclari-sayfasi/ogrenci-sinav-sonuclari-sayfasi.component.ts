@@ -23,15 +23,20 @@ interface DetaySinavSonucu {
   dogru_sayisi: number;
   yanlis_sayisi: number;
   bos_sayisi: number;
+  toplam_soru: number;
   basari_yuzdesi: number;
+  cevap_anahtari?: any;
+  ogrenci_cevaplari?: any;
   sorular: {
-    soru_no: number;
+    soru_no?: number;
+    soru_numarasi?: number;
     ogrenci_cevabi: string;
     dogru_cevap: string;
     konu_id?: number;
     is_correct: boolean;
     video_url?: string;
   }[];
+  [key: string]: any; // Dynamic property'ler için
 }
 
 @Component({
@@ -498,34 +503,41 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit, AfterViewI
       .subscribe({
         next: (response) => {
           this.loadingDetails = false;
-          if (response.success) {
+          if (response.success && response.data) {
             this.selectedSinavDetails = response.data;
 
             // Eğer sorular array değilse, soru sayısına göre oluştur
-            if (!this.selectedSinavDetails.sorular || !Array.isArray(this.selectedSinavDetails.sorular)) {
-              this.selectedSinavDetails.sorular = [];
-              const soruSayisi = this.selectedSinavDetails.soru_sayisi || sinav.soru_sayisi || 40;
+            if (!this.selectedSinavDetails!.sorular || !Array.isArray(this.selectedSinavDetails!.sorular)) {
+              this.selectedSinavDetails!.sorular = [];
+              const soruSayisi = this.selectedSinavDetails!.toplam_soru || sinav.toplam_soru || 40;
 
               for (let i = 1; i <= soruSayisi; i++) {
                 const soruNumKey = `soru_${i}`;
                 const dogruCevapKey = `dogru_cevap_${i}`;
                 const ogrenciCevabiKey = `ogrenci_cevabi_${i}`;
 
-                this.selectedSinavDetails.sorular.push({
+                this.selectedSinavDetails!.sorular.push({
                   soru_numarasi: i,
-                  dogru_cevap: this.selectedSinavDetails[dogruCevapKey] || 
-                              this.selectedSinavDetails.cevap_anahtari?.[`ca${i}`] || 'A',
-                  ogrenci_cevabi: this.selectedSinavDetails[ogrenciCevabiKey] || 
-                                 this.selectedSinavDetails.ogrenci_cevaplari?.[`ca${i}`] || null
+                  soru_no: i,
+                  dogru_cevap: (this.selectedSinavDetails as any)[dogruCevapKey] || 
+                              this.selectedSinavDetails!.cevap_anahtari?.[`ca${i}`] || 'A',
+                  ogrenci_cevabi: (this.selectedSinavDetails as any)[ogrenciCevabiKey] || 
+                                 this.selectedSinavDetails!.ogrenci_cevaplari?.[`ca${i}`] || null,
+                  is_correct: false
                 });
               }
+
+              // is_correct property'sini ayarla
+              this.selectedSinavDetails!.sorular.forEach(soru => {
+                soru.is_correct = soru.ogrenci_cevabi === soru.dogru_cevap;
+              });
             }
 
             console.log('Detaylı sonuçlar:', this.selectedSinavDetails);
 
             // Chart'ı çiz
             setTimeout(() => {
-              this.createDetailChart();
+              this.createChart();
             }, 100);
           } else {
             console.error('Detaylı sonuçlar yüklenemedi:', response.message);

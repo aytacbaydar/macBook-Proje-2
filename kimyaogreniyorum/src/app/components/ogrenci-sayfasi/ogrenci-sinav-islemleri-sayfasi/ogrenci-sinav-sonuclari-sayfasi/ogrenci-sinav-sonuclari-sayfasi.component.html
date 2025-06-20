@@ -167,7 +167,7 @@
                  [class.wrong]="question.ogrenci_cevabi !== question.dogru_cevap && question.ogrenci_cevabi"
                  [class.empty]="!question.ogrenci_cevabi">
               <div class="question-header">
-                <div class="question-number">Soru {{ question.soru_numarasi }}</div>
+                <div class="question-number">Soru {{ question.soru_numarasi || question.soru_no }}</div>
                 <div class="question-status">
                   <i *ngIf="question.ogrenci_cevabi === question.dogru_cevap" class="bi bi-check-circle-fill text-success"></i>
                   <i *ngIf="question.ogrenci_cevabi !== question.dogru_cevap && question.ogrenci_cevabi" class="bi bi-x-circle-fill text-danger"></i>
