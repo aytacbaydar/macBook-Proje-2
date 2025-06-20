@@ -1,0 +1,131 @@
+✘ [ERROR] NG9: Property 'soru_numarasi' does not exist on type '{ soru_no: number; ogrenci_cevabi: string; dogru_cevap: string; konu_id?: number | undefined; is_correct: boolean; video_url?: string | undefined; }'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.html:170:62:
+      170 │ ...v class="question-number">Soru {{ question.soru_numarasi }}</div>
+          ╵                                               ~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:40:15:
+      40 │   templateUrl: './ogrenci-sinav-sonuclari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2531: Object is possibly 'null'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:505:17:
+      505 │             if (!this.selectedSinavDetails.sorular || !Array.isAr...
+          ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2531: Object is possibly 'null'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:505:69:
+      505 │ ...s.sorular || !Array.isArray(this.selectedSinavDetails.sorular)) {
+          ╵                                ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2531: Object is possibly 'null'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:506:14:
+      506 │               this.selectedSinavDetails.sorular = [];
+          ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2531: Object is possibly 'null'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:507:33:
+      507 │ ...const soruSayisi = this.selectedSinavDetails.soru_sayisi || si...
+          ╵                       ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2551: Property 'soru_sayisi' does not exist on type 'DetaySinavSonucu'. Did you mean 'dogru_sayisi'? [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:507:59:
+      507 │ ...this.selectedSinavDetails.soru_sayisi || sinav.soru_sayisi || 40;
+          ╵                              ~~~~~~~~~~~
+
+  'dogru_sayisi' is declared here.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:23:2:
+      23 │   dogru_sayisi: number;
+         ╵   ~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2531: Object is possibly 'null'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:514:16:
+      514 │                 this.selectedSinavDetails.sorular.push({
+          ╵                 ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2353: Object literal may only specify known properties, and 'soru_numarasi' does not exist in type '{ soru_no: number; ogrenci_cevabi: string; dogru_cevap: string; konu_id?: number | undefined; is_correct: boolean; video_url?: string | undefined; }'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:515:18:
+      515 │                   soru_numarasi: i,
+          ╵                   ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2531: Object is possibly 'null'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:516:31:
+      516 │ ...         dogru_cevap: this.selectedSinavDetails[dogruCevapKey] ||
+          ╵                          ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'DetaySinavSonucu'.
+  No index signature with a parameter of type 'string' was found on type 'DetaySinavSonucu'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:516:31:
+      516 │ ...         dogru_cevap: this.selectedSinavDetails[dogruCevapKey] ||
+          ╵                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2531: Object is possibly 'null'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:517:30:
+      517 │ ...                   this.selectedSinavDetails.cevap_anahtari?.[...
+          ╵                       ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'cevap_anahtari' does not exist on type 'DetaySinavSonucu'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:517:56:
+      517 │ ...     this.selectedSinavDetails.cevap_anahtari?.[`ca${i}`] || 'A',
+          ╵                                   ~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2531: Object is possibly 'null'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:518:34:
+      518 │ ...   ogrenci_cevabi: this.selectedSinavDetails[ogrenciCevabiKey] ||
+          ╵                       ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'DetaySinavSonucu'.
+  No index signature with a parameter of type 'string' was found on type 'DetaySinavSonucu'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:518:34:
+      518 │ ...   ogrenci_cevabi: this.selectedSinavDetails[ogrenciCevabiKey] ||
+          ╵                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2531: Object is possibly 'null'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:519:33:
+      519 │ ...                   this.selectedSinavDetails.ogrenci_cevaplari...
+          ╵                       ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'ogrenci_cevaplari' does not exist on type 'DetaySinavSonucu'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:519:59:
+      519 │ ...  this.selectedSinavDetails.ogrenci_cevaplari?.[`ca${i}`] || null
+          ╵                                ~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'createDetailChart' does not exist on type 'OgrenciSinavSonuclariSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:528:19:
+      528 │               this.createDetailChart();
+          ╵                    ~~~~~~~~~~~~~~~~~
