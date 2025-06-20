@@ -183,53 +183,7 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit, AfterViewI
     return date.toLocaleDateString('tr-TR');
   }
 
-  createChart() {
-    if (!this.selectedSinavDetails) return;
-
-    const ctx = document.getElementById('resultChart') as HTMLCanvasElement;
-    if (!ctx) return;
-
-    // Destroy existing chart if it exists
-    if (this.chart) {
-      this.chart.destroy();
-    }
-
-    const dogru = this.selectedSinavDetails.dogru_sayisi;
-    const yanlis = this.selectedSinavDetails.yanlis_sayisi;
-    const bos = this.selectedSinavDetails.bos_sayisi;
-    const total = dogru + yanlis + bos;
-
-    this.chart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['Doğru', 'Yanlış', 'Boş'],
-        datasets: [{
-          label: 'Soru Sayısı',
-          data: [dogru, yanlis, bos],
-          backgroundColor: ['#28a745', '#dc3545', '#ffc107'],
-          borderColor: ['#28a745', '#dc3545', '#ffc107'],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            display: false
-          }
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            max: total,
-            ticks: {
-              stepSize: 1
-            }
-          }
-        }
-      }
-    });
-  }
+  
 
   createMiniCharts() {
     this.sinavSonuclari.forEach((sinav, index) => {
@@ -488,11 +442,6 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit, AfterViewI
             }
 
             console.log('Detaylı sonuçlar:', this.selectedSinavDetails);
-
-            // Chart'ı çiz
-            setTimeout(() => {
-              this.createChart();
-            }, 100);
           } else {
             console.error('Detaylı sonuçlar yüklenemedi:', response.message);
           }
