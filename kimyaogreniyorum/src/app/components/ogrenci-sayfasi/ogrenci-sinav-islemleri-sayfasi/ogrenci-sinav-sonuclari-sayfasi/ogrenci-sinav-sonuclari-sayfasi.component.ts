@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Chart } from 'chart.js/auto';
@@ -40,7 +40,7 @@ interface DetaySinavSonucu {
   templateUrl: './ogrenci-sinav-sonuclari-sayfasi.component.html',
   styleUrl: './ogrenci-sinav-sonuclari-sayfasi.component.scss'
 })
-export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
+export class OgrenciSinavSonuclariSayfasiComponent implements OnInit, AfterViewInit {
   sinavSonuclari: SinavSonucu[] = [];
   selectedSinav: SinavSonucu | null = null;
   selectedSinavDetails: DetaySinavSonucu | null = null;
@@ -68,6 +68,13 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
       const sinavId = params['sinavId'] ? parseInt(params['sinavId']) : undefined;
       this.loadAllSinavSonuclari(sinavId);
     });
+  }
+
+  ngAfterViewInit() {
+    // Mini grafikler için timeout ekle
+    setTimeout(() => {
+      this.createMiniCharts();
+    }, 500);
   }
 
   loadAllSinavSonuclari(selectedSinavId?: number) {
@@ -119,6 +126,11 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
               this.selectSinav(targetSinav);
             }
           }
+
+          // Mini grafikler için timeout ekle
+          setTimeout(() => {
+            this.createMiniCharts();
+          }, 100);
         } else {
           this.error = response.message || 'Henüz sınav sonucunuz bulunmuyor';
         }
@@ -254,6 +266,48 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit {
           }
         }
       }
+    });
+  }
+
+  createMiniCharts() {
+    this.sinavSonuclari.forEach((sinav, index) => {
+      const canvasId = `miniChart-${index}`;
+      const ctx = document.getElementById(canvasId) as HTMLCanvasElement;
+      
+      if (!ctx) return;
+
+      const dogru = sinav.dogru_sayisi;
+      const yanlis = sinav.yanlis_sayisi;
+      const bos = sinav.bos_sayisi;
+
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Doğru', 'Yanlış', 'Boş'],
+          datasets: [{
+            data: [dogru, yanlis, bos],
+            backgroundColor: ['#28a745', '#dc3545', '#ffc107'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              enabled: false
+            }
+          },
+          elements: {
+            arc: {
+              borderWidth: 0
+            }
+          }
+        }
+      });
     });
   }
 

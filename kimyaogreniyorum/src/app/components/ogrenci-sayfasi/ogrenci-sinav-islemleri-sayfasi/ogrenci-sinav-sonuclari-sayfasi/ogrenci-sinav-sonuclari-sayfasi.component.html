@@ -37,39 +37,38 @@
 
   <!-- Exam Results Cards -->
   <div *ngIf="!loading && !error && sinavSonuclari.length > 0" class="exam-results-grid">
-    <div class="exam-card" *ngFor="let sinav of sinavSonuclari" (click)="selectSinav(sinav)">
+    <div class="exam-card" *ngFor="let sinav of sinavSonuclari; let i = index" (click)="selectSinav(sinav)">
       <div class="exam-card-header" [style.background]="getSinavTuruColor(sinav.sinav_turu)">
         <div class="exam-type-badge">{{ getSinavTuruLabel(sinav.sinav_turu) }}</div>
-        <div class="exam-score">{{ getSuccessPercentage(sinav) }}%</div>
+        <div class="exam-date">{{ formatDate(sinav.cozum_tarihi) }}</div>
       </div>
 
-      <div class="exam-card-content">
+      <div class="exam-card-body">
         <h3 class="exam-title">{{ sinav.sinav_adi }}</h3>
-        <div class="exam-date">
-          <i class="bi bi-calendar3"></i>
-          {{ formatDate(sinav.sinav_tarihi) }}
-        </div>
 
         <div class="exam-stats">
-          <div class="stat-item correct">
-            <i class="bi bi-check-circle-fill"></i>
-            <span>{{ sinav.dogru_sayisi }} Doğru</span>
+          <div class="stat-item success">
+            <span class="stat-number">{{ sinav.dogru_sayisi }}</span>
+            <span class="stat-label">Doğru</span>
           </div>
-          <div class="stat-item wrong">
-            <i class="bi bi-x-circle-fill"></i>
-            <span>{{ sinav.yanlis_sayisi }} Yanlış</span>
+          <div class="stat-item error">
+            <span class="stat-number">{{ sinav.yanlis_sayisi }}</span>
+            <span class="stat-label">Yanlış</span>
           </div>
           <div class="stat-item empty">
-            <i class="bi bi-circle"></i>
-            <span>{{ sinav.bos_sayisi }} Boş</span>
+            <span class="stat-number">{{ sinav.bos_sayisi }}</span>
+            <span class="stat-label">Boş</span>
           </div>
         </div>
 
-        <div class="exam-actions">
-          <button class="btn btn-sm btn-outline-primary" (click)="retakeExam(sinav); $event.stopPropagation()">
-            <i class="bi bi-arrow-clockwise me-1"></i>
-            Tekrar Çöz
-          </button>
+        <!-- Mini Chart -->
+        <div class="mini-chart-container">
+          <canvas [id]="'miniChart-' + i" width="200" height="100"></canvas>
+        </div>
+
+        <div class="exam-success-rate">
+          <div class="success-percentage">{{ getSuccessPercentage(sinav) }}%</div>
+          <div class="success-label">Başarı Oranı</div>
         </div>
       </div>
     </div>
@@ -289,3 +288,4 @@
       </button>
     </div>
   </div>
+</div
