@@ -35,6 +35,20 @@
     </div>
   </div>
 
+  <!-- Comparison Chart Section -->
+  <div *ngIf="!loading && !error && sinavSonuclari.length > 0" class="comparison-chart-section">
+    <div class="chart-header">
+      <h2>
+        <i class="bi bi-bar-chart-fill me-2"></i>
+        Sınav Karşılaştırması
+      </h2>
+      <p class="chart-description">Tüm sınavlarınızın başarı oranlarını karşılaştırın</p>
+    </div>
+    <div class="comparison-chart-container">
+      <canvas id="comparisonChart" width="800" height="400"></canvas>
+    </div>
+  </div>
+
   <!-- Exam Results Cards -->
   <div *ngIf="!loading && !error && sinavSonuclari.length > 0" class="exam-results-grid">
     <div class="exam-card" *ngFor="let sinav of sinavSonuclari; let i = index" (click)="selectSinav(sinav)">

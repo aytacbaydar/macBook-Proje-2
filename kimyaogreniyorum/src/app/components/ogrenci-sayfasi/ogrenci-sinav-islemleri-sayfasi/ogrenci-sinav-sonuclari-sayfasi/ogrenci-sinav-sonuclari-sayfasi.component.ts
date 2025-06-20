@@ -48,6 +48,7 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit, AfterViewI
   loadingDetails = false;
   error: string | null = null;
   chart: any;
+  comparisonChart: any;
 
   sinavTurleri: any = {
     'TYT': { color: '#667eea', label: 'TYT Deneme' },
@@ -71,9 +72,10 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit, AfterViewI
   }
 
   ngAfterViewInit() {
-    // Mini grafikler için timeout ekle
+    // Mini grafikler ve karşılaştırma grafiği için timeout ekle
     setTimeout(() => {
       this.createMiniCharts();
+      this.createComparisonChart();
     }, 500);
   }
 
@@ -127,9 +129,10 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit, AfterViewI
             }
           }
 
-          // Mini grafikler için timeout ekle
+          // Mini grafikler ve karşılaştırma grafiği için timeout ekle
           setTimeout(() => {
             this.createMiniCharts();
+            this.createComparisonChart();
           }, 100);
         } else {
           this.error = response.message || 'Henüz sınav sonucunuz bulunmuyor';
@@ -382,6 +385,106 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit, AfterViewI
 
   goBackToExams() {
     this.router.navigate(['/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi']);
+  }
+
+  createComparisonChart() {
+    const ctx = document.getElementById('comparisonChart') as HTMLCanvasElement;
+    if (!ctx || this.sinavSonuclari.length === 0) return;
+
+    // Destroy existing chart if it exists
+    if (this.comparisonChart) {
+      this.comparisonChart.destroy();
+    }
+
+    // Sınav adları ve başarı oranları
+    const sinavAdlari = this.sinavSonuclari.map(sinav => {
+      // Sınav adını kısalt (çok uzunsa)
+      const ad = sinav.sinav_adi;
+      return ad.length > 20 ? ad.substring(0, 17) + '...' : ad;
+    });
+    
+    const basariOranlari = this.sinavSonuclari.map(sinav => this.getSuccessPercentage(sinav));
+    
+    // Sınav türlerine göre renkler
+    const renkler = this.sinavSonuclari.map(sinav => this.getSinavTuruColor(sinav.sinav_turu));
+
+    this.comparisonChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: sinavAdlari,
+        datasets: [{
+          label: 'Başarı Oranı (%)',
+          data: basariOranlari,
+          backgroundColor: renkler.map(color => color + '80'), // %50 şeffaflık
+          borderColor: renkler,
+          borderWidth: 2,
+          borderRadius: 8,
+          borderSkipped: false,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            callbacks: {
+              title: (context) => {
+                // Tam sınav adını tooltip'te göster
+                const index = context[0].dataIndex;
+                return this.sinavSonuclari[index].sinav_adi;
+              },
+              label: (context) => {
+                const index = context.dataIndex;
+                const sinav = this.sinavSonuclari[index];
+                return [
+                  `Başarı Oranı: ${context.parsed.y}%`,
+                  `Doğru: ${sinav.dogru_sayisi}`,
+                  `Yanlış: ${sinav.yanlis_sayisi}`,
+                  `Boş: ${sinav.bos_sayisi}`,
+                  `Tarih: ${this.formatDate(sinav.cozum_tarihi)}`
+                ];
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            ticks: {
+              callback: function(value) {
+                return value + '%';
+              }
+            },
+            title: {
+              display: true,
+              text: 'Başarı Oranı (%)'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Sınavlar'
+            },
+            ticks: {
+              maxRotation: 45,
+              minRotation: 0
+            }
+          }
+        },
+        interaction: {
+          intersect: false,
+          mode: 'index'
+        },
+        animation: {
+          duration: 1000,
+          easing: 'easeInOutQuart'
+        }
+      }
+    });
   }
 
   goToExams() {
