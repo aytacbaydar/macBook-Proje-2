@@ -54,7 +54,7 @@
     <div class="exam-card" *ngFor="let sinav of sinavSonuclari; let i = index" (click)="selectSinav(sinav)">
       <div class="exam-card-header" [style.background]="getSinavTuruColor(sinav.sinav_turu)">
         <div class="exam-type-badge">{{ getSinavTuruLabel(sinav.sinav_turu) }}</div>
-        <div class="exam-date">{{ formatDate(sinav.cozum_tarihi) }}</div>
+        <!--<div class="exam-date">{{ formatDate(sinav.cozum_tarihi) }}</div>-->
       </div>
 
       <div class="exam-card-body">
@@ -285,8 +285,8 @@
           Sınavı Tekrar Çöz
         </button>
       </div>
-    </div>
   </div>
+ 
 
   <!-- Empty State -->
   <div *ngIf="!loading && !error && sinavSonuclari.length === 0" class="empty-state">
@@ -302,4 +302,4 @@
       </button>
     </div>
   </div>
-</div
+</div>

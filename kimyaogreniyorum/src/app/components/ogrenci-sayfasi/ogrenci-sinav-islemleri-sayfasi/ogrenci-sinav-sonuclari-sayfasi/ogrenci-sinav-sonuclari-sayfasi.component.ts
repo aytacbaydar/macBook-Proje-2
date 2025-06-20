@@ -9,6 +9,7 @@ interface SinavSonucu {
   sinav_adi: string;
   sinav_turu: string;
   sinav_tarihi: string;
+  cozum_tarihi: string;
   dogru_sayisi: number;
   yanlis_sayisi: number;
   bos_sayisi: number;
