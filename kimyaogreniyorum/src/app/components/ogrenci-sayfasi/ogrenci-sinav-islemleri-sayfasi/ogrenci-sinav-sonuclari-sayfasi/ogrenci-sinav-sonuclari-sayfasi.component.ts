@@ -506,7 +506,9 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit, AfterViewI
 
   closeModal() {
     // Body scroll'unu geri aç
-      document.body.style.overflow = 'auto';
-      this.selectedSinav = null;
+    document.body.style.overflow = 'auto';
+    this.selectedSinav = null;
+    this.selectedSinavDetails = null;
+    this.loadingDetails = false;
   }
 }
