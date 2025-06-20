@@ -515,4 +515,11 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit, AfterViewI
     this.selectedSinavDetails = null;
     this.loadingDetails = false;
   }
+
+  getQuestionStatus(question: any): string {
+    if (!question.ogrenci_cevabi) {
+      return 'Boş';
+    }
+    return question.ogrenci_cevabi === question.dogru_cevap ? 'Doğru' : 'Yanlış';
+  }
 }

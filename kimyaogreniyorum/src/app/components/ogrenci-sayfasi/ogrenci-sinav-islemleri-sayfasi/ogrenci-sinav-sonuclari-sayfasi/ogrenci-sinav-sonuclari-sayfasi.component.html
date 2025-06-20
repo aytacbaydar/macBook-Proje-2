@@ -89,14 +89,14 @@
   </div>
 
   <!-- Detailed Exam View Modal -->
-  <div class="modal" *ngIf="selectedSinav" (click)="selectedSinav = null">
+  <div class="modal" *ngIf="selectedSinav" (click)="closeModal()">
     <div class="modal-dialog" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h2>
-          <i class="bi bi-clipboard-data me-2"></i>
+          <i class="bi bi-clipboard-data"></i>
           {{ selectedSinav.sinav_adi }} - Detaylı Sonuç
         </h2>
-        <button class="close-btn" (click)="selectedSinav = null">
+        <button class="close-btn" (click)="closeModal()">
           <i class="bi bi-x-lg"></i>
         </button>
       </div>
@@ -105,7 +105,7 @@
       <div *ngIf="loadingDetails" class="modal-body">
         <div class="loading-section">
           <div class="spinner-border text-primary" role="status"></div>
-          <p class="mt-2">Detaylı sonuçlar yükleniyor...</p>
+          <p>Detaylı sonuçlar yükleniyor...</p>
         </div>
       </div>
 
@@ -114,7 +114,7 @@
         <!-- Summary Stats -->
         <div class="summary-stats">
           <div class="stat-card correct">
-            <div class="stat-icon">
+            <div class="stat-icon correct">
               <i class="bi bi-check-circle-fill"></i>
             </div>
             <div class="stat-content">
@@ -122,9 +122,8 @@
               <div class="stat-label">Doğru</div>
             </div>
           </div>
-
           <div class="stat-card wrong">
-            <div class="stat-icon">
+            <div class="stat-icon wrong">
               <i class="bi bi-x-circle-fill"></i>
             </div>
             <div class="stat-content">
@@ -132,61 +131,59 @@
               <div class="stat-label">Yanlış</div>
             </div>
           </div>
-
           <div class="stat-card empty">
-            <div class="stat-icon">
-              <i class="bi bi-circle"></i>
+            <div class="stat-icon empty">
+              <i class="bi bi-dash-circle-fill"></i>
             </div>
             <div class="stat-content">
               <div class="stat-number">{{ selectedSinavDetails.bos_sayisi }}</div>
               <div class="stat-label">Boş</div>
             </div>
           </div>
-
-          <div class="stat-card score">
+          <div class="stat-card success-rate">
             <div class="stat-icon">
-              <i class="bi bi-trophy-fill"></i>
+              <i class="bi bi-percent"></i>
             </div>
             <div class="stat-content">
-              <div class="stat-number">{{ selectedSinavDetails.basari_yuzdesi }}%</div>
+              <div class="stat-number">{{ getSuccessPercentage(selectedSinav) }}%</div>
               <div class="stat-label">Başarı</div>
             </div>
           </div>
         </div>
 
-        <!-- Questions Details -->
-        <div class="questions-section" *ngIf="selectedSinavDetails.sorular && selectedSinavDetails.sorular.length > 0">
+        <!-- Questions Section -->
+        <div class="questions-section">
           <h3>
             <i class="bi bi-list-ol"></i>
-            Soru Detayları ({{ selectedSinavDetails.sorular.length }} soru)
+            Soru Detayları ({{ selectedSinavDetails.sorular?.length || 0 }} soru)
           </h3>
-          <div class="questions-container">
-            <div class="question-item" 
-                 *ngFor="let question of selectedSinavDetails.sorular"
-                 [class.correct]="question.ogrenci_cevabi === question.dogru_cevap"
-                 [class.wrong]="question.ogrenci_cevabi !== question.dogru_cevap && question.ogrenci_cevabi"
-                 [class.empty]="!question.ogrenci_cevabi">
+
+          <div class="questions-grid">
+            <div class="question-card" *ngFor="let question of selectedSinavDetails.sorular; let i = index">
               <div class="question-header">
-                <div class="question-number">Soru {{ question.soru_numarasi || question.soru_no }}</div>
-                <div class="question-status">
-                  <i *ngIf="question.ogrenci_cevabi === question.dogru_cevap" class="bi bi-check-circle-fill text-success"></i>
-                  <i *ngIf="question.ogrenci_cevabi !== question.dogru_cevap && question.ogrenci_cevabi" class="bi bi-x-circle-fill text-danger"></i>
-                  <i *ngIf="!question.ogrenci_cevabi" class="bi bi-circle text-muted"></i>
-                </div>
+                <span class="question-number">Soru {{ question.soru_no }}</span>
+                <span class="question-status" 
+                      [class.correct]="question.ogrenci_cevabi === question.dogru_cevap"
+                      [class.wrong]="question.ogrenci_cevabi !== question.dogru_cevap && question.ogrenci_cevabi"
+                      [class.empty]="!question.ogrenci_cevabi">
+                  {{ getQuestionStatus(question) }}
+                </span>
               </div>
-              <div class="question-details">
-                <div class="answer-row">
-                  <span class="label">Doğru Cevap:</span>
-                  <span class="correct-answer">{{ question.dogru_cevap }}</span>
-                </div>
-                <div class="answer-row">
-                  <span class="label">Sizin Cevabınız:</span>
-                  <span class="student-answer" 
-                        [class.correct]="question.ogrenci_cevabi === question.dogru_cevap"
-                        [class.wrong]="question.ogrenci_cevabi !== question.dogru_cevap && question.ogrenci_cevabi"
-                        [class.empty]="!question.ogrenci_cevabi">
-                    {{ question.ogrenci_cevabi || 'Boş' }}
-                  </span>
+              <div class="question-content">
+                <div class="answers-grid">
+                  <div class="answer-row correct-answer">
+                    <span class="label">Doğru Cevap:</span>
+                    <span class="answer-value">{{ question.dogru_cevap }}</span>
+                  </div>
+                  <div class="answer-row">
+                    <span class="label">Sizin Cevabınız:</span>
+                    <span class="student-answer" 
+                          [class.correct]="question.ogrenci_cevabi === question.dogru_cevap"
+                          [class.wrong]="question.ogrenci_cevabi !== question.dogru_cevap && question.ogrenci_cevabi"
+                          [class.empty]="!question.ogrenci_cevabi">
+                      {{ question.ogrenci_cevabi || 'Boş' }}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -203,11 +200,11 @@
       </div>
 
       <div class="modal-footer">
-        <button class="btn btn-outline-secondary" (click)="selectedSinav = null">
+        <button class="btn btn-outline-secondary" (click)="closeModal()">
           Kapat
         </button>
         <button class="btn btn-primary" (click)="retakeExam(selectedSinav)">
-          <i class="bi bi-arrow-clockwise me-1"></i>
+          <i class="bi bi-arrow-clockwise"></i>
           Sınavı Tekrar Çöz
         </button>
       </div>
