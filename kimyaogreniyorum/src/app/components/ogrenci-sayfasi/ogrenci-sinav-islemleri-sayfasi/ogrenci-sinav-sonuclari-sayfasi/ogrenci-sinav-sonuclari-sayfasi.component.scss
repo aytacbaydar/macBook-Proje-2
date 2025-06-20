@@ -226,402 +226,74 @@
   }
 }
 
-/* Modal Overlay */
+/* Bootstrap Modal Override Styles */
 .modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  backdrop-filter: blur(5px);
-  padding: 20px;
-  box-sizing: border-box;
-}
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
 
-.modal-dialog {
-  background: white;
-  border-radius: 16px;
-  width: 100%;
-  max-width: 1100px;
-  height: 90vh;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  animation: modalFadeIn 0.3s ease-out;
-}
+  .modal-dialog {
+    max-width: 900px;
+    height: 90vh;
 
-@keyframes modalFadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Modal Header */
-.modal-header {
-  padding: 24px 32px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-shrink: 0;
-
-  h2 {
-    margin: 0;
-    font-size: 1.75rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-
-    i {
-      margin-right: 12px;
+    .modal-content {
+      height: 100%;
+      border-radius: 15px;
+      border: none;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     }
   }
 
-  .close-btn {
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
+  .modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 1.2rem;
+    border-radius: 15px 15px 0 0;
+    border-bottom: none;
+    padding: 1.5rem;
 
-    &:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: scale(1.05);
-    }
-  }
-}
-
-/* Modal Body */
-.modal-body {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 30px;
-  max-height: calc(100vh - 200px);
-
-  /* Custom scrollbar */
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 4px;
-
-    &:hover {
-      background: #a8a8a8;
-    }
-  }
-}
-
-/* Loading Section */
-.loading-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 32px;
-
-  .spinner-border {
-    width: 3rem;
-    height: 3rem;
-    margin-bottom: 16px;
-  }
-
-  p {
-    color: #6c757d;
-    font-size: 1.1rem;
-  }
-}
-
-/* Summary Stats */
-.summary-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  padding: 32px;
-  background: #f8f9fa;
-  border-bottom: 1px solid #dee2e6;
-}
-
-.stat-card {
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  text-align: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-left: 4px solid;
-
-  &.correct {
-    border-left-color: #28a745;
-  }
-
-  &.wrong {
-    border-left-color: #dc3545;
-  }
-
-  &.empty {
-    border-left-color: #6c757d;
-  }
-
-  .stat-icon {
-    font-size: 2rem;
-    margin-bottom: 12px;
-
-    &.correct { color: #28a745; }
-    &.wrong { color: #dc3545; }
-    &.empty { color: #6c757d; }
-  }
-
-  .stat-content {
-    .stat-number {
-      display: block;
-      font-size: 2.5rem;
+    .modal-title {
+      font-size: 1.5rem;
       font-weight: 700;
-      color: #2c3e50;
-      margin-bottom: 4px;
+      margin: 0;
     }
 
-    .stat-label {
-      color: #6c757d;
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-  }
-}
-
-/* Success Rate */
-.success-rate {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border-left: none !important;
-
-  .stat-number {
-    color: white !important;
-  }
-
-  .stat-label {
-    color: rgba(255, 255, 255, 0.9) !important;
-  }
-}
-
-/* Questions Section */
-.questions-section {
-  padding: 32px;
-
-  h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-
-    i {
-      margin-right: 12px;
-      color: #667eea;
-    }
-  }
-}
-
-.questions-grid {
-  display: grid;
-  gap: 16px;
-}
-
-.question-card {
-  background: white;
-  border: 1px solid #e9ecef;
-  border-radius: 12px;
-  overflow: hidden;
-  transition: all 0.3s ease;
-
-  &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-}
-
-.question-header {
-  background: #f8f9fa;
-  padding: 16px 20px;
-  border-bottom: 1px solid #e9ecef;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  .question-number {
-    font-weight: 600;
-    color: #495057;
-    font-size: 1.1rem;
-  }
-
-  .question-status {
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-
-    &.correct {
-      background: #d4edda;
-      color: #155724;
-    }
-
-    &.wrong {
-      background: #f8d7da;
-      color: #721c24;
-    }
-
-    &.empty {
-      background: #e2e3e5;
-      color: #383d41;
-    }
-  }
-}
-
-.question-content {
-  padding: 20px;
-}
-
-.answers-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-.answer-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  border-left: 4px solid #dee2e6;
-
-  .label {
-    font-weight: 500;
-    color: #495057;
-    font-size: 0.9rem;
-  }
-
-  .correct-answer {
-    background: #d4edda;
-    border-left-color: #28a745;
-
-    .answer-value {
-      color: #155724;
-      font-weight: 600;
-    }
-  }
-
-  .student-answer {
-    font-weight: 600;
-    padding: 4px 8px;
-    border-radius: 4px;
-
-    &.correct {
-      background: #28a745;
-      color: white;
-    }
-
-    &.wrong {
-      background: #dc3545;
-      color: white;
-    }
-
-    &.empty {
-      background: #6c757d;
-      color: white;
-    }
-  }
-}
-
-/* Chart Section */
-.chart-section {
-  padding: 32px;
-  background: #f8f9fa;
-  border-top: 1px solid #dee2e6;
-
-  h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 24px;
-    text-align: center;
-  }
-
-  .chart-container {
-    display: flex;
-    justify-content: center;
-    max-width: 400px;
-    margin: 0 auto;
-  }
-}
-
-/* Modal Footer */
-.modal-footer {
-  padding: 20px 32px;
-  background: #f8f9fa;
-  border-top: 1px solid #dee2e6;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-shrink: 0;
-
-  .btn {
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    border: none;
-    cursor: pointer;
-
-    &.btn-outline-secondary {
-      background: white;
-      color: #6c757d;
-      border: 1px solid #dee2e6;
+    .btn-close {
+      filter: invert(1);
+      opacity: 0.8;
 
       &:hover {
-        background: #e9ecef;
-        color: #495057;
+        opacity: 1;
       }
     }
+  }
 
-    &.btn-primary {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
+  .modal-body {
+    padding: 1.5rem;
+
+    /* Custom scrollbar for modal body */
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 4px;
 
       &:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        background: #a8a8a8;
       }
     }
+  }
+
+  .modal-footer {
+    border-top: 1px solid #e9ecef;
+    background: #f8f9fa;
+    border-radius: 0 0 15px 15px;
+    padding: 1rem 1.5rem;
   }
 }
 
