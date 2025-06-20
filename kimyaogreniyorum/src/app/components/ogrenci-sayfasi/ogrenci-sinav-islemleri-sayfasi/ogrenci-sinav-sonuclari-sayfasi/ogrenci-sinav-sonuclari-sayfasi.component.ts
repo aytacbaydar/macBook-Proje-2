@@ -1,4 +1,3 @@
-
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -177,12 +176,12 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit, AfterViewI
         this.loadingDetails = false;
         if (response.success && response.data) {
           this.selectedSinavDetails = response.data;
-          
+
           // Başarı yüzdesini hesapla
           if (this.selectedSinavDetails) {
             const total = this.selectedSinavDetails.dogru_sayisi + this.selectedSinavDetails.yanlis_sayisi + this.selectedSinavDetails.bos_sayisi;
             this.selectedSinavDetails.basari_yuzdesi = total > 0 ? Math.round((this.selectedSinavDetails.dogru_sayisi / total) * 100) : 0;
-            
+
             // Sorulara is_correct property'sini ekle
             if (this.selectedSinavDetails.sorular) {
               this.selectedSinavDetails.sorular.forEach(soru => {
@@ -190,7 +189,7 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit, AfterViewI
               });
             }
           }
-          
+
           console.log('Sınav detayları yüklendi:', this.selectedSinavDetails);
 
           // Grafik güncelleme
@@ -277,7 +276,7 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit, AfterViewI
     this.sinavSonuclari.forEach((sinav, index) => {
       const canvasId = `miniChart-${index}`;
       const ctx = document.getElementById(canvasId) as HTMLCanvasElement;
-      
+
       if (!ctx) return;
 
       const dogru = sinav.dogru_sayisi;
@@ -403,9 +402,9 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit, AfterViewI
       const ad = sinav.sinav_adi;
       return ad.length > 20 ? ad.substring(0, 17) + '...' : ad;
     });
-    
+
     const basariOranlari = this.sinavSonuclari.map(sinav => this.getSuccessPercentage(sinav));
-    
+
     // Sınav türlerine göre renkler
     const renkler = this.sinavSonuclari.map(sinav => this.getSinavTuruColor(sinav.sinav_turu));
 
@@ -490,5 +489,52 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit, AfterViewI
 
   goToExams() {
     this.router.navigate(['/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi']);
+  }
+
+  loadSinavDetails(sinav: any) {
+    this.loadingDetails = true;
+
+    this.http.get<any>(`./server/api/sinav_detay_sonuc.php?sinav_id=${sinav.sinav_id}&ogrenci_id=${sinav.ogrenci_id}`)
+      .subscribe({
+        next: (response) => {
+          this.loadingDetails = false;
+          if (response.success) {
+            this.selectedSinavDetails = response.data;
+
+            // Eğer sorular array değilse, soru sayısına göre oluştur
+            if (!this.selectedSinavDetails.sorular || !Array.isArray(this.selectedSinavDetails.sorular)) {
+              this.selectedSinavDetails.sorular = [];
+              const soruSayisi = this.selectedSinavDetails.soru_sayisi || sinav.soru_sayisi || 40;
+
+              for (let i = 1; i <= soruSayisi; i++) {
+                const soruNumKey = `soru_${i}`;
+                const dogruCevapKey = `dogru_cevap_${i}`;
+                const ogrenciCevabiKey = `ogrenci_cevabi_${i}`;
+
+                this.selectedSinavDetails.sorular.push({
+                  soru_numarasi: i,
+                  dogru_cevap: this.selectedSinavDetails[dogruCevapKey] || 
+                              this.selectedSinavDetails.cevap_anahtari?.[`ca${i}`] || 'A',
+                  ogrenci_cevabi: this.selectedSinavDetails[ogrenciCevabiKey] || 
+                                 this.selectedSinavDetails.ogrenci_cevaplari?.[`ca${i}`] || null
+                });
+              }
+            }
+
+            console.log('Detaylı sonuçlar:', this.selectedSinavDetails);
+
+            // Chart'ı çiz
+            setTimeout(() => {
+              this.createDetailChart();
+            }, 100);
+          } else {
+            console.error('Detaylı sonuçlar yüklenemedi:', response.message);
+          }
+        },
+        error: (error) => {
+          this.loadingDetails = false;
+          console.error('Detaylı sonuçlar yüklenirken hata:', error);
+        }
+      });
   }
 }

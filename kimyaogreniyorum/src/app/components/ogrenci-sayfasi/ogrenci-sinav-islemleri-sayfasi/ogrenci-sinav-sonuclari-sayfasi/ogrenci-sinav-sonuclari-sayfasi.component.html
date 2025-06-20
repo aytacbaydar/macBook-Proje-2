@@ -154,12 +154,26 @@
           </div>
         </div>
 
-        <!-- Questions Detail -->
-        <div class="questions-section" *ngIf="selectedSinavDetails?.sorular">
-          <h3>Soru Detayları</h3>
-          <div class="questions-list">
-            <div class="question-item" *ngFor="let question of selectedSinavDetails.sorular; let i = index">
-              <div class="question-number">{{ i + 1 }}</div>
+        <!-- Questions Details -->
+        <div class="questions-section" *ngIf="selectedSinavDetails.sorular && selectedSinavDetails.sorular.length > 0">
+          <h3>
+            <i class="bi bi-list-ol"></i>
+            Soru Detayları ({{ selectedSinavDetails.sorular.length }} soru)
+          </h3>
+          <div class="questions-container">
+            <div class="question-item" 
+                 *ngFor="let question of selectedSinavDetails.sorular"
+                 [class.correct]="question.ogrenci_cevabi === question.dogru_cevap"
+                 [class.wrong]="question.ogrenci_cevabi !== question.dogru_cevap && question.ogrenci_cevabi"
+                 [class.empty]="!question.ogrenci_cevabi">
+              <div class="question-header">
+                <div class="question-number">Soru {{ question.soru_numarasi }}</div>
+                <div class="question-status">
+                  <i *ngIf="question.ogrenci_cevabi === question.dogru_cevap" class="bi bi-check-circle-fill text-success"></i>
+                  <i *ngIf="question.ogrenci_cevabi !== question.dogru_cevap && question.ogrenci_cevabi" class="bi bi-x-circle-fill text-danger"></i>
+                  <i *ngIf="!question.ogrenci_cevabi" class="bi bi-circle text-muted"></i>
+                </div>
+              </div>
               <div class="question-details">
                 <div class="answer-row">
                   <span class="label">Doğru Cevap:</span>
@@ -174,11 +188,6 @@
                     {{ question.ogrenci_cevabi || 'Boş' }}
                   </span>
                 </div>
-              </div>
-              <div class="question-status">
-                <i *ngIf="question.ogrenci_cevabi === question.dogru_cevap" class="bi bi-check-circle-fill text-success"></i>
-                <i *ngIf="question.ogrenci_cevabi !== question.dogru_cevap && question.ogrenci_cevabi" class="bi bi-x-circle-fill text-danger"></i>
-                <i *ngIf="!question.ogrenci_cevabi" class="bi bi-circle text-muted"></i>
               </div>
             </div>
           </div>
