@@ -1038,6 +1038,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
         orientation: 'portrait',
         unit: 'mm',
         format: 'a4',
+        compress: true, // PDF sıkıştırmasını etkinleştir
       });
 
       const processNextPage = (page: number) => {
@@ -1063,11 +1064,11 @@ export class OgretmenDersAnlatmaTahtasiComponent
         setTimeout(() => {
           const canvas = this.canvasInstances[page - 1];
           if (canvas) {
-            // Canvas'ı PNG olarak dışa aktar - boyutu küçültmek için kalite ve çarpanı azalttık
+            // Canvas'ı JPEG formatında optimize edilmiş şekilde dışa aktar
             const dataURL = canvas.toDataURL({
-              format: 'png',
-              quality: 0.8, // Kaliteyi düşürerek dosya boyutunu azalt
-              multiplier: 1.5, // Çarpanı düşürerek dosya boyutunu azalt
+              format: 'jpeg',
+              quality: 0.7, // JPEG kalitesini düşürerek dosya boyutunu azalt
+              multiplier: 0.8, // Çözünürlüğü düşürerek boyutu azalt
             });
 
             // İlk sayfa değilse yeni sayfa ekle
@@ -1075,10 +1076,10 @@ export class OgretmenDersAnlatmaTahtasiComponent
               pdf.addPage();
             }
 
-            // PNG'yi PDF'e ekle
+            // JPEG'i PDF'e ekle
             const imgWidth = 210; // A4 genişliği (mm)
             const imgHeight = 297; // A4 yüksekliği (mm)
-            pdf.addImage(dataURL, 'PNG', 0, 0, imgWidth, imgHeight);
+            pdf.addImage(dataURL, 'JPEG', 0, 0, imgWidth, imgHeight, undefined, 'MEDIUM');
 
             // Sonraki sayfaya geç
             processNextPage(page + 1);
@@ -1150,23 +1151,31 @@ export class OgretmenDersAnlatmaTahtasiComponent
           // Canvas'ı al
           const canvas = this.canvasInstances[page - 1];
           if (canvas) {
-            // Canvas'ı PNG olarak dışa aktar
-            const dataURL = canvas.toDataURL({
-              format: 'png',
-              quality: 0.8, // Kaliteyi düşürerek dosya boyutunu azalt
-              multiplier: 1.5, // Çarpanı düşürerek dosya boyutunu azalt
-            });
+            // Canvas'ta çizim var mı kontrol et
+            const hasDrawings = canvas.getObjects().length > 0;
+            
+            if (hasDrawings) {
+              // Canvas'ı JPEG formatında optimize edilmiş şekilde dışa aktar
+              const dataURL = canvas.toDataURL({
+                format: 'jpeg',
+                quality: 0.6, // JPEG kalitesini düşürerek dosya boyutunu azalt
+                multiplier: 0.7, // Çözünürlüğü düşürerek boyutu azalt
+              });
 
-            // İlk sayfa değilse yeni sayfa ekle
-            if (page > 1) {
-              pdf.addPage();
+              // İlk sayfa değilse yeni sayfa ekle
+              if (page > 1) {
+                pdf.addPage();
+              }
+
+              // JPEG'i PDF'e ekle
+              const imgWidth = 210; // A4 genişliği (mm)
+              const imgHeight = 297; // A4 yüksekliği (mm)
+              pdf.addImage(dataURL, 'JPEG', 0, 0, imgWidth, imgHeight, undefined, 'MEDIUM');
+              console.log(`Sayfa ${page} PDF'e eklendi.`);
+            } else {
+              console.log(`Sayfa ${page} boş, atlandı.`);
+              // Boş sayfaları PDF'e ekleme, sadece çizim olan sayfaları ekle
             }
-
-            // PNG'yi PDF'e ekle
-            const imgWidth = 210; // A4 genişliği (mm)
-            const imgHeight = 297; // A4 yüksekliği (mm)
-            pdf.addImage(dataURL, 'PNG', 0, 0, imgWidth, imgHeight);
-            console.log(`Sayfa ${page} PDF'e eklendi.`);
           } else {
             console.error(`Canvas ${page} bulunamadı!`);
           }
@@ -1175,10 +1184,19 @@ export class OgretmenDersAnlatmaTahtasiComponent
         // ADIM 4: PDFi blob olarak hazırla
         console.log('ADIM 4: PDF blob olarak hazırlanıyor...');
         const pdfOutput = pdf.output('blob');
-        console.log('PDF blob boyutu:', pdfOutput.size, 'bytes');
+        const pdfSizeMB = pdfOutput.size / (1024 * 1024);
+        console.log('PDF blob boyutu:', pdfOutput.size, 'bytes', `(${pdfSizeMB.toFixed(2)} MB)`);
 
         if (!pdfOutput || pdfOutput.size <= 0) {
           alert('PDF oluşturulamadı! PDF boyutu sıfır.');
+          this.kaydetmeIsleminde = false;
+          return;
+        }
+
+        // PDF boyut kontrolü - 15MB limit
+        const maxSizeMB = 15;
+        if (pdfSizeMB > maxSizeMB) {
+          alert(`PDF dosyası çok büyük! Boyut: ${pdfSizeMB.toFixed(2)} MB. Maksimum izin verilen: ${maxSizeMB} MB. Lütfen daha az sayfa çizin veya çizimlerinizi basitleştirin.`);
           this.kaydetmeIsleminde = false;
           return;
         }
@@ -1237,27 +1255,27 @@ export class OgretmenDersAnlatmaTahtasiComponent
           'bytes'
         );
 
-        // ADIM 9: Kapak sayfası ekle (opsiyonel)
+        // ADIM 9: Kapak sayfası ekle (opsiyonel) - optimize edilmiş
         console.log('ADIM 9: Kapak sayfası ekleye hazırlanıyor...');
-        if (this.canvasInstances[0]) {
+        if (this.canvasInstances[0] && this.canvasInstances[0].getObjects().length > 0) {
           const coverDataURL = this.canvasInstances[0].toDataURL({
-            format: 'png',
-            quality: 0.8,
-            multiplier: 1.5,
+            format: 'jpeg',
+            quality: 0.5,
+            multiplier: 0.5,
           });
           const coverBlob = this.dataURLtoBlob(coverDataURL);
-          const coverFile = new File([coverBlob], 'kapak.png', {
-            type: 'image/png',
+          const coverFile = new File([coverBlob], 'kapak.jpg', {
+            type: 'image/jpeg',
             lastModified: Date.now(),
           });
-          formData.append('cizim_verisi', coverFile, 'kapak.png');
+          formData.append('cizim_verisi', coverFile, 'kapak.jpg');
           console.log(
             "Kapak sayfası FormData'ya eklendi:",
             coverFile.size,
             'bytes'
           );
         } else {
-          console.log("Kapak sayfası canvas'ı bulunamadı. Kapak eklenmedi.");
+          console.log("Kapak sayfası canvas'ı boş veya bulunamadı. Kapak eklenmedi.");
         }
 
         // ADIM 10: FormData içeriğini kontrol et
