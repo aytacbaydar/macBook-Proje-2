@@ -675,7 +675,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
         return;
       }
 
-      // Canvas boyutlarını A4 oranına uygun şekilde ayarla
+      // Canvas boyutlarını ekran boyutuna göre büyüt (A4 oranını koruyarak)
       const container = canvasEl.parentElement;
       if (container) {
         // A4 oranı: 210/297 = 0.707
@@ -683,18 +683,26 @@ export class OgretmenDersAnlatmaTahtasiComponent
         const containerWidth = container.clientWidth;
         const containerHeight = container.clientHeight;
         
-        // Container'ın oranına göre A4'e en uygun boyutu hesapla
+        // Ekran boyutunun %90'ını kullan (daha büyük yazma alanı için)
+        const availableWidth = containerWidth * 0.9;
+        const availableHeight = containerHeight * 0.9;
+        
+        // A4 oranına göre maksimum boyutu hesapla
         let canvasWidth, canvasHeight;
         
-        if (containerWidth / containerHeight > a4Ratio) {
-          // Container daha geniş, yüksekliği baz al
-          canvasHeight = Math.min(containerHeight * 0.95, 800); // Maksimum 800px
+        if (availableWidth / availableHeight > a4Ratio) {
+          // Genişlik fazla, yüksekliği baz al
+          canvasHeight = availableHeight;
           canvasWidth = canvasHeight * a4Ratio;
         } else {
-          // Container daha uzun, genişliği baz al
-          canvasWidth = Math.min(containerWidth * 0.95, 600); // Maksimum 600px
+          // Yükseklik fazla, genişliği baz al
+          canvasWidth = availableWidth;
           canvasHeight = canvasWidth / a4Ratio;
         }
+        
+        // Minimum boyutları garanti et (çok küçük ekranlar için)
+        canvasWidth = Math.max(canvasWidth, 800);
+        canvasHeight = Math.max(canvasHeight, 1131); // A4 oranında 800'e karşılık gelen yükseklik
         
         canvasEl.width = canvasWidth;
         canvasEl.height = canvasHeight;
@@ -743,15 +751,23 @@ export class OgretmenDersAnlatmaTahtasiComponent
         const containerWidth = container.clientWidth;
         const containerHeight = container.clientHeight;
         
+        // Ekran boyutunun %90'ını kullan
+        const availableWidth = containerWidth * 0.9;
+        const availableHeight = containerHeight * 0.9;
+        
         let canvasWidth, canvasHeight;
         
-        if (containerWidth / containerHeight > a4Ratio) {
-          canvasHeight = Math.min(containerHeight * 0.95, 800);
+        if (availableWidth / availableHeight > a4Ratio) {
+          canvasHeight = availableHeight;
           canvasWidth = canvasHeight * a4Ratio;
         } else {
-          canvasWidth = Math.min(containerWidth * 0.95, 600);
+          canvasWidth = availableWidth;
           canvasHeight = canvasWidth / a4Ratio;
         }
+        
+        // Minimum boyutları garanti et
+        canvasWidth = Math.max(canvasWidth, 800);
+        canvasHeight = Math.max(canvasHeight, 1131);
         
         // Canvas boyutlarını güncelle
         canvas.setWidth(canvasWidth);
