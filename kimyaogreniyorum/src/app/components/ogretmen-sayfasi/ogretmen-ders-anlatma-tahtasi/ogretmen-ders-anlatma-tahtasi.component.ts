@@ -1064,6 +1064,11 @@ export class OgretmenDersAnlatmaTahtasiComponent
         setTimeout(() => {
           const canvas = this.canvasInstances[page - 1];
           if (canvas) {
+            // Canvas'ın gerçek boyutlarını al
+            const canvasWidth = canvas.width || 800;
+            const canvasHeight = canvas.height || 600;
+            const canvasRatio = canvasWidth / canvasHeight;
+            
             // Canvas'ı JPEG formatında optimize edilmiş şekilde dışa aktar
             const dataURL = canvas.toDataURL({
               format: 'jpeg',
@@ -1076,10 +1081,32 @@ export class OgretmenDersAnlatmaTahtasiComponent
               pdf.addPage();
             }
 
+            // A4 sayfasına uygun boyutları hesapla (kenar boşluklarıyla)
+            const pageWidth = 210; // A4 genişliği (mm)
+            const pageHeight = 297; // A4 yüksekliği (mm)
+            const margin = 10; // Kenar boşluğu (mm)
+            const availableWidth = pageWidth - (margin * 2);
+            const availableHeight = pageHeight - (margin * 2);
+
+            let imgWidth, imgHeight;
+
+            // Canvas oranına göre PDF'e sığacak boyutları hesapla
+            if (canvasRatio > (availableWidth / availableHeight)) {
+              // Canvas daha geniş, genişlik sınırı kullan
+              imgWidth = availableWidth;
+              imgHeight = availableWidth / canvasRatio;
+            } else {
+              // Canvas daha uzun, yükseklik sınırı kullan
+              imgHeight = availableHeight;
+              imgWidth = availableHeight * canvasRatio;
+            }
+
+            // Ortalanmış pozisyon hesapla
+            const x = margin + (availableWidth - imgWidth) / 2;
+            const y = margin + (availableHeight - imgHeight) / 2;
+
             // JPEG'i PDF'e ekle
-            const imgWidth = 210; // A4 genişliği (mm)
-            const imgHeight = 297; // A4 yüksekliği (mm)
-            pdf.addImage(dataURL, 'JPEG', 0, 0, imgWidth, imgHeight, undefined, 'MEDIUM');
+            pdf.addImage(dataURL, 'JPEG', x, y, imgWidth, imgHeight, undefined, 'MEDIUM');
 
             // Sonraki sayfaya geç
             processNextPage(page + 1);
@@ -1155,6 +1182,14 @@ export class OgretmenDersAnlatmaTahtasiComponent
             const hasDrawings = canvas.getObjects().length > 0;
             
             if (hasDrawings) {
+              // Canvas'ın gerçek boyutlarını al
+              const canvasWidth = canvas.width || 800;
+              const canvasHeight = canvas.height || 600;
+              
+              // A4 oranını hesapla (210mm x 297mm = 0.707 oran)
+              const a4Ratio = 210 / 297;
+              const canvasRatio = canvasWidth / canvasHeight;
+              
               // Canvas'ı JPEG formatında optimize edilmiş şekilde dışa aktar
               const dataURL = canvas.toDataURL({
                 format: 'jpeg',
@@ -1167,11 +1202,33 @@ export class OgretmenDersAnlatmaTahtasiComponent
                 pdf.addPage();
               }
 
+              // A4 sayfasına uygun boyutları hesapla (kenar boşluklarıyla)
+              const pageWidth = 210; // A4 genişliği (mm)
+              const pageHeight = 297; // A4 yüksekliği (mm)
+              const margin = 10; // Kenar boşluğu (mm)
+              const availableWidth = pageWidth - (margin * 2);
+              const availableHeight = pageHeight - (margin * 2);
+
+              let imgWidth, imgHeight;
+
+              // Canvas oranına göre PDF'e sığacak boyutları hesapla
+              if (canvasRatio > (availableWidth / availableHeight)) {
+                // Canvas daha geniş, genişlik sınırı kullan
+                imgWidth = availableWidth;
+                imgHeight = availableWidth / canvasRatio;
+              } else {
+                // Canvas daha uzun, yükseklik sınırı kullan
+                imgHeight = availableHeight;
+                imgWidth = availableHeight * canvasRatio;
+              }
+
+              // Ortalanmış pozisyon hesapla
+              const x = margin + (availableWidth - imgWidth) / 2;
+              const y = margin + (availableHeight - imgHeight) / 2;
+
               // JPEG'i PDF'e ekle
-              const imgWidth = 210; // A4 genişliği (mm)
-              const imgHeight = 297; // A4 yüksekliği (mm)
-              pdf.addImage(dataURL, 'JPEG', 0, 0, imgWidth, imgHeight, undefined, 'MEDIUM');
-              console.log(`Sayfa ${page} PDF'e eklendi.`);
+              pdf.addImage(dataURL, 'JPEG', x, y, imgWidth, imgHeight, undefined, 'MEDIUM');
+              console.log(`Sayfa ${page} PDF'e eklendi. Canvas boyutu: ${canvasWidth}x${canvasHeight}, PDF boyutu: ${imgWidth.toFixed(1)}x${imgHeight.toFixed(1)}mm`);
             } else {
               console.log(`Sayfa ${page} boş, atlandı.`);
               // Boş sayfaları PDF'e ekleme, sadece çizim olan sayfaları ekle
