@@ -704,8 +704,10 @@ export class OgretmenDersAnlatmaTahtasiComponent
         canvasWidth = Math.max(canvasWidth, 1000);
         canvasHeight = Math.max(canvasHeight, 1414); // A4 oranında 1000'e karşılık gelen yükseklik
         
+        // Canvas'ı üstten daha az boşlukla konumlandır
         canvasEl.width = canvasWidth;
         canvasEl.height = canvasHeight;
+        canvasEl.style.marginTop = '10px'; // Üst boşluğu azalt
       }
 
       // Yeni fabric canvas oluştur
@@ -772,6 +774,13 @@ export class OgretmenDersAnlatmaTahtasiComponent
         // Canvas boyutlarını güncelle
         canvas.setWidth(canvasWidth);
         canvas.setHeight(canvasHeight);
+        
+        // Canvas'ı üstten daha az boşlukla konumlandır
+        const canvasEl = document.getElementById(`canvas-${sayfaNo}`) as HTMLCanvasElement;
+        if (canvasEl) {
+          canvasEl.style.marginTop = '10px'; // Üst boşluğu azalt
+        }
+        
         canvas.renderAll();
       }
     } catch (error) {
