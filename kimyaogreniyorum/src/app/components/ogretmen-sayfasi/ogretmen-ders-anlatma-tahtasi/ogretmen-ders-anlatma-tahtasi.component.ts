@@ -683,9 +683,9 @@ export class OgretmenDersAnlatmaTahtasiComponent
         const containerWidth = container.clientWidth;
         const containerHeight = container.clientHeight;
         
-        // Ekran boyutunun %90'ını kullan (daha büyük yazma alanı için)
-        const availableWidth = containerWidth * 0.9;
-        const availableHeight = containerHeight * 0.9;
+        // Ekran boyutunun %95'ini kullan (maksimum yazma alanı için)
+        const availableWidth = containerWidth * 0.95;
+        const availableHeight = containerHeight * 0.95;
         
         // A4 oranına göre maksimum boyutu hesapla
         let canvasWidth, canvasHeight;
@@ -701,8 +701,8 @@ export class OgretmenDersAnlatmaTahtasiComponent
         }
         
         // Minimum boyutları garanti et (çok küçük ekranlar için)
-        canvasWidth = Math.max(canvasWidth, 800);
-        canvasHeight = Math.max(canvasHeight, 1131); // A4 oranında 800'e karşılık gelen yükseklik
+        canvasWidth = Math.max(canvasWidth, 1000);
+        canvasHeight = Math.max(canvasHeight, 1414); // A4 oranında 1000'e karşılık gelen yükseklik
         
         canvasEl.width = canvasWidth;
         canvasEl.height = canvasHeight;
@@ -751,9 +751,9 @@ export class OgretmenDersAnlatmaTahtasiComponent
         const containerWidth = container.clientWidth;
         const containerHeight = container.clientHeight;
         
-        // Ekran boyutunun %90'ını kullan
-        const availableWidth = containerWidth * 0.9;
-        const availableHeight = containerHeight * 0.9;
+        // Ekran boyutunun %95'ini kullan
+        const availableWidth = containerWidth * 0.95;
+        const availableHeight = containerHeight * 0.95;
         
         let canvasWidth, canvasHeight;
         
@@ -766,8 +766,8 @@ export class OgretmenDersAnlatmaTahtasiComponent
         }
         
         // Minimum boyutları garanti et
-        canvasWidth = Math.max(canvasWidth, 800);
-        canvasHeight = Math.max(canvasHeight, 1131);
+        canvasWidth = Math.max(canvasWidth, 1000);
+        canvasHeight = Math.max(canvasHeight, 1414);
         
         // Canvas boyutlarını güncelle
         canvas.setWidth(canvasWidth);
