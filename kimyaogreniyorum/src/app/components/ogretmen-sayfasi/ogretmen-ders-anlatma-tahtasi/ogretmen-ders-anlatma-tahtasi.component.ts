@@ -675,11 +675,29 @@ export class OgretmenDersAnlatmaTahtasiComponent
         return;
       }
 
-      // Canvas boyutlarını ayarla
+      // Canvas boyutlarını A4 oranına uygun şekilde ayarla
       const container = canvasEl.parentElement;
       if (container) {
-        canvasEl.width = container.clientWidth;
-        canvasEl.height = container.clientHeight;
+        // A4 oranı: 210/297 = 0.707
+        const a4Ratio = 210 / 297;
+        const containerWidth = container.clientWidth;
+        const containerHeight = container.clientHeight;
+        
+        // Container'ın oranına göre A4'e en uygun boyutu hesapla
+        let canvasWidth, canvasHeight;
+        
+        if (containerWidth / containerHeight > a4Ratio) {
+          // Container daha geniş, yüksekliği baz al
+          canvasHeight = Math.min(containerHeight * 0.95, 800); // Maksimum 800px
+          canvasWidth = canvasHeight * a4Ratio;
+        } else {
+          // Container daha uzun, genişliği baz al
+          canvasWidth = Math.min(containerWidth * 0.95, 600); // Maksimum 600px
+          canvasHeight = canvasWidth / a4Ratio;
+        }
+        
+        canvasEl.width = canvasWidth;
+        canvasEl.height = canvasHeight;
       }
 
       // Yeni fabric canvas oluştur
@@ -720,9 +738,24 @@ export class OgretmenDersAnlatmaTahtasiComponent
       const container = canvasEl.parentElement;
 
       if (container) {
+        // A4 oranına uygun boyutları hesapla
+        const a4Ratio = 210 / 297;
+        const containerWidth = container.clientWidth;
+        const containerHeight = container.clientHeight;
+        
+        let canvasWidth, canvasHeight;
+        
+        if (containerWidth / containerHeight > a4Ratio) {
+          canvasHeight = Math.min(containerHeight * 0.95, 800);
+          canvasWidth = canvasHeight * a4Ratio;
+        } else {
+          canvasWidth = Math.min(containerWidth * 0.95, 600);
+          canvasHeight = canvasWidth / a4Ratio;
+        }
+        
         // Canvas boyutlarını güncelle
-        canvas.setWidth(container.clientWidth);
-        canvas.setHeight(container.clientHeight);
+        canvas.setWidth(canvasWidth);
+        canvas.setHeight(canvasHeight);
         canvas.renderAll();
       }
     } catch (error) {
