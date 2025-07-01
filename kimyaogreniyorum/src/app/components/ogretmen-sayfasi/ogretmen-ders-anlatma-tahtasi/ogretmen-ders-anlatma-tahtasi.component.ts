@@ -683,9 +683,9 @@ export class OgretmenDersAnlatmaTahtasiComponent
         const containerWidth = container.clientWidth;
         const containerHeight = container.clientHeight;
         
-        // Ekran boyutunun %200'ünü kullan (maksimum yazma alanı için)
-        const availableWidth = containerWidth * 2.00;
-        const availableHeight = containerHeight * 2.00;
+        // Ekran boyutunun %120'sini kullan (maksimum yazma alanı için)
+        const availableWidth = containerWidth * 1.20;
+        const availableHeight = containerHeight * 1.20;
         
         // A4 oranına göre maksimum boyutu hesapla
         let canvasWidth, canvasHeight;
@@ -751,9 +751,9 @@ export class OgretmenDersAnlatmaTahtasiComponent
         const containerWidth = container.clientWidth;
         const containerHeight = container.clientHeight;
         
-        // Ekran boyutunun %200'ünü kullan
-        const availableWidth = containerWidth * 2.00;
-        const availableHeight = containerHeight * 2.00;
+        // Ekran boyutunun %120'sini kullan
+        const availableWidth = containerWidth * 1.20;
+        const availableHeight = containerHeight * 1.20;
         
         let canvasWidth, canvasHeight;
         
