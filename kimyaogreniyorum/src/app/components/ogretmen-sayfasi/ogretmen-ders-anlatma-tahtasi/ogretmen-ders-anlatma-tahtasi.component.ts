@@ -675,46 +675,20 @@ export class OgretmenDersAnlatmaTahtasiComponent
         return;
       }
 
-      // Canvas boyutlarını ekran boyutuna göre büyüt (A4 oranını koruyarak)
-      const container = canvasEl.parentElement;
-      if (container) {
-        // A4 oranı: 210/297 = 0.707
-        const a4Ratio = 210 / 297;
-        const containerWidth = container.clientWidth;
-        const containerHeight = container.clientHeight;
-        
-        // Ekran boyutunun %170'ini kullan (maksimum yazma alanı için)
-        const availableWidth = containerWidth * 1.70;
-        const availableHeight = containerHeight * 1.70;
-        
-        // A4 oranına göre maksimum boyutu hesapla
-        let canvasWidth, canvasHeight;
-        
-        if (availableWidth / availableHeight > a4Ratio) {
-          // Genişlik fazla, yüksekliği baz al
-          canvasHeight = availableHeight;
-          canvasWidth = canvasHeight * a4Ratio;
-        } else {
-          // Yükseklik fazla, genişliği baz al
-          canvasWidth = availableWidth;
-          canvasHeight = canvasWidth / a4Ratio;
-        }
-        
-        // Minimum boyutları garanti et (çok küçük ekranlar için)
-        canvasWidth = Math.max(canvasWidth, 1000);
-        canvasHeight = Math.max(canvasHeight, 1414); // A4 oranında 1000'e karşılık gelen yükseklik
-        
-        // Canvas'ı üstten daha az boşlukla konumlandır
-        canvasEl.width = canvasWidth;
-        canvasEl.height = canvasHeight;
-        canvasEl.style.marginTop = '10px'; // Üst boşluğu azalt
-      }
+      // Sabit canvas boyutları (A4 oranında)
+      const canvasWidth = 800;
+      const canvasHeight = 1131; // A4 oranı (800 * 1.414)
+      
+      // Canvas element boyutlarını ayarla
+      canvasEl.width = canvasWidth;
+      canvasEl.height = canvasHeight;
+      canvasEl.style.marginTop = '10px';
 
       // Yeni fabric canvas oluştur
       const canvas = new fabric.Canvas(canvasId, {
         isDrawingMode: true,
-        width: canvasEl.width,
-        height: canvasEl.height,
+        width: canvasWidth,
+        height: canvasHeight,
         selection: false,
         renderOnAddRemove: true,
         interactive: true,
@@ -742,47 +716,8 @@ export class OgretmenDersAnlatmaTahtasiComponent
     if (!canvas) return;
 
     try {
-      const canvasEl = document.getElementById(
-        `canvas-${sayfaNo}`
-      ) as HTMLCanvasElement;
-      const container = canvasEl.parentElement;
-
-      if (container) {
-        // A4 oranına uygun boyutları hesapla
-        const a4Ratio = 210 / 297;
-        const containerWidth = container.clientWidth;
-        const containerHeight = container.clientHeight;
-        
-        // Ekran boyutunun %170'ini kullan
-        const availableWidth = containerWidth * 1.70;
-        const availableHeight = containerHeight * 1.70;
-        
-        let canvasWidth, canvasHeight;
-        
-        if (availableWidth / availableHeight > a4Ratio) {
-          canvasHeight = availableHeight;
-          canvasWidth = canvasHeight * a4Ratio;
-        } else {
-          canvasWidth = availableWidth;
-          canvasHeight = canvasWidth / a4Ratio;
-        }
-        
-        // Minimum boyutları garanti et
-        canvasWidth = Math.max(canvasWidth, 1000);
-        canvasHeight = Math.max(canvasHeight, 1414);
-        
-        // Canvas boyutlarını güncelle
-        canvas.setWidth(canvasWidth);
-        canvas.setHeight(canvasHeight);
-        
-        // Canvas'ı üstten daha az boşlukla konumlandır
-        const canvasEl = document.getElementById(`canvas-${sayfaNo}`) as HTMLCanvasElement;
-        if (canvasEl) {
-          canvasEl.style.marginTop = '10px'; // Üst boşluğu azalt
-        }
-        
-        canvas.renderAll();
-      }
+      // Sabit boyutları kullan - boyutlandırma yapmayın
+      canvas.renderAll();
     } catch (error) {
       console.error(`Canvas ${sayfaNo} boyutlandırma hatası:`, error);
     }
