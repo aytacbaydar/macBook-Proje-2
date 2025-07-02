@@ -1098,20 +1098,61 @@ export class OgretmenDersAnlatmaTahtasiComponent
             const x = margin + (availableWidth - imgWidth) / 2;
             const y = margin + 15 + (availableHeight - imgHeight) / 2; // Başlık için 15mm boşluk
 
-            // Filigran ekle (sayfa arka planına)
-            pdf.setTextColor(220, 220, 220); // Açık gri renk
-            pdf.setFontSize(60);
-            pdf.setFont('helvetica', 'bold');
-            
-            // Sayfanın ortasına çapraz filigran
-            const centerX = pageWidth / 2;
-            const centerY = pageHeight / 2;
-            
-            // Metni 45 derece döndür ve ortala
-            pdf.text('KimyaÖğreniyorum', centerX, centerY, {
-              angle: 45,
-              align: 'center'
-            });
+            // Filigran resmi ekle (sayfa arka planına)
+            try {
+              // Resmi base64 olarak yükle
+              const filigranResmiYolu = '/public/siyah-turuncu.png';
+              
+              // Resmi canvas üzerinden yükle
+              const filigranImg = new Image();
+              filigranImg.crossOrigin = 'anonymous';
+              
+              await new Promise((resolve, reject) => {
+                filigranImg.onload = () => {
+                  try {
+                    // Geçici canvas oluştur
+                    const tempCanvas = document.createElement('canvas');
+                    const tempCtx = tempCanvas.getContext('2d');
+                    
+                    // Filigran boyutları - sayfanın %30'u kadar
+                    const filigranGenislik = pageWidth * 0.3;
+                    const filigranYukseklik = (filigranImg.height * filigranGenislik) / filigranImg.width;
+                    
+                    tempCanvas.width = filigranGenislik * 2.83; // mm to px dönüşümü
+                    tempCanvas.height = filigranYukseklik * 2.83;
+                    
+                    // Soluk görünüm için opacity ayarla
+                    tempCtx.globalAlpha = 0.1; // %10 opaklık (çok soluk)
+                    tempCtx.drawImage(filigranImg, 0, 0, tempCanvas.width, tempCanvas.height);
+                    
+                    // Canvas'tan base64 al
+                    const filigranDataUrl = tempCanvas.toDataURL('image/png');
+                    
+                    // PDF'e filigran ekle - tam ortaya
+                    const filigranX = (pageWidth - filigranGenislik) / 2;
+                    const filigranY = (pageHeight - filigranYukseklik) / 2;
+                    
+                    pdf.addImage(filigranDataUrl, 'PNG', filigranX, filigranY, filigranGenislik, filigranYukseklik);
+                    
+                    resolve(true);
+                  } catch (error) {
+                    console.warn('Filigran ekleme hatası:', error);
+                    resolve(false); // Hata olsa bile devam et
+                  }
+                };
+                
+                filigranImg.onerror = () => {
+                  console.warn('Filigran resmi yüklenemedi');
+                  resolve(false); // Hata olsa bile devam et
+                };
+                
+                filigranImg.src = filigranResmiYolu;
+              });
+              
+            } catch (error) {
+              console.warn('Filigran yükleme hatası:', error);
+              // Hata durumunda devam et
+            }
 
             // Canvas görselini ekle
             pdf.addImage(dataURL, 'JPEG', x, y, imgWidth, imgHeight, undefined, 'MEDIUM');
@@ -1121,6 +1162,11 @@ export class OgretmenDersAnlatmaTahtasiComponent
             pdf.setFontSize(14);
             pdf.setFont('helvetica', 'bold');
             pdf.text('KimyaÖğreniyorum', margin, margin + 5);
+            
+            // Başlık altına çizgi ekle
+            const baslikGenisligi = pdf.getTextWidth('KimyaÖğreniyorum');
+            pdf.setLineWidth(0.5);
+            pdf.line(margin, margin + 7, margin + baslikGenisligi, margin + 7);
 
             // Sayfa numarası ekle (alt ortası)
             pdf.setFontSize(10);
@@ -1247,20 +1293,61 @@ export class OgretmenDersAnlatmaTahtasiComponent
               const x = margin + (availableWidth - imgWidth) / 2;
               const y = margin + 15 + (availableHeight - imgHeight) / 2; // Başlık için 15mm boşluk
 
-              // Filigran ekle (sayfa arka planına)
-              pdf.setTextColor(220, 220, 220); // Açık gri renk
-              pdf.setFontSize(60);
-              pdf.setFont('helvetica', 'bold');
-              
-              // Sayfanın ortasına çapraz filigran
-              const centerX = pageWidth / 2;
-              const centerY = pageHeight / 2;
-              
-              // Metni 45 derece döndür ve ortala
-              pdf.text('KimyaÖğreniyorum', centerX, centerY, {
-                angle: 45,
-                align: 'center'
-              });
+              // Filigran resmi ekle (sayfa arka planına)
+              try {
+                // Resmi base64 olarak yükle
+                const filigranResmiYolu = '/public/siyah-turuncu.png';
+                
+                // Resmi canvas üzerinden yükle
+                const filigranImg = new Image();
+                filigranImg.crossOrigin = 'anonymous';
+                
+                await new Promise((resolve, reject) => {
+                  filigranImg.onload = () => {
+                    try {
+                      // Geçici canvas oluştur
+                      const tempCanvas = document.createElement('canvas');
+                      const tempCtx = tempCanvas.getContext('2d');
+                      
+                      // Filigran boyutları - sayfanın %30'u kadar
+                      const filigranGenislik = pageWidth * 0.3;
+                      const filigranYukseklik = (filigranImg.height * filigranGenislik) / filigranImg.width;
+                      
+                      tempCanvas.width = filigranGenislik * 2.83; // mm to px dönüşümü
+                      tempCanvas.height = filigranYukseklik * 2.83;
+                      
+                      // Soluk görünüm için opacity ayarla
+                      tempCtx.globalAlpha = 0.1; // %10 opaklık (çok soluk)
+                      tempCtx.drawImage(filigranImg, 0, 0, tempCanvas.width, tempCanvas.height);
+                      
+                      // Canvas'tan base64 al
+                      const filigranDataUrl = tempCanvas.toDataURL('image/png');
+                      
+                      // PDF'e filigran ekle - tam ortaya
+                      const filigranX = (pageWidth - filigranGenislik) / 2;
+                      const filigranY = (pageHeight - filigranYukseklik) / 2;
+                      
+                      pdf.addImage(filigranDataUrl, 'PNG', filigranX, filigranY, filigranGenislik, filigranYukseklik);
+                      
+                      resolve(true);
+                    } catch (error) {
+                      console.warn('Filigran ekleme hatası:', error);
+                      resolve(false); // Hata olsa bile devam et
+                    }
+                  };
+                  
+                  filigranImg.onerror = () => {
+                    console.warn('Filigran resmi yüklenemedi');
+                    resolve(false); // Hata olsa bile devam et
+                  };
+                  
+                  filigranImg.src = filigranResmiYolu;
+                });
+                
+              } catch (error) {
+                console.warn('Filigran yükleme hatası:', error);
+                // Hata durumunda devam et
+              }
 
               // Canvas görselini ekle
               pdf.addImage(dataURL, 'JPEG', x, y, imgWidth, imgHeight, undefined, 'MEDIUM');
@@ -1270,6 +1357,11 @@ export class OgretmenDersAnlatmaTahtasiComponent
               pdf.setFontSize(12);
               pdf.setFont('helvetica', 'bold');
               pdf.text('Aytaç Baydar || Kimya Ögretmeni', margin, margin + 5);
+              
+              // Başlık altına çizgi ekle
+              const baslikGenisligi = pdf.getTextWidth('Aytaç Baydar || Kimya Ögretmeni');
+              pdf.setLineWidth(0.5);
+              pdf.line(margin, margin + 7, margin + baslikGenisligi, margin + 7);
 
               // Sayfa numarası ekle (alt ortası)
               pdf.setFontSize(10);
