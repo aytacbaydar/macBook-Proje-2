@@ -1077,9 +1077,9 @@ export class OgretmenDersAnlatmaTahtasiComponent
             // A4 sayfasına uygun boyutları hesapla (kenar boşluklarıyla)
             const pageWidth = 210; // A4 genişliği (mm)
             const pageHeight = 297; // A4 yüksekliği (mm)
-            const margin = 10; // Kenar boşluğu (mm)
+            const margin = 15; // Kenar boşluğu (mm) - başlık için biraz daha fazla
             const availableWidth = pageWidth - (margin * 2);
-            const availableHeight = pageHeight - (margin * 2);
+            const availableHeight = pageHeight - (margin * 2) - 20; // Başlık ve alt bilgi için alan
 
             let imgWidth, imgHeight;
 
@@ -1094,12 +1094,40 @@ export class OgretmenDersAnlatmaTahtasiComponent
               imgWidth = availableHeight * canvasRatio;
             }
 
-            // Ortalanmış pozisyon hesapla
+            // Ortalanmış pozisyon hesapla (başlık için aşağı kaydır)
             const x = margin + (availableWidth - imgWidth) / 2;
-            const y = margin + (availableHeight - imgHeight) / 2;
+            const y = margin + 15 + (availableHeight - imgHeight) / 2; // Başlık için 15mm boşluk
 
-            // JPEG'i PDF'e ekle
+            // Filigran ekle (sayfa arka planına)
+            pdf.setTextColor(220, 220, 220); // Açık gri renk
+            pdf.setFontSize(60);
+            pdf.setFont(undefined, 'bold');
+            
+            // Sayfanın ortasına çapraz filigran
+            const centerX = pageWidth / 2;
+            const centerY = pageHeight / 2;
+            
+            // Metni 45 derece döndür ve ortala
+            pdf.text('KimyaÖğreniyorum', centerX, centerY, {
+              angle: 45,
+              align: 'center'
+            });
+
+            // Canvas görselini ekle
             pdf.addImage(dataURL, 'JPEG', x, y, imgWidth, imgHeight, undefined, 'MEDIUM');
+
+            // Başlık ekle (sol üst)
+            pdf.setTextColor(0, 0, 0); // Siyah renk
+            pdf.setFontSize(14);
+            pdf.setFont(undefined, 'bold');
+            pdf.text('KimyaÖğreniyorum', margin, margin + 5);
+
+            // Sayfa numarası ekle (alt ortası)
+            pdf.setFontSize(10);
+            pdf.setFont(undefined, 'normal');
+            const sayfaNumarasi = `${page} / ${this.totalPages}`;
+            const textWidth = pdf.getTextWidth(sayfaNumarasi);
+            pdf.text(sayfaNumarasi, (pageWidth - textWidth) / 2, pageHeight - 10);
 
             // Sonraki sayfaya geç
             processNextPage(page + 1);
@@ -1198,9 +1226,9 @@ export class OgretmenDersAnlatmaTahtasiComponent
               // A4 sayfasına uygun boyutları hesapla (kenar boşluklarıyla)
               const pageWidth = 210; // A4 genişliği (mm)
               const pageHeight = 297; // A4 yüksekliği (mm)
-              const margin = 10; // Kenar boşluğu (mm)
+              const margin = 15; // Kenar boşluğu (mm) - başlık için biraz daha fazla
               const availableWidth = pageWidth - (margin * 2);
-              const availableHeight = pageHeight - (margin * 2);
+              const availableHeight = pageHeight - (margin * 2) - 20; // Başlık ve alt bilgi için alan
 
               let imgWidth, imgHeight;
 
@@ -1215,12 +1243,40 @@ export class OgretmenDersAnlatmaTahtasiComponent
                 imgWidth = availableHeight * canvasRatio;
               }
 
-              // Ortalanmış pozisyon hesapla
+              // Ortalanmış pozisyon hesapla (başlık için aşağı kaydır)
               const x = margin + (availableWidth - imgWidth) / 2;
-              const y = margin + (availableHeight - imgHeight) / 2;
+              const y = margin + 15 + (availableHeight - imgHeight) / 2; // Başlık için 15mm boşluk
 
-              // JPEG'i PDF'e ekle
+              // Filigran ekle (sayfa arka planına)
+              pdf.setTextColor(220, 220, 220); // Açık gri renk
+              pdf.setFontSize(60);
+              pdf.setFont(undefined, 'bold');
+              
+              // Sayfanın ortasına çapraz filigran
+              const centerX = pageWidth / 2;
+              const centerY = pageHeight / 2;
+              
+              // Metni 45 derece döndür ve ortala
+              pdf.text('KimyaÖğreniyorum', centerX, centerY, {
+                angle: 45,
+                align: 'center'
+              });
+
+              // Canvas görselini ekle
               pdf.addImage(dataURL, 'JPEG', x, y, imgWidth, imgHeight, undefined, 'MEDIUM');
+
+              // Başlık ekle (sol üst)
+              pdf.setTextColor(0, 0, 0); // Siyah renk
+              pdf.setFontSize(14);
+              pdf.setFont(undefined, 'bold');
+              pdf.text('KimyaÖğreniyorum', margin, margin + 5);
+
+              // Sayfa numarası ekle (alt ortası)
+              pdf.setFontSize(10);
+              pdf.setFont(undefined, 'normal');
+              const sayfaNumarasi = `${page} / ${this.totalPages}`;
+              const textWidth = pdf.getTextWidth(sayfaNumarasi);
+              pdf.text(sayfaNumarasi, (pageWidth - textWidth) / 2, pageHeight - 10);
               console.log(`Sayfa ${page} PDF'e eklendi. Canvas boyutu: ${canvasWidth}x${canvasHeight}, PDF boyutu: ${imgWidth.toFixed(1)}x${imgHeight.toFixed(1)}mm`);
             } else {
               console.log(`Sayfa ${page} boş, atlandı.`);
