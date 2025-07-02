@@ -1101,7 +1101,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
             // Filigran ekle (sayfa arka planına)
             pdf.setTextColor(220, 220, 220); // Açık gri renk
             pdf.setFontSize(60);
-            pdf.setFont(undefined, 'bold');
+            pdf.setFont('helvetica', 'bold');
             
             // Sayfanın ortasına çapraz filigran
             const centerX = pageWidth / 2;
@@ -1119,12 +1119,12 @@ export class OgretmenDersAnlatmaTahtasiComponent
             // Başlık ekle (sol üst)
             pdf.setTextColor(0, 0, 0); // Siyah renk
             pdf.setFontSize(14);
-            pdf.setFont(undefined, 'bold');
+            pdf.setFont('helvetica', 'bold');
             pdf.text('KimyaÖğreniyorum', margin, margin + 5);
 
             // Sayfa numarası ekle (alt ortası)
             pdf.setFontSize(10);
-            pdf.setFont(undefined, 'normal');
+            pdf.setFont('helvetica', 'normal');
             const sayfaNumarasi = `${page} / ${this.totalPages}`;
             const textWidth = pdf.getTextWidth(sayfaNumarasi);
             pdf.text(sayfaNumarasi, (pageWidth - textWidth) / 2, pageHeight - 10);
@@ -1250,7 +1250,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
               // Filigran ekle (sayfa arka planına)
               pdf.setTextColor(220, 220, 220); // Açık gri renk
               pdf.setFontSize(60);
-              pdf.setFont(undefined, 'bold');
+              pdf.setFont('helvetica', 'bold');
               
               // Sayfanın ortasına çapraz filigran
               const centerX = pageWidth / 2;
@@ -1267,13 +1267,13 @@ export class OgretmenDersAnlatmaTahtasiComponent
 
               // Başlık ekle (sol üst)
               pdf.setTextColor(0, 0, 0); // Siyah renk
-              pdf.setFontSize(14);
-              pdf.setFont(undefined, 'bold');
-              pdf.text('KimyaÖğreniyorum', margin, margin + 5);
+              pdf.setFontSize(12);
+              pdf.setFont('helvetica', 'bold');
+              pdf.text('Aytaç Baydar || Kimya Ögretmeni', margin, margin + 5);
 
               // Sayfa numarası ekle (alt ortası)
               pdf.setFontSize(10);
-              pdf.setFont(undefined, 'normal');
+              pdf.setFont('helvetica', 'normal');
               const sayfaNumarasi = `${page} / ${this.totalPages}`;
               const textWidth = pdf.getTextWidth(sayfaNumarasi);
               pdf.text(sayfaNumarasi, (pageWidth - textWidth) / 2, pageHeight - 10);
