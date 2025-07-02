@@ -1102,11 +1102,12 @@ export class OgretmenDersAnlatmaTahtasiComponent
             try {
               // Filigran resmi yolları - farklı yolları dene
               const filigranYollari = [
-                '/public/siyah-turuncu.png',
-                './public/siyah-turuncu.png',
+                'siyah-turuncu.png',
+                './siyah-turuncu.png',
+                '/siyah-turuncu.png',
                 'public/siyah-turuncu.png',
-                '/kimyaogreniyorum/public/siyah-turuncu.png',
-                './kimyaogreniyorum/public/siyah-turuncu.png'
+                './public/siyah-turuncu.png',
+                '/public/siyah-turuncu.png'
               ];
 
               let filigranYuklendi = false;
@@ -1328,15 +1329,26 @@ export class OgretmenDersAnlatmaTahtasiComponent
 
               // Filigran resmi ekle (sayfa arka planına)
               try {
-                // Resmi base64 olarak yükle
-                const filigranResmiYolu = 'public/siyah-turuncu.png';
+                // Filigran resmi yolları - farklı yolları dene
+                const filigranYollari = [
+                  'siyah-turuncu.png',
+                  './siyah-turuncu.png',
+                  '/siyah-turuncu.png',
+                  'public/siyah-turuncu.png',
+                  './public/siyah-turuncu.png',
+                  '/public/siyah-turuncu.png'
+                ];
 
-                // Resmi canvas üzerinden yükle
-                const filigranImg = new Image();
-                filigranImg.crossOrigin = 'anonymous';
+                let filigranYuklendi = false;
 
-                await new Promise((resolve, reject) => {
-                  filigranImg.onload = () => {
+                for (const yol of filigranYollari) {
+                  try {
+                    // Resmi canvas üzerinden yükle
+                    const filigranImg = new Image();
+                    filigranImg.crossOrigin = 'anonymous';
+
+                    const basarili = await new Promise((resolve) => {
+                      filigranImg.onload = () => {
                     try {
                       // Geçici canvas oluştur
                       const tempCanvas = document.createElement('canvas');
@@ -1372,13 +1384,32 @@ export class OgretmenDersAnlatmaTahtasiComponent
                   };
 
                   filigranImg.onerror = () => {
-                    console.warn('Filigran resmi yüklenemedi, alternatif yol deneniyor');
-                    // Alternatif yol dene
-                    filigranImg.src = '/kimyaogreniyorum/public/siyah-turuncu.png';
-                  };
+                        console.warn('Filigran resmi yüklenemedi:', yol);
+                        resolve(false);
+                      };
 
-                  filigranImg.src = filigranResmiYolu;
-                });
+                      // 5 saniye timeout
+                      setTimeout(() => {
+                        console.warn('Filigran yükleme timeout:', yol);
+                        resolve(false);
+                      }, 5000);
+
+                      filigranImg.src = yol;
+                    });
+
+                    if (basarili) {
+                      filigranYuklendi = true;
+                      break; // Başarıyla yüklenirse döngüden çık
+                    }
+                  } catch (error) {
+                    console.warn('Filigran deneme hatası:', yol, error);
+                    continue; // Sonraki yolu dene
+                  }
+                }
+
+                if (!filigranYuklendi) {
+                  console.warn('Hiçbir filigran yolu çalışmadı, filigran olmadan devam ediliyor');
+                }
 
               } catch (error) {
                 console.warn('Filigran yükleme hatası:', error);
