@@ -1034,7 +1034,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
         compress: true, // PDF sıkıştırmasını etkinleştir
       });
 
-      const processNextPage = (page: number) => {
+      const processNextPage = async (page: number) => {
         if (page > this.totalPages) {
           // Tüm sayfalar tamamlandı, PDF'i indir
           const bugun = new Date();
@@ -1054,7 +1054,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
         // Geçerli sayfayı görünür yap ve canvas'ı al
         this.sayfayaGit(page);
 
-        setTimeout(() => {
+        setTimeout(async () => {
           const canvas = this.canvasInstances[page - 1];
           if (canvas) {
             // Canvas'ın gerçek boyutlarını al
@@ -1122,8 +1122,10 @@ export class OgretmenDersAnlatmaTahtasiComponent
                     tempCanvas.height = filigranYukseklik * 2.83;
                     
                     // Soluk görünüm için opacity ayarla
-                    tempCtx.globalAlpha = 0.1; // %10 opaklık (çok soluk)
-                    tempCtx.drawImage(filigranImg, 0, 0, tempCanvas.width, tempCanvas.height);
+                    if (tempCtx) {
+                      tempCtx.globalAlpha = 0.1; // %10 opaklık (çok soluk)
+                      tempCtx.drawImage(filigranImg, 0, 0, tempCanvas.width, tempCanvas.height);
+                    }
                     
                     // Canvas'tan base64 al
                     const filigranDataUrl = tempCanvas.toDataURL('image/png');
@@ -1161,10 +1163,10 @@ export class OgretmenDersAnlatmaTahtasiComponent
             pdf.setTextColor(0, 0, 0); // Siyah renk
             pdf.setFontSize(14);
             pdf.setFont('helvetica', 'bold');
-            pdf.text('KimyaÖğreniyorum', margin, margin + 5);
+            pdf.text('Aytaç Baydar || Kimya Öğretmeni', margin, margin + 5);
             
             // Başlık altına çizgi ekle
-            const baslikGenisligi = pdf.getTextWidth('KimyaÖğreniyorum');
+            const baslikGenisligi = pdf.getTextWidth('Aytaç Baydar || Kimya Öğretmeni');
             pdf.setLineWidth(0.5);
             pdf.line(margin, margin + 7, margin + baslikGenisligi, margin + 7);
 
@@ -1317,8 +1319,10 @@ export class OgretmenDersAnlatmaTahtasiComponent
                       tempCanvas.height = filigranYukseklik * 2.83;
                       
                       // Soluk görünüm için opacity ayarla
-                      tempCtx.globalAlpha = 0.1; // %10 opaklık (çok soluk)
-                      tempCtx.drawImage(filigranImg, 0, 0, tempCanvas.width, tempCanvas.height);
+                      if (tempCtx) {
+                        tempCtx.globalAlpha = 0.1; // %10 opaklık (çok soluk)
+                        tempCtx.drawImage(filigranImg, 0, 0, tempCanvas.width, tempCanvas.height);
+                      }
                       
                       // Canvas'tan base64 al
                       const filigranDataUrl = tempCanvas.toDataURL('image/png');
