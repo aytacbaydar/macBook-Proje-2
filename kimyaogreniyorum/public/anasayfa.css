@@ -1,0 +1,61 @@
+.card-ana {
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    background-color: #fff;
+    width: 100%;
+    margin: 0 auto;
+    font-family: sans-serif;
+    margin-bottom: 20px;
+  }
+  
+  /* Header */
+  .card-ana-header {
+    color: white;
+    padding: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }  
+  
+  .card-ana-header h4{
+    font-size: 16px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+    margin: 0;
+    padding-left: 10px;
+  }
+  
+  /* Body */
+  .card-ana-body {
+    background-color: white;
+    padding: 10px;
+    color: #333;
+  }
+  
+  /* Button */
+  .card-ana-header button {
+    background-color: #ffffff50;
+    border: none;
+    color: white;
+    padding: 4px 8px;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .card-ana-header button:hover {
+    background-color: #ffffffe1;
+    color: #333;
+  }
+
+.bg-blue { background-color: #366bc0; color: white; }
+.bg-orange { background-color: #ff6600; color: white; }
+.bg-green { background-color: #11b07b; color: white; }
+.bg-red { background-color: #ff0000; color: white; }
+.bg-purple { background-color: #a855f7; color: white; }
+.bg-yellow { background-color: #facc15; color: white; }
+.bg-gray { background-color: #6b7280; color: white; }
+.bg-pink { background-color: #ec4899; color: white; }
