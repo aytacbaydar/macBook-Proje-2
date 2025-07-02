@@ -1,3 +1,105 @@
+<div class="attendance-container">
+  <!-- Modern Header Section -->
+  <div class="modern-page-header">
+    <div class="header-content">
+
+      <!-- Header Stats -->
+      <div class="admin-overview">
+        <div class="stat-card mavi">
+          <div class="stat-icon">
+            <i class="bi bi-book"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ completedLessons }}/{{ totalLessons }}</h3>
+            <p>Ders İlerlemesi</p>
+          </div>
+        </div>
+
+        <div class="stat-card yesil">
+          <div class="stat-icon">
+            <i class="bi bi-calendar-check"></i>
+          </div>
+          <div class="stat-content">
+            <h3></h3>
+            <p>Devamsızlık</p>
+          </div>
+        </div>
+
+        <div class="stat-card turuncu">
+          <div class="stat-icon">
+            <i class="bi bi-trophy"></i>
+          </div>
+          <div class="stat-content">
+            <h3></h3>
+            <p>Başarı %</p>
+          </div>
+        </div>
+
+        <div class="stat-card kırmızı">
+          <div class="stat-icon">
+            <i class="fas fa-chalkboard-teacher"></i>
+          </div>
+          <div class="stat-content">
+            <h3></h3>
+            <p>Toplam Soru Sayısı</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modern Header Section Son -->
+</div>
+
+<!--Yeni Tasarım-->
+
+<div class="anasayfa-container">
+  <div class="anasayfa-grid">
+
+    <!-- Tüm ekranı kaplayan 12 kolon -->
+    <div class="anasayfa-card col-12">
+      <div class="card">
+        <h3>12 Kolonluk Kart</h3>
+        <p>Bu tüm genişliği kaplar.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="anasayfa-grid">
+    <!-- 8 + 4 yan yana -->
+    <div class="anasayfa-card col-8">
+      <div class="card">
+        <h3>8 Kolon</h3>
+        <p>Bu 8/12 genişliğinde</p>
+      </div>
+    </div>
+    <div class="anasayfa-card col-4">
+      <div class="card">
+        <h3>4 Kolon</h3>
+        <p>Bu 4/12 genişliğinde</p>
+      </div>
+    </div>
+    </div>
+    <div class="anasayfa-grid">
+    <!-- 6 + 6 yan yana -->
+    <div class="col-6">
+      <div class="card">
+        <h3>6 Kolon</h3>
+        <p>Sol yarı</p>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="card">
+        <h3>6 Kolon</h3>
+        <p>Sağ yarı</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!--Yeni Tasarım Son-->
+
 
 <div class="student-dashboard-page">
   <!-- Loading State -->
@@ -21,11 +123,11 @@
   <!-- Main Content -->
   <div *ngIf="!isLoadingTopics && !topicsError">
 
-    <!-- Student Info Card -->
+    <!-- Student Info Card 
     <div class="student-info-card">
       <div class="student-details">
         <div class="student-avatar">
-          <!--<i class="bi bi-person-circle"></i>-->
+          <i class="bi bi-person-circle"></i>
           <img [src]="studentAvatar" alt="" width="100%" height="100%" style="border-radius: 8px;">
         </div>
         <div class="student-text">
@@ -43,8 +145,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Summary Stats -->
     <div class="summary-stats">
       <div class="stats-grid">
         <div class="stat-card">
@@ -52,7 +152,7 @@
             <i class="bi bi-calendar-check"></i>
           </div>
           <div class="stat-content">
-            <h4>{{ thisWeekAttendance }}/5</h4>
+            <h4>{{ thisWeekAttendance }}/4</h4>
             <p>Bu Hafta Devam</p>
           </div>
         </div>
@@ -88,13 +188,13 @@
           </div>
         </div>
       </div>
-    </div>
+    </div>-->
 
-    <!-- Quick Actions Section -->
+    <!-- Quick Actions Section 
     <div class="actions-container">
       <div class="action-section">
 
-        <!-- QR Kod Kartı -->
+        
         <div class="action-header">
           <div class="action-title">
             <div class="action-icon">
@@ -111,8 +211,6 @@
             </div>
           </div>
         </div>
-
-        <!-- QR Action Button -->
         <div class="action-content">
           <div class="action-button-container">
             <a routerLink="/ogrenci-sayfasi/ogrenci-qr-kod-sayfasi" class="action-button qr-button">
@@ -122,7 +220,10 @@
           </div>
         </div>
       </div>
-    </div>
+    </div>-->
+
+
+  
     <!-- Live Class Status -->
     <div class="class-status-container" *ngIf="!isLoadingClassStatus && classStatus">
       <div class="class-status-section">

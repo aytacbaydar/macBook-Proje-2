@@ -85,3 +85,23 @@ a{
         padding-left: 15px;   
     }
 }
+
+.dropdown-item{
+    padding: 0px !important;
+    .cikis{
+        width: 100%;
+        display: flex;
+        justify-content:space-around;
+        align-items: center;
+        flex-direction: row;
+    i{
+        margin-top: 1px;
+    }
+    p{
+        padding-top: 15px;
+        font-weight: 700;
+        font-size: 14px;
+        padding-left: 8px;
+    }
+}
+}
