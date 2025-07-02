@@ -52,402 +52,154 @@
 
 <!--Yeni Tasarım-->
 
-<div class="anasayfa-container">
-  <div class="anasayfa-grid">
-
-    <!-- Tüm ekranı kaplayan 12 kolon -->
-    <div class="anasayfa-card col-12">
-      <div class="card">
-        <h3>12 Kolonluk Kart</h3>
-        <p>Bu tüm genişliği kaplar.</p>
+<div class="container-full">
+  <div class="row">
+    <div class="col-12">
+      <div class="card-ana">
+        <div class="card-ana-header bg-green">
+          <h4>Profil Kartı</h4>
+          <button>Düzenle</button>
+        </div>
+        <div class="card-ana-body">
+          <p><strong>Ad:</strong> Aytaç Baydar</p>
+          <p><strong>Rol:</strong> Kimya Öğretmeni</p>
+          <p><strong>Açıklama:</strong> Bu kart, örnek bir kullanıcı profilini temsil eder.</p>
+        </div>
+      </div>      
+    </div>
+    <div class="col-4">
+      <div class="card-ana">
+        <div class="card-ana-header bg-blue">
+          <h4>Hızlı Erişim</h4>
+        </div>
+        <div class="card-ana-body">
+          <ul>
+            <li><a href="#">QR Kod İşlemleri</a></li>
+            <li><a href="#">Ders Notları</a></li>
+            <li><a href="#">Sınav Sonuçları</a></li>
+          </ul>
+        </div>
       </div>
     </div>
-  </div>
-
-  <div class="anasayfa-grid">
-    <!-- 8 + 4 yan yana -->
-    <div class="anasayfa-card col-8">
-      <div class="card">
-        <h3>8 Kolon</h3>
-        <p>Bu 8/12 genişliğinde</p>
+    <div class="col-8">
+      <div class="card-ana">
+        <div class="card-ana-header bg-purple">
+          <h4>Son İşlenen Konular</h4>
+        </div>
+        <div class="card-ana-body">
+          <!--İçerik-->
+          <div class="topics-container">
+            <div class="topics-section">
+      
+              <!-- Topics Header -->
+              <div class="topics-header">
+                <div class="topics-title">
+                  <div class="topics-icon">
+                    <i class="bi bi-bookmark-check-fill"></i>
+                  </div>
+                  <div class="topics-info">
+                    <h4>Son İşlenen Konular</h4>
+                  </div>
+                </div>
+                <div class="topics-stats">
+                  <div class="stat-item">
+                    <span class="stat-number">{{ recentTopics.length }}</span>
+                    <span class="stat-label">Son Konu</span>
+                  </div>
+                </div>
+              </div>
+      
+              <!-- Topics List -->
+              <div class="topics-list" *ngIf="recentTopics.length > 0">
+                <div class="topic-item" *ngFor="let topic of recentTopics; let topicIndex = index"
+                  [style.animation-delay]="topicIndex * 0.1 + 's'">
+      
+                  <!-- Topic Status -->
+                  <div class="topic-status">
+                    <i class="bi bi-check-circle-fill text-success"></i>
+                  </div>
+      
+                  <!-- Topic Content -->
+                  <div class="topic-content">
+                    <div class="topic-header">
+                      <h5 class="topic-title">
+                        {{ topicIndex + 1 }}. {{ topic.konu_adi }}
+                      </h5>
+                      <span class="topic-class-badge">{{ topic.sinif_seviyesi }}</span>
+                    </div>
+      
+                    <!-- Topic Meta -->
+                    <div class="topic-meta">
+                      <span class="topic-unit">
+                        <i class="bi bi-folder me-1"></i>
+                        {{ topic.unite_adi }}
+                      </span>
+                      <span class="topic-date">
+                        <i class="bi bi-calendar-check me-1"></i>
+                        {{ formatDate(topic.isleme_tarihi) }}
+                      </span>
+                    </div>
+                  </div>
+      
+                  <!-- Topic Actions -->
+                  <div class="topic-actions">
+                    <span class="completed-badge">
+                      <i class="bi bi-check-lg me-1"></i>
+                      Tamamlandı
+                    </span>
+                  </div>
+                </div>
+              </div>
+      
+              <!-- Empty State -->
+              <div *ngIf="recentTopics.length === 0" class="empty-state-topics">
+                <div class="empty-content">
+                  <i class="bi bi-journal-x"></i>
+                  <h3>Henüz İşlenen Konu Yok</h3>
+                  <p>Öğretmeniniz konuları işledikçe burada görünecek 📚</p>
+                </div>
+              </div>
+              <!-- Topics Actions -->
+              <div *ngIf="recentTopics.length > 0" class="topics-actions">
+                <div class="action-buttons">
+                  <button class="view-all-btn" routerLink="ogrenci-islene-konular-sayfasi">
+                    <i class="bi bi-list-ul"></i>
+                    Tümünü Görüntüle
+                  </button>
+                  <button class="pdf-btn" routerLink="ogrenci-islene-konularin-pdf-sayfasi">
+                    <i class="bi bi-file-earmark-pdf"></i>
+                    Ders Notları
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--İçerik Son-->
+        </div>
       </div>
     </div>
-    <div class="anasayfa-card col-4">
-      <div class="card">
-        <h3>4 Kolon</h3>
-        <p>Bu 4/12 genişliğinde</p>
-      </div>
-    </div>
-  </div>
-  
-  <div class="anasayfa-grid">
-    <!-- 6 + 6 yan yana -->
-    <div class="anasayfa-card col-6">
-      <div class="card">
-        <h3>6 Kolon</h3>
-        <p>Sol yarı</p>
-      </div>
-    </div>
-    <div class="anasayfa-card col-6">
-      <div class="card">
-        <h3>6 Kolon</h3>
-        <p>Sağ yarı</p>
-      </div>
-    </div>
+    <div class="col-6">
+      <div class="card-ana">
+        <div class="card-ana-header bg-purple">
+          <h4>Son İşlenen Konular</h4>
+        </div>
+        <div class="card-ana-body">
+          <!--İçerik-->
+          <!--İçerik Son-->
+        </div>
+      </div></div>
+    <div class="col-6">
+      <div class="card-ana">
+        <div class="card-ana-header bg-purple">
+          <h4>Son İşlenen Konular</h4>
+        </div>
+        <div class="card-ana-body">
+          <!--İçerik-->
+          <!--İçerik Son-->
+        </div>
+      </div></div>
   </div>
 </div>
-
 
 <!--Yeni Tasarım Son-->
 
-
-<div class="student-dashboard-page">
-  <!-- Loading State -->
-  <div *ngIf="isLoadingTopics" class="loading-section">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Yükleniyor...</span>
-    </div>
-    <p class="mt-3 text-muted">Veriler yükleniyor...</p>
-  </div>
-
-  <!-- Error State -->
-  <div *ngIf="topicsError && !isLoadingTopics" class="alert alert-danger">
-    <i class="bi bi-exclamation-triangle me-2"></i>
-    {{ topicsError }}
-    <button class="btn btn-sm btn-outline-danger ms-3" (click)="retryLoadTopics()">
-      <i class="bi bi-arrow-clockwise me-1"></i>
-      Tekrar Dene
-    </button>
-  </div>
-
-  <!-- Main Content -->
-  <div *ngIf="!isLoadingTopics && !topicsError">
-
-    <!-- Student Info Card 
-    <div class="student-info-card">
-      <div class="student-details">
-        <div class="student-avatar">
-          <i class="bi bi-person-circle"></i>
-          <img [src]="studentAvatar" alt="" width="100%" height="100%" style="border-radius: 8px;">
-        </div>
-        <div class="student-text">
-          <h3>{{ currentStudent || 'Öğrenci Paneli' }}</h3>
-          <div class="student-meta">
-            <span class="meta-item">
-              <i class="bi bi-calendar-check me-1"></i>
-              Bugün: {{ getCurrentDate() }}
-            </span>
-            <span class="meta-item">
-              <i class="bi bi-clock me-1"></i>
-              {{ getCurrentTime() }}
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="summary-stats">
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="bi bi-calendar-check"></i>
-          </div>
-          <div class="stat-content">
-            <h4>{{ thisWeekAttendance }}/4</h4>
-            <p>Bu Hafta Devam</p>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="bi bi-book"></i>
-          </div>
-          <div class="stat-content">
-            <h4>{{ completedLessons }}/{{ totalLessons }}</h4>
-            <p>Ders İlerlemesi</p>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="bi bi-people"></i>
-          </div>
-          <div class="stat-content">
-            <h4 *ngIf="classStatus">{{ classStatus.bugun_gelen }}/{{ classStatus.toplam_ogrenci }}</h4>
-            <h4 *ngIf="!classStatus">-/-</h4>
-            <p>Bugün Sınıfta</p>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="bi bi-trophy"></i>
-          </div>
-          <div class="stat-content">
-            <h4>{{ currentGrade }}</h4>
-            <p>Genel Ortalama</p>
-          </div>
-        </div>
-      </div>
-    </div>-->
-
-    <!-- Quick Actions Section 
-    <div class="actions-container">
-      <div class="action-section">
-
-        
-        <div class="action-header">
-          <div class="action-title">
-            <div class="action-icon">
-              <i class="bi bi-qr-code"></i>
-            </div>
-            <div class="action-info">
-              <h4>QR Kod İşlemleri</h4>
-              <p>Sınıfa giriş/çıkış işlemleri için QR kodunu kullanın</p>
-            </div>
-          </div>
-          <div class="action-stats">
-            <div class="stat-item">
-              <span class="stat-label">Hızlı Erişim</span>
-            </div>
-          </div>
-        </div>
-        <div class="action-content">
-          <div class="action-button-container">
-            <a routerLink="/ogrenci-sayfasi/ogrenci-qr-kod-sayfasi" class="action-button qr-button">
-              <i class="bi bi-qr-code me-2"></i>
-              QR Kod Sayfası
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>-->
-
-
-  
-    <!-- Live Class Status -->
-    <div class="class-status-container" *ngIf="!isLoadingClassStatus && classStatus">
-      <div class="class-status-section">
-        <div class="class-status-header">
-          <div class="class-status-title">
-            <div class="class-status-icon">
-              <i class="bi bi-people-fill"></i>
-            </div>
-            <div class="class-status-info">
-              <h4>Anlık Sınıf Durumu</h4>
-              <p>{{ studentGroup }} grubu</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="class-status-content">
-          <div class="status-item">
-            <span class="status-label">Bugün Gelen:</span>
-            <span class="status-value text-success">{{ classStatus.bugun_gelen }}</span>
-          </div>
-          <div class="status-item">
-            <span class="status-label">Gelmeyen:</span>
-            <span class="status-value text-danger">{{ classStatus.bugun_gelmeyen }}</span>
-          </div>
-          <div class="status-item" *ngIf="classStatus.son_giris_saati">
-            <span class="status-label">Son Giriş:</span>
-            <span class="status-value">{{ classStatus.son_giris_saati }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="anasayfa-grid">
-    <!-- Son İşlenen Konular Section -->
-    <div class="topics-container anasayfa-card grid-8">
-      <div class="topics-section">
-
-        <!-- Topics Header -->
-        <div class="topics-header">
-          <div class="topics-title">
-            <div class="topics-icon">
-              <i class="bi bi-bookmark-check-fill"></i>
-            </div>
-            <div class="topics-info">
-              <h4>Son İşlenen Konular</h4>
-            </div>
-          </div>
-          <div class="topics-stats">
-            <div class="stat-item">
-              <span class="stat-number">{{ recentTopics.length }}</span>
-              <span class="stat-label">Son Konu</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Topics List -->
-        <div class="topics-list" *ngIf="recentTopics.length > 0">
-          <div class="topic-item" *ngFor="let topic of recentTopics; let topicIndex = index"
-            [style.animation-delay]="topicIndex * 0.1 + 's'">
-
-            <!-- Topic Status -->
-            <div class="topic-status">
-              <i class="bi bi-check-circle-fill text-success"></i>
-            </div>
-
-            <!-- Topic Content -->
-            <div class="topic-content">
-              <div class="topic-header">
-                <h5 class="topic-title">
-                  {{ topicIndex + 1 }}. {{ topic.konu_adi }}
-                </h5>
-                <span class="topic-class-badge">{{ topic.sinif_seviyesi }}</span>
-              </div>
-
-              <!-- Topic Meta -->
-              <div class="topic-meta">
-                <span class="topic-unit">
-                  <i class="bi bi-folder me-1"></i>
-                  {{ topic.unite_adi }}
-                </span>
-                <span class="topic-date">
-                  <i class="bi bi-calendar-check me-1"></i>
-                  {{ formatDate(topic.isleme_tarihi) }}
-                </span>
-              </div>
-            </div>
-
-            <!-- Topic Actions -->
-            <div class="topic-actions">
-              <span class="completed-badge">
-                <i class="bi bi-check-lg me-1"></i>
-                Tamamlandı
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Empty State -->
-        <div *ngIf="recentTopics.length === 0" class="empty-state-topics">
-          <div class="empty-content">
-            <i class="bi bi-journal-x"></i>
-            <h3>Henüz İşlenen Konu Yok</h3>
-            <p>Öğretmeniniz konuları işledikçe burada görünecek 📚</p>
-          </div>
-        </div>
-
-          
-
-                <!-- Topics Actions -->
-        <div *ngIf="recentTopics.length > 0" class="topics-actions">
-          <div class="action-buttons">
-            <button class="view-all-btn" routerLink="ogrenci-islene-konular-sayfasi">
-              <i class="bi bi-list-ul"></i>
-              Tümünü Görüntüle
-            </button>
-            <button class="pdf-btn" routerLink="ogrenci-islene-konularin-pdf-sayfasi">
-              <i class="bi bi-file-earmark-pdf"></i>
-              Ders Notları
-            </button>
-          </div>
-        </div>
-            </div>
-    </div>
-    <!-- Progress Section -->
-    <div class="progress-container anasayfa-card grid-4">
-      <div class="progress-section">
-    
-        <!-- Progress Header -->
-        <div class="progress-header">
-          <div class="progress-title">
-            <div class="progress-icon">
-              <i class="bi bi-graph-up"></i>
-            </div>
-            <div class="progress-info">
-              <h4>İlerleme Durumu</h4>
-            </div>
-          </div>
-        </div>
-    
-        <!-- Progress Cards -->
-        <div class="progress-cards">
-          <!-- Devamsızlık Progress -->
-          <div class="progress-card">
-            <div class="progress-card-header">
-              <h5>Haftalık Devam</h5>
-              <span class="progress-percentage">{{ getAttendancePercentage() }}%</span>
-            </div>
-            <div class="progress-bar-container">
-              <div class="progress-bar">
-                <div class="progress-fill attendance-fill" [style.width.%]="getAttendancePercentage()">
-                </div>
-              </div>
-            </div>
-            <p class="progress-text">{{ thisWeekAttendance }}/5 gün devam</p>
-          </div>
-    
-          <!-- Ders İlerlemesi Progress -->
-          <div class="progress-card">
-            <div class="progress-card-header">
-              <h5>Ders İlerlemesi</h5>
-              <span class="progress-percentage">{{ getLessonProgress() }}%</span>
-            </div>
-            <div class="progress-bar-container">
-              <div class="progress-bar">
-                <div class="progress-fill lesson-fill" [style.width.%]="getLessonProgress()">
-                </div>
-              </div>
-            </div>
-            <p class="progress-text">{{ completedLessons }}/{{ totalLessons }} ders tamamlandı</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Weekly Performance Chart -->
-    <div class="topics-container performance-chart-container anasayfa-card grid-8">
-      <div class="performance-section">
-        <!-- Performance Header -->
-        <div class="performance-header">
-          <div class="performance-title">
-            <div class="performance-icon">
-              <i class="bi bi-bar-chart-line-fill"></i>
-            </div>
-            <div class="performance-info">
-              <h4>Haftalık Performans</h4>
-              <p>Son 4 haftanın devam durumu</p>
-            </div>
-          </div>
-          <div class="performance-stats">
-            <div class="stat-item">
-              <span class="stat-number">{{ getAveragePerformance() }}%</span>
-              <span class="stat-label">Ortalama</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Performance Chart -->
-        <div class="performance-chart" *ngIf="!isLoadingPerformance && weeklyPerformance.length > 0">
-          <div class="chart-bars">
-            <div class="chart-bar" *ngFor="let week of weeklyPerformance" 
-                 [style.height.%]="(week.basari_orani / getMaxPerformance()) * 100">
-              <div class="bar-fill" [style.height.%]="week.basari_orani">
-                <span class="bar-value">{{ week.basari_orani }}%</span>
-              </div>
-              <span class="bar-label">{{ week.hafta_adi }}</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Loading State -->
-        <div *ngIf="isLoadingPerformance" class="chart-loading">
-          <div class="skeleton-bars">
-            <div class="skeleton-bar" *ngFor="let i of [1,2,3,4]"></div>
-          </div>
-        </div>
-
-        <!-- Empty State -->
-        <div *ngIf="!isLoadingPerformance && weeklyPerformance.length === 0" class="chart-empty">
-          <i class="bi bi-graph-down text-muted"></i>
-          <p>Henüz performans verisi yok</p>
-        </div>
-      </div>
-    </div>
-
-
-  </div>
-</div>
-</div>
