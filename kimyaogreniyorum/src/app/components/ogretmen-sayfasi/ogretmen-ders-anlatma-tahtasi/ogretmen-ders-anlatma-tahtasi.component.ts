@@ -678,7 +678,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
       // Sabit canvas boyutları (A4 oranında)
       const canvasWidth = 800;
       const canvasHeight = 1131; // A4 oranı (800 * 1.414)
-      
+
       // Canvas element boyutlarını ayarla
       canvasEl.width = canvasWidth;
       canvasEl.height = canvasHeight;
@@ -1061,7 +1061,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
             const canvasWidth = canvas.width || 800;
             const canvasHeight = canvas.height || 600;
             const canvasRatio = canvasWidth / canvasHeight;
-            
+
             // Canvas'ı JPEG formatında optimize edilmiş şekilde dışa aktar
             const dataURL = canvas.toDataURL({
               format: 'jpeg',
@@ -1101,56 +1101,57 @@ export class OgretmenDersAnlatmaTahtasiComponent
             // Filigran resmi ekle (sayfa arka planına)
             try {
               // Resmi base64 olarak yükle
-              const filigranResmiYolu = '/public/siyah-turuncu.png';
-              
+              const filigranResmiYolu = 'public/siyah-turuncu.png';
+
               // Resmi canvas üzerinden yükle
               const filigranImg = new Image();
               filigranImg.crossOrigin = 'anonymous';
-              
+
               await new Promise((resolve, reject) => {
                 filigranImg.onload = () => {
                   try {
                     // Geçici canvas oluştur
                     const tempCanvas = document.createElement('canvas');
                     const tempCtx = tempCanvas.getContext('2d');
-                    
-                    // Filigran boyutları - sayfanın %30'u kadar
-                    const filigranGenislik = pageWidth * 0.3;
+
+                    // Filigran boyutları - sayfanın %40'ı kadar (daha büyük)
+                    const filigranGenislik = pageWidth * 0.4;
                     const filigranYukseklik = (filigranImg.height * filigranGenislik) / filigranImg.width;
-                    
+
                     tempCanvas.width = filigranGenislik * 2.83; // mm to px dönüşümü
                     tempCanvas.height = filigranYukseklik * 2.83;
-                    
-                    // Soluk görünüm için opacity ayarla
+
+                    // Daha görünür opacity ayarla
                     if (tempCtx) {
-                      tempCtx.globalAlpha = 0.1; // %10 opaklık (çok soluk)
+                      tempCtx.globalAlpha = 0.15; // %15 opaklık (daha görünür)
                       tempCtx.drawImage(filigranImg, 0, 0, tempCanvas.width, tempCanvas.height);
                     }
-                    
+
                     // Canvas'tan base64 al
                     const filigranDataUrl = tempCanvas.toDataURL('image/png');
-                    
+
                     // PDF'e filigran ekle - tam ortaya
                     const filigranX = (pageWidth - filigranGenislik) / 2;
                     const filigranY = (pageHeight - filigranYukseklik) / 2;
-                    
+
                     pdf.addImage(filigranDataUrl, 'PNG', filigranX, filigranY, filigranGenislik, filigranYukseklik);
-                    
+
                     resolve(true);
                   } catch (error) {
                     console.warn('Filigran ekleme hatası:', error);
                     resolve(false); // Hata olsa bile devam et
                   }
                 };
-                
+
                 filigranImg.onerror = () => {
-                  console.warn('Filigran resmi yüklenemedi');
-                  resolve(false); // Hata olsa bile devam et
+                  console.warn('Filigran resmi yüklenemedi, alternatif yol deneniyor');
+                  // Alternatif yol dene
+                  filigranImg.src = '/kimyaogreniyorum/public/siyah-turuncu.png';
                 };
-                
+
                 filigranImg.src = filigranResmiYolu;
               });
-              
+
             } catch (error) {
               console.warn('Filigran yükleme hatası:', error);
               // Hata durumunda devam et
@@ -1164,7 +1165,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
             pdf.setFontSize(14);
             pdf.setFont('helvetica', 'bold');
             pdf.text('Aytaç Baydar || Kimya Öğretmeni', margin, margin + 5);
-            
+
             // Başlık altına çizgi ekle
             const baslikGenisligi = pdf.getTextWidth('Aytaç Baydar || Kimya Öğretmeni');
             pdf.setLineWidth(0.5);
@@ -1249,16 +1250,16 @@ export class OgretmenDersAnlatmaTahtasiComponent
           if (canvas) {
             // Canvas'ta çizim var mı kontrol et
             const hasDrawings = canvas.getObjects().length > 0;
-            
+
             if (hasDrawings) {
               // Canvas'ın gerçek boyutlarını al
               const canvasWidth = canvas.width || 800;
               const canvasHeight = canvas.height || 600;
-              
+
               // A4 oranını hesapla (210mm x 297mm = 0.707 oran)
               const a4Ratio = 210 / 297;
               const canvasRatio = canvasWidth / canvasHeight;
-              
+
               // Canvas'ı JPEG formatında optimize edilmiş şekilde dışa aktar
               const dataURL = canvas.toDataURL({
                 format: 'jpeg',
@@ -1298,56 +1299,57 @@ export class OgretmenDersAnlatmaTahtasiComponent
               // Filigran resmi ekle (sayfa arka planına)
               try {
                 // Resmi base64 olarak yükle
-                const filigranResmiYolu = '/public/siyah-turuncu.png';
-                
+                const filigranResmiYolu = 'public/siyah-turuncu.png';
+
                 // Resmi canvas üzerinden yükle
                 const filigranImg = new Image();
                 filigranImg.crossOrigin = 'anonymous';
-                
+
                 await new Promise((resolve, reject) => {
                   filigranImg.onload = () => {
                     try {
                       // Geçici canvas oluştur
                       const tempCanvas = document.createElement('canvas');
                       const tempCtx = tempCanvas.getContext('2d');
-                      
-                      // Filigran boyutları - sayfanın %30'u kadar
-                      const filigranGenislik = pageWidth * 0.3;
+
+                      // Filigran boyutları - sayfanın %40'ı kadar (daha büyük)
+                      const filigranGenislik = pageWidth * 0.4;
                       const filigranYukseklik = (filigranImg.height * filigranGenislik) / filigranImg.width;
-                      
+
                       tempCanvas.width = filigranGenislik * 2.83; // mm to px dönüşümü
                       tempCanvas.height = filigranYukseklik * 2.83;
-                      
-                      // Soluk görünüm için opacity ayarla
+
+                      // Daha görünür opacity ayarla
                       if (tempCtx) {
-                        tempCtx.globalAlpha = 0.1; // %10 opaklık (çok soluk)
+                        tempCtx.globalAlpha = 0.15; // %15 opaklık (daha görünür)
                         tempCtx.drawImage(filigranImg, 0, 0, tempCanvas.width, tempCanvas.height);
                       }
-                      
+
                       // Canvas'tan base64 al
                       const filigranDataUrl = tempCanvas.toDataURL('image/png');
-                      
+
                       // PDF'e filigran ekle - tam ortaya
                       const filigranX = (pageWidth - filigranGenislik) / 2;
                       const filigranY = (pageHeight - filigranYukseklik) / 2;
-                      
+
                       pdf.addImage(filigranDataUrl, 'PNG', filigranX, filigranY, filigranGenislik, filigranYukseklik);
-                      
+
                       resolve(true);
                     } catch (error) {
                       console.warn('Filigran ekleme hatası:', error);
                       resolve(false); // Hata olsa bile devam et
                     }
                   };
-                  
+
                   filigranImg.onerror = () => {
-                    console.warn('Filigran resmi yüklenemedi');
-                    resolve(false); // Hata olsa bile devam et
+                    console.warn('Filigran resmi yüklenemedi, alternatif yol deneniyor');
+                    // Alternatif yol dene
+                    filigranImg.src = '/kimyaogreniyorum/public/siyah-turuncu.png';
                   };
-                  
+
                   filigranImg.src = filigranResmiYolu;
                 });
-                
+
               } catch (error) {
                 console.warn('Filigran yükleme hatası:', error);
                 // Hata durumunda devam et
@@ -1360,12 +1362,11 @@ export class OgretmenDersAnlatmaTahtasiComponent
               pdf.setTextColor(0, 0, 0); // Siyah renk
               pdf.setFontSize(12);
               pdf.setFont('helvetica', 'bold');
-              pdf.text('Aytaç Baydar || Kimya Ögretmeni', margin, margin + 5);
-              
-              // Başlık altına çizgi ekle
-              const baslikGenisligi = pdf.getTextWidth('Aytaç Baydar || Kimya Ögretmeni');
+              pdf.text('Aytaç Baydar || Kimya Öğretmeni', margin, margin + 5);
+
+              // Başlık altına çizgi ekle - sayfa genişliğinde
               pdf.setLineWidth(0.5);
-              pdf.line(margin, margin + 7, margin + baslikGenisligi, margin + 7);
+              pdf.line(margin, margin + 7, pageWidth - margin, margin + 7);
 
               // Sayfa numarası ekle (alt ortası)
               pdf.setFontSize(10);
@@ -1602,7 +1603,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
                   // Yanıtı kontrol et
                   const jsonResponse = event.body;
                   console.log('İşlem yanıtı:', jsonResponse);
-                  
+
                   if (jsonResponse && jsonResponse.success === true) {
                     console.log('İşlem başarılı:', jsonResponse);
                     alert(
@@ -1702,8 +1703,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
     const arr = dataURL.split(',');
     const mime = arr[0].match(/:(.*?);/)?.[1] || 'image/png';
     const bstr = atob(arr[1]);
-    let n = bstr.length;
-    const u8arr = new Uint8Array(n);
+    let n = bstr.length;    const u8arr = new Uint8Array(n);
     while (n--) {
       u8arr[n] = bstr.charCodeAt(n);
     }
