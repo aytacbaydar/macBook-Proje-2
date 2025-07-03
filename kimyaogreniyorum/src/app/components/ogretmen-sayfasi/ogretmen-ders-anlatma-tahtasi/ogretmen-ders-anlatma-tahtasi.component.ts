@@ -1202,7 +1202,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
             // Başlık altına çizgi ekle
             const baslikGenisligi = pdf.getTextWidth('Aytaç Baydar || Kimya Ögretmeni');
             pdf.setLineWidth(0.5);
-            pdf.line(margin, margin + 5, margin + baslikGenisligi, margin + 5);
+            pdf.line(margin, margin + 7, margin + baslikGenisligi, margin + 7);
 
             // Sayfa numarası ekle (alt ortası)
             pdf.setFontSize(10);
