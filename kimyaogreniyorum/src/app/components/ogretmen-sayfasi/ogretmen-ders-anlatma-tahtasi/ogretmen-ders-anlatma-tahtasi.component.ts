@@ -680,14 +680,15 @@ export class OgretmenDersAnlatmaTahtasiComponent
         return;
       }
 
-      // Sabit canvas boyutları (A4 oranında) - daha büyük boyut
-      const canvasWidth = 1200;
-      const canvasHeight = 1697; // A4 oranı (1200 * 1.414)
+      // Sabit canvas boyutları (A4 oranında) - optimize edilmiş boyut
+      const canvasWidth = 800;
+      const canvasHeight = 1130; // A4 oranı (800 * 1.414)
 
       // Canvas element boyutlarını ayarla
       canvasEl.width = canvasWidth;
       canvasEl.height = canvasHeight;
-      canvasEl.style.marginTop = '10px';
+      canvasEl.style.marginTop = '5px';
+      canvasEl.style.marginBottom = '15px';
 
       // Yeni fabric canvas oluştur
       const canvas = new fabric.Canvas(canvasId, {
@@ -754,13 +755,20 @@ export class OgretmenDersAnlatmaTahtasiComponent
       setTimeout(() => {
         const canvasElement = document.getElementById(`canvas-${this.currentPage}`);
         if (canvasElement) {
+          // Sayfanın alt kısmına kaydır
           canvasElement.scrollIntoView({ 
             behavior: 'smooth', 
-            block: 'start',
+            block: 'center',
             inline: 'center' 
           });
+          
+          // Alternatif olarak sayfa sonuna kaydır
+          window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: 'smooth'
+          });
         }
-      }, 200);
+      }, 300);
     }, 100);
   }
 
