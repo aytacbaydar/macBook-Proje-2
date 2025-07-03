@@ -1169,8 +1169,8 @@ export class OgretmenDersAnlatmaTahtasiComponent
             canvas.renderAll();
             const dataURL = canvas.toDataURL({
               format: 'jpeg',
-              quality: 0.5, // Çok düşük kalite - dosya boyutu için
-              multiplier: 0.5, // Çözünürlüğü düşür
+              quality: 0.8, // Yüksek kalite - daha iyi görüntü için
+              multiplier: 1.0, // Tam çözünürlük
             });
 
             // Canvas'ın gerçek boyutlarını al
@@ -1218,10 +1218,9 @@ export class OgretmenDersAnlatmaTahtasiComponent
             pdf.setFont('helvetica', 'bold');
             pdf.text('Aytaç Baydar || Kimya Ögretmeni', margin, margin + 5);
 
-            // Başlık altına çizgi ekle
-            const baslikGenisligi = pdf.getTextWidth('Aytaç Baydar || Kimya Ögretmeni');
-            pdf.setLineWidth(0.5);
-            pdf.line(margin, margin + 7, margin + baslikGenisligi, margin + 7);
+            // Başlık altına çizgi ekle - sayfa genişliğinde
+            pdf.setLineWidth(0.8);
+            pdf.line(margin, margin + 7, pageWidth - margin, margin + 7);
 
             // Sayfa numarası ekle (alt ortası)
             pdf.setFontSize(10);
@@ -1319,8 +1318,8 @@ export class OgretmenDersAnlatmaTahtasiComponent
               // Canvas'ı JPEG formatında çok düşük kalitede dışa aktar
               const dataURL = canvas.toDataURL({
                 format: 'jpeg',
-                quality: 0.5, // Orta kalite - daha iyi görüntü için
-                multiplier: 0.6, // Biraz daha yüksek çözünürlük
+                quality: 0.7, // Yüksek kalite - daha iyi görüntü için
+                multiplier: 0.8, // Yüksek çözünürlük
               });
 
               // İlk sayfa değilse yeni sayfa ekle
@@ -1364,7 +1363,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
               pdf.text('Aytaç Baydar || Kimya Öğretmeni', margin, margin + 5);
 
               // Başlık altına çizgi ekle - sayfa genişliğinde
-              pdf.setLineWidth(0.5);
+              pdf.setLineWidth(0.8);
               pdf.line(margin, margin + 7, pageWidth - margin, margin + 7);
 
               // Sayfa numarası ekle (alt ortası)
@@ -1375,7 +1374,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
               pdf.text(sayfaNumarasi, (pageWidth - textWidth) / 2, pageHeight - 10);
 
               // Sayfa numarası altına çizgi ekle - sayfa genişliğinde
-              pdf.setLineWidth(0.5);
+              pdf.setLineWidth(0.8);
               pdf.line(margin, pageHeight - 12, pageWidth - margin, pageHeight - 12);
               console.log(`Sayfa ${page} PDF'e eklendi. Canvas boyutu: ${canvasWidth}x${canvasHeight}, PDF boyutu: ${imgWidth.toFixed(1)}x${imgHeight.toFixed(1)}mm`);
             } else {
