@@ -1,27 +1,7 @@
 
 <div class="modern-page-container">
   <!-- Minimal Navbar -->
-  <div class="minimal-navbar">
-    <div class="navbar-content">
-      <div class="page-info">
-        <h1 class="page-title">
-          <i class="bi bi-file-earmark-pdf-fill me-2"></i>
-          Ders Notları
-        </h1>
-        <p class="page-subtitle" *ngIf="studentInfo">
-          {{ studentInfo.grubu }} - İşlenen Konular PDF Dokümanları
-        </p>
-      </div>
-      <div class="navbar-actions">
-        <button class="modern-btn modern-btn-secondary" 
-                routerLink="../islenen-konular"
-                aria-label="İşlenen konular sayfasına geri dön">
-          <i class="bi bi-arrow-left" aria-hidden="true"></i>
-          İşlenen Konular
-        </button>
-      </div>
-    </div>
-  </div>
+
 
   <!-- Loading State -->
   <div *ngIf="isLoading" class="loading-container">
@@ -41,19 +21,7 @@
 
   <!-- Main Content -->
   <div *ngIf="!isLoading && !error" class="content-wrapper">
-    <!-- Student Info Card -->
-    <div class="student-info-card" *ngIf="studentInfo">
-      <div class="student-header">
-        <div class="student-avatar">
-          <i class="bi bi-person-circle"></i>
-        </div>
-        <div class="student-details">
-          <h3>{{ studentInfo.adi_soyadi }}</h3>
-          <p class="student-group">{{ studentInfo.grubu }} Grubu</p>
-          <p class="student-email">{{ studentInfo.email }}</p>
-        </div>
-      </div>
-    </div>
+  
 
     <!-- Ders Kayıtları -->
     <div class="lessons-section">

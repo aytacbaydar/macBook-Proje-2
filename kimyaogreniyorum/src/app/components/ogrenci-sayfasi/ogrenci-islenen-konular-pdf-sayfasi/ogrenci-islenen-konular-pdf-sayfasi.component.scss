@@ -1,8 +1,7 @@
 
 .modern-page-container {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100%;
+  font-family: 'Roboto', sans-serif;
 }
 
 .minimal-navbar {
@@ -77,13 +76,13 @@
 }
 
 .content-wrapper {
-  max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
   padding: 2rem;
 }
 
 .student-info-card {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgb(255, 255, 255);
   backdrop-filter: blur(10px);
   border-radius: 16px;
   padding: 1.5rem;
