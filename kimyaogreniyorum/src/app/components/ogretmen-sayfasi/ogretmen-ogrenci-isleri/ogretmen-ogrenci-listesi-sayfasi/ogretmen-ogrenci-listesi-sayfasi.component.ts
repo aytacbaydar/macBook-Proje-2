@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -272,7 +272,7 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
         error: (error) => {
           console.error('API hatası:', error);
           let errorMessage = 'Silme işlemi sırasında bir hata oluştu: ';
-          
+
           if (error.error && error.error.error) {
             errorMessage += error.error.error;
           } else if (error.message) {
@@ -280,7 +280,7 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
           } else {
             errorMessage += 'Bilinmeyen bir hata';
           }
-          
+
           alert(errorMessage);
         },
       });
@@ -462,5 +462,45 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
 
   getTeachersWaiting(): number {
     return this.newUsers.filter((user) => user.rutbe === 'ogretmen').length;
+  }
+
+  loadStudents(): void {
+    this.isLoading = true;
+    this.error = null;
+
+    let token = '';
+    let loggedInUser: any = null;
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (userStr) {
+      loggedInUser = JSON.parse(userStr);
+      token = loggedInUser.token || '';
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    this.http.get<any>('./server/api/ogrenciler_listesi.php', { headers })
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            // Sadece öğrencileri filtrele ve giriş yapan öğretmene ait olanları göster
+            const loggedInTeacherName = loggedInUser?.adi_soyadi || '';
+            const loggedInTeacherId = loggedInUser?.id || '';
+
+            this.students = response.data.filter((student: any) => 
+              student.rutbe === 'ogrenci' && 
+              (student.ogretmeni === loggedInTeacherName || student.ogretmeni == loggedInTeacherId)
+            );
+          } else {
+            this.error = response.message || 'Öğrenci verileri yüklenirken hata oluştu.';
+          }
+          this.isLoading = false;
+        },
+        error: (error) => {
+          this.error = 'Sunucu hatası: ' + (error.error?.message || error.message);
+          this.isLoading = false;
+        }
+      });
   }
 }

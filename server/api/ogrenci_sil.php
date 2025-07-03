@@ -35,11 +35,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 errorResponse('Öğrenci bulunamadı', 404);
             }
             
-            // Debug için log ekle
-            error_log("Silme işlemi kontrol - Öğretmen: " . $user['adi_soyadi'] . ", Öğrencinin öğretmeni: " . $student['ogretmeni']);
+            // Öğretmen kontrolü - hem ID hem de isim ile kontrol et
+            $teacherMatch = false;
             
-            if ($student['ogretmeni'] !== $user['adi_soyadi']) {
-                errorResponse('Bu öğrenciyi silme yetkiniz yok. Öğrenci: ' . $student['ogretmeni'] . ', Siz: ' . $user['adi_soyadi'], 403);
+            // Eğer ogretmeni alanı ID ise
+            if (is_numeric($student['ogretmeni']) && $student['ogretmeni'] == $user['id']) {
+                $teacherMatch = true;
+            }
+            // Eğer ogretmeni alanı isim ise
+            else if ($student['ogretmeni'] === $user['adi_soyadi']) {
+                $teacherMatch = true;
+            }
+            
+            if (!$teacherMatch) {
+                errorResponse('Bu öğrenciyi silme yetkiniz yok', 403);
             }
         }
 
