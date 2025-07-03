@@ -110,10 +110,11 @@
   </div>
 
   <div class="calisma-alani">
-    <div class="beyaz-tahta-container">
-      <div *ngFor="let sayfa of sayfalar; let i = index" [class.aktif-sayfa]="currentPage === i + 1" class="beyaz-tahta">
-        <canvas [id]="'canvas-' + (i + 1)" class="drawing-canvas"></canvas>
-      </div>
+    <div class="canvas-container">
+      <canvas *ngFor="let sayfa of sayfalar; let i = index" 
+              [id]="'canvas-' + (i + 1)" 
+              [style.display]="currentPage === i + 1 ? 'block' : 'none'"
+              class="drawing-canvas"></canvas>
     </div>
   </div>
 

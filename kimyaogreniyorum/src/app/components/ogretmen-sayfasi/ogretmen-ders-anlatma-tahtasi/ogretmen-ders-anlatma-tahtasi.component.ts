@@ -784,21 +784,9 @@ export class OgretmenDersAnlatmaTahtasiComponent
 
   sayfayaGit(sayfa: number): void {
     this.currentPage = sayfa;
-    
-    // Tüm sayfaları gizle
-    const sayfalar = document.querySelectorAll('.beyaz-tahta');
-    sayfalar.forEach((element) => {
-      element.classList.remove('aktif-sayfa');
-    });
 
-    // Aktif sayfayı göster
+    // Eğer bu sayfanın canvas'ı yoksa oluştur
     setTimeout(() => {
-      const aktifSayfa = document.querySelector(`.beyaz-tahta:nth-child(${sayfa})`);
-      if (aktifSayfa) {
-        aktifSayfa.classList.add('aktif-sayfa');
-      }
-
-      // Eğer bu sayfanın canvas'ı yoksa oluştur
       if (!this.canvasInstances[sayfa - 1]) {
         this.canvasOlustur(sayfa);
       } else {
@@ -1157,43 +1145,14 @@ export class OgretmenDersAnlatmaTahtasiComponent
             canvas.backgroundColor = '#ffffff';
             canvas.renderAll();
             
-            // Tüm sayfa container'ını al (filigran dahil)
-            const sayfaContainer = document.querySelector(`.beyaz-tahta:nth-child(${page})`);
-            
-            let dataURL: string;
-            
-            if (sayfaContainer) {
-              // html2canvas ile filigran dahil tüm sayfayı yakala
-              try {
-                const html2canvas = (await import('html2canvas')).default;
-                const canvasElement = await html2canvas(sayfaContainer as HTMLElement, {
-                  backgroundColor: '#ffffff',
-                  scale: 1,
-                  useCORS: true,
-                  allowTaint: true
-                });
-                dataURL = canvasElement.toDataURL('image/jpeg', 0.7);
-              } catch (error) {
-                console.warn('html2canvas hatası, canvas export kullanılıyor:', error);
-                // Fallback: sadece canvas
-                canvas.backgroundColor = '#ffffff';
-                canvas.renderAll();
-                dataURL = canvas.toDataURL({
-                  format: 'jpeg',
-                  quality: 0.7,
-                  multiplier: 0.8,
-                });
-              }
-            } else {
-              // Fallback: sadece canvas
-              canvas.backgroundColor = '#ffffff';
-              canvas.renderAll();
-              dataURL = canvas.toDataURL({
-                format: 'jpeg',
-                quality: 0.7,
-                multiplier: 0.8,
-              });
-            }
+            // Canvas'ı doğrudan al
+            canvas.backgroundColor = '#ffffff';
+            canvas.renderAll();
+            const dataURL = canvas.toDataURL({
+              format: 'jpeg',
+              quality: 0.7,
+              multiplier: 0.8,
+            });
 
             // Canvas'ın gerçek boyutlarını al
             const canvasWidth = canvas.width || 800;
