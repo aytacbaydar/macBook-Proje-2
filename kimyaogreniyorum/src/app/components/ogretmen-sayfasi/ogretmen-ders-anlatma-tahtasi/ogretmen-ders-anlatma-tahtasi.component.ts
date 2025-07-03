@@ -1107,14 +1107,14 @@ export class OgretmenDersAnlatmaTahtasiComponent
 
             // Başlık ekle (sol üst)
             pdf.setTextColor(0, 0, 0); // Siyah renk
-            pdf.setFontSize(14);
+            pdf.setFontSize(11);
             pdf.setFont('helvetica', 'bold');
             pdf.text('Aytaç Baydar || Kimya Ögretmeni', margin, margin + 5);
 
             // Başlık altına çizgi ekle
-            const baslikGenisligi = pdf.getTextWidth('Aytaç Baydar || Kimya Öğretmeni');
+            const baslikGenisligi = pdf.getTextWidth('Aytaç Baydar || Kimya Ögretmeni');
             pdf.setLineWidth(0.5);
-            pdf.line(margin, margin + 7, margin + baslikGenisligi, margin + 7);
+            pdf.line(margin, margin + 5, margin + baslikGenisligi, margin + 5);
 
             // Sayfa numarası ekle (alt ortası)
             pdf.setFontSize(10);
