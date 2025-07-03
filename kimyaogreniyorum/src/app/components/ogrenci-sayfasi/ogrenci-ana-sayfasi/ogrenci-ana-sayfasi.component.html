@@ -1,38 +1,59 @@
 <div class="container-full">
   <div class="row">
     <div class="col-12 d-block d-md-none mt-5">
-        <div class="card-ana bg-blue">
+      <div class="card-ana bg-blue">
+        <div class="card-ana-header">
+          <h4><i class="bi bi-lightning-charge-fill"></i>Hızlı Erişim</h4>
+          <button><i class="bi bi-bookmark-plus-fill"></i></button>
+        </div>
+        <div class="card-ana-body">
+          <!--İçerik-->
+          <div class="modern-quick-actions">
+            <a href="ogrenci-sayfasi/ogrenci-islene-konular-sayfasi" class="modern-action-btn gradient-blue">
+              <div class="action-icon">
+                <i class="bi bi-book"></i>
+              </div>
+              <span>İşlenen Konular</span>
+            </a>
+            <a href="ogrenci-sayfasi/ogrenci-islene-konularin-pdf-sayfasi" class="modern-action-btn gradient-red">
+              <div class="action-icon">
+                <i class="bi bi-file-pdf"></i>
+              </div>
+              <span>Konu PDF'leri</span>
+            </a>
+            <a routerLink="ogrenci-qr-kod-sayfasi" class="modern-action-btn gradient-green">
+              <div class="action-icon">
+                <i class="bi bi-qr-code"></i>
+              </div>
+              <span>QR Kod</span>
+            </a>
+            <a routerLink="ogrenci-sinav-islemleri-sayfasi" class="modern-action-btn gradient-purple">
+              <div class="action-icon">
+                <i class="bi bi-clipboard-check"></i>
+              </div>
+              <span>Sınavlar</span>
+            </a>
+          </div>
+          <!--İçerik Son-->
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+        <div class="card-ana bg-green">
           <div class="card-ana-header">
-            <h4><i class="bi bi-lightning-charge-fill"></i>Hızlı Erişim</h4>
-            <button>Ekle</button>
+            <h4><i class="bi bi-bar-chart-fill"></i> Sınav Performansım</h4>
+            <button><i class="bi bi-bookmark-plus-fill"></i></button>
           </div>
           <div class="card-ana-body">
             <!--İçerik-->
-              <div class="modern-quick-actions">
-                <a href="ogrenci-sayfasi/ogrenci-islene-konular-sayfasi" class="modern-action-btn gradient-blue">
-                  <div class="action-icon">
-                    <i class="bi bi-book"></i>
-                  </div>
-                  <span>İşlenen Konular</span>
-                </a>
-                <a href="ogrenci-sayfasi/ogrenci-islene-konularin-pdf-sayfasi" class="modern-action-btn gradient-red">
-                  <div class="action-icon">
-                    <i class="bi bi-file-pdf"></i>
-                  </div>
-                  <span>Konu PDF'leri</span>
-                </a>
-                <a routerLink="ogrenci-qr-kod-sayfasi" class="modern-action-btn gradient-green">
-                  <div class="action-icon">
-                    <i class="bi bi-qr-code"></i>
-                  </div>
-                  <span>QR Kod</span>
-                </a>
-                <a routerLink="ogrenci-sinav-islemleri-sayfasi" class="modern-action-btn gradient-purple">
-                  <div class="action-icon">
-                    <i class="bi bi-clipboard-check"></i>
-                  </div>
-                  <span>Sınavlar</span>
-                </a>
+            <div *ngIf="loadingExamResults" class="loading-section text-center py-3">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Yükleniyor...</span>
+              </div>
+              <p class="mt-2">Sınav sonuçları yükleniyor...</p>
+            </div>
+            <div *ngIf="!loadingExamResults" class="chart-container">
+              <canvas id="comparisonChart" width="100%" height="300"></canvas>
               </div>
             <!--İçerik Son-->
           </div>
@@ -42,7 +63,7 @@
         <div class="card-ana bg-orange">
           <div class="card-ana-header">
             <h4><i class="bi bi-book me-2"></i>Son İşlenen Konular</h4>
-            <button>Ekle</button>
+            <button><i class="bi bi-bookmark-plus-fill"></i></button>
           </div>
           <div class="card-ana-body">
             <!--İçerik-->
@@ -85,7 +106,7 @@
         <div class="card-ana bg-blue">
           <div class="card-ana-header">
             <h4><i class="bi bi-lightning-charge-fill"></i>Hızlı Erişim</h4>
-            <button>Ekle</button>
+            <button><i class="bi bi-bookmark-plus-fill"></i></button>
           </div>
           <div class="card-ana-body">
             <!--İçerik-->
@@ -118,78 +139,6 @@
             <!--İçerik Son-->
           </div>
         </div>
-    </div>
-  </div>
-</div>
-
-
-
-
-<div class="ogrenci-ana-sayfasi">
-
-  <!-- Main Content Grid -->
-  <div class="main-grid">
-    <!-- Son İşlenen Konular Card -->
-    <div class="card">
-      <div class="card-header">
-        <h4><i class="bi bi-book-fill me-2"></i>Son İşlenen Konular</h4>
-      </div>
-      <div class="card-body">
-        <div *ngIf="loadingTopics" class="loading-section text-center py-3">
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Yükleniyor...</span>
-          </div>
-          <p class="mt-2">Konular yükleniyor...</p>
-        </div>
-        
-        <div *ngIf="!loadingTopics && sonIslenenKonular.length > 0" class="topics-list">
-          <div class="topic-item" *ngFor="let konu of sonIslenenKonular; let i = index">
-            <div class="topic-icon">
-              <i class="bi bi-check-circle-fill text-success"></i>
-            </div>
-            <div class="topic-content">
-              <h6 class="topic-title">{{ konu.konu_adi || konu.konu_baslik }}</h6>
-              <p class="topic-meta">
-                <small class="text-muted">
-                  <i class="bi bi-calendar-check me-1"></i>
-                  {{ formatDate(konu.isleme_tarihi) }}
-                </small>
-                <span class="badge bg-light text-dark ms-2" *ngIf="konu.sinif_seviyesi">
-                  {{ konu.sinif_seviyesi }}
-                </span>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div *ngIf="!loadingTopics && sonIslenenKonular.length === 0" class="empty-state text-center py-3">
-          <i class="bi bi-journal-x text-muted" style="font-size: 2rem;"></i>
-          <p class="text-muted mt-2">Henüz işlenen konu yok</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Sınav Performansı Grafiği -->
-  <div class="row mt-4" *ngIf="sinavSonuclari.length > 0">
-    <div class="col-12">
-      <div class="card chart-card">
-        <div class="card-header">
-          <h5><i class="bi bi-bar-chart-fill"></i> Sınav Performansım</h5>
-          <small class="text-muted">Son 5 sınav sonucunuz</small>
-        </div>
-        <div class="card-body">
-          <div *ngIf="loadingExamResults" class="loading-section text-center py-3">
-            <div class="spinner-border text-primary" role="status">
-              <span class="visually-hidden">Yükleniyor...</span>
-            </div>
-            <p class="mt-2">Sınav sonuçları yükleniyor...</p>
-          </div>
-          <div *ngIf="!loadingExamResults" class="chart-container">
-            <canvas id="comparisonChart" width="100%" height="300"></canvas>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </div>
