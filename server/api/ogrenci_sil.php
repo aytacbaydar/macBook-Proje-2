@@ -8,8 +8,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Kullanıcı doğrulama
         $user = authorize();
 
-        // Sadece yöneticiler silme yetkisine sahip
-        if ($user['rutbe'] !== 'admin') {
+        // Yöneticiler tüm öğrencileri silebilir, öğretmenler sadece kendi öğrencilerini silebilir
+        if ($user['rutbe'] !== 'admin' && $user['rutbe'] !== 'ogretmen') {
             errorResponse('Bu işlemi yapmaya yetkiniz yok', 403);
         }
 
@@ -24,6 +24,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $userId = $data['id'];
 
         $conn = getConnection();
+
+        // Eğer öğretmense, sadece kendi öğrencisini silebilir
+        if ($user['rutbe'] === 'ogretmen') {
+            $stmt = $conn->prepare("SELECT ogretmeni FROM ogrenciler WHERE id = ?");
+            $stmt->execute([$userId]);
+            $student = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$student || $student['ogretmeni'] !== $user['adi_soyadi']) {
+                errorResponse('Bu öğrenciyi silme yetkiniz yok', 403);
+            }
+        }
 
         // İşlemi transaction içinde yap
         $conn->beginTransaction();
