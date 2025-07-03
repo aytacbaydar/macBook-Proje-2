@@ -264,8 +264,8 @@ body.fosforlu-kalem-aktif .drawing-canvas {
   position: relative;
 }
 
-.aktif-sayfa {
-  display: block;
+.beyaz-tahta.aktif-sayfa {
+  display: block !important;
 }
 
 .drawing-canvas {

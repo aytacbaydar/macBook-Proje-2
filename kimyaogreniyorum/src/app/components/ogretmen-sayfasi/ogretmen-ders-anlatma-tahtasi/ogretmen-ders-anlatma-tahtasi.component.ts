@@ -767,27 +767,29 @@ export class OgretmenDersAnlatmaTahtasiComponent
   }
 
   sayfayaGit(sayfa: number): void {
-    // Aktif sayfa sınıfını değiştir
+    this.currentPage = sayfa;
+    
+    // Tüm sayfaları gizle
     const sayfalar = document.querySelectorAll('.beyaz-tahta');
-    sayfalar.forEach((element, index) => {
-      if (index + 1 === sayfa) {
-        element.classList.add('aktif-sayfa');
-      } else {
-        element.classList.remove('aktif-sayfa');
-      }
+    sayfalar.forEach((element) => {
+      element.classList.remove('aktif-sayfa');
     });
 
-    this.currentPage = sayfa;
+    // Aktif sayfayı göster
+    setTimeout(() => {
+      const aktifSayfa = document.querySelector(`.beyaz-tahta:nth-child(${sayfa})`);
+      if (aktifSayfa) {
+        aktifSayfa.classList.add('aktif-sayfa');
+      }
 
-    // Eğer bu sayfanın canvas'ı yoksa oluştur
-    if (!this.canvasInstances[sayfa - 1]) {
-      setTimeout(() => {
+      // Eğer bu sayfanın canvas'ı yoksa oluştur
+      if (!this.canvasInstances[sayfa - 1]) {
         this.canvasOlustur(sayfa);
-      }, 100);
-    } else {
-      // Kalem özelliklerini güncelle
-      this.ayarlaKalemOzellikleri(sayfa);
-    }
+      } else {
+        // Kalem özelliklerini güncelle
+        this.ayarlaKalemOzellikleri(sayfa);
+      }
+    }, 50);
   }
 
   temizleSayfa(): void {
