@@ -692,7 +692,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
         selection: false,
         renderOnAddRemove: true,
         interactive: true,
-        backgroundColor: '#ffffff',
+        backgroundColor: 'transparent',
       });
 
       // Canvas array'e ekle veya güncelle
@@ -796,7 +796,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
     const canvas = this.canvasInstances[this.currentPage - 1];
     if (canvas) {
       canvas.clear();
-      canvas.backgroundColor = '#ffffff';
+      canvas.backgroundColor = 'transparent';
       canvas.renderAll();
     }
   }
@@ -1109,7 +1109,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
             pdf.setTextColor(0, 0, 0); // Siyah renk
             pdf.setFontSize(14);
             pdf.setFont('helvetica', 'bold');
-            pdf.text('Aytaç Baydar || Kimya Öğretmeni', margin, margin + 5);
+            pdf.text('Aytaç Baydar || Kimya Ögretmeni', margin, margin + 5);
 
             // Başlık altına çizgi ekle
             const baslikGenisligi = pdf.getTextWidth('Aytaç Baydar || Kimya Öğretmeni');
