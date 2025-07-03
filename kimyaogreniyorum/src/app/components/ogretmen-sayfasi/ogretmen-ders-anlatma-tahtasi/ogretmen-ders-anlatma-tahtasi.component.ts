@@ -680,9 +680,9 @@ export class OgretmenDersAnlatmaTahtasiComponent
         return;
       }
 
-      // Sabit canvas boyutları (A4 oranında)
-      const canvasWidth = 800;
-      const canvasHeight = 1131; // A4 oranı (800 * 1.414)
+      // Sabit canvas boyutları (A4 oranında) - daha büyük boyut
+      const canvasWidth = 1200;
+      const canvasHeight = 1697; // A4 oranı (1200 * 1.414)
 
       // Canvas element boyutlarını ayarla
       canvasEl.width = canvasWidth;
@@ -1155,7 +1155,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
             });
 
             // Canvas'ın gerçek boyutlarını al
-            const canvasWidth = canvas.width || 800;
+            const canvasWidth = canvas.width || 1200;
             const canvasHeight = canvas.height || 600;
             const canvasRatio = canvasWidth / canvasHeight;
 
@@ -1290,7 +1290,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
 
             if (hasDrawings) {
               // Canvas'ın gerçek boyutlarını al
-              const canvasWidth = canvas.width || 800;
+              const canvasWidth = canvas.width || 1200;
               const canvasHeight = canvas.height || 600;
 
               // A4 oranını hesapla (210mm x 297mm = 0.707 oran)
