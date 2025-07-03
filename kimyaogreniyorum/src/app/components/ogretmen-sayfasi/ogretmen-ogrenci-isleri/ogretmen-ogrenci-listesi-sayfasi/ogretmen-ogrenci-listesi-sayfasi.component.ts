@@ -473,5 +473,44 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
       });
   }
 
-  
+  deleteStudent(studentId: number): void {
+    if (confirm('Bu öğrenciyi silmek istediğinizden emin misiniz?')) {
+      let token = '';
+      const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        token = user.token || '';
+      }
+
+      const headers = new HttpHeaders({
+        'Authorization': `Bearer ${token}`
+      });
+
+      this.http.delete(`./server/api/ogrenci_sil.php?id=${studentId}`, { headers })
+        .subscribe({
+          next: (response: any) => {
+            if (response.success) {
+              alert('Öğrenci başarıyla silindi.');
+              this.loadStudents(); // Listeyi yenile
+            } else {
+              alert('Öğrenci silinirken hata oluştu: ' + (response.error || response.message));
+            }
+          },
+          error: (error) => {
+            console.error('API hatası:', error);
+            let errorMessage = 'Silme işlemi sırasında bir hata oluştu: ';
+
+            if (error.error && error.error.error) {
+              errorMessage += error.error.error;
+            } else if (error.message) {
+              errorMessage += error.message;
+            } else {
+              errorMessage += 'Bilinmeyen bir hata';
+            }
+
+            alert(errorMessage);
+          },
+        });
+    }
+  }
 }
