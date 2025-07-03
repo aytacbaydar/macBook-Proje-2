@@ -101,17 +101,17 @@
 .fosforlu-renkler {
   display: flex;
   align-items: center;
-  padding: 4px 8px;
+  padding: 2px 4px; /* Daha küçük padding */
   background-color: #f5f5f5;
   border-radius: 4px;
-  margin-top: 4px;
+  margin-top: 2px; /* Daha küçük margin */
 }
 
 .fosforlu-renk-btn {
-  width: 28px;
-  height: 28px;
+  width: 22px; /* Daha küçük */
+  height: 22px; /* Daha küçük */
   border-radius: 4px;
-  margin: 0 4px;
+  margin: 0 2px; /* Daha küçük margin */
   cursor: pointer;
   border: 2px solid transparent;
 }
@@ -258,7 +258,7 @@ body.fosforlu-kalem-aktif .drawing-canvas {
 }
 
 .drawing-canvas {
-  width: 800px;
+  width: 100%; /* Sayfa genişliğine ayarlandı */
   height: 1130px;
   background: white !important;
   border: 2px solid #ddd;
@@ -320,8 +320,8 @@ body.sekil-ciz-aktif .drawing-canvas {
 }
 
 .sekil-btn {
-  width: 32px;
-  height: 32px;
+  width: 26px; /* Daha küçük */
+  height: 26px; /* Daha küçük */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -330,6 +330,7 @@ body.sekil-ciz-aktif .drawing-canvas {
   border: 1px solid #ccc;
   cursor: pointer;
   transition: all 0.2s;
+  font-size: 12px; /* Font boyutu ekle */
 }
 
 .sekil-btn:hover {

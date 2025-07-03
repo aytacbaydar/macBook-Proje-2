@@ -680,15 +680,16 @@ export class OgretmenDersAnlatmaTahtasiComponent
         return;
       }
 
-      // Sabit canvas boyutları (A4 oranında) - optimize edilmiş boyut
-      const canvasWidth = 800;
-      const canvasHeight = 1130; // A4 oranı (800 * 1.414)
+      // Dinamik canvas boyutları - sayfa genişliğinde
+      const viewportWidth = window.innerWidth;
+      const canvasWidth = Math.min(viewportWidth - 40, 1400); // 40px margin, max 1400px
+      const canvasHeight = canvasWidth * 1.414; // A4 oranını koru
 
       // Canvas element boyutlarını ayarla
       canvasEl.width = canvasWidth;
       canvasEl.height = canvasHeight;
       canvasEl.style.marginTop = '5px';
-      canvasEl.style.marginBottom = '15px';
+      canvasEl.style.marginBottom = '10px';
 
       // Yeni fabric canvas oluştur
       const canvas = new fabric.Canvas(canvasId, {
@@ -733,7 +734,24 @@ export class OgretmenDersAnlatmaTahtasiComponent
     if (!canvas) return;
 
     try {
-      // Sabit boyutları kullan - boyutlandırma yapmayın
+      // Dinamik boyutlandırma
+      const viewportWidth = window.innerWidth;
+      const newCanvasWidth = Math.min(viewportWidth - 40, 1400);
+      const newCanvasHeight = newCanvasWidth * 1.414;
+      
+      // Canvas boyutlarını güncelle
+      canvas.setDimensions({ 
+        width: newCanvasWidth, 
+        height: newCanvasHeight 
+      });
+      
+      // HTML canvas elementini de güncelle
+      const canvasEl = document.getElementById(`canvas-${sayfaNo}`) as HTMLCanvasElement;
+      if (canvasEl) {
+        canvasEl.width = newCanvasWidth;
+        canvasEl.height = newCanvasHeight;
+      }
+      
       canvas.renderAll();
     } catch (error) {
       console.error(`Canvas ${sayfaNo} boyutlandırma hatası:`, error);
