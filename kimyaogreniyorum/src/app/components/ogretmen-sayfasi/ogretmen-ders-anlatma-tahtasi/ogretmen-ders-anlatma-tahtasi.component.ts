@@ -1186,9 +1186,9 @@ export class OgretmenDersAnlatmaTahtasiComponent
             // A4 sayfasına uygun boyutları hesapla (kenar boşluklarıyla)
             const pageWidth = 210; // A4 genişliği (mm)
             const pageHeight = 297; // A4 yüksekliği (mm)
-            const margin = 15; // Kenar boşluğu (mm) - başlık için biraz daha fazla
+            const margin = 8; // Kenar boşluğu (mm) - başlık için biraz daha fazla
             const availableWidth = pageWidth - (margin * 2);
-            const availableHeight = pageHeight - (margin * 2) - 20; // Başlık ve alt bilgi için alan
+            const availableHeight = pageHeight - (margin * 2) - 10; // Başlık ve alt bilgi için alan
 
             let imgWidth, imgHeight;
 
@@ -1205,7 +1205,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
 
             // Ortalanmış pozisyon hesapla (başlık için aşağı kaydır)
             const x = margin + (availableWidth - imgWidth) / 2;
-            const y = margin + 15 + (availableHeight - imgHeight) / 2; // Başlık için 15mm boşluk
+            const y = margin + 8 + (availableHeight - imgHeight) / 2; // Başlık için 15mm boşluk
 
             // Filigran artık CSS ile ekleniyor, PDF'te ayrı filigran gerekmez
 
@@ -1219,7 +1219,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
             pdf.text('Aytaç Baydar || Kimya Ögretmeni', margin, margin + 5);
 
             // Başlık altına çizgi ekle - sayfa genişliğinde
-            pdf.setLineWidth(0.8);
+            pdf.setLineWidth(0.4);
             pdf.line(margin, margin + 7, pageWidth - margin, margin + 7);
 
             // Sayfa numarası ekle (alt ortası)
@@ -1227,7 +1227,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
             pdf.setFont('helvetica', 'normal');
             const sayfaNumarasi = `${page} / ${this.totalPages}`;
             const textWidth = pdf.getTextWidth(sayfaNumarasi);
-            pdf.text(sayfaNumarasi, (pageWidth - textWidth) / 2, pageHeight - 10);
+            pdf.text(sayfaNumarasi, (pageWidth - textWidth) / 2, pageHeight - 5);
 
             // Sonraki sayfaya geç
             processNextPage(page + 1);
