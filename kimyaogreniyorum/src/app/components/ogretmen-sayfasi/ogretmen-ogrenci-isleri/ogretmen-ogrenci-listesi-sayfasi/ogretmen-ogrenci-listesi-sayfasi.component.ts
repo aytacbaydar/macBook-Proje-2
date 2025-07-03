@@ -235,6 +235,59 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
 
   
 
+  // Öğrenci silme işlemi
+  deleteStudent(id: number): void {
+    if (!confirm('Bu öğrenciyi silmek istediğinize emin misiniz?')) {
+      return;
+    }
+
+    // LocalStorage veya sessionStorage'dan token'ı al
+    let token = '';
+    const userStr =
+      localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      token = user.token || '';
+    }
+
+    this.http
+      .post<any>(
+        './server/api/ogrenci_sil.php',
+        { id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            alert('Öğrenci başarıyla silindi!');
+            // Listeyi yenile
+            this.loadUsers();
+          } else {
+            alert('Silme işlemi başarısız: ' + response.error);
+          }
+        },
+        error: (error) => {
+          console.error('API hatası:', error);
+          let errorMessage = 'Silme işlemi sırasında bir hata oluştu: ';
+
+          if (error.error && error.error.error) {
+            errorMessage += error.error.error;
+          } else if (error.message) {
+            errorMessage += error.message;
+          } else {
+            errorMessage += 'Bilinmeyen bir hata';
+          }
+
+          alert(errorMessage);
+        },
+      });
+  }
+
   // Yeni kullanıcıyı onaylama
   approveUser(userId: number) {
     if (!confirm('Bu kullanıcıyı onaylamak istediğinizden emin misiniz?')) {
