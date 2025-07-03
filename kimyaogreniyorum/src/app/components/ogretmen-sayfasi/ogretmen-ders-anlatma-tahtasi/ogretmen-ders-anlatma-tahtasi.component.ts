@@ -1729,7 +1729,7 @@ This line adds the functionality to scroll to the newly added page.
       event.returnValue =
         'Sayfadan ayrılmak istediğinize emin misiniz? Yapılan değişiklikler kaybolabilir.';
       return event.returnValue;
-    }```typescript
+    }
     return true;
   }
 
