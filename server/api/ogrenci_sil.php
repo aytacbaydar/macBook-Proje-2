@@ -31,8 +31,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$userId]);
             $student = $stmt->fetch(PDO::FETCH_ASSOC);
             
-            if (!$student || $student['ogretmeni'] !== $user['adi_soyadi']) {
-                errorResponse('Bu öğrenciyi silme yetkiniz yok', 403);
+            if (!$student) {
+                errorResponse('Öğrenci bulunamadı', 404);
+            }
+            
+            // Debug için log ekle
+            error_log("Silme işlemi kontrol - Öğretmen: " . $user['adi_soyadi'] . ", Öğrencinin öğretmeni: " . $student['ogretmeni']);
+            
+            if ($student['ogretmeni'] !== $user['adi_soyadi']) {
+                errorResponse('Bu öğrenciyi silme yetkiniz yok. Öğrenci: ' . $student['ogretmeni'] . ', Siz: ' . $user['adi_soyadi'], 403);
             }
         }
 

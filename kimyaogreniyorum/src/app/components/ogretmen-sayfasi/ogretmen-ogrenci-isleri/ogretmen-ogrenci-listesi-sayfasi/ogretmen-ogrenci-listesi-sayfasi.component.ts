@@ -271,10 +271,17 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
         },
         error: (error) => {
           console.error('API hatası:', error);
-          alert(
-            'Silme işlemi sırasında bir hata oluştu: ' +
-              (error.message || 'Bilinmeyen bir hata')
-          );
+          let errorMessage = 'Silme işlemi sırasında bir hata oluştu: ';
+          
+          if (error.error && error.error.error) {
+            errorMessage += error.error.error;
+          } else if (error.message) {
+            errorMessage += error.message;
+          } else {
+            errorMessage += 'Bilinmeyen bir hata';
+          }
+          
+          alert(errorMessage);
         },
       });
   }
