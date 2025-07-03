@@ -99,10 +99,10 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
             // Sadece yeni (daha önce onaylanmamış) kullanıcıları filtrele
             this.newUsers = users.filter((user: User) => user.rutbe === 'yeni');
 
-            console.log('Yüklenen kullanıcılar:', {
-              students: this.students.length,
-              newUsers: this.newUsers.length,
-            });
+            // console.log('Yüklenen kullanıcılar:', {
+            //   students: this.students.length,
+            //   newUsers: this.newUsers.length,
+            // });
           } else {
             console.error('API yanıtı başarısız:', response.error);
           }
@@ -233,9 +233,9 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
     return pages;
   }
 
-  
 
-  
+
+
 
   // Yeni kullanıcıyı onaylama
   approveUser(userId: number) {
@@ -425,11 +425,11 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
     if (userStr) {
       loggedInUser = JSON.parse(userStr);
       token = loggedInUser.token || '';
-      console.log('Öğretmen bilgileri:', {
-        id: loggedInUser.id,
-        name: loggedInUser.adi_soyadi,
-        rutbe: loggedInUser.rutbe
-      });
+      // console.log('Öğretmen bilgileri:', {
+      //   id: loggedInUser.id,
+      //   name: loggedInUser.adi_soyadi,
+      //   rutbe: loggedInUser.rutbe
+      // });
     }
 
     const headers = new HttpHeaders({
@@ -442,25 +442,25 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
           if (response.success) {
             // Sadece öğrencileri filtrele ve giriş yapan öğretmene ait olanları göster
             const loggedInTeacherName = loggedInUser?.adi_soyadi || '';
-            
-            console.log('Tüm öğrenciler:', response.data);
-            
+
+            // console.log('Tüm öğrenciler:', response.data);
+
             this.students = response.data.filter((student: any) => {
               const isStudent = student.rutbe === 'ogrenci';
               const belongsToTeacher = student.ogretmeni === loggedInTeacherName;
-              
-              console.log('Öğrenci kontrolü:', {
-                name: student.adi_soyadi,
-                ogretmeni: student.ogretmeni,
-                loggedInTeacher: loggedInTeacherName,
-                isStudent: isStudent,
-                belongsToTeacher: belongsToTeacher
-              });
-              
+
+              // console.log('Öğrenci kontrolü:', {
+              //   name: student.adi_soyadi,
+              //   ogretmeni: student.ogretmeni,
+              //   loggedInTeacher: loggedInTeacherName,
+              //   isStudent: isStudent,
+              //   belongsToTeacher: belongsToTeacher
+              // });
+
               return isStudent && belongsToTeacher;
             });
-            
-            console.log('Filtrelenmiş öğrenciler:', this.students);
+
+            // console.log('Filtrelenmiş öğrenciler:', this.students);
           } else {
             this.error = response.message || 'Öğrenci verileri yüklenirken hata oluştu.';
           }
