@@ -1145,13 +1145,13 @@ export class OgretmenDersAnlatmaTahtasiComponent
             canvas.backgroundColor = '#ffffff';
             canvas.renderAll();
             
-            // Canvas'ı doğrudan al
+            // Canvas'ı doğrudan al - daha yüksek kalite
             canvas.backgroundColor = '#ffffff';
             canvas.renderAll();
             const dataURL = canvas.toDataURL({
               format: 'jpeg',
-              quality: 0.7,
-              multiplier: 0.8,
+              quality: 0.9, // Kaliteyi artırdık
+              multiplier: 1.0, // Çözünürlüğü artırdık
             });
 
             // Canvas'ın gerçek boyutlarını al
@@ -1297,11 +1297,11 @@ export class OgretmenDersAnlatmaTahtasiComponent
               const a4Ratio = 210 / 297;
               const canvasRatio = canvasWidth / canvasHeight;
 
-              // Canvas'ı JPEG formatında optimize edilmiş şekilde dışa aktar
+              // Canvas'ı JPEG formatında daha iyi kalitede dışa aktar
               const dataURL = canvas.toDataURL({
                 format: 'jpeg',
-                quality: 0.6, // JPEG kalitesini düşürerek dosya boyutunu azalt
-                multiplier: 0.7, // Çözünürlüğü düşürerek boyutu azalt
+                quality: 0.8, // JPEG kalitesini iyileştirdik
+                multiplier: 0.9, // Çözünürlüğü iyileştirdik
               });
 
               // İlk sayfa değilse yeni sayfa ekle
