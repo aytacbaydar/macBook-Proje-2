@@ -693,6 +693,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
         renderOnAddRemove: true,
         interactive: true,
         backgroundColor: '#ffffff',
+        preserveObjectStacking: true,
       });
 
       // Canvas array'e ekle veya güncelle
@@ -876,23 +877,17 @@ export class OgretmenDersAnlatmaTahtasiComponent
     // Canvas'ı çizim moduna al
     canvas.isDrawingMode = this.cizilebilir;
 
-    // Brush'ı kontrol et
-    if (!canvas.freeDrawingBrush) {
-      canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
-    }
+    // Brush'ı yeniden oluştur
+    canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
 
     // Kalem ayarlarını güncelle
     canvas.freeDrawingBrush.color = this.kalemRengi;
     canvas.freeDrawingBrush.width = this.kalemKalinligi;
 
-    // İnce çizgiler için ek ayarlar (fabric.js versiyonuna göre)
-    try {
-      if (canvas.freeDrawingBrush.hasOwnProperty('getInk')) {
-        (canvas.freeDrawingBrush as any).getInk = false;
-      }
-    } catch (e) {
-      console.log('getInk özelliği bu fabric.js versiyonunda desteklenmiyor');
-    }
+    // Canvas'ı yeniden render et
+    canvas.renderAll();
+    
+    console.log(`Canvas ${pageNo} kalem ayarları güncellendi - Renk: ${this.kalemRengi}, Kalınlık: ${this.kalemKalinligi}, Çizim Modu: ${canvas.isDrawingMode}`);
   }
 
   silgiModunuAc(): void {
@@ -947,16 +942,6 @@ export class OgretmenDersAnlatmaTahtasiComponent
     // Önceki kalem ayarlarını geri yükle
     this.kalemRengi = this.oncekiKalemRengi;
     this.kalemKalinligi = this.oncekiKalemKalinligi;
-    this.ayarlaKalemOzellikleri();
-
-    // İmleç stilini güncelle
-    document.body.classList.add('kalem-aktif');
-    document.body.classList.remove(
-      'silgi-aktif',
-      'el-imleci-aktif',
-      'sekil-ciz-aktif',
-      'fosforlu-kalem-aktif'
-    );
 
     // Canvas'ı kalem moduna getir
     const canvas = this.canvasInstances[this.currentPage - 1];
@@ -968,7 +953,26 @@ export class OgretmenDersAnlatmaTahtasiComponent
 
       // Çizim modunu aktifleştir
       canvas.isDrawingMode = true;
+      canvas.selection = false;
+      
+      // Brush'ı yeniden oluştur ve ayarla
+      canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
+      canvas.freeDrawingBrush.color = this.kalemRengi;
+      canvas.freeDrawingBrush.width = this.kalemKalinligi;
+      
+      canvas.renderAll();
     }
+
+    // İmleç stilini güncelle
+    document.body.classList.add('kalem-aktif');
+    document.body.classList.remove(
+      'silgi-aktif',
+      'el-imleci-aktif',
+      'sekil-ciz-aktif',
+      'fosforlu-kalem-aktif'
+    );
+
+    console.log('Kalem modu aktifleştirildi');
   }
 
   fosforluKalemModunuAc(renk?: string): void {
