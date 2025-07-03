@@ -761,7 +761,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
             block: 'center',
             inline: 'center' 
           });
-          
+
           // Alternatif olarak sayfa sonuna kaydır
           window.scrollTo({
             top: document.body.scrollHeight,
@@ -1169,7 +1169,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
             canvas.renderAll();
             const dataURL = canvas.toDataURL({
               format: 'jpeg',
-              quality: 0.3, // Çok düşük kalite - dosya boyutu için
+              quality: 0.5, // Çok düşük kalite - dosya boyutu için
               multiplier: 0.5, // Çözünürlüğü düşür
             });
 
@@ -1319,8 +1319,8 @@ export class OgretmenDersAnlatmaTahtasiComponent
               // Canvas'ı JPEG formatında çok düşük kalitede dışa aktar
               const dataURL = canvas.toDataURL({
                 format: 'jpeg',
-                quality: 0.2, // Çok düşük kalite - veritabanı limiti için
-                multiplier: 0.3, // Çok düşük çözünürlük
+                quality: 0.5, // Orta kalite - daha iyi görüntü için
+                multiplier: 0.6, // Biraz daha yüksek çözünürlük
               });
 
               // İlk sayfa değilse yeni sayfa ekle
@@ -1373,6 +1373,10 @@ export class OgretmenDersAnlatmaTahtasiComponent
               const sayfaNumarasi = `${page} / ${this.totalPages}`;
               const textWidth = pdf.getTextWidth(sayfaNumarasi);
               pdf.text(sayfaNumarasi, (pageWidth - textWidth) / 2, pageHeight - 10);
+
+              // Sayfa numarası altına çizgi ekle - sayfa genişliğinde
+              pdf.setLineWidth(0.5);
+              pdf.line(margin, pageHeight - 12, pageWidth - margin, pageHeight - 12);
               console.log(`Sayfa ${page} PDF'e eklendi. Canvas boyutu: ${canvasWidth}x${canvasHeight}, PDF boyutu: ${imgWidth.toFixed(1)}x${imgHeight.toFixed(1)}mm`);
             } else {
               console.log(`Sayfa ${page} boş, atlandı.`);
