@@ -47,6 +47,11 @@ export class OgretmenDersAnlatmaTahtasiComponent
   baslangicX: number = 0;
   baslangicY: number = 0;
 
+  // Text yazma değişkenleri
+  textModu: boolean = false;
+  textBoyutu: number = 24;
+  textFontu: string = 'Arial';
+
   // Resim yükleme özellikleri
   resimYukleniyor: boolean = false;
 
@@ -947,6 +952,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
     this.fosforluKalemModu = false;
     this.sekilModu = false;
     this.secilenSekil = '';
+    this.textModu = false;
     this.cizilebilir = true;
 
     // Önceki kalem ayarlarını geri yükle
@@ -986,7 +992,8 @@ export class OgretmenDersAnlatmaTahtasiComponent
       'silgi-aktif',
       'el-imleci-aktif',
       'sekil-ciz-aktif',
-      'fosforlu-kalem-aktif'
+      'fosforlu-kalem-aktif',
+      'text-aktif'
     );
 
     console.log('Kalem modu başarıyla aktifleştirildi');
@@ -997,6 +1004,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
     this.silgiModu = false;
     this.sekilModu = false;
     this.secilenSekil = '';
+    this.textModu = false;
     this.cizilebilir = true;
     this.fosforluKalemModu = true;
 
@@ -1022,7 +1030,8 @@ export class OgretmenDersAnlatmaTahtasiComponent
       'kalem-aktif',
       'silgi-aktif',
       'el-imleci-aktif',
-      'sekil-ciz-aktif'
+      'sekil-ciz-aktif',
+      'text-aktif'
     );
 
     // Canvas'ı fosforlu kalem moduna getir
@@ -1042,6 +1051,65 @@ export class OgretmenDersAnlatmaTahtasiComponent
         canvas.freeDrawingBrush.width = 16;
       }
     }
+  }
+
+  // Text yazma modunu aç
+  textModunuAc(): void {
+    this.textModu = true;
+    this.silgiModu = false;
+    this.fosforluKalemModu = false;
+    this.sekilModu = false;
+    this.secilenSekil = '';
+    this.cizilebilir = false;
+
+    // İmleç stilini güncelle
+    document.body.classList.add('text-aktif');
+    document.body.classList.remove(
+      'kalem-aktif',
+      'silgi-aktif',
+      'el-imleci-aktif',
+      'sekil-ciz-aktif',
+      'fosforlu-kalem-aktif'
+    );
+
+    // Canvas olaylarını ayarla
+    this.ayarlaTextOlaylari();
+  }
+
+  ayarlaTextOlaylari(): void {
+    const canvas = this.canvasInstances[this.currentPage - 1];
+    if (!canvas) return;
+
+    // Mevcut olayları temizle
+    canvas.off('mouse:down');
+    canvas.off('mouse:move');
+    canvas.off('mouse:up');
+
+    // Çizim modunu kapat
+    canvas.isDrawingMode = false;
+
+    // Text ekleme olayını ekle
+    canvas.on('mouse:down', (o: fabric.TEvent) => {
+      const pointer = canvas.getPointer(o.e);
+      
+      // Text input prompt'u göster
+      const text = prompt('Yazılacak metni girin:');
+      if (text && text.trim() !== '') {
+        const textObj = new fabric.Text(text, {
+          left: pointer.x,
+          top: pointer.y,
+          fontFamily: this.textFontu,
+          fontSize: this.textBoyutu,
+          fill: this.kalemRengi,
+          selectable: true,
+          editable: true
+        });
+        
+        canvas.add(textObj);
+        canvas.setActiveObject(textObj);
+        canvas.renderAll();
+      }
+    });
   }
 
   // PDF'i oluştur ve indir
@@ -1080,21 +1148,52 @@ export class OgretmenDersAnlatmaTahtasiComponent
         setTimeout(async () => {
           const canvas = this.canvasInstances[page - 1];
           if (canvas) {
-            // Canvas background'ını beyaz yap
-            canvas.backgroundColor = '#ffffff';
+            // Canvas background'ını şeffaf bırak (filigran için)
+            canvas.backgroundColor = 'transparent';
             canvas.renderAll();
             
+            // Tüm sayfa container'ını al (filigran dahil)
+            const sayfaContainer = document.querySelector(`.beyaz-tahta:nth-child(${page})`);
+            
+            let dataURL: string;
+            
+            if (sayfaContainer) {
+              // html2canvas ile filigran dahil tüm sayfayı yakala
+              try {
+                const html2canvas = (await import('html2canvas')).default;
+                const canvasElement = await html2canvas(sayfaContainer as HTMLElement, {
+                  backgroundColor: '#ffffff',
+                  scale: 1,
+                  useCORS: true,
+                  allowTaint: true
+                });
+                dataURL = canvasElement.toDataURL('image/jpeg', 0.7);
+              } catch (error) {
+                console.warn('html2canvas hatası, canvas export kullanılıyor:', error);
+                // Fallback: sadece canvas
+                canvas.backgroundColor = '#ffffff';
+                canvas.renderAll();
+                dataURL = canvas.toDataURL({
+                  format: 'jpeg',
+                  quality: 0.7,
+                  multiplier: 0.8,
+                });
+              }
+            } else {
+              // Fallback: sadece canvas
+              canvas.backgroundColor = '#ffffff';
+              canvas.renderAll();
+              dataURL = canvas.toDataURL({
+                format: 'jpeg',
+                quality: 0.7,
+                multiplier: 0.8,
+              });
+            }
+
             // Canvas'ın gerçek boyutlarını al
             const canvasWidth = canvas.width || 800;
             const canvasHeight = canvas.height || 600;
             const canvasRatio = canvasWidth / canvasHeight;
-
-            // Canvas'ı JPEG formatında optimize edilmiş şekilde dışa aktar
-            const dataURL = canvas.toDataURL({
-              format: 'jpeg',
-              quality: 0.7, // JPEG kalitesini düşürerek dosya boyutunu azalt
-              multiplier: 0.8, // Çözünürlüğü düşürerek boyutu azalt
-            });
 
             // İlk sayfa değilse yeni sayfa ekle
             if (page > 1) {
