@@ -692,7 +692,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
         selection: false,
         renderOnAddRemove: true,
         interactive: true,
-        backgroundColor: 'transparent',
+        backgroundColor: '#ffffff',
       });
 
       // Canvas array'e ekle veya güncelle
@@ -796,7 +796,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
     const canvas = this.canvasInstances[this.currentPage - 1];
     if (canvas) {
       canvas.clear();
-      canvas.backgroundColor = 'transparent';
+      canvas.backgroundColor = '#ffffff';
       canvas.renderAll();
     }
   }
@@ -1059,6 +1059,10 @@ export class OgretmenDersAnlatmaTahtasiComponent
         setTimeout(async () => {
           const canvas = this.canvasInstances[page - 1];
           if (canvas) {
+            // Canvas background'ını beyaz yap
+            canvas.backgroundColor = '#ffffff';
+            canvas.renderAll();
+            
             // Canvas'ın gerçek boyutlarını al
             const canvasWidth = canvas.width || 800;
             const canvasHeight = canvas.height || 600;
@@ -1193,6 +1197,10 @@ export class OgretmenDersAnlatmaTahtasiComponent
           // Canvas'ı al
           const canvas = this.canvasInstances[page - 1];
           if (canvas) {
+            // Canvas background'ını beyaz yap
+            canvas.backgroundColor = '#ffffff';
+            canvas.renderAll();
+            
             // Canvas'ta çizim var mı kontrol et
             const hasDrawings = canvas.getObjects().length > 0;
 

@@ -292,9 +292,9 @@ body.fosforlu-kalem-aktif .drawing-canvas {
   background-repeat: no-repeat;
   background-position: center;
   transform: translate(-50%, -50%);
-  opacity: 0.15;
+  opacity: 0.1;
   pointer-events: none;
-  z-index: 1;
+  z-index: 0;
 }
 
 .drawing-canvas {
@@ -303,7 +303,7 @@ body.fosforlu-kalem-aktif .drawing-canvas {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 2;
+  z-index: 1;
   background: transparent !important;
 }
 
