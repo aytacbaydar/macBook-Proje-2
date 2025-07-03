@@ -483,10 +483,11 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
       }
 
       const headers = new HttpHeaders({
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
       });
 
-      this.http.delete(`./server/api/ogrenci_sil.php?id=${studentId}`, { headers })
+      this.http.post('./server/api/ogrenci_sil.php', { id: studentId }, { headers })
         .subscribe({
           next: (response: any) => {
             if (response.success) {
