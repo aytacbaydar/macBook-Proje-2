@@ -907,10 +907,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
     // Brush'ı yeniden oluştur
     canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
 
-    // KalemProperties are updated.
-This line adds the functionality to scroll to the newly added page.
-```typescript
-   // Kalem ayarlarını güncelle
+    // Kalem ayarlarını güncelle
     canvas.freeDrawingBrush.color = this.kalemRengi;
     canvas.freeDrawingBrush.width = this.kalemKalinligi;
 
