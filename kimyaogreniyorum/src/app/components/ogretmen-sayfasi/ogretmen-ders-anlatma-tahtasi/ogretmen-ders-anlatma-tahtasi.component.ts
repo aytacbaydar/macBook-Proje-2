@@ -697,7 +697,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
         selection: false,
         renderOnAddRemove: true,
         interactive: true,
-        backgroundColor: 'transparent', // Şeffaf background filigran için
+        backgroundColor: '#ffffff', // Beyaz background
         preserveObjectStacking: true,
       });
 
@@ -813,6 +813,11 @@ export class OgretmenDersAnlatmaTahtasiComponent
     if (canvas) {
       canvas.clear();
       canvas.backgroundColor = '#ffffff';
+      // Çizim modunu yeniden aktifleştir
+      canvas.isDrawingMode = true;
+      canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
+      canvas.freeDrawingBrush.color = this.kalemRengi;
+      canvas.freeDrawingBrush.width = this.kalemKalinligi;
       canvas.renderAll();
     }
   }
@@ -1148,8 +1153,8 @@ export class OgretmenDersAnlatmaTahtasiComponent
         setTimeout(async () => {
           const canvas = this.canvasInstances[page - 1];
           if (canvas) {
-            // Canvas background'ını şeffaf bırak (filigran için)
-            canvas.backgroundColor = 'transparent';
+            // Canvas background'ını beyaz yap
+            canvas.backgroundColor = '#ffffff';
             canvas.renderAll();
             
             // Tüm sayfa container'ını al (filigran dahil)
