@@ -1,205 +1,66 @@
-<div class="attendance-container">
-  <!-- Modern Header Section -->
-  <div class="modern-page-header">
+<div class="ogrenci-ana-sayfasi">
+  <!-- Header Section -->
+  <div class="page-header">
     <div class="header-content">
+      <h1>Hoş Geldin, {{ studentName }}!</h1>
+      <p>{{ studentTeacher }} • {{ studentClass }}</p>
+    </div>
+  </div>
 
-      <!-- Header Stats -->
-      <div class="admin-overview">
-        <div class="stat-card mavi">
-          <div class="stat-icon">
+  <!-- Main Content Grid -->
+  <div class="main-grid">
+    <!-- Student Info Card -->
+    <div class="card">
+      <div class="card-header">
+        <h4>Profil Bilgileri</h4>
+      </div>
+      <div class="card-body">
+        <div class="student-info">
+          <img [src]="studentAvatar" alt="Avatar" class="avatar">
+          <div class="info">
+            <h5>{{ studentName }}</h5>
+            <p>{{ studentClass }}</p>
+            <p>Öğretmen: {{ studentTeacher }}</p>
+            <p *ngIf="studentGroup">Grup: {{ studentGroup }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions Card -->
+    <div class="card">
+      <div class="card-header">
+        <h4>Hızlı Erişim</h4>
+      </div>
+      <div class="card-body">
+        <div class="quick-actions">
+          <a routerLink="ogrenci-islene-konular-sayfasi" class="action-btn">
             <i class="bi bi-book"></i>
-          </div>
-          <div class="stat-content">
-            <h3>{{ completedLessons }}/{{ totalLessons }}</h3>
-            <p>Ders İlerlemesi</p>
-          </div>
+            <span>İşlenen Konular</span>
+          </a>
+          <a routerLink="ogrenci-qr-kod-sayfasi" class="action-btn">
+            <i class="bi bi-qr-code"></i>
+            <span>QR Kod</span>
+          </a>
+          <a routerLink="ogrenci-sinav-islemleri-sayfasi" class="action-btn">
+            <i class="bi bi-clipboard-check"></i>
+            <span>Sınavlar</span>
+          </a>
         </div>
+      </div>
+    </div>
 
-        <div class="stat-card yesil">
-          <div class="stat-icon">
-            <i class="bi bi-calendar-check"></i>
-          </div>
-          <div class="stat-content">
-            <h3></h3>
-            <p>Devamsızlık</p>
-          </div>
-        </div>
-
-        <div class="stat-card turuncu">
-          <div class="stat-icon">
-            <i class="bi bi-trophy"></i>
-          </div>
-          <div class="stat-content">
-            <h3></h3>
-            <p>Başarı %</p>
-          </div>
-        </div>
-
-        <div class="stat-card kırmızı">
-          <div class="stat-icon">
-            <i class="fas fa-chalkboard-teacher"></i>
-          </div>
-          <div class="stat-content">
-            <h3></h3>
-            <p>Toplam Soru Sayısı</p>
-          </div>
+    <!-- Date & Time Card -->
+    <div class="card">
+      <div class="card-header">
+        <h4>Bugün</h4>
+      </div>
+      <div class="card-body">
+        <div class="date-time">
+          <p class="date">{{ getCurrentDate() }}</p>
+          <p class="time">{{ getCurrentTime() }}</p>
         </div>
       </div>
     </div>
   </div>
-  <!-- Modern Header Section Son -->
 </div>
-
-<!--Yeni Tasarım-->
-
-<div class="container-full">
-  <div class="row">
-    <div class="col-12">
-      <div class="card-ana">
-        <div class="card-ana-header bg-green">
-          <h4>Profil Kartı</h4>
-          <button>Düzenle</button>
-        </div>
-        <div class="card-ana-body">
-          <p><strong>Ad:</strong> Aytaç Baydar</p>
-          <p><strong>Rol:</strong> Kimya Öğretmeni</p>
-          <p><strong>Açıklama:</strong> Bu kart, örnek bir kullanıcı profilini temsil eder.</p>
-        </div>
-      </div>      
-    </div>
-    <div class="col-4">
-      <div class="card-ana">
-        <div class="card-ana-header bg-blue">
-          <h4>Hızlı Erişim</h4>
-        </div>
-        <div class="card-ana-body">
-          <ul>
-            <li><a href="#">QR Kod İşlemleri</a></li>
-            <li><a href="#">Ders Notları</a></li>
-            <li><a href="#">Sınav Sonuçları</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="col-8">
-      <div class="card-ana">
-        <div class="card-ana-header bg-purple">
-          <h4>Son İşlenen Konular</h4>
-        </div>
-        <div class="card-ana-body">
-          <!--İçerik-->
-          <div class="topics-container">
-            <div class="topics-section">
-      
-              <!-- Topics Header -->
-              <div class="topics-header">
-                <div class="topics-title">
-                  <div class="topics-icon">
-                    <i class="bi bi-bookmark-check-fill"></i>
-                  </div>
-                  <div class="topics-info">
-                    <h4>Son İşlenen Konular</h4>
-                  </div>
-                </div>
-                <div class="topics-stats">
-                  <div class="stat-item">
-                    <span class="stat-number">{{ recentTopics.length }}</span>
-                    <span class="stat-label">Son Konu</span>
-                  </div>
-                </div>
-              </div>
-      
-              <!-- Topics List -->
-              <div class="topics-list" *ngIf="recentTopics.length > 0">
-                <div class="topic-item" *ngFor="let topic of recentTopics; let topicIndex = index"
-                  [style.animation-delay]="topicIndex * 0.1 + 's'">
-      
-                  <!-- Topic Status -->
-                  <div class="topic-status">
-                    <i class="bi bi-check-circle-fill text-success"></i>
-                  </div>
-      
-                  <!-- Topic Content -->
-                  <div class="topic-content">
-                    <div class="topic-header">
-                      <h5 class="topic-title">
-                        {{ topicIndex + 1 }}. {{ topic.konu_adi }}
-                      </h5>
-                      <span class="topic-class-badge">{{ topic.sinif_seviyesi }}</span>
-                    </div>
-      
-                    <!-- Topic Meta -->
-                    <div class="topic-meta">
-                      <span class="topic-unit">
-                        <i class="bi bi-folder me-1"></i>
-                        {{ topic.unite_adi }}
-                      </span>
-                      <span class="topic-date">
-                        <i class="bi bi-calendar-check me-1"></i>
-                        {{ formatDate(topic.isleme_tarihi) }}
-                      </span>
-                    </div>
-                  </div>
-      
-                  <!-- Topic Actions -->
-                  <div class="topic-actions">
-                    <span class="completed-badge">
-                      <i class="bi bi-check-lg me-1"></i>
-                      Tamamlandı
-                    </span>
-                  </div>
-                </div>
-              </div>
-      
-              <!-- Empty State -->
-              <div *ngIf="recentTopics.length === 0" class="empty-state-topics">
-                <div class="empty-content">
-                  <i class="bi bi-journal-x"></i>
-                  <h3>Henüz İşlenen Konu Yok</h3>
-                  <p>Öğretmeniniz konuları işledikçe burada görünecek 📚</p>
-                </div>
-              </div>
-              <!-- Topics Actions -->
-              <div *ngIf="recentTopics.length > 0" class="topics-actions">
-                <div class="action-buttons">
-                  <button class="view-all-btn" routerLink="ogrenci-islene-konular-sayfasi">
-                    <i class="bi bi-list-ul"></i>
-                    Tümünü Görüntüle
-                  </button>
-                  <button class="pdf-btn" routerLink="ogrenci-islene-konularin-pdf-sayfasi">
-                    <i class="bi bi-file-earmark-pdf"></i>
-                    Ders Notları
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!--İçerik Son-->
-        </div>
-      </div>
-    </div>
-    <div class="col-6">
-      <div class="card-ana">
-        <div class="card-ana-header bg-purple">
-          <h4>Son İşlenen Konular</h4>
-        </div>
-        <div class="card-ana-body">
-          <!--İçerik-->
-          <!--İçerik Son-->
-        </div>
-      </div></div>
-    <div class="col-6">
-      <div class="card-ana">
-        <div class="card-ana-header bg-purple">
-          <h4>Son İşlenen Konular</h4>
-        </div>
-        <div class="card-ana-body">
-          <!--İçerik-->
-          <!--İçerik Son-->
-        </div>
-      </div></div>
-  </div>
-</div>
-
-<!--Yeni Tasarım Son-->
-
