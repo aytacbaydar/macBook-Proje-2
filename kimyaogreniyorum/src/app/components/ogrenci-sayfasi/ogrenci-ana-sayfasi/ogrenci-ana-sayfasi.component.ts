@@ -1,5 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Chart, registerables } from 'chart.js';
+
+Chart.register(...registerables);
+
+interface SinavSonucu {
+  sinav_id: number;
+  sinav_adi: string;
+  sinav_turu: string;
+  dogru_sayisi: number;
+  yanlis_sayisi: number;
+  bos_sayisi: number;
+  cozum_tarihi: string;
+}
 
 @Component({
   selector: 'app-ogrenci-ana-sayfasi',
@@ -7,7 +20,7 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './ogrenci-ana-sayfasi.component.html',
   styleUrl: './ogrenci-ana-sayfasi.component.scss',
 })
-export class OgrenciAnaSayfasiComponent implements OnInit {
+export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
   // Sidebar state
   isSidebarOpen: boolean = true;
 
@@ -22,14 +35,34 @@ export class OgrenciAnaSayfasiComponent implements OnInit {
   isLoading: boolean = false;
   error: string = '';
 
+  // Sınav sonuçları
+  sinavSonuclari: SinavSonucu[] = [];
+  comparisonChart: any;
+  loadingExamResults: boolean = false;
+
+  sinavTurleri: any = {
+    'TYT': { color: '#667eea', label: 'TYT Deneme' },
+    'AYT': { color: '#4facfe', label: 'AYT Deneme' },
+    'TAR': { color: '#43e97b', label: 'Tarama Sınavı' },
+    'TEST': { color: '#fa709a', label: 'Konu Testi' }
+  };
+
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     this.loadStudentInfo();
     this.checkScreenSize();
+    this.loadSinavSonuclari();
     window.addEventListener('resize', () => {
       this.checkScreenSize();
     });
+  }
+
+  ngAfterViewInit() {
+    // Grafik için timeout ekle
+    setTimeout(() => {
+      this.createComparisonChart();
+    }, 500);
   }
 
   private loadStudentInfo(): void {
@@ -96,5 +129,165 @@ export class OgrenciAnaSayfasiComponent implements OnInit {
       minute: '2-digit',
     };
     return now.toLocaleTimeString('tr-TR', options);
+  }
+
+  loadSinavSonuclari() {
+    this.loadingExamResults = true;
+
+    // localStorage veya sessionStorage'dan öğrenci ID'sini al
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+
+    if (!userStr) {
+      this.loadingExamResults = false;
+      return;
+    }
+
+    let userData;
+    try {
+      userData = JSON.parse(userStr);
+    } catch (error) {
+      this.loadingExamResults = false;
+      return;
+    }
+
+    const ogrenciId = userData.id;
+
+    if (!ogrenciId) {
+      this.loadingExamResults = false;
+      return;
+    }
+
+    this.http.get<any>(`./server/api/ogrenci_tum_sinav_sonuclari.php?ogrenci_id=${ogrenciId}`).subscribe({
+      next: (response) => {
+        this.loadingExamResults = false;
+        if (response.success && response.data) {
+          // Son 5 sınav sonucunu al
+          this.sinavSonuclari = (response.data.sinav_sonuclari || []).slice(-5);
+          
+          // Grafik oluştur
+          setTimeout(() => {
+            this.createComparisonChart();
+          }, 100);
+        }
+      },
+      error: (error) => {
+        this.loadingExamResults = false;
+      }
+    });
+  }
+
+  createComparisonChart() {
+    const ctx = document.getElementById('comparisonChart') as HTMLCanvasElement;
+    if (!ctx || this.sinavSonuclari.length === 0) return;
+
+    // Destroy existing chart if it exists
+    if (this.comparisonChart) {
+      this.comparisonChart.destroy();
+    }
+
+    // Sınav adları ve başarı oranları
+    const sinavAdlari = this.sinavSonuclari.map(sinav => {
+      // Sınav adını kısalt (çok uzunsa)
+      const ad = sinav.sinav_adi;
+      return ad.length > 15 ? ad.substring(0, 12) + '...' : ad;
+    });
+
+    const basariOranlari = this.sinavSonuclari.map(sinav => this.getSuccessPercentage(sinav));
+
+    // Sınav türlerine göre renkler
+    const renkler = this.sinavSonuclari.map(sinav => this.getSinavTuruColor(sinav.sinav_turu));
+
+    this.comparisonChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: sinavAdlari,
+        datasets: [{
+          label: 'Başarı Oranı (%)',
+          data: basariOranlari,
+          backgroundColor: renkler.map(color => color + '80'), // %50 şeffaflık
+          borderColor: renkler,
+          borderWidth: 2,
+          borderRadius: 8,
+          borderSkipped: false,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            callbacks: {
+              title: (context) => {
+                // Tam sınav adını tooltip'te göster
+                const index = context[0].dataIndex;
+                return this.sinavSonuclari[index].sinav_adi;
+              },
+              label: (context) => {
+                const index = context.dataIndex;
+                const sinav = this.sinavSonuclari[index];
+                return [
+                  `Başarı Oranı: ${context.parsed.y}%`,
+                  `Doğru: ${sinav.dogru_sayisi}`,
+                  `Yanlış: ${sinav.yanlis_sayisi}`,
+                  `Boş: ${sinav.bos_sayisi}`,
+                  `Tarih: ${this.formatDate(sinav.cozum_tarihi)}`
+                ];
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            ticks: {
+              callback: function(value) {
+                return value + '%';
+              }
+            },
+            title: {
+              display: true,
+              text: 'Başarı Oranı (%)'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Son Sınavlar'
+            },
+            ticks: {
+              maxRotation: 45,
+              minRotation: 0
+            }
+          }
+        },
+        interaction: {
+          intersect: false,
+          mode: 'index'
+        },
+        animation: {
+          duration: 1000,
+          easing: 'easeInOutQuart'
+        }
+      }
+    });
+  }
+
+  getSinavTuruColor(sinavTuru: string): string {
+    return this.sinavTurleri[sinavTuru]?.color || '#6c757d';
+  }
+
+  getSuccessPercentage(sinav: SinavSonucu): number {
+    const totalQuestions = sinav.dogru_sayisi + sinav.yanlis_sayisi + sinav.bos_sayisi;
+    if (totalQuestions === 0) return 0;
+    return Math.round((sinav.dogru_sayisi / totalQuestions) * 100);
+  }
+
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('tr-TR');
   }
 }

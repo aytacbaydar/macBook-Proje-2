@@ -128,6 +128,69 @@
         margin: 0;
       }
     }
+
+    .time-card {
+    border-left: 4px solid #17a2b8;
+
+    .time-info {
+      text-align: center;
+
+      .date {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 5px;
+      }
+
+      .time {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #17a2b8;
+      }
+    }
+  }
+
+  .chart-card {
+    border-left: 4px solid #6f42c1;
+
+    .card-header {
+      background-color: #f8f9fa;
+      border-bottom: 1px solid #dee2e6;
+
+      h5 {
+        margin-bottom: 0;
+        color: #6f42c1;
+        font-weight: 600;
+      }
+
+      small {
+        display: block;
+        margin-top: 5px;
+      }
+    }
+
+    .chart-container {
+      position: relative;
+      height: 300px;
+      width: 100%;
+
+      canvas {
+        max-height: 300px;
+      }
+    }
+
+    .loading-section {
+      height: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      .spinner-border {
+        width: 2rem;
+        height: 2rem;
+      }
+    }
   }
 }
 
