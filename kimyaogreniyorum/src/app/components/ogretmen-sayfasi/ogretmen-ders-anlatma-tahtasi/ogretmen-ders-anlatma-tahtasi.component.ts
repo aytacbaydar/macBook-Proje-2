@@ -1098,95 +1098,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
             const x = margin + (availableWidth - imgWidth) / 2;
             const y = margin + 15 + (availableHeight - imgHeight) / 2; // Başlık için 15mm boşluk
 
-            // Filigran resmi ekle (sayfa arka planına)
-            try {
-              // Filigran resmi yolları - farklı yolları dene
-              const filigranYollari = [
-                'siyah-turuncu.png',
-                './siyah-turuncu.png',
-                '/siyah-turuncu.png',
-                'public/siyah-turuncu.png',
-                './public/siyah-turuncu.png',
-                '/public/siyah-turuncu.png'
-              ];
-
-              let filigranYuklendi = false;
-
-              for (const yol of filigranYollari) {
-                try {
-                  // Resmi canvas üzerinden yükle
-                  const filigranImg = new Image();
-                  filigranImg.crossOrigin = 'anonymous';
-
-                  const basarili = await new Promise((resolve) => {
-                    filigranImg.onload = () => {
-                      try {
-                        // Geçici canvas oluştur
-                        const tempCanvas = document.createElement('canvas');
-                        const tempCtx = tempCanvas.getContext('2d');
-
-                        // Filigran boyutları - sayfanın %40'ı kadar (daha büyük)
-                        const filigranGenislik = pageWidth * 0.4;
-                        const filigranYukseklik = (filigranImg.height * filigranGenislik) / filigranImg.width;
-
-                        tempCanvas.width = filigranGenislik * 2.83; // mm to px dönüşümü
-                        tempCanvas.height = filigranYukseklik * 2.83;
-
-                        // Daha görünür opacity ayarla
-                        if (tempCtx) {
-                          tempCtx.globalAlpha = 0.15; // %15 opaklık (daha görünür)
-                          tempCtx.drawImage(filigranImg, 0, 0, tempCanvas.width, tempCanvas.height);
-                        }
-
-                        // Canvas'tan base64 al
-                        const filigranDataUrl = tempCanvas.toDataURL('image/png');
-
-                        // PDF'e filigran ekle - tam ortaya
-                        const filigranX = (pageWidth - filigranGenislik) / 2;
-                        const filigranY = (pageHeight - filigranYukseklik) / 2;
-
-                        pdf.addImage(filigranDataUrl, 'PNG', filigranX, filigranY, filigranGenislik, filigranYukseklik);
-
-                        console.log('Filigran başarıyla eklendi:', yol);
-                        resolve(true);
-                      } catch (error) {
-                        console.warn('Filigran ekleme hatası:', error);
-                        resolve(false);
-                      }
-                    };
-
-                    filigranImg.onerror = () => {
-                      console.warn('Filigran resmi yüklenemedi:', yol);
-                      resolve(false);
-                    };
-
-                    // 5 saniye timeout
-                    setTimeout(() => {
-                      console.warn('Filigran yükleme timeout:', yol);
-                      resolve(false);
-                    }, 5000);
-
-                    filigranImg.src = yol;
-                  });
-
-                  if (basarili) {
-                    filigranYuklendi = true;
-                    break; // Başarıyla yüklenirse döngüden çık
-                  }
-                } catch (error) {
-                  console.warn('Filigran deneme hatası:', yol, error);
-                  continue; // Sonraki yolu dene
-                }
-              }
-
-              if (!filigranYuklendi) {
-                console.warn('Hiçbir filigran yolu çalışmadı, filigran olmadan devam ediliyor');
-              }
-
-            } catch (error) {
-              console.warn('Filigran yükleme hatası:', error);
-              // Hata durumunda devam et
-            }
+            // Filigran artık CSS ile ekleniyor, PDF'te ayrı filigran gerekmez
 
             // Canvas görselini ekle
             pdf.addImage(dataURL, 'JPEG', x, y, imgWidth, imgHeight, undefined, 'MEDIUM');
@@ -1327,94 +1239,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
               const x = margin + (availableWidth - imgWidth) / 2;
               const y = margin + 15 + (availableHeight - imgHeight) / 2; // Başlık için 15mm boşluk
 
-              // Filigran resmi ekle (sayfa arka planına)
-              try {
-                // Filigran resmi yolları - farklı yolları dene
-                const filigranYollari = [
-                  'siyah-turuncu.png',
-                  './siyah-turuncu.png',
-                  '/siyah-turuncu.png',
-                  'public/siyah-turuncu.png',
-                  './public/siyah-turuncu.png',
-                  '/public/siyah-turuncu.png'
-                ];
-
-                let filigranYuklendi = false;
-
-                for (const yol of filigranYollari) {
-                  try {
-                    // Resmi canvas üzerinden yükle
-                    const filigranImg = new Image();
-                    filigranImg.crossOrigin = 'anonymous';
-
-                    const basarili = await new Promise((resolve) => {
-                      filigranImg.onload = () => {
-                    try {
-                      // Geçici canvas oluştur
-                      const tempCanvas = document.createElement('canvas');
-                      const tempCtx = tempCanvas.getContext('2d');
-
-                      // Filigran boyutları - sayfanın %40'ı kadar (daha büyük)
-                      const filigranGenislik = pageWidth * 0.4;
-                      const filigranYukseklik = (filigranImg.height * filigranGenislik) / filigranImg.width;
-
-                      tempCanvas.width = filigranGenislik * 2.83; // mm to px dönüşümü
-                      tempCanvas.height = filigranYukseklik * 2.83;
-
-                      // Daha görünür opacity ayarla
-                      if (tempCtx) {
-                        tempCtx.globalAlpha = 0.15; // %15 opaklık (daha görünür)
-                        tempCtx.drawImage(filigranImg, 0, 0, tempCanvas.width, tempCanvas.height);
-                      }
-
-                      // Canvas'tan base64 al
-                      const filigranDataUrl = tempCanvas.toDataURL('image/png');
-
-                      // PDF'e filigran ekle - tam ortaya
-                      const filigranX = (pageWidth - filigranGenislik) / 2;
-                      const filigranY = (pageHeight - filigranYukseklik) / 2;
-
-                      pdf.addImage(filigranDataUrl, 'PNG', filigranX, filigranY, filigranGenislik, filigranYukseklik);
-
-                      resolve(true);
-                    } catch (error) {
-                      console.warn('Filigran ekleme hatası:', error);
-                      resolve(false); // Hata olsa bile devam et
-                    }
-                  };
-
-                  filigranImg.onerror = () => {
-                        console.warn('Filigran resmi yüklenemedi:', yol);
-                        resolve(false);
-                      };
-
-                      // 5 saniye timeout
-                      setTimeout(() => {
-                        console.warn('Filigran yükleme timeout:', yol);
-                        resolve(false);
-                      }, 5000);
-
-                      filigranImg.src = yol;
-                    });
-
-                    if (basarili) {
-                      filigranYuklendi = true;
-                      break; // Başarıyla yüklenirse döngüden çık
-                    }
-                  } catch (error) {
-                    console.warn('Filigran deneme hatası:', yol, error);
-                    continue; // Sonraki yolu dene
-                  }
-                }
-
-                if (!filigranYuklendi) {
-                  console.warn('Hiçbir filigran yolu çalışmadı, filigran olmadan devam ediliyor');
-                }
-
-              } catch (error) {
-                console.warn('Filigran yükleme hatası:', error);
-                // Hata durumunda devam et
-              }
+              // Filigran artık CSS ile ekleniyor, PDF'te ayrı filigran gerekmez
 
               // Canvas görselini ekle
               pdf.addImage(dataURL, 'JPEG', x, y, imgWidth, imgHeight, undefined, 'MEDIUM');
@@ -1833,8 +1658,8 @@ export class OgretmenDersAnlatmaTahtasiComponent
         (element as any).mozRequestFullScreen();
       } else if ((element as any).webkitRequestFullscreen) {
         (element as any).webkitRequestFullscreen();
-      } else if ((element as any).msRequestFullscreen) {
-        (element as any).msRequestFullscreen();
+      } else if ((document as any).msRequestFullscreen) {
+        (document as any).msRequestFullscreen();
       }
     }
     this.isTamEkran = !this.isTamEkran;
