@@ -750,6 +750,17 @@ export class OgretmenDersAnlatmaTahtasiComponent
     // Yeni sayfanın canvas'ını oluştur
     setTimeout(() => {
       this.canvasOlustur(this.currentPage);
+      // Yeni sayfaya geçince sayfayı alta kaydır
+      setTimeout(() => {
+        const canvasElement = document.getElementById(`canvas-${this.currentPage}`);
+        if (canvasElement) {
+          canvasElement.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start',
+            inline: 'center' 
+          });
+        }
+      }, 200);
     }, 100);
   }
 
@@ -888,13 +899,16 @@ export class OgretmenDersAnlatmaTahtasiComponent
     // Brush'ı yeniden oluştur
     canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
 
-    // Kalem ayarlarını güncelle
+    // KalemProperties are updated.
+This line adds the functionality to scroll to the newly added page.
+```typescript
+   // Kalem ayarlarını güncelle
     canvas.freeDrawingBrush.color = this.kalemRengi;
     canvas.freeDrawingBrush.width = this.kalemKalinligi;
 
     // Canvas'ı yeniden render et
     canvas.renderAll();
-    
+
     console.log(`Canvas ${pageNo} kalem ayarları güncellendi - Renk: ${this.kalemRengi}, Kalınlık: ${this.kalemKalinligi}, Çizim Modu: ${canvas.isDrawingMode}`);
   }
 
@@ -967,15 +981,15 @@ export class OgretmenDersAnlatmaTahtasiComponent
       // Çizim modunu zorunlu aktifleştir
       canvas.isDrawingMode = true;
       canvas.selection = false;
-      
+
       // Brush'ı tamamen yeniden oluştur
       canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
       canvas.freeDrawingBrush.color = this.kalemRengi;
       canvas.freeDrawingBrush.width = this.kalemKalinligi;
-      
+
       // Canvas'ı zorunlu render et
       canvas.renderAll();
-      
+
       console.log(`Kalem modu aktif - Renk: ${this.kalemRengi}, Kalınlık: ${this.kalemKalinligi}, Çizim Modu: ${canvas.isDrawingMode}`);
     }
 
@@ -1084,7 +1098,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
     // Text ekleme olayını ekle
     canvas.on('mouse:down', (o: fabric.TEvent) => {
       const pointer = canvas.getPointer(o.e);
-      
+
       // Text input prompt'u göster
       const text = prompt('Yazılacak metni girin:');
       if (text && text.trim() !== '') {
@@ -1097,7 +1111,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
           selectable: true,
           editable: true
         });
-        
+
         canvas.add(textObj);
         canvas.setActiveObject(textObj);
         canvas.renderAll();
@@ -1144,7 +1158,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
             // Canvas background'ını beyaz yap
             canvas.backgroundColor = '#ffffff';
             canvas.renderAll();
-            
+
             // Canvas'ı düşük kalitede al - dosya boyutunu minimize et
             canvas.backgroundColor = '#ffffff';
             canvas.renderAll();
@@ -1284,7 +1298,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
             // Canvas background'ını beyaz yap
             canvas.backgroundColor = '#ffffff';
             canvas.renderAll();
-            
+
             // Canvas'ta çizim var mı kontrol et
             const hasDrawings = canvas.getObjects().length > 0;
 
@@ -1707,7 +1721,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
       event.returnValue =
         'Sayfadan ayrılmak istediğinize emin misiniz? Yapılan değişiklikler kaybolabilir.';
       return event.returnValue;
-    }
+    }```typescript
     return true;
   }
 
