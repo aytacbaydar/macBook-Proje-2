@@ -1145,13 +1145,13 @@ export class OgretmenDersAnlatmaTahtasiComponent
             canvas.backgroundColor = '#ffffff';
             canvas.renderAll();
             
-            // Canvas'ı doğrudan al - daha yüksek kalite
+            // Canvas'ı düşük kalitede al - dosya boyutunu minimize et
             canvas.backgroundColor = '#ffffff';
             canvas.renderAll();
             const dataURL = canvas.toDataURL({
               format: 'jpeg',
-              quality: 0.9, // Kaliteyi artırdık
-              multiplier: 1.0, // Çözünürlüğü artırdık
+              quality: 0.3, // Çok düşük kalite - dosya boyutu için
+              multiplier: 0.5, // Çözünürlüğü düşür
             });
 
             // Canvas'ın gerçek boyutlarını al
@@ -1297,11 +1297,11 @@ export class OgretmenDersAnlatmaTahtasiComponent
               const a4Ratio = 210 / 297;
               const canvasRatio = canvasWidth / canvasHeight;
 
-              // Canvas'ı JPEG formatında daha iyi kalitede dışa aktar
+              // Canvas'ı JPEG formatında çok düşük kalitede dışa aktar
               const dataURL = canvas.toDataURL({
                 format: 'jpeg',
-                quality: 0.8, // JPEG kalitesini iyileştirdik
-                multiplier: 0.9, // Çözünürlüğü iyileştirdik
+                quality: 0.2, // Çok düşük kalite - veritabanı limiti için
+                multiplier: 0.3, // Çok düşük çözünürlük
               });
 
               // İlk sayfa değilse yeni sayfa ekle
@@ -1376,8 +1376,8 @@ export class OgretmenDersAnlatmaTahtasiComponent
           return;
         }
 
-        // PDF boyut kontrolü - 15MB limit
-        const maxSizeMB = 15;
+        // PDF boyut kontrolü - 10MB limit (veritabanı limiti için)
+        const maxSizeMB = 10;
         if (pdfSizeMB > maxSizeMB) {
           alert(`PDF dosyası çok büyük! Boyut: ${pdfSizeMB.toFixed(2)} MB. Maksimum izin verilen: ${maxSizeMB} MB. Lütfen daha az sayfa çizin veya çizimlerinizi basitleştirin.`);
           this.kaydetmeIsleminde = false;
@@ -1438,13 +1438,13 @@ export class OgretmenDersAnlatmaTahtasiComponent
           'bytes'
         );
 
-        // ADIM 9: Kapak sayfası ekle (opsiyonel) - optimize edilmiş
+        // ADIM 9: Kapak sayfası ekle (opsiyonel) - minimize edilmiş
         console.log('ADIM 9: Kapak sayfası ekleye hazırlanıyor...');
         if (this.canvasInstances[0] && this.canvasInstances[0].getObjects().length > 0) {
           const coverDataURL = this.canvasInstances[0].toDataURL({
             format: 'jpeg',
-            quality: 0.5,
-            multiplier: 0.5,
+            quality: 0.1,
+            multiplier: 0.2,
           });
           const coverBlob = this.dataURLtoBlob(coverDataURL);
           const coverFile = new File([coverBlob], 'kapak.jpg', {
