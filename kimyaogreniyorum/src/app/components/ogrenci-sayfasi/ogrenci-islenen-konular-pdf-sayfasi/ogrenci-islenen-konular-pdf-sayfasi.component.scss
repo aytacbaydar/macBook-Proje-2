@@ -4,68 +4,6 @@
   font-family: 'Roboto', sans-serif;
 }
 
-.minimal-navbar {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 1rem 2rem;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-
-  .navbar-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .page-info {
-    .page-title {
-      margin: 0;
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #2d3748;
-      display: flex;
-      align-items: center;
-
-      i {
-        color: #e53e3e;
-      }
-    }
-
-    .page-subtitle {
-      margin: 0.25rem 0 0 0;
-      font-size: 0.9rem;
-      color: #718096;
-    }
-  }
-
-  .modern-btn {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 8px;
-    font-weight: 500;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.2s ease;
-    cursor: pointer;
-
-    &.modern-btn-secondary {
-      background: #e2e8f0;
-      color: #4a5568;
-
-      &:hover {
-        background: #cbd5e0;
-        transform: translateY(-1px);
-      }
-    }
-  }
-}
-
 .loading-container {
   display: flex;
   flex-direction: column;
@@ -79,55 +17,6 @@
   width: 100%;
   margin: 0 auto;
   padding: 2rem;
-}
-
-.student-info-card {
-  background: rgb(255, 255, 255);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-
-  .student-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-
-    .student-avatar {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 1.5rem;
-    }
-
-    .student-details {
-      h3 {
-        margin: 0;
-        font-size: 1.25rem;
-        font-weight: 600;
-        color: #2d3748;
-      }
-
-      .student-group {
-        margin: 0.25rem 0;
-        font-size: 0.9rem;
-        color: #667eea;
-        font-weight: 500;
-      }
-
-      .student-email {
-        margin: 0;
-        font-size: 0.85rem;
-        color: #718096;
-      }
-    }
-  }
 }
 
 .lessons-section {
@@ -310,7 +199,6 @@
   }
 }
 
-// PDF Modal Styles
 .pdf-modal-overlay {
   position: fixed;
   top: 0;
@@ -439,32 +327,13 @@
   }
 }
 
-// Responsive Design
 @media (max-width: 768px) {
-  .minimal-navbar {
-    padding: 1rem;
-
-    .navbar-content {
-      flex-direction: column;
-      gap: 1rem;
-      align-items: flex-start;
-    }
-  }
-
   .content-wrapper {
     padding: 1rem;
   }
 
   .lessons-grid {
     grid-template-columns: 1fr;
-  }
-
-  .student-info-card {
-    .student-header {
-      flex-direction: column;
-      text-align: center;
-      gap: 1rem;
-    }
   }
 
   .pdf-modal-overlay {

@@ -66,12 +66,12 @@
               </span>
               <span class="value">{{ ders.sayfa_sayisi }} sayfa</span>
             </div>
-            <div class="info-item" *ngIf="ders.ogretmen_adi">
+            <div class="info-item">
               <span class="label">
                 <i class="bi bi-person-badge me-1"></i>
                 Öğretmen:
               </span>
-              <span class="value">{{ ders.ogretmen_adi }}</span>
+              <span class="value">{{ ders.ogretmen_adi || 'Belirtilmemiş' }}</span>
             </div>
           </div>
 
