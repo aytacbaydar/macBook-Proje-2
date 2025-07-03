@@ -9,20 +9,42 @@
 
   <!-- Main Content Grid -->
   <div class="main-grid">
-    <!-- Student Info Card -->
+    <!-- Son İşlenen Konular Card -->
     <div class="card">
       <div class="card-header">
-        <h4>Profil Bilgileri</h4>
+        <h4><i class="bi bi-book-fill me-2"></i>Son İşlenen Konular</h4>
       </div>
       <div class="card-body">
-        <div class="student-info">
-          <img [src]="studentAvatar" alt="Avatar" class="avatar">
-          <div class="info">
-            <h5>{{ studentName }}</h5>
-            <p>{{ studentClass }}</p>
-            <p>Öğretmen: {{ studentTeacher }}</p>
-            <p *ngIf="studentGroup">Grup: {{ studentGroup }}</p>
+        <div *ngIf="loadingTopics" class="loading-section text-center py-3">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Yükleniyor...</span>
           </div>
+          <p class="mt-2">Konular yükleniyor...</p>
+        </div>
+        
+        <div *ngIf="!loadingTopics && sonIslenenKonular.length > 0" class="topics-list">
+          <div class="topic-item" *ngFor="let konu of sonIslenenKonular; let i = index">
+            <div class="topic-icon">
+              <i class="bi bi-check-circle-fill text-success"></i>
+            </div>
+            <div class="topic-content">
+              <h6 class="topic-title">{{ konu.konu_adi || konu.konu_baslik }}</h6>
+              <p class="topic-meta">
+                <small class="text-muted">
+                  <i class="bi bi-calendar-check me-1"></i>
+                  {{ formatDate(konu.isleme_tarihi) }}
+                </small>
+                <span class="badge bg-light text-dark ms-2" *ngIf="konu.sinif_seviyesi">
+                  {{ konu.sinif_seviyesi }}
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!loadingTopics && sonIslenenKonular.length === 0" class="empty-state text-center py-3">
+          <i class="bi bi-journal-x text-muted" style="font-size: 2rem;"></i>
+          <p class="text-muted mt-2">Henüz işlenen konu yok</p>
         </div>
       </div>
     </div>
@@ -46,19 +68,6 @@
             <i class="bi bi-clipboard-check"></i>
             <span>Sınavlar</span>
           </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Date & Time Card -->
-    <div class="card">
-      <div class="card-header">
-        <h4>Bugün</h4>
-      </div>
-      <div class="card-body">
-        <div class="date-time">
-          <p class="date">{{ getCurrentDate() }}</p>
-          <p class="time">{{ getCurrentTime() }}</p>
         </div>
       </div>
     </div>

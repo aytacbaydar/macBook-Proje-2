@@ -150,6 +150,58 @@
     }
   }
 
+  .topics-list {
+    max-height: 300px;
+    overflow-y: auto;
+
+    .topic-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #f8f9fa;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .topic-icon {
+        flex-shrink: 0;
+        font-size: 1.2rem;
+        margin-top: 2px;
+      }
+
+      .topic-content {
+        flex: 1;
+
+        .topic-title {
+          margin: 0 0 5px 0;
+          font-size: 0.95rem;
+          font-weight: 600;
+          color: #333;
+          line-height: 1.3;
+        }
+
+        .topic-meta {
+          margin: 0;
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 5px;
+
+          small {
+            font-size: 0.8rem;
+          }
+
+          .badge {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+          }
+        }
+      }
+    }
+  }
+
   .chart-card {
     border-left: 4px solid #6f42c1;
 

@@ -40,6 +40,10 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
   comparisonChart: any;
   loadingExamResults: boolean = false;
 
+  // Son işlenen konular
+  sonIslenenKonular: any[] = [];
+  loadingTopics: boolean = false;
+
   sinavTurleri: any = {
     'TYT': { color: '#667eea', label: 'TYT Deneme' },
     'AYT': { color: '#4facfe', label: 'AYT Deneme' },
@@ -53,6 +57,7 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
     this.loadStudentInfo();
     this.checkScreenSize();
     this.loadSinavSonuclari();
+    this.loadSonIslenenKonular();
     window.addEventListener('resize', () => {
       this.checkScreenSize();
     });
@@ -289,5 +294,44 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
   formatDate(dateString: string): string {
     const date = new Date(dateString);
     return date.toLocaleDateString('tr-TR');
+  }
+
+  loadSonIslenenKonular() {
+    this.loadingTopics = true;
+    
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (!userStr) {
+      this.loadingTopics = false;
+      return;
+    }
+
+    let userData;
+    try {
+      userData = JSON.parse(userStr);
+    } catch (error) {
+      this.loadingTopics = false;
+      return;
+    }
+
+    const grupBilgisi = userData.grup || userData.grubu;
+    if (!grupBilgisi) {
+      this.loadingTopics = false;
+      return;
+    }
+
+    this.http.get<any>(`./server/api/ogrenci_islenen_konular.php?grup=${grupBilgisi}`).subscribe({
+      next: (response) => {
+        this.loadingTopics = false;
+        if (response.success && response.islenen_konular) {
+          // Son 5 konuyu al (tarih sırasına göre)
+          this.sonIslenenKonular = response.islenen_konular
+            .sort((a: any, b: any) => new Date(b.isleme_tarihi).getTime() - new Date(a.isleme_tarihi).getTime())
+            .slice(0, 5);
+        }
+      },
+      error: (error) => {
+        this.loadingTopics = false;
+      }
+    });
   }
 }
