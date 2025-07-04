@@ -20,7 +20,31 @@ try {
 
     $conn = getConnection();
 
-    // Basit sorgu ile öğrencinin tüm sınav sonuçlarını al
+    // Tablo oluştur
+    $createTableSQL = "
+        CREATE TABLE IF NOT EXISTS sinav_sonuclari (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            sinav_id INT NOT NULL,
+            ogrenci_id INT NOT NULL,
+            sinav_adi VARCHAR(255) NOT NULL,
+            sinav_turu VARCHAR(50) NOT NULL,
+            soru_sayisi INT NOT NULL,
+            dogru_sayisi INT NOT NULL DEFAULT 0,
+            yanlis_sayisi INT NOT NULL DEFAULT 0,
+            bos_sayisi INT NOT NULL DEFAULT 0,
+            net_sayisi DECIMAL(5,2) NOT NULL DEFAULT 0,
+            puan DECIMAL(6,2) NOT NULL DEFAULT 0,
+            yuzde DECIMAL(5,2) NOT NULL DEFAULT 0,
+            gonderim_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            guncelleme_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_sinav_ogrenci (sinav_id, ogrenci_id),
+            INDEX idx_ogrenci_id (ogrenci_id),
+            UNIQUE KEY unique_sinav_ogrenci (sinav_id, ogrenci_id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    ";
+    $conn->exec($createTableSQL);
+
+    // Öğrencinin tüm sınav sonuçlarını al (her sınav için sadece bir kayıt)
     $sql = "SELECT 
                 ss.id,
                 ss.sinav_id, 
@@ -42,31 +66,18 @@ try {
     
     $stmt = $conn->prepare($sql);
     $stmt->execute([$ogrenci_id]);
-    $allResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Duplicate kayıtları manuel olarak temizle (aynı sinav_id için en son olanı tut)
-    $uniqueResults = [];
-    $seenSinavIds = [];
-    
-    foreach ($allResults as $result) {
-        $sinavId = $result['sinav_id'];
-        
-        if (!in_array($sinavId, $seenSinavIds)) {
-            $seenSinavIds[] = $sinavId;
-            $uniqueResults[] = $result;
-        }
-    }
+    $sinavSonuclari = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Her sınav için katılımcı sayısı ve sıralama bilgisi ekle
-    foreach ($uniqueResults as &$sonuc) {
-        // Bu sınava kaç kişi katıldı
+    foreach ($sinavSonuclari as &$sonuc) {
+        // Katılımcı sayısı
         $katilimciSql = "SELECT COUNT(DISTINCT ogrenci_id) as katilimci_sayisi FROM sinav_sonuclari WHERE sinav_id = ?";
         $katilimciStmt = $conn->prepare($katilimciSql);
         $katilimciStmt->execute([$sonuc['sinav_id']]);
         $katilimciResult = $katilimciStmt->fetch(PDO::FETCH_ASSOC);
         $sonuc['katilimci_sayisi'] = (int)$katilimciResult['katilimci_sayisi'];
 
-        // Bu öğrencinin sıralaması (puana göre)
+        // Sıralama
         $siralamaSql = "SELECT COUNT(DISTINCT ogrenci_id) + 1 as siralama 
                        FROM sinav_sonuclari 
                        WHERE sinav_id = ? AND puan > ?";
@@ -76,17 +87,23 @@ try {
         $sonuc['siralama'] = (int)$siralamaResult['siralama'];
     }
 
-    // İstatistikleri hesapla
-    $toplamSinav = count($uniqueResults);
-    $toplamDogru = array_sum(array_column($uniqueResults, 'dogru_sayisi'));
-    $toplamYanlis = array_sum(array_column($uniqueResults, 'yanlis_sayisi'));
-    $toplamBos = array_sum(array_column($uniqueResults, 'bos_sayisi'));
-    $toplamNet = array_sum(array_column($uniqueResults, 'net_sayisi'));
+    // Genel istatistikler
+    $toplamSinav = count($sinavSonuclari);
+    $toplamDogru = array_sum(array_column($sinavSonuclari, 'dogru_sayisi'));
+    $toplamYanlis = array_sum(array_column($sinavSonuclari, 'yanlis_sayisi'));
+    $toplamBos = array_sum(array_column($sinavSonuclari, 'bos_sayisi'));
+    $toplamNet = array_sum(array_column($sinavSonuclari, 'net_sayisi'));
+    
+    $genelOrtalama = 0;
+    if ($toplamSinav > 0) {
+        $genelOrtalama = array_sum(array_column($sinavSonuclari, 'yuzde')) / $toplamSinav;
+    }
 
-    // Sınav türüne göre grupla
+    // Sınav türlerine göre grupla
     $sinavTurleri = [];
-    foreach ($uniqueResults as $sonuc) {
+    foreach ($sinavSonuclari as $sonuc) {
         $tur = $sonuc['sinav_turu'];
+        
         if (!isset($sinavTurleri[$tur])) {
             $sinavTurleri[$tur] = [
                 'sinav_sayisi' => 0,
@@ -100,14 +117,14 @@ try {
         }
 
         $sinavTurleri[$tur]['sinav_sayisi']++;
-        $sinavTurleri[$tur]['toplam_dogru'] += $sonuc['dogru_sayisi'];
-        $sinavTurleri[$tur]['toplam_yanlis'] += $sonuc['yanlis_sayisi'];
-        $sinavTurleri[$tur]['toplam_bos'] += $sonuc['bos_sayisi'];
-        $sinavTurleri[$tur]['toplam_net'] += $sonuc['net_sayisi'];
+        $sinavTurleri[$tur]['toplam_dogru'] += (int)$sonuc['dogru_sayisi'];
+        $sinavTurleri[$tur]['toplam_yanlis'] += (int)$sonuc['yanlis_sayisi'];
+        $sinavTurleri[$tur]['toplam_bos'] += (int)$sonuc['bos_sayisi'];
+        $sinavTurleri[$tur]['toplam_net'] += (float)$sonuc['net_sayisi'];
         $sinavTurleri[$tur]['sinavlar'][] = $sonuc;
     }
 
-    // Ortalama yüzdeleri hesapla
+    // Her sınav türü için ortalama hesapla
     foreach ($sinavTurleri as $tur => &$data) {
         if ($data['sinav_sayisi'] > 0) {
             $toplamYuzde = array_sum(array_column($data['sinavlar'], 'yuzde'));
@@ -118,14 +135,14 @@ try {
     echo json_encode([
         'success' => true,
         'data' => [
-            'sinav_sonuclari' => $uniqueResults,
+            'sinav_sonuclari' => $sinavSonuclari,
             'genel_istatistikler' => [
                 'toplam_sinav' => $toplamSinav,
                 'toplam_dogru' => $toplamDogru,
                 'toplam_yanlis' => $toplamYanlis,
                 'toplam_bos' => $toplamBos,
                 'toplam_net' => round($toplamNet, 2),
-                'genel_ortalama' => $toplamSinav > 0 ? round(array_sum(array_column($uniqueResults, 'yuzde')) / $toplamSinav, 1) : 0
+                'genel_ortalama' => round($genelOrtalama, 1)
             ],
             'sinav_turleri' => $sinavTurleri
         ]
