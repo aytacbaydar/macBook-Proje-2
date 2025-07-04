@@ -1,6 +1,6 @@
 
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 interface StudentInfo {
   id: number;
@@ -11,6 +11,7 @@ interface StudentInfo {
   grubu?: string;
   ogretmeni?: string;
   avatar?: string;
+  token?: string;
 }
 
 interface SoruMesaj {
@@ -101,7 +102,8 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
             sinifi: user.sinif || user.sinifi || 'Bilinmiyor',
             grup: user.grup || user.grubu,
             ogretmeni: user.ogretmeni,
-            avatar: user.avatar
+            avatar: user.avatar,
+            token: user.token
           };
           resolve();
         } catch (error) {
@@ -118,28 +120,33 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
 
     this.isLoadingMessages = true;
     
-    // Bu örnek implementasyonda localStorage kullanacağız
-    // Gerçek uygulamada API çağrısı yapılacak
-    const storedMessages = localStorage.getItem(`soru_mesajlari_${this.studentInfo.id}`);
-    
-    if (storedMessages) {
-      try {
-        this.mesajlar = JSON.parse(storedMessages);
-      } catch (error) {
-        console.error('Error parsing stored messages:', error);
-        this.mesajlar = [];
-      }
-    } else {
-      this.mesajlar = [];
-    }
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.studentInfo.token}`
+    });
 
-    this.isLoadingMessages = false;
-    this.isLoading = false;
-    
-    // Scroll to bottom after loading messages
-    setTimeout(() => {
-      this.scrollToBottom();
-    }, 100);
+    this.http.get<any>(`${this.apiBaseUrl}/soru_mesajlari.php?ogrenci_id=${this.studentInfo.id}`, { headers })
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.mesajlar = response.data || [];
+          } else {
+            this.error = response.error || 'Mesajlar yüklenirken hata oluştu.';
+          }
+          this.isLoadingMessages = false;
+          this.isLoading = false;
+          
+          // Scroll to bottom after loading messages
+          setTimeout(() => {
+            this.scrollToBottom();
+          }, 100);
+        },
+        error: (error) => {
+          console.error('Error loading messages:', error);
+          this.error = 'Mesajlar yüklenirken hata oluştu.';
+          this.isLoadingMessages = false;
+          this.isLoading = false;
+        }
+      });
   }
 
   onFileSelected(event: any) {
@@ -186,75 +193,41 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
     this.isSending = true;
     this.error = null;
 
-    // Create new message
-    const yeniMesajObj: SoruMesaj = {
-      id: Date.now(),
-      ogrenci_id: this.studentInfo.id,
-      mesaj_metni: this.yeniMesaj.trim(),
-      gonderim_tarihi: new Date().toISOString(),
-      gonderen_tip: 'ogrenci',
-      gonderen_adi: this.studentInfo.adi_soyadi,
-      okundu: false
-    };
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.studentInfo.token}`
+    });
 
-    // Handle file upload if exists
-    if (this.selectedFile && this.previewUrl) {
-      yeniMesajObj.resim_url = this.previewUrl;
+    const formData = new FormData();
+    formData.append('ogrenci_id', this.studentInfo.id.toString());
+    formData.append('mesaj_metni', this.yeniMesaj.trim());
+    formData.append('gonderen_tip', 'ogrenci');
+    formData.append('gonderen_adi', this.studentInfo.adi_soyadi);
+
+    if (this.selectedFile) {
+      formData.append('resim', this.selectedFile);
     }
 
-    // Add to messages array
-    this.mesajlar.push(yeniMesajObj);
-
-    // Save to localStorage (in real app, this would be an API call)
-    localStorage.setItem(`soru_mesajlari_${this.studentInfo.id}`, JSON.stringify(this.mesajlar));
-
-    // Reset form
-    this.yeniMesaj = '';
-    this.removeSelectedFile();
-    this.isSending = false;
-
-    // Scroll to bottom
-    setTimeout(() => {
-      this.scrollToBottom();
-    }, 100);
-
-    // Simulate teacher response after 2-5 seconds (for demo purposes)
-    setTimeout(() => {
-      this.simulateTeacherResponse();
-    }, Math.random() * 3000 + 2000);
-  }
-
-  private simulateTeacherResponse() {
-    if (!this.studentInfo) return;
-
-    const teacherResponses = [
-      'Bu soruyu çözmek için hangi konuları bilmen gerekiyor?',
-      'Önce denklemleri dengeleyelim. Hangi adımda zorlanıyorsun?',
-      'Bu tür sorularda önce bilinenleri ve bilinmeyenleri ayıralım.',
-      'Güzel soru! Bu konuyu daha detaylı anlatmam gerekiyor galiba.',
-      'Formülü doğru yazmışsın, şimdi yerine değerleri koyalım.',
-      'Bu soruyu adım adım çözelim. İlk önce ne yapmalıyız?'
-    ];
-
-    const randomResponse = teacherResponses[Math.floor(Math.random() * teacherResponses.length)];
-
-    const teacherMessage: SoruMesaj = {
-      id: Date.now() + 1,
-      ogrenci_id: this.studentInfo.id,
-      ogretmen_id: 1,
-      mesaj_metni: randomResponse,
-      gonderim_tarihi: new Date().toISOString(),
-      gonderen_tip: 'ogretmen',
-      gonderen_adi: this.studentInfo.ogretmeni || 'Öğretmen',
-      okundu: false
-    };
-
-    this.mesajlar.push(teacherMessage);
-    localStorage.setItem(`soru_mesajlari_${this.studentInfo.id}`, JSON.stringify(this.mesajlar));
-
-    setTimeout(() => {
-      this.scrollToBottom();
-    }, 100);
+    this.http.post<any>(`${this.apiBaseUrl}/soru_mesajlari.php`, formData, { headers })
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            // Reset form
+            this.yeniMesaj = '';
+            this.removeSelectedFile();
+            
+            // Reload messages
+            this.loadMesajlar();
+          } else {
+            this.error = response.error || 'Mesaj gönderilirken hata oluştu.';
+          }
+          this.isSending = false;
+        },
+        error: (error) => {
+          console.error('Error sending message:', error);
+          this.error = 'Mesaj gönderilirken hata oluştu.';
+          this.isSending = false;
+        }
+      });
   }
 
   private scrollToBottom() {
@@ -267,9 +240,8 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
   private startAutoRefresh() {
     if (this.autoRefresh) {
       this.refreshInterval = setInterval(() => {
-        // In real app, this would check for new messages from API
-        // For now, we'll just check localStorage
-      }, 5000);
+        this.loadMesajlar();
+      }, 10000); // 10 saniyede bir yenile
     }
   }
 
@@ -307,10 +279,27 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
 
   temizleMesajlar() {
     if (confirm('Tüm mesajları silmek istediğinizden emin misiniz?')) {
-      this.mesajlar = [];
-      if (this.studentInfo) {
-        localStorage.removeItem(`soru_mesajlari_${this.studentInfo.id}`);
-      }
+      if (!this.studentInfo) return;
+
+      const headers = new HttpHeaders({
+        'Authorization': `Bearer ${this.studentInfo.token}`
+      });
+
+      // Tüm mesajları sil
+      this.mesajlar.forEach(mesaj => {
+        if (mesaj.id) {
+          this.http.delete(`${this.apiBaseUrl}/soru_mesajlari.php?id=${mesaj.id}`, { headers })
+            .subscribe({
+              next: () => {
+                // Mesajlar silindi, listeyi yenile
+                this.loadMesajlar();
+              },
+              error: (error) => {
+                console.error('Error deleting message:', error);
+              }
+            });
+        }
+      });
     }
   }
 
@@ -325,7 +314,9 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
   }
 
   openImageModal(imageUrl: string) {
-    // Simple image modal implementation
+    // Resim URL'sini tam path'e çevir
+    const fullImageUrl = imageUrl.startsWith('http') ? imageUrl : `./server/${imageUrl}`;
+    
     const modal = document.createElement('div');
     modal.className = 'image-modal-overlay';
     modal.style.cssText = `
@@ -343,7 +334,7 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
     `;
 
     const img = document.createElement('img');
-    img.src = imageUrl;
+    img.src = fullImageUrl;
     img.style.cssText = `
       max-width: 90%;
       max-height: 90%;
@@ -357,5 +348,10 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
     modal.addEventListener('click', () => {
       document.body.removeChild(modal);
     });
+  }
+
+  getImageUrl(resimUrl: string): string {
+    if (!resimUrl) return '';
+    return resimUrl.startsWith('http') ? resimUrl : `./server/${resimUrl}`;
   }
 }
