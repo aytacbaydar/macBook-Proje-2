@@ -11,6 +11,9 @@
                         <i class="bi {{ item.icon }}"></i>
                         <p *ngIf="!isClosed">{{ item.label }}</p>
                     </div>
+                    <span class="badge bg-warning ms-auto" *ngIf="item.label === 'Soru Çözümü'">
+              {{ item.badgeCount || 0 }}
+            </span>
                 </a>
             </li>
         </div>

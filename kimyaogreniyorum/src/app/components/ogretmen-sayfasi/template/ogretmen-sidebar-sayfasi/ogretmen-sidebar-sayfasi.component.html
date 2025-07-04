@@ -12,8 +12,8 @@
                         <p *ngIf="!isClosed">
                         <span class="sidebar-item-text">{{ item.label }}</span>
                         <span 
-                          *ngIf="item.badgeCount && item.badgeCount > 0" 
                           class="badge bg-danger rounded-pill ms-auto"
+                          *ngIf="item.badgeCount || item.badgeCount === 0"
                         >
                           {{ item.badgeCount > 99 ? '99+' : item.badgeCount }}
                         </span>
