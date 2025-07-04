@@ -65,6 +65,7 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
     this.checkScreenSize();
     this.loadSinavSonuclari();
     this.loadSonIslenenKonular();
+    this.loadKonuAnalizi();
     window.addEventListener('resize', () => {
       this.checkScreenSize();
     });
@@ -378,6 +379,56 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
         this.loadingTopics = false;
       }
     });
+  }
+
+  loadKonuAnalizi() {
+    this.loadingKonuAnalizi = true;
+
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (!userStr) {
+      this.loadingKonuAnalizi = false;
+      return;
+    }
+
+    let userData;
+    try {
+      userData = JSON.parse(userStr);
+    } catch (error) {
+      this.loadingKonuAnalizi = false;
+      return;
+    }
+
+    const ogrenciId = userData.id;
+    if (!ogrenciId) {
+      this.loadingKonuAnalizi = false;
+      return;
+    }
+
+    this.http.get<any>(`./server/api/ogrenci_konu_analizi.php?ogrenci_id=${ogrenciId}`).subscribe({
+      next: (response) => {
+        this.loadingKonuAnalizi = false;
+        if (response.success && response.data) {
+          this.konuAnalizi = response.data.konu_istatistikleri || [];
+        }
+      },
+      error: (error) => {
+        this.loadingKonuAnalizi = false;
+      }
+    });
+  }
+
+  getKonuSuccessColor(basariOrani: number): string {
+    if (basariOrani >= 80) return '#28a745'; // Yeşil
+    if (basariOrani >= 60) return '#ffc107'; // Sarı
+    if (basariOrani >= 40) return '#fd7e14'; // Turuncu
+    return '#dc3545'; // Kırmızı
+  }
+
+  getKonuSuccessText(basariOrani: number): string {
+    if (basariOrani >= 80) return 'Mükemmel';
+    if (basariOrani >= 60) return 'İyi';
+    if (basariOrani >= 40) return 'Orta';
+    return 'Geliştirilmeli';
   }
 
 

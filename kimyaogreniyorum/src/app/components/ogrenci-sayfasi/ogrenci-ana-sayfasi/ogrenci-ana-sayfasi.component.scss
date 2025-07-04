@@ -226,13 +226,102 @@ gap: 12px;
 }
  .chart-container {
       position: relative;
-      
+
       canvas {
         max-width: 100%;
-        height: 500px !important;
+        height: 300px !important;
       }
     }
 
+// Konu Analizi Stilleri
+.konu-analizi-container {
+  max-height: 400px;
+  overflow-y: auto;
+
+  .konu-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+
+    .konu-adi {
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .progress {
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      overflow: hidden;
+
+      .progress-bar {
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: bold;
+        color: #fff;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        transition: width 0.6s ease;
+      }
+    }
+
+    .konu-detaylar {
+      .badge {
+        font-size: 11px;
+        min-width: 25px;
+      }
+
+      small {
+        font-size: 10px;
+      }
+
+      .sinavlar-listesi {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 8px;
+        border-radius: 6px;
+
+        small {
+          color: rgba(255, 255, 255, 0.8);
+          font-size: 11px;
+        }
+      }
+    }
+  }
+}
+
+.empty-state {
+  i {
+    opacity: 0.5;
+  }
+
+  h5, p {
+    color: rgba(255, 255, 255, 0.8);
+  }
+}
+
+// Mobile responsive
+@media (max-width: 768px) {
+  .konu-analizi-container {
+    .konu-item {
+      padding: 12px;
+
+      .konu-adi {
+        font-size: 13px;
+      }
+
+      .progress {
+        height: 20px !important;
+
+        .progress-bar {
+          font-size: 11px;
+        }
+      }
+    }
+  }
+}
     .sinav-detay-bilgileri {
       h5 {
         color: #333;
