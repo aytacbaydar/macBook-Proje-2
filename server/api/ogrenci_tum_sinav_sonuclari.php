@@ -46,14 +46,26 @@ try {
 
     $conn->exec($createTableSQL);
 
+    // Duplicate kayıtları temizle (aynı öğrenci ve sınav için birden fazla kayıt varsa en sonuncuyu tut)
+    $cleanupSQL = "
+        DELETE ss1 FROM sinav_sonuclari ss1
+        INNER JOIN sinav_sonuclari ss2 
+        WHERE ss1.ogrenci_id = ss2.ogrenci_id 
+        AND ss1.sinav_id = ss2.sinav_id 
+        AND ss1.id < ss2.id
+        AND ss1.ogrenci_id = ?
+    ";
+    $cleanupStmt = $conn->prepare($cleanupSQL);
+    $cleanupStmt->execute([$ogrenci_id]);
+
     // Öğrencinin her sınav için en son sonucunu al (aynı sınavı birden fazla çözmüşse en son olanı)
-    $sql = "SELECT ss1.* FROM sinav_sonuclari ss1
+    $sql = "SELECT DISTINCT ss1.* FROM sinav_sonuclari ss1
             INNER JOIN (
-                SELECT sinav_id, MAX(gonderim_tarihi) as max_tarih 
+                SELECT sinav_id, MAX(id) as max_id 
                 FROM sinav_sonuclari 
                 WHERE ogrenci_id = ? 
                 GROUP BY sinav_id
-            ) ss2 ON ss1.sinav_id = ss2.sinav_id AND ss1.gonderim_tarihi = ss2.max_tarih
+            ) ss2 ON ss1.sinav_id = ss2.sinav_id AND ss1.id = ss2.max_id
             WHERE ss1.ogrenci_id = ?
             ORDER BY ss1.gonderim_tarihi DESC";
     $stmt = $conn->prepare($sql);
