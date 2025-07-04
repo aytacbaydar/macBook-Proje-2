@@ -1,1 +1,257 @@
-<p>ogrenci-konu-analiz-sayfasi works!</p>
+
+<div class="konu-analiz-container">
+  <!-- Header Section -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-text">
+        <h1><i class="bi bi-graph-up me-2"></i>Konu Analizi</h1>
+        <p class="text-muted">Sınav performansınıza göre konu başarı analiziniz</p>
+      </div>
+      
+      <!-- Student Info -->
+      <div class="student-info-card" *ngIf="studentInfo">
+        <div class="student-avatar">
+          <img [src]="studentInfo.avatar" [alt]="studentInfo.adi_soyadi">
+        </div>
+        <div class="student-details">
+          <h4>{{ studentInfo.adi_soyadi }}</h4>
+          <div class="student-meta">
+            <span class="meta-item">
+              <i class="bi bi-mortarboard me-1"></i>
+              {{ studentInfo.sinifi }}
+            </span>
+            <span class="meta-item" *ngIf="studentInfo.grup">
+              <i class="bi bi-people me-1"></i>
+              {{ studentInfo.grup }}
+            </span>
+            <span class="meta-item" *ngIf="studentInfo.ogretmeni">
+              <i class="bi bi-person-badge me-1"></i>
+              {{ studentInfo.ogretmeni }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loadingKonuAnalizi" class="loading-section text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Yükleniyor...</span>
+    </div>
+    <p class="mt-3 text-muted">Konu analizi yükleniyor...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loadingKonuAnalizi" class="alert alert-danger">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    {{ error }}
+    <button class="btn btn-sm btn-outline-danger ms-3" (click)="loadData()">
+      <i class="bi bi-arrow-clockwise me-1"></i>
+      Tekrar Dene
+    </button>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!loadingKonuAnalizi && !error">
+    
+    <!-- Summary Statistics -->
+    <div class="summary-stats-section" *ngIf="konuAnalizi.length > 0">
+      <div class="stats-grid">
+        <div class="stat-card primary">
+          <div class="stat-icon">
+            <i class="bi bi-book"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ getTotalTopics() }}</h3>
+            <p>Toplam Konu</p>
+          </div>
+        </div>
+
+        <div class="stat-card success">
+          <div class="stat-icon">
+            <i class="bi bi-percent"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ getAverageSuccess() }}%</h3>
+            <p>Ortalama Başarı</p>
+          </div>
+        </div>
+
+        <div class="stat-card info">
+          <div class="stat-icon">
+            <i class="bi bi-question-circle"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ getTotalQuestions() }}</h3>
+            <p>Toplam Soru</p>
+          </div>
+        </div>
+
+        <div class="stat-card warning">
+          <div class="stat-icon">
+            <i class="bi bi-check-circle"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ getTotalCorrect() }}</h3>
+            <p>Doğru Cevap</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Performance Level Distribution -->
+    <div class="performance-distribution" *ngIf="konuAnalizi.length > 0">
+      <h3><i class="bi bi-pie-chart me-2"></i>Başarı Seviyesi Dağılımı</h3>
+      <div class="distribution-grid">
+        <div class="distribution-card excellent">
+          <div class="distribution-icon">
+            <i class="bi bi-trophy-fill"></i>
+          </div>
+          <div class="distribution-content">
+            <h4>{{ getMukemmelKonuSayisi() }}</h4>
+            <p>Mükemmel (80%+)</p>
+          </div>
+        </div>
+
+        <div class="distribution-card good">
+          <div class="distribution-icon">
+            <i class="bi bi-star-fill"></i>
+          </div>
+          <div class="distribution-content">
+            <h4>{{ getIyiKonuSayisi() }}</h4>
+            <p>İyi (60-79%)</p>
+          </div>
+        </div>
+
+        <div class="distribution-card average">
+          <div class="distribution-icon">
+            <i class="bi bi-dash-circle-fill"></i>
+          </div>
+          <div class="distribution-content">
+            <h4>{{ getOrtaKonuSayisi() }}</h4>
+            <p>Orta (40-59%)</p>
+          </div>
+        </div>
+
+        <div class="distribution-card needs-improvement">
+          <div class="distribution-icon">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+          </div>
+          <div class="distribution-content">
+            <h4>{{ getGelistirilmeliKonuSayisi() }}</h4>
+            <p>Geliştirilmeli (0-39%)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Best and Worst Topics -->
+    <div class="topics-highlights" *ngIf="konuAnalizi.length > 0">
+      <div class="row">
+        <!-- En İyi Konular -->
+        <div class="col-md-6">
+          <div class="highlight-card success-topics">
+            <h4><i class="bi bi-award me-2"></i>En İyi Konularınız</h4>
+            <div class="topics-list">
+              <div class="topic-highlight-item" *ngFor="let konu of getEnIyiKonular(); let i = index">
+                <div class="topic-rank">{{ i + 1 }}</div>
+                <div class="topic-info">
+                  <h6>{{ konu.konu_adi }}</h6>
+                  <div class="topic-stats">
+                    <span class="success-rate">{{ konu.basari_orani }}%</span>
+                    <small class="text-muted">{{ konu.dogru_sayisi }}/{{ konu.toplam_soru }}</small>
+                  </div>
+                </div>
+                <div class="topic-badge excellent">
+                  <i class="bi bi-trophy"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Geliştirilmesi Gereken Konular -->
+        <div class="col-md-6">
+          <div class="highlight-card improvement-topics">
+            <h4><i class="bi bi-arrow-up-circle me-2"></i>Geliştirilmesi Gereken Konular</h4>
+            <div class="topics-list">
+              <div class="topic-highlight-item" *ngFor="let konu of getGelistirilmesiGerekenKonular(); let i = index">
+                <div class="topic-rank warning">{{ i + 1 }}</div>
+                <div class="topic-info">
+                  <h6>{{ konu.konu_adi }}</h6>
+                  <div class="topic-stats">
+                    <span class="success-rate warning">{{ konu.basari_orani }}%</span>
+                    <small class="text-muted">{{ konu.dogru_sayisi }}/{{ konu.toplam_soru }}</small>
+                  </div>
+                </div>
+                <div class="topic-badge needs-work">
+                  <i class="bi bi-arrow-up"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detailed Topic Analysis -->
+    <div class="detailed-analysis" *ngIf="konuAnalizi.length > 0">
+      <h3><i class="bi bi-list-check me-2"></i>Detaylı Konu Analizi</h3>
+      
+      <div class="konu-analizi-container">
+        <div class="konu-item mb-4" *ngFor="let konu of konuAnalizi; let i = index">
+          <div class="konu-header d-flex justify-content-between align-items-center mb-2">
+            <h6 class="konu-adi mb-0 fw-bold">{{ konu.konu_adi }}</h6>
+            <span class="badge" [style.background-color]="getKonuSuccessColor(konu.basari_orani)">
+              {{ getKonuSuccessText(konu.basari_orani) }}
+            </span>
+          </div>
+          
+          <div class="progress mb-2" style="height: 25px;">
+            <div class="progress-bar" 
+                 [style.width.%]="konu.basari_orani"
+                 [style.background-color]="getKonuSuccessColor(konu.basari_orani)"
+                 role="progressbar" 
+                 [attr.aria-valuenow]="konu.basari_orani" 
+                 aria-valuemin="0" 
+                 aria-valuemax="100">
+              <span class="fw-bold">{{ konu.basari_orani }}%</span>
+            </div>
+          </div>
+
+          <div class="konu-detaylar">
+            <div class="row text-center">
+              <div class="col-3">
+                <span class="badge bg-success d-block mb-1">{{ konu.dogru_sayisi }}</span>
+                <small class="text-muted">Doğru</small>
+              </div>
+              <div class="col-3">
+                <span class="badge bg-danger d-block mb-1">{{ konu.yanlis_sayisi }}</span>
+                <small class="text-muted">Yanlış</small>
+              </div>
+              <div class="col-3">
+                <span class="badge bg-warning d-block mb-1">{{ konu.bos_sayisi }}</span>
+                <small class="text-muted">Boş</small>
+              </div>
+              <div class="col-3">
+                <span class="badge bg-info d-block mb-1">{{ konu.toplam_soru }}</span>
+                <small class="text-muted">Toplam</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loadingKonuAnalizi && !error && konuAnalizi.length === 0" class="empty-state text-center py-5">
+      <div class="empty-content">
+        <i class="bi bi-graph-up text-muted" style="font-size: 4rem;"></i>
+        <h3 class="text-muted mt-3">Henüz Konu Analizi Yok</h3>
+        <p class="text-muted">Sınav çözdükçe konu başarı analiziniz burada görünecek</p>
+        <p class="text-muted">Hadi ilk sınavını çöz! 📊</p>
+      </div>
+    </div>
+  </div>
+</div>
