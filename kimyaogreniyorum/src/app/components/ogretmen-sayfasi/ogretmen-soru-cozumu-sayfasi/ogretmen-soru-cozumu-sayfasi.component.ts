@@ -63,6 +63,10 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
   toastMessage: string = '';
   toastType: 'success' | 'info' | 'warning' | 'error' = 'info';
 
+  // Image modal
+  showImageModal: boolean = false;
+  selectedImageUrl: string = '';
+
   private apiBaseUrl = './server/api';
 
   constructor(private http: HttpClient) {
@@ -589,5 +593,23 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     } else {
       this.notificationsEnabled = enabled;
     }
+  }
+
+  openImageModal(imageUrl: string): void {
+    this.selectedImageUrl = imageUrl;
+    this.showImageModal = true;
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+  }
+
+  closeImageModal(): void {
+    this.showImageModal = false;
+    this.selectedImageUrl = '';
+    document.body.style.overflow = 'auto'; // Restore scrolling
+  }
+
+  getImageFileName(url: string): string {
+    if (!url) return 'resim.jpg';
+    const parts = url.split('/');
+    return parts[parts.length - 1] || 'resim.jpg';
   }
 }

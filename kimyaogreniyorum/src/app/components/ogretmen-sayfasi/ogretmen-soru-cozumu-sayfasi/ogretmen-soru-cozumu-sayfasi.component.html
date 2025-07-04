@@ -166,7 +166,10 @@
                   <div class="message-body">
                     <p *ngIf="mesaj.mesaj_metni" class="message-text">{{ mesaj.mesaj_metni }}</p>
                     <div *ngIf="mesaj.resim_url" class="message-image">
-                      <img [src]="mesaj.resim_url" alt="Soru resmi" class="img-fluid rounded">
+                      <img [src]="mesaj.resim_url" 
+                           alt="Soru resmi" 
+                           class="img-fluid rounded cursor-pointer"
+                           (click)="openImageModal(mesaj.resim_url)">
                     </div>
                   </div>
                 </div>
@@ -252,6 +255,34 @@
     </div>
     <div class="toast-body">
       {{ toastMessage }}
+    </div>
+  </div>
+</div>
+
+<!-- Image Modal -->
+<div *ngIf="showImageModal" class="image-modal-overlay" (click)="closeImageModal()">
+  <div class="image-modal-content" (click)="$event.stopPropagation()">
+    <div class="image-modal-header">
+      <h5 class="modal-title">
+        <i class="bi bi-image me-2"></i>
+        Resim Görüntüleme
+      </h5>
+      <button type="button" class="btn-close" (click)="closeImageModal()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    <div class="image-modal-body">
+      <img [src]="selectedImageUrl" alt="Büyütülmüş resim" class="modal-image">
+    </div>
+    <div class="image-modal-footer">
+      <button class="btn btn-secondary" (click)="closeImageModal()">
+        <i class="bi bi-x-circle me-1"></i>
+        Kapat
+      </button>
+      <a [href]="selectedImageUrl" [download]="getImageFileName(selectedImageUrl)" class="btn btn-primary">
+        <i class="bi bi-download me-1"></i>
+        İndir
+      </a>
     </div>
   </div>
 </div>

@@ -1,4 +1,3 @@
-
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
@@ -38,13 +37,13 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
 
   // Student information
   studentInfo: StudentInfo | null = null;
-  
+
   // Messages and communication
   mesajlar: SoruMesaj[] = [];
   yeniMesaj: string = '';
   selectedFile: File | null = null;
   previewUrl: string | null = null;
-  
+
   // Loading states
   isLoading: boolean = false;
   isLoadingMessages: boolean = false;
@@ -58,6 +57,15 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
   // Notification settings
   notificationsEnabled: boolean = false;
   lastMessageCount: number = 0;
+
+  // Toast notification
+  showToast: boolean = false;
+  toastMessage: string = '';
+  toastType: 'success' | 'info' | 'warning' | 'error' = 'info';
+
+  // Image modal
+  showImageModal: boolean = false;
+  selectedImageUrl: string = '';
 
   private apiBaseUrl = './server/api';
 
@@ -97,7 +105,7 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
   private loadStudentInfo(): Promise<void> {
     return new Promise((resolve, reject) => {
       const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
-      
+
       if (userStr) {
         try {
           const user = JSON.parse(userStr);
@@ -128,7 +136,7 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
     }
 
     this.isLoadingMessages = true;
-    
+
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.studentInfo.token}`
     });
@@ -148,7 +156,7 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
           }
           this.isLoadingMessages = false;
           this.isLoading = false;
-          
+
           // Scroll to bottom after loading messages
           setTimeout(() => {
             this.scrollToBottom();
@@ -159,7 +167,7 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
           console.error('Error status:', error.status);
           console.error('Error message:', error.message);
           console.error('Error details:', error.error);
-          
+
           this.error = `Mesajlar yüklenirken hata oluştu. (${error.status}: ${error.statusText})`;
           this.isLoadingMessages = false;
           this.isLoading = false;
@@ -232,7 +240,7 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
             // Reset form
             this.yeniMesaj = '';
             this.removeSelectedFile();
-            
+
             // Reload messages
             this.loadMesajlar();
           } else {
@@ -265,7 +273,7 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
 
   toggleAutoRefresh() {
     this.autoRefresh = !this.autoRefresh;
-    
+
     if (this.autoRefresh) {
       this.startAutoRefresh();
     } else if (this.refreshInterval) {
@@ -285,7 +293,7 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
     if (minutes < 60) return `${minutes} dakika önce`;
     if (hours < 24) return `${hours} saat önce`;
     if (days < 7) return `${days} gün önce`;
-    
+
     return date.toLocaleDateString('tr-TR', {
       year: 'numeric',
       month: 'short',
@@ -331,41 +339,22 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
     return mesaj.id;
   }
 
-  openImageModal(imageUrl: string) {
-    // Resim URL'sini tam path'e çevir
-    const fullImageUrl = imageUrl.startsWith('http') ? imageUrl : `./server/${imageUrl}`;
-    
-    const modal = document.createElement('div');
-    modal.className = 'image-modal-overlay';
-    modal.style.cssText = `
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      cursor: pointer;
-    `;
+  openImageModal(imageUrl: string): void {
+    this.selectedImageUrl = imageUrl;
+    this.showImageModal = true;
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+  }
 
-    const img = document.createElement('img');
-    img.src = fullImageUrl;
-    img.style.cssText = `
-      max-width: 90%;
-      max-height: 90%;
-      border-radius: 10px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    `;
+  closeImageModal(): void {
+    this.showImageModal = false;
+    this.selectedImageUrl = '';
+    document.body.style.overflow = 'auto'; // Restore scrolling
+  }
 
-    modal.appendChild(img);
-    document.body.appendChild(modal);
-
-    modal.addEventListener('click', () => {
-      document.body.removeChild(modal);
-    });
+  getImageFileName(url: string): string {
+    if (!url) return 'resim.jpg';
+    const parts = url.split('/');
+    return parts[parts.length - 1] || 'resim.jpg';
   }
 
   getImageUrl(resimUrl: string): string {
@@ -419,11 +408,11 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
         next: (response) => {
           if (response.success) {
             const newMessages = response.data || [];
-            
+
             // Check if there are new teacher messages
             if (this.lastMessageCount > 0 && newMessages.length > this.lastMessageCount) {
               const latestMessage = newMessages[newMessages.length - 1]; // Get latest message
-              
+
               if (latestMessage.gonderen_tip === 'ogretmen') {
                 this.showNotification(
                   'Öğretmeninizden Cevap!', 
@@ -431,13 +420,13 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
                 );
               }
             }
-            
+
             this.lastMessageCount = newMessages.length;
-            
+
             // Update messages only if there are new ones
             if (newMessages.length !== this.mesajlar.length) {
               this.mesajlar = newMessages;
-              
+
               // Scroll to bottom after loading messages
               setTimeout(() => {
                 this.scrollToBottom();
@@ -453,7 +442,7 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
 
   toggleNotifications(event: any): void {
     const enabled = event.target.checked;
-    
+
     if (enabled && 'Notification' in window) {
       if (Notification.permission === 'default') {
         Notification.requestPermission().then(permission => {
@@ -472,5 +461,9 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
     } else {
       this.notificationsEnabled = enabled;
     }
+  }
+
+  hideToast(): void {
+    this.showToast = false;
   }
 }
