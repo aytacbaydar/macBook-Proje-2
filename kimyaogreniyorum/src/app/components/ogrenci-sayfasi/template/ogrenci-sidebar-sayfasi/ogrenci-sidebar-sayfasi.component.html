@@ -6,14 +6,20 @@
         <div class="logo" *ngIf="!isClosed">Kimya<span>Öğreniyorum</span></div>
         <div class="menu-sidebar">
             <li class="li-menu" *ngFor="let item of menuItems">
-                <a href="{{ item.link }}">
+                <a href="{{ item.link }}" style="position: relative;">
                     <div class="menu-flex">
                         <i class="bi {{ item.icon }}"></i>
-                        <p *ngIf="!isClosed">{{ item.label }}</p>
+                        <p *ngIf="!isClosed">
+                          <span class="sidebar-item-text">{{ item.label }}</span>
+                          <span 
+                            class="badge bg-warning rounded-pill ms-auto"
+                            *ngIf="item.label === 'Soru Çözümü' && item.badgeCount > 0"
+                            style="position: absolute; top: -5px; right: -5px; font-size: 10px; min-width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;"
+                          >
+                            {{ item.badgeCount > 99 ? '99+' : item.badgeCount }}
+                          </span>
+                        </p>
                     </div>
-                    <span class="badge bg-warning ms-auto" *ngIf="item.label === 'Soru Çözümü'">
-              {{ item.badgeCount || 0 }}
-            </span>
                 </a>
             </li>
         </div>
