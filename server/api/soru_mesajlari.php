@@ -1,5 +1,10 @@
 
 <?php
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('log_errors', 1);
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
@@ -11,16 +16,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 require_once '../config.php';
 
+// Log the request
+error_log("soru_mesajlari.php - Request method: " . $_SERVER['REQUEST_METHOD']);
+error_log("soru_mesajlari.php - Request URI: " . $_SERVER['REQUEST_URI']);
+error_log("soru_mesajlari.php - GET params: " . json_encode($_GET));
+
 function authorize() {
+    error_log("authorize() - Starting authorization check");
+    
     $headers = getallheaders();
+    error_log("authorize() - Headers: " . json_encode($headers));
     
     if (!isset($headers['Authorization'])) {
+        error_log("authorize() - No Authorization header found");
         http_response_code(401);
         echo json_encode(['error' => 'Token bulunamadı']);
         exit;
     }
     
     $token = str_replace('Bearer ', '', $headers['Authorization']);
+    error_log("authorize() - Token: " . substr($token, 0, 10) . "...");
     
     try {
         $conn = getConnection();
@@ -30,13 +45,16 @@ function authorize() {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if (!$user) {
+            error_log("authorize() - Invalid token");
             http_response_code(401);
             echo json_encode(['error' => 'Geçersiz token']);
             exit;
         }
         
+        error_log("authorize() - User found: " . $user['adi_soyadi']);
         return $user;
     } catch (Exception $e) {
+        error_log("authorize() - Database error: " . $e->getMessage());
         http_response_code(500);
         echo json_encode(['error' => 'Sunucu hatası: ' . $e->getMessage()]);
         exit;
@@ -44,20 +62,28 @@ function authorize() {
 }
 
 function createTable($conn) {
-    $sql = "CREATE TABLE IF NOT EXISTS soru_mesajlari (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        ogrenci_id INT NOT NULL,
-        ogretmen_id INT NULL,
-        mesaj_metni TEXT,
-        resim_url VARCHAR(500),
-        gonderim_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        gonderen_tip ENUM('ogrenci', 'ogretmen') NOT NULL,
-        gonderen_adi VARCHAR(100) NOT NULL,
-        okundu TINYINT DEFAULT 0,
-        FOREIGN KEY (ogrenci_id) REFERENCES ogrenciler(id) ON DELETE CASCADE
-    )";
+    error_log("createTable() - Creating soru_mesajlari table");
     
-    $conn->exec($sql);
+    try {
+        $sql = "CREATE TABLE IF NOT EXISTS soru_mesajlari (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            ogrenci_id INT NOT NULL,
+            ogretmen_id INT NULL,
+            mesaj_metni TEXT,
+            resim_url VARCHAR(500),
+            gonderim_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            gonderen_tip ENUM('ogrenci', 'ogretmen') NOT NULL,
+            gonderen_adi VARCHAR(100) NOT NULL,
+            okundu TINYINT DEFAULT 0,
+            FOREIGN KEY (ogrenci_id) REFERENCES ogrenciler(id) ON DELETE CASCADE
+        )";
+        
+        $conn->exec($sql);
+        error_log("createTable() - Table created successfully");
+    } catch (Exception $e) {
+        error_log("createTable() - Error creating table: " . $e->getMessage());
+        throw $e;
+    }
 }
 
 function handleImageUpload($file, $ogrenciId) {
@@ -93,19 +119,31 @@ function handleImageUpload($file, $ogrenciId) {
 }
 
 try {
+    error_log("Main try block - Starting");
+    
     $conn = getConnection();
+    error_log("Main try block - Database connection established");
+    
     createTable($conn);
+    error_log("Main try block - Table created/verified");
     
     $method = $_SERVER['REQUEST_METHOD'];
+    error_log("Main try block - HTTP method: " . $method);
     
     switch ($method) {
         case 'GET':
+            error_log("GET request - Starting");
+            
             // Mesajları getir
             $user = authorize();
+            error_log("GET request - User authorized: " . json_encode($user));
+            
             $ogrenciId = $_GET['ogrenci_id'] ?? $user['id'];
+            error_log("GET request - Ogrenci ID: " . $ogrenciId);
             
             // Sadece kendi mesajlarını görebilir (öğrenci ise)
             if ($user['rutbe'] !== 'ogretmen' && $user['rutbe'] !== 'admin' && $ogrenciId != $user['id']) {
+                error_log("GET request - Access denied for user: " . $user['id']);
                 http_response_code(403);
                 echo json_encode(['error' => 'Bu mesajları görme yetkiniz yok']);
                 exit;
@@ -118,6 +156,8 @@ try {
             ");
             $stmt->execute([$ogrenciId]);
             $mesajlar = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            error_log("GET request - Found " . count($mesajlar) . " messages");
             
             echo json_encode([
                 'success' => true,
@@ -242,7 +282,18 @@ try {
     }
     
 } catch (Exception $e) {
+    error_log("MAIN CATCH - Exception caught: " . $e->getMessage());
+    error_log("MAIN CATCH - Stack trace: " . $e->getTraceAsString());
+    error_log("MAIN CATCH - File: " . $e->getFile() . " Line: " . $e->getLine());
+    
     http_response_code(500);
-    echo json_encode(['error' => 'Sunucu hatası: ' . $e->getMessage()]);
+    echo json_encode([
+        'error' => 'Sunucu hatası: ' . $e->getMessage(),
+        'details' => [
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => $e->getTraceAsString()
+        ]
+    ]);
 }
 ?>

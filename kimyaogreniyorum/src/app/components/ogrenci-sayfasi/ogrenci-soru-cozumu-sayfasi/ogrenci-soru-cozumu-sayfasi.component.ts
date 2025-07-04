@@ -116,7 +116,10 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
   }
 
   loadMesajlar() {
-    if (!this.studentInfo) return;
+    if (!this.studentInfo) {
+      console.error('Student info not available');
+      return;
+    }
 
     this.isLoadingMessages = true;
     
@@ -124,13 +127,18 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
       'Authorization': `Bearer ${this.studentInfo.token}`
     });
 
+    console.log('Loading messages for student ID:', this.studentInfo.id);
+    console.log('API URL:', `${this.apiBaseUrl}/soru_mesajlari.php?ogrenci_id=${this.studentInfo.id}`);
+
     this.http.get<any>(`${this.apiBaseUrl}/soru_mesajlari.php?ogrenci_id=${this.studentInfo.id}`, { headers })
       .subscribe({
         next: (response) => {
+          console.log('Messages loaded successfully:', response);
           if (response.success) {
             this.mesajlar = response.data || [];
           } else {
             this.error = response.error || 'Mesajlar yüklenirken hata oluştu.';
+            console.error('API Error:', response.error);
           }
           this.isLoadingMessages = false;
           this.isLoading = false;
@@ -141,8 +149,12 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
           }, 100);
         },
         error: (error) => {
-          console.error('Error loading messages:', error);
-          this.error = 'Mesajlar yüklenirken hata oluştu.';
+          console.error('Full API Error:', error);
+          console.error('Error status:', error.status);
+          console.error('Error message:', error.message);
+          console.error('Error details:', error.error);
+          
+          this.error = `Mesajlar yüklenirken hata oluştu. (${error.status}: ${error.statusText})`;
           this.isLoadingMessages = false;
           this.isLoading = false;
         }
