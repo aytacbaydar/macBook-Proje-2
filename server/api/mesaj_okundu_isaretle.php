@@ -40,7 +40,7 @@ function authorize() {
     
     if (empty($authHeader) || substr($authHeader, 0, 7) !== 'Bearer ') {
         http_response_code(401);
-        echo json_encode(['error' => 'Token gerekli']);
+        echo json_encode(['success' => false, 'message' => 'Token gerekli']);
         exit;
     }
     
@@ -53,7 +53,7 @@ function authorize() {
     
     if (!$user) {
         http_response_code(401);
-        echo json_encode(['error' => 'Geçersiz token']);
+        echo json_encode(['success' => false, 'message' => 'Geçersiz token']);
         exit;
     }
     
@@ -67,74 +67,83 @@ try {
     // Get POST data
     $input = json_decode(file_get_contents('php://input'), true);
     
-    // Check if this is a teacher marking a single message
-    if (isset($input['mesaj_id']) && isset($input['okundu'])) {
-        // Teacher marking single message
-        $mesajId = $input['mesaj_id'];
+    if (!$input) {
+        echo json_encode(['success' => false, 'message' => 'Geçersiz JSON verisi']);
+        exit;
+    }
+    
+    // Check if this is for marking all student messages as read
+    if (isset($input['ogrenci_id']) && !isset($input['message_ids'])) {
+        $ogrenciId = $input['ogrenci_id'];
         
-        if ($user['rutbe'] !== 'ogretmen') {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Bu işlem için yetkiniz yok'
-            ]);
+        // Student can only mark their own messages
+        if ($user['rutbe'] === 'ogrenci' && $user['id'] != $ogrenciId) {
+            echo json_encode(['success' => false, 'message' => 'Bu işlem için yetkiniz yok']);
             exit;
         }
         
-        $sql = "UPDATE soru_mesajlari 
-                SET okundu = 1 
-                WHERE id = ? 
-                AND gonderen_tip = 'ogrenci'";
+        // Teacher can only mark messages for their students
+        if ($user['rutbe'] === 'ogretmen') {
+            $stmt = $pdo->prepare("SELECT id FROM ogrenciler WHERE id = ? AND ogretmeni = ?");
+            $stmt->execute([$ogrenciId, $user['adi_soyadi']]);
+            if (!$stmt->fetch()) {
+                echo json_encode(['success' => false, 'message' => 'Bu öğrencinin mesajlarını işaretleme yetkiniz yok']);
+                exit;
+            }
+        }
         
-        $stmt = $pdo->prepare($sql);
-        $result = $stmt->execute([$mesajId]);
+        // Mark all unread messages for this student as read
+        if ($user['rutbe'] === 'ogrenci') {
+            // Student marking teacher messages as read
+            $sql = "UPDATE soru_mesajlari 
+                    SET okundu = 1 
+                    WHERE ogrenci_id = ? 
+                    AND gonderen_tip = 'ogretmen' 
+                    AND okundu = 0";
+            $stmt = $pdo->prepare($sql);
+            $result = $stmt->execute([$ogrenciId]);
+        } else {
+            // Teacher marking student messages as read
+            $sql = "UPDATE soru_mesajlari 
+                    SET okundu = 1 
+                    WHERE ogrenci_id = ? 
+                    AND gonderen_tip = 'ogrenci' 
+                    AND okundu = 0";
+            $stmt = $pdo->prepare($sql);
+            $result = $stmt->execute([$ogrenciId]);
+        }
         
         if ($result) {
             echo json_encode([
                 'success' => true,
-                'message' => 'Mesaj okundu olarak işaretlendi',
+                'message' => 'Mesajlar okundu olarak işaretlendi',
                 'updated_count' => $stmt->rowCount()
             ]);
         } else {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Mesaj güncellenirken hata oluştu'
-            ]);
+            echo json_encode(['success' => false, 'message' => 'Mesajlar güncellenirken hata oluştu']);
         }
         
     } else {
-        // Student marking multiple messages
+        // Legacy support for specific message IDs
         if (!isset($input['message_ids']) || !isset($input['ogrenci_id'])) {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Gerekli parametreler eksik'
-            ]);
+            echo json_encode(['success' => false, 'message' => 'Gerekli parametreler eksik']);
             exit;
         }
         
         $messageIds = $input['message_ids'];
         $ogrenciId = $input['ogrenci_id'];
         
-        // Check if user has permission to mark these messages as read
         if ($user['rutbe'] === 'ogrenci' && $user['id'] != $ogrenciId) {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Bu işlem için yetkiniz yok'
-            ]);
+            echo json_encode(['success' => false, 'message' => 'Bu işlem için yetkiniz yok']);
             exit;
         }
         
         if (!is_array($messageIds) || empty($messageIds)) {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Geçersiz mesaj ID listesi'
-            ]);
+            echo json_encode(['success' => false, 'message' => 'Geçersiz mesaj ID listesi']);
             exit;
         }
         
-        // Create placeholders for prepared statement
         $placeholders = str_repeat('?,', count($messageIds) - 1) . '?';
-        
-        // Update messages as read
         $sql = "UPDATE soru_mesajlari 
                 SET okundu = 1 
                 WHERE id IN ($placeholders) 
@@ -142,11 +151,8 @@ try {
                 AND gonderen_tip = 'ogretmen'";
         
         $stmt = $pdo->prepare($sql);
-        
-        // Bind parameters
         $params = $messageIds;
         $params[] = $ogrenciId;
-        
         $result = $stmt->execute($params);
         
         if ($result) {
@@ -156,24 +162,15 @@ try {
                 'updated_count' => $stmt->rowCount()
             ]);
         } else {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Mesajlar güncellenirken hata oluştu'
-            ]);
+            echo json_encode(['success' => false, 'message' => 'Mesajlar güncellenirken hata oluştu']);
         }
     }
     
 } catch (PDOException $e) {
     error_log('PDO Error in mesaj_okundu_isaretle.php: ' . $e->getMessage());
-    echo json_encode([
-        'success' => false,
-        'message' => 'Veritabanı hatası: ' . $e->getMessage()
-    ]);
+    echo json_encode(['success' => false, 'message' => 'Veritabanı hatası oluştu']);
 } catch (Exception $e) {
     error_log('Error in mesaj_okundu_isaretle.php: ' . $e->getMessage());
-    echo json_encode([
-        'success' => false,
-        'message' => 'Sunucu hatası: ' . $e->getMessage()
-    ]);
+    echo json_encode(['success' => false, 'message' => 'Sunucu hatası oluştu']);
 }
 ?>

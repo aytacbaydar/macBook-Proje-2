@@ -505,39 +505,27 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
   private markMessagesAsRead(): void {
     if (!this.studentInfo?.id) return;
 
-    // Öğretmenden gelen okunmamış mesajları bul
-    const unreadTeacherMessages = this.mesajlar.filter(mesaj => 
-      mesaj.gonderen_tip === 'ogretmen' && !mesaj.okundu
-    );
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.studentInfo.token}`,
+      'Content-Type': 'application/json'
+    });
 
-    if (unreadTeacherMessages.length > 0) {
-      // API'ye okundu işareti gönder
-      const messageIds = unreadTeacherMessages.map(mesaj => mesaj.id).filter(id => id);
-
-      if (messageIds.length > 0) {
-        const headers = new HttpHeaders({
-          'Authorization': `Bearer ${this.studentInfo.token}`,
-          'Content-Type': 'application/json'
-        });
-
-        this.http.post(`${this.apiBaseUrl}/mesaj_okundu_isaretle.php`, {
-          message_ids: messageIds,
-          ogrenci_id: this.studentInfo.id
-        }, { headers }).subscribe({
-          next: (response) => {
-            console.log('Mesajlar okundu olarak işaretlendi:', response);
-            // Mesajları local olarak da okundu işaretle
-            this.mesajlar.forEach(mesaj => {
-              if (mesaj.gonderen_tip === 'ogretmen') {
-                mesaj.okundu = true;
-              }
-            });
-          },
-          error: (error) => {
-            console.error('Mesajlar okundu işaretlenirken hata:', error);
+    // Sadece öğrenci ID'si gönder - API bütün okunmamış mesajları işaretleyecek
+    this.http.post(`${this.apiBaseUrl}/mesaj_okundu_isaretle.php`, {
+      ogrenci_id: this.studentInfo.id
+    }, { headers }).subscribe({
+      next: (response: any) => {
+        console.log('Mesajlar okundu olarak işaretlendi:', response);
+        // Mesajları local olarak da okundu işaretle
+        this.mesajlar.forEach(mesaj => {
+          if (mesaj.gonderen_tip === 'ogretmen') {
+            mesaj.okundu = true;
           }
         });
+      },
+      error: (error) => {
+        console.error('Mesajlar okundu işaretlenirken hata:', error);
       }
-    }
+    });
   }
 }
