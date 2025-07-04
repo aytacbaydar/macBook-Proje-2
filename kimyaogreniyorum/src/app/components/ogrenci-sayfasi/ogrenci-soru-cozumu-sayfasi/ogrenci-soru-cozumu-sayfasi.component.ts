@@ -509,7 +509,7 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
       ogrenci_id: this.studentInfo.id
     };
 
-    this.http.post(`${this.apiBaseUrl}/mesaj_okundu_isaretle.php`, requestData).subscribe({
+    this.http.post(`${this.apiBaseUrl}/mesaj_okundu_toplu.php`, requestData).subscribe({
       next: (response: any) => {
         console.log('Mesajlar okundu olarak işaretlendi:', response);
         // Mesajları local olarak da okundu işaretle
