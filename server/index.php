@@ -104,6 +104,10 @@ if (strpos($requestUri, $basePath) === 0) {
             require_once 'api/soru_mesajlari.php';
             break;
 
+        case 'mesaj_okundu_isaretle.php':
+            require_once 'api/mesaj_okundu_isaretle.php';
+            break;
+
         case 'mesaj_okundu_isaretle':
             require_once 'api/mesaj_okundu_isaretle.php';
             break;
