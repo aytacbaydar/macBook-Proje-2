@@ -21,45 +21,7 @@ error_log("soru_mesajlari.php - Request method: " . $_SERVER['REQUEST_METHOD']);
 error_log("soru_mesajlari.php - Request URI: " . $_SERVER['REQUEST_URI']);
 error_log("soru_mesajlari.php - GET params: " . json_encode($_GET));
 
-function authorize() {
-    error_log("authorize() - Starting authorization check");
-    
-    $headers = getallheaders();
-    error_log("authorize() - Headers: " . json_encode($headers));
-    
-    if (!isset($headers['Authorization'])) {
-        error_log("authorize() - No Authorization header found");
-        http_response_code(401);
-        echo json_encode(['error' => 'Token bulunamadı']);
-        exit;
-    }
-    
-    $token = str_replace('Bearer ', '', $headers['Authorization']);
-    error_log("authorize() - Token: " . substr($token, 0, 10) . "...");
-    
-    try {
-        $conn = getConnection();
-        $stmt = $conn->prepare("SELECT * FROM ogrenciler WHERE token = ?");
-        $stmt->execute([$token]);
-        
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        if (!$user) {
-            error_log("authorize() - Invalid token");
-            http_response_code(401);
-            echo json_encode(['error' => 'Geçersiz token']);
-            exit;
-        }
-        
-        error_log("authorize() - User found: " . $user['adi_soyadi']);
-        return $user;
-    } catch (Exception $e) {
-        error_log("authorize() - Database error: " . $e->getMessage());
-        http_response_code(500);
-        echo json_encode(['error' => 'Sunucu hatası: ' . $e->getMessage()]);
-        exit;
-    }
-}
+// authorize fonksiyonu config.php'den geliyor
 
 function createTable($conn) {
     error_log("createTable() - Creating soru_mesajlari table");
