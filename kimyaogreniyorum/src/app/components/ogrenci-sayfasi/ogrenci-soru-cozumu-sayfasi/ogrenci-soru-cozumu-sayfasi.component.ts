@@ -55,9 +55,15 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
   autoRefresh: boolean = true;
   refreshInterval: any;
 
+  // Notification settings
+  notificationsEnabled: boolean = false;
+  lastMessageCount: number = 0;
+
   private apiBaseUrl = './server/api';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.requestNotificationPermission();
+  }
 
   ngOnInit(): void {
     this.loadData();
@@ -252,7 +258,7 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
   private startAutoRefresh() {
     if (this.autoRefresh) {
       this.refreshInterval = setInterval(() => {
-        this.loadMesajlar();
+        this.checkForNewMessages();
       }, 10000); // 10 saniyede bir yenile
     }
   }
@@ -365,5 +371,106 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
   getImageUrl(resimUrl: string): string {
     if (!resimUrl) return '';
     return resimUrl.startsWith('http') ? resimUrl : `./${resimUrl}`;
+  }
+
+  private requestNotificationPermission(): void {
+    if ('Notification' in window) {
+      if (Notification.permission === 'default') {
+        Notification.requestPermission().then(permission => {
+          this.notificationsEnabled = permission === 'granted';
+        });
+      } else if (Notification.permission === 'granted') {
+        this.notificationsEnabled = true;
+      }
+    }
+  }
+
+  private showNotification(title: string, body: string): void {
+    if (this.notificationsEnabled && 'Notification' in window && Notification.permission === 'granted') {
+      const notification = new Notification(title, {
+        body: body,
+        icon: './assets/siyah-turuncu.png',
+        badge: './assets/siyah-turuncu.png',
+        tag: 'teacher-reply',
+        requireInteraction: true
+      });
+
+      notification.onclick = () => {
+        window.focus();
+        notification.close();
+      };
+
+      // Auto close after 5 seconds
+      setTimeout(() => {
+        notification.close();
+      }, 5000);
+    }
+  }
+
+  private checkForNewMessages(): void {
+    if (!this.studentInfo) return;
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.studentInfo.token}`
+    });
+
+    this.http.get<any>(`${this.apiBaseUrl}/soru_mesajlari.php?ogrenci_id=${this.studentInfo.id}`, { headers })
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            const newMessages = response.data || [];
+            
+            // Check if there are new teacher messages
+            if (this.lastMessageCount > 0 && newMessages.length > this.lastMessageCount) {
+              const latestMessage = newMessages[newMessages.length - 1]; // Get latest message
+              
+              if (latestMessage.gonderen_tip === 'ogretmen') {
+                this.showNotification(
+                  'Öğretmeninizden Cevap!', 
+                  `${latestMessage.gonderen_adi} sorunuza cevap verdi.`
+                );
+              }
+            }
+            
+            this.lastMessageCount = newMessages.length;
+            
+            // Update messages only if there are new ones
+            if (newMessages.length !== this.mesajlar.length) {
+              this.mesajlar = newMessages;
+              
+              // Scroll to bottom after loading messages
+              setTimeout(() => {
+                this.scrollToBottom();
+              }, 100);
+            }
+          }
+        },
+        error: (error) => {
+          console.error('Background message check error:', error);
+        }
+      });
+  }
+
+  toggleNotifications(event: any): void {
+    const enabled = event.target.checked;
+    
+    if (enabled && 'Notification' in window) {
+      if (Notification.permission === 'default') {
+        Notification.requestPermission().then(permission => {
+          this.notificationsEnabled = permission === 'granted';
+          if (!this.notificationsEnabled) {
+            event.target.checked = false;
+          }
+        });
+      } else if (Notification.permission === 'granted') {
+        this.notificationsEnabled = true;
+      } else {
+        this.notificationsEnabled = false;
+        event.target.checked = false;
+        alert('Tarayıcı ayarlarından bildirim izni vermelisiniz.');
+      }
+    } else {
+      this.notificationsEnabled = enabled;
+    }
   }
 }

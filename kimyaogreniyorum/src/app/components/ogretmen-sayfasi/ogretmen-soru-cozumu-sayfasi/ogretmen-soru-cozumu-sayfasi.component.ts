@@ -53,9 +53,15 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
   // View mode
   viewMode: 'all' | 'student' = 'all';
 
+  // Notification settings
+  notificationsEnabled: boolean = false;
+  lastMessageCount: number = 0;
+
   private apiBaseUrl = './server/api';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.requestNotificationPermission();
+  }
 
   private getTokenFromStorage(): string {
     let token = localStorage.getItem('token');
@@ -76,7 +82,17 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
   ngOnInit(): void {
     this.loadStudents();
     this.loadAllMessages();
+    this.startMessageCheckInterval();
   }
+
+  ngOnDestroy(): void {
+    // Clear any intervals when component is destroyed
+    if (this.messageCheckInterval) {
+      clearInterval(this.messageCheckInterval);
+    }
+  }
+
+  private messageCheckInterval: any;
 
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
@@ -355,5 +371,124 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
 
   getUnreadMessageCount(studentId: number): number {
     return this.allMessages.filter(m => m.ogrenci_id === studentId && !m.okundu && m.gonderen_tip === 'ogrenci').length;
+  }
+
+  private requestNotificationPermission(): void {
+    if ('Notification' in window) {
+      if (Notification.permission === 'default') {
+        Notification.requestPermission().then(permission => {
+          this.notificationsEnabled = permission === 'granted';
+        });
+      } else if (Notification.permission === 'granted') {
+        this.notificationsEnabled = true;
+      }
+    }
+  }
+
+  private showNotification(title: string, body: string, studentName?: string): void {
+    if (this.notificationsEnabled && 'Notification' in window && Notification.permission === 'granted') {
+      const notification = new Notification(title, {
+        body: body,
+        icon: './assets/siyah-turuncu.png',
+        badge: './assets/siyah-turuncu.png',
+        tag: 'new-message',
+        requireInteraction: true
+      });
+
+      notification.onclick = () => {
+        window.focus();
+        notification.close();
+        
+        // If student name is provided, select that student
+        if (studentName) {
+          const student = this.students.find(s => s.adi_soyadi === studentName);
+          if (student) {
+            this.selectStudent(student);
+          }
+        }
+      };
+
+      // Auto close after 5 seconds
+      setTimeout(() => {
+        notification.close();
+      }, 5000);
+    }
+  }
+
+  private startMessageCheckInterval(): void {
+    // Check for new messages every 10 seconds
+    this.messageCheckInterval = setInterval(() => {
+      this.checkForNewMessages();
+    }, 10000);
+  }
+
+  private checkForNewMessages(): void {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.getTokenFromStorage()}`,
+      'Content-Type': 'application/json'
+    });
+
+    this.http.get<any>(`${this.apiBaseUrl}/soru_mesajlari.php`, { headers })
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            const newMessages = response.data || [];
+            
+            // Check if there are new messages
+            if (this.lastMessageCount > 0 && newMessages.length > this.lastMessageCount) {
+              const latestMessage = newMessages[0]; // Assuming newest first
+              const studentName = latestMessage.ogrenci_adi || 'Bir öğrenci';
+              
+              this.showNotification(
+                'Yeni Mesaj!', 
+                `${studentName} size yeni bir mesaj gönderdi.`,
+                studentName
+              );
+            }
+            
+            this.lastMessageCount = newMessages.length;
+            
+            // Update messages only if there are new ones
+            if (newMessages.length !== this.allMessages.length) {
+              this.allMessages = newMessages;
+              
+              // Fix image URLs
+              this.allMessages.forEach(message => {
+                if (message.resim_url && !message.resim_url.startsWith('http')) {
+                  if (!message.resim_url.startsWith('./')) {
+                    message.resim_url = './' + message.resim_url;
+                  }
+                }
+              });
+            }
+          }
+        },
+        error: (error) => {
+          console.error('Background message check error:', error);
+        }
+      });
+  }
+
+  toggleNotifications(event: any): void {
+    const enabled = event.target.checked;
+    
+    if (enabled && 'Notification' in window) {
+      if (Notification.permission === 'default') {
+        Notification.requestPermission().then(permission => {
+          this.notificationsEnabled = permission === 'granted';
+          if (!this.notificationsEnabled) {
+            event.target.checked = false;
+          }
+        });
+      } else if (Notification.permission === 'granted') {
+        this.notificationsEnabled = true;
+      } else {
+        this.notificationsEnabled = false;
+        event.target.checked = false;
+        alert('Tarayıcı ayarlarından bildirim izni vermelisiniz.');
+      }
+    } else {
+      this.notificationsEnabled = enabled;
+    }
   }
 }

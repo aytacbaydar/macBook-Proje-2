@@ -52,11 +52,25 @@
     <div class="col-md-8 col-lg-9">
       <!-- All Messages View -->
       <div *ngIf="viewMode === 'all'" class="card h-100">
-        <div class="card-header bg-success text-white">
-          <h5 class="mb-0">
-            <i class="bi bi-chat-dots-fill me-2"></i>
-            Tüm Mesajlar
-          </h5>
+        <div class="card-header bg-primary text-white">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+              <i class="bi bi-chat-dots me-2"></i>
+              Öğrenci Mesajları
+            </h5>
+            <div class="d-flex align-items-center">
+              <small class="me-2">Bildirimler:</small>
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="notificationSwitch" 
+                       [checked]="notificationsEnabled" 
+                       (change)="toggleNotifications($event)"
+                       style="cursor: pointer;">
+                <label class="form-check-label text-white" for="notificationSwitch" style="cursor: pointer;">
+                  <i class="bi" [ngClass]="notificationsEnabled ? 'bi-bell-fill' : 'bi-bell-slash-fill'"></i>
+                </label>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="card-body">
           <!-- Loading Messages -->
