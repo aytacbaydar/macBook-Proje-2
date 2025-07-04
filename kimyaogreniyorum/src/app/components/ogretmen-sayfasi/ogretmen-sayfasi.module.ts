@@ -15,7 +15,7 @@ import { OgretmenOgrenciDetaySayfasiComponent } from './ogretmen-ogrenci-isleri/
 import { OgretmenSiniftaKimlerVarSayfasiComponent } from './ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component';
 import { OgretmenQrGeneratorComponent } from './ogretmen-ogrenci-isleri/ogretmen-qr-generator/ogretmen-qr-generator.component';
 import { OgretmenSidebarSayfasiComponent } from './template/ogretmen-sidebar-sayfasi/ogretmen-sidebar-sayfasi.component';
-import { HttpClientModule } from '@angular/common/http';
+
 import { OgretmenNavbarSayfasiComponent } from './template/ogretmen-navbar-sayfasi/ogretmen-navbar-sayfasi.component';
 import { OgretmenTaaslakSayfasiComponent } from './template/ogretmen-taaslak-sayfasi/ogretmen-taaslak-sayfasi.component';
 import { OgretmenSinavlarSayfasiComponent } from './ogretmen-sinavlar-sayfasi/ogretmen-sinavlar-sayfasi.component';
