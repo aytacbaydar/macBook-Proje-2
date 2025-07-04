@@ -1,1 +1,210 @@
-<p>ogrenci-soru-cozumu-sayfasi works!</p>
+
+<div class="soru-cozumu-container">
+  <!-- Header Section -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-left">
+        <i class="bi bi-chat-dots-fill header-icon"></i>
+        <div class="header-text">
+          <h2>Soru Çözümü</h2>
+          <p>Öğretmeninle soru çözümü konusunda iletişime geç</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-outline-success btn-sm" (click)="yeniSoruBaslat()">
+          <i class="bi bi-plus-circle me-1"></i>
+          Yeni Soru
+        </button>
+        <button class="btn btn-outline-danger btn-sm" (click)="temizleMesajlar()">
+          <i class="bi bi-trash me-1"></i>
+          Temizle
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-section">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Yükleniyor...</span>
+    </div>
+    <p class="mt-3 text-muted">Soru çözümü sayfası yükleniyor...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="alert alert-danger alert-dismissible">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    {{ error }}
+    <button type="button" class="btn-close" (click)="error = null"></button>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!isLoading && !error" class="chat-container">
+    
+    <!-- Student Info Card -->
+    <div class="student-info-card" *ngIf="studentInfo">
+      <div class="student-avatar">
+        <i class="bi bi-person-circle"></i>
+      </div>
+      <div class="student-details">
+        <h4>{{ studentInfo.adi_soyadi }}</h4>
+        <div class="student-meta">
+          <span class="badge bg-primary me-2">{{ studentInfo.sinifi }}</span>
+          <span class="badge bg-success me-2" *ngIf="studentInfo.grup">{{ studentInfo.grup }}</span>
+          <span class="text-muted" *ngIf="studentInfo.ogretmeni">
+            <i class="bi bi-person-check me-1"></i>
+            {{ studentInfo.ogretmeni }}
+          </span>
+        </div>
+      </div>
+      <div class="auto-refresh-toggle">
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" 
+                 [checked]="autoRefresh" 
+                 (change)="toggleAutoRefresh()"
+                 id="autoRefreshSwitch">
+          <label class="form-check-label" for="autoRefreshSwitch">
+            Otomatik Yenile
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Messages -->
+    <div class="chat-messages-container">
+      <div class="messages-wrapper" #messageContainer>
+        
+        <!-- No Messages State -->
+        <div *ngIf="mesajlar.length === 0" class="empty-chat-state">
+          <div class="empty-icon">
+            <i class="bi bi-chat-square-dots"></i>
+          </div>
+          <h4>Henüz mesaj yok</h4>
+          <p>Öğretmeninle soru çözümü konusunda konuşmaya başla!</p>
+          <div class="suggestion-buttons">
+            <button class="btn btn-outline-primary btn-sm me-2" 
+                    (click)="yeniMesaj = 'Bu soruyu nasıl çözebilirim?'">
+              "Bu soruyu nasıl çözebilirim?"
+            </button>
+            <button class="btn btn-outline-primary btn-sm" 
+                    (click)="yeniMesaj = 'Bu konuyu anlayamadım, açıklayabilir misiniz?'">
+              "Bu konuyu anlayamadım"
+            </button>
+          </div>
+        </div>
+
+        <!-- Messages -->
+        <div class="messages-list" *ngIf="mesajlar.length > 0">
+          <div class="message-item" 
+               *ngFor="let mesaj of mesajlar; trackBy: trackByMessageId"
+               [ngClass]="{'message-own': mesaj.gonderen_tip === 'ogrenci', 'message-other': mesaj.gonderen_tip === 'ogretmen'}">
+            
+            <div class="message-avatar">
+              <i class="bi" 
+                 [ngClass]="mesaj.gonderen_tip === 'ogrenci' ? 'bi-person-circle' : 'bi-person-check-fill'"></i>
+            </div>
+            
+            <div class="message-content">
+              <div class="message-header">
+                <span class="sender-name">{{ mesaj.gonderen_adi }}</span>
+                <span class="message-time">{{ formatDate(mesaj.gonderim_tarihi) }}</span>
+              </div>
+              
+              <!-- Image -->
+              <div class="message-image" *ngIf="mesaj.resim_url">
+                <img [src]="mesaj.resim_url" 
+                     alt="Soru resmi" 
+                     class="img-fluid rounded"
+                     style="max-width: 300px; max-height: 400px; cursor: pointer;"
+                     (click)="openImageModal(mesaj.resim_url)">
+              </div>
+              
+              <!-- Text -->
+              <div class="message-text" *ngIf="mesaj.mesaj_metni">
+                {{ mesaj.mesaj_metni }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Message Input -->
+    <div class="message-input-container">
+      
+      <!-- File Preview -->
+      <div class="file-preview" *ngIf="previewUrl">
+        <div class="preview-image">
+          <img [src]="previewUrl" alt="Önizleme" class="img-thumbnail">
+          <button class="btn btn-sm btn-danger preview-remove" 
+                  (click)="removeSelectedFile()">
+            <i class="bi bi-x"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Input Form -->
+      <div class="input-form">
+        <div class="input-group">
+          
+          <!-- File Upload Button -->
+          <button class="btn btn-outline-secondary" 
+                  type="button" 
+                  (click)="fileInput.click()"
+                  [disabled]="isSending">
+            <i class="bi bi-paperclip"></i>
+          </button>
+          
+          <!-- Text Input -->
+          <input type="text" 
+                 class="form-control" 
+                 placeholder="Sorunuzu yazın veya resim yükleyin..."
+                 [(ngModel)]="yeniMesaj"
+                 (keyup.enter)="gonderMesaj()"
+                 [disabled]="isSending">
+          
+          <!-- Send Button -->
+          <button class="btn btn-primary" 
+                  (click)="gonderMesaj()"
+                  [disabled]="isSending || (!yeniMesaj.trim() && !selectedFile)">
+            <span *ngIf="!isSending">
+              <i class="bi bi-send"></i>
+            </span>
+            <span *ngIf="isSending" class="spinner-border spinner-border-sm me-1"></span>
+            <span *ngIf="isSending">Gönderiliyor...</span>
+          </button>
+        </div>
+        
+        <!-- File Input (Hidden) -->
+        <input type="file" 
+               #fileInput 
+               class="d-none" 
+               accept="image/jpeg,image/png,image/gif"
+               (change)="onFileSelected($event)">
+      </div>
+
+      <!-- File Type Info -->
+      <div class="file-info">
+        <small class="text-muted">
+          <i class="bi bi-info-circle me-1"></i>
+          JPG, PNG ve GIF dosyaları yükleyebilirsiniz (Maks. 5MB)
+        </small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Image Modal for full view -->
+<div class="modal fade" id="imageModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Soru Resmi</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img id="modalImage" src="" alt="Soru resmi" class="img-fluid">
+      </div>
+    </div>
+  </div>
+</div>

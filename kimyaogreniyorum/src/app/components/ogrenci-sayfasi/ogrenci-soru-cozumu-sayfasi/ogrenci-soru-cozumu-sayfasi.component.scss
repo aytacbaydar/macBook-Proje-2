@@ -1,0 +1,411 @@
+
+.soru-cozumu-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  gap: 20px;
+
+  .page-header {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+
+        .header-icon {
+          font-size: 2.5rem;
+          color: #667eea;
+        }
+
+        .header-text {
+          h2 {
+            margin: 0;
+            color: #2d3748;
+            font-weight: 700;
+          }
+
+          p {
+            margin: 0;
+            color: #718096;
+            font-size: 0.9rem;
+          }
+        }
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 10px;
+      }
+    }
+  }
+
+  .loading-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+  }
+
+  .chat-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-height: 0;
+
+    .student-info-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+
+      .student-avatar {
+        i {
+          font-size: 3rem;
+          color: #667eea;
+        }
+      }
+
+      .student-details {
+        flex: 1;
+
+        h4 {
+          margin: 0 0 8px 0;
+          color: #2d3748;
+          font-weight: 600;
+        }
+
+        .student-meta {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+      }
+
+      .auto-refresh-toggle {
+        .form-check-label {
+          font-size: 0.9rem;
+          color: #718096;
+        }
+      }
+    }
+
+    .chat-messages-container {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+
+      .messages-wrapper {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+        min-height: 0;
+
+        .empty-chat-state {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          height: 100%;
+          text-align: center;
+          color: #718096;
+
+          .empty-icon {
+            i {
+              font-size: 4rem;
+              color: #cbd5e0;
+              margin-bottom: 20px;
+            }
+          }
+
+          h4 {
+            color: #4a5568;
+            margin-bottom: 10px;
+          }
+
+          p {
+            margin-bottom: 30px;
+          }
+
+          .suggestion-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+          }
+        }
+
+        .messages-list {
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+
+          .message-item {
+            display: flex;
+            gap: 12px;
+
+            &.message-own {
+              flex-direction: row-reverse;
+
+              .message-content {
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                color: white;
+                border-radius: 20px 20px 5px 20px;
+              }
+
+              .message-avatar i {
+                color: #667eea;
+              }
+            }
+
+            &.message-other {
+              .message-content {
+                background: #f7fafc;
+                color: #2d3748;
+                border: 1px solid #e2e8f0;
+                border-radius: 20px 20px 20px 5px;
+              }
+
+              .message-avatar i {
+                color: #48bb78;
+              }
+            }
+
+            .message-avatar {
+              i {
+                font-size: 2rem;
+              }
+            }
+
+            .message-content {
+              max-width: 70%;
+              padding: 15px 20px;
+              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+              .message-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 8px;
+                font-size: 0.8rem;
+                opacity: 0.8;
+
+                .sender-name {
+                  font-weight: 600;
+                }
+              }
+
+              .message-image {
+                margin-bottom: 10px;
+
+                img {
+                  border-radius: 10px;
+                  transition: transform 0.2s ease;
+
+                  &:hover {
+                    transform: scale(1.02);
+                  }
+                }
+              }
+
+              .message-text {
+                line-height: 1.5;
+                word-wrap: break-word;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .message-input-container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+
+      .file-preview {
+        margin-bottom: 15px;
+
+        .preview-image {
+          position: relative;
+          display: inline-block;
+
+          img {
+            max-width: 200px;
+            max-height: 150px;
+            border-radius: 10px;
+          }
+
+          .preview-remove {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+          }
+        }
+      }
+
+      .input-form {
+        .input-group {
+          border-radius: 25px;
+          overflow: hidden;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+          .form-control {
+            border: none;
+            padding: 15px 20px;
+            font-size: 1rem;
+
+            &:focus {
+              box-shadow: none;
+              border-color: transparent;
+            }
+          }
+
+          .btn {
+            border: none;
+            padding: 15px 20px;
+
+            &.btn-outline-secondary {
+              background: #f7fafc;
+              color: #718096;
+
+              &:hover {
+                background: #edf2f7;
+                color: #4a5568;
+              }
+            }
+
+            &.btn-primary {
+              background: linear-gradient(135deg, #667eea, #764ba2);
+              border: none;
+
+              &:hover {
+                background: linear-gradient(135deg, #5a67d8, #6b46c1);
+              }
+            }
+          }
+        }
+      }
+
+      .file-info {
+        margin-top: 10px;
+        text-align: center;
+      }
+    }
+  }
+}
+
+// Mobile Responsive
+@media (max-width: 768px) {
+  .soru-cozumu-container {
+    padding: 10px;
+
+    .page-header .header-content {
+      flex-direction: column;
+      gap: 15px;
+      text-align: center;
+
+      .header-actions {
+        justify-content: center;
+      }
+    }
+
+    .student-info-card {
+      flex-direction: column;
+      text-align: center;
+      gap: 10px;
+
+      .student-details {
+        text-align: center;
+      }
+    }
+
+    .chat-messages-container .messages-wrapper .messages-list .message-item {
+      .message-content {
+        max-width: 85%;
+      }
+    }
+
+    .message-input-container {
+      .file-preview .preview-image img {
+        max-width: 150px;
+        max-height: 100px;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .soru-cozumu-container {
+    padding: 5px;
+
+    .page-header,
+    .student-info-card,
+    .chat-messages-container,
+    .message-input-container {
+      border-radius: 10px;
+      padding: 15px;
+    }
+
+    .chat-messages-container .messages-wrapper .messages-list .message-item {
+      .message-content {
+        max-width: 90%;
+        padding: 12px 15px;
+      }
+    }
+  }
+}
+
+// Custom scrollbar
+.messages-wrapper::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messages-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.messages-wrapper::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 10px;
+
+  &:hover {
+    background: #a0aec0;
+  }
+}
