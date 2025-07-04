@@ -14,6 +14,7 @@ import { OgrenciIslenenKonularPdfSayfasiComponent } from './ogrenci-islenen-konu
 import { OgrenciSinavIslemleriSayfasiComponent } from './ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-islemleri-sayfasi.component';
 import { OgrenciOptikSayfasiComponent } from './ogrenci-sinav-islemleri-sayfasi/ogrenci-optik-sayfasi/ogrenci-optik-sayfasi.component';
 import { OgrenciSinavSonuclariSayfasiComponent } from './ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component';
+import { OgrenciKonuAnalizSayfasiComponent } from './ogrenci-konu-analiz-sayfasi/ogrenci-konu-analiz-sayfasi.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { OgrenciSinavSonuclariSayfasiComponent } from './ogrenci-sinav-islemleri
     OgrenciSinavIslemleriSayfasiComponent,
     OgrenciOptikSayfasiComponent,
     OgrenciSinavSonuclariSayfasiComponent,
+    OgrenciKonuAnalizSayfasiComponent,
   ],
   imports: [
     CommonModule,
