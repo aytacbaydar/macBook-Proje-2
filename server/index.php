@@ -120,6 +120,14 @@ if (strpos($requestUri, $basePath) === 0) {
             require_once 'api/mesaj_okundu_toplu.php';
             break;
 
+        case 'mesaj_okundu':
+            require_once 'api/mesaj_okundu.php';
+            break;
+
+        case 'mesaj_okundu.php':
+            require_once 'api/mesaj_okundu.php';
+            break;
+
         default:
             http_response_code(404);
             echo json_encode(['error' => 'API endpoint bulunamadı']);

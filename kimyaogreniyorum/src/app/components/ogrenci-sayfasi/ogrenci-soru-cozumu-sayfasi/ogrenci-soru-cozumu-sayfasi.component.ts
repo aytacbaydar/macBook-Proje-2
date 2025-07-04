@@ -505,11 +505,7 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
   private markMessagesAsRead(): void {
     if (!this.studentInfo?.id) return;
 
-    const requestData = {
-      ogrenci_id: this.studentInfo.id
-    };
-
-    this.http.post(`${this.apiBaseUrl}/mesaj_okundu_toplu.php`, requestData).subscribe({
+    this.http.get(`${this.apiBaseUrl}/mesaj_okundu.php?ogrenci_id=${this.studentInfo.id}`).subscribe({
       next: (response: any) => {
         console.log('Mesajlar okundu olarak işaretlendi:', response);
         // Mesajları local olarak da okundu işaretle
