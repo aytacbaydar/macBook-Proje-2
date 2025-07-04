@@ -150,6 +150,9 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
           console.log('Messages loaded successfully:', response);
           if (response.success) {
             this.mesajlar = response.data || [];
+            
+            // Öğretmenden gelen okunmamış mesajları okundu olarak işaretle
+            this.markMessagesAsRead();
           } else {
             this.error = response.error || 'Mesajlar yüklenirken hata oluştu.';
             console.error('API Error:', response.error);
@@ -512,11 +515,17 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
       const messageIds = unreadTeacherMessages.map(mesaj => mesaj.id).filter(id => id);
 
       if (messageIds.length > 0) {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${this.studentInfo.token}`,
+          'Content-Type': 'application/json'
+        });
+
         this.http.post(`${this.apiBaseUrl}/mesaj_okundu_isaretle.php`, {
           message_ids: messageIds,
           ogrenci_id: this.studentInfo.id
-        }).subscribe({
+        }, { headers }).subscribe({
           next: (response) => {
+            console.log('Mesajlar okundu olarak işaretlendi:', response);
             // Mesajları local olarak da okundu işaretle
             this.mesajlar.forEach(mesaj => {
               if (mesaj.gonderen_tip === 'ogretmen') {
