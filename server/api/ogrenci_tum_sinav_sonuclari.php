@@ -40,7 +40,7 @@ try {
     $conn->exec($createTableSQL);
 
     // Sınav sonuçlarını çek (ogrenci_id varsa filtrele)
-    $sql = "SELECT 
+    $sql = "SELECT DISTINCT
                 ss.id,
                 ss.sinav_id, 
                 ss.ogrenci_id,
@@ -65,9 +65,26 @@ try {
     
     $sql .= " ORDER BY ss.gonderim_tarihi DESC";
     
+    // Debug için sorguyu logla
+    error_log("SQL Query: " . $sql);
+    error_log("Params: " . json_encode($params));
+    
     $stmt = $conn->prepare($sql);
     $stmt->execute($params);
     $sinavSonuclari = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Debug için sonuçları logla
+    error_log("Raw results count: " . count($sinavSonuclari));
+    error_log("Raw results: " . json_encode($sinavSonuclari));
+
+    // Veri tekrarını önle - ID'ye göre benzersiz hale getir
+    $uniqueResults = [];
+    foreach ($sinavSonuclari as $sonuc) {
+        $uniqueResults[$sonuc['id']] = $sonuc;
+    }
+    $sinavSonuclari = array_values($uniqueResults);
+    
+    error_log("Unique results count: " . count($sinavSonuclari));
 
     // Her sınav için katılımcı sayısı ve sıralama bilgisi ekle
     foreach ($sinavSonuclari as &$sonuc) {
