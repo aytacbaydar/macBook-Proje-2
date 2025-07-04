@@ -46,11 +46,29 @@ try {
 
     $conn->exec($createTableSQL);
 
-    // Öğrencinin tüm sınav sonuçlarını al
+    // Öğrencinin tüm sınav sonuçlarını al ve her sınav için katılımcı sayısı ve sıralama bilgisi ekle
     $sql = "SELECT * FROM sinav_sonuclari WHERE ogrenci_id = ? ORDER BY gonderim_tarihi DESC";
     $stmt = $conn->prepare($sql);
     $stmt->execute([$ogrenci_id]);
     $sinavSonuclari = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Her sınav için katılımcı sayısı ve sıralama bilgisi ekle
+    foreach ($sinavSonuclari as &$sonuc) {
+        // Bu sınava kaç kişi katıldı
+        $katilimciSql = "SELECT COUNT(*) as katilimci_sayisi FROM sinav_sonuclari WHERE sinav_id = ?";
+        $katilimciStmt = $conn->prepare($katilimciSql);
+        $katilimciStmt->execute([$sonuc['sinav_id']]);
+        $katilimciResult = $katilimciStmt->fetch(PDO::FETCH_ASSOC);
+        $sonuc['katilimci_sayisi'] = (int)$katilimciResult['katilimci_sayisi'];
+
+        // Bu öğrencinin sıralaması (puana göre)
+        $siralamaSql = "SELECT COUNT(*) + 1 as siralama FROM sinav_sonuclari 
+                       WHERE sinav_id = ? AND puan > ?";
+        $siralamaStmt = $conn->prepare($siralamaSql);
+        $siralamaStmt->execute([$sonuc['sinav_id'], $sonuc['puan']]);
+        $siralamaResult = $siralamaStmt->fetch(PDO::FETCH_ASSOC);
+        $sonuc['siralama'] = (int)$siralamaResult['siralama'];
+    }
 
     // İstatistikleri hesapla
     $toplamSinav = count($sinavSonuclari);
