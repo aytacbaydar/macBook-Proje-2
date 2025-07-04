@@ -1,0 +1,99 @@
+{
+  "success": true,
+  "data": {
+    "sinav_sonuclari": [
+      {
+        "id": 22,
+        "sinav_id": 12,
+        "ogrenci_id": 4,
+        "sinav_adi": "AYT-1-STS",
+        "sinav_turu": "AYT",
+        "soru_sayisi": 13,
+        "dogru_sayisi": 8,
+        "yanlis_sayisi": 5,
+        "bos_sayisi": 0,
+        "net_sayisi": "6.75",
+        "puan": "6.75",
+        "yuzde": "61.54",
+        "gonderim_tarihi": "2025-07-04 12:40:56",
+        "guncelleme_tarihi": "2025-07-04 12:40:56",
+        "katilimci_sayisi": 5,
+        "siralama": 1
+      },
+      {
+        "id": 22,
+        "sinav_id": 12,
+        "ogrenci_id": 4,
+        "sinav_adi": "AYT-1-STS",
+        "sinav_turu": "AYT",
+        "soru_sayisi": 13,
+        "dogru_sayisi": 8,
+        "yanlis_sayisi": 5,
+        "bos_sayisi": 0,
+        "net_sayisi": "6.75",
+        "puan": "6.75",
+        "yuzde": "61.54",
+        "gonderim_tarihi": "2025-07-04 12:40:56",
+        "guncelleme_tarihi": "2025-07-04 12:40:56",
+        "katilimci_sayisi": 5,
+        "siralama": 1
+      }
+    ],
+    "genel_istatistikler": {
+      "toplam_sinav": 2,
+      "toplam_dogru": 10,
+      "toplam_yanlis": 10,
+      "toplam_bos": 0,
+      "toplam_net": 7.5,
+      "genel_ortalama": 61.5
+    },
+    "sinav_turleri": {
+      "AYT": {
+        "sinav_sayisi": 2,
+        "toplam_dogru": 16,
+        "toplam_yanlis": 10,
+        "toplam_bos": 0,
+        "toplam_net": 13.5,
+        "ortalama_yuzde": 61.5,
+        "sinavlar": [
+          {
+            "id": 22,
+            "sinav_id": 12,
+            "ogrenci_id": 4,
+            "sinav_adi": "AYT-1-STS",
+            "sinav_turu": "AYT",
+            "soru_sayisi": 13,
+            "dogru_sayisi": 8,
+            "yanlis_sayisi": 5,
+            "bos_sayisi": 0,
+            "net_sayisi": "6.75",
+            "puan": "6.75",
+            "yuzde": "61.54",
+            "gonderim_tarihi": "2025-07-04 12:40:56",
+            "guncelleme_tarihi": "2025-07-04 12:40:56",
+            "katilimci_sayisi": 5,
+            "siralama": 1
+          },
+          {
+            "id": 22,
+            "sinav_id": 12,
+            "ogrenci_id": 4,
+            "sinav_adi": "AYT-1-STS",
+            "sinav_turu": "AYT",
+            "soru_sayisi": 13,
+            "dogru_sayisi": 8,
+            "yanlis_sayisi": 5,
+            "bos_sayisi": 0,
+            "net_sayisi": "6.75",
+            "puan": "6.75",
+            "yuzde": "61.54",
+            "gonderim_tarihi": "2025-07-04 12:40:56",
+            "guncelleme_tarihi": "2025-07-04 12:40:56",
+            "katilimci_sayisi": 5,
+            "siralama": 1
+          }
+        ]
+      }
+    }
+  }
+}
