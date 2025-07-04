@@ -103,13 +103,18 @@ try {
             if ($user['rutbe'] === 'ogretmen') {
                 // Öğretmen ise - tüm öğrencilerinin mesajlarını getir veya belirli öğrencininkileri
                 $ogrenciId = $_GET['ogrenci_id'] ?? null;
+                error_log("GET request - Öğrenci ID: " . ($ogrenciId ?? 'null'));
                 
                 if ($ogrenciId) {
                     // Belirli öğrencinin mesajları
                     // Önce bu öğrencinin kendi öğrencisi olup olmadığını kontrol et
-                    $stmt = $conn->prepare("SELECT id FROM ogrenciler WHERE id = ? AND ogretmeni = ?");
+                    $stmt = $conn->prepare("SELECT id, adi_soyadi FROM ogrenciler WHERE id = ? AND ogretmeni = ?");
                     $stmt->execute([$ogrenciId, $user['adi_soyadi']]);
-                    if (!$stmt->fetch()) {
+                    $ogrenci = $stmt->fetch();
+                    error_log("GET request - Öğrenci kontrol sonucu: " . json_encode($ogrenci));
+                    
+                    if (!$ogrenci) {
+                        error_log("GET request - Öğrenci bulunamadı veya yetki yok");
                         http_response_code(403);
                         echo json_encode(['error' => 'Bu öğrencinin mesajlarını görme yetkiniz yok']);
                         exit;
@@ -122,8 +127,11 @@ try {
                     ");
                     $stmt->execute([$ogrenciId]);
                     $mesajlar = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    error_log("GET request - Öğrenci mesajları: " . count($mesajlar) . " adet");
                 } else {
                     // Tüm öğrencilerinin mesajları (öğrenci bilgileriyle birlikte)
+                    error_log("GET request - Tüm mesajlar için öğretmen: " . $user['adi_soyadi']);
+                    
                     $stmt = $conn->prepare("
                         SELECT sm.*, o.adi_soyadi as ogrenci_adi 
                         FROM soru_mesajlari sm
@@ -133,6 +141,17 @@ try {
                     ");
                     $stmt->execute([$user['adi_soyadi']]);
                     $mesajlar = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    error_log("GET request - Tüm mesajlar: " . count($mesajlar) . " adet");
+                    
+                    // Resim URL'lerini tam yola çevir
+                    foreach ($mesajlar as &$mesaj) {
+                        if ($mesaj['resim_url']) {
+                            // Eğer resim URL'si relative ise, tam yola çevir
+                            if (!str_starts_with($mesaj['resim_url'], 'http')) {
+                                $mesaj['resim_url'] = './server/' . $mesaj['resim_url'];
+                            }
+                        }
+                    }
                 }
             } else {
                 // Öğrenci ise - sadece kendi mesajları

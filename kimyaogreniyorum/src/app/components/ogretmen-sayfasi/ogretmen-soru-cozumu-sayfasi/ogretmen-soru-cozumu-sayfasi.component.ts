@@ -138,19 +138,34 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
       'Content-Type': 'application/json'
     });
 
+    console.log('Loading all messages with token:', this.getTokenFromStorage().substring(0, 20) + '...');
+
     this.http.get<any>(`${this.apiBaseUrl}/soru_mesajlari.php`, { headers })
       .subscribe({
         next: (response) => {
+          console.log('All messages response:', response);
           if (response.success) {
-            this.allMessages = response.data;
+            this.allMessages = response.data || [];
+            console.log('Loaded messages count:', this.allMessages.length);
+            
+            // Fix image URLs
+            this.allMessages.forEach(message => {
+              if (message.resim_url && !message.resim_url.startsWith('http')) {
+                if (!message.resim_url.startsWith('./')) {
+                  message.resim_url = './' + message.resim_url;
+                }
+              }
+            });
           } else {
-            this.error = response.message || 'Mesajlar yüklenemedi';
+            this.error = response.message || response.error || 'Mesajlar yüklenemedi';
+            console.error('API Error:', response);
           }
           this.isLoadingMessages = false;
         },
         error: (error) => {
           console.error('Messages loading error:', error);
-          this.error = 'Mesajlar yüklenirken hata oluştu';
+          console.error('Error details:', error.error);
+          this.error = 'Mesajlar yüklenirken hata oluştu: ' + (error.error?.error || error.message);
           this.isLoadingMessages = false;
         }
       });
@@ -171,20 +186,35 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
       'Content-Type': 'application/json'
     });
 
+    console.log('Loading messages for student ID:', studentId);
+
     this.http.get<any>(`${this.apiBaseUrl}/soru_mesajlari.php?ogrenci_id=${studentId}`, { headers })
       .subscribe({
         next: (response) => {
+          console.log('Student messages response:', response);
           if (response.success) {
-            this.studentMessages = response.data;
+            this.studentMessages = response.data || [];
+            
+            // Fix image URLs
+            this.studentMessages.forEach(message => {
+              if (message.resim_url && !message.resim_url.startsWith('http')) {
+                if (!message.resim_url.startsWith('./')) {
+                  message.resim_url = './' + message.resim_url;
+                }
+              }
+            });
+            
             setTimeout(() => this.scrollToBottom(), 100);
           } else {
-            this.error = response.message || 'Mesajlar yüklenemedi';
+            this.error = response.message || response.error || 'Mesajlar yüklenemedi';
+            console.error('API Error:', response);
           }
           this.isLoadingMessages = false;
         },
         error: (error) => {
           console.error('Student messages loading error:', error);
-          this.error = 'Mesajlar yüklenirken hata oluştu';
+          console.error('Error details:', error.error);
+          this.error = 'Mesajlar yüklenirken hata oluştu: ' + (error.error?.error || error.message);
           this.isLoadingMessages = false;
         }
       });
