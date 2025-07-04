@@ -283,4 +283,64 @@ gap: 12px;
           min-width: 30px;
         }
       }
+
+      // Mobil kartlar
+      .sinav-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        overflow: hidden;
+
+        .sinav-card-header {
+          background: #f8f9fa;
+          padding: 12px 16px;
+          border-bottom: 1px solid #e9ecef;
+
+          .badge {
+            font-size: 0.7rem;
+            color: white !important;
+          }
+
+          h6 {
+            margin: 4px 0;
+            color: #333;
+          }
+
+          small {
+            display: block;
+            margin-top: 4px;
+          }
+        }
+
+        .sinav-card-body {
+          padding: 16px;
+
+          .badge {
+            font-size: 0.8rem;
+            min-width: 40px;
+            padding: 6px 8px;
+          }
+
+          .progress {
+            height: 20px;
+
+            .progress-bar {
+              color: white;
+              font-weight: 600;
+              font-size: 0.8rem;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+          }
+
+          small {
+            font-size: 0.75rem;
+          }
+
+          i {
+            font-size: 1.1rem;
+          }
+        }
+      }
     }
