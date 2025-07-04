@@ -1,4 +1,3 @@
-
 <div class="container-fluid">
   <div class="row">
     <!-- Sidebar - Student List -->
@@ -22,7 +21,7 @@
           <!-- Students List -->
           <div class="student-list" *ngIf="!isLoadingStudents">
             <div class="student-item" 
-                 *ngFor="let student of students; trackBy: trackByMessageId"
+                 *ngFor="let student of students; trackBy: trackByStudentId"
                  (click)="selectStudent(student)"
                  [ngClass]="{'active': selectedStudent?.id === student.id}">
               <div class="student-avatar">
@@ -72,7 +71,7 @@
           <div *ngIf="!isLoadingMessages" class="all-messages-container">
             <div class="message-summary" 
                  *ngFor="let message of allMessages; trackBy: trackByMessageId"
-                 (click)="selectStudent(students.find(s => s.id === message.ogrenci_id)!)"
+                 (click)="selectStudentFromMessage(message)"
                  style="cursor: pointer;">
               <div class="message-summary-header">
                 <div class="d-flex justify-content-between align-items-center">
@@ -193,21 +192,21 @@
                      accept="image/*" 
                      (change)="onFileSelected($event)" 
                      style="display: none;">
-              
+
               <button class="btn btn-outline-secondary" 
                       type="button" 
                       (click)="fileInput.click()"
                       [disabled]="isSending">
                 <i class="bi bi-paperclip"></i>
               </button>
-              
+
               <input type="text" 
                      class="form-control" 
                      [(ngModel)]="yeniMesaj"
                      placeholder="Öğrencinize mesaj yazın..."
                      (keyup.enter)="sendMessage()"
                      [disabled]="isSending">
-              
+
               <button class="btn btn-primary" 
                       type="button" 
                       (click)="sendMessage()"

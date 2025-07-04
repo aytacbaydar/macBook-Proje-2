@@ -241,6 +241,17 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     return message.id || index;
   }
 
+  trackByStudentId(index: number, student: Student): number {
+    return student.id || index;
+  }
+
+  selectStudentFromMessage(message: SoruMesaj) {
+    const student = this.students.find(s => s.id === message.ogrenci_id);
+    if (student) {
+      this.selectStudent(student);
+    }
+  }
+
   getStudentMessageCount(studentId: number): number {
     return this.allMessages.filter(m => m.ogrenci_id === studentId).length;
   }
