@@ -155,28 +155,6 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
     return token || '';
   }
 
-  private loadUnreadMessageCount(): void {
-    if (!this.studentId) return;
-
-    this.http.get<any>(`./server/api/soru_mesajlari.php?ogrenci_id=${this.studentId}`).subscribe({
-      next: (response) => {
-        if (response.success && response.data) {
-          // Öğretmenden gelen okunmamış mesajları say
-          const unreadMessages = response.data.filter((mesaj: SoruMesaj) => 
-            mesaj.gonderen_tip === 'ogretmen' && !mesaj.okundu
-          );
-          this.unreadMessageCount = unreadMessages.length;
-          const soruCozumuMenuItem = this.menuItems.find(item => item.label === 'Soru Çözümü');
-          if (soruCozumuMenuItem) {
-            soruCozumuMenuItem.badgeCount = this.unreadMessageCount;
-          }
-        }
-      },
-      error: (error) => {
-        console.error('Mesaj sayısı yüklenirken hata:', error);
-      }
-    });
-  }
 
   toggleSidebar() {
     this.isClosed = !this.isClosed;
