@@ -9,7 +9,15 @@
                 <a href="{{ item.link }}">
                     <div class="menu-flex">
                         <i class="bi {{ item.icon }}"></i>
-                        <p *ngIf="!isClosed">{{ item.label }}</p>
+                        <p *ngIf="!isClosed">
+                        <span class="sidebar-item-text">{{ item.label }}</span>
+                        <span 
+                          *ngIf="item.badgeCount && item.badgeCount > 0" 
+                          class="badge bg-danger rounded-pill ms-auto"
+                        >
+                          {{ item.badgeCount > 99 ? '99+' : item.badgeCount }}
+                        </span>
+                        </p>
                     </div>
                 </a>
             </li>

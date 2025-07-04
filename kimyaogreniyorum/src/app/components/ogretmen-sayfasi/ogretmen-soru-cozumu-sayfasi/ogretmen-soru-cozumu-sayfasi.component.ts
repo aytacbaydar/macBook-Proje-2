@@ -204,6 +204,11 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     this.selectedStudent = student;
     this.viewMode = 'student';
     this.loadStudentMessages(student.id);
+    
+    // Öğrenci seçildiğinde okunmamış mesajları okundu olarak işaretle
+    setTimeout(() => {
+      this.markStudentMessagesAsRead(student.id);
+    }, 1000);
   }
 
   loadStudentMessages(studentId: number) {
@@ -611,5 +616,51 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     if (!url) return 'resim.jpg';
     const parts = url.split('/');
     return parts[parts.length - 1] || 'resim.jpg';
+  }
+
+  // Mesajı okundu olarak işaretle
+  markMessageAsRead(messageId: number): void {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.getTokenFromStorage()}`,
+      'Content-Type': 'application/json'
+    });
+
+    const payload = {
+      mesaj_id: messageId,
+      okundu: true
+    };
+
+    this.http.post<any>(`${this.apiBaseUrl}/mesaj_okundu_isaretle.php`, payload, { headers })
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            // Mesajı yerel olarak da okundu olarak işaretle
+            const message = this.studentMessages.find(m => m.id === messageId);
+            if (message) {
+              message.okundu = true;
+            }
+            
+            // Tüm mesajlar listesinde de güncelle
+            const allMessage = this.allMessages.find(m => m.id === messageId);
+            if (allMessage) {
+              allMessage.okundu = true;
+            }
+          }
+        },
+        error: (error) => {
+          console.error('Mesaj okundu işaretlenirken hata:', error);
+        }
+      });
+  }
+
+  // Öğrenci seçildiğinde o öğrencinin okunmamış mesajlarını okundu olarak işaretle
+  markStudentMessagesAsRead(studentId: number): void {
+    const unreadMessages = this.studentMessages.filter(
+      m => m.ogrenci_id === studentId && m.gonderen_tip === 'ogrenci' && !m.okundu
+    );
+
+    unreadMessages.forEach(message => {
+      this.markMessageAsRead(message.id!);
+    });
   }
 }
