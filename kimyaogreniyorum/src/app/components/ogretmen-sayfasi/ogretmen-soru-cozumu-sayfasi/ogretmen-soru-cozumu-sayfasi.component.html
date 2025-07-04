@@ -72,43 +72,43 @@
             </div>
           </div>
         </div>
-        <div class="card-body">
-          <!-- Loading Messages -->
-          <div *ngIf="isLoadingMessages" class="text-center py-5">
-            <div class="spinner-border text-primary" role="status">
-              <span class="visually-hidden">Yükleniyor...</span>
-            </div>
-            <p class="mt-2">Mesajlar yükleniyor...</p>
-          </div>
-
-          <!-- All Messages List -->
-          <div *ngIf="!isLoadingMessages" class="all-messages-container">
-            <div class="message-summary" 
-                 *ngFor="let message of allMessages; trackBy: trackByMessageId"
-                 (click)="selectStudentFromMessage(message)"
-                 style="cursor: pointer;">
-              <div class="message-summary-header">
-                <div class="d-flex justify-content-between align-items-center">
+        <div class="card-body overflow-auto" style="max-height: 500px;">
+          <div class="message-summary-list">
+            <div *ngFor="let studentId of getGroupedStudentIds(); trackBy: trackByStudentId" 
+                 class="message-summary-item p-3 border-bottom cursor-pointer"
+                 (click)="selectStudentFromGroupedMessage(studentId)">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div class="d-flex justify-content-between align-items-center w-100">
                   <h6 class="mb-1">
                     <i class="bi bi-person-circle me-2"></i>
-                    {{ message.ogrenci_adi || 'Bilinmeyen Öğrenci' }}
+                    {{ getStudentName(studentId) }}
                   </h6>
-                  <small class="text-muted">{{ formatDate(message.gonderim_tarihi) }}</small>
+                  <div class="d-flex align-items-center">
+                    <span class="badge bg-info me-2">{{ getMessageCountForStudent(studentId) }} mesaj</span>
+                    <small class="text-muted">{{ formatDate(getLatestMessageForStudent(studentId)?.gonderim_tarihi || '') }}</small>
+                  </div>
                 </div>
-                <span class="badge" 
-                      [ngClass]="message.gonderen_tip === 'ogrenci' ? 'bg-primary' : 'bg-success'">
-                  {{ message.gonderen_tip === 'ogrenci' ? 'Öğrenci' : 'Öğretmen' }}
-                </span>
               </div>
               <div class="message-summary-content">
-                <p class="mb-1" *ngIf="message.mesaj_metni">{{ message.mesaj_metni }}</p>
-                <p class="mb-1 text-muted" *ngIf="!message.mesaj_metni && message.resim_url">
-                  <i class="bi bi-image"></i> Resim gönderdi
+                <p class="mb-1" *ngIf="getLatestMessageForStudent(studentId)?.mesaj_metni">
+                  <strong>Son mesaj:</strong> {{ getLatestMessageForStudent(studentId)?.mesaj_metni }}
                 </p>
+                <p class="mb-1 text-muted" *ngIf="!getLatestMessageForStudent(studentId)?.mesaj_metni && getLatestMessageForStudent(studentId)?.resim_url">
+                  <i class="bi bi-image"></i> <strong>Son mesaj:</strong> Resim gönderdi
+                </p>
+                <div class="d-flex justify-content-between align-items-center mt-2">
+                  <span class="badge" 
+                        [ngClass]="getLatestMessageForStudent(studentId)?.gonderen_tip === 'ogrenci' ? 'bg-primary' : 'bg-success'">
+                    Son: {{ getLatestMessageForStudent(studentId)?.gonderen_tip === 'ogrenci' ? 'Öğrenci' : 'Öğretmen' }}
+                  </span>
+                  <span class="badge bg-warning" *ngIf="getUnreadMessageCount(studentId) > 0">
+                    {{ getUnreadMessageCount(studentId) }} okunmamış
+                  </span>
+                </div>
               </div>
             </div>
 
-            <div *ngIf="allMessages.length === 0" class="text-center py-5">
+            <div *ngIf="getGroupedStudentIds().length === 0" class="text-center py-5">
               <i class="bi bi-chat-x text-muted" style="font-size: 3rem;"></i>
               <h5 class="text-muted mt-3">Henüz Mesaj Yok</h5>
               <p class="text-muted">Öğrencilerinizden henüz soru çözümü talebi gelmedi</p>
@@ -233,5 +233,35 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Toast Notification -->
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 11000;">
+  <div *ngIf="showToast" class="toast show" 
+       [ngClass]="{'border-info': toastType === 'info', 'border-success': toastType === 'success', 'border-warning': toastType === 'warning', 'border-danger': toastType === 'error'}"
+       role="alert">
+    <div class="toast-header"
+         [ngClass]="{'bg-info': toastType === 'info', 'bg-success': toastType === 'success', 'bg-warning': toastType === 'warning', 'bg-danger': toastType === 'error'}">
+      <i class="bi me-2"
+         [ngClass]="{'bi-info-circle': toastType === 'info', 'bi-check-circle': toastType === 'success', 'bi-exclamation-triangle': toastType === 'warning', 'bi-x-circle': toastType === 'error'}"></i>
+      <strong class="me-auto text-white">
+        {{ toastType === 'info' ? 'Bilgi' : toastType === 'success' ? 'Başarılı' : toastType === 'warning' ? 'Uyarı' : 'Hata' }}
+      </strong>
+      <button type="button" class="btn-close btn-close-white" (click)="hideToast()"></button>
+    </div>
+    <div class="toast-body">
+      {{ toastMessage }}
+    </div>
+  </div>
+</div>
+
+<!-- Loading Overlay -->
+<div *ngIf="isLoading" class="loading-overlay">
+  <div class="text-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Yükleniyor...</span>
+    </div>
+    <p class="mt-2">Yükleniyor...</p>
   </div>
 </div>

@@ -1,4 +1,3 @@
-
 .student-list {
   max-height: 600px;
   overflow-y: auto;
@@ -83,7 +82,7 @@
 .message-item {
   display: flex;
   margin-bottom: 16px;
-  
+
   &.message-own {
     flex-direction: row-reverse;
     .message-content {
@@ -97,7 +96,7 @@
       margin-right: 0;
     }
   }
-  
+
   &.message-other {
     .message-content {
       background-color: white;
@@ -149,7 +148,7 @@
     line-height: 1.4;
     word-wrap: break-word;
   }
-  
+
   .message-image {
     margin-top: 8px;
     img {
@@ -167,7 +166,7 @@
     border-radius: 8px;
     object-fit: cover;
   }
-  
+
   .preview-close {
     position: absolute;
     top: -8px;
@@ -196,13 +195,61 @@
     &.message-own .message-content {
       margin-left: 20px;
     }
-    
+
     &.message-other .message-content {
       margin-right: 20px;
     }
   }
-  
+
   .message-content {
     max-width: 85%;
+  }
+}
+
+width: 100%;
+  height: 100%;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Toast notification styles
+.toast-container {
+  z-index: 11000;
+}
+
+.toast {
+  min-width: 300px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  .toast-header {
+    color: white;
+
+    &.bg-info {
+      background-color: #0dcaf0 !important;
+    }
+
+    &.bg-success {
+      background-color: #198754 !important;
+    }
+
+    &.bg-warning {
+      background-color: #ffc107 !important;
+      color: #000 !important;
+
+      .btn-close-white {
+        filter: invert(1) grayscale(100%) brightness(0%);
+      }
+    }
+
+    &.bg-danger {
+      background-color: #dc3545 !important;
+    }
+  }
+
+  .toast-body {
+    font-size: 14px;
+    line-height: 1.4;
   }
 }

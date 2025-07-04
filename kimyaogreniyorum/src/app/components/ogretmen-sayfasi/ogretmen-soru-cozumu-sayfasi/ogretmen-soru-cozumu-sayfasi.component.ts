@@ -37,6 +37,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
   selectedStudent: Student | null = null;
   allMessages: SoruMesaj[] = [];
   studentMessages: SoruMesaj[] = [];
+  groupedMessages: { [studentId: number]: SoruMesaj[] } = {};
   
   // Message sending
   yeniMesaj: string = '';
@@ -56,6 +57,11 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
   // Notification settings
   notificationsEnabled: boolean = false;
   lastMessageCount: number = 0;
+
+  // Toast notification
+  showToast: boolean = false;
+  toastMessage: string = '';
+  toastType: 'success' | 'info' | 'warning' | 'error' = 'info';
 
   private apiBaseUrl = './server/api';
 
@@ -172,6 +178,9 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
                 }
               }
             });
+
+            // Group messages by student
+            this.groupMessagesByStudent();
           } else {
             this.error = response.message || response.error || 'Mesajlar yüklenemedi';
             console.error('API Error:', response);
@@ -422,6 +431,82 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     }, 10000);
   }
 
+  private groupMessagesByStudent(): void {
+    this.groupedMessages = {};
+    
+    this.allMessages.forEach(message => {
+      if (!this.groupedMessages[message.ogrenci_id]) {
+        this.groupedMessages[message.ogrenci_id] = [];
+      }
+      this.groupedMessages[message.ogrenci_id].push(message);
+    });
+
+    // Sort messages within each group by date (newest first)
+    Object.keys(this.groupedMessages).forEach(studentId => {
+      this.groupedMessages[+studentId].sort((a, b) => 
+        new Date(b.gonderim_tarihi).getTime() - new Date(a.gonderim_tarihi).getTime()
+      );
+    });
+  }
+
+  getGroupedStudentIds(): number[] {
+    return Object.keys(this.groupedMessages).map(id => +id);
+  }
+
+  getLatestMessageForStudent(studentId: number): SoruMesaj | null {
+    const messages = this.groupedMessages[studentId];
+    return messages && messages.length > 0 ? messages[0] : null;
+  }
+
+  getMessageCountForStudent(studentId: number): number {
+    const messages = this.groupedMessages[studentId];
+    return messages ? messages.length : 0;
+  }
+
+  getStudentName(studentId: number): string {
+    const student = this.students.find(s => s.id === studentId);
+    if (student) return student.adi_soyadi;
+    
+    const messages = this.groupedMessages[studentId];
+    if (messages && messages.length > 0) {
+      return messages[0].ogrenci_adi || 'Bilinmeyen Öğrenci';
+    }
+    
+    return 'Bilinmeyen Öğrenci';
+  }
+
+  selectStudentFromGroupedMessage(studentId: number): void {
+    let student = this.students.find(s => s.id === studentId);
+    
+    if (!student) {
+      // If student not found in students list, create a temporary student object
+      const studentName = this.getStudentName(studentId);
+      student = {
+        id: studentId,
+        adi_soyadi: studentName,
+        email: '',
+        grubu: ''
+      };
+    }
+    
+    this.selectStudent(student);
+  }
+
+  private showToastNotification(message: string, type: 'success' | 'info' | 'warning' | 'error' = 'info'): void {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+    
+    // Auto hide after 5 seconds
+    setTimeout(() => {
+      this.showToast = false;
+    }, 5000);
+  }
+
+  hideToast(): void {
+    this.showToast = false;
+  }
+
   private checkForNewMessages(): void {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.getTokenFromStorage()}`,
@@ -439,6 +524,13 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
               const latestMessage = newMessages[0]; // Assuming newest first
               const studentName = latestMessage.ogrenci_adi || 'Bir öğrenci';
               
+              // Show toast notification
+              this.showToastNotification(
+                `${studentName} size yeni bir mesaj gönderdi!`,
+                'info'
+              );
+              
+              // Also show browser notification if enabled
               this.showNotification(
                 'Yeni Mesaj!', 
                 `${studentName} size yeni bir mesaj gönderdi.`,
@@ -460,6 +552,9 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
                   }
                 }
               });
+
+              // Re-group messages
+              this.groupMessagesByStudent();
             }
           }
         },
