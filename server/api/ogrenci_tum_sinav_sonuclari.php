@@ -12,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require_once '../config.php';
 
 try {
+    $ogrenci_id = $_GET['ogrenci_id'] ?? null;
     $conn = getConnection();
 
     // Tablo oluştur
@@ -38,7 +39,7 @@ try {
     ";
     $conn->exec($createTableSQL);
 
-    // Tüm sınav sonuçlarını çek
+    // Sınav sonuçlarını çek (ogrenci_id varsa filtrele)
     $sql = "SELECT 
                 ss.id,
                 ss.sinav_id, 
@@ -54,11 +55,18 @@ try {
                 ss.yuzde,
                 ss.gonderim_tarihi,
                 ss.guncelleme_tarihi
-            FROM sinav_sonuclari ss
-            ORDER BY ss.gonderim_tarihi DESC";
+            FROM sinav_sonuclari ss";
+    
+    $params = [];
+    if ($ogrenci_id) {
+        $sql .= " WHERE ss.ogrenci_id = ?";
+        $params[] = $ogrenci_id;
+    }
+    
+    $sql .= " ORDER BY ss.gonderim_tarihi DESC";
     
     $stmt = $conn->prepare($sql);
-    $stmt->execute();
+    $stmt->execute($params);
     $sinavSonuclari = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Her sınav için katılımcı sayısı ve sıralama bilgisi ekle
