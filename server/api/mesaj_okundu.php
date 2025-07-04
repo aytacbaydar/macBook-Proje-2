@@ -1,5 +1,8 @@
-
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
@@ -7,17 +10,18 @@ header('Access-Control-Allow-Headers: Content-Type');
 
 require_once '../config.php';
 
-// ogrenci_id alınıyor
+$conn = getConnection(); // ⭐️ ÖNEMLİ: PDO bağlantısını buradan alıyoruz
+
 $ogrenci_id = $_GET['ogrenci_id'] ?? $_POST['ogrenci_id'] ?? null;
 
 if (!$ogrenci_id) {
-    echo json_encode(["error" => "ogrenci_id gerekli."]);
+    echo json_encode(["error" => "ogrenci_id parametresi gerekli."]);
     exit;
 }
 
 try {
     $sql = "UPDATE soru_mesajlari SET okundu = 1 WHERE ogrenci_id = :ogrenci_id AND okundu = 0";
-    $stmt = $pdo->prepare($sql);
+    $stmt = $conn->prepare($sql);
     $stmt->bindParam(':ogrenci_id', $ogrenci_id, PDO::PARAM_INT);
     $stmt->execute();
 
