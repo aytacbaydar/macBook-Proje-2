@@ -22,7 +22,7 @@ export class OgrenciSidebarSayfasiComponent {
     },
     {
       icon: 'bi-camera-reels',
-      label: 'Konu Anlatımı',
+      label: 'Konu Anlatımı Video',
       link: 'ogrenci-sayfasi',
     },
     {
