@@ -221,6 +221,7 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        aspectRatio: 2,
         plugins: {
           legend: {
             display: false
