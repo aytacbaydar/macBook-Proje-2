@@ -48,6 +48,11 @@ export class OgrenciSidebarSayfasiComponent {
       link: 'ogrenci-sayfasi/ogrenci-konu-analiz-sayfasi',
     },
     {
+      icon: 'bi-pencil',
+      label: 'Soru Çözümü',
+      link: 'ogrenci-sayfasi/ogrenci-soru-cozumu-sayfasi',
+    },
+    {
       icon: 'bi-credit-card-2-back',
       label: 'Ücretler',
       link: 'ogrenci-sayfasi',
