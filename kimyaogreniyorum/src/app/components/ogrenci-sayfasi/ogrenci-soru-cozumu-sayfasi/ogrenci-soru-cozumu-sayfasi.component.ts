@@ -466,4 +466,8 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
   hideToast(): void {
     this.showToast = false;
   }
+
+  trackByMessageId(index: number, message: any): number {
+    return message.id || index;
+  }
 }
