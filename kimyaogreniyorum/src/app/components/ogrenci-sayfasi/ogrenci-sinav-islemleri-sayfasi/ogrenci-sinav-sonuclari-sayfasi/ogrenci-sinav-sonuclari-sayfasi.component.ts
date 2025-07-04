@@ -117,14 +117,19 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit, AfterViewI
 
     console.log('Sınav sonuçları yükleniyor:', { ogrenciId, selectedSinavId });
 
-    this.http.get<any>(`./server/api/ogrenci_tum_sinav_sonuclari.php?ogrenci_id=${ogrenciId}`).subscribe({
+    this.http.get<any>(`./server/api/ogrenci_tum_sinav_sonuclari.php`).subscribe({
       next: (response) => {
         this.loading = false;
         if (response.success && response.data) {
-          // Sınav sonuçları listesini al
-          this.sinavSonuclari = response.data.sinav_sonuclari || [];
+          // Tüm sınav sonuçlarını al ve öğrenci ID'sine göre filtrele
+          const tumSinavSonuclari = response.data.sinav_sonuclari || [];
+          
+          // Sadece bu öğrencinin sınavlarını filtrele
+          this.sinavSonuclari = tumSinavSonuclari.filter((sinav: any) => 
+            sinav.ogrenci_id == ogrenciId
+          );
 
-          console.log('Tüm sınav sonuçları yüklendi:', this.sinavSonuclari);
+          console.log('Filtrelenmiş sınav sonuçları yüklendi:', this.sinavSonuclari);
 
           // Eğer belirli bir sınav ID'si varsa, onu otomatik seç
           if (selectedSinavId) {

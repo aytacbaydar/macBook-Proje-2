@@ -12,7 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require_once '../config.php';
 
 try {
-    $ogrenci_id = $_GET['ogrenci_id'] ?? null;
     $conn = getConnection();
 
     // Tablo oluştur
@@ -39,7 +38,7 @@ try {
     ";
     $conn->exec($createTableSQL);
 
-    // Sınav sonuçlarını çek (ogrenci_id varsa filtrele)
+    // Tüm sınav sonuçlarını çek
     $sql = "SELECT DISTINCT
                 ss.id,
                 ss.sinav_id, 
@@ -55,22 +54,11 @@ try {
                 ss.yuzde,
                 ss.gonderim_tarihi,
                 ss.guncelleme_tarihi
-            FROM sinav_sonuclari ss";
-    
-    $params = [];
-    if ($ogrenci_id) {
-        $sql .= " WHERE ss.ogrenci_id = ?";
-        $params[] = $ogrenci_id;
-    }
-    
-    $sql .= " ORDER BY ss.gonderim_tarihi DESC";
-    
-    // Debug için sorguyu logla
-    error_log("SQL Query: " . $sql);
-    error_log("Params: " . json_encode($params));
+            FROM sinav_sonuclari ss
+            ORDER BY ss.gonderim_tarihi DESC";
     
     $stmt = $conn->prepare($sql);
-    $stmt->execute($params);
+    $stmt->execute();
     $sinavSonuclari = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     // Debug için sonuçları logla

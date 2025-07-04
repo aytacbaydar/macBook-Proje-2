@@ -170,12 +170,20 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.http.get<any>(`./server/api/ogrenci_tum_sinav_sonuclari.php?ogrenci_id=${ogrenciId}`).subscribe({
+    this.http.get<any>(`./server/api/ogrenci_tum_sinav_sonuclari.php`).subscribe({
       next: (response) => {
         this.loadingExamResults = false;
         if (response.success && response.data) {
+          // Tüm sınav sonuçlarını al ve öğrenci ID'sine göre filtrele
+          const tumSinavSonuclari = response.data.sinav_sonuclari || [];
+          
+          // Sadece bu öğrencinin sınavlarını filtrele
+          const ogrenciSinavlari = tumSinavSonuclari.filter((sinav: any) => 
+            sinav.ogrenci_id == ogrenciId
+          );
+          
           // Son 5 sınav sonucunu al
-          this.sinavSonuclari = (response.data.sinav_sonuclari || []).slice(-5);
+          this.sinavSonuclari = ogrenciSinavlari.slice(-5);
 
           // Grafik oluştur
           setTimeout(() => {
