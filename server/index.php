@@ -96,6 +96,13 @@ if (strpos($requestUri, $basePath) === 0) {
         case 'sinav_detay_sonuc':
             require_once 'api/sinav_detay_sonuc.php';
             break;
+        case 'sinav_sonucu_getir':
+            require_once 'api/sinav_sonucu_getir.php';
+            break;
+
+        case 'soru_mesajlari':
+            require_once 'api/soru_mesajlari.php';
+            break;
 
         default:
             http_response_code(404);
