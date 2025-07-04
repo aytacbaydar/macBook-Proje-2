@@ -407,25 +407,12 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
     this.http.get<any>(`./server/api/ogrenci_konu_analizi.php?ogrenci_id=${ogrenciId}`).subscribe({
       next: (response) => {
         this.loadingKonuAnalizi = false;
-        console.log('Konu analizi API yanıtı:', response);
         if (response.success && response.data) {
           this.konuAnalizi = response.data.konu_istatistikleri || [];
-          console.log('Konu istatistikleri:', this.konuAnalizi);
-
-          // Konu adlarını ayrı olarak yazdır
-          if (this.konuAnalizi.length > 0) {
-            console.log('Bulunan konu adları:');
-            this.konuAnalizi.forEach((konu, index) => {
-              console.log(`${index + 1}. ${konu.konu_adi}`);
-            });
-          } else {
-            console.log('Hiç konu bulunamadı');
-          }
         }
       },
       error: (error) => {
         this.loadingKonuAnalizi = false;
-        console.error('Konu analizi yüklenirken hata:', error);
       }
     });
   }
