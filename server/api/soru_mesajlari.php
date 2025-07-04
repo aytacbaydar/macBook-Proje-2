@@ -209,7 +209,7 @@ try {
                 $ogretmenId = $user['id'];
             } else {
                 // Öğrenci mesajı ise, öğretmen ID'sini öğrencinin öğretmeninden al
-                $stmt = $conn->prepare("SELECT og.id FROM ogrenciler o JOIN ogrenciler og ON o.ogretmeni = og.adi_soyadi WHERE o.id = ? AND og.rutbe = 'ogretmen'");
+                $stmt = $conn->prepare("SELECT id FROM ogrenciler WHERE adi_soyadi = (SELECT ogretmeni FROM ogrenciler WHERE id = ?) AND rutbe = 'ogretmen'");
                 $stmt->execute([$ogrenciId]);
                 $result = $stmt->fetch();
                 if ($result) {

@@ -37,11 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $stmt = $conn->prepare("
             SELECT o.id, o.adi_soyadi, o.email, o.cep_telefonu, o.rutbe, o.aktif, o.avatar, o.brans, o.ogretmeni, o.created_at,
                    ob.okulu, ob.sinifi, ob.grubu, ob.ders_gunu, ob.ders_saati, ob.ucret,
-                   ob.veli_adi, ob.veli_cep,
-                   og.ogrt_adi_soyadi as ogretmen_adi
+                   ob.veli_adi, ob.veli_cep
             FROM ogrenciler o
             LEFT JOIN ogrenci_bilgileri ob ON o.id = ob.ogrenci_id
-            LEFT JOIN ogretmenler og ON o.ogretmeni = og.id
             WHERE o.ogretmeni = :ogretmen_id
             ORDER BY o.created_at DESC
         ");
