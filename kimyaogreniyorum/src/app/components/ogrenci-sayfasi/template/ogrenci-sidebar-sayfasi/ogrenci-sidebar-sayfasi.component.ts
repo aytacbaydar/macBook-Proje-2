@@ -111,34 +111,37 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
     };
 
     this.http.get<any>(`./server/api/soru_mesajlari.php?ogrenci_id=${this.studentId}`, { headers })
-      .toPromise()
-      .then((response) => {
-        if (response && response.success && response.data) {
-          // Öğretmenden gelen okunmamış mesajları say
-          const unreadMessages = response.data.filter((mesaj: SoruMesaj) => 
-            mesaj.gonderen_tip === 'ogretmen' && !mesaj.okundu
-          );
-          this.unreadMessageCount = unreadMessages.length;
-          
-          // Soru Çözümü menü öğesindeki badge sayısını güncelle
-          const soruCozumuMenuItem = this.menuItems.find(item => item.label === 'Soru Çözümü');
-          if (soruCozumuMenuItem) {
-            soruCozumuMenuItem.badgeCount = this.unreadMessageCount;
+      .subscribe({
+        next: (response) => {
+          if (response && response.success && response.data) {
+            // Öğretmenden gelen okunmamış mesajları say
+            const unreadMessages = response.data.filter((mesaj: SoruMesaj) => 
+              mesaj.gonderen_tip === 'ogretmen' && !mesaj.okundu
+            );
+            this.unreadMessageCount = unreadMessages.length;
+            
+            // Soru Çözümü menü öğesindeki badge sayısını güncelle
+            const soruCozumuMenuItem = this.menuItems.find(item => item.label === 'Soru Çözümü');
+            if (soruCozumuMenuItem) {
+              soruCozumuMenuItem.badgeCount = this.unreadMessageCount;
+            }
+          } else {
+            // Başarısız response durumunda badge'i 0 yap
+            this.unreadMessageCount = 0;
+            const soruCozumuMenuItem = this.menuItems.find(item => item.label === 'Soru Çözümü');
+            if (soruCozumuMenuItem) {
+              soruCozumuMenuItem.badgeCount = 0;
+            }
           }
-        } else {
-          // Başarısız response durumunda badge'i 0 yap
+        },
+        error: (error) => {
+          console.error('Mesaj sayısı yüklenirken hata:', error);
+          // Hata durumunda badge'i 0 yap
+          this.unreadMessageCount = 0;
           const soruCozumuMenuItem = this.menuItems.find(item => item.label === 'Soru Çözümü');
           if (soruCozumuMenuItem) {
             soruCozumuMenuItem.badgeCount = 0;
           }
-        }
-      })
-      .catch((error) => {
-        console.error('Mesaj sayısı yüklenirken hata:', error);
-        // Hata durumunda badge'i 0 yap
-        const soruCozumuMenuItem = this.menuItems.find(item => item.label === 'Soru Çözümü');
-        if (soruCozumuMenuItem) {
-          soruCozumuMenuItem.badgeCount = 0;
         }
       });
   }
