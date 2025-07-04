@@ -21,6 +21,7 @@ import { OgretmenSinavlarSayfasiComponent } from './ogretmen-sinavlar-sayfasi/og
 import { OgretmenUcretSayfasiComponent } from './ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component';
 import { OgretmenIslenenKonularSayfasiComponent } from './ogretmen-islenen-konular-sayfasi/ogretmen-islenen-konular-sayfasi.component';
 import { OgretmenKonuIslemleriSayfasiComponent } from './ogretmen-islenen-konular-sayfasi/ogretmen-konu-islemleri-sayfasi/ogretmen-konu-islemleri-sayfasi.component';
+import { OgretmenSoruCozumuSayfasiComponent } from './ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { OgretmenKonuIslemleriSayfasiComponent } from './ogretmen-islenen-konula
     OgretmenUcretSayfasiComponent,
     OgretmenIslenenKonularSayfasiComponent,
     OgretmenKonuIslemleriSayfasiComponent,
+    OgretmenSoruCozumuSayfasiComponent,
   ],
   imports: [
     CommonModule,
