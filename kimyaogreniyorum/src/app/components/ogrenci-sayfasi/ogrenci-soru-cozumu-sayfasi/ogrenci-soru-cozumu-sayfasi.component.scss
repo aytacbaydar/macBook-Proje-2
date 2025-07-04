@@ -1,10 +1,91 @@
-.soru-cozumu-container {
-  height: 100vh;
+.card-ana {
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  background-color: #fff;
+  width: 100%;
+  margin: 0 auto;
+  font-family: sans-serif;
+  margin-bottom: 20px;
+}
+
+/* Header */
+.card-ana-header {
+  color: white;
+  padding: 8px;
   display: flex;
-  flex-direction: column;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 20px;
-  gap: 20px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-buttons{
+  margin: 5px;
+}
+
+.card-ana-header h4 {
+  font-size: 16px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  margin: 0;
+  padding-left: 10px;
+}
+
+/* Body */
+.card-ana-body {
+  background-color: white;
+  padding: 10px;
+  color: #333;
+}
+
+/* Button */
+.card-ana-header button {
+  background-color: #ffffff50;
+  border: none;
+  color: white;
+  padding: 4px 8px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.card-ana-header button:hover {
+  background-color: #ffffffe1;
+  color: #333;
+}
+
+.bg-blue {
+  background: linear-gradient(135deg, #244bfc 0%, #637ffd 100%);
+  color: white;
+}
+
+.bg-orange {
+  background: linear-gradient(135deg, #ff6600 0%, #fc924b 100%);
+  color: white;
+}
+
+.bg-green {
+  background: linear-gradient(135deg, #36a00d 0%, #88fd02 100%);
+  color: white;
+}
+
+.bg-red {
+  background: linear-gradient(135deg, #ff0000 0%, #fc4b4b 100%);
+  color: white;
+}
+
+.bg-purple {
+  background: linear-gradient(135deg, #f700ff 0%, #ed4bfc 100%);
+  color: white;
+}
+
+.bg-yellow {
+  background: linear-gradient(135deg, #f7fc01 0%, #f0fc4b 100%);
+  color: white;
+}
+
+
 
   .page-header {
     background: rgba(255, 255, 255, 0.95);
@@ -113,7 +194,7 @@
     .chat-messages-container {
       flex: 1;
       background: rgba(255, 255, 255, 0.95);
-      border-radius: 15px;
+      border-radius: 8px;
       display: flex;
       flex-direction: column;
       min-height: 0;
@@ -173,13 +254,14 @@
               flex-direction: row-reverse;
 
               .message-content {
-                background: linear-gradient(135deg, #667eea, #764ba2);
-                color: white;
-                border-radius: 20px 20px 5px 20px;
+                background: linear-gradient(135deg, #ffffff, #f5f5f5);
+                color: rgb(82, 80, 80);
+                border-radius: 8px 5px 5px 8px;
+                min-width: 320px;
               }
 
               .message-avatar i {
-                color: #667eea;
+                color: #ff6600;
               }
             }
 
@@ -215,6 +297,11 @@
                 font-size: 0.8rem;
                 opacity: 0.8;
 
+                .message-time {
+                  color: #a0aec0;
+                  font-style: italic;
+                  font-size: 10px;
+                }
                 .sender-name {
                   font-weight: 600;
                 }
@@ -236,6 +323,7 @@
               .message-text {
                 line-height: 1.5;
                 word-wrap: break-word;
+                font-size: 12px;
               }
             }
           }
@@ -244,8 +332,8 @@
     }
 
     .message-input-container {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 15px;
+      background: #ff6600;
+      border-radius: 8px;
       padding: 20px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
       backdrop-filter: blur(10px);
@@ -280,7 +368,7 @@
 
       .input-form {
         .input-group {
-          border-radius: 25px;
+          border-radius: 8px;
           overflow: hidden;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
@@ -298,6 +386,8 @@
           .btn {
             border: none;
             padding: 15px 20px;
+            cursor: pointer;
+            
 
             &.btn-outline-secondary {
               background: #f7fafc;
@@ -310,11 +400,12 @@
             }
 
             &.btn-primary {
-              background: linear-gradient(135deg, #667eea, #764ba2);
+              background: linear-gradient(135deg, #29303c, #3e444e);
               border: none;
+              cursor: pointer;
 
               &:hover {
-                background: linear-gradient(135deg, #5a67d8, #6b46c1);
+                background: linear-gradient(135deg, #f89603, #f8b051);
               }
             }
           }
@@ -327,12 +418,11 @@
       }
     }
   }
-}
+
 
 // Mobile Responsive
 @media (max-width: 768px) {
-  .soru-cozumu-container {
-    padding: 10px;
+
 
     .page-header .header-content {
       flex-direction: column;
@@ -366,12 +456,11 @@
         max-height: 100px;
       }
     }
-  }
+  
 }
 
 @media (max-width: 480px) {
-  .soru-cozumu-container {
-    padding: 5px;
+
 
     .page-header,
     .student-info-card,
@@ -388,7 +477,7 @@
       }
     }
   }
-}
+
 
 // Custom scrollbar
 .messages-wrapper::-webkit-scrollbar {

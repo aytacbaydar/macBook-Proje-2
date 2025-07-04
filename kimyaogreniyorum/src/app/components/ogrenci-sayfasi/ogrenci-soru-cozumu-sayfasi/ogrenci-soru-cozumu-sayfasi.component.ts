@@ -335,9 +335,6 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
     this.error = null;
   }
 
-  trackByMessageId(index: number, mesaj: SoruMesaj): any {
-    return mesaj.id;
-  }
 
   openImageModal(imageUrl: string): void {
     this.selectedImageUrl = imageUrl;

@@ -1,58 +1,99 @@
-<div class="attendance-container">
-  <div class="modern-page-header">
-    <div class="header-content">
-      <div class="header-text">
-        <h1 class="modern-page-title">
-          <i class="bi bi-people-fill me-2"></i>
-          Öğrenci Yoklama Sistemi
-        </h1>
-        <p class="modern-page-description">
-          Öğrencilerinizi gruplarına göre devamsızlık takibi Sistemi
-        </p>
-      </div>
-      <div class="admin-overview">
-        <!-- İçerik-->
-        <div class="stat-card mavi">
-          <div class="stat-icon">
-            <i class="fas fa-users"></i>
-          </div>
-          <div class="stat-content">
-            <h3>{{ groupStudents.length }}</h3>
-            <p>Toplam Öğrenci</p>
-          </div>
+<div class="container-full">
+  <div class="row">
+    <div class="col-12 col-lg-4 mt-1">
+      <div class="card-ana bg-orange">
+        <div class="card-ana-header">
+          <h4><i class="bi bi-book me-2"></i>Son İşlenen Konular</h4>
+          <button><i class="bi bi-bookmark-plus-fill"></i></button>
         </div>
-
-        <div class="stat-card yesil">
-          <div class="stat-icon">
-            <i class="bi bi-check-circle"></i>
-          </div>
-          <div class="stat-content">
-            <h3>{{ getPresentCount() }}</h3>
-            <p>Sınıfta Olan</p>
-          </div>
+        <div class="card-ana-body">
+          <!--İçerik-->
+          <!--İçerik Son-->
         </div>
-
-        <div class="stat-card acik-turuncu">
-          <div class="stat-icon">
-            <i class="bi bi-x-circle"></i>
-          </div>
-          <div class="stat-content">
-            <h3>{{ getAbsentCount() }}</h3>
-            <p>Henüz Gelmemiş</p>
-          </div>
-        </div>
-
-        <div class="stat-card mavi">
-          <div class="stat-icon">
-            <i class="bi bi-percent"></i>
-          </div>
-          <div class="stat-content">
-            <h3>{{ getAttendancePercentage() }}%</h3>
-            <p>Katılım Yüzdesi</p>
-          </div>
-        </div>
-        <!-- İçerik-->
       </div>
     </div>
   </div>
 </div>
+
+.card-ana {
+border-radius: 8px;
+box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+overflow: hidden;
+background-color: #fff;
+width: 100%;
+margin: 0 auto;
+font-family: sans-serif;
+margin-bottom: 20px;
+}
+
+/* Header */
+.card-ana-header {
+color: white;
+padding: 8px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+.card-ana-header h4 {
+font-size: 16px;
+font-family: 'Roboto', sans-serif;
+font-weight: 400;
+margin: 0;
+padding-left: 10px;
+}
+
+/* Body */
+.card-ana-body {
+background-color: white;
+padding: 10px;
+color: #333;
+}
+
+/* Button */
+.card-ana-header button {
+background-color: #ffffff50;
+border: none;
+color: white;
+padding: 4px 8px;
+font-size: 14px;
+font-weight: 500;
+border-radius: 4px;
+cursor: pointer;
+transition: background-color 0.2s ease;
+}
+
+.card-ana-header button:hover {
+background-color: #ffffffe1;
+color: #333;
+}
+
+.bg-blue {
+background: linear-gradient(135deg, #244bfc 0%, #637ffd 100%);
+color: white;
+}
+
+.bg-orange {
+background: linear-gradient(135deg, #ff6600 0%, #fc924b 100%);
+color: white;
+}
+
+.bg-green {
+background: linear-gradient(135deg, #36a00d 0%, #88fd02 100%);
+color: white;
+}
+
+.bg-red {
+background: linear-gradient(135deg, #ff0000 0%, #fc4b4b 100%);
+color: white;
+}
+
+.bg-purple {
+background: linear-gradient(135deg, #f700ff 0%, #ed4bfc 100%);
+color: white;
+}
+
+.bg-yellow {
+background: linear-gradient(135deg, #f7fc01 0%, #f0fc4b 100%);
+color: white;
+}
