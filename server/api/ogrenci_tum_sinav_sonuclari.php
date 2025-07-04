@@ -46,10 +46,18 @@ try {
 
     $conn->exec($createTableSQL);
 
-    // Öğrencinin tüm sınav sonuçlarını al ve her sınav için katılımcı sayısı ve sıralama bilgisi ekle
-    $sql = "SELECT * FROM sinav_sonuclari WHERE ogrenci_id = ? ORDER BY gonderim_tarihi DESC";
+    // Öğrencinin her sınav için en son sonucunu al (aynı sınavı birden fazla çözmüşse en son olanı)
+    $sql = "SELECT ss1.* FROM sinav_sonuclari ss1
+            INNER JOIN (
+                SELECT sinav_id, MAX(gonderim_tarihi) as max_tarih 
+                FROM sinav_sonuclari 
+                WHERE ogrenci_id = ? 
+                GROUP BY sinav_id
+            ) ss2 ON ss1.sinav_id = ss2.sinav_id AND ss1.gonderim_tarihi = ss2.max_tarih
+            WHERE ss1.ogrenci_id = ?
+            ORDER BY ss1.gonderim_tarihi DESC";
     $stmt = $conn->prepare($sql);
-    $stmt->execute([$ogrenci_id]);
+    $stmt->execute([$ogrenci_id, $ogrenci_id]);
     $sinavSonuclari = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Her sınav için katılımcı sayısı ve sıralama bilgisi ekle

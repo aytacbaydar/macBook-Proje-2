@@ -1,4 +1,3 @@
-
 <?php
 // Hata raporlamayı etkinleştir
 error_reporting(E_ALL);
@@ -26,9 +25,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 
 try {
     $conn = getConnection();
-    
+
     $ogrenci_id = $_GET['ogrenci_id'] ?? null;
-    
+
     if (!$ogrenci_id) {
         throw new Exception('Öğrenci ID gerekli');
     }
@@ -42,27 +41,27 @@ try {
         WHERE sc.ogrenci_id = ?
         ORDER BY sc.gonderim_tarihi DESC
     ";
-    
+
     $stmt = $conn->prepare($sql);
     $stmt->execute([$ogrenci_id]);
     $sinavlar = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
     $konu_istatistikleri = [];
-    
+
     foreach ($sinavlar as $sinav) {
         $ogrenci_cevaplar = json_decode($sinav['cevaplar'], true);
         $soru_konulari = json_decode($sinav['soru_konulari'], true);
         $dogru_cevaplar = json_decode($sinav['dogru_cevaplar'], true);
-        
+
         if (!$soru_konulari || !$dogru_cevaplar) continue;
-        
+
         foreach ($soru_konulari as $soru_key => $konu_adi) {
             if (empty($konu_adi)) continue;
-            
+
             $soru_no = str_replace('soru', '', $soru_key);
             $ogrenci_cevap = $ogrenci_cevaplar[$soru_key] ?? '';
             $dogru_cevap = $dogru_cevaplar["ca{$soru_no}"] ?? '';
-            
+
             // Konu istatistiklerini başlat
             if (!isset($konu_istatistikleri[$konu_adi])) {
                 $konu_istatistikleri[$konu_adi] = [
@@ -75,14 +74,14 @@ try {
                     'sinavlar' => []
                 ];
             }
-            
+
             $konu_istatistikleri[$konu_adi]['toplam_soru']++;
-            
+
             // Sinav bilgisini ekle
             if (!in_array($sinav['sinav_adi'], $konu_istatistikleri[$konu_adi]['sinavlar'])) {
                 $konu_istatistikleri[$konu_adi]['sinavlar'][] = $sinav['sinav_adi'];
             }
-            
+
             if (empty($ogrenci_cevap)) {
                 $konu_istatistikleri[$konu_adi]['bos_sayisi']++;
             } elseif ($ogrenci_cevap === $dogru_cevap) {
@@ -92,19 +91,19 @@ try {
             }
         }
     }
-    
+
     // Başarı oranlarını hesapla
     foreach ($konu_istatistikleri as &$konu) {
         if ($konu['toplam_soru'] > 0) {
             $konu['basari_orani'] = round(($konu['dogru_sayisi'] / $konu['toplam_soru']) * 100, 1);
         }
     }
-    
+
     // Başarı oranına göre sırala (yüksekten düşüğe)
     uasort($konu_istatistikleri, function($a, $b) {
         return $b['basari_orani'] <=> $a['basari_orani'];
     });
-    
+
     echo json_encode([
         'success' => true,
         'data' => [
