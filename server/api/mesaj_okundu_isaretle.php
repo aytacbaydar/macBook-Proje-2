@@ -18,7 +18,7 @@ function authorize() {
     $headers = getallheaders();
     $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
     
-    if (empty($authHeader) || !str_starts_with($authHeader, 'Bearer ')) {
+    if (empty($authHeader) || substr($authHeader, 0, 7) !== 'Bearer ') {
         http_response_code(401);
         echo json_encode(['error' => 'Token gerekli']);
         exit;
@@ -106,7 +106,14 @@ try {
         ]);
     }
     
+} catch (PDOException $e) {
+    error_log('PDO Error in mesaj_okundu_isaretle.php: ' . $e->getMessage());
+    echo json_encode([
+        'success' => false,
+        'message' => 'Veritabanı hatası: ' . $e->getMessage()
+    ]);
 } catch (Exception $e) {
+    error_log('Error in mesaj_okundu_isaretle.php: ' . $e->getMessage());
     echo json_encode([
         'success' => false,
         'message' => 'Sunucu hatası: ' . $e->getMessage()
