@@ -1,0 +1,192 @@
+▲ [WARNING] Deprecation [plugin angular-sass]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-detay-sayfasi/ogretmen-ogrenci-detay-sayfasi.component.scss:67:24:
+      67 │       background-color: darken($secondary-color, 5%);
+         ╵                         ^
+
+
+  Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+  Use color.adjust instead.
+
+  More info and automated migrator: https://sass-lang.com/d/import
+
+
+▲ [WARNING] Deprecation [plugin angular-sass]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-detay-sayfasi/ogretmen-ogrenci-detay-sayfasi.component.scss:67:24:
+      67 │       background-color: darken($secondary-color, 5%);
+         ╵                         ^
+
+
+  darken() is deprecated. Suggestions:
+
+  color.scale($color, $lightness: -5.1515151515%)
+  color.adjust($color, $lightness: -5%)
+
+  More info: https://sass-lang.com/d/color-functions
+
+
+▲ [WARNING] Deprecation [plugin angular-sass]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-detay-sayfasi/ogretmen-ogrenci-detay-sayfasi.component.scss:520:24:
+      520 │       background-color: darken($primary-color, 5%);
+          ╵                         ^
+
+
+  Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+  Use color.adjust instead.
+
+  More info and automated migrator: https://sass-lang.com/d/import
+
+
+▲ [WARNING] Deprecation [plugin angular-sass]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-detay-sayfasi/ogretmen-ogrenci-detay-sayfasi.component.scss:520:24:
+      520 │       background-color: darken($primary-color, 5%);
+          ╵                         ^
+
+
+  darken() is deprecated. Suggestions:
+
+  color.scale($color, $lightness: -8.5%)
+  color.adjust($color, $lightness: -5%)
+
+  More info: https://sass-lang.com/d/color-functions
+
+
+▲ [WARNING] Deprecation [plugin angular-sass]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-detay-sayfasi/ogretmen-ogrenci-detay-sayfasi.component.scss:533:24:
+      533 │       background-color: darken($secondary-color, 5%);
+          ╵                         ^
+
+
+  Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+  Use color.adjust instead.
+
+  More info and automated migrator: https://sass-lang.com/d/import
+
+
+▲ [WARNING] Deprecation [plugin angular-sass]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-detay-sayfasi/ogretmen-ogrenci-detay-sayfasi.component.scss:533:24:
+      533 │       background-color: darken($secondary-color, 5%);
+          ╵                         ^
+
+
+  darken() is deprecated. Suggestions:
+
+  color.scale($color, $lightness: -5.1515151515%)
+  color.adjust($color, $lightness: -5%)
+
+  More info: https://sass-lang.com/d/color-functions
+
+
+▲ [WARNING] Deprecation [plugin angular-sass]
+
+    src/app/components/yonetici-sayfasi/ogrenci-isleri-sayfasi/ogrenci-detay-sayfasi/ogrenci-detay-sayfasi.component.scss:67:24:
+      67 │       background-color: darken($secondary-color, 5%);
+         ╵                         ^
+
+
+  Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+  Use color.adjust instead.
+
+  More info and automated migrator: https://sass-lang.com/d/import
+
+
+▲ [WARNING] Deprecation [plugin angular-sass]
+
+    src/app/components/yonetici-sayfasi/ogrenci-isleri-sayfasi/ogrenci-detay-sayfasi/ogrenci-detay-sayfasi.component.scss:67:24:
+      67 │       background-color: darken($secondary-color, 5%);
+         ╵                         ^
+
+
+  darken() is deprecated. Suggestions:
+
+  color.scale($color, $lightness: -5.1515151515%)
+  color.adjust($color, $lightness: -5%)
+
+  More info: https://sass-lang.com/d/color-functions
+
+
+▲ [WARNING] Deprecation [plugin angular-sass]
+
+    src/app/components/yonetici-sayfasi/ogrenci-isleri-sayfasi/ogrenci-detay-sayfasi/ogrenci-detay-sayfasi.component.scss:520:24:
+      520 │       background-color: darken($primary-color, 5%);
+          ╵                         ^
+
+
+  Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+  Use color.adjust instead.
+
+  More info and automated migrator: https://sass-lang.com/d/import
+
+
+▲ [WARNING] Deprecation [plugin angular-sass]
+
+    src/app/components/yonetici-sayfasi/ogrenci-isleri-sayfasi/ogrenci-detay-sayfasi/ogrenci-detay-sayfasi.component.scss:520:24:
+      520 │       background-color: darken($primary-color, 5%);
+          ╵                         ^
+
+
+  darken() is deprecated. Suggestions:
+
+  color.scale($color, $lightness: -8.5%)
+  color.adjust($color, $lightness: -5%)
+
+  More info: https://sass-lang.com/d/color-functions
+
+
+▲ [WARNING] Deprecation [plugin angular-sass]
+
+    src/app/components/yonetici-sayfasi/ogrenci-isleri-sayfasi/ogrenci-detay-sayfasi/ogrenci-detay-sayfasi.component.scss:533:24:
+      533 │       background-color: darken($secondary-color, 5%);
+          ╵                         ^
+
+
+  Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+  Use color.adjust instead.
+
+  More info and automated migrator: https://sass-lang.com/d/import
+
+
+▲ [WARNING] Deprecation [plugin angular-sass]
+
+    src/app/components/yonetici-sayfasi/ogrenci-isleri-sayfasi/ogrenci-detay-sayfasi/ogrenci-detay-sayfasi.component.scss:533:24:
+      533 │       background-color: darken($secondary-color, 5%);
+          ╵                         ^
+
+
+  darken() is deprecated. Suggestions:
+
+  color.scale($color, $lightness: -5.1515151515%)
+  color.adjust($color, $lightness: -5%)
+
+  More info: https://sass-lang.com/d/color-functions
+
+
+X [ERROR] NG5002: Invalid ICU message. Missing '}'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-soru-cozumu-sayfasi/ogrenci-soru-cozumu-sayfasi.component.html:14:72:
+      14 │ ...class SoruCozumuComponent implements AfterViewChecked, OnDestroy {
+         ╵                                                                     ^
+
+  Error occurs in the template of component OgrenciSoruCozumuSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-soru-cozumu-sayfasi/ogrenci-soru-cozumu-sayfasi.component.ts:31:15:
+      31 │   templateUrl: './ogrenci-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Unexpected character "EOF" (Do you have an unescaped "{" in your template? Use "{{ '{' }}") to escape it.) [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-soru-cozumu-sayfasi/ogrenci-soru-cozumu-sayfasi.component.html:873:20:
+      873 │ </replit_final_file>
+          ╵                     ^
+
+  Error occurs in the template of component OgrenciSoruCozumuSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-soru-cozumu-sayfasi/ogrenci-soru-cozumu-sayfasi.component.ts:31:15:
+      31 │   templateUrl: './ogrenci-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
