@@ -1,4 +1,26 @@
-import { Component } from '@angular/core';
+
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+
+interface SoruMesaj {
+  id?: number;
+  ogrenci_id: number;
+  ogretmen_id?: number;
+  mesaj_metni: string;
+  resim_url?: string;
+  gonderim_tarihi: string;
+  gonderen_tip: 'ogrenci' | 'ogretmen';
+  gonderen_adi: string;
+  okundu: boolean;
+  ogrenci_adi?: string; // Öğretmen görünümü için
+}
+
+interface Student {
+  id: number;
+  adi_soyadi: string;
+  email: string;
+  grubu?: string;
+}
 
 @Component({
   selector: 'app-ogretmen-soru-cozumu-sayfasi',
@@ -6,6 +28,224 @@ import { Component } from '@angular/core';
   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
   styleUrl: './ogretmen-soru-cozumu-sayfasi.component.scss'
 })
-export class OgretmenSoruCozumuSayfasiComponent {
+export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('messageContainer') messageContainer!: ElementRef<HTMLDivElement>;
 
+  // Students and messages
+  students: Student[] = [];
+  selectedStudent: Student | null = null;
+  allMessages: SoruMesaj[] = [];
+  studentMessages: SoruMesaj[] = [];
+  
+  // Message sending
+  yeniMesaj: string = '';
+  selectedFile: File | null = null;
+  previewUrl: string | null = null;
+  
+  // Loading states
+  isLoading: boolean = false;
+  isLoadingMessages: boolean = false;
+  isLoadingStudents: boolean = false;
+  isSending: boolean = false;
+  error: string | null = null;
+
+  // View mode
+  viewMode: 'all' | 'student' = 'all';
+
+  private apiBaseUrl = './server/api';
+
+  constructor(private http: HttpClient) {}
+
+  ngOnInit(): void {
+    this.loadStudents();
+    this.loadAllMessages();
+  }
+
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+  }
+
+  loadStudents() {
+    this.isLoadingStudents = true;
+    this.error = null;
+
+    this.http.get<any>(`${this.apiBaseUrl}/ogretmen_ogrencileri.php`, { headers: this.getHeaders() })
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.students = response.data;
+          } else {
+            this.error = response.message || 'Öğrenciler yüklenemedi';
+          }
+          this.isLoadingStudents = false;
+        },
+        error: (error) => {
+          console.error('Students loading error:', error);
+          this.error = 'Öğrenciler yüklenirken hata oluştu';
+          this.isLoadingStudents = false;
+        }
+      });
+  }
+
+  loadAllMessages() {
+    this.isLoadingMessages = true;
+    this.error = null;
+
+    this.http.get<any>(`${this.apiBaseUrl}/soru_mesajlari.php`, { headers: this.getHeaders() })
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.allMessages = response.data;
+          } else {
+            this.error = response.message || 'Mesajlar yüklenemedi';
+          }
+          this.isLoadingMessages = false;
+        },
+        error: (error) => {
+          console.error('Messages loading error:', error);
+          this.error = 'Mesajlar yüklenirken hata oluştu';
+          this.isLoadingMessages = false;
+        }
+      });
+  }
+
+  selectStudent(student: Student) {
+    this.selectedStudent = student;
+    this.viewMode = 'student';
+    this.loadStudentMessages(student.id);
+  }
+
+  loadStudentMessages(studentId: number) {
+    this.isLoadingMessages = true;
+    this.error = null;
+
+    this.http.get<any>(`${this.apiBaseUrl}/soru_mesajlari.php?ogrenci_id=${studentId}`, { headers: this.getHeaders() })
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.studentMessages = response.data;
+            setTimeout(() => this.scrollToBottom(), 100);
+          } else {
+            this.error = response.message || 'Mesajlar yüklenemedi';
+          }
+          this.isLoadingMessages = false;
+        },
+        error: (error) => {
+          console.error('Student messages loading error:', error);
+          this.error = 'Mesajlar yüklenirken hata oluştu';
+          this.isLoadingMessages = false;
+        }
+      });
+  }
+
+  sendMessage() {
+    if (!this.selectedStudent || (!this.yeniMesaj.trim() && !this.selectedFile)) {
+      return;
+    }
+
+    this.isSending = true;
+    const formData = new FormData();
+    formData.append('ogrenci_id', this.selectedStudent.id.toString());
+    formData.append('mesaj_metni', this.yeniMesaj);
+    formData.append('gonderen_tip', 'ogretmen');
+
+    if (this.selectedFile) {
+      formData.append('resim', this.selectedFile);
+    }
+
+    this.http.post<any>(`${this.apiBaseUrl}/soru_mesajlari.php`, formData)
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.yeniMesaj = '';
+            this.selectedFile = null;
+            this.previewUrl = null;
+            this.loadStudentMessages(this.selectedStudent!.id);
+            this.loadAllMessages(); // Refresh all messages too
+          } else {
+            this.error = response.message || 'Mesaj gönderilemedi';
+          }
+          this.isSending = false;
+        },
+        error: (error) => {
+          console.error('Message sending error:', error);
+          this.error = 'Mesaj gönderilirken hata oluştu';
+          this.isSending = false;
+        }
+      });
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        this.error = 'Dosya boyutu 5MB\'dan büyük olamaz';
+        return;
+      }
+
+      this.selectedFile = file;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.previewUrl = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  removeFile() {
+    this.selectedFile = null;
+    this.previewUrl = null;
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = '';
+    }
+  }
+
+  backToAllMessages() {
+    this.viewMode = 'all';
+    this.selectedStudent = null;
+    this.studentMessages = [];
+    this.yeniMesaj = '';
+    this.selectedFile = null;
+    this.previewUrl = null;
+  }
+
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) {
+      return 'Bugün ' + date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+    } else if (diffDays === 1) {
+      return 'Dün ' + date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+    } else {
+      return date.toLocaleDateString('tr-TR') + ' ' + date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+    }
+  }
+
+  private scrollToBottom() {
+    if (this.messageContainer) {
+      setTimeout(() => {
+        this.messageContainer.nativeElement.scrollTop = this.messageContainer.nativeElement.scrollHeight;
+      }, 100);
+    }
+  }
+
+  trackByMessageId(index: number, message: SoruMesaj): number {
+    return message.id || index;
+  }
+
+  getStudentMessageCount(studentId: number): number {
+    return this.allMessages.filter(m => m.ogrenci_id === studentId).length;
+  }
+
+  getUnreadMessageCount(studentId: number): number {
+    return this.allMessages.filter(m => m.ogrenci_id === studentId && !m.okundu && m.gonderen_tip === 'ogrenci').length;
+  }
 }

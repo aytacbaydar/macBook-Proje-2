@@ -100,24 +100,59 @@ try {
             $user = authorize();
             error_log("GET request - User authorized: " . json_encode($user));
             
-            $ogrenciId = $_GET['ogrenci_id'] ?? $user['id'];
-            error_log("GET request - Ogrenci ID: " . $ogrenciId);
-            
-            // Sadece kendi mesajlarını görebilir (öğrenci ise)
-            if ($user['rutbe'] !== 'ogretmen' && $user['rutbe'] !== 'admin' && $ogrenciId != $user['id']) {
-                error_log("GET request - Access denied for user: " . $user['id']);
-                http_response_code(403);
-                echo json_encode(['error' => 'Bu mesajları görme yetkiniz yok']);
-                exit;
+            if ($user['rutbe'] === 'ogretmen') {
+                // Öğretmen ise - tüm öğrencilerinin mesajlarını getir veya belirli öğrencininkileri
+                $ogrenciId = $_GET['ogrenci_id'] ?? null;
+                
+                if ($ogrenciId) {
+                    // Belirli öğrencinin mesajları
+                    // Önce bu öğrencinin kendi öğrencisi olup olmadığını kontrol et
+                    $stmt = $conn->prepare("SELECT id FROM ogrenciler WHERE id = ? AND ogretmeni = ?");
+                    $stmt->execute([$ogrenciId, $user['adi_soyadi']]);
+                    if (!$stmt->fetch()) {
+                        http_response_code(403);
+                        echo json_encode(['error' => 'Bu öğrencinin mesajlarını görme yetkiniz yok']);
+                        exit;
+                    }
+                    
+                    $stmt = $conn->prepare("
+                        SELECT * FROM soru_mesajlari 
+                        WHERE ogrenci_id = ? 
+                        ORDER BY gonderim_tarihi ASC
+                    ");
+                    $stmt->execute([$ogrenciId]);
+                    $mesajlar = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                } else {
+                    // Tüm öğrencilerinin mesajları (öğrenci bilgileriyle birlikte)
+                    $stmt = $conn->prepare("
+                        SELECT sm.*, o.adi_soyadi as ogrenci_adi 
+                        FROM soru_mesajlari sm
+                        JOIN ogrenciler o ON sm.ogrenci_id = o.id
+                        WHERE o.ogretmeni = ?
+                        ORDER BY sm.gonderim_tarihi DESC
+                    ");
+                    $stmt->execute([$user['adi_soyadi']]);
+                    $mesajlar = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                }
+            } else {
+                // Öğrenci ise - sadece kendi mesajları
+                $ogrenciId = $_GET['ogrenci_id'] ?? $user['id'];
+                
+                if ($ogrenciId != $user['id']) {
+                    error_log("GET request - Access denied for user: " . $user['id']);
+                    http_response_code(403);
+                    echo json_encode(['error' => 'Bu mesajları görme yetkiniz yok']);
+                    exit;
+                }
+                
+                $stmt = $conn->prepare("
+                    SELECT * FROM soru_mesajlari 
+                    WHERE ogrenci_id = ? 
+                    ORDER BY gonderim_tarihi ASC
+                ");
+                $stmt->execute([$ogrenciId]);
+                $mesajlar = $stmt->fetchAll(PDO::FETCH_ASSOC);
             }
-            
-            $stmt = $conn->prepare("
-                SELECT * FROM soru_mesajlari 
-                WHERE ogrenci_id = ? 
-                ORDER BY gonderim_tarihi ASC
-            ");
-            $stmt->execute([$ogrenciId]);
-            $mesajlar = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
             error_log("GET request - Found " . count($mesajlar) . " messages");
             
@@ -133,7 +168,7 @@ try {
             
             $ogrenciId = $_POST['ogrenci_id'] ?? $user['id'];
             $mesajMetni = $_POST['mesaj_metni'] ?? '';
-            $gonderenTip = $_POST['gonderen_tip'] ?? 'ogrenci';
+            $gonderenTip = $_POST['gonderen_tip'] ?? ($user['rutbe'] === 'ogretmen' ? 'ogretmen' : 'ogrenci');
             $gonderenAdi = $_POST['gonderen_adi'] ?? $user['adi_soyadi'];
             
             // Öğrenci sadece kendi adına mesaj gönderebilir
@@ -141,6 +176,17 @@ try {
                 http_response_code(403);
                 echo json_encode(['error' => 'Bu işlem için yetkiniz yok']);
                 exit;
+            }
+            
+            // Öğretmen için öğrenci kontrolü
+            if ($user['rutbe'] === 'ogretmen') {
+                $stmt = $conn->prepare("SELECT id FROM ogrenciler WHERE id = ? AND ogretmeni = ?");
+                $stmt->execute([$ogrenciId, $user['adi_soyadi']]);
+                if (!$stmt->fetch()) {
+                    http_response_code(403);
+                    echo json_encode(['error' => 'Bu öğrenciye mesaj gönderme yetkiniz yok']);
+                    exit;
+                }
             }
             
             $resimUrl = null;
@@ -157,14 +203,29 @@ try {
                 exit;
             }
             
+            // Öğretmen ID'sini belirle
+            $ogretmenId = null;
+            if ($user['rutbe'] === 'ogretmen') {
+                $ogretmenId = $user['id'];
+            } else {
+                // Öğrenci mesajı ise, öğretmen ID'sini öğrencinin öğretmeninden al
+                $stmt = $conn->prepare("SELECT og.id FROM ogrenciler o JOIN ogrenciler og ON o.ogretmeni = og.adi_soyadi WHERE o.id = ? AND og.rutbe = 'ogretmen'");
+                $stmt->execute([$ogrenciId]);
+                $result = $stmt->fetch();
+                if ($result) {
+                    $ogretmenId = $result['id'];
+                }
+            }
+            
             $stmt = $conn->prepare("
                 INSERT INTO soru_mesajlari 
-                (ogrenci_id, mesaj_metni, resim_url, gonderen_tip, gonderen_adi) 
-                VALUES (?, ?, ?, ?, ?)
+                (ogrenci_id, ogretmen_id, mesaj_metni, resim_url, gonderen_tip, gonderen_adi) 
+                VALUES (?, ?, ?, ?, ?, ?)
             ");
             
             $stmt->execute([
                 $ogrenciId,
+                $ogretmenId,
                 $mesajMetni,
                 $resimUrl,
                 $gonderenTip,

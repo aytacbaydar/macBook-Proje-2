@@ -1,1 +1,224 @@
-<p>ogretmen-soru-cozumu-sayfasi works!</p>
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar - Student List -->
+    <div class="col-md-4 col-lg-3" [ngClass]="{'d-none': viewMode === 'student', 'd-md-block': viewMode === 'student'}">
+      <div class="card h-100">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">
+            <i class="bi bi-people-fill me-2"></i>
+            Öğrencilerim
+          </h5>
+        </div>
+        <div class="card-body p-0">
+          <!-- Loading Students -->
+          <div *ngIf="isLoadingStudents" class="text-center p-3">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Yükleniyor...</span>
+            </div>
+            <p class="mt-2 mb-0">Öğrenciler yükleniyor...</p>
+          </div>
+
+          <!-- Students List -->
+          <div class="student-list" *ngIf="!isLoadingStudents">
+            <div class="student-item" 
+                 *ngFor="let student of students; trackBy: trackByMessageId"
+                 (click)="selectStudent(student)"
+                 [ngClass]="{'active': selectedStudent?.id === student.id}">
+              <div class="student-avatar">
+                <i class="bi bi-person-circle"></i>
+              </div>
+              <div class="student-info">
+                <h6 class="student-name">{{ student.adi_soyadi }}</h6>
+                <small class="text-muted" *ngIf="student.grubu">{{ student.grubu }}</small>
+                <div class="message-stats">
+                  <span class="badge bg-info me-1">{{ getStudentMessageCount(student.id) }} mesaj</span>
+                  <span class="badge bg-warning" *ngIf="getUnreadMessageCount(student.id) > 0">
+                    {{ getUnreadMessageCount(student.id) }} okunmamış
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="students.length === 0" class="text-center p-3">
+              <i class="bi bi-person-x text-muted" style="font-size: 2rem;"></i>
+              <p class="text-muted mt-2">Henüz öğrenciniz yok</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="col-md-8 col-lg-9">
+      <!-- All Messages View -->
+      <div *ngIf="viewMode === 'all'" class="card h-100">
+        <div class="card-header bg-success text-white">
+          <h5 class="mb-0">
+            <i class="bi bi-chat-dots-fill me-2"></i>
+            Tüm Mesajlar
+          </h5>
+        </div>
+        <div class="card-body">
+          <!-- Loading Messages -->
+          <div *ngIf="isLoadingMessages" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Yükleniyor...</span>
+            </div>
+            <p class="mt-2">Mesajlar yükleniyor...</p>
+          </div>
+
+          <!-- All Messages List -->
+          <div *ngIf="!isLoadingMessages" class="all-messages-container">
+            <div class="message-summary" 
+                 *ngFor="let message of allMessages; trackBy: trackByMessageId"
+                 (click)="selectStudent(students.find(s => s.id === message.ogrenci_id)!)"
+                 style="cursor: pointer;">
+              <div class="message-summary-header">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h6 class="mb-1">
+                    <i class="bi bi-person-circle me-2"></i>
+                    {{ message.ogrenci_adi || 'Bilinmeyen Öğrenci' }}
+                  </h6>
+                  <small class="text-muted">{{ formatDate(message.gonderim_tarihi) }}</small>
+                </div>
+                <span class="badge" 
+                      [ngClass]="message.gonderen_tip === 'ogrenci' ? 'bg-primary' : 'bg-success'">
+                  {{ message.gonderen_tip === 'ogrenci' ? 'Öğrenci' : 'Öğretmen' }}
+                </span>
+              </div>
+              <div class="message-summary-content">
+                <p class="mb-1" *ngIf="message.mesaj_metni">{{ message.mesaj_metni }}</p>
+                <p class="mb-1 text-muted" *ngIf="!message.mesaj_metni && message.resim_url">
+                  <i class="bi bi-image"></i> Resim gönderdi
+                </p>
+              </div>
+            </div>
+
+            <div *ngIf="allMessages.length === 0" class="text-center py-5">
+              <i class="bi bi-chat-x text-muted" style="font-size: 3rem;"></i>
+              <h5 class="text-muted mt-3">Henüz Mesaj Yok</h5>
+              <p class="text-muted">Öğrencilerinizden henüz soru çözümü talebi gelmedi</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Student Chat View -->
+      <div *ngIf="viewMode === 'student' && selectedStudent" class="card h-100">
+        <div class="card-header bg-primary text-white">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+              <button class="btn btn-light btn-sm me-2 d-md-none" (click)="backToAllMessages()">
+                <i class="bi bi-arrow-left"></i>
+              </button>
+              <i class="bi bi-person-circle me-2"></i>
+              {{ selectedStudent.adi_soyadi }}
+            </h5>
+            <button class="btn btn-light btn-sm d-none d-md-inline-block" (click)="backToAllMessages()">
+              <i class="bi bi-arrow-left me-1"></i>
+              Geri
+            </button>
+          </div>
+        </div>
+
+        <!-- Chat Messages -->
+        <div class="card-body p-0 position-relative" style="height: 400px;">
+          <div #messageContainer class="messages-container h-100 overflow-auto p-3">
+            <!-- Loading Messages -->
+            <div *ngIf="isLoadingMessages" class="text-center py-3">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Yükleniyor...</span>
+              </div>
+              <p class="mt-2">Mesajlar yükleniyor...</p>
+            </div>
+
+            <!-- Messages -->
+            <div *ngIf="!isLoadingMessages">
+              <div class="message-item" 
+                   *ngFor="let mesaj of studentMessages; trackBy: trackByMessageId"
+                   [ngClass]="{'message-own': mesaj.gonderen_tip === 'ogretmen', 'message-other': mesaj.gonderen_tip === 'ogrenci'}">
+
+                <div class="message-avatar">
+                  <i class="bi" 
+                     [ngClass]="mesaj.gonderen_tip === 'ogrenci' ? 'bi-person-circle' : 'bi-person-check-fill'"></i>
+                </div>
+
+                <div class="message-content">
+                  <div class="message-header">
+                    <span class="sender-name">{{ mesaj.gonderen_adi }}</span>
+                    <span class="message-time">{{ formatDate(mesaj.gonderim_tarihi) }}</span>
+                  </div>
+
+                  <div class="message-body">
+                    <p *ngIf="mesaj.mesaj_metni" class="message-text">{{ mesaj.mesaj_metni }}</p>
+                    <div *ngIf="mesaj.resim_url" class="message-image">
+                      <img [src]="mesaj.resim_url" alt="Soru resmi" class="img-fluid rounded">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="studentMessages.length === 0" class="text-center py-4">
+                <i class="bi bi-chat text-muted" style="font-size: 2rem;"></i>
+                <p class="text-muted mt-2">Henüz mesaj yok. Öğrencinizle sohbete başlayın!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Message Input -->
+        <div class="card-footer">
+          <!-- Error Alert -->
+          <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ error }}
+            <button type="button" class="btn-close" (click)="error = null"></button>
+          </div>
+
+          <!-- File Preview -->
+          <div *ngIf="previewUrl" class="file-preview mb-3">
+            <div class="position-relative d-inline-block">
+              <img [src]="previewUrl" alt="Önizleme" class="preview-image">
+              <button type="button" class="btn btn-sm btn-danger preview-close" (click)="removeFile()">
+                <i class="bi bi-x"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Message Form -->
+          <div class="message-form">
+            <div class="input-group">
+              <input type="file" 
+                     #fileInput 
+                     accept="image/*" 
+                     (change)="onFileSelected($event)" 
+                     style="display: none;">
+              
+              <button class="btn btn-outline-secondary" 
+                      type="button" 
+                      (click)="fileInput.click()"
+                      [disabled]="isSending">
+                <i class="bi bi-paperclip"></i>
+              </button>
+              
+              <input type="text" 
+                     class="form-control" 
+                     [(ngModel)]="yeniMesaj"
+                     placeholder="Öğrencinize mesaj yazın..."
+                     (keyup.enter)="sendMessage()"
+                     [disabled]="isSending">
+              
+              <button class="btn btn-primary" 
+                      type="button" 
+                      (click)="sendMessage()"
+                      [disabled]="isSending || (!yeniMesaj.trim() && !selectedFile)">
+                <span *ngIf="isSending" class="spinner-border spinner-border-sm me-1"></span>
+                <i class="bi bi-send"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
