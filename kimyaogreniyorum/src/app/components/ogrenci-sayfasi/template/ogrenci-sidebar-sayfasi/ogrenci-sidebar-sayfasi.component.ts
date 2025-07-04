@@ -104,40 +104,58 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
   }
 
   private loadUnreadMessageCount(): void {
-    if (!this.studentId) return;
+    console.log('loadUnreadMessageCount çağrıldı, studentId:', this.studentId);
+    if (!this.studentId) {
+      console.log('Student ID yok, fonksiyon sonlandırılıyor');
+      return;
+    }
 
     const headers = {
       'Authorization': `Bearer ${this.getTokenFromStorage()}`
     };
 
+    console.log('API çağrısı yapılıyor:', `./server/api/soru_mesajlari.php?ogrenci_id=${this.studentId}`);
+    
     this.http.get<any>(`./server/api/soru_mesajlari.php?ogrenci_id=${this.studentId}`, { headers })
       .subscribe({
         next: (response) => {
-          console.log('Mesaj response:', response);
+          console.log('API Response tamamı:', response);
           if (response && response.success && response.data) {
+            console.log('Response data:', response.data);
+            console.log('Data array uzunluğu:', response.data.length);
+            
             // Öğretmenden gelen okunmamış mesajları say
-            const unreadMessages = response.data.filter((mesaj: SoruMesaj) => 
-              mesaj.gonderen_tip === 'ogretmen' && !mesaj.okundu
-            );
+            const unreadMessages = response.data.filter((mesaj: SoruMesaj) => {
+              console.log('Mesaj kontrol ediliyor:', mesaj);
+              console.log('Gönderen tip:', mesaj.gonderen_tip, 'Okundu:', mesaj.okundu);
+              return mesaj.gonderen_tip === 'ogretmen' && !mesaj.okundu;
+            });
+            
             this.unreadMessageCount = unreadMessages.length;
-            console.log('Okunmamış mesaj sayısı:', this.unreadMessageCount);
+            console.log('Filtrelenmiş okunmamış mesajlar:', unreadMessages);
+            console.log('Toplam okunmamış mesaj sayısı:', this.unreadMessageCount);
             
             // Soru Çözümü menü öğesindeki badge sayısını güncelle
             const soruCozumuMenuItem = this.menuItems.find(item => item.label === 'Soru Çözümü');
+            console.log('Soru Çözümü menu item bulundu:', soruCozumuMenuItem);
             if (soruCozumuMenuItem) {
               soruCozumuMenuItem.badgeCount = this.unreadMessageCount;
               console.log('Badge count güncellendi:', soruCozumuMenuItem.badgeCount);
+              console.log('Güncel menuItems:', this.menuItems);
             }
           } else {
+            console.log('Response başarısız veya data yok');
             this.unreadMessageCount = 0;
             const soruCozumuMenuItem = this.menuItems.find(item => item.label === 'Soru Çözümü');
             if (soruCozumuMenuItem) {
               soruCozumuMenuItem.badgeCount = 0;
+              console.log('Badge count 0 olarak ayarlandı');
             }
           }
         },
         error: (error) => {
           console.error('Mesaj sayısı yüklenirken hata:', error);
+          console.error('Error detayı:', error.message);
           this.unreadMessageCount = 0;
           const soruCozumuMenuItem = this.menuItems.find(item => item.label === 'Soru Çözümü');
           if (soruCozumuMenuItem) {

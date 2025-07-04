@@ -11,7 +11,9 @@
                         <i class="bi {{ item.icon }}"></i>
                         <p *ngIf="!isClosed">
                           <span class="sidebar-item-text">{{ item.label }}</span>
-                          <span class="badge bg-warning ms-auto" *ngIf="item.label === 'Soru Çözümü'">
+                          <span class="badge bg-warning ms-auto" 
+                                *ngIf="item.label === 'Soru Çözümü'"
+                                [title]="'Debug: badgeCount = ' + item.badgeCount + ', unreadMessageCount = ' + unreadMessageCount">
                             {{ item.badgeCount || 0 }}
                           </span>
                         </p>
