@@ -105,9 +105,10 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
       'Authorization': `Bearer ${this.getTokenFromStorage()}`
     };
 
-    this.http.get<any>(`./server/api/soru_mesajlari.php?ogrenci_id=${this.studentId}`, { headers }).subscribe({
-      next: (response) => {
-        if (response.success && response.data) {
+    this.http.get<any>(`./server/api/soru_mesajlari.php?ogrenci_id=${this.studentId}`, { headers })
+      .toPromise()
+      .then((response) => {
+        if (response && response.success && response.data) {
           // Öğretmenden gelen okunmamış mesajları say
           const unreadMessages = response.data.filter((mesaj: SoruMesaj) => 
             mesaj.gonderen_tip === 'ogretmen' && !mesaj.okundu
@@ -119,12 +120,22 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
           if (soruCozumuMenuItem) {
             soruCozumuMenuItem.badgeCount = this.unreadMessageCount;
           }
+        } else {
+          // Başarısız response durumunda badge'i 0 yap
+          const soruCozumuMenuItem = this.menuItems.find(item => item.label === 'Soru Çözümü');
+          if (soruCozumuMenuItem) {
+            soruCozumuMenuItem.badgeCount = 0;
+          }
         }
-      },
-      error: (error) => {
+      })
+      .catch((error) => {
         console.error('Mesaj sayısı yüklenirken hata:', error);
-      }
-    });
+        // Hata durumunda badge'i 0 yap
+        const soruCozumuMenuItem = this.menuItems.find(item => item.label === 'Soru Çözümü');
+        if (soruCozumuMenuItem) {
+          soruCozumuMenuItem.badgeCount = 0;
+        }
+      });
   }
 
   private loadStudentInfo(): void {
