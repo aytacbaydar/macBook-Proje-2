@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
@@ -30,55 +29,88 @@ export class OgrenciIslenenKonularPdfSayfasiComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.loadStudentInfo();
-    this.loadDersKayitlari();
+    this.loadData();
   }
 
-  loadStudentInfo(): void {
-    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
-    if (userStr) {
-      this.studentInfo = JSON.parse(userStr);
-    }
-  }
-
-  loadDersKayitlari(): void {
+  loadData() {
     this.isLoading = true;
     this.error = null;
 
-    if (!this.studentInfo || !this.studentInfo.grubu) {
-      this.error = 'Öğrenci grup bilgisi bulunamadı';
-      this.isLoading = false;
-      return;
-    }
-
-    // Token'ı al
-    let token = '';
-    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
-    if (userStr) {
-      const user = JSON.parse(userStr);
-      token = user.token || '';
-    }
-
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-
-    // Ders kayıtlarını getir
-    this.http.get<any>(`./server/api/grup_ders_kayitlari.php?grup=${encodeURIComponent(this.studentInfo.grubu)}`, { headers })
-      .subscribe({
-        next: (response) => {
-          if (response.success) {
-            this.dersKayitlari = response.data || [];
-          } else {
-            this.error = response.message || 'Ders kayıtları yüklenirken hata oluştu.';
-          }
+    // Load student info first
+    this.loadStudentInfo().then(() => {
+      if (this.studentInfo) {
+        // Then load PDF lessons
+        this.loadDersKayitlari().then(() => {
           this.isLoading = false;
+        }).catch(error => {
+          console.error('Error loading lessons:', error);
+          this.error = 'Ders kayıtları yüklenirken hata oluştu.';
+          this.isLoading = false;
+        });
+      } else {
+        this.error = 'Öğrenci bilgileri alınamadı.';
+        this.isLoading = false;
+      }
+    }).catch(error => {
+      console.error('Error loading student info:', error);
+      this.error = 'Öğrenci bilgileri yüklenirken hata oluştu.';
+      this.isLoading = false;
+    });
+  }
+
+  loadStudentInfo(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+      if (userStr) {
+        this.studentInfo = JSON.parse(userStr);
+        resolve();
+      } else {
+        reject('Kullanıcı bilgisi bulunamadı.');
+      }
+    });
+  }
+
+  loadDersKayitlari(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (!this.studentInfo || !this.studentInfo.grubu) {
+        this.error = 'Öğrenci grup bilgisi bulunamadı';
+        this.isLoading = false;
+        reject('Öğrenci grup bilgisi bulunamadı');
+        return;
+      }
+
+      let token = '';
+      const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        token = user.token || '';
+      }
+
+      const headers = new HttpHeaders({
+        'Authorization': `Bearer ${token}`
+      });
+
+      const apiUrl = `./server/api/grup_ders_kayitlari.php?grup=${encodeURIComponent(this.studentInfo.grubu)}`;
+      this.http.get<any>(apiUrl, { headers }).subscribe({
+        next: (response) => {
+          if (response.success && response.data) {
+            // Ders kayıtlarına öğretmen bilgisi ekle
+            this.dersKayitlari = response.data.map((ders: any) => ({
+              ...ders,
+              ogretmen_adi: this.studentInfo?.ogretmeni || 'Bilinmeyen Öğretmen'
+            }));
+          } else {
+            this.dersKayitlari = [];
+          }
+          resolve();
         },
         error: (error) => {
           this.error = 'Sunucu hatası: ' + (error.error?.message || error.message);
           this.isLoading = false;
+          reject(error);
         }
       });
+    });
   }
 
   viewLessonPdf(fileName: string): void {
@@ -87,14 +119,11 @@ export class OgrenciIslenenKonularPdfSayfasiComponent implements OnInit {
       return;
     }
 
-    // PDF state'ini sıfırla
     this.pdfLoaded = false;
     this.selectedPdf = null;
 
-    // Modal'ı aç
     this.showPdfModal = true;
 
-    // Kısa bir gecikme ile PDF URL'ini ayarla
     setTimeout(() => {
       this.selectedPdf = `./server/api/pdf_viewer.php?file=${encodeURIComponent(fileName)}`;
     }, 100);
