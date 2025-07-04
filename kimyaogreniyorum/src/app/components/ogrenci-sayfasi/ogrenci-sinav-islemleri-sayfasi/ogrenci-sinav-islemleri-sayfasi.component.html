@@ -1,101 +1,171 @@
 
-<div class="modern-sinav-container">
-  <!-- Header Section -->
-  <div class="modern-header">
+<div class="sinav-container">
+  <!-- Ana Header -->
+  <div class="main-header">
     <div class="header-content">
-      <h1 class="page-title">
-        <i class="bi bi-clipboard-check"></i>
-        Sınav İşlemleri
-      </h1>
-      <p class="page-subtitle">Mevcut sınavları görüntüle ve sınava katıl</p>
+      <div class="title-section">
+        <h1 class="main-title">
+          <i class="bi bi-clipboard-check-fill"></i>
+          Sınavlarım
+        </h1>
+        <p class="subtitle">Katılabileceğin aktif sınavları görüntüle ve hemen başla</p>
+      </div>
+      <div class="stats-cards">
+        <div class="stat-card">
+          <div class="stat-number">{{ sinavlar.length }}</div>
+          <div class="stat-label">Aktif Sınav</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">{{ getTotalQuestions() }}</div>
+          <div class="stat-label">Toplam Soru</div>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- Loading State -->
-  <div *ngIf="loading" class="modern-loading">
-    <div class="loading-spinner">
-      <div class="spinner"></div>
+  <div *ngIf="loading" class="loading-state">
+    <div class="loading-animation">
+      <div class="pulse-ring"></div>
+      <div class="pulse-ring"></div>
+      <div class="pulse-ring"></div>
     </div>
-    <p class="loading-text">Sınavlar yükleniyor...</p>
+    <h3>Sınavlar yükleniyor...</h3>
+    <p>Lütfen bekleyin</p>
   </div>
 
   <!-- Error State -->
-  <div *ngIf="error && !loading" class="modern-error">
+  <div *ngIf="error && !loading" class="error-state">
     <div class="error-icon">
-      <i class="bi bi-exclamation-triangle"></i>
+      <i class="bi bi-exclamation-triangle-fill"></i>
     </div>
-    <h3 class="error-title">Bir hata oluştu</h3>
+    <h3>Bir şeyler ters gitti</h3>
     <p class="error-message">{{ error }}</p>
-    <button class="retry-btn" (click)="loadSinavlar()">
+    <button class="retry-button" (click)="loadSinavlar()">
       <i class="bi bi-arrow-clockwise"></i>
       Tekrar Dene
     </button>
   </div>
 
-  <!-- Content -->
-  <div *ngIf="!loading && !error" class="modern-content">
-    <!-- Exam Types -->
-    <div class="exam-types" *ngFor="let tip of sinavTurleri">
-      <div class="type-header" [style.--accent-color]="tip.color">
-        <div class="type-info">
+  <!-- Main Content -->
+  <div *ngIf="!loading && !error" class="content-area">
+    
+    <!-- Exam Types Filter -->
+    <div class="filter-section" *ngIf="sinavlar.length > 0">
+      <div class="filter-tabs">
+        <button 
+          class="filter-tab" 
+          [class.active]="selectedFilter === 'ALL'"
+          (click)="setFilter('ALL')">
+          <i class="bi bi-grid-3x3-gap"></i>
+          Tümü
+          <span class="count">{{ sinavlar.length }}</span>
+        </button>
+        <button 
+          *ngFor="let tip of sinavTurleri" 
+          class="filter-tab" 
+          [class.active]="selectedFilter === tip.id"
+          [style.--tab-color]="tip.color"
+          (click)="setFilter(tip.id)">
           <i class="{{ tip.icon }}"></i>
-          <div class="type-text">
-            <h2>{{ tip.label }}</h2>
-            <span class="exam-count">{{ getSinavlarByType(tip.id).length }} sınav mevcut</span>
-          </div>
-        </div>
+          {{ tip.label }}
+          <span class="count">{{ getSinavlarByType(tip.id).length }}</span>
+        </button>
       </div>
+    </div>
 
-      <!-- Exams Grid -->
-      <div class="exams-grid" *ngIf="getSinavlarByType(tip.id).length > 0">
-        <div class="exam-card" *ngFor="let sinav of getSinavlarByType(tip.id)" [style.--accent-color]="tip.color">
-          <div class="exam-header">
-            <div class="exam-cover" *ngIf="sinav.sinav_kapagi">
-              <img [src]="'/uploads/' + sinav.sinav_kapagi" alt="Sınav Kapağı">
+    <!-- Exams Grid -->
+    <div class="exams-section" *ngIf="getFilteredSinavlar().length > 0">
+      <div class="exams-grid">
+        <div 
+          class="exam-item" 
+          *ngFor="let sinav of getFilteredSinavlar(); trackBy: trackBySinavId"
+          [style.--exam-color]="getSinavTuruInfo(sinav.sinav_turu).color">
+          
+          <!-- Exam Card Header -->
+          <div class="exam-card-header">
+            <div class="exam-type-badge">
+              <i class="{{ getSinavTuruInfo(sinav.sinav_turu).icon }}"></i>
+              {{ getSinavTuruInfo(sinav.sinav_turu).label }}
             </div>
-            <div class="exam-fallback" *ngIf="!sinav.sinav_kapagi">
-              <i class="{{ tip.icon }}"></i>
+            <div class="exam-date">
+              <i class="bi bi-calendar3"></i>
+              {{ formatDate(sinav.tarih) }}
             </div>
           </div>
-          
-          <div class="exam-body">
+
+          <!-- Exam Visual -->
+          <div class="exam-visual">
+            <div class="exam-cover" *ngIf="sinav.sinav_kapagi">
+              <img [src]="'/uploads/' + sinav.sinav_kapagi" [alt]="sinav.sinav_adi">
+            </div>
+            <div class="exam-placeholder" *ngIf="!sinav.sinav_kapagi">
+              <i class="{{ getSinavTuruInfo(sinav.sinav_turu).icon }}"></i>
+            </div>
+          </div>
+
+          <!-- Exam Info -->
+          <div class="exam-info">
             <h3 class="exam-title">{{ sinav.sinav_adi }}</h3>
             
-            <div class="exam-meta">
-              <div class="meta-item">
+            <div class="exam-details">
+              <div class="detail-item">
                 <i class="bi bi-list-ol"></i>
                 <span>{{ sinav.soru_sayisi }} Soru</span>
               </div>
-              <div class="meta-item">
-                <i class="bi bi-calendar3"></i>
-                <span>{{ formatDate(sinav.tarih) }}</span>
+              <div class="detail-item">
+                <i class="bi bi-clock"></i>
+                <span>{{ calculateEstimatedTime(sinav.soru_sayisi) }} dk</span>
               </div>
             </div>
-            
-            <button class="start-btn" (click)="startExam(sinav)">
-              <i class="bi bi-play-circle"></i>
-              Sınava Başla
+
+            <div class="difficulty-indicator">
+              <div class="difficulty-label">Zorluk:</div>
+              <div class="difficulty-bars">
+                <div class="bar" [class.active]="getDifficultyLevel(sinav.sinav_turu) >= 1"></div>
+                <div class="bar" [class.active]="getDifficultyLevel(sinav.sinav_turu) >= 2"></div>
+                <div class="bar" [class.active]="getDifficultyLevel(sinav.sinav_turu) >= 3"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Button -->
+          <div class="exam-action">
+            <button class="start-exam-btn" (click)="startExam(sinav)">
+              <div class="btn-content">
+                <i class="bi bi-play-circle-fill"></i>
+                <span>Sınava Başla</span>
+              </div>
+              <div class="btn-shine"></div>
             </button>
           </div>
         </div>
       </div>
-
-      <!-- Empty State -->
-      <div class="empty-type" *ngIf="getSinavlarByType(tip.id).length === 0">
-        <div class="empty-icon">
-          <i class="bi bi-inbox"></i>
-        </div>
-        <p class="empty-text">Henüz {{ tip.label }} sınavı bulunmuyor</p>
-      </div>
     </div>
 
-    <!-- Global Empty State -->
-    <div *ngIf="sinavlar.length === 0" class="global-empty">
+    <!-- Empty States -->
+    <div *ngIf="!loading && !error && sinavlar.length === 0" class="empty-state">
       <div class="empty-illustration">
         <i class="bi bi-clipboard-x"></i>
       </div>
-      <h3 class="empty-title">Henüz sınav bulunmuyor</h3>
-      <p class="empty-description">Şu anda katılabileceğiniz aktif bir sınav bulunmamaktadır.</p>
+      <h3>Henüz sınav yok</h3>
+      <p>Şu anda katılabileceğin aktif bir sınav bulunmuyor.</p>
+      <button class="refresh-btn" (click)="loadSinavlar()">
+        <i class="bi bi-arrow-clockwise"></i>
+        Yenile
+      </button>
+    </div>
+
+    <div *ngIf="!loading && !error && sinavlar.length > 0 && getFilteredSinavlar().length === 0" class="empty-state">
+      <div class="empty-illustration">
+        <i class="bi bi-funnel"></i>
+      </div>
+      <h3>Bu kategoride sınav yok</h3>
+      <p>Seçtiğin kategoriyde sınav bulunmuyor.</p>
+      <button class="clear-filter-btn" (click)="setFilter('ALL')">
+        <i class="bi bi-x-circle"></i>
+        Filtreyi Temizle
+      </button>
     </div>
   </div>
 </div>
