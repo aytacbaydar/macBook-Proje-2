@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // Renkler
 $primary-color: #4a90e2;
 $primary-light: #c8e1fb;
@@ -64,7 +66,7 @@ $transition-fast: all 0.2s ease;
     transition: $transition-normal;
 
     &:hover {
-      background-color: darken($secondary-color, 5%);
+      background-color: color.adjust($secondary-color, $lightness: -5%);
     }
 
     i {
@@ -517,7 +519,7 @@ $transition-fast: all 0.2s ease;
     box-shadow: $button-shadow;
 
     &:hover:not(:disabled) {
-      background-color: darken($primary-color, 5%);
+      background-color: color.adjust($primary-color, $lightness: -5%);
     }
 
     &:active:not(:disabled) {
@@ -530,7 +532,7 @@ $transition-fast: all 0.2s ease;
     color: $gray-700;
 
     &:hover:not(:disabled) {
-      background-color: darken($secondary-color, 5%);
+      background-color: color.adjust($secondary-color, $lightness: -5%);
     }
 
     &:active:not(:disabled) {
@@ -559,4 +561,3 @@ $transition-fast: all 0.2s ease;
   clip: rect(1px, 1px, 1px, 1px);
   white-space: nowrap;
 }
-
