@@ -34,17 +34,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
         // Öğretmene ait öğrencileri getir
         error_log("Öğretmen ID ile öğrenci arama: " . $user['id']);
+        error_log("Öğretmen adi_soyadi: " . $user['adi_soyadi']);
 
+        // Önce öğretmen adıyla arama yapalım
         $stmt = $conn->prepare("
             SELECT o.id, o.adi_soyadi, o.email, o.cep_telefonu, o.rutbe, o.aktif, o.avatar, o.brans, o.ogretmeni, o.created_at,
                    ob.okulu, ob.sinifi, ob.grubu, ob.ders_gunu, ob.ders_saati, ob.ucret,
                    ob.veli_adi, ob.veli_cep
             FROM ogrenciler o
             LEFT JOIN ogrenci_bilgileri ob ON o.id = ob.ogrenci_id
-            WHERE o.ogretmeni = :ogretmen_id AND o.rutbe = 'ogrenci'
+            WHERE o.ogretmeni = :ogretmen_adi AND o.rutbe = 'ogrenci'
             ORDER BY o.created_at DESC
         ");
-        $stmt->bindParam(':ogretmen_id', $user['id'], PDO::PARAM_STR);
+        $stmt->bindParam(':ogretmen_adi', $user['adi_soyadi'], PDO::PARAM_STR);
         $stmt->execute();
 
         $ogrenciler = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -52,6 +54,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
         if (count($ogrenciler) > 0) {
             error_log("İlk öğrenci: " . json_encode($ogrenciler[0]));
+        } else {
+            // Eğer öğrenci bulunamazsa, tüm öğrencileri kontrol edelim
+            error_log("Öğrenci bulunamadı, tüm öğrencileri kontrol ediliyor...");
+            $debugStmt = $conn->prepare("SELECT id, adi_soyadi, ogretmeni, rutbe FROM ogrenciler WHERE rutbe = 'ogrenci' LIMIT 5");
+            $debugStmt->execute();
+            $allStudents = $debugStmt->fetchAll(PDO::FETCH_ASSOC);
+            error_log("Tüm öğrenciler sample: " . json_encode($allStudents));
         }
 
         successResponse($ogrenciler, 'Öğrenciler başarıyla getirildi');
