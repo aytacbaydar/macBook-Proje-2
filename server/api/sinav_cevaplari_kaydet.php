@@ -72,6 +72,7 @@ try {
             sinav_turu VARCHAR(50) NOT NULL,
             soru_sayisi INT NOT NULL,
             cevaplar JSON NOT NULL,
+            soru_konulari JSON NULL,
             gonderim_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             INDEX idx_sinav_ogrenci (sinav_id, ogrenci_id),
             INDEX idx_sinav_turu (sinav_turu),
@@ -118,8 +119,8 @@ try {
         throw new Exception('Sonuçlar tablosu oluşturma hatası: ' . $e->getMessage());
     }
 
-    // Cevap anahtarını al
-    $cevapAnahtariSQL = "SELECT cevaplar FROM cevapAnahtari WHERE id = ?";
+    // Cevap anahtarını ve konu bilgilerini al
+    $cevapAnahtariSQL = "SELECT cevaplar, konular FROM cevapAnahtari WHERE id = ?";
     $cevapStmt = $conn->prepare($cevapAnahtariSQL);
     $cevapStmt->execute([$sinav_id]);
     $cevapAnahtari = $cevapStmt->fetch(PDO::FETCH_ASSOC);
@@ -128,13 +129,21 @@ try {
     $dogru_sayisi = 0;
     $yanlis_sayisi = 0;
     $bos_sayisi = 0;
+    $soru_konulari = [];
 
     if ($cevapAnahtari) {
         $dogruCevaplar = json_decode($cevapAnahtari['cevaplar'], true);
+        $konularData = json_decode($cevapAnahtari['konular'], true);
 
         for ($i = 1; $i <= $soru_sayisi; $i++) {
             $ogrenciCevap = $cevaplar["soru{$i}"] ?? '';
             $dogruCevap = $dogruCevaplar["ca{$i}"] ?? '';
+            $soruKonusu = $konularData["ka{$i}"] ?? '';
+
+            // Her soru için konu bilgisini kaydet
+            if (!empty($soruKonusu)) {
+                $soru_konulari["soru{$i}"] = $soruKonusu;
+            }
 
             if (empty($ogrenciCevap)) {
                 $bos_sayisi++;
@@ -167,12 +176,13 @@ try {
         // Cevapları güncelle
         $updateSQL = "
             UPDATE sinav_cevaplari 
-            SET cevaplar = ?, sinav_adi = ?, sinav_turu = ?, soru_sayisi = ?, gonderim_tarihi = CURRENT_TIMESTAMP
+            SET cevaplar = ?, soru_konulari = ?, sinav_adi = ?, sinav_turu = ?, soru_sayisi = ?, gonderim_tarihi = CURRENT_TIMESTAMP
             WHERE sinav_id = ? AND ogrenci_id = ?
         ";
         $stmt = $conn->prepare($updateSQL);
         $stmt->execute([
             json_encode($cevaplar, JSON_UNESCAPED_UNICODE),
+            json_encode($soru_konulari, JSON_UNESCAPED_UNICODE),
             $sinav_adi,
             $sinav_turu,
             $soru_sayisi,
@@ -198,8 +208,8 @@ try {
     } else {
         // Yeni cevap kaydı
         $insertSQL = "
-            INSERT INTO sinav_cevaplari (sinav_id, ogrenci_id, sinav_adi, sinav_turu, soru_sayisi, cevaplar)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO sinav_cevaplari (sinav_id, ogrenci_id, sinav_adi, sinav_turu, soru_sayisi, cevaplar, soru_konulari)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         ";
         $stmt = $conn->prepare($insertSQL);
         $stmt->execute([
@@ -208,7 +218,8 @@ try {
             $sinav_adi,
             $sinav_turu,
             $soru_sayisi,
-            json_encode($cevaplar, JSON_UNESCAPED_UNICODE)
+            json_encode($cevaplar, JSON_UNESCAPED_UNICODE),
+            json_encode($soru_konulari, JSON_UNESCAPED_UNICODE)
         ]);
 
         // Yeni sonuç kaydı

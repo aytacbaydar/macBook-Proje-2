@@ -237,7 +237,22 @@
           </div>
           <div class="card-ana-body">
             <!--İçerik-->
+            <div *ngIf="loadingKonuAnalizi" class="loading-section text-center py-3">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Yükleniyor...</span>
+              </div>
+              <p class="mt-2">Konu analizi yükleniyor...</p>
+            </div>
             
+            <div *ngIf="!loadingKonuAnalizi && konuAnalizi.length > 0" class="chart-container">
+              <canvas id="konuAnaliziChart" width="100%" height="400px"></canvas>
+            </div>
+            
+            <div *ngIf="!loadingKonuAnalizi && konuAnalizi.length === 0" class="empty-state text-center py-3">
+              <i class="bi bi-graph-down text-muted" style="font-size: 2rem;"></i>
+              <p class="text-muted mt-2">Henüz konu analizi verisi yok</p>
+              <small class="text-muted">Sınav çözdükçe konu bazlı başarı analiziniz burada görünecek</small>
+            </div>
             <!--İçerik Son-->
           </div>
         </div>
