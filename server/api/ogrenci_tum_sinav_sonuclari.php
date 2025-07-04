@@ -46,7 +46,15 @@ try {
 
     $conn->exec($createTableSQL);
 
-    // Duplicate kayıtları temizle (aynı öğrenci ve sınav için birden fazla kayıt varsa en sonuncuyu tut)
+    // Debug: Önce tüm kayıtları kontrol et
+    $debugSQL = "SELECT * FROM sinav_sonuclari WHERE ogrenci_id = ? ORDER BY sinav_id, id";
+    $debugStmt = $conn->prepare($debugSQL);
+    $debugStmt->execute([$ogrenci_id]);
+    $allRecords = $debugStmt->fetchAll(PDO::FETCH_ASSOC);
+    error_log("Öğrenci $ogrenci_id için tüm kayıtlar: " . json_encode($allRecords));
+
+    // Cleanup işlemini geçici olarak kapat
+    /*
     $cleanupSQL = "
         DELETE ss1 FROM sinav_sonuclari ss1
         INNER JOIN sinav_sonuclari ss2 
@@ -57,20 +65,18 @@ try {
     ";
     $cleanupStmt = $conn->prepare($cleanupSQL);
     $cleanupStmt->execute([$ogrenci_id]);
+    */
 
-    // Öğrencinin her sınav için en son sonucunu al (aynı sınavı birden fazla çözmüşse en son olanı)
-    $sql = "SELECT DISTINCT ss1.* FROM sinav_sonuclari ss1
-            INNER JOIN (
-                SELECT sinav_id, MAX(id) as max_id 
-                FROM sinav_sonuclari 
-                WHERE ogrenci_id = ? 
-                GROUP BY sinav_id
-            ) ss2 ON ss1.sinav_id = ss2.sinav_id AND ss1.id = ss2.max_id
-            WHERE ss1.ogrenci_id = ?
-            ORDER BY ss1.gonderim_tarihi DESC";
+    // Basit sorgu ile tüm kayıtları al
+    $sql = "SELECT * FROM sinav_sonuclari 
+            WHERE ogrenci_id = ?
+            ORDER BY gonderim_tarihi DESC";
     $stmt = $conn->prepare($sql);
-    $stmt->execute([$ogrenci_id, $ogrenci_id]);
+    $stmt->execute([$ogrenci_id]);
     $sinavSonuclari = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    error_log("Sorgu sonucu kayıt sayısı: " . count($sinavSonuclari));
+    error_log("Bulunan sınavlar: " . json_encode(array_column($sinavSonuclari, 'sinav_adi')));
 
     // Her sınav için katılımcı sayısı ve sıralama bilgisi ekle
     foreach ($sinavSonuclari as &$sonuc) {
