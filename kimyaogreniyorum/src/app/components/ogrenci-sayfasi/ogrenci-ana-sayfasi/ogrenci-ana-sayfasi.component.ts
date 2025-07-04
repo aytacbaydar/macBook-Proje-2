@@ -12,6 +12,8 @@ interface SinavSonucu {
   yanlis_sayisi: number;
   bos_sayisi: number;
   cozum_tarihi: string;
+  katilimci_sayisi?: number;
+  siralama?: number;
 }
 
 @Component({
@@ -294,6 +296,15 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
   formatDate(dateString: string): string {
     const date = new Date(dateString);
     return date.toLocaleDateString('tr-TR');
+  }
+
+  getSinavTuruLabel(sinavTuru: string): string {
+    return this.sinavTurleri[sinavTuru]?.label || sinavTuru;
+  }
+
+  calculateNet(sinav: SinavSonucu): number {
+    // Net = Doğru - (Yanlış / 4)
+    return Math.max(0, Math.round(sinav.dogru_sayisi - (sinav.yanlis_sayisi / 4)));
   }
 
   loadSonIslenenKonular() {

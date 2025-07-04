@@ -54,7 +54,74 @@
             </div>
             <div *ngIf="!loadingExamResults" class="chart-container">
               <canvas id="comparisonChart" width="100%" height="300"></canvas>
+              
+              <!-- Detaylı Sınav Bilgileri -->
+              <div class="sinav-detay-bilgileri mt-4" *ngIf="sinavSonuclari.length > 0">
+                <h5><i class="bi bi-info-circle"></i> Detaylı Sınav Bilgileri</h5>
+                <div class="table-responsive">
+                  <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                      <tr>
+                        <th>Sınav Adı</th>
+                        <th>Doğru</th>
+                        <th>Yanlış</th>
+                        <th>Boş</th>
+                        <th>Net</th>
+                        <th>Başarı %</th>
+                        <th>Katılımcı</th>
+                        <th>Sıralama</th>
+                        <th>Tarih</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let sinav of sinavSonuclari" 
+                          [style.border-left]="'4px solid ' + getSinavTuruColor(sinav.sinav_turu)">
+                        <td>
+                          <div class="sinav-adi">
+                            <span class="badge me-2" [style.background-color]="getSinavTuruColor(sinav.sinav_turu)">
+                              {{ getSinavTuruLabel(sinav.sinav_turu) }}
+                            </span>
+                            <span class="fw-bold">{{ sinav.sinav_adi }}</span>
+                          </div>
+                        </td>
+                        <td>
+                          <span class="badge bg-success">{{ sinav.dogru_sayisi }}</span>
+                        </td>
+                        <td>
+                          <span class="badge bg-danger">{{ sinav.yanlis_sayisi }}</span>
+                        </td>
+                        <td>
+                          <span class="badge bg-warning">{{ sinav.bos_sayisi }}</span>
+                        </td>
+                        <td>
+                          <span class="badge bg-info">{{ calculateNet(sinav) }}</span>
+                        </td>
+                        <td>
+                          <div class="progress" style="height: 20px;">
+                            <div class="progress-bar" 
+                                 [style.width.%]="getSuccessPercentage(sinav)"
+                                 [style.background-color]="getSinavTuruColor(sinav.sinav_turu)">
+                              {{ getSuccessPercentage(sinav) }}%
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <i class="bi bi-people"></i>
+                          <span class="ms-1">{{ sinav.katilimci_sayisi || 'Bilinmiyor' }}</span>
+                        </td>
+                        <td>
+                          <i class="bi bi-trophy"></i>
+                          <span class="ms-1">{{ sinav.siralama || 'Bilinmiyor' }}</span>
+                        </td>
+                        <td>
+                          <small class="text-muted">{{ formatDate(sinav.cozum_tarihi) }}</small>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
+            </div>
             <!--İçerik Son-->
           </div>
         </div>

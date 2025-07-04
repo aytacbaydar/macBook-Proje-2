@@ -168,7 +168,7 @@ gap: 12px;
 
     .action-icon {
       background: rgba(0, 0, 0, 0.1);
-      
+
       i {
         color: #333;
       }
@@ -224,3 +224,61 @@ gap: 12px;
 @media (max-width: 768px) {
 
 }
+ .chart-container {
+      canvas {
+        max-width: 100%;
+        height: auto;
+      }
+    }
+
+    .sinav-detay-bilgileri {
+      h5 {
+        color: #333;
+        margin-bottom: 1rem;
+        font-weight: 600;
+      }
+
+      .table {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+
+        thead th {
+          font-weight: 600;
+          text-align: center;
+          vertical-align: middle;
+          border: none;
+        }
+
+        tbody td {
+          text-align: center;
+          vertical-align: middle;
+          padding: 12px 8px;
+          border-color: #e9ecef;
+        }
+
+        .sinav-adi {
+          text-align: left;
+
+          .badge {
+            font-size: 0.7rem;
+            color: white !important;
+          }
+        }
+
+        .progress {
+          margin: 0;
+
+          .progress-bar {
+            color: white;
+            font-weight: 600;
+            font-size: 0.8rem;
+          }
+        }
+
+        .badge {
+          font-size: 0.8rem;
+          min-width: 30px;
+        }
+      }
+    }
