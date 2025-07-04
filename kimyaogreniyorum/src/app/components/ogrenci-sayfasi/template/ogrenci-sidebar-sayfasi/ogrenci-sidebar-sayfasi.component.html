@@ -13,10 +13,10 @@
                           <span class="sidebar-item-text">{{ item.label }}</span>
                           <span 
                             class="badge bg-warning rounded-pill ms-auto"
-                            *ngIf="item.label === 'Soru Çözümü' && item.badgeCount > 0"
+                            *ngIf="item.label === 'Soru Çözümü' && item.badgeCount != null && item.badgeCount > 0"
                             style="position: absolute; top: -5px; right: -5px; font-size: 10px; min-width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;"
                           >
-                            {{ item.badgeCount > 99 ? '99+' : item.badgeCount }}
+                            {{ (item.badgeCount || 0) > 99 ? '99+' : (item.badgeCount || 0) }}
                           </span>
                         </p>
                     </div>

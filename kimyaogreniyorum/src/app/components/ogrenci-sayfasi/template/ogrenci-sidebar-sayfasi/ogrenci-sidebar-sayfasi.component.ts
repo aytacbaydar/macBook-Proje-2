@@ -25,7 +25,12 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
   studentId: number | null = null;
   isClosed = true;
 
-  menuItems = [
+  menuItems: Array<{
+    icon: string;
+    label: string;
+    link: string;
+    badgeCount?: number;
+  }> = [
     {
       icon: 'bi-house',
       label: 'AnaSayfa',
@@ -67,7 +72,7 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
       icon: 'bi-pencil',
       label: 'Soru Çözümü',
       link: 'ogrenci-sayfasi/ogrenci-soru-cozumu-sayfasi',
-      badgeCount: this.unreadMessageCount
+      badgeCount: 0
     },
     {
       icon: 'bi-credit-card-2-back',
