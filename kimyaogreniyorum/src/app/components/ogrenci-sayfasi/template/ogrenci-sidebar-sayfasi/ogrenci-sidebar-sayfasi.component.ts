@@ -1,12 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
+interface SoruMesaj {
+  id: number;
+  ogrenci_id: number;
+  ogretmen_id: number;
+  mesaj_metni: string;
+  resim_url?: string;
+  gonderim_tarihi: string;
+  gonderen_tip: 'ogrenci' | 'ogretmen';
+  gonderen_adi: string;
+  okundu: boolean;
+}
 
 @Component({
   selector: 'app-ogrenci-sidebar-sayfasi',
   standalone: false,
   templateUrl: './ogrenci-sidebar-sayfasi.component.html',
-  styleUrl: './ogrenci-sidebar-sayfasi.component.scss',
+  styleUrl: './ogrenci-sidebar-sayfasi.component.scss'
 })
-export class OgrenciSidebarSayfasiComponent {
+export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
+  unreadMessageCount: number = 0;
+  refreshInterval: any;
+  studentId: number | null = null;
   isClosed = true;
 
   menuItems = [
@@ -51,6 +67,7 @@ export class OgrenciSidebarSayfasiComponent {
       icon: 'bi-pencil',
       label: 'Soru Çözümü',
       link: 'ogrenci-sayfasi/ogrenci-soru-cozumu-sayfasi',
+      badgeCount: this.unreadMessageCount
     },
     {
       icon: 'bi-credit-card-2-back',
@@ -63,6 +80,58 @@ export class OgrenciSidebarSayfasiComponent {
       link: 'ogrenci-sayfasi/ogrenci-qr-kod-sayfasi',
     },
   ];
+
+  constructor(private http: HttpClient) { }
+
+  ngOnInit(): void {
+    this.loadStudentInfo();
+    this.loadUnreadMessageCount();
+    // Her 30 saniyede bir mesaj sayısını güncelle
+    this.refreshInterval = setInterval(() => {
+      this.loadUnreadMessageCount();
+    }, 30000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+    }
+  }
+
+  private loadStudentInfo(): void {
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        this.studentId = user.id;
+      } catch (error) {
+        console.error('Öğrenci bilgileri yüklenirken hata:', error);
+      }
+    }
+  }
+
+  private loadUnreadMessageCount(): void {
+    if (!this.studentId) return;
+
+    this.http.get<any>(`./server/api/soru_mesajlari.php?ogrenci_id=${this.studentId}`).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          // Öğretmenden gelen okunmamış mesajları say
+          const unreadMessages = response.data.filter((mesaj: SoruMesaj) => 
+            mesaj.gonderen_tip === 'ogretmen' && !mesaj.okundu
+          );
+          this.unreadMessageCount = unreadMessages.length;
+          const soruCozumuMenuItem = this.menuItems.find(item => item.label === 'Soru Çözümü');
+          if (soruCozumuMenuItem) {
+            soruCozumuMenuItem.badgeCount = this.unreadMessageCount;
+          }
+        }
+      },
+      error: (error) => {
+        console.error('Mesaj sayısı yüklenirken hata:', error);
+      }
+    });
+  }
 
   toggleSidebar() {
     this.isClosed = !this.isClosed;

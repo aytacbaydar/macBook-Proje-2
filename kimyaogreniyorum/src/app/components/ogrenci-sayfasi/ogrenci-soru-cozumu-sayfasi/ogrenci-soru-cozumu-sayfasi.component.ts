@@ -467,4 +467,68 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
   trackByMessageId(index: number, message: any): number {
     return message.id || index;
   }
+
+  private loadMessages(): void {
+    if (!this.studentInfo?.id) return;
+
+    this.isLoadingMessages = true;
+    this.error = null;
+
+    this.http.get<any>(`${this.apiBaseUrl}/soru_mesajlari.php?ogrenci_id=${this.studentInfo.id}`).subscribe({
+      next: (response) => {
+        this.isLoadingMessages = false;
+        if (response.success && response.data) {
+          this.mesajlar = response.data.sort((a: SoruMesaj, b: SoruMesaj) => 
+            new Date(a.gonderim_tarihi).getTime() - new Date(b.gonderim_tarihi).getTime()
+          );
+
+          // Öğretmenden gelen okunmamış mesajları okundu olarak işaretle
+          this.markMessagesAsRead();
+
+          // Auto scroll to bottom after loading messages
+          setTimeout(() => {
+            this.scrollToBottom();
+          }, 100);
+        }
+      },
+      error: (error) => {
+        this.isLoadingMessages = false;
+        this.error = 'Mesajlar yüklenirken bir hata oluştu.';
+        console.error('Mesaj yükleme hatası:', error);
+      }
+    });
+  }
+
+  private markMessagesAsRead(): void {
+    if (!this.studentInfo?.id) return;
+
+    // Öğretmenden gelen okunmamış mesajları bul
+    const unreadTeacherMessages = this.mesajlar.filter(mesaj => 
+      mesaj.gonderen_tip === 'ogretmen' && !mesaj.okundu
+    );
+
+    if (unreadTeacherMessages.length > 0) {
+      // API'ye okundu işareti gönder
+      const messageIds = unreadTeacherMessages.map(mesaj => mesaj.id).filter(id => id);
+
+      if (messageIds.length > 0) {
+        this.http.post(`${this.apiBaseUrl}/mesaj_okundu_isaretle.php`, {
+          message_ids: messageIds,
+          ogrenci_id: this.studentInfo.id
+        }).subscribe({
+          next: (response) => {
+            // Mesajları local olarak da okundu işaretle
+            this.mesajlar.forEach(mesaj => {
+              if (mesaj.gonderen_tip === 'ogretmen') {
+                mesaj.okundu = true;
+              }
+            });
+          },
+          error: (error) => {
+            console.error('Mesajlar okundu işaretlenirken hata:', error);
+          }
+        });
+      }
+    }
+  }
 }
