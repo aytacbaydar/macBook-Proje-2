@@ -1,0 +1,578 @@
+
+
+X [ERROR] NG2: Type '(index: number, message: SoruMesaj) => number' is not assignable to type 'TrackByFunction<Student>'.
+  Types of parameters 'message' and 'item' are incompatible.
+    Type 'Student' is missing the following properties from type 'SoruMesaj': ogrenci_id, mesaj_metni, gonderim_tarihi, gonderen_tip, and 2 more. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:25:50:
+      25 │ ...       *ngFor="let student of students; trackBy: trackByMessageId"
+         ╵                                            ~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:75:26:
+      75 │ ... (click)="selectStudent(students.find(s => s.id === message.ogr...
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: No overload matches this call.
+  Overload 1 of 2, '(predicate: (value: Student, index: number, obj: Student[]) => value is Student, thisArg?: any): Student | undefined', gave the following error.
+    Argument of type 'undefined' is not assignable to parameter of type '(value: Student, index: number, obj: Student[]) => value is Student'.
+  Overload 2 of 2, '(predicate: (value: Student, index: number, obj: Student[]) => unknown, thisArg?: any): Student | undefined', gave the following error.
+    Argument of type 'undefined' is not assignable to parameter of type '(value: Student, index: number, obj: Student[]) => unknown'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:75:54:
+      75 │ ...="selectStudent(students.find(s => s.id === message.ogrenci_id)!)"
+         ╵                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 's' does not exist on type 'OgretmenSoruCozumuSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:75:54:
+      75 │ ...)="selectStudent(students.find(s => s.id === message.ogrenci_id...
+         ╵                                   ^
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:81:20:
+      81 │ ...               {{ message.ogrenci_adi || 'Bilinmeyen Öğrenci' }}
+         ╵                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:83:44:
+      83 │ ...ass="text-muted">{{ formatDate(message.gonderim_tarihi) }}</small>
+         ╵                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:86:33:
+      86 │ ...ngClass]="message.gonderen_tip === 'ogrenci' ? 'bg-primary' : '...
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:87:18:
+      87 │ ...          {{ message.gonderen_tip === 'ogrenci' ? 'Öğrenci' :...
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:91:32:
+      91 │ ...  <p class="mb-1" *ngIf="message.mesaj_metni">{{ message.mesaj_...
+         ╵                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:91:60:
+      91 │ ...s="mb-1" *ngIf="message.mesaj_metni">{{ message.mesaj_metni }}</p>
+         ╵                                         ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:92:43:
+      92 │ ...b-1 text-muted" *ngIf="!message.mesaj_metni && message.resim_url">
+         ╵                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:98:17:
+      98 │             <div *ngIf="allMessages.length === 0" class="text-cent...
+         ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:108:11:
+      108 │       <div *ngIf="viewMode === 'student' && selectedStudent" clas...
+          ╵            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:112:75:
+      112 │ ...n btn-light btn-sm me-2 d-md-none" (click)="backToAllMessages()">
+          ╵                                                ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:116:14:
+      116 │               {{ selectedStudent.adi_soyadi }}
+          ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:118:83:
+      118 │ ...t btn-sm d-none d-md-inline-block" (click)="backToAllMessages()">
+          ╵                                                ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:129:17:
+      129 │             <div *ngIf="isLoadingMessages" class="text-center py-3">
+          ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:137:17:
+      137 │             <div *ngIf="!isLoadingMessages">
+          ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:139:19:
+      139 │ ...          *ngFor="let mesaj of studentMessages; trackBy: track...
+          ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:140:30:
+      140 │ ...ngClass]="{'message-own': mesaj.gonderen_tip === 'ogretmen', '...
+          ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:144:32:
+      144 │ ...ngClass]="mesaj.gonderen_tip === 'ogrenci' ? 'bi-person-circle...
+          ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:149:46:
+      149 │ ...        <span class="sender-name">{{ mesaj.gonderen_adi }}</span>
+          ╵                                      ~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:150:47:
+      150 │ ...ass="message-time">{{ formatDate(mesaj.gonderim_tarihi) }}</span>
+          ╵                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:154:23:
+      154 │ ...                <p *ngIf="mesaj.mesaj_metni" class="message-te...
+          ╵                       ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:154:70:
+      154 │ ...saj.mesaj_metni" class="message-text">{{ mesaj.mesaj_metni }}</p>
+          ╵                                          ~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:155:25:
+      155 │ ...               <div *ngIf="mesaj.resim_url" class="message-ima...
+          ╵                        ~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:156:34:
+      156 │ ...            <img [src]="mesaj.resim_url" alt="Soru resmi" clas...
+          ╵                            ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:162:19:
+      162 │ ...        <div *ngIf="studentMessages.length === 0" class="text-...
+          ╵                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:173:15:
+      173 │           <div *ngIf="error" class="alert alert-danger alert-dism...
+          ╵                ~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:174:12:
+      174 │             {{ error }}
+          ╵             ~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:175:61:
+      175 │ ... type="button" class="btn-close" (click)="error = null"></button>
+          ╵                                              ~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:179:15:
+      179 │           <div *ngIf="previewUrl" class="file-preview mb-3">
+          ╵                ~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:181:26:
+      181 │               <img [src]="previewUrl" alt="Önizleme" class="prev...
+          ╵                           ~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:182:89:
+      182 │ ...ass="btn btn-sm btn-danger preview-close" (click)="removeFile()">
+          ╵                                                       ~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:194:31:
+      194 │                      (change)="onFileSelected($event)"
+          ╵                                ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:199:31:
+      199 │                       (click)="fileInput.click()"
+          ╵                                ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:200:34:
+      200 │                       [disabled]="isSending">
+          ╵                                   ~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:206:34:
+      206 │                      [(ngModel)]="yeniMesaj"
+          ╵                                   ~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:206:34:
+      206 │                      [(ngModel)]="yeniMesaj"
+          ╵                                   ~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:208:36:
+      208 │                      (keyup.enter)="sendMessage()"
+          ╵                                     ~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:209:33:
+      209 │                      [disabled]="isSending">
+          ╵                                  ~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:213:31:
+      213 │                       (click)="sendMessage()"
+          ╵                                ~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:214:34:
+      214 │ ...  [disabled]="isSending || (!yeniMesaj.trim() && !selectedFile)">
+          ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token > at column 32 in [selectStudent(students.find(s => s.id === message.ogrenci_id)!)] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@74:26 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:215:22:
+      215 │                 <span *ngIf="isSending" class="spinner-border spi...
+          ╵                       ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:28:15:
+      28 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵
