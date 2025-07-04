@@ -169,3 +169,88 @@
     </div>
   </div>
 </div>
+
+<!-- Sınav Daha Önce Çözülmüş Modal -->
+<div class="modal fade" [class.show]="showExamAlreadyTakenModal" [style.display]="showExamAlreadyTakenModal ? 'block' : 'none'" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-warning text-dark">
+        <h5 class="modal-title">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          Sınav Daha Önce Çözülmüş
+        </h5>
+        <button type="button" class="btn-close" (click)="closeExamAlreadyTakenModal()"></button>
+      </div>
+      <div class="modal-body" *ngIf="examResult">
+        <div class="alert alert-warning" role="alert">
+          <strong>Uyarı:</strong> Bu sınavı daha önce çözmüşsünüz. Her sınav sadece bir kez çözülebilir.
+        </div>
+        
+        <div class="exam-result-summary">
+          <h6 class="fw-bold mb-3">{{ examResult.sinav_adi }} - Sonuçlarınız:</h6>
+          
+          <div class="row text-center mb-3">
+            <div class="col-3">
+              <div class="result-stat bg-success text-white rounded p-2">
+                <div class="fs-4 fw-bold">{{ examResult.dogru_sayisi }}</div>
+                <small>Doğru</small>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="result-stat bg-danger text-white rounded p-2">
+                <div class="fs-4 fw-bold">{{ examResult.yanlis_sayisi }}</div>
+                <small>Yanlış</small>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="result-stat bg-warning text-white rounded p-2">
+                <div class="fs-4 fw-bold">{{ examResult.bos_sayisi }}</div>
+                <small>Boş</small>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="result-stat bg-info text-white rounded p-2">
+                <div class="fs-4 fw-bold">{{ calculateNet(examResult) }}</div>
+                <small>Net</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-6">
+              <div class="d-flex align-items-center">
+                <strong>Başarı Yüzdesi:</strong>
+                <span class="badge bg-primary ms-2 fs-6">{{ examResult.yuzde }}%</span>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="d-flex align-items-center">
+                <strong>Puan:</strong>
+                <span class="badge bg-secondary ms-2 fs-6">{{ examResult.puan }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-muted">
+            <small>
+              <i class="bi bi-calendar-check me-1"></i>
+              Çözüm Tarihi: {{ formatDate(examResult.gonderim_tarihi) }}
+            </small>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="viewExamResults()">
+          <i class="bi bi-bar-chart-line me-1"></i>
+          Tüm Sonuçlarımı Görüntüle
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="closeExamAlreadyTakenModal()">
+          Kapat
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Backdrop -->
+<div class="modal-backdrop fade" [class.show]="showExamAlreadyTakenModal" [style.display]="showExamAlreadyTakenModal ? 'block' : 'none'" (click)="closeExamAlreadyTakenModal()"></div>

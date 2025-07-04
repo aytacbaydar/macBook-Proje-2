@@ -1,4 +1,3 @@
-
 .sinav-container {
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -590,4 +589,81 @@
       padding: 0 1rem 1rem 1rem;
     }
   }
+}
+
+// Modern scrollbar
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+// Modal stillers
+.modal {
+  z-index: 1050;
+
+  .modal-content {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+
+  .modal-header {
+    border-radius: 15px 15px 0 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+
+    .modal-title {
+      font-weight: 600;
+    }
+  }
+
+  .modal-footer {
+    border-top: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0 0 15px 15px;
+  }
+}
+
+.modal-backdrop {
+  z-index: 1040;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+// Sonuç istatistikleri
+.exam-result-summary {
+  .result-stat {
+    margin-bottom: 10px;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+
+    .fs-4 {
+      font-size: 1.5rem !important;
+    }
+
+    small {
+      font-size: 0.8rem;
+      opacity: 0.9;
+    }
+  }
+}
+
+// Alert stilleri
+.alert-warning {
+  border-left: 4px solid #f0ad4e;
+  background-color: #fcf8e3;
+  border-color: #faebcc;
 }

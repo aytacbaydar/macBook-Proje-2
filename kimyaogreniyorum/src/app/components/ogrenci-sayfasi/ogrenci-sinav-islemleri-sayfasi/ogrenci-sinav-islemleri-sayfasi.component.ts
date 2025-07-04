@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -106,19 +105,79 @@ export class OgrenciSinavIslemleriSayfasiComponent implements OnInit {
     return sinav.id || index;
   }
 
-  startExam(sinav: Sinav) {
-    // Optik sayfasına sınav bilgilerini gönder
-    this.router.navigate(
-      ['/ogrenci-sayfasi/optik'],
-      {
-        queryParams: {
-          sinavId: sinav.id,
-          sinavAdi: sinav.sinav_adi,
-          sinavTuru: sinav.sinav_turu,
-          soruSayisi: sinav.soru_sayisi,
-        },
+  // Modal kontrol değişkenleri
+  showExamAlreadyTakenModal = false;
+  examResult: any = null;
+
+  // Sınav çözme fonksiyonu
+  startExam(sinav: any) {
+    // Önce sınavın daha önce çözülüp çözülmediğini kontrol et
+    this.checkExamStatus(sinav);
+  }
+
+  private checkExamStatus(sinav: any) {
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (!userStr) {
+      //this.toastr.error('Kullanıcı bilgisi bulunamadı', 'Hata'); // Removed toastr
+      console.error('Kullanıcı bilgisi bulunamadı');
+      return;
+    }
+
+    const user = JSON.parse(userStr);
+    const ogrenci_id = user.id;
+
+    this.http.get<any>(`./server/api/sinav_kontrol.php`, {
+      params: {
+        sinav_id: sinav.id.toString(),
+        ogrenci_id: ogrenci_id.toString()
       }
-    );
+    }).subscribe({
+      next: (response) => {
+        if (response.success) {
+          if (response.sinav_cozulmus) {
+            // Sınav daha önce çözülmüş, modal aç
+            this.examResult = response.sonuc;
+            this.showExamAlreadyTakenModal = true;
+          } else {
+            // Sınav çözülebilir, optik sayfasına git
+            this.router.navigate(
+              ['/ogrenci-sayfasi/optik'],
+              {
+                queryParams: {
+                  sinavId: sinav.id,
+                  sinavAdi: sinav.sinav_adi,
+                  sinavTuru: sinav.sinav_turu,
+                  soruSayisi: sinav.soru_sayisi,
+                },
+              }
+            );
+          }
+        } else {
+          //this.toastr.error(response.message || 'Sınav kontrol edilemedi', 'Hata'); // Removed toastr
+          console.error(response.message || 'Sınav kontrol edilemedi');
+        }
+      },
+      error: (error) => {
+        console.error('Sınav kontrol hatası:', error);
+        //this.toastr.error('Sınav kontrol edilirken hata oluştu', 'Hata'); // Removed toastr
+        console.error('Sınav kontrol edilirken hata oluştu');
+      }
+    });
+  }
+
+  closeExamAlreadyTakenModal() {
+    this.showExamAlreadyTakenModal = false;
+    this.examResult = null;
+  }
+
+  viewExamResults() {
+    this.closeExamAlreadyTakenModal();
+    this.router.navigate(['/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi']);
+  }
+
+  calculateNet(sonuc: any): number {
+    if (!sonuc) return 0;
+    return Math.max(0, sonuc.dogru_sayisi - (sonuc.yanlis_sayisi / 4));
   }
 
   formatDate(dateString: string): string {
@@ -129,5 +188,12 @@ export class OgrenciSinavIslemleriSayfasiComponent implements OnInit {
       year: 'numeric'
     };
     return date.toLocaleDateString('tr-TR', options);
+  }
+
+  getAuthHeaders() {
+    const token = localStorage.getItem('token');
+    return {
+      'Authorization': `Bearer ${token}`
+    };
   }
 }
