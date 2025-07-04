@@ -1,5 +1,5 @@
 .container-full{
-    width: 100%;
+    width: calc(100% - 8px);
     height: auto;
     display: grid;
     grid-template-columns: 70px 1fr;

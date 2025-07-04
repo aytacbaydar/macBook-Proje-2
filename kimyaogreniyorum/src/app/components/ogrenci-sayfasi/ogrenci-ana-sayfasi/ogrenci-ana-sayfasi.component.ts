@@ -11,7 +11,7 @@ interface SinavSonucu {
   dogru_sayisi: number;
   yanlis_sayisi: number;
   bos_sayisi: number;
-  cozum_tarihi: string;
+  gonderim_tarihi: string;
   katilimci_sayisi?: number;
   siralama?: number;
 }
@@ -253,7 +253,7 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
                   `Doğru: ${sinav.dogru_sayisi}`,
                   `Yanlış: ${sinav.yanlis_sayisi}`,
                   `Boş: ${sinav.bos_sayisi}`,
-                  `Tarih: ${this.formatDate(sinav.cozum_tarihi)}`
+                  `Tarih: ${this.formatDate(sinav.gonderim_tarihi)}`
                 ];
               }
             }

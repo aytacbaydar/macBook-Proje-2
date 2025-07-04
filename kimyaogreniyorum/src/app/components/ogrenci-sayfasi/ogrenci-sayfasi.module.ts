@@ -4,7 +4,6 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { OgrenciQrKodSayfasiComponent } from './ogrenci-qr-kod-sayfasi/ogrenci-qr-kod-sayfasi.component';
-import { OgrenciIndexSayfasiComponent } from './ogrenci-index-sayfasi/ogrenci-index-sayfasi.component';
 import { RouterModule } from '@angular/router';
 import { OgrenciAnaSayfasiComponent } from './ogrenci-ana-sayfasi/ogrenci-ana-sayfasi.component';
 import { OgrenciTaslakSayfasiComponent } from './template/ogrenci-taslak-sayfasi/ogrenci-taslak-sayfasi.component';
@@ -21,7 +20,6 @@ import { OgrenciSinavSonuclariSayfasiComponent } from './ogrenci-sinav-islemleri
 @NgModule({
   declarations: [
     OgrenciQrKodSayfasiComponent,
-    OgrenciIndexSayfasiComponent,
     OgrenciAnaSayfasiComponent,
     OgrenciTaslakSayfasiComponent,
     OgrenciNavbarSayfasiComponent,
