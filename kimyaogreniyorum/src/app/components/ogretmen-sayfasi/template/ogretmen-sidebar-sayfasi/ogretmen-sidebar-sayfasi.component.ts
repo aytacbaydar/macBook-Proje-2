@@ -53,6 +53,11 @@ export class OgretmenSidebarSayfasiComponent {
       label: 'Sınıfta Kimler Var',
       link: 'ogretmen-sayfasi/ogretmen-sinifta-kimler-var-sayfasi',
     },
+    {
+      icon: 'bi-pencil-square',
+      label: 'Sıoru Çözümü',
+      link: 'ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi',
+    },
   ];
 
   toggleSidebar() {

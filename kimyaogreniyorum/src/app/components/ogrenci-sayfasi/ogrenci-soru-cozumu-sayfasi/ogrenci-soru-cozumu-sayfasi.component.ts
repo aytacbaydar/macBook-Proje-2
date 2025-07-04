@@ -364,6 +364,6 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
 
   getImageUrl(resimUrl: string): string {
     if (!resimUrl) return '';
-    return resimUrl.startsWith('http') ? resimUrl : `./server/${resimUrl}`;
+    return resimUrl.startsWith('http') ? resimUrl : `./${resimUrl}`;
   }
 }

@@ -36,6 +36,7 @@ import { OgrenciOptikSayfasiComponent } from './components/ogrenci-sayfasi/ogren
 import { OgrenciSinavSonuclariSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component';
 import { OgrenciKonuAnalizSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-konu-analiz-sayfasi/ogrenci-konu-analiz-sayfasi.component';
 import { OgrenciSoruCozumuSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-soru-cozumu-sayfasi/ogrenci-soru-cozumu-sayfasi.component';
+import { OgretmenSoruCozumuSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/giris-sayfasi', pathMatch: 'full' },
@@ -179,6 +180,10 @@ const routes: Routes = [
       {
         path: 'qr-generator',
         component: OgretmenQrGeneratorComponent,
+      },
+      {
+        path: 'ogretmen-soru-cozumu-sayfasi',
+        component: OgretmenSoruCozumuSayfasiComponent,
       },
       {
         path: 'ogretmen-sinavlar-sayfasi',
