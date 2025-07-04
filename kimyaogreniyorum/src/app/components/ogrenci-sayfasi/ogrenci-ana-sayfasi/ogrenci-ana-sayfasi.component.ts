@@ -170,7 +170,7 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
         if (response.success && response.data) {
           // Son 5 sınav sonucunu al
           this.sinavSonuclari = (response.data.sinav_sonuclari || []).slice(-5);
-          
+
           // Grafik oluştur
           setTimeout(() => {
             this.createComparisonChart();
@@ -227,6 +227,18 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
             display: false
           },
           tooltip: {
+            titleFont: {
+              size: 14,
+              weight: 'bold'
+            },
+            bodyFont: {
+              size: 13
+            },
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            titleColor: '#fff',
+            bodyColor: '#fff',
+            borderColor: '#ddd',
+            borderWidth: 1,
             callbacks: {
               title: (context) => {
                 // Tam sınav adını tooltip'te göster
@@ -254,21 +266,37 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
             ticks: {
               callback: function(value) {
                 return value + '%';
+              },
+              font: {
+                size: 12,
+                weight: 'bold'
               }
             },
             title: {
               display: true,
-              text: 'Başarı Oranı (%)'
+              text: 'Başarı Oranı (%)',
+              font: {
+                size: 14,
+                weight: 'bold'
+              }
             }
           },
           x: {
             title: {
               display: true,
-              text: 'Son Sınavlar'
+              text: 'Son Sınavlar',
+              font: {
+                size: 14,
+                weight: 'bold'
+              }
             },
             ticks: {
               maxRotation: 45,
-              minRotation: 0
+              minRotation: 0,
+              font: {
+                size: 12,
+                weight: 'bold'
+              }
             }
           }
         },
@@ -310,7 +338,7 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
 
   loadSonIslenenKonular() {
     this.loadingTopics = true;
-    
+
     const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
     if (!userStr) {
       this.loadingTopics = false;
