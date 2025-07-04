@@ -57,6 +57,22 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
 
   constructor(private http: HttpClient) {}
 
+  private getTokenFromStorage(): string {
+    let token = localStorage.getItem('token');
+    if (!token) {
+      const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          token = user.token;
+        } catch (error) {
+          console.error('Error parsing user data:', error);
+        }
+      }
+    }
+    return token || '';
+  }
+
   ngOnInit(): void {
     this.loadStudents();
     this.loadAllMessages();
@@ -64,9 +80,25 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
 
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
+    if (!token) {
+      // Try to get token from user object
+      const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          const userToken = user.token;
+          if (userToken) {
+            return new HttpHeaders({
+              'Authorization': `Bearer ${userToken}`
+            });
+          }
+        } catch (error) {
+          console.error('Error parsing user data:', error);
+        }
+      }
+    }
     return new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
+      'Authorization': `Bearer ${token || ''}`
     });
   }
 
@@ -74,7 +106,12 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     this.isLoadingStudents = true;
     this.error = null;
 
-    this.http.get<any>(`${this.apiBaseUrl}/ogretmen_ogrencileri.php`, { headers: this.getHeaders() })
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.getTokenFromStorage()}`,
+      'Content-Type': 'application/json'
+    });
+
+    this.http.get<any>(`${this.apiBaseUrl}/ogretmen_ogrencileri.php`, { headers })
       .subscribe({
         next: (response) => {
           if (response.success) {
@@ -96,7 +133,12 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     this.isLoadingMessages = true;
     this.error = null;
 
-    this.http.get<any>(`${this.apiBaseUrl}/soru_mesajlari.php`, { headers: this.getHeaders() })
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.getTokenFromStorage()}`,
+      'Content-Type': 'application/json'
+    });
+
+    this.http.get<any>(`${this.apiBaseUrl}/soru_mesajlari.php`, { headers })
       .subscribe({
         next: (response) => {
           if (response.success) {
@@ -124,7 +166,12 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     this.isLoadingMessages = true;
     this.error = null;
 
-    this.http.get<any>(`${this.apiBaseUrl}/soru_mesajlari.php?ogrenci_id=${studentId}`, { headers: this.getHeaders() })
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.getTokenFromStorage()}`,
+      'Content-Type': 'application/json'
+    });
+
+    this.http.get<any>(`${this.apiBaseUrl}/soru_mesajlari.php?ogrenci_id=${studentId}`, { headers })
       .subscribe({
         next: (response) => {
           if (response.success) {
@@ -158,7 +205,27 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
       formData.append('resim', this.selectedFile);
     }
 
-    this.http.post<any>(`${this.apiBaseUrl}/soru_mesajlari.php`, formData)
+    // For FormData, don't set Content-Type header - let browser set it
+    const token = localStorage.getItem('token');
+    let authToken = token;
+    
+    if (!authToken) {
+      const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          authToken = user.token;
+        } catch (error) {
+          console.error('Error parsing user data:', error);
+        }
+      }
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${authToken || ''}`
+    });
+
+    this.http.post<any>(`${this.apiBaseUrl}/soru_mesajlari.php`, formData, { headers })
       .subscribe({
         next: (response) => {
           if (response.success) {
