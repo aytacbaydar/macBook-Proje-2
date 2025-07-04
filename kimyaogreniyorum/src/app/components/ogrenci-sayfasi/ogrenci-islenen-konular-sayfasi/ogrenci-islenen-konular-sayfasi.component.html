@@ -22,7 +22,7 @@
 
   <!-- Main Content -->
   <div *ngIf="!isLoading && !error">
-    
+
     <!-- Student Info Card -->
     <div class="student-info-card" *ngIf="studentInfo">
       <div class="student-details">
@@ -61,7 +61,7 @@
                 <p>İşlenen Konu</p>
               </div>
             </div>
-        
+
             <div class="stat-card">
               <div class="stat-icon">
                 <i class="bi bi-journal-text"></i>
@@ -71,7 +71,7 @@
                 <p>Toplam Konu</p>
               </div>
             </div>
-        
+
             <div class="stat-card">
               <div class="stat-icon">
                 <i class="bi bi-graph-up"></i>
@@ -81,7 +81,7 @@
                 <p>İlerleme</p>
               </div>
             </div>
-        
+
             <div class="stat-card">
               <div class="stat-icon">
                 <i class="bi bi-folder-check"></i>
@@ -94,11 +94,11 @@
           </div>
           </div>
 
-          
+
     <!-- Topics by Units -->
     <div class="topics-container" *ngIf="getUnitesByGroup().length > 0">
       <div class="unit-section" *ngFor="let unit of getUnitesByGroup(); let unitIndex = index">
-        
+
         <!-- Unit Header -->
         <div class="unit-header">
           <div class="unit-title">
@@ -136,7 +136,7 @@
           <div class="topic-item" 
                *ngFor="let konu of unit.konular; let topicIndex = index"
                [class.completed]="konuIslendi(konu.id)">
-            
+
             <!-- Topic Status -->
             <div class="topic-status">
               <i class="bi" 
@@ -154,7 +154,7 @@
                 </h5>
                 <span class="topic-class-badge">{{ konu.sinif_seviyesi }}</span>
               </div>
-              
+
               <p class="topic-description" *ngIf="konu.aciklama">
                 {{ konu.aciklama }}
               </p>

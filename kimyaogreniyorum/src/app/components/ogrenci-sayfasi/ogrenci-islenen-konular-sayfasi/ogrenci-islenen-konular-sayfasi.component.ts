@@ -184,7 +184,11 @@ export class OgrenciIslenenKonularSayfasiComponent implements OnInit {
       this.http.get<any>(apiUrl, { headers }).subscribe({
         next: (response) => {
           if (response.success && response.islenen_konular) {
-            this.islenenKonular = response.islenen_konular;
+            // İşlenen konulara öğretmen bilgisi ekle
+            this.islenenKonular = response.islenen_konular.map((konu: any) => ({
+              ...konu,
+              ogretmen_adi: this.studentInfo?.ogretmeni || 'Bilinmeyen Öğretmen'
+            }));
           } else {
             this.islenenKonular = [];
           }
