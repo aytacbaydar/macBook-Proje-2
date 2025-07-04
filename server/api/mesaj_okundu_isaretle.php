@@ -3,7 +3,7 @@
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
 // Handle preflight requests
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -13,7 +13,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 require_once '../config.php';
 
+// Authorization function
+function authorize() {
+    $headers = getallheaders();
+    $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
+    
+    if (empty($authHeader) || !str_starts_with($authHeader, 'Bearer ')) {
+        http_response_code(401);
+        echo json_encode(['error' => 'Token gerekli']);
+        exit;
+    }
+    
+    $token = substr($authHeader, 7);
+    
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT * FROM ogrenciler WHERE token = ?");
+    $stmt->execute([$token]);
+    $user = $stmt->fetch();
+    
+    if (!$user) {
+        http_response_code(401);
+        echo json_encode(['error' => 'Geçersiz token']);
+        exit;
+    }
+    
+    return $user;
+}
+
 try {
+    // Authorize user
+    $user = authorize();
+    
     // Get POST data
     $input = json_decode(file_get_contents('php://input'), true);
     
@@ -27,6 +57,15 @@ try {
     
     $messageIds = $input['message_ids'];
     $ogrenciId = $input['ogrenci_id'];
+    
+    // Check if user has permission to mark these messages as read
+    if ($user['rutbe'] === 'ogrenci' && $user['id'] != $ogrenciId) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Bu işlem için yetkiniz yok'
+        ]);
+        exit;
+    }
     
     if (!is_array($messageIds) || empty($messageIds)) {
         echo json_encode([
