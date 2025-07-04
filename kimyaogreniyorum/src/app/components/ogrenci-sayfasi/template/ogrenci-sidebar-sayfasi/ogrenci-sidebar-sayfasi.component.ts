@@ -98,6 +98,35 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
     }
   }
 
+  private loadUnreadMessageCount(): void {
+    if (!this.studentId) return;
+
+    const headers = {
+      'Authorization': `Bearer ${this.getTokenFromStorage()}`
+    };
+
+    this.http.get<any>(`./server/api/soru_mesajlari.php?ogrenci_id=${this.studentId}`, { headers }).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          // Öğretmenden gelen okunmamış mesajları say
+          const unreadMessages = response.data.filter((mesaj: SoruMesaj) => 
+            mesaj.gonderen_tip === 'ogretmen' && !mesaj.okundu
+          );
+          this.unreadMessageCount = unreadMessages.length;
+          
+          // Soru Çözümü menü öğesindeki badge sayısını güncelle
+          const soruCozumuMenuItem = this.menuItems.find(item => item.label === 'Soru Çözümü');
+          if (soruCozumuMenuItem) {
+            soruCozumuMenuItem.badgeCount = this.unreadMessageCount;
+          }
+        }
+      },
+      error: (error) => {
+        console.error('Mesaj sayısı yüklenirken hata:', error);
+      }
+    });
+  }
+
   private loadStudentInfo(): void {
     const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
     if (userStr) {
@@ -108,6 +137,22 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
         console.error('Öğrenci bilgileri yüklenirken hata:', error);
       }
     }
+  }
+
+  private getTokenFromStorage(): string {
+    let token = localStorage.getItem('token');
+    if (!token) {
+      const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          token = user.token;
+        } catch (error) {
+          console.error('Error parsing user data:', error);
+        }
+      }
+    }
+    return token || '';
   }
 
   private loadUnreadMessageCount(): void {
