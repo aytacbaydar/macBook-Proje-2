@@ -367,6 +367,10 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     return student.id || index;
   }
 
+  trackByStudentIdNumber(index: number, studentId: number): number {
+    return studentId;
+  }
+
   selectStudentFromMessage(message: SoruMesaj) {
     const student = this.students.find(s => s.id === message.ogrenci_id);
     if (student) {

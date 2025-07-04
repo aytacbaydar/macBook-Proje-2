@@ -74,7 +74,7 @@
         </div>
         <div class="card-body overflow-auto" style="max-height: 500px;">
           <div class="message-summary-list">
-            <div *ngFor="let studentId of getGroupedStudentIds(); trackBy: trackByStudentId" 
+            <div *ngFor="let studentId of getGroupedStudentIds(); trackBy: trackByStudentIdNumber" 
                  class="message-summary-item p-3 border-bottom cursor-pointer"
                  (click)="selectStudentFromGroupedMessage(studentId)">
               <div class="d-flex justify-content-between align-items-start mb-2">
