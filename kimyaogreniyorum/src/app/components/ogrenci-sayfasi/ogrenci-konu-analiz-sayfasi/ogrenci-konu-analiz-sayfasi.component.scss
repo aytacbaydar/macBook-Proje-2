@@ -1,8 +1,7 @@
 
 .konu-analiz-container {
-  padding: 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
+  padding: 8px;
+  height: 100%;
 
   .page-header {
     margin-bottom: 30px;
@@ -33,7 +32,7 @@
         background: rgba(255, 255, 255, 0.1);
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 15px;
+        border-radius: 8px;
         padding: 20px;
         display: flex;
         align-items: center;
@@ -76,7 +75,7 @@
 
   .loading-section {
     background: white;
-    border-radius: 15px;
+    border-radius: 8px;
     padding: 40px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 
@@ -92,7 +91,7 @@
   }
 
   .alert {
-    border-radius: 15px;
+    border-radius: 8px;
     border: none;
     font-size: 1.1rem;
     
@@ -112,7 +111,7 @@
 
       .stat-card {
         background: white;
-        border-radius: 15px;
+        border-radius: 8px;
         padding: 25px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         display: flex;
@@ -128,7 +127,7 @@
         .stat-icon {
           width: 60px;
           height: 60px;
-          border-radius: 12px;
+          border-radius: 8px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -163,7 +162,7 @@
   .performance-distribution {
     margin-bottom: 30px;
     background: white;
-    border-radius: 15px;
+    border-radius: 8px;
     padding: 25px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 
@@ -179,7 +178,7 @@
       gap: 15px;
 
       .distribution-card {
-        border-radius: 12px;
+        border-radius: 8px;
         padding: 20px;
         text-align: center;
         transition: all 0.3s ease;
@@ -235,7 +234,7 @@
 
     .highlight-card {
       background: white;
-      border-radius: 15px;
+      border-radius: 8px;
       padding: 25px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
       height: 100%;
@@ -254,7 +253,7 @@
           align-items: center;
           gap: 15px;
           padding: 15px;
-          border-radius: 10px;
+          border-radius: 8px;
           margin-bottom: 10px;
           transition: all 0.3s ease;
 
@@ -308,7 +307,7 @@
           .topic-badge {
             width: 40px;
             height: 40px;
-            border-radius: 10px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -332,7 +331,7 @@
   // Detailed Analysis
   .detailed-analysis {
     background: white;
-    border-radius: 15px;
+    border-radius: 8px;
     padding: 25px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 
@@ -347,7 +346,7 @@
     .konu-analizi-container {
       .konu-item {
         background: #f8f9fa;
-        border-radius: 12px;
+        border-radius: 8px;
         padding: 20px;
         border-left: 5px solid #667eea;
         transition: all 0.3s ease;
@@ -367,17 +366,17 @@
             color: white;
             font-weight: 600;
             padding: 8px 12px;
-            border-radius: 8px;
+            border-radius: 4px;
           }
         }
 
         .progress {
           background-color: #e9ecef;
-          border-radius: 10px;
+          border-radius: 8px;
           overflow: hidden;
 
           .progress-bar {
-            border-radius: 10px;
+            border-radius: 4px;
             transition: width 0.6s ease;
           }
         }
@@ -386,7 +385,7 @@
           .badge {
             font-size: 0.9rem;
             padding: 8px 10px;
-            border-radius: 8px;
+            border-radius: 4px;
           }
 
           small {
@@ -401,7 +400,7 @@
   // Empty State
   .empty-state {
     background: white;
-    border-radius: 15px;
+    border-radius: 8px;
     padding: 60px 40px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 

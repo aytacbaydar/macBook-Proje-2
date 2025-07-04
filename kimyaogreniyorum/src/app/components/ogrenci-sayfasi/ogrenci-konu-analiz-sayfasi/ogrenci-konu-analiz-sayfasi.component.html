@@ -1,38 +1,5 @@
 
 <div class="konu-analiz-container">
-  <!-- Header Section -->
-  <div class="page-header">
-    <div class="header-content">
-      <div class="header-text">
-        <h1><i class="bi bi-graph-up me-2"></i>Konu Analizi</h1>
-        <p class="text-muted">Sınav performansınıza göre konu başarı analiziniz</p>
-      </div>
-      
-      <!-- Student Info -->
-      <div class="student-info-card" *ngIf="studentInfo">
-        <div class="student-avatar">
-          <img [src]="studentInfo.avatar" [alt]="studentInfo.adi_soyadi">
-        </div>
-        <div class="student-details">
-          <h4>{{ studentInfo.adi_soyadi }}</h4>
-          <div class="student-meta">
-            <span class="meta-item">
-              <i class="bi bi-mortarboard me-1"></i>
-              {{ studentInfo.sinifi }}
-            </span>
-            <span class="meta-item" *ngIf="studentInfo.grup">
-              <i class="bi bi-people me-1"></i>
-              {{ studentInfo.grup }}
-            </span>
-            <span class="meta-item" *ngIf="studentInfo.ogretmeni">
-              <i class="bi bi-person-badge me-1"></i>
-              {{ studentInfo.ogretmeni }}
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Loading State -->
   <div *ngIf="loadingKonuAnalizi" class="loading-section text-center py-5">
