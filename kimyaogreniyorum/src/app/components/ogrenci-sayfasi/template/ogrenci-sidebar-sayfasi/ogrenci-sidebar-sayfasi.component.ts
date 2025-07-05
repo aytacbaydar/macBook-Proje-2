@@ -91,10 +91,16 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadStudentInfo();
     this.loadUnreadMessageCount();
-    // Her 30 saniyede bir mesaj sayısını güncelle
+    
+    // Her 5 saniyede bir mesaj sayısını güncelle
     this.refreshInterval = setInterval(() => {
       this.loadUnreadMessageCount();
-    }, 30000);
+    }, 5000);
+
+    // Custom event listener for immediate updates
+    window.addEventListener('updateUnreadCount', () => {
+      this.loadUnreadMessageCount();
+    });
   }
 
   ngOnDestroy(): void {

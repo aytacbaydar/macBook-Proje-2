@@ -244,8 +244,13 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
             this.yeniMesaj = '';
             this.removeSelectedFile();
 
-            // Reload messages
-            this.loadMesajlar();
+            // Hemen mesajları yenile
+            this.checkForNewMessages();
+            
+            // Sidebar'daki badge'i de güncelle
+            setTimeout(() => {
+              window.dispatchEvent(new CustomEvent('updateUnreadCount'));
+            }, 1000);
           } else {
             this.error = response.error || 'Mesaj gönderilirken hata oluştu.';
           }
@@ -270,7 +275,7 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
     if (this.autoRefresh) {
       this.refreshInterval = setInterval(() => {
         this.checkForNewMessages();
-      }, 30000); // 30 saniyede bir yenile
+      }, 5000); // 5 saniyede bir yenile - daha hızlı güncelleme
     }
   }
 
@@ -408,24 +413,29 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
         next: (response) => {
           if (response.success) {
             const newMessages = response.data || [];
+            const oldMessageCount = this.mesajlar.length;
 
             // Check if there are new teacher messages
-            if (this.lastMessageCount > 0 && newMessages.length > this.lastMessageCount) {
-              const latestMessage = newMessages[newMessages.length - 1]; // Get latest message
-
-              if (latestMessage.gonderen_tip === 'ogretmen') {
-                this.showNotification(
-                  'Öğretmeninizden Cevap!', 
-                  `${latestMessage.gonderen_adi} sorunuza cevap verdi.`
-                );
-              }
+            if (oldMessageCount > 0 && newMessages.length > oldMessageCount) {
+              const latestMessages = newMessages.slice(oldMessageCount);
+              
+              latestMessages.forEach((newMessage: any) => {
+                if (newMessage.gonderen_tip === 'ogretmen') {
+                  this.showNotification(
+                    'Öğretmeninizden Cevap!', 
+                    `${newMessage.gonderen_adi} sorunuza cevap verdi.`
+                  );
+                }
+              });
             }
 
-            this.lastMessageCount = newMessages.length;
-
-            // Update messages only if there are new ones
-            if (newMessages.length !== this.mesajlar.length) {
+            // Always update messages if there's a difference
+            if (newMessages.length !== this.mesajlar.length || 
+                JSON.stringify(newMessages) !== JSON.stringify(this.mesajlar)) {
               this.mesajlar = newMessages;
+
+              // Mark teacher messages as read
+              this.markMessagesAsRead();
 
               // Scroll to bottom after loading messages
               setTimeout(() => {
