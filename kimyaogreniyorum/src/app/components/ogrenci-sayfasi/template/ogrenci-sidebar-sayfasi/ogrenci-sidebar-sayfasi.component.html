@@ -11,13 +11,10 @@
                         <i class="bi {{ item.icon }}"></i>
                         <p *ngIf="!isClosed">
                           <span class="sidebar-item-text">{{ item.label }}</span>
-                          <!-- Debug: Her item için badge göster -->
-                          <span class="badge ms-auto" 
-                                [class]="item.label === 'Soru Çözümü' ? 'bg-warning' : 'bg-secondary'"
-                                [title]="'Debug: label=' + item.label + ', badgeCount=' + item.badgeCount + ', unreadMessageCount=' + unreadMessageCount"
-                                [style.min-width]="'20px'"
-                                [style.display]="'inline-block'">
-                            {{ item.label === 'Soru Çözümü' ? (item.badgeCount !== undefined ? item.badgeCount : 0) : item.label.slice(0,1) }}
+                          <span class="badge bg-warning ms-auto" 
+                                *ngIf="item.label === 'Soru Çözümü'"
+                                [title]="'Badge Count: ' + (item.badgeCount || 0)">
+                            {{ item.badgeCount || 0 }}
                           </span>
                         </p>
                     </div>

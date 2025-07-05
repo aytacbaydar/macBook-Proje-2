@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 interface SoruMesaj {
@@ -86,7 +86,7 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
     },
   ];
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.loadStudentInfo();
@@ -146,6 +146,8 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
               soruCozumuMenuItem.badgeCount = this.unreadMessageCount;
               console.log('Badge count güncellendi:', soruCozumuMenuItem.badgeCount);
               console.log('Menu item son durumu:', soruCozumuMenuItem);
+              // Manuel değişiklik algılamayı tetikle
+              this.cdr.detectChanges();
             } else {
               console.error('Soru Çözümü menu item bulunamadı!');
             }
@@ -156,6 +158,7 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
             if (soruCozumuMenuItem) {
               soruCozumuMenuItem.badgeCount = 0;
               console.log('Badge count 0 olarak ayarlandı');
+              this.cdr.detectChanges();
             }
           }
         },
@@ -166,6 +169,7 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
           const soruCozumuMenuItem = this.menuItems.find(item => item.label === 'Soru Çözümü');
           if (soruCozumuMenuItem) {
             soruCozumuMenuItem.badgeCount = 0;
+            this.cdr.detectChanges();
           }
         }
       });
