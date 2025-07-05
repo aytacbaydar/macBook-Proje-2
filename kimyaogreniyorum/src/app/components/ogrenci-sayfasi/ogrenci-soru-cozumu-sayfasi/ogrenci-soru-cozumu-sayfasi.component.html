@@ -6,7 +6,7 @@
         <i class="bi bi-person-check-fill"></i>
       </div>
       <div class="header-text">
-        <h4>Öğretmeniniz</h4>
+        <h4>{{ studentInfo?.ogretmeni || 'Öğretmeniniz' }}</h4>
         <span class="status" [ngClass]="autoRefresh ? 'online' : 'offline'">
           {{ autoRefresh ? 'Çevrimiçi' : 'Çevrimdışı' }}
         </span>

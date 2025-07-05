@@ -408,6 +408,7 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
       'Authorization': `Bearer ${this.studentInfo.token}`
     });
 
+    // Önce okunmamış mesaj sayısını kontrol et
     this.http.get<any>(`${this.apiBaseUrl}/soru_mesajlari.php?ogrenci_id=${this.studentInfo.id}`, { headers })
       .subscribe({
         next: (response) => {
@@ -415,29 +416,56 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
             const newMessages = response.data || [];
             const oldMessageCount = this.mesajlar.length;
 
-            // Check if there are new teacher messages
-            if (oldMessageCount > 0 && newMessages.length > oldMessageCount) {
-              const latestMessages = newMessages.slice(oldMessageCount);
-              
-              latestMessages.forEach((newMessage: any) => {
-                if (newMessage.gonderen_tip === 'ogretmen') {
-                  this.showNotification(
-                    'Öğretmeninizden Cevap!', 
-                    `${newMessage.gonderen_adi} sorunuza cevap verdi.`
-                  );
-                }
-              });
-            }
+            // Yeni mesaj var mı kontrol et
+            const hasNewMessages = newMessages.length > oldMessageCount;
+            
+            // Okunmamış öğretmen mesajı var mı kontrol et
+            const unreadTeacherMessages = newMessages.filter((msg: any) => 
+              msg.gonderen_tip === 'ogretmen' && msg.okundu === 0
+            );
 
-            // Always update messages if there's a difference
-            if (newMessages.length !== this.mesajlar.length || 
-                JSON.stringify(newMessages) !== JSON.stringify(this.mesajlar)) {
+            console.log('Mesaj kontrol ediliyor:', {
+              yeniMesajSayisi: newMessages.length,
+              eskiMesajSayisi: oldMessageCount,
+              okunmamisOgretmenMesaji: unreadTeacherMessages.length,
+              hasNewMessages: hasNewMessages
+            });
+
+            // Eğer yeni mesaj varsa veya okunmamış öğretmen mesajı varsa
+            if (hasNewMessages || unreadTeacherMessages.length > 0) {
+              console.log('Yeni mesaj tespit edildi, sayfayı yeniliyorum...');
+              
+              // Mesajları güncelle
               this.mesajlar = newMessages;
 
-              // Mark teacher messages as read
+              // Öğretmen mesajlarını okundu olarak işaretle
               this.markMessagesAsRead();
 
-              // Scroll to bottom after loading messages
+              // Sidebar badge'ini güncelle
+              window.dispatchEvent(new CustomEvent('updateUnreadCount'));
+
+              // Yeni öğretmen mesajları için bildirim göster
+              if (hasNewMessages) {
+                const latestMessages = newMessages.slice(oldMessageCount);
+                latestMessages.forEach((newMessage: any) => {
+                  if (newMessage.gonderen_tip === 'ogretmen') {
+                    this.showNotification(
+                      'Öğretmeninizden Cevap!', 
+                      `${newMessage.gonderen_adi} sorunuza cevap verdi.`
+                    );
+                  }
+                });
+              }
+
+              // Scroll to bottom
+              setTimeout(() => {
+                this.scrollToBottom();
+              }, 100);
+            }
+
+            // Her durumda mesajları güncelle (küçük değişiklikler için)
+            if (JSON.stringify(newMessages) !== JSON.stringify(this.mesajlar)) {
+              this.mesajlar = newMessages;
               setTimeout(() => {
                 this.scrollToBottom();
               }, 100);

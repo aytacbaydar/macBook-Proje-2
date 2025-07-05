@@ -91,8 +91,8 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadStudentInfo();
     this.loadUnreadMessageCount();
-    
-    // Her 5 saniyede bir mesaj sayısını güncelle
+
+    // 5 saniyede bir mesaj sayısını güncelle - daha hızlı güncelleme
     this.refreshInterval = setInterval(() => {
       this.loadUnreadMessageCount();
     }, 5000);
@@ -111,14 +111,14 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
 
   private loadUnreadMessageCount(): void {
     console.log('loadUnreadMessageCount çağrıldı, studentId:', this.studentId);
-    
+
     // Önce badge'i 0 olarak ayarla
     const soruCozumuMenuItem = this.menuItems.find(item => item.label === 'Soru Çözümü');
     if (soruCozumuMenuItem) {
       soruCozumuMenuItem.badgeCount = 0;
       this.cdr.detectChanges();
     }
-    
+
     if (!this.studentId) {
       console.log('Student ID yok, badge 0 olarak ayarlandı');
       return;
@@ -129,7 +129,7 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
     };
 
     console.log('API çağrısı yapılıyor:', `./server/api/soru_mesajlari.php?ogrenci_id=${this.studentId}`);
-    
+
     this.http.get<any>(`./server/api/soru_mesajlari.php?ogrenci_id=${this.studentId}`, { headers })
       .subscribe({
         next: (response) => {
@@ -139,10 +139,10 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
             const unreadMessages = response.data.filter((mesaj: SoruMesaj) => 
               mesaj.gonderen_tip === 'ogretmen' && !mesaj.okundu
             );
-            
+
             this.unreadMessageCount = unreadMessages.length;
             console.log('Okunmamış mesaj sayısı:', this.unreadMessageCount);
-            
+
             // Badge sayısını güncelle
             if (soruCozumuMenuItem) {
               soruCozumuMenuItem.badgeCount = this.unreadMessageCount;
