@@ -105,8 +105,16 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
 
   private loadUnreadMessageCount(): void {
     console.log('loadUnreadMessageCount çağrıldı, studentId:', this.studentId);
+    
+    // Önce badge'i 0 olarak ayarla
+    const soruCozumuMenuItem = this.menuItems.find(item => item.label === 'Soru Çözümü');
+    if (soruCozumuMenuItem) {
+      soruCozumuMenuItem.badgeCount = 0;
+      this.cdr.detectChanges();
+    }
+    
     if (!this.studentId) {
-      console.log('Student ID yok, fonksiyon sonlandırılıyor');
+      console.log('Student ID yok, badge 0 olarak ayarlandı');
       return;
     }
 
@@ -119,58 +127,29 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
     this.http.get<any>(`./server/api/soru_mesajlari.php?ogrenci_id=${this.studentId}`, { headers })
       .subscribe({
         next: (response) => {
-          console.log('API Response tamamı:', response);
+          console.log('API Response:', response);
           if (response && response.success && response.data) {
-            console.log('Response data:', response.data);
-            console.log('Data array uzunluğu:', response.data.length);
-            
             // Öğretmenden gelen okunmamış mesajları say
-            const unreadMessages = response.data.filter((mesaj: SoruMesaj) => {
-              console.log('Mesaj kontrol ediliyor:', mesaj);
-              console.log('Gönderen tip:', mesaj.gonderen_tip, 'Okundu:', mesaj.okundu);
-              return mesaj.gonderen_tip === 'ogretmen' && !mesaj.okundu;
-            });
+            const unreadMessages = response.data.filter((mesaj: SoruMesaj) => 
+              mesaj.gonderen_tip === 'ogretmen' && !mesaj.okundu
+            );
             
             this.unreadMessageCount = unreadMessages.length;
-            console.log('Filtrelenmiş okunmamış mesajlar:', unreadMessages);
-            console.log('Toplam okunmamış mesaj sayısı:', this.unreadMessageCount);
+            console.log('Okunmamış mesaj sayısı:', this.unreadMessageCount);
             
-            // Soru Çözümü menü öğesindeki badge sayısını güncelle
-            console.log('Tüm menu items:', this.menuItems);
-            const soruCozumuMenuItem = this.menuItems.find(item => {
-              console.log('Menu item kontrol ediliyor:', item.label, item.label === 'Soru Çözümü');
-              return item.label === 'Soru Çözümü';
-            });
-            console.log('Soru Çözümü menu item bulundu:', soruCozumuMenuItem);
+            // Badge sayısını güncelle
             if (soruCozumuMenuItem) {
               soruCozumuMenuItem.badgeCount = this.unreadMessageCount;
               console.log('Badge count güncellendi:', soruCozumuMenuItem.badgeCount);
-              console.log('Menu item son durumu:', soruCozumuMenuItem);
-              // Manuel değişiklik algılamayı tetikle
               this.cdr.detectChanges();
-            } else {
-              console.error('Soru Çözümü menu item bulunamadı!');
             }
           } else {
-            console.log('Response başarısız veya data yok');
-            this.unreadMessageCount = 0;
-            const soruCozumuMenuItem = this.menuItems.find(item => item.label === 'Soru Çözümü');
-            if (soruCozumuMenuItem) {
-              soruCozumuMenuItem.badgeCount = 0;
-              console.log('Badge count 0 olarak ayarlandı');
-              this.cdr.detectChanges();
-            }
+            console.log('Response başarısız veya data yok - badge 0 kalacak');
           }
         },
         error: (error) => {
           console.error('Mesaj sayısı yüklenirken hata:', error);
-          console.error('Error detayı:', error.message);
-          this.unreadMessageCount = 0;
-          const soruCozumuMenuItem = this.menuItems.find(item => item.label === 'Soru Çözümü');
-          if (soruCozumuMenuItem) {
-            soruCozumuMenuItem.badgeCount = 0;
-            this.cdr.detectChanges();
-          }
+          console.log('Hata durumunda badge 0 olarak kalacak');
         }
       });
   }

@@ -9,12 +9,13 @@
                 <a href="{{ item.link }}" style="position: relative;">
                     <div class="menu-flex">
                         <i class="bi {{ item.icon }}"></i>
-                        <span class="badge bg-warning ms-auto" *ngIf="item.label === 'Soru Çözümü'"
-                            [title]="'Badge Count: ' + (item.badgeCount || 0)">
-                            {{ item.badgeCount || 0 }}
-                        </span>
                         <p *ngIf="!isClosed">
                           <span class="sidebar-item-text">{{ item.label }}</span>
+                          <span class="badge bg-warning ms-auto" 
+                                *ngIf="item.label === 'Soru Çözümü'"
+                                [title]="'Okunmamış mesaj: ' + (item.badgeCount !== undefined ? item.badgeCount : 0)">
+                            {{ item.badgeCount !== undefined ? item.badgeCount : 0 }}
+                          </span>
                         </p>
                     </div>
                 </a>
