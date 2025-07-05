@@ -245,10 +245,12 @@
           display: flex;
           flex-direction: column;
           gap: 15px;
+          height: calc(100% - 80px);
 
           .message-item {
             display: flex;
             gap: 12px;
+            height: fit-content;
 
             &.message-own {
               flex-direction: row-reverse;
@@ -447,6 +449,9 @@
 
     .chat-messages-container .messages-wrapper .messages-list .message-item {
       .message-content {
+          min-width: 220px;
+        }
+      .message-content {
         max-width: 85%;
       }
     }
@@ -472,6 +477,9 @@
     }
 
     .chat-messages-container .messages-wrapper .messages-list .message-item {
+      .message-content {
+          min-width: 220px;
+        }
       .message-content {
         max-width: 90%;
         padding: 12px 15px;
