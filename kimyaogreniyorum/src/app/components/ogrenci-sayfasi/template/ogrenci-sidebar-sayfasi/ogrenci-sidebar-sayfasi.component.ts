@@ -136,12 +136,18 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
             console.log('Toplam okunmamış mesaj sayısı:', this.unreadMessageCount);
             
             // Soru Çözümü menü öğesindeki badge sayısını güncelle
-            const soruCozumuMenuItem = this.menuItems.find(item => item.label === 'Soru Çözümü');
+            console.log('Tüm menu items:', this.menuItems);
+            const soruCozumuMenuItem = this.menuItems.find(item => {
+              console.log('Menu item kontrol ediliyor:', item.label, item.label === 'Soru Çözümü');
+              return item.label === 'Soru Çözümü';
+            });
             console.log('Soru Çözümü menu item bulundu:', soruCozumuMenuItem);
             if (soruCozumuMenuItem) {
               soruCozumuMenuItem.badgeCount = this.unreadMessageCount;
               console.log('Badge count güncellendi:', soruCozumuMenuItem.badgeCount);
-              console.log('Güncel menuItems:', this.menuItems);
+              console.log('Menu item son durumu:', soruCozumuMenuItem);
+            } else {
+              console.error('Soru Çözümü menu item bulunamadı!');
             }
           } else {
             console.log('Response başarısız veya data yok');
