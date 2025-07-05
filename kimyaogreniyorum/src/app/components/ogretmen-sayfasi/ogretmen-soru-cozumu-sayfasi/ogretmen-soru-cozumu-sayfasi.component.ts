@@ -438,10 +438,10 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
   }
 
   private startMessageCheckInterval(): void {
-    // Check for new messages every 10 seconds
+    // Check for new messages every 30 seconds
     this.messageCheckInterval = setInterval(() => {
       this.checkForNewMessages();
-    }, 10000);
+    }, 30000);
   }
 
   private groupMessagesByStudent(): void {

@@ -270,7 +270,7 @@ export class OgrenciSoruCozumuSayfasiComponent implements OnInit {
     if (this.autoRefresh) {
       this.refreshInterval = setInterval(() => {
         this.checkForNewMessages();
-      }, 10000); // 10 saniyede bir yenile
+      }, 30000); // 30 saniyede bir yenile
     }
   }
 
