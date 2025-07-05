@@ -264,6 +264,19 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     formData.append('ogrenci_id', this.selectedStudent.id.toString());
     formData.append('mesaj_metni', this.yeniMesaj);
     formData.append('gonderen_tip', 'ogretmen');
+    
+    // Öğretmen adını al
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    let ogretmenAdi = 'Öğretmen';
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        ogretmenAdi = user.adi_soyadi || 'Öğretmen';
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+      }
+    }
+    formData.append('gonderen_adi', ogretmenAdi);
 
     if (this.selectedFile) {
       formData.append('resim', this.selectedFile);
@@ -438,10 +451,10 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
   }
 
   private startMessageCheckInterval(): void {
-    // Check for new messages every 30 seconds
+    // Check for new messages every 5 seconds
     this.messageCheckInterval = setInterval(() => {
       this.checkForNewMessages();
-    }, 30000);
+    }, 5000);
   }
 
   private groupMessagesByStudent(): void {
