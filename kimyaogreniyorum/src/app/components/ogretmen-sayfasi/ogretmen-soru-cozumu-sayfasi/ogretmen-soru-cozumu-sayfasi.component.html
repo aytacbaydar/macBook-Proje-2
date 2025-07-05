@@ -118,7 +118,7 @@
 
         <textarea class="message-input" 
                   [(ngModel)]="yeniMesaj"
-                  (keydown.enter)="($event as KeyboardEvent).ctrlKey && sendMessage()"
+                  (keydown.enter)="handleEnterKeyPress($event)"
                   placeholder="Mesaj yazın... (Ctrl+Enter ile gönder)"
                   rows="1"></textarea>
 

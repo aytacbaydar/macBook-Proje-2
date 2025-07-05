@@ -631,6 +631,13 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     return parts[parts.length - 1] || 'resim.jpg';
   }
 
+  handleEnterKeyPress(event: Event): void {
+    const keyboardEvent = event as KeyboardEvent;
+    if (keyboardEvent.ctrlKey) {
+      this.sendMessage();
+    }
+  }
+
   // Mesajı okundu olarak işaretle
   markMessageAsRead(messageId: number): void {
     const headers = new HttpHeaders({
