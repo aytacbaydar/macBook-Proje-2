@@ -1,9 +1,11 @@
 .chat-container {
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
   height: 100vh;
   background-color: #f0f2f5;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
 }
 
 .chat-header {
@@ -177,23 +179,26 @@
 .student-list {
   flex: 1;
   overflow-y: auto;
-  padding: 0.5rem;
+  padding: 1rem;
+  min-height: 400px;
+  max-height: calc(100vh - 140px);
 
   .student-item {
     display: flex;
     align-items: center;
     padding: 1rem;
     background: white;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.2s;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    min-height: 80px;
 
     &:hover {
       background: #f8f9fa;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
     }
 
     .student-avatar {
