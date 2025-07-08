@@ -55,7 +55,6 @@
     <div class="questions-grid">
       <div class="question-row" *ngFor="let soruNo of sorular">
         <div class="question-number">
-          <span class="number">{{ soruNo }}</span>
           <button 
             *ngIf="cevaplar['soru' + soruNo]" 
             class="clear-btn" 
@@ -66,6 +65,7 @@
         </div>
         
         <div class="answer-options">
+          <span class="number">{{ soruNo }}</span>
           <button 
             *ngFor="let sik of siklar"
             class="option-btn"
