@@ -1378,7 +1378,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
               pdf.setTextColor(0, 0, 0); // Siyah renk
               pdf.setFontSize(12);
               pdf.setFont('helvetica', 'bold');
-              pdf.text('Aytaç Baydar || Kimya Öğretmeni', margin, margin + 5);
+              pdf.text('Aytaç Baydar || Kimya Ögretmeni', margin, margin + 5);
 
               // Başlık altına çizgi ekle - sayfa genişliğinde
               pdf.setLineWidth(0.8);
@@ -1392,9 +1392,9 @@ export class OgretmenDersAnlatmaTahtasiComponent
               pdf.text(sayfaNumarasi, (pageWidth - textWidth) / 2, pageHeight - 10);
 
               // Sayfa numarası altına çizgi ekle - sayfa genişliğinde
-              pdf.setLineWidth(0.8);
-              pdf.line(margin, pageHeight - 12, pageWidth - margin, pageHeight - 12);
-              console.log(`Sayfa ${page} PDF'e eklendi. Canvas boyutu: ${canvasWidth}x${canvasHeight}, PDF boyutu: ${imgWidth.toFixed(1)}x${imgHeight.toFixed(1)}mm`);
+              // pdf.setLineWidth(0.8);
+              // pdf.line(margin, pageHeight - 12, pageWidth - margin, pageHeight - 12);
+              // console.log(`Sayfa ${page} PDF'e eklendi. Canvas boyutu: ${canvasWidth}x${canvasHeight}, PDF boyutu: ${imgWidth.toFixed(1)}x${imgHeight.toFixed(1)}mm`);
             } else {
               console.log(`Sayfa ${page} boş, atlandı.`);
               // Boş sayfaları PDF'e ekleme, sadece çizim olan sayfaları ekle
