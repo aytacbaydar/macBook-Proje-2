@@ -96,19 +96,33 @@ export class OgretmenEkDersGirisiSayfasiComponent implements OnInit {
       })
       .subscribe({
         next: (response) => {
-          console.log('Gruplar API response:', response);
+          console.log('Gruplar API yanıtı:', response);
           if (response.success && response.data) {
+            // Giriş yapan öğretmenin bilgilerini al
+            const loggedInUser = this.getLoggedInUser();
+            const loggedInTeacherName = loggedInUser?.adi_soyadi || '';
+
+            // Sadece öğrencileri filtrele ve öğretmenine göre filtrele
+            const actualStudents = response.data.filter(
+              (student: any) =>
+                student.rutbe === 'ogrenci' &&
+                student.ogretmeni === loggedInTeacherName
+            );
+
+            // Tüm grupları al
             this.groups = [
-              ...Array.from(new Set(response.data.map((student: any) => String(student.grubu)))) as string[],
+              'Tüm Gruplar',
+              ...Array.from(new Set(actualStudents.map((student: any) => String(student.grubu)))) as string[],
             ];
             console.log('Yüklenen gruplar:', this.groups);
+            console.log('Filtrelenen öğrenci sayısı:', actualStudents.length);
 
             // Eğer route'dan grup bilgisi geldiyse otomatik olarak yükle
             if (this.selectedGroup && this.groups.includes(this.selectedGroup)) {
               this.onGroupChange();
             }
           } else {
-            this.toastr.error(response.message || 'Gruplar yüklenemedi', 'Hata');
+            console.error('Grup verisi alınamadı:', response);
           }
           this.isLoading = false;
         },
@@ -121,10 +135,49 @@ export class OgretmenEkDersGirisiSayfasiComponent implements OnInit {
   }
 
   onGroupChange(): void {
-    if (this.selectedGroup) {
-      this.loadGroupStudents();
-      this.loadEkDersKayitlari();
+    if (!this.selectedGroup) {
+      this.groupStudents = [];
+      return;
     }
+
+    this.isLoading = true;
+
+    this.http
+      .get<any>('./server/api/ogrenciler_listesi.php', {
+        headers: this.getAuthHeaders(),
+      })
+      .subscribe({
+        next: (response) => {
+          if (response.success && response.data) {
+            // Giriş yapan öğretmenin bilgilerini al
+            const loggedInUser = this.getLoggedInUser();
+            const loggedInTeacherName = loggedInUser?.adi_soyadi || '';
+
+            let filteredStudents = response.data.filter(
+              (student: any) =>
+                student.rutbe === 'ogrenci' &&
+                student.ogretmeni === loggedInTeacherName
+            );
+
+            if (this.selectedGroup === 'Tüm Gruplar') {
+              this.groupStudents = filteredStudents;
+            } else {
+              this.groupStudents = filteredStudents.filter(
+                (student: any) => student.grubu === this.selectedGroup
+              );
+            }
+
+            console.log('Yüklenen öğrenci sayısı:', this.groupStudents.length);
+            this.loadEkDersKayitlari();
+          }
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Öğrenciler yüklenirken hata:', error);
+          this.toastr.error('Öğrenciler yüklenemedi', 'Hata');
+          this.isLoading = false;
+        },
+      });
   }
 
   onDateChange(): void {
@@ -165,9 +218,12 @@ export class OgretmenEkDersGirisiSayfasiComponent implements OnInit {
     if (!this.selectedDate) return;
 
     this.http
-      .get<any>('./server/api/ek_ders_yoklama_listesi.php', {
+      .get<any>(`./server/api/devamsizlik_kayitlari.php`, {
         headers: this.getAuthHeaders(),
-        params: { tarih: this.selectedDate },
+        params: {
+          grup: this.selectedGroup,
+          tarih: this.selectedDate,
+        },
       })
       .subscribe({
         next: (response) => {
@@ -263,7 +319,7 @@ export class OgretmenEkDersGirisiSayfasiComponent implements OnInit {
         };
 
         const promise = this.http
-          .post<any>('./server/api/ek_ders_yoklama_kaydet.php', data, {
+          .post<any>('./server/api/devamsizlik_kaydet.php', data, {
             headers: this.getAuthHeaders(),
           })
           .toPromise();
@@ -333,5 +389,20 @@ export class OgretmenEkDersGirisiSayfasiComponent implements OnInit {
       'Cumartesi',
     ];
     return days[date.getDay()];
+  }
+
+    getLoggedInUser(): any {
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (userStr) {
+      try {
+        return JSON.parse(userStr);
+      } catch (error) {
+        console.error('Kullanıcı parse hatası:', error);
+        return null;
+      }
+    } else {
+      console.log('Kullanıcı bilgisi bulunamadı!');
+      return null;
+    }
   }
 }
