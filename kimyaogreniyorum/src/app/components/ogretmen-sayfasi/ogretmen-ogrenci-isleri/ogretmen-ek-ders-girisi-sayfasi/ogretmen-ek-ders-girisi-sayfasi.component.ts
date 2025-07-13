@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute, Router } from '@angular/router';
 
 interface Student {
   id: number;
@@ -37,9 +38,22 @@ export class OgretmenEkDersGirisiSayfasiComponent implements OnInit {
   isLoading: boolean = false;
   isSaving: boolean = false;
 
-  constructor(private http: HttpClient, private toastr: ToastrService) {}
+  constructor(
+    private http: HttpClient, 
+    private toastr: ToastrService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
+    // URL parametresinden grup bilgisini al
+    this.route.params.subscribe((params) => {
+      if (params['grupAdi']) {
+        this.selectedGroup = decodeURIComponent(params['grupAdi']);
+        console.log('Route\'dan alınan grup:', this.selectedGroup);
+      }
+    });
+
     this.setDefaultDate();
     this.loadGroups();
   }
@@ -58,20 +72,34 @@ export class OgretmenEkDersGirisiSayfasiComponent implements OnInit {
   }
 
   loadGroups(): void {
+    this.isLoading = true;
+    
     this.http
       .get<any>('./server/api/ogretmen_ogrencileri.php', {
         headers: this.getAuthHeaders(),
       })
       .subscribe({
         next: (response) => {
+          console.log('Gruplar API response:', response);
           if (response.success && response.data) {
             this.groups = [
               ...Array.from(new Set(response.data.map((student: any) => String(student.grubu)))) as string[],
             ];
+            console.log('Yüklenen gruplar:', this.groups);
+            
+            // Eğer route'dan grup bilgisi geldiyse otomatik olarak yükle
+            if (this.selectedGroup && this.groups.includes(this.selectedGroup)) {
+              this.onGroupChange();
+            }
+          } else {
+            this.toastr.error(response.message || 'Gruplar yüklenemedi', 'Hata');
           }
+          this.isLoading = false;
         },
         error: (error) => {
+          console.error('Gruplar yüklenirken hata:', error);
           this.toastr.error('Gruplar yüklenirken hata oluştu', 'Hata');
+          this.isLoading = false;
         },
       });
   }
