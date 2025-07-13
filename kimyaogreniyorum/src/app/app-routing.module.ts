@@ -37,6 +37,7 @@ import { OgrenciSinavSonuclariSayfasiComponent } from './components/ogrenci-sayf
 import { OgrenciKonuAnalizSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-konu-analiz-sayfasi/ogrenci-konu-analiz-sayfasi.component';
 import { OgrenciSoruCozumuSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-soru-cozumu-sayfasi/ogrenci-soru-cozumu-sayfasi.component';
 import { OgretmenSoruCozumuSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component';
+import { OgretmenEkDersGirisiSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ek-ders-girisi-sayfasi/ogretmen-ek-ders-girisi-sayfasi.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/giris-sayfasi', pathMatch: 'full' },
@@ -156,6 +157,10 @@ const routes: Routes = [
       {
         path: 'devamsizlik/:grupAdi',
         component: OgretmenDevamsizlikSayfasiComponent,
+      },
+      {
+        path: 'ek-ders-girisi',
+        component: OgretmenEkDersGirisiSayfasiComponent,
       },
       {
         path: 'ogretmen-gruplar-sayfasi',
