@@ -1120,7 +1120,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
   navigateToEkDers() {
     if (this.selectedGroup) {
       // Ek ders yoklama sayfasına grup adı ile yönlendir
-      this.router.navigate(['/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ek-ders-girisi-sayfasi', this.selectedGroup]);
+      this.router.navigate(['/ogretmen-sayfasi/ogretmen-ek-ders-girisi-sayfasi', this.selectedGroup]);
     } else {
       this.toastr.warning('Lütfen önce bir grup seçiniz', 'Uyarı');
     }

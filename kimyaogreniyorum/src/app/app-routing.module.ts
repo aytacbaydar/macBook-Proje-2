@@ -159,7 +159,7 @@ const routes: Routes = [
         component: OgretmenDevamsizlikSayfasiComponent,
       },
       {
-        path: 'ek-ders-girisi',
+        path: 'ogretmen-ek-ders-girisi-sayfasi/:grupAdi',
         component: OgretmenEkDersGirisiSayfasiComponent,
       },
       {
