@@ -63,17 +63,33 @@ export class OgretmenEkDersGirisiSayfasiComponent implements OnInit {
     this.selectedDate = today.toISOString().split('T')[0];
   }
 
-  private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
+  getAuthHeaders() {
+    // localStorage veya sessionStorage'dan user objesini al
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    let token = '';
+
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        token = user.token || '';
+        console.log('Token bulundu:', token ? 'Evet' : 'Hayır');
+        console.log('Token uzunluğu:', token.length);
+      } catch (error) {
+        console.error('User parse hatası:', error);
+      }
+    } else {
+      console.error('User data bulunamadı!');
+    }
+
     return new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
     });
   }
 
   loadGroups(): void {
     this.isLoading = true;
-    
+
     this.http
       .get<any>('./server/api/ogretmen_ogrencileri.php', {
         headers: this.getAuthHeaders(),
@@ -86,7 +102,7 @@ export class OgretmenEkDersGirisiSayfasiComponent implements OnInit {
               ...Array.from(new Set(response.data.map((student: any) => String(student.grubu)))) as string[],
             ];
             console.log('Yüklenen gruplar:', this.groups);
-            
+
             // Eğer route'dan grup bilgisi geldiyse otomatik olarak yükle
             if (this.selectedGroup && this.groups.includes(this.selectedGroup)) {
               this.onGroupChange();

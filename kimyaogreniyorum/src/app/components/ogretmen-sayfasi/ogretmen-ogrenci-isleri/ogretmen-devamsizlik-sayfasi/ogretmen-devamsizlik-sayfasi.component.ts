@@ -108,19 +108,26 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     this.stopQRScanner();
   }
 
-  private getAuthHeaders(): HttpHeaders {
-    // Token'ı al - gruplar sayfasındaki gibi
+  private getAuthHeaders() {
+    // localStorage veya sessionStorage'dan user objesini al
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
     let token = '';
-    const userStr =
-      localStorage.getItem('user') || sessionStorage.getItem('user');
+
     if (userStr) {
-      const user = JSON.parse(userStr);
-      token = user.token || '';
+      try {
+        const user = JSON.parse(userStr);
+        token = user.token || '';
+        console.log('Devamsızlık - Token bulundu:', token ? 'Evet' : 'Hayır');
+      } catch (error) {
+        console.error('Devamsızlık - User parse hatası:', error);
+      }
+    } else {
+      console.error('Devamsızlık - User data bulunamadı!');
     }
 
     return new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
     });
   }
 
