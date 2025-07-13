@@ -1,0 +1,162 @@
+<div class="ek-ders-yoklama-container">
+    <!-- Header -->
+    <div class="modern-page-header">
+        <div class="header-content">
+            <div class="header-text">
+                <h1 class="modern-page-title">
+                    <i class="bi bi-plus-circle me-2"></i>
+                    Ek Ders Yoklaması
+                </h1>
+                <p class="modern-page-description">
+                    Normal derse katılamayan öğrenciler için ek ders yoklaması alın.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls-card">
+        <div class="card-header">
+            <h3><i class="bi bi-gear"></i> Yoklama Ayarları</h3>
+        </div>
+        <div class="card-body">
+            <div class="controls-grid">
+                <div class="control-group">
+                    <label for="groupSelect">Grup Seçimi</label>
+                    <select id="groupSelect" class="modern-select" [(ngModel)]="selectedGroup"
+                        (change)="onGroupChange()">
+                        <option value="">Grup seçin...</option>
+                        <option *ngFor="let group of groups" [value]="group">{{ group }}</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label for="dateSelect">Ek Ders Tarihi</label>
+                    <input type="date" id="dateSelect" class="modern-input" [(ngModel)]="selectedDate"
+                        (change)="onDateChange()">
+                </div>
+
+                <div class="control-group" *ngIf="selectedGroup">
+                    <label>Yoklama Özeti</label>
+                    <div class="summary-badges">
+                        <span class="summary-badge present">
+                            <i class="bi bi-check-circle"></i>
+                            {{ getPresentCount() }} Katıldı
+                        </span>
+                        <span class="summary-badge absent">
+                            <i class="bi bi-x-circle"></i>
+                            {{ getAbsentCount() }} Katılmadı
+                        </span>
+                        <span class="summary-badge not-marked">
+                            <i class="bi bi-question-circle"></i>
+                            {{ getNotMarkedCount() }} İşaretlenmedi
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions-row" *ngIf="selectedGroup && selectedDate">
+                <button class="btn-save" (click)="saveAllAttendance()" [disabled]="isSaving">
+                    <i class="bi bi-save"></i>
+                    <span *ngIf="!isSaving">Tüm Yoklamaları Kaydet</span>
+                    <span *ngIf="isSaving">Kaydediliyor...</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student List -->
+    <div class="students-section" *ngIf="selectedGroup && !isLoading">
+        <div class="section-header">
+            <h3><i class="bi bi-people"></i> Öğrenci Listesi - {{ selectedGroup }}</h3>
+            <div class="date-info">
+                <i class="bi bi-calendar-event"></i>
+                {{ formatDate(selectedDate) }} - {{ getDayName(selectedDate) }}
+            </div>
+        </div>
+
+        <div class="students-grid">
+            <div class="student-card" *ngFor="let student of groupStudents">
+                <div class="student-info">
+                    <div class="student-avatar">
+                        <img [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)" alt="Avatar"
+                            class="avatar-img">
+                    </div>
+                    <div class="student-details">
+                        <h4>{{ student.adi_soyadi }}</h4>
+                        <p>{{ student.email }}</p>
+                        <span class="status-badge" [class]="getAttendanceStatus(student.id)">
+                            {{ getAttendanceStatusText(student.id) }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="attendance-actions">
+                    <button class="btn-action present" [class.active]="getAttendanceStatus(student.id) === 'present'"
+                        (click)="markAttendance(student.id, 'geldi')">
+                        <i class="bi bi-check-lg"></i>
+                        <span>Katıldı</span>
+                    </button>
+                    <button class="btn-action absent" [class.active]="getAttendanceStatus(student.id) === 'absent'"
+                        (click)="markAttendance(student.id, 'gelmedi')">
+                        <i class="bi bi-x-lg"></i>
+                        <span>Katılmadı</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading-section" *ngIf="isLoading">
+        <div class="loading-spinner">
+            <i class="bi bi-arrow-clockwise spinning"></i>
+            <p>Öğrenciler yükleniyor...</p>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!selectedGroup">
+        <div class="empty-icon">
+            <i class="bi bi-calendar-plus"></i>
+        </div>
+        <h3>Ek Ders Yoklaması</h3>
+        <p>Normal derse katılamayan öğrenciler için ek ders yoklaması almak üzere grup ve tarih seçin.</p>
+    </div>
+
+    <!-- Historical Records -->
+    <div class="historical-section" *ngIf="ekDersKayitlari.length > 0">
+        <div class="section-header">
+            <h3><i class="bi bi-clock-history"></i> Bugünkü Ek Ders Kayıtları</h3>
+        </div>
+
+        <div class="records-table">
+            <div class="table-header">
+                <div class="col">Öğrenci</div>
+                <div class="col">Grup</div>
+                <div class="col">Durum</div>
+                <div class="col">Kayıt Saati</div>
+            </div>
+
+            <div class="table-row" *ngFor="let kayit of ekDersKayitlari">
+                <div class="col">
+                    <div class="student-info-mini">
+                        <img [src]="getDefaultAvatar(kayit.ogrenci_adi)" alt="Avatar" class="mini-avatar">
+                        <span>{{ kayit.ogrenci_adi }}</span>
+                    </div>
+                </div>
+                <div class="col">{{ kayit.grubu }}</div>
+                <div class="col">
+                    <span class="status-mini" [class.present]="kayit.durum === 'geldi'"
+                        [class.absent]="kayit.durum === 'gelmedi'">
+                        <i class="bi" [class.bi-check-circle]="kayit.durum === 'geldi'"
+                            [class.bi-x-circle]="kayit.durum === 'gelmedi'"></i>
+                        {{ kayit.durum === 'geldi' ? 'Katıldı' : 'Katılmadı' }}
+                    </span>
+                </div>
+                <div class="col">{{ kayit.olusturma_zamani | date:'HH:mm' }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+  
