@@ -6,7 +6,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
 interface Student {
@@ -87,6 +87,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
   constructor(
     private http: HttpClient,
     private route: ActivatedRoute,
+    private router: Router,
     private toastr: ToastrService
   ) {}
 
@@ -1114,5 +1115,14 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
   }
   setTodayDate() {
     this.selectedDate = new Date().toISOString().split('T')[0];
+  }
+
+  navigateToEkDers() {
+    if (this.selectedGroup) {
+      // Ek ders yoklama sayfasına grup adı ile yönlendir
+      this.router.navigate(['/ogretmen-sayfasi/ogretmen-ek-ders-girisi-sayfasi', encodeURIComponent(this.selectedGroup)]);
+    } else {
+      this.toastr.warning('Lütfen önce bir grup seçiniz', 'Uyarı');
+    }
   }
 }

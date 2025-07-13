@@ -32,6 +32,13 @@
             {{ isLoading ? 'Kaydediliyor...' : 'Yoklamayı Kaydet' }}
           </button>
         </div>
+
+        <div class="control-item">
+          <button class="btn btn-warning" (click)="navigateToEkDers()" [disabled]="!selectedGroup">
+            <i class="bi bi-plus-circle"></i>
+            Ek Ders Yoklaması
+          </button>
+        </div></div>
       </div>
     </div>
   </div>
