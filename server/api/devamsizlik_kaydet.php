@@ -133,15 +133,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $yontem = isset($record['yontem']) ? $record['yontem'] : 'manual';
 
-                // Normal ders kaydı olarak işaretle
+                // Ders tipini belirle (default: normal, ek ders olabilir)
+                $dersTipi = isset($record['ders_tipi']) ? $record['ders_tipi'] : 'normal';
+                
                 $stmt = $conn->prepare("
                     INSERT INTO devamsizlik_kayitlari 
                     (ogrenci_id, ogretmen_id, grup, tarih, durum, zaman, yontem, ders_tipi)
-                    VALUES (:ogrenci_id, :ogretmen_id, :grup, :tarih, :durum, :zaman, :yontem, 'normal')
+                    VALUES (:ogrenci_id, :ogretmen_id, :grup, :tarih, :durum, :zaman, :yontem, :ders_tipi)
                     ON DUPLICATE KEY UPDATE
                     durum = VALUES(durum),
                     zaman = VALUES(zaman),
                     yontem = VALUES(yontem),
+                    ders_tipi = VALUES(ders_tipi),
                     guncelleme_zamani = CURRENT_TIMESTAMP
                 ");
 
@@ -152,6 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->bindParam(':durum', $record['durum']);
                 $stmt->bindParam(':zaman', $zaman);
                 $stmt->bindParam(':yontem', $yontem);
+                $stmt->bindParam(':ders_tipi', $dersTipi);
 
                 // Debug: SQL parametrelerini logla
                 error_log("SQL Parametreleri:");

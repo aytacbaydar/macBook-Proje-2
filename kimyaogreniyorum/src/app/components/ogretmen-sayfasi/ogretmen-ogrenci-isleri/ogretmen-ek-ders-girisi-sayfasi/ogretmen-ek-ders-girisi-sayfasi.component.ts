@@ -238,13 +238,26 @@ export class OgretmenEkDersGirisiSayfasiComponent implements OnInit {
   }
 
   private saveAttendance(studentId: number, durum: 'geldi' | 'gelmedi'): void {
+    const student = this.groupStudents.find((s) => s.id === studentId);
+    if (!student) {
+      this.toastr.error('Öğrenci bulunamadı', 'Hata');
+      return;
+    }
+
+    // devamsizlik_kaydet.php'nin beklediği format
     const data = {
-      ogrenci_id: studentId,
-      durum: durum,
-      ders_tarihi: this.selectedDate,
-      not: '',
-      ders_tipi: 'ek_ders'
+      records: [{
+        ogrenci_id: studentId,
+        grup: student.grubu || 'Grup bilgisi yok',
+        tarih: this.selectedDate,
+        durum: durum === 'geldi' ? 'present' : 'absent',
+        yontem: 'manual',
+        zaman: new Date().toISOString(),
+        ders_tipi: 'ek_ders'
+      }]
     };
+
+    console.log('Ek ders kaydı gönderiliyor:', data);
 
     this.http
       .post<any>('./server/api/devamsizlik_kaydet.php', data, {
@@ -252,23 +265,32 @@ export class OgretmenEkDersGirisiSayfasiComponent implements OnInit {
       })
       .subscribe({
         next: (response) => {
+          console.log('Ek ders kayıt response:', response);
           if (response.success) {
-            const student = this.groupStudents.find((s) => s.id === studentId);
             const durumText = durum === 'geldi' ? 'katıldı' : 'katılmadı';
             this.toastr.success(
-              `${student?.adi_soyadi} ek derse ${durumText} olarak işaretlendi`,
+              `${student.adi_soyadi} ek derse ${durumText} olarak işaretlendi`,
               'Başarılı'
             );
-            //this.loadEkDersKayitlari(); // Kayıtları yeniden yükle
+          } else {
+            console.error('API Hatası:', response.message);
+            this.toastr.error(response.message || 'Yoklama kaydedilirken hata oluştu', 'Hata');
           }
         },
         error: (error) => {
-          this.toastr.error('Yoklama kaydedilirken hata oluştu', 'Hata');
+          console.error('Ek ders kayıt hatası:', error);
+          console.error('Error details:', error.error);
+          
+          let errorMessage = 'Yoklama kaydedilirken hata oluştu';
+          if (error.error && error.error.message) {
+            errorMessage = error.error.message;
+          }
+          
+          this.toastr.error(errorMessage, 'Hata');
+          
           // Hata durumunda öğrencinin attendance durumunu geri al
-          const student = this.groupStudents.find((s) => s.id === studentId);
           if (student) {
-            student.attendance =
-              student.attendance === durum ? null : student.attendance;
+            student.attendance = student.attendance === durum ? null : student.attendance;
           }
         },
       });
@@ -291,34 +313,48 @@ export class OgretmenEkDersGirisiSayfasiComponent implements OnInit {
 
     this.isSaving = true;
 
-    // Tüm kayıtları tek seferde gönder
+    // devamsizlik_kaydet.php'nin beklediği format - records dizisi içinde
     const records = attendanceRecords.map(student => ({
       ogrenci_id: student.id,
-      grup: student.grubu,
+      grup: student.grubu || 'Grup bilgisi yok',
       tarih: this.selectedDate,
       durum: student.attendance === 'geldi' ? 'present' : 'absent',
       yontem: 'manual',
-      zaman: new Date().toISOString()
+      zaman: new Date().toISOString(),
+      ders_tipi: 'ek_ders'
     }));
 
+    console.log('Toplu ek ders kaydı gönderiliyor:', { records });
+
     this.http
-      .post<any>('./server/api/ek_ders_yoklama_kaydet.php', { records }, {
+      .post<any>('./server/api/devamsizlik_kaydet.php', { records }, {
         headers: this.getAuthHeaders(),
       })
       .subscribe({
         next: (response) => {
+          console.log('Toplu ek ders kayıt response:', response);
           if (response.success) {
             this.toastr.success('Tüm ek ders yoklamaları başarıyla kaydedildi', 'Başarılı');
             // Attendance durumlarını temizle
             this.groupStudents.forEach(student => {
               student.attendance = null;
             });
+          } else {
+            console.error('API Hatası:', response.message);
+            this.toastr.error(response.message || 'Ek ders yoklamaları kaydedilirken hata oluştu', 'Hata');
           }
           this.isSaving = false;
         },
         error: (error) => {
           console.error('Toplu ek ders kaydı hatası:', error);
-          this.toastr.error('Ek ders yoklamaları kaydedilirken hata oluştu', 'Hata');
+          console.error('Error details:', error.error);
+          
+          let errorMessage = 'Ek ders yoklamaları kaydedilirken hata oluştu';
+          if (error.error && error.error.message) {
+            errorMessage = error.error.message;
+          }
+          
+          this.toastr.error(errorMessage, 'Hata');
           this.isSaving = false;
         }
       });
