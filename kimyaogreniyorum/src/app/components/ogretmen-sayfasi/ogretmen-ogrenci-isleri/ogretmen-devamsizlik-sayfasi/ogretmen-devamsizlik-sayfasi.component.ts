@@ -537,6 +537,55 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     return this.getAttendancePercentage();
   }
 
+  // Öğrenci bazında detaylı devamsızlık analizi
+  getStudentAttendanceAnalysis(): any[] {
+    if (!this.selectedGroup || this.groupStudents.length === 0) {
+      return [];
+    }
+
+    return this.groupStudents.map(student => {
+      // Bu öğrencinin tüm devamsızlık kayıtlarını al
+      const studentRecords = this.historicalAttendance.filter(
+        record => record.ogrenci_id === student.id
+      );
+
+      // Present kayıtları
+      const presentRecords = studentRecords.filter(record => record.durum === 'present');
+      const presentNormal = presentRecords.filter(record => !record.ders_tipi || record.ders_tipi === 'normal').length;
+      const presentEkDers = presentRecords.filter(record => record.ders_tipi === 'ek_ders').length;
+      const totalPresent = presentRecords.length;
+
+      // Absent kayıtları
+      const absentRecords = studentRecords.filter(record => record.durum === 'absent');
+      const absentNormal = absentRecords.filter(record => !record.ders_tipi || record.ders_tipi === 'normal').length;
+      const absentEkDers = absentRecords.filter(record => record.ders_tipi === 'ek_ders').length;
+      const totalAbsent = absentRecords.length;
+
+      // Toplam
+      const totalRecords = studentRecords.length;
+      const attendancePercentage = totalRecords > 0 ? Math.round((totalPresent / totalRecords) * 100) : 0;
+
+      return {
+        id: student.id,
+        name: student.adi_soyadi,
+        email: student.email,
+        avatar: student.avatar,
+        totalRecords: totalRecords,
+        present: {
+          total: totalPresent,
+          normal: presentNormal,
+          ek_ders: presentEkDers
+        },
+        absent: {
+          total: totalAbsent,
+          normal: absentNormal,
+          ek_ders: absentEkDers
+        },
+        attendancePercentage: attendancePercentage
+      };
+    }).sort((a, b) => b.attendancePercentage - a.attendancePercentage);
+  }
+
   // Öğrenci bazında katılım istatistiklerini getir
   getStudentAttendanceStats(): any[] {
     if (!this.selectedGroup || this.groupStudents.length === 0) {
