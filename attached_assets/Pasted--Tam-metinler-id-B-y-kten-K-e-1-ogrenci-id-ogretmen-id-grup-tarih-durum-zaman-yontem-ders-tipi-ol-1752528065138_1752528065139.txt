@@ -1,0 +1,298 @@
+
+Tam metinler
+id Büyükten Küçüğe 1
+ogrenci_id
+ogretmen_id
+grup
+tarih
+durum
+zaman
+yontem
+ders_tipi
+olusturma_zamani
+guncelleme_zamani
+
+Düzenle Düzenle
+Kopyala Kopyala
+Sil Sil
+146
+42
+1
+ESA
+2025-07-13
+present
+2025-07-14 23:29:12
+manual
+ek_ders
+2025-07-14 23:29:12
+2025-07-15 00:14:58
+
+Düzenle Düzenle
+Kopyala Kopyala
+Sil Sil
+134
+40
+1
+ESA
+2025-07-12
+present
+2025-07-13 21:19:14
+manual
+normal
+2025-07-13 21:19:18
+2025-07-13 21:19:18
+
+Düzenle Düzenle
+Kopyala Kopyala
+Sil Sil
+133
+41
+1
+ESA
+2025-07-12
+present
+2025-07-13 21:19:14
+manual
+normal
+2025-07-13 21:19:18
+2025-07-13 21:19:18
+
+Düzenle Düzenle
+Kopyala Kopyala
+Sil Sil
+132
+42
+1
+ESA
+2025-07-12
+present
+2025-07-13 21:19:14
+manual
+normal
+2025-07-13 21:19:18
+2025-07-13 21:19:18
+
+Düzenle Düzenle
+Kopyala Kopyala
+Sil Sil
+131
+46
+1
+ESA
+2025-07-12
+present
+2025-07-13 21:19:14
+manual
+normal
+2025-07-13 21:19:18
+2025-07-13 21:19:18
+
+Düzenle Düzenle
+Kopyala Kopyala
+Sil Sil
+130
+40
+1
+ESA
+2025-07-10
+present
+2025-07-10 10:24:11
+manual
+normal
+2025-07-10 10:24:12
+2025-07-10 10:24:12
+
+Düzenle Düzenle
+Kopyala Kopyala
+Sil Sil
+129
+41
+1
+ESA
+2025-07-10
+present
+2025-07-10 10:24:11
+manual
+normal
+2025-07-10 10:24:12
+2025-07-10 10:24:12
+
+Düzenle Düzenle
+Kopyala Kopyala
+Sil Sil
+128
+42
+1
+ESA
+2025-07-10
+present
+2025-07-14 21:17:45
+manual
+normal
+2025-07-10 10:24:12
+2025-07-14 23:31:41
+
+Düzenle Düzenle
+Kopyala Kopyala
+Sil Sil
+127
+43
+1
+ZAE
+2025-07-09
+present
+2025-07-09 15:06:38
+manual
+normal
+2025-07-09 15:06:38
+2025-07-09 15:06:38
+
+Düzenle Düzenle
+Kopyala Kopyala
+Sil Sil
+125
+40
+1
+ESA
+2025-07-08
+present
+2025-07-08 10:05:46
+manual
+normal
+2025-07-08 10:05:46
+2025-07-08 10:05:46
+
+Düzenle Düzenle
+Kopyala Kopyala
+Sil Sil
+124
+41
+1
+ESA
+2025-07-08
+present
+2025-07-08 10:05:46
+manual
+normal
+2025-07-08 10:05:46
+2025-07-08 10:05:46
+
+Düzenle Düzenle
+Kopyala Kopyala
+Sil Sil
+123
+42
+1
+ESA
+2025-07-08
+present
+2025-07-08 10:05:46
+manual
+normal
+2025-07-08 10:05:46
+2025-07-08 10:05:46
+
+Düzenle Düzenle
+Kopyala Kopyala
+Sil Sil
+122
+43
+1
+ZAE
+2025-07-07
+present
+2025-07-07 15:00:10
+manual
+normal
+2025-07-07 15:00:10
+2025-07-07 15:00:10
+
+Düzenle Düzenle
+Kopyala Kopyala
+Sil Sil
+121
+40
+1
+ESA
+2025-07-05
+present
+2025-07-05 09:58:35
+manual
+normal
+2025-07-05 10:18:09
+2025-07-05 10:18:09
+
+Düzenle Düzenle
+Kopyala Kopyala
+Sil Sil
+120
+41
+1
+ESA
+2025-07-05
+present
+2025-07-05 09:58:35
+manual
+normal
+2025-07-05 10:18:09
+2025-07-05 10:18:09
+
+Düzenle Düzenle
+Kopyala Kopyala
+Sil Sil
+119
+42
+1
+ESA
+2025-07-05
+absent
+2025-07-05 10:17:59
+manual
+normal
+2025-07-05 10:18:09
+2025-07-05 10:18:09
+
+Düzenle Düzenle
+Kopyala Kopyala
+Sil Sil
+118
+40
+1
+ESA
+2025-07-03
+present
+2025-07-03 16:30:39
+manual
+normal
+2025-07-03 16:30:40
+2025-07-03 16:30:40
+
+Düzenle Düzenle
+Kopyala Kopyala
+Sil Sil
+117
+41
+1
+ESA
+2025-07-03
+present
+2025-07-03 16:30:39
+manual
+normal
+2025-07-03 16:30:40
+2025-07-03 16:30:40
+
+Düzenle Düzenle
+Kopyala Kopyala
+Sil Sil
+116
+42
+1
+ESA
+2025-07-03
+absent
+2025-07-03 16:30:40
+manual
+normal
+2025-07-03 16:30:40
+2025-07-03 16:30:40
