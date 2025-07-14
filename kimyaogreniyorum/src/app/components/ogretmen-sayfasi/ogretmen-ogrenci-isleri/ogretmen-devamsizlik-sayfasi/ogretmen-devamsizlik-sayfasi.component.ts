@@ -544,18 +544,17 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     }
 
     return this.groupStudents.map(student => {
-      // Bu öğrencinin tüm devamsızlık kayıtlarını bul - sadece normal dersleri
+      // Bu öğrencinin tüm devamsızlık kayıtlarını bul - hem normal hem ek dersleri dahil et
       const studentRecords = this.historicalAttendance.filter(
-        record => record.ogrenci_id === student.id && 
-        (record.ders_tipi === 'normal' || !record.ders_tipi)
+        record => record.ogrenci_id === student.id
       );
 
-      // Katıldığı dersleri say
+      // Katıldığı dersleri say (hem normal hem ek ders)
       const presentCount = studentRecords.filter(
         record => record.durum === 'present'
       ).length;
 
-      // Katılmadığı dersleri say
+      // Katılmadığı dersleri say (hem normal hem ek ders)
       const absentCount = studentRecords.filter(
         record => record.durum === 'absent'
       ).length;
