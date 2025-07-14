@@ -582,8 +582,8 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
         email: student.email,
         avatar: student.avatar,
         ucret: ucret,
-        presentCount: totalRecordsCount, // Toplam kayıt sayısı (normal + ek ders)
-        absentCount: absentCount,
+        presentCount: presentCount, // Sadece 'present' durumundaki kayıtlar
+        absentCount: absentCount,   // Sadece 'absent' durumundaki kayıtlar
         totalLessons: totalLessons,
         attendancePercentage: attendancePercentage,
         expectedPaymentCycles: expectedPaymentCycles,
