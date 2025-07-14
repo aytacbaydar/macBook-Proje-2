@@ -66,14 +66,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         ";
         $conn->exec($createTableSql);
 
-        // Ana devamsızlık kayıtları sorgusu - sadece normal dersleri getir
+        // Ana devamsızlık kayıtları sorgusu - hem normal hem ek ders kayıtlarını getir
         $sql = "
             SELECT dk.*, o.adi_soyadi, o.email, o.avatar
             FROM devamsizlik_kayitlari dk
             LEFT JOIN ogrenciler o ON dk.ogrenci_id = o.id
             WHERE dk.ogretmen_id = :ogretmen_id 
             AND dk.grup = :grup
-            AND (dk.ders_tipi = 'normal' OR dk.ders_tipi IS NULL)
         ";
 
         $params = [
@@ -123,7 +122,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             FROM devamsizlik_kayitlari dk
             WHERE dk.ogretmen_id = :ogretmen_id 
             AND dk.grup = :grup
-            AND (dk.ders_tipi = 'normal' OR dk.ders_tipi IS NULL)
         ";
 
         $countParams = [
