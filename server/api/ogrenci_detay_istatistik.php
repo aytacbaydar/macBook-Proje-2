@@ -122,7 +122,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         ";
         $stmt = $conn->prepare($recentAttendanceQuery);
         $stmt->execute([$ogrenci_id]);
-        $recentAttendance = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $recentAttendanceRaw = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Durum metinlerini Türkçe'ye çevir
+        $recentAttendance = array_map(function($record) {
+            $record['durum'] = $record['durum'] === 'present' ? 'Katıldı' : 'Katılmadı';
+            return $record;
+        }, $recentAttendanceRaw);
 
         $statistics = [
             'student_info' => [
