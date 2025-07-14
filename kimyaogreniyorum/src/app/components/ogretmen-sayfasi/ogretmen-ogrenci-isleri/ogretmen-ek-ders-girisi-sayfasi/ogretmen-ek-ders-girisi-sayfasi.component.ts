@@ -327,7 +327,7 @@ export class OgretmenEkDersGirisiSayfasiComponent implements OnInit {
     console.log('Toplu ek ders kaydı gönderiliyor:', { records });
 
     this.http
-      .post<any>('./server/api/devamsizlik_kaydet.php', { records }, {
+      .post<any>('./server/api/ek_ders_yoklama_kaydet.php', { records }, {
         headers: this.getAuthHeaders(),
       })
       .subscribe({
