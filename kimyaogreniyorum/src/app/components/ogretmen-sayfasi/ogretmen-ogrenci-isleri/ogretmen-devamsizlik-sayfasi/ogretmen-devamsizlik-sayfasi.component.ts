@@ -666,6 +666,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
   // Detaylı öğrenci istatistiklerini getir
   selectedStudentStats: any = null;
   showStudentStatsModal = false;
+  selectedStudentId: number | null = null;
 
   async loadStudentDetailedStats(studentId: number) {
     if (!this.selectedGroup) {
@@ -721,7 +722,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
   // Öğrenci seçildiğinde detayları göster
   selectStudent(student: any): void {
     this.selectedStudentId = student.id;
-    this.loadStudentDetailStats(student.id);
+    this.loadStudentDetailedStats(student.id);
   }
 
   // Debug: Öğrenci kayıtlarını detaylı analiz et
