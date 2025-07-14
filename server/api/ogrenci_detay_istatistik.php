@@ -116,12 +116,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $recentAttendanceQuery = "
             SELECT durum, tarih, zaman, ders_tipi
             FROM devamsizlik_kayitlari
-            WHERE ogrenci_id = ? AND grup = ?
-            ORDER BY tarih DESC
+            WHERE ogrenci_id = ?
+            ORDER BY tarih DESC, zaman DESC
             LIMIT 10
         ";
         $stmt = $conn->prepare($recentAttendanceQuery);
-        $stmt->execute([$ogrenci_id, $grup]);
+        $stmt->execute([$ogrenci_id]);
         $recentAttendance = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $statistics = [
