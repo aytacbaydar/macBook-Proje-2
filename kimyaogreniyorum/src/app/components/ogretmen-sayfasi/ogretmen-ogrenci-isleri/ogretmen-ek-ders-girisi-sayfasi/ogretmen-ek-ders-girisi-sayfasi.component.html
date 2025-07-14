@@ -123,40 +123,4 @@
         <h3>Ek Ders Yoklaması</h3>
         <p>Normal derse katılamayan öğrenciler için ek ders yoklaması almak üzere grup ve tarih seçin.</p>
     </div>
-
-    <!-- Historical Records -->
-    <div class="historical-section" *ngIf="ekDersKayitlari.length > 0">
-        <div class="section-header">
-            <h3><i class="bi bi-clock-history"></i> Bugünkü Ek Ders Kayıtları</h3>
-        </div>
-
-        <div class="records-table">
-            <div class="table-header">
-                <div class="col">Öğrenci</div>
-                <div class="col">Grup</div>
-                <div class="col">Durum</div>
-                <div class="col">Kayıt Saati</div>
-            </div>
-
-            <div class="table-row" *ngFor="let kayit of ekDersKayitlari">
-                <div class="col">
-                    <div class="student-info-mini">
-                        <img [src]="getDefaultAvatar(kayit.ogrenci_adi)" alt="Avatar" class="mini-avatar">
-                        <span>{{ kayit.ogrenci_adi }}</span>
-                    </div>
-                </div>
-                <div class="col">{{ kayit.grubu }}</div>
-                <div class="col">
-                    <span class="status-mini" [class.present]="kayit.durum === 'geldi'"
-                        [class.absent]="kayit.durum === 'gelmedi'">
-                        <i class="bi" [class.bi-check-circle]="kayit.durum === 'geldi'"
-                            [class.bi-x-circle]="kayit.durum === 'gelmedi'"></i>
-                        {{ kayit.durum === 'geldi' ? 'Katıldı' : 'Katılmadı' }}
-                    </span>
-                </div>
-                <div class="col">{{ kayit.olusturma_zamani | date:'HH:mm' }}</div>
-            </div>
-        </div>
-    </div>
 </div>
-  
