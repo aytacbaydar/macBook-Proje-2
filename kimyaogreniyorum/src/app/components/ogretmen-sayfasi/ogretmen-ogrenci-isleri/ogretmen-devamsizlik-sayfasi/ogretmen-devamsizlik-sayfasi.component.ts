@@ -718,6 +718,58 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     this.selectedStudentStats = null;
   }
 
+  // Öğrenci seçildiğinde detayları göster
+  selectStudent(student: any): void {
+    this.selectedStudentId = student.id;
+    this.loadStudentDetailStats(student.id);
+  }
+
+  // Debug: Öğrenci kayıtlarını detaylı analiz et
+  debugStudentRecords(studentId?: number): void {
+    if (!this.selectedGroup) {
+      console.log('Grup seçilmemiş');
+      return;
+    }
+
+    // Eğer studentId verilmemişse, ilk öğrenciyi al
+    const targetStudent = studentId ? 
+      this.groupStudents.find(s => s.id === studentId) : 
+      this.groupStudents[0];
+
+    if (!targetStudent) {
+      console.log('Öğrenci bulunamadı');
+      return;
+    }
+
+    console.log('=== ÖĞRENCI KAYIT DETAY ANALİZİ ===');
+    console.log('Öğrenci:', targetStudent.adi_soyadi, '(ID:', targetStudent.id, ')');
+    console.log('Grup:', this.selectedGroup);
+
+    // Bu öğrencinin tüm kayıtlarını filtrele
+    const studentRecords = this.historicalAttendance.filter(
+      record => record.ogrenci_id === targetStudent.id
+    );
+
+    console.log('Toplam kayıt sayısı:', studentRecords.length);
+    console.log('Tüm kayıtlar:', studentRecords);
+
+    // Kayıtları ders tipine göre grupla
+    const normalRecords = studentRecords.filter(r => !r.ders_tipi || r.ders_tipi === 'normal');
+    const ekDersRecords = studentRecords.filter(r => r.ders_tipi === 'ek_ders');
+
+    console.log('Normal ders kayıtları:', normalRecords.length, normalRecords);
+    console.log('Ek ders kayıtları:', ekDersRecords.length, ekDersRecords);
+
+    // Durum bazında analiz
+    const presentRecords = studentRecords.filter(r => r.durum === 'present');
+    const absentRecords = studentRecords.filter(r => r.durum === 'absent');
+
+    console.log('Present kayıtları:', presentRecords.length, presentRecords);
+    console.log('Absent kayıtları:', absentRecords.length, absentRecords);
+
+    console.log('=== KAYIT ANALİZİ TAMAMLANDI ===');
+  }
+
   formatCurrency(amount: number): string {
     return new Intl.NumberFormat('tr-TR', {
       style: 'currency',
