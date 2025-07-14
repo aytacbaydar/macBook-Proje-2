@@ -113,18 +113,11 @@ export class OgretmenGruplarSayfasiComponent implements OnInit {
 
     // Giriş yapan öğretmenin adi_soyadi'sını al
     const loggedInTeacherName = loggedInUser?.adi_soyadi || '';
-    
-    // Debug bilgisi
-    console.log('Öğretmen adı:', loggedInTeacherName);
-    console.log('Toplam öğrenci sayısı:', students.length);
-    
     // Sadece öğrencileri filtrele (admin ve öğretmenleri hariç tut)
     const actualStudents = students.filter(
-      (student) => student.rutbe === 'ogrenci'
+      (student) =>
+        student.rutbe === 'ogrenci' && student.ogretmeni === loggedInTeacherName
     );
-    
-    console.log('Filtreli öğrenci sayısı:', actualStudents.length);
-    console.log('İlk 3 öğrencinin öğretmeni:', actualStudents.slice(0, 3).map(s => s.ogretmeni));
 
     // Öğrencileri gruplara ayır
     actualStudents.forEach((student) => {
