@@ -731,37 +731,47 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Eğer studentId verilmemişse, ilk öğrenciyi al
-    const targetStudent = studentId ? 
-      this.groupStudents.find(s => s.id === studentId) : 
-      this.groupStudents[0];
+    // Eğer studentId verilmemişse, tüm öğrencileri analiz et
+    const targetStudents = studentId ? 
+      [this.groupStudents.find(s => s.id === studentId)] : 
+      this.groupStudents;
 
-    if (!targetStudent) {
-      return;
-    }
+    targetStudents.forEach(student => {
+      if (!student) return;
 
-    // Bu öğrencinin tüm kayıtlarını filtrele
-    const studentRecords = this.historicalAttendance.filter(
-      record => record.ogrenci_id === targetStudent.id
-    );
+      // Bu öğrencinin tüm kayıtlarını filtrele
+      const studentRecords = this.historicalAttendance.filter(
+        record => record.ogrenci_id === student.id
+      );
 
-    console.log('Öğrenci:', targetStudent.adi_soyadi, '(ID:', targetStudent.id, ')');
-    console.log('Toplam kayıt sayısı:', studentRecords.length);
-    console.log('Tüm kayıtlar:', studentRecords);
+      console.log('=== DEBUG: Öğrenci:', student.adi_soyadi, '(ID:', student.id, ') ===');
+      console.log('Toplam kayıt sayısı:', studentRecords.length);
+      console.log('Tüm kayıtlar:', studentRecords);
 
-    // Kayıtları ders tipine göre grupla
-    const normalRecords = studentRecords.filter(r => !r.ders_tipi || r.ders_tipi === 'normal');
-    const ekDersRecords = studentRecords.filter(r => r.ders_tipi === 'ek_ders');
+      // Kayıtları ders tipine göre grupla
+      const normalRecords = studentRecords.filter(r => !r.ders_tipi || r.ders_tipi === 'normal');
+      const ekDersRecords = studentRecords.filter(r => r.ders_tipi === 'ek_ders');
 
-    console.log('Normal ders kayıtları:', normalRecords.length);
-    console.log('Ek ders kayıtları:', ekDersRecords.length);
+      console.log('Normal ders kayıtları:', normalRecords.length, normalRecords);
+      console.log('Ek ders kayıtları:', ekDersRecords.length, ekDersRecords);
 
-    // Durum bazında analiz
-    const presentRecords = studentRecords.filter(r => r.durum === 'present');
-    const absentRecords = studentRecords.filter(r => r.durum === 'absent');
+      // Durum bazında analiz
+      const presentRecords = studentRecords.filter(r => r.durum === 'present');
+      const absentRecords = studentRecords.filter(r => r.durum === 'absent');
 
-    console.log('Present kayıtları:', presentRecords.length);
-    console.log('Absent kayıtları:', absentRecords.length);
+      console.log('Present kayıtları:', presentRecords.length, presentRecords);
+      console.log('Absent kayıtları:', absentRecords.length, absentRecords);
+
+      // Ders tipi bazında durum analizi
+      const normalPresent = studentRecords.filter(r => (!r.ders_tipi || r.ders_tipi === 'normal') && r.durum === 'present');
+      const ekDersPresent = studentRecords.filter(r => r.ders_tipi === 'ek_ders' && r.durum === 'present');
+      const normalAbsent = studentRecords.filter(r => (!r.ders_tipi || r.ders_tipi === 'normal') && r.durum === 'absent');
+      const ekDersAbsent = studentRecords.filter(r => r.ders_tipi === 'ek_ders' && r.durum === 'absent');
+
+      console.log('Normal Present:', normalPresent.length, 'Normal Absent:', normalAbsent.length);
+      console.log('Ek Ders Present:', ekDersPresent.length, 'Ek Ders Absent:', ekDersAbsent.length);
+      console.log('===================================');
+    });
   }
 
   formatCurrency(amount: number): string {
