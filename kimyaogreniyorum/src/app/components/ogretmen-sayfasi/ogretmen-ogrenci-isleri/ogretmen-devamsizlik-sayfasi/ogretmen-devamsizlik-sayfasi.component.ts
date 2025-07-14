@@ -537,7 +537,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     return this.getAttendancePercentage();
   }
 
-  // Öğrenci bazında detaylı devamsızlık analizi
+  // Detaylı devamsızlık analizi - öğrenci bazında ders tiplerini ayır
   getStudentAttendanceAnalysis(): any[] {
     if (!this.selectedGroup || this.groupStudents.length === 0) {
       return [];
@@ -548,6 +548,16 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       const studentRecords = this.historicalAttendance.filter(
         record => record.ogrenci_id === student.id
       );
+
+      // Debug: Her öğrenci için kayıtları logla
+      console.log(`Öğrenci ${student.adi_soyadi} (ID: ${student.id}):`, {
+        'Toplam kayıt': studentRecords.length,
+        'Kayıtlar': studentRecords.map(r => ({
+          tarih: r.tarih,
+          durum: r.durum,
+          ders_tipi: r.ders_tipi || 'normal'
+        }))
+      });
 
       // Present kayıtları
       const presentRecords = studentRecords.filter(record => record.durum === 'present');
@@ -564,6 +574,17 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       // Toplam
       const totalRecords = studentRecords.length;
       const attendancePercentage = totalRecords > 0 ? Math.round((totalPresent / totalRecords) * 100) : 0;
+
+      // Debug: Hesaplanan değerleri logla
+      console.log(`Öğrenci ${student.adi_soyadi} analizi:`, {
+        'Present Normal': presentNormal,
+        'Present Ek Ders': presentEkDers,
+        'Absent Normal': absentNormal,
+        'Absent Ek Ders': absentEkDers,
+        'Toplam Present': totalPresent,
+        'Toplam Absent': totalAbsent,
+        'Katılım %': attendancePercentage
+      });
 
       return {
         id: student.id,
@@ -888,8 +909,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       const studentId = parseInt(match[1]);
       const student = this.groupStudents.find((s) => s.id === studentId);
 
-      if (student) {
-        this.markAttendance(studentId, 'present', 'qr');
+      if (student) {        this.markAttendance(studentId, 'present', 'qr');
         this.toastr.success(
           `${student.adi_soyadi} QR kod ile katıldı olarak işaretlendi`,
           'Başarılı'
