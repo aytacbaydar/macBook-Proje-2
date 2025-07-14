@@ -544,17 +544,20 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     }
 
     return this.groupStudents.map(student => {
-      // Bu öğrencinin tüm devamsızlık kayıtlarını bul - hem normal hem ek dersleri dahil et
+      // Bu öğrencinin devamsizlik_kayitlari tablosundaki toplam kayıt sayısını al
       const studentRecords = this.historicalAttendance.filter(
         record => record.ogrenci_id === student.id
       );
 
-      // Katıldığı dersleri say (hem normal hem ek ders)
+      // Toplam kayıt sayısı (normal + ek ders = toplam)
+      const totalRecordsCount = studentRecords.length;
+      
+      // Katıldığı dersleri say 
       const presentCount = studentRecords.filter(
         record => record.durum === 'present'
       ).length;
 
-      // Katılmadığı dersleri say (hem normal hem ek ders)
+      // Katılmadığı dersleri say
       const absentCount = studentRecords.filter(
         record => record.durum === 'absent'
       ).length;
@@ -579,7 +582,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
         email: student.email,
         avatar: student.avatar,
         ucret: ucret,
-        presentCount: presentCount,
+        presentCount: totalRecordsCount, // Toplam kayıt sayısı (normal + ek ders)
         absentCount: absentCount,
         totalLessons: totalLessons,
         attendancePercentage: attendancePercentage,
