@@ -55,12 +55,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             errorResponse('Öğrenci bulunamadı.', 404);
         }
 
-        // Bu öğrencinin devamsızlık kayıtlarını al - sadece normal dersleri
+        // Bu öğrencinin devamsızlık kayıtlarını al - hem normal hem ek dersleri
         $attendanceQuery = "
-            SELECT tarih, durum, zaman
+            SELECT tarih, durum, zaman, ders_tipi
             FROM devamsizlik_kayitlari
             WHERE ogrenci_id = ?
-            AND (ders_tipi = 'normal' OR ders_tipi IS NULL)
             ORDER BY tarih DESC, zaman DESC
         ";
         $stmt = $conn->prepare($attendanceQuery);
@@ -113,9 +112,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         // Katılım yüzdesi
         $attendancePercentage = $totalLessons > 0 ? round(($presentCount / $totalLessons) * 100, 1) : 0;
 
-        // Son devamsızlık kayıtlarını al (son 10 ders)
+        // Son devamsızlık kayıtlarını al (son 10 ders) - hem normal hem ek dersleri
         $recentAttendanceQuery = "
-            SELECT durum, tarih, zaman
+            SELECT durum, tarih, zaman, ders_tipi
             FROM devamsizlik_kayitlari
             WHERE ogrenci_id = ? AND grup = ?
             ORDER BY tarih DESC
