@@ -1,4 +1,3 @@
-
 <?php
 // Error handling için output buffering başlat
 ob_start();
@@ -26,21 +25,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
         $user = authorize();
-        
+
         if ($user['rutbe'] !== 'ogretmen') {
             errorResponse('Bu işlem için yetkiniz yok.', 403);
         }
-        
+
         $conn = getConnection();
         $teacherName = $user['adi_soyadi'];
-        
+
         $grup = $_GET['grup'] ?? '';
         $ogrenci_id = $_GET['ogrenci_id'] ?? '';
-        
+
         if (empty($grup) || empty($ogrenci_id)) {
             errorResponse('Grup ve öğrenci ID gerekli.', 400);
         }
-        
+
         // Öğrenci bilgilerini al
         $studentQuery = "
             SELECT o.id, o.adi_soyadi, o.email, ob.ucret, ob.grubu
@@ -51,26 +50,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $stmt = $conn->prepare($studentQuery);
         $stmt->execute([$ogrenci_id, $teacherName]);
         $student = $stmt->fetch(PDO::FETCH_ASSOC);
-        
+
         if (!$student) {
             errorResponse('Öğrenci bulunamadı.', 404);
         }
-        
-        // Devamsızlık kayıtlarını al
+
+        // Bu öğrencinin devamsızlık kayıtlarını al - sadece normal dersleri
         $attendanceQuery = "
-            SELECT durum, tarih, zaman
+            SELECT tarih, durum, zaman
             FROM devamsizlik_kayitlari
-            WHERE ogrenci_id = ? AND grup = ?
-            ORDER BY tarih DESC
+            WHERE ogrenci_id = ?
+            AND (ders_tipi = 'normal' OR ders_tipi IS NULL)
+            ORDER BY tarih DESC, zaman DESC
         ";
         $stmt = $conn->prepare($attendanceQuery);
-        $stmt->execute([$ogrenci_id, $grup]);
+        $stmt->execute([$ogrenci_id]);
         $attendanceRecords = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
+
         // Katıldığı ve katılmadığı ders sayılarını hesapla
         $presentCount = 0;
         $absentCount = 0;
-        
+
         foreach ($attendanceRecords as $record) {
             if ($record['durum'] === 'present') {
                 $presentCount++;
@@ -78,22 +78,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 $absentCount++;
             }
         }
-        
+
         $totalLessons = $presentCount + $absentCount;
-        
+
         // Ödeme durumunu hesapla
         $ucretPerLesson = floatval($student['ucret'] ?? 0);
-        
+
         // Her 4 derste bir ödeme yapılması gerekiyor
         $expectedPaymentCycles = floor($presentCount / 4);
         $expectedTotalAmount = $expectedPaymentCycles * $ucretPerLesson;
-        
+
         // Bir sonraki ödeme için kaç ders kaldığını hesapla
         $lessonsUntilNextPayment = 4 - ($presentCount % 4);
         if ($lessonsUntilNextPayment === 4 && $presentCount > 0) {
             $lessonsUntilNextPayment = 0; // Tam 4'ün katı ise bir sonraki döngü için
         }
-        
+
         // Bu öğrencinin ödemelerini al
         $paymentsQuery = "
             SELECT SUM(tutar) as toplam_odeme, COUNT(*) as odeme_sayisi
@@ -103,16 +103,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $stmt = $conn->prepare($paymentsQuery);
         $stmt->execute([$ogrenci_id]);
         $paymentData = $stmt->fetch(PDO::FETCH_ASSOC);
-        
+
         $totalPaid = floatval($paymentData['toplam_odeme'] ?? 0);
         $paymentCount = intval($paymentData['odeme_sayisi'] ?? 0);
-        
+
         // Borç hesaplama
         $debt = max(0, $expectedTotalAmount - $totalPaid);
-        
+
         // Katılım yüzdesi
         $attendancePercentage = $totalLessons > 0 ? round(($presentCount / $totalLessons) * 100, 1) : 0;
-        
+
         // Son devamsızlık kayıtlarını al (son 10 ders)
         $recentAttendanceQuery = "
             SELECT durum, tarih, zaman
@@ -124,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $stmt = $conn->prepare($recentAttendanceQuery);
         $stmt->execute([$ogrenci_id, $grup]);
         $recentAttendance = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
+
         $statistics = [
             'student_info' => [
                 'id' => $student['id'],
@@ -150,9 +150,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             ],
             'recent_attendance' => $recentAttendance
         ];
-        
+
         successResponse($statistics, 'Öğrenci istatistikleri başarıyla getirildi');
-        
+
     } catch (Exception $e) {
         error_log("Öğrenci istatistik hatası: " . $e->getMessage());
         errorResponse('İstatistik getirme hatası: ' . $e->getMessage(), 500);
