@@ -41,6 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $tarih = $_GET['tarih'] ?? '';
         $baslangic_tarih = $_GET['baslangic_tarih'] ?? '';
         $bitis_tarih = $_GET['bitis_tarih'] ?? '';
+        $ders_tipi = $_GET['ders_tipi'] ?? ''; // 'normal', 'ek_ders' veya boş (hepsi)
         
         if (empty($grup)) {
             errorResponse('Grup parametresi gerekli', 400);
@@ -79,6 +80,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             ':ogretmen_id' => $user['id'],
             ':grup' => $grup
         ];
+        
+        // Ders tipi filtresi ekle
+        if (!empty($ders_tipi)) {
+            $sql .= " AND dk.ders_tipi = :ders_tipi";
+            $params[':ders_tipi'] = $ders_tipi;
+        }
         
         // Tarih filtresi ekle
         if (!empty($tarih)) {

@@ -223,6 +223,7 @@ export class OgretmenEkDersGirisiSayfasiComponent implements OnInit {
         params: {
           grup: this.selectedGroup,
           tarih: this.selectedDate,
+          ders_tipi: 'ek_ders'
         },
       })
       .subscribe({
@@ -270,10 +271,11 @@ export class OgretmenEkDersGirisiSayfasiComponent implements OnInit {
       durum: durum,
       ders_tarihi: this.selectedDate,
       not: '',
+      ders_tipi: 'ek_ders'
     };
 
     this.http
-      .post<any>('./server/api/ek_ders_yoklama_kaydet.php', data, {
+      .post<any>('./server/api/devamsizlik_kaydet.php', data, {
         headers: this.getAuthHeaders(),
       })
       .subscribe({
@@ -316,6 +318,7 @@ export class OgretmenEkDersGirisiSayfasiComponent implements OnInit {
           durum: student.attendance,
           ders_tarihi: this.selectedDate,
           not: '',
+          ders_tipi: 'ek_ders'
         };
 
         const promise = this.http

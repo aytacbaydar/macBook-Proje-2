@@ -1,3 +1,4 @@
+
 <?php
 // Türkiye saat dilimini ayarla
 date_default_timezone_set('Europe/Istanbul');
@@ -29,18 +30,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user = authorize();
 
         // Debug: User bilgilerini logla
-        error_log("=== DEVAMSIZLIK KAYDET DEBUG ===");
+        error_log("=== EK DERS YOKLAMA KAYDET DEBUG ===");
         error_log("User bilgileri: " . print_r($user, true));
         error_log("User ID (ogretmen_id): " . ($user['id'] ?? 'YOK'));
         error_log("User Rütbe: " . ($user['rutbe'] ?? 'YOK'));
-        error_log("User Adı: " . ($user['adi_soyadi'] ?? 'YOK'));
-        error_log("User ID Türü: " . gettype($user['id'] ?? null));
-        error_log("User ID Boş mu: " . (empty($user['id']) ? 'EVET' : 'HAYIR'));
-        error_log("================================");
+        error_log("=====================================");
 
-        // Sadece öğretmenler devamsızlık kaydı yapabilir
+        // Sadece öğretmenler ek ders yoklaması yapabilir
         if ($user['rutbe'] !== 'ogretmen') {
-            errorResponse('Bu işlem için yetkiniz yok. Sadece öğretmenler devamsızlık kaydı yapabilir.', 403);
+            errorResponse('Bu işlem için yetkiniz yok. Sadece öğretmenler ek ders yoklaması yapabilir.', 403);
         }
 
         // JSON verisini al
@@ -100,11 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($input['records'] as $index => $record) {
             try {
                 // Debug: Her record için bilgi logla
-                error_log("Record $index işleniyor: " . print_r($record, true));
-                error_log("Öğrenci ID: " . ($record['ogrenci_id'] ?? 'YOK'));
-                error_log("Grup: " . ($record['grup'] ?? 'YOK'));
-                error_log("Tarih: " . ($record['tarih'] ?? 'YOK'));
-                error_log("Durum: " . ($record['durum'] ?? 'YOK'));
+                error_log("Ek ders record $index işleniyor: " . print_r($record, true));
 
                 // Gerekli alanları kontrol et
                 if (!isset($record['ogrenci_id']) || !isset($record['grup']) || 
@@ -133,11 +127,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $yontem = isset($record['yontem']) ? $record['yontem'] : 'manual';
 
-                // Normal ders kaydı olarak işaretle
+                // Ek ders kaydı olarak işaretle
                 $stmt = $conn->prepare("
                     INSERT INTO devamsizlik_kayitlari 
                     (ogrenci_id, ogretmen_id, grup, tarih, durum, zaman, yontem, ders_tipi)
-                    VALUES (:ogrenci_id, :ogretmen_id, :grup, :tarih, :durum, :zaman, :yontem, 'normal')
+                    VALUES (:ogrenci_id, :ogretmen_id, :grup, :tarih, :durum, :zaman, :yontem, 'ek_ders')
                     ON DUPLICATE KEY UPDATE
                     durum = VALUES(durum),
                     zaman = VALUES(zaman),
@@ -154,21 +148,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->bindParam(':yontem', $yontem);
 
                 // Debug: SQL parametrelerini logla
-                error_log("SQL Parametreleri:");
+                error_log("Ek ders SQL Parametreleri:");
                 error_log("- ogrenci_id: " . $record['ogrenci_id']);
                 error_log("- ogretmen_id: " . $user['id']);
                 error_log("- grup: " . $record['grup']);
                 error_log("- tarih: " . $record['tarih']);
                 error_log("- durum: " . $record['durum']);
-                error_log("- zaman: " . $zaman);
-                error_log("- yontem: " . $yontem);
+                error_log("- ders_tipi: ek_ders");
 
                 $stmt->execute();
-                error_log("Kayıt başarılı - Öğrenci ID: " . $record['ogrenci_id']);
+                error_log("Ek ders kaydı başarılı - Öğrenci ID: " . $record['ogrenci_id']);
                 $savedCount++;
 
             } catch (PDOException $e) {
-                $errors[] = "Kayıt hatası (öğrenci ID: {$record['ogrenci_id']}): " . $e->getMessage();
+                $errors[] = "Ek ders kayıt hatası (öğrenci ID: {$record['ogrenci_id']}): " . $e->getMessage();
+                error_log("Ek ders kayıt hatası: " . $e->getMessage());
             }
         }
 
@@ -176,11 +170,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $conn->commit();
             successResponse([
                 'saved_count' => $savedCount,
-                'total_count' => count($input['records'])
-            ], 'Devamsızlık kayıtları başarıyla kaydedildi');
+                'total_count' => count($input['records']),
+                'message' => 'Ek ders yoklama kayıtları başarıyla kaydedildi'
+            ], 'Ek ders yoklama kayıtları başarıyla kaydedildi');
         } else {
             $conn->rollBack();
-            errorResponse('Kayıt sırasında hatalar oluştu: ' . implode(', ', $errors), 400);
+            errorResponse('Ek ders kayıt sırasında hatalar oluştu: ' . implode(', ', $errors), 400);
         }
 
     } catch (PDOException $e) {
@@ -188,7 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $conn->rollBack();
         }
         error_log("Veritabanı hatası: " . $e->getMessage());
-        errorResponse('Devamsızlık kayıtları kaydedilemedi: ' . $e->getMessage(), 500);
+        errorResponse('Ek ders yoklama kayıtları kaydedilemedi: ' . $e->getMessage(), 500);
     } catch (Exception $e) {
         if (isset($conn)) {
             $conn->rollBack();
