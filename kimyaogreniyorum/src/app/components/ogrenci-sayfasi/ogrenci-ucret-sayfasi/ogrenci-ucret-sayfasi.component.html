@@ -1,1 +1,215 @@
-<p>ogrenci-ucret-sayfasi works!</p>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="page-header">
+        <h2><i class="bi bi-credit-card me-2"></i>Ücret Bilgileri</h2>
+        <p class="text-muted">Ders ücretleri ve ödeme durumları</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Öğrenci Bilgi Kartları -->
+  <div class="row" *ngIf="studentAnalysis.length > 0">
+    <div class="col-12">
+      <h4 class="mb-3">Öğrenci Bilgi Kartları</h4>
+    </div>
+    <div class="col-md-6 col-lg-4 mb-4" *ngFor="let student of studentAnalysis">
+      <div class="student-card">
+        <div class="student-card-header">
+          <img [src]="student.avatar || getDefaultAvatar(student.name)" 
+               class="student-avatar" 
+               alt="Avatar">
+          <div class="student-info">
+            <h6 class="student-name">{{ student.name }}</h6>
+            <p class="student-email">{{ student.email }}</p>
+          </div>
+        </div>
+        <div class="student-card-body">
+          <div class="stat-row">
+            <span class="stat-label">Ders Ücreti:</span>
+            <span class="stat-value">{{ formatCurrency(student.ucret) }}</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Katıldığı Ders:</span>
+            <span class="stat-value">{{ student.presentCount }}</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Beklenen Tutar:</span>
+            <span class="stat-value">{{ formatCurrency(student.expectedTotalAmount) }}</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Katılım Oranı:</span>
+            <span class="stat-value">
+              <span class="badge bg-{{ getAttendanceColor(student.attendancePercentage) }}">
+                %{{ student.attendancePercentage }}
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="student-card-footer">
+          <button class="btn btn-primary btn-sm" 
+                  (click)="loadStudentDetailedStats(student.id)">
+            <i class="bi bi-graph-up me-1"></i>
+            Detaylı İstatistikleri Gör
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bilgi mesajı -->
+  <div class="row" *ngIf="studentAnalysis.length === 0">
+    <div class="col-12">
+      <div class="alert alert-info">
+        <i class="bi bi-info-circle me-2"></i>
+        Henüz öğrenci bilgisi bulunmamaktadır.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Student Detail Modal -->
+<div class="modern-modal-overlay" *ngIf="showStudentStatsModal" (click)="closeStudentStatsModal()">
+  <div class="modern-modal-content large-modal" (click)="$event.stopPropagation()">
+    <div class="modern-modal-header">
+      <div class="modal-title-section">
+        <div class="modal-icon">
+          <i class="bi bi-graph-up"></i>
+        </div>
+        <div class="modal-title-text">
+          <h4>Öğrenci Detay İstatistikleri</h4>
+          <p *ngIf="selectedStudentStats">{{ selectedStudentStats.student_info.name }}</p>
+        </div>
+      </div>
+      <button type="button" class="modern-close-btn" (click)="closeStudentStatsModal()">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+
+    <div class="modern-modal-body" *ngIf="selectedStudentStats">
+      <!-- Öğrenci Temel Bilgileri -->
+      <div class="student-basic-info mb-4">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="info-card">
+              <h6><i class="bi bi-person-fill me-2"></i>Öğrenci Bilgileri</h6>
+              <div class="info-item">
+                <span class="label">Ad Soyad:</span>
+                <span class="value">{{ selectedStudentStats.student_info.name }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">E-posta:</span>
+                <span class="value">{{ selectedStudentStats.student_info.email }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">Grup:</span>
+                <span class="value">{{ selectedStudentStats.student_info.grup }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">Ders Ücreti:</span>
+                <span class="value">{{ formatCurrency(selectedStudentStats.student_info.ucret) }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="info-card">
+              <h6><i class="bi bi-graph-up me-2"></i>Katılım İstatistikleri</h6>
+              <div class="info-item">
+                <span class="label">Konu Anlatımı Dersi:</span>
+                <span class="value">{{ selectedStudentStats.attendance_stats.total_lessons }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">Katıldığı Ders:</span>
+                <span class="value">{{ selectedStudentStats.attendance_stats.present_count }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">Katılmadığı Ders:</span>
+                <span class="value">{{ selectedStudentStats.attendance_stats.absent_count }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">Katılım Oranı:</span>
+                <span class="value badge bg-success">%{{ selectedStudentStats.attendance_stats.attendance_percentage }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ödeme İstatistikleri -->
+      <div class="payment-stats mb-4">
+        <div class="info-card">
+          <h6><i class="bi bi-credit-card me-2"></i>Ödeme İstatistikleri</h6>
+          <div class="row">
+            <div class="col-md-3">
+              <div class="stat-item">
+                <div class="stat-value">{{ selectedStudentStats.payment_stats.expected_payment_cycles }}</div>
+                <div class="stat-label">Beklenen Dönem</div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-item">
+                <div class="stat-value">{{ formatCurrency(selectedStudentStats.payment_stats.expected_total_amount) }}</div>
+                <div class="stat-label">Beklenen Tutar</div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-item">
+                <div class="stat-value">{{ formatCurrency(selectedStudentStats.payment_stats.total_paid) }}</div>
+                <div class="stat-label">Ödenen Tutar</div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-item">
+                <div class="stat-value" [class.text-danger]="selectedStudentStats.payment_stats.debt > 0">
+                  {{ formatCurrency(selectedStudentStats.payment_stats.debt) }}
+                </div>
+                <div class="stat-label">Borç</div>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-6">
+              <div class="stat-item">
+                <div class="stat-value">{{ selectedStudentStats.payment_stats.lessons_until_next_payment }}</div>
+                <div class="stat-label">Sonraki Ödemeye Kalan Ders</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="stat-item">
+                <div class="stat-value">{{ selectedStudentStats.payment_stats.payment_count }}</div>
+                <div class="stat-label">Yapılan Ödeme Sayısı</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Son Devamsızlık Kayıtları -->
+      <div class="recent-attendance mb-4">
+        <div class="info-card">
+          <h6><i class="bi bi-calendar-check me-2"></i>Son Devamsızlık Kayıtları</h6>
+          <div class="attendance-list">
+            <div class="attendance-item" *ngFor="let record of selectedStudentStats.recent_attendance">
+              <div class="attendance-date">
+                {{ formatDate(record.tarih) }}
+                <span class="attendance-time">{{ formatTime(record.zaman) }}</span>
+              </div>
+              <div class="attendance-status">
+                <span class="badge" 
+                      [class.bg-success]="record.durum === 'Katıldı'"
+                      [class.bg-danger]="record.durum === 'Katılmadı'">
+                  {{ record.durum }}
+                </span>
+                <span class="badge bg-info ms-1" *ngIf="record.ders_tipi">
+                  {{ record.ders_tipi === 'normal' ? 'Normal' : 
+                     record.ders_tipi === 'ek_ders' ? 'Ek Ders' : 'Etüt' }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
