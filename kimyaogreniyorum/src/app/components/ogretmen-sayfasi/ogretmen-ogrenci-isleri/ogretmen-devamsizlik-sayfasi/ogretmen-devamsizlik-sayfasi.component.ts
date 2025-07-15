@@ -734,6 +734,13 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     return new Date(dateString).toLocaleDateString('tr-TR');
   }
 
+  getTimeFromDate(dateString: string): string {
+    return new Date(dateString).toLocaleTimeString('tr-TR', { 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    });
+  }
+
   private initializeAttendanceRecords() {
     this.attendanceRecords.clear();
     this.groupStudents.forEach((student) => {
