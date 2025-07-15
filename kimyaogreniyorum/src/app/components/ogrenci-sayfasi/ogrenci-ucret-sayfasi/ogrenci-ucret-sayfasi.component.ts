@@ -324,7 +324,7 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
   // Ders tipine göre filtreleme
   getLessonsByType(lessons: AttendanceRecord[], lessonType: string): AttendanceRecord[] {
     if (!lessons) return [];
-    
+
     return lessons.filter(lesson => {
       if (lessonType === 'normal') {
         return !lesson.ders_tipi || lesson.ders_tipi === 'normal';
@@ -483,5 +483,49 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
       expectedTotalAmount: expectedTotalAmount,
       lessonsUntilNextPayment: lessonsUntilNextPayment === 4 ? 0 : lessonsUntilNextPayment
     }];
+  }
+
+  loadPaymentData(): void {
+    this.isLoading = true;
+    const headers = this.getAuthHeaders();
+
+    this.http.get<any>('./server/api/ogrenci_ucret_bilgileri.php', { headers })
+      .subscribe({
+        next: (response) => {
+          console.log('API Response:', response);
+
+          if (response && response.success) {
+            this.currentStudent = response.data.student_info;
+            this.historicalAttendance = response.data.attendance_records || [];
+            this.paymentHistory = response.data.payments || [];
+            this.groupedAttendanceByDate = this.convertGroupedAttendance(response.data.grouped_attendance || {});
+
+            console.log('Loaded data:', {
+              student: this.currentStudent,
+              attendance: this.historicalAttendance.length,
+              payments: this.paymentHistory.length,
+              grouped: Object.keys(this.groupedAttendanceByDate).length
+            });
+          } else {
+            console.error('API failed response:', response);
+            this.error = 'Veri yüklenemedi: ' + (response?.message || 'Bilinmeyen hata');
+          }
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('API Error:', error);
+          this.error = 'Bağlantı hatası: ' + (error.message || 'Bilinmeyen hata');
+          this.isLoading = false;
+        }
+      });
+  }
+  
+  convertGroupedAttendance(groupedAttendance: any): any[] {
+    return Object.entries(groupedAttendance).map(([date, data]: [string, any]) => ({
+      tarih: date,
+      kayitlar: data.kayitlar,
+      katilan_sayisi: data.katilan_sayisi,
+      katilmayan_sayisi: data.katilmayan_sayisi
+    })).sort((a: any, b: any) => new Date(b.tarih).getTime() - new Date(a.tarih).getTime());
   }
 }
