@@ -2454,3 +2454,66 @@
 }
 
 .processed-lessons-section {
+  margin-bottom: 2rem;
+
+  .lessons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+
+    .lesson-card {
+      background: var(--background-secondary);
+      border-radius: var(--border-radius-lg);
+      padding: 1.5rem;
+      border: 1px solid var(--border-primary);
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .lesson-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+
+        .lesson-title {
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: var(--text-primary);
+        }
+
+        .lesson-badge {
+          padding: 0.25rem 0.75rem;
+          border-radius: var(--border-radius-sm);
+          font-size: 0.8rem;
+          font-weight: 500;
+          background: var(--color-primary);
+          color: white;
+        }
+      }
+
+      .lesson-content {
+        .lesson-info {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+
+          .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+
+            i {
+              color: var(--color-primary);
+            }
+          }
+        }
+      }
+    }
+  }
+}
