@@ -57,6 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 durum ENUM('present', 'absent') NOT NULL,
                 zaman DATETIME NOT NULL,
                 yontem ENUM('manual', 'qr') DEFAULT 'manual',
+                ders_tipi ENUM('normal', 'ek_ders', 'etut_dersi') DEFAULT 'normal',
                 olusturma_zamani TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 guncelleme_zamani TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 FOREIGN KEY (ogrenci_id) REFERENCES ogrenciler(id) ON DELETE CASCADE,

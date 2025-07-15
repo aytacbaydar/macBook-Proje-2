@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 durum ENUM('present', 'absent') NOT NULL,
                 zaman DATETIME NOT NULL,
                 yontem ENUM('manual', 'qr') DEFAULT 'manual',
-                ders_tipi ENUM('normal', 'ek_ders') DEFAULT 'normal',
+                ders_tipi ENUM('normal', 'ek_ders', 'etut_dersi') DEFAULT 'normal',
                 olusturma_zamani TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 guncelleme_zamani TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 INDEX idx_ogrenci_id (ogrenci_id),
@@ -82,13 +82,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Eğer ders_tipi kolonu yoksa ekle
         $alterTableSql = "
             ALTER TABLE devamsizlik_kayitlari 
-            ADD COLUMN IF NOT EXISTS ders_tipi ENUM('normal', 'ek_ders') DEFAULT 'normal' AFTER yontem
+            ADD COLUMN IF NOT EXISTS ders_tipi ENUM('normal', 'ek_ders', 'etut_dersi') DEFAULT 'normal' AFTER yontem
         ";
         try {
             $conn->exec($alterTableSql);
         } catch (PDOException $e) {
             // Kolon zaten varsa hata vermez
             error_log("Ders tipi kolonu zaten mevcut veya eklenirken hata: " . $e->getMessage());
+        }
+
+        // Varolan ders_tipi kolonunu etut_dersi seçeneği ile güncelle
+        $updateEnumSql = "
+            ALTER TABLE devamsizlik_kayitlari 
+            MODIFY COLUMN ders_tipi ENUM('normal', 'ek_ders', 'etut_dersi') DEFAULT 'normal'
+        ";
+        try {
+            $conn->exec($updateEnumSql);
+        } catch (PDOException $e) {
+            error_log("Ders tipi enum güncellenirken hata: " . $e->getMessage());
         }
 
         // Transaction başlat
