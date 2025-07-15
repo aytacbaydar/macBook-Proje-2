@@ -1,4 +1,3 @@
-
 <?php
 require_once '../config.php';
 
@@ -17,14 +16,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
         $user = authorize();
-        
+
         if ($user['rutbe'] !== 'ogrenci') {
             errorResponse('Bu işlem sadece öğrenciler için geçerlidir.', 403);
         }
-        
+
         $conn = getConnection();
         $studentId = $user['id'];
-        
+
         // 1. Öğrenci temel bilgilerini getir
         $studentQuery = "
             SELECT o.id, o.adi_soyadi, o.email, o.avatar, o.ogretmeni,
@@ -36,11 +35,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $stmt = $conn->prepare($studentQuery);
         $stmt->execute([$studentId]);
         $student = $stmt->fetch(PDO::FETCH_ASSOC);
-        
+
         if (!$student) {
             errorResponse('Öğrenci bilgisi bulunamadı.', 404);
         }
-        
+
         // 2. Devamsızlık kayıtlarını getir (son 3 ay)
         $threeMonthsAgo = date('Y-m-d', strtotime('-3 months'));
         $attendanceQuery = "
@@ -52,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $stmt = $conn->prepare($attendanceQuery);
         $stmt->execute([$studentId, $threeMonthsAgo]);
         $attendanceRecords = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
+
         // 3. Ödemeler (son 6 ay)
         $sixMonthsAgo = date('Y-m-d', strtotime('-6 months'));
         $paymentsQuery = "
@@ -64,15 +63,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $stmt = $conn->prepare($paymentsQuery);
         $stmt->execute([$studentId, $sixMonthsAgo]);
         $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
+
         // 4. İstatistikleri hesapla
         $ucretPerLesson = floatval($student['ucret'] ?? 0);
-        
+
         // Katıldığı dersleri say (sadece normal ders ve ek ders)
         $presentCount = 0;
         $absentCount = 0;
         $totalRecords = count($attendanceRecords);
-        
+
         foreach ($attendanceRecords as $record) {
             if ($record['durum'] === 'present') {
                 // Sadece normal ders ve ek ders sayılsın
@@ -83,23 +82,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 $absentCount++;
             }
         }
-        
+
         $totalLessons = $presentCount + $absentCount;
         $attendancePercentage = $totalLessons > 0 ? round(($presentCount / $totalLessons) * 100) : 0;
-        
+
         // Ödeme hesaplamaları
         $expectedPaymentCycles = floor($presentCount / 4);
         $expectedTotalAmount = $expectedPaymentCycles * $ucretPerLesson;
         $lessonsUntilNextPayment = $presentCount > 0 ? 4 - ($presentCount % 4) : 4;
-        
+
         // Toplam ödenen tutar
         $totalPaid = 0;
         foreach ($payments as $payment) {
             $totalPaid += floatval($payment['tutar']);
         }
-        
+
         $debt = $expectedTotalAmount - $totalPaid;
-        
+
         // Tarihe göre gruplanmış devamsızlık kayıtları
         $groupedAttendance = [];
         foreach ($attendanceRecords as $record) {
@@ -109,11 +108,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             }
             $groupedAttendance[$date][] = $record;
         }
-        
+
         // Grupları tarihe göre sırala
         ksort($groupedAttendance);
         $groupedAttendance = array_reverse($groupedAttendance, true);
-        
+
         // Response datası
         $responseData = [
             'student_info' => $student,
@@ -134,9 +133,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 'payment_count' => count($payments)
             ]
         ];
-        
+
         successResponse($responseData);
-        
+
     } catch (Exception $e) {
         errorResponse('Veri getirme hatası: ' . $e->getMessage(), 500);
     }

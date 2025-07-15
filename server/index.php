@@ -89,6 +89,10 @@ if (strpos($requestUri, $basePath) === 0) {
             require_once 'api/ogrenci_profil.php';
             break;
 
+        case 'ogrenci_ucret_bilgileri':
+            require_once 'api/ogrenci_ucret_bilgileri.php';
+            break;
+
         case 'sinav_cevaplari_kaydet':
             require_once 'api/sinav_cevaplari_kaydet.php';
             break;
