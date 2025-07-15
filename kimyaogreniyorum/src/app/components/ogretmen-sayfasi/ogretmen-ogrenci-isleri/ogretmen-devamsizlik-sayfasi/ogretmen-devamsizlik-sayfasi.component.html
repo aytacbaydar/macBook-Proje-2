@@ -728,21 +728,99 @@
 
     <!-- Geçmiş Devamsızlık Kayıtları -->
     <div class="historical-attendance" *ngIf="viewHistoricalData">
-<!-- İşlenen Dersler Bölümü güncellendi -->
-    <div class="taught-lessons-section">
-      <div class="section-header">
-        <h3><i class="fas fa-chalkboard-teacher"></i> İşlenen Dersler (Normal Dersler)</h3>
-        <div class="lesson-count-badge" *ngIf="processedLessons.length > 0">
-          {{ processedLessons.length }} Ders
+<!-- İşlenen Dersler Bölümü - Modern Tasarım -->
+    <div class="modern-lessons-section">
+      <div class="modern-section-header">
+        <div class="header-content">
+          <div class="header-title">
+            <i class="bi bi-book-half text-primary"></i>
+            <h3>İşlenen Dersler</h3>
+            <span class="badge bg-light text-primary">Normal Dersler</span>
+          </div>
+          <div class="lessons-count" *ngIf="processedLessons.length > 0">
+            <span class="count-badge">{{ processedLessons.length }}</span>
+            <span class="count-text">Ders</span>
+          </div>
         </div>
       </div>
 
-      <div class="lessons-container" *ngIf="processedLessons.length > 0">
-        <div class="lesson-card" *ngFor="let lesson of processedLessons; let i = index">
-          <!-- Card Header -->
+      <div class="modern-lessons-grid" *ngIf="processedLessons.length > 0">
+        <div class="modern-lesson-card" *ngFor="let lesson of processedLessons; let i = index">
           <div class="lesson-card-header">
-            <div class="lesson-number">
-              <span class="lesson-index">{{ i + 1 }}</span>
+            <div class="lesson-number-badge">
+              <span class="lesson-number">{{ i + 1 }}</span>
+            </div>
+            <div class="lesson-date-info">
+              <div class="lesson-date">
+                <i class="bi bi-calendar3"></i>
+                {{ formatDate(lesson.tarih) }}
+              </div>
+              <div class="lesson-time">
+                <i class="bi bi-clock"></i>
+                {{ getTimeFromDate(lesson.tarih) }}
+              </div>
+            </div>
+          </div>
+          
+          <div class="lesson-card-body">
+            <div class="lesson-details">
+              <div class="lesson-topic" *ngIf="lesson.konu">
+                <i class="bi bi-lightbulb text-warning"></i>
+                <span>{{ lesson.konu }}</span>
+              </div>
+              <div class="lesson-description" *ngIf="lesson.aciklama">
+                <i class="bi bi-card-text text-info"></i>
+                <span>{{ lesson.aciklama }}</span>
+              </div>
+              <div class="lesson-method">
+                <i class="bi bi-person-check text-success"></i>
+                <span>{{ lesson.yontem === 'qr' ? 'QR Kod' : 'Manuel' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="lesson-card-footer">
+            <div class="student-stats">
+              <div class="stat-item present">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>{{ getAttendanceCountByLesson(lesson, 'present') }} Katıldı</span>
+              </div>
+              <div class="stat-item absent">
+                <i class="bi bi-x-circle-fill"></i>
+                <span>{{ getAttendanceCountByLesson(lesson, 'absent') }} Katılmadı</span>
+              </div>
+            </div>
+            
+            <button class="detail-btn" (click)="toggleLessonDetails(i)">
+              <i class="bi" [class.bi-chevron-down]="!lesson.showDetails" [class.bi-chevron-up]="lesson.showDetails"></i>
+              Detay
+            </button>
+          </div>
+
+          <div class="lesson-students-detail" *ngIf="lesson.showDetails">
+            <div class="students-header">
+              <h6><i class="bi bi-people"></i> Öğrenci Detayları</h6>
+            </div>
+            <div class="students-grid">
+              <div class="student-item" *ngFor="let student of getStudentsByLesson(lesson)" 
+                   [class.present]="student.durum === 'present'" 
+                   [class.absent]="student.durum === 'absent'">
+                <div class="student-avatar">
+                  <i class="bi bi-person-circle"></i>
+                </div>
+                <div class="student-info">
+                  <span class="student-name">{{ student.adi_soyadi }}</span>
+                  <span class="student-status">
+                    <i class="bi" [class.bi-check-circle]="student.durum === 'present'" 
+                       [class.bi-x-circle]="student.durum === 'absent'"></i>
+                    {{ student.durum === 'present' ? 'Katıldı' : 'Katılmadı' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>n-index">{{ i + 1 }}</span>
             </div>
             <div class="lesson-date-info">
               <div class="lesson-date">{{ formatDate(lesson.tarih) }}</div>

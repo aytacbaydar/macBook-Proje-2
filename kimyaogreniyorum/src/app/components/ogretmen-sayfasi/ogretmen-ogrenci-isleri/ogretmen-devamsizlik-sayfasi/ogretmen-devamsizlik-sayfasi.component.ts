@@ -741,6 +741,21 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     });
   }
 
+  toggleLessonDetails(index: number): void {
+    if (this.processedLessons[index]) {
+      this.processedLessons[index].showDetails = !this.processedLessons[index].showDetails;
+    }
+  }
+
+  getAttendanceCountByLesson(lesson: any, status: string): number {
+    if (!lesson || !lesson.ogrenci_listesi) return 0;
+    return lesson.ogrenci_listesi.filter((student: any) => student.durum === status).length;
+  }
+
+  getStudentsByLesson(lesson: any): any[] {
+    return lesson.ogrenci_listesi || [];
+  }
+
   private initializeAttendanceRecords() {
     this.attendanceRecords.clear();
     this.groupStudents.forEach((student) => {
