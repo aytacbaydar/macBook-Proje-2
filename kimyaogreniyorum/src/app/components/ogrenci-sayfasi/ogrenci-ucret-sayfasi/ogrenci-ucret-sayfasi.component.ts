@@ -32,6 +32,16 @@ interface AttendanceRecord {
   ders_tipi: string;
 }
 
+interface Payment {
+  id: number;
+  ogrenci_id: number;
+  tutar: number;
+  odeme_tarihi: string;
+  aciklama: string;
+  ay: number;
+  yil: number;
+}
+
 @Component({
   selector: 'app-ogrenci-ucret-sayfasi',
   standalone: false,
@@ -49,6 +59,8 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
   historicalAttendance: AttendanceRecord[] = [];
   groupedAttendanceByDate: any[] = [];
   studentStats: any = null;
+  paymentHistory: Payment[] = [];
+  error: string | null = null;
 
   // Payment history
   paymentHistory: any[] = [];
