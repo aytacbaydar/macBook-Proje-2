@@ -51,7 +51,7 @@ export class OgrenciUcretSayfasiComponent implements OnInit {
   // Devamsızlık kayıtları
   historicalAttendance: any[] = [];
   groupedAttendanceByDate: any[] = [];
-  viewHistoricalData: boolean = false;
+  viewHistoricalData: boolean = true;
   startDate: string = '';
   endDate: string = '';
 
@@ -365,7 +365,25 @@ export class OgrenciUcretSayfasiComponent implements OnInit {
   // Devamsızlık analizi - ders tiplerini ayır
   getStudentAttendanceAnalysis(): any {
     if (!this.currentUser || this.historicalAttendance.length === 0) {
-      return null;
+      // Veri yoksa sıfır değerlerle dolu obje döndür
+      return {
+        id: this.currentUser?.id || 0,
+        name: this.currentUser?.name || 'Öğrenci',
+        totalRecords: 0,
+        present: {
+          total: 0,
+          normal: 0,
+          ek_ders: 0,
+          etut_dersi: 0
+        },
+        absent: {
+          total: 0,
+          normal: 0,
+          ek_ders: 0,
+          etut_dersi: 0
+        },
+        attendancePercentage: 0
+      };
     }
 
     // Present kayıtları
