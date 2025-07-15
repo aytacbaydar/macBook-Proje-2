@@ -1,7 +1,32 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute, Router } from '@angular/router';
+
+interface Student {
+  id: number;
+  adi_soyadi: string;
+  email: string;
+  grubu: string;
+  avatar?: string;
+  rutbe: string;
+  ogretmeni: string;
+  ucret: string;
+}
+
+interface Group {
+  name: string;
+  students: Student[];
+  color: string;
+}
+
+interface AttendanceRecord {
+  student_id: number;
+  status: 'present' | 'absent' | 'pending';
+  timestamp: Date;
+  method: 'manual' | 'qr';
+}
 
 interface StudentStats {
   id: number;
@@ -18,28 +43,57 @@ interface StudentStats {
   lessonsUntilNextPayment: number;
 }
 
-interface AttendanceRecord {
-  tarih: string;
-  durum: string;
-  zaman: string;
-  ders_tipi: string;
-}
-
 @Component({
   selector: 'app-ogrenci-ucret-sayfasi',
   standalone: false,
   templateUrl: './ogrenci-ucret-sayfasi.component.html',
   styleUrl: './ogrenci-ucret-sayfasi.component.scss'
 })
-export class OgrenciUcretSayfasiComponent implements OnInit {
+export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
+  @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
+  @ViewChild('canvasElement') canvasElement!: ElementRef<HTMLCanvasElement>;
+
   // Math nesnesini template'de kullanmak için expose et
   Math = Math;
-  
+
+  private apiBaseUrl = 'http://localhost:8000/api';
+  private mediaStream: MediaStream | null = null;
+  private qrScanInterval: any;
+
+  // Data properties
+  groups: Group[] = [];
+  groupStudents: Student[] = [];
+  attendanceRecords: Map<number, AttendanceRecord> = new Map();
+  pastWeekAttendance: any[] = [];
+  historicalAttendance: any[] = [];
+  groupedAttendanceByDate: any[] = [];
+
+  // UI state
+  selectedGroup: string = '';
+  selectedDate: string = new Date().toISOString().split('T')[0];
+  viewHistoricalData: boolean = true;
+  viewProcessedLessons: boolean = false;
+  startDate: string = '';
+  endDate: string = '';
+  isQRScannerActive: boolean = false;
+  isLoading: boolean = false;
+  hasChanges: boolean = false;
+
+  // İşlenen dersler için değişkenler
+  processedLessons: any[] = [];
+  processedLessonsGroupedByDate: any[] = [];
+
+  // Etüt Dersi için değişkenler
+  etutAttendanceRecords: Map<number, AttendanceRecord> = new Map();
+  etutDersiTarih: string = new Date().toISOString().split('T')[0];
+  etutDersiSaat: string = '19:00';
+  hasEtutChanges: boolean = false;
+  isEtutSaving: boolean = false;
+
   // Öğrenci bilgileri
   selectedStudentStats: any = null;
   showStudentStatsModal = false;
   selectedStudentId: number | null = null;
-  isLoading = false;
   studentAnalysis: StudentStats[] = [];
   
   // Kullanıcı bilgileri
@@ -48,13 +102,6 @@ export class OgrenciUcretSayfasiComponent implements OnInit {
   // Öğrenci istatistik kartları
   studentStats: any[] = [];
   
-  // Devamsızlık kayıtları
-  historicalAttendance: any[] = [];
-  groupedAttendanceByDate: any[] = [];
-  viewHistoricalData: boolean = true;
-  startDate: string = '';
-  endDate: string = '';
-  
   // Filtreleme için orijinal veriler
   originalHistoricalAttendance: any[] = [];
   originalGroupedAttendanceByDate: any[] = [];
@@ -62,8 +109,27 @@ export class OgrenciUcretSayfasiComponent implements OnInit {
   // Ders tipi filtreleme
   selectedDersType: string = 'all'; // 'all', 'normal', 'ek_ders', 'etut_dersi'
 
+  // Computed properties
+  get totalStudents(): number {
+    return this.groupStudents.length;
+  }
+
+  get presentStudents(): number {
+    return Array.from(this.attendanceRecords.values()).filter(
+      (record) => record.status === 'present'
+    ).length;
+  }
+
+  get absentStudents(): number {
+    return Array.from(this.attendanceRecords.values()).filter(
+      (record) => record.status === 'absent'
+    ).length;
+  }
+
   constructor(
     private http: HttpClient,
+    private route: ActivatedRoute,
+    private router: Router,
     private toastr: ToastrService
   ) {}
 
@@ -71,6 +137,11 @@ export class OgrenciUcretSayfasiComponent implements OnInit {
     this.loadUserData();
     this.loadStudentStats();
     this.loadStudentHistoricalAttendance();
+    this.setTodayDate();
+  }
+
+  ngOnDestroy() {
+    this.stopQRScanner();
   }
 
   private loadUserData() {
@@ -83,10 +154,19 @@ export class OgrenciUcretSayfasiComponent implements OnInit {
           name: payload.adi_soyadi,
           rutbe: payload.rutbe
         };
+        console.log('Current user loaded:', this.currentUser);
       } catch (error) {
         console.error('Token parsing error:', error);
       }
     }
+  }
+
+  private getAuthHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
   }
 
   // Öğrenci istatistiklerini yükle (kendi bilgilerini görmek için)
@@ -120,6 +200,21 @@ export class OgrenciUcretSayfasiComponent implements OnInit {
           expectedTotalAmount: stats.payment_stats.expected_total_amount,
           lessonsUntilNextPayment: stats.payment_stats.lessons_until_next_payment
         }];
+
+        // Grup bilgisini al ve groupStudents'ı sadece bu öğrenci ile doldur
+        this.groupStudents = [{
+          id: stats.student_info.id,
+          adi_soyadi: stats.student_info.name,
+          email: stats.student_info.email,
+          grubu: stats.student_info.grubu || '',
+          avatar: this.getDefaultAvatar(stats.student_info.name),
+          rutbe: 'ogrenci',
+          ogretmeni: '',
+          ucret: stats.student_info.ucret.toString()
+        }];
+
+        this.selectedGroup = stats.student_info.grubu || '';
+        this.initializeAttendanceRecords();
       }
     } catch (error: any) {
       console.error('Öğrenci istatistikleri yüklenirken hata:', error);
@@ -167,45 +262,6 @@ export class OgrenciUcretSayfasiComponent implements OnInit {
     this.selectedStudentId = null;
   }
 
-  // Yardımcı fonksiyonlar
-  getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
-    return new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
-  }
-
-  formatCurrency(amount: number): string {
-    return new Intl.NumberFormat('tr-TR', {
-      style: 'currency',
-      currency: 'TRY'
-    }).format(amount);
-  }
-
-  getDefaultAvatar(name: string): string {
-    return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=0d6efd&color=fff&size=40`;
-  }
-
-  getAttendanceColor(percentage: number): string {
-    if (percentage >= 80) return 'success';
-    if (percentage >= 60) return 'warning';
-    return 'danger';
-  }
-
-  formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('tr-TR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    });
-  }
-
-  formatTime(timeString: string): string {
-    return timeString.substring(0, 5);
-  }
-
   // Öğrencinin geçmiş devamsızlık kayıtlarını yükle
   async loadStudentHistoricalAttendance() {
     if (!this.currentUser || !this.currentUser.id) {
@@ -240,6 +296,10 @@ export class OgrenciUcretSayfasiComponent implements OnInit {
       this.historicalAttendance = [];
       this.groupedAttendanceByDate = [];
     }
+  }
+
+  loadHistoricalAttendance() {
+    this.loadStudentHistoricalAttendance();
   }
 
   // Tarih aralığına göre kayıtları yükle
@@ -567,5 +627,138 @@ export class OgrenciUcretSayfasiComponent implements OnInit {
     };
     
     return typeClasses[dersType] || 'badge-primary';
+  }
+
+  formatCurrency(amount: number): string {
+    return new Intl.NumberFormat('tr-TR', {
+      style: 'currency',
+      currency: 'TRY'
+    }).format(amount);
+  }
+
+  getDefaultAvatar(name: string): string {
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=0d6efd&color=fff&size=40`;
+  }
+
+  getAttendanceColor(percentage: number): string {
+    if (percentage >= 80) return 'success';
+    if (percentage >= 60) return 'warning';
+    return 'danger';
+  }
+
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('tr-TR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  }
+
+  formatTime(timeString: string): string {
+    return timeString.substring(0, 5);
+  }
+
+  private initializeAttendanceRecords() {
+    this.attendanceRecords.clear();
+    this.groupStudents.forEach((student) => {
+      this.attendanceRecords.set(student.id, {
+        student_id: student.id,
+        status: 'pending',
+        timestamp: new Date(),
+        method: 'manual',
+      });
+    });
+  }
+
+  // QR Scanner methods (disabled for student view but keeping for compatibility)
+  toggleQRScanner() {
+    this.toastr.info('QR kod tarayıcı öğrenci sayfasında kullanılamaz', 'Bilgi');
+  }
+
+  private async startQRScanner() {
+    // Disabled for students
+  }
+
+  private stopQRScanner() {
+    if (this.mediaStream) {
+      this.mediaStream.getTracks().forEach((track) => track.stop());
+      this.mediaStream = null;
+    }
+
+    if (this.qrScanInterval) {
+      clearInterval(this.qrScanInterval);
+      this.qrScanInterval = null;
+    }
+
+    this.isQRScannerActive = false;
+  }
+
+  // Disabled attendance marking methods for students
+  markAttendance(studentId: number, status: 'present' | 'absent', method: 'manual' | 'qr' = 'manual') {
+    this.toastr.warning('Öğrenci olarak devamsızlık işaretleyemezsiniz', 'Uyarı');
+  }
+
+  markAllPresent() {
+    this.toastr.warning('Öğrenci olarak devamsızlık işaretleyemezsiniz', 'Uyarı');
+  }
+
+  markAllAbsent() {
+    this.toastr.warning('Öğrenci olarak devamsızlık işaretleyemezsiniz', 'Uyarı');
+  }
+
+  saveAttendance() {
+    this.toastr.warning('Öğrenci olarak devamsızlık kaydedemezsiniz', 'Uyarı');
+  }
+
+  // Dummy methods for compatibility
+  getAttendanceStatus(studentId: number): string {
+    return 'pending';
+  }
+
+  getAttendanceStatusText(studentId: number): string {
+    return 'Bekliyor';
+  }
+
+  getAttendanceTime(studentId: number): Date | null {
+    return null;
+  }
+
+  setTodayDate() {
+    this.selectedDate = new Date().toISOString().split('T')[0];
+  }
+
+  // Processed lessons methods (view only for students)
+  toggleProcessedLessonsView() {
+    this.viewProcessedLessons = !this.viewProcessedLessons;
+    if (this.viewProcessedLessons) {
+      this.loadProcessedLessons();
+    }
+  }
+
+  async loadProcessedLessons() {
+    if (!this.currentUser || !this.currentUser.id) return;
+
+    try {
+      const response = await this.http.get<any>(`./server/api/devamsizlik_kayitlari.php`, {
+        headers: this.getAuthHeaders(),
+        params: {
+          ogrenci_id: this.currentUser.id.toString(),
+          ders_tipi: 'normal'
+        }
+      }).toPromise();
+
+      if (response && response.success && response.data) {
+        this.processedLessons = response.data.kayitlar || [];
+        this.processedLessonsGroupedByDate = response.data.tarihlere_gore || [];
+      }
+    } catch (error: any) {
+      console.error('İşlenen dersler yüklenirken hata:', error);
+    }
+  }
+
+  // Student can only view their own data - no etüt creation
+  openEtutDersiModal() {
+    this.toastr.info('Öğrenci olarak etüt dersi oluşturamazsınız', 'Bilgi');
   }
 }
