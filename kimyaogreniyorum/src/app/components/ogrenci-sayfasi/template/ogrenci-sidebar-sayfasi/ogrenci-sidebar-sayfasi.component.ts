@@ -17,7 +17,7 @@ interface SoruMesaj {
   selector: 'app-ogrenci-sidebar-sayfasi',
   standalone: false,
   templateUrl: './ogrenci-sidebar-sayfasi.component.html',
-  styleUrl: './ogrenci-sidebar-sayfasi.component.scss'
+  styleUrl: './ogrenci-sidebar-sayfasi.component.scss',
 })
 export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
   unreadMessageCount: number = 0;
@@ -72,12 +72,12 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
       icon: 'bi-pencil',
       label: 'Soru Çözümü',
       link: 'ogrenci-sayfasi/ogrenci-soru-cozumu-sayfasi',
-      badgeCount: 0
+      badgeCount: 0,
     },
     {
       icon: 'bi-credit-card-2-back',
       label: 'Ücretler',
-      link: 'ogrenci-sayfasi',
+      link: 'ogrenci-sayfasi/ogrenci-ucret-sayfasi',
     },
     {
       icon: 'bi-qr-code-scan',
@@ -86,7 +86,7 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
     },
   ];
 
-  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) { }
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.loadStudentInfo();
@@ -113,7 +113,9 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
     console.log('loadUnreadMessageCount çağrıldı, studentId:', this.studentId);
 
     // Önce badge'i 0 olarak ayarla
-    const soruCozumuMenuItem = this.menuItems.find(item => item.label === 'Soru Çözümü');
+    const soruCozumuMenuItem = this.menuItems.find(
+      (item) => item.label === 'Soru Çözümü'
+    );
     if (soruCozumuMenuItem) {
       soruCozumuMenuItem.badgeCount = 0;
       this.cdr.detectChanges();
@@ -125,19 +127,27 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
     }
 
     const headers = {
-      'Authorization': `Bearer ${this.getTokenFromStorage()}`
+      Authorization: `Bearer ${this.getTokenFromStorage()}`,
     };
 
-    console.log('API çağrısı yapılıyor:', `./server/api/soru_mesajlari.php?ogrenci_id=${this.studentId}`);
+    console.log(
+      'API çağrısı yapılıyor:',
+      `./server/api/soru_mesajlari.php?ogrenci_id=${this.studentId}`
+    );
 
-    this.http.get<any>(`./server/api/soru_mesajlari.php?ogrenci_id=${this.studentId}`, { headers })
+    this.http
+      .get<any>(
+        `./server/api/soru_mesajlari.php?ogrenci_id=${this.studentId}`,
+        { headers }
+      )
       .subscribe({
         next: (response) => {
           console.log('API Response:', response);
           if (response && response.success && response.data) {
             // Öğretmenden gelen okunmamış mesajları say
-            const unreadMessages = response.data.filter((mesaj: SoruMesaj) => 
-              mesaj.gonderen_tip === 'ogretmen' && !mesaj.okundu
+            const unreadMessages = response.data.filter(
+              (mesaj: SoruMesaj) =>
+                mesaj.gonderen_tip === 'ogretmen' && !mesaj.okundu
             );
 
             this.unreadMessageCount = unreadMessages.length;
@@ -146,7 +156,10 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
             // Badge sayısını güncelle
             if (soruCozumuMenuItem) {
               soruCozumuMenuItem.badgeCount = this.unreadMessageCount;
-              console.log('Badge count güncellendi:', soruCozumuMenuItem.badgeCount);
+              console.log(
+                'Badge count güncellendi:',
+                soruCozumuMenuItem.badgeCount
+              );
               this.cdr.detectChanges();
             }
           } else {
@@ -156,12 +169,13 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
         error: (error) => {
           console.error('Mesaj sayısı yüklenirken hata:', error);
           console.log('Hata durumunda badge 0 olarak kalacak');
-        }
+        },
       });
   }
 
   private loadStudentInfo(): void {
-    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    const userStr =
+      localStorage.getItem('user') || sessionStorage.getItem('user');
     if (userStr) {
       try {
         const user = JSON.parse(userStr);
@@ -175,7 +189,8 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
   private getTokenFromStorage(): string {
     let token = localStorage.getItem('token');
     if (!token) {
-      const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+      const userStr =
+        localStorage.getItem('user') || sessionStorage.getItem('user');
       if (userStr) {
         try {
           const user = JSON.parse(userStr);
@@ -187,7 +202,6 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
     }
     return token || '';
   }
-
 
   toggleSidebar() {
     this.isClosed = !this.isClosed;
