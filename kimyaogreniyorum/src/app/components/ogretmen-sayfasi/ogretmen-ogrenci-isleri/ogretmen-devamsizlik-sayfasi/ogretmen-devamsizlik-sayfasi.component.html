@@ -575,7 +575,7 @@
               <div class="timeline-content">
                 <div class="timeline-date">{{ formatDate(record.tarih) }}</div>
                 <div class="timeline-status" [class.text-success]="record.durum === 'present'" [class.text-danger]="record.durum === 'absent'">
-                  {{ record.durum === 'present' ? 'Katıldı' : 'Katılmadı' }}
+                  {{ record.durum === 'present' ? 'Katılmadı' : 'Katıldı' }}
                 </div>
                 <div class="timeline-time text-muted small">{{ record.zaman | date:'HH:mm' }}</div>
               </div>
