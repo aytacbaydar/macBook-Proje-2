@@ -936,7 +936,6 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
           method: method,
         });
         this.hasChanges = true;
-        console.log(`Öğrenci ${studentId} durumu ${status} olarak güncellendi`);
       }
     }
   }

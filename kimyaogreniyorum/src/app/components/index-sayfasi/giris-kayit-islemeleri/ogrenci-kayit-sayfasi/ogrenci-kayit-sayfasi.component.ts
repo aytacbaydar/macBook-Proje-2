@@ -183,12 +183,9 @@ export class OgrenciKayitSayfasiComponent implements OnInit {
     console.log('Öğretmenler yükleniyor...');
     this.http.get<any>('./server/api/ogretmenler_listesi.php').subscribe({
       next: (response) => {
-        console.log('API yanıtı:', response);
+        
         if (response.success) {
           this.teachers = response.data || [];
-          console.log('Yüklenen öğretmenler: ', response.data);
-          console.log('Teachers array length: ', this.teachers.length);
-          console.log('Teachers array: ', this.teachers);
           // Manually trigger change detection
           this.cdr.detectChanges();
         } else {
