@@ -321,6 +321,18 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=4f46e5&color=fff&size=40&font-size=0.6&rounded=true`;
   }
 
+  // Ders tipine göre filtreleme
+  getLessonsByType(lessons: AttendanceRecord[], lessonType: string): AttendanceRecord[] {
+    if (!lessons) return [];
+    
+    return lessons.filter(lesson => {
+      if (lessonType === 'normal') {
+        return !lesson.ders_tipi || lesson.ders_tipi === 'normal';
+      }
+      return lesson.ders_tipi === lessonType;
+    });
+  }
+
   // Statistics methods
   getTotalPresentCount(): number {
     return this.historicalAttendance.filter(record => record.durum === 'present').length;

@@ -204,22 +204,73 @@
               </span>
             </div>
 
-            <div class="lessons-list">
-              <div class="lesson-record" *ngFor="let record of dateGroup.kayitlar">
-                <div class="lesson-status" [class.present]="record.durum === 'present'" 
-                     [class.absent]="record.durum === 'absent'">
-                  <i class="bi" [class.bi-check-circle]="record.durum === 'present'"
-                     [class.bi-x-circle]="record.durum === 'absent'"></i>
+            <!-- Ders Tipine Göre Gruplama -->
+            <div class="lessons-by-type">
+              <!-- Normal Dersler -->
+              <div class="lesson-type-group" *ngIf="getLessonsByType(dateGroup.kayitlar, 'normal').length > 0">
+                <div class="lesson-type-header">
+                  <h6><i class="bi bi-book"></i> Normal Dersler</h6>
                 </div>
-                <div class="lesson-details">
-                  <div class="lesson-type">
-                    {{ record.ders_tipi === 'ek_ders' ? 'Ek Ders' : 
-                       record.ders_tipi === 'etut_dersi' ? 'Etüt Dersi' : 'Normal Ders' }}
+                <div class="lessons-list">
+                  <div class="lesson-record" *ngFor="let record of getLessonsByType(dateGroup.kayitlar, 'normal')">
+                    <div class="lesson-status" [class.present]="record.durum === 'present'" 
+                         [class.absent]="record.durum === 'absent'">
+                      <i class="bi" [class.bi-check-circle]="record.durum === 'present'"
+                         [class.bi-x-circle]="record.durum === 'absent'"></i>
+                    </div>
+                    <div class="lesson-details">
+                      <div class="lesson-time">{{ record.zaman | date:'HH:mm' }}</div>
+                      <div class="lesson-status-text" [class.text-success]="record.durum === 'present'"
+                           [class.text-danger]="record.durum === 'absent'">
+                        {{ record.durum === 'present' ? 'Katıldım' : 'Katılmadım' }}
+                      </div>
+                    </div>
                   </div>
-                  <div class="lesson-time">{{ record.zaman | date:'HH:mm' }}</div>
-                  <div class="lesson-status-text" [class.text-success]="record.durum === 'present'"
-                       [class.text-danger]="record.durum === 'absent'">
-                    {{ record.durum === 'present' ? 'Katıldım' : 'Katılmadım' }}
+                </div>
+              </div>
+
+              <!-- Ek Dersler -->
+              <div class="lesson-type-group" *ngIf="getLessonsByType(dateGroup.kayitlar, 'ek_ders').length > 0">
+                <div class="lesson-type-header">
+                  <h6><i class="bi bi-plus-circle"></i> Ek Dersler</h6>
+                </div>
+                <div class="lessons-list">
+                  <div class="lesson-record" *ngFor="let record of getLessonsByType(dateGroup.kayitlar, 'ek_ders')">
+                    <div class="lesson-status" [class.present]="record.durum === 'present'" 
+                         [class.absent]="record.durum === 'absent'">
+                      <i class="bi" [class.bi-check-circle]="record.durum === 'present'"
+                         [class.bi-x-circle]="record.durum === 'absent'"></i>
+                    </div>
+                    <div class="lesson-details">
+                      <div class="lesson-time">{{ record.zaman | date:'HH:mm' }}</div>
+                      <div class="lesson-status-text" [class.text-success]="record.durum === 'present'"
+                           [class.text-danger]="record.durum === 'absent'">
+                        {{ record.durum === 'present' ? 'Katıldım' : 'Katılmadım' }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Etüt Dersleri -->
+              <div class="lesson-type-group" *ngIf="getLessonsByType(dateGroup.kayitlar, 'etut_dersi').length > 0">
+                <div class="lesson-type-header">
+                  <h6><i class="bi bi-clipboard-check"></i> Etüt Dersleri</h6>
+                </div>
+                <div class="lessons-list">
+                  <div class="lesson-record" *ngFor="let record of getLessonsByType(dateGroup.kayitlar, 'etut_dersi')">
+                    <div class="lesson-status" [class.present]="record.durum === 'present'" 
+                         [class.absent]="record.durum === 'absent'">
+                      <i class="bi" [class.bi-check-circle]="record.durum === 'present'"
+                         [class.bi-x-circle]="record.durum === 'absent'"></i>
+                    </div>
+                    <div class="lesson-details">
+                      <div class="lesson-time">{{ record.zaman | date:'HH:mm' }}</div>
+                      <div class="lesson-status-text" [class.text-success]="record.durum === 'present'"
+                           [class.text-danger]="record.durum === 'absent'">
+                        {{ record.durum === 'present' ? 'Katıldım' : 'Katılmadım' }}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
