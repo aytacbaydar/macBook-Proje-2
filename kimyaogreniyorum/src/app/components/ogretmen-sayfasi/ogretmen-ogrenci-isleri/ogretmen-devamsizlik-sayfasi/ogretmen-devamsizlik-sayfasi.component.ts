@@ -468,19 +468,53 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       });
   }
 
-  // Aylık özet istatistikleri
+  // Aylık özet istatistikleri - sadece normal dersler
   getTotalPresentInPeriod(): number {
-    return this.groupedAttendanceByDate.reduce(
-      (total, day) => total + day.katilan_sayisi,
-      0
-    );
+    if (!this.groupedAttendanceByDate || this.groupedAttendanceByDate.length === 0) {
+      return 0;
+    }
+
+    let totalPresent = 0;
+    
+    this.groupedAttendanceByDate.forEach(dateGroup => {
+      // O tarihteki kayıtları kontrol et
+      const dateRecords = this.historicalAttendance.filter(record => 
+        record.tarih === dateGroup.tarih
+      );
+      
+      // Sadece normal ders kayıtlarında present olanları say
+      const normalPresentCount = dateRecords.filter(record => 
+        (!record.ders_tipi || record.ders_tipi === 'normal') && record.durum === 'present'
+      ).length;
+      
+      totalPresent += normalPresentCount;
+    });
+
+    return totalPresent;
   }
 
   getTotalAbsentInPeriod(): number {
-    return this.groupedAttendanceByDate.reduce(
-      (total, day) => total + day.katilmayan_sayisi,
-      0
-    );
+    if (!this.groupedAttendanceByDate || this.groupedAttendanceByDate.length === 0) {
+      return 0;
+    }
+
+    let totalAbsent = 0;
+    
+    this.groupedAttendanceByDate.forEach(dateGroup => {
+      // O tarihteki kayıtları kontrol et
+      const dateRecords = this.historicalAttendance.filter(record => 
+        record.tarih === dateGroup.tarih
+      );
+      
+      // Sadece normal ders kayıtlarında absent olanları say
+      const normalAbsentCount = dateRecords.filter(record => 
+        (!record.ders_tipi || record.ders_tipi === 'normal') && record.durum === 'absent'
+      ).length;
+      
+      totalAbsent += normalAbsentCount;
+    });
+
+    return totalAbsent;
   }
 
   getAttendancePercentage(): number {
@@ -502,9 +536,32 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     return total > 0 ? Math.round((totalPresent / total) * 100) : 0;
   }
 
-  // Toplam ders sayısını getir (tarihlere göre)
+  // Toplam ders sayısını getir (tarihlere göre) - sadece normal dersler
   getTotalLessonsCount(): number {
-    return this.groupedAttendanceByDate.length;
+    if (!this.groupedAttendanceByDate || this.groupedAttendanceByDate.length === 0) {
+      return 0;
+    }
+
+    // Normal derslerin olduğu tarihleri say
+    let normalLessonsCount = 0;
+    
+    this.groupedAttendanceByDate.forEach(dateGroup => {
+      // O tarihteki kayıtları kontrol et
+      const dateRecords = this.historicalAttendance.filter(record => 
+        record.tarih === dateGroup.tarih
+      );
+      
+      // Normal ders kayıtları var mı kontrol et
+      const hasNormalLessons = dateRecords.some(record => 
+        !record.ders_tipi || record.ders_tipi === 'normal'
+      );
+      
+      if (hasNormalLessons) {
+        normalLessonsCount++;
+      }
+    });
+
+    return normalLessonsCount;
   }
 
   // Toplam katılım sayısını getir
