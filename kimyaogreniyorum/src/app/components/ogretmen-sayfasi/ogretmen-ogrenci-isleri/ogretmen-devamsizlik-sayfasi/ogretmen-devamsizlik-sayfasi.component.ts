@@ -117,7 +117,6 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       try {
         const user = JSON.parse(userStr);
         token = user.token || '';
-        console.log('Devamsızlık - Token bulundu:', token ? 'Evet' : 'Hayır');
       } catch (error) {
         console.error('Devamsızlık - User parse hatası:', error);
       }
@@ -219,7 +218,6 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
 
   onDateChange() {
     if (this.selectedGroup && this.selectedDate) {
-      console.log('Tarih değişti:', this.selectedDate);
 
       // Önce değişiklikleri sıfırla
       this.hasChanges = false;
@@ -284,13 +282,6 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
                 );
               }
 
-              console.log(`${dateGroup.tarih} tarihinde:`, {
-                katilan_sayisi: dateGroup.katilan_sayisi,
-                katilmayan_sayisi: dateGroup.katilmayan_sayisi,
-                katilanlar: dateGroup.katilanlar?.length || 0,
-                katilmayanlar: dateGroup.katilmayanlar?.length || 0,
-                katilmayan_isimler: dateGroup.katilmayanlar?.map((s: Student) => s.adi_soyadi) || []
-              });
             });
           } else {
             this.historicalAttendance = [];
@@ -315,11 +306,6 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       return;
     }
 
-    console.log('Tarih aralığı filtresi:', {
-      grup: this.selectedGroup,
-      baslangic_tarih: this.startDate,
-      bitis_tarih: this.endDate
-    });
 
     this.http
       .get<any>(`./server/api/devamsizlik_kayitlari.php`, {
@@ -332,7 +318,6 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       })
       .subscribe({
         next: (response) => {
-          console.log('Tarih aralığı filtre yanıtı:', response);
           if (response.success && response.data) {
             this.historicalAttendance = response.data.kayitlar || [];
             this.groupedAttendanceByDate = response.data.tarihlere_gore || [];
@@ -394,7 +379,6 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     this.startDate = startDate.toISOString().split('T')[0];
     this.endDate = endDate.toISOString().split('T')[0];
 
-    console.log('Son 1 hafta filtrelendi:', this.startDate, 'to', this.endDate);
     this.loadHistoricalAttendanceByDateRange();
   }
 
@@ -406,7 +390,6 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     this.startDate = startDate.toISOString().split('T')[0];
     this.endDate = endDate.toISOString().split('T')[0];
 
-    console.log('Son 1 ay filtrelendi:', this.startDate, 'to', this.endDate);
     this.loadHistoricalAttendanceByDateRange();
   }
 
@@ -418,7 +401,6 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     this.startDate = startDate.toISOString().split('T')[0];
     this.endDate = endDate.toISOString().split('T')[0];
 
-    console.log('Bu ay filtrelendi:', this.startDate, 'to', this.endDate);
     this.loadHistoricalAttendanceByDateRange();
   }
 
@@ -430,7 +412,6 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     this.startDate = startDate.toISOString().split('T')[0];
     this.endDate = endDate.toISOString().split('T')[0];
 
-    console.log('Bu yıl filtrelendi:', this.startDate, 'to', this.endDate);
     this.loadHistoricalAttendanceByDateRange();
   }
 
@@ -438,7 +419,6 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
   loadAllAttendanceRecords() {
     if (!this.selectedGroup) return;
 
-    console.log('Bütün devamsızlık kayıtları yükleniyor...');
 
     this.http
       .get<any>(`./server/api/devamsizlik_kayitlari.php`, {
@@ -450,18 +430,10 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       })
       .subscribe({
         next: (response) => {
-          console.log('Tüm kayıtlar API yanıtı:', response);
 
           if (response.success && response.data) {
             this.historicalAttendance = response.data.kayitlar || [];
             this.groupedAttendanceByDate = response.data.tarihlere_gore || [];
-
-            console.log('Toplam tüm kayıt:', this.historicalAttendance.length);
-            console.log('Gruplandırılmış tarih sayısı:', this.groupedAttendanceByDate.length);
-            console.log('API yanıtı toplam_kayit:', response.data.toplam_kayit);
-            console.log('Seçilen grup:', this.selectedGroup);
-            console.log('İlk 5 kayıt:', this.historicalAttendance.slice(0, 5));
-            console.log('Son 5 kayıt:', this.historicalAttendance.slice(-5));
 
             // Tarih inputlarını temizle
             this.startDate = '';
@@ -549,15 +521,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
         record => record.ogrenci_id === student.id
       );
 
-      // Debug: Her öğrenci için kayıtları logla
-      console.log(`Öğrenci ${student.adi_soyadi} (ID: ${student.id}):`, {
-        'Toplam kayıt': studentRecords.length,
-        'Kayıtlar': studentRecords.map(r => ({
-          tarih: r.tarih,
-          durum: r.durum,
-          ders_tipi: r.ders_tipi || 'normal'
-        }))
-      });
+
 
       // Present kayıtları
       const presentRecords = studentRecords.filter(record => record.durum === 'present');
@@ -575,16 +539,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       const totalRecords = studentRecords.length;
       const attendancePercentage = totalRecords > 0 ? Math.round((totalPresent / totalRecords) * 100) : 0;
 
-      // Debug: Hesaplanan değerleri logla
-      console.log(`Öğrenci ${student.adi_soyadi} analizi:`, {
-        'Present Normal': presentNormal,
-        'Present Ek Ders': presentEkDers,
-        'Absent Normal': absentNormal,
-        'Absent Ek Ders': absentEkDers,
-        'Toplam Present': totalPresent,
-        'Toplam Absent': totalAbsent,
-        'Katılım %': attendancePercentage
-      });
+
 
       return {
         id: student.id,
@@ -674,7 +629,6 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       return;
     }
 
-    console.log('Öğrenci detay istatistikleri yükleniyor:', { studentId, grup: this.selectedGroup });
 
     this.isLoading = true;
 
@@ -688,12 +642,10 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
         responseType: 'json'
       }).toPromise();
 
-      console.log('Öğrenci detay istatistik API yanıtı:', response);
 
       if (response && response.success) {
         this.selectedStudentStats = response.data;
         this.showStudentStatsModal = true;
-        console.log('Modal açılıyor, seçilen öğrenci stats:', this.selectedStudentStats);
       } else {
         this.toastr.error(response?.message || 'Öğrenci istatistikleri yüklenemedi', 'Hata');
       }
@@ -744,23 +696,17 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
         record => record.ogrenci_id === student.id
       );
 
-      console.log('=== DEBUG: Öğrenci:', student.adi_soyadi, '(ID:', student.id, ') ===');
-      console.log('Toplam kayıt sayısı:', studentRecords.length);
-      console.log('Tüm kayıtlar:', studentRecords);
+
 
       // Kayıtları ders tipine göre grupla
       const normalRecords = studentRecords.filter(r => !r.ders_tipi || r.ders_tipi === 'normal');
       const ekDersRecords = studentRecords.filter(r => r.ders_tipi === 'ek_ders');
 
-      console.log('Normal ders kayıtları:', normalRecords.length, normalRecords);
-      console.log('Ek ders kayıtları:', ekDersRecords.length, ekDersRecords);
 
       // Durum bazında analiz
       const presentRecords = studentRecords.filter(r => r.durum === 'present');
       const absentRecords = studentRecords.filter(r => r.durum === 'absent');
 
-      console.log('Present kayıtları:', presentRecords.length, presentRecords);
-      console.log('Absent kayıtları:', absentRecords.length, absentRecords);
 
       // Ders tipi bazında durum analizi
       const normalPresent = studentRecords.filter(r => (!r.ders_tipi || r.ders_tipi === 'normal') && r.durum === 'present');
@@ -768,9 +714,6 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       const normalAbsent = studentRecords.filter(r => (!r.ders_tipi || r.ders_tipi === 'normal') && r.durum === 'absent');
       const ekDersAbsent = studentRecords.filter(r => r.ders_tipi === 'ek_ders' && r.durum === 'absent');
 
-      console.log('Normal Present:', normalPresent.length, 'Normal Absent:', normalAbsent.length);
-      console.log('Ek Ders Present:', ekDersPresent.length, 'Ek Ders Absent:', ekDersAbsent.length);
-      console.log('===================================');
     });
   }
 
@@ -831,7 +774,6 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
               attendanceData = response.data;
             }
 
-            console.log('Mevcut yoklama verileri yüklendi:', attendanceData);
 
             // Mevcut kayıtları güncelle
             if (attendanceData && attendanceData.length > 0) {
@@ -846,9 +788,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
                 }
               });
 
-              console.log(`${this.selectedDate} tarihinde ${attendanceData.length} kayıt bulundu`);
             } else {
-              console.log(`${this.selectedDate} tarihinde kayıt bulunamadı, yeni yoklama alınabilir`);
             }
 
             // Veri yüklendikten sonra hasChanges'i false yap
