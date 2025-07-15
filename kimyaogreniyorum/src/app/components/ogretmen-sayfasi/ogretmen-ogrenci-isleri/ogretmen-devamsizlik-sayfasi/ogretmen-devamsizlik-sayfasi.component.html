@@ -761,7 +761,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="lesson-card-body">
             <div class="lesson-details">
               <div class="lesson-topic" *ngIf="lesson.konu">
@@ -790,7 +790,7 @@
                 <span>{{ getAttendanceCountByLesson(lesson, 'absent') }} Katılmadı</span>
               </div>
             </div>
-            
+
             <button class="detail-btn" (click)="toggleLessonDetails(i)">
               <i class="bi" [class.bi-chevron-down]="!lesson.showDetails" [class.bi-chevron-up]="lesson.showDetails"></i>
               Detay
@@ -820,132 +820,43 @@
             </div>
           </div>
         </div>
-      </div>n-index">{{ i + 1 }}</span>
-            </div>
-            <div class="lesson-date-info">
-              <div class="lesson-date">{{ formatDate(lesson.tarih) }}</div>
-              <div class="lesson-day">{{ getDayName(lesson.tarih) }}</div>
-            </div>
-            <div class="lesson-status">
-              <span class="status-badge completed">
-                <i class="fas fa-check-circle"></i>
-                Tamamlandı
-              </span>
-            </div>
-          </div>
+      </div>
+      <span class="lesson-index">{{ i + 1 }}</span>
+                    <div class="lesson-content">
+                      <div class="lesson-main-info">
+                        <h4 class="lesson-title">{{ lesson.konu_adi }}</h4>
+                        <p class="lesson-description">{{ lesson.aciklama || 'Açıklama yok' }}</p>
+                      </div>
 
-          <!-- Card Content -->
-          <div class="lesson-card-content">
-            <div class="lesson-topic">
-              <h4 class="topic-title">
-                <i class="fas fa-book-open"></i>
-                {{ lesson.ders_konusu || 'Ders konusu belirtilmemiş' }}
-              </h4>
-            </div>
+                      <div class="lesson-details">
+                        <div class="lesson-detail">
+                          <i class="fas fa-calendar-alt"></i>
+                          <span>{{ formatDate(lesson.tarih) }}</span>
+                        </div>
+                        <div class="lesson-detail">
+                          <i class="fas fa-clock"></i>
+                          <span>{{ getTimeFromDate(lesson.tarih) }}</span>
+                        </div>
+                        <div class="lesson-detail">
+                          <i class="fas fa-users"></i>
+                          <span>{{ lesson.grup_adi }}</span>
+                        </div>
+                      </div>
+                    </div>
 
-            <!-- Attendance Stats -->
-            <div class="attendance-overview">
-              <div class="attendance-stat present">
-                <div class="stat-icon">
-                  <i class="fas fa-user-check"></i>
-                </div>
-                <div class="stat-info">
-                  <span class="stat-number">{{ lesson.katilan_ogrenciler?.length || 0 }}</span>
-                  <span class="stat-label">Katılan</span>
-                </div>
+                    <div class="lesson-actions">
+                      <button class="detay-buton" type="button">
+                        <i class="fas fa-eye"></i>
+                        <span>Detayları Gör</span>
+                      </button>
+                    </div>
+                  </div>
+
+                <hr />
               </div>
-
-              <div class="attendance-stat absent">
-                <div class="stat-icon">
-                  <i class="fas fa-user-times"></i>
-                </div>
-                <div class="stat-info">
-                  <span class="stat-number">{{ lesson.katilmayan_ogrenciler?.length || 0 }}</span>
-                  <span class="stat-label">Katılmayan</span>
-                </div>
-              </div>
-
-              <div class="attendance-stat total">
-                <div class="stat-icon">
-                  <i class="fas fa-users"></i>
-                </div>
-                <div class="stat-info">
-                  <span class="stat-number">{{ (lesson.katilan_ogrenciler?.length || 0) + (lesson.katilmayan_ogrenciler?.length || 0) }}</span>
-                  <span class="stat-label">Toplam</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Student Details -->
-            <div class="student-details-section">
-              <div class="student-group present-group" *ngIf="lesson.katilan_ogrenciler?.length > 0">
-                <div class="group-header">
-                  <i class="fas fa-check-circle"></i>
-                  <span>Katılan Öğrenciler</span>
-                  <span class="count">({{ lesson.katilan_ogrenciler.length }})</span>
-                </div>
-                <div class="student-tags">
-                  <span class="student-tag present" *ngFor="let student of lesson.katilan_ogrenciler">
-                    <i class="fas fa-user"></i>
-                    {{ student }}
-                  </span>
-                </div>
-              </div>
-
-              <div class="student-group absent-group" *ngIf="lesson.katilmayan_ogrenciler?.length > 0">
-                <div class="group-header">
-                  <i class="fas fa-times-circle"></i>
-                  <span>Katılmayan Öğrenciler</span>
-                  <span class="count">({{ lesson.katilmayan_ogrenciler.length }})</span>
-                </div>
-                <div class="student-tags">
-                  <span class="student-tag absent" *ngFor="let student of lesson.katilmayan_ogrenciler">
-                    <i class="fas fa-user"></i>
-                    {{ student }}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card Footer -->
-          <div class="lesson-card-footer">
-            <div class="lesson-actions">
-              <button class="action-btn view-btn" type="button">
-                <i class="fas fa-eye"></i>
-                Detaylar
-              </button>
-              <button class="action-btn edit-btn" type="button">
-                <i class="fas fa-edit"></i>
-                Düzenle
-              </button>
-            </div>
-            <div class="lesson-meta">
-              <span class="meta-item">
-                <i class="fas fa-clock"></i>
-                {{ getTimeFromDate(lesson.tarih) }}
-              </span>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- Empty State -->
-      <div class="empty-state" *ngIf="processedLessons.length === 0">
-        <div class="empty-icon">
-          <i class="fas fa-chalkboard-teacher"></i>
-        </div>
-        <div class="empty-title">Henüz İşlenen Ders Yok</div>
-        <div class="empty-subtitle">Seçilen tarih aralığında işlenen ders kaydı bulunamadı.</div>
-        <div class="empty-action">
-          <button class="btn btn-primary" type="button">
-            <i class="fas fa-plus"></i>
-            Yeni Ders Ekle
-          </button>
-        </div>
-      </div>
-    </div>
-    <!-- İşlenen dersler bölümü -->
-    <div class="recent-attendance">
     </div>
 </div>
