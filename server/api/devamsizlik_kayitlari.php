@@ -28,9 +28,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         // Kullanıcıyı doğrula
         $user = authorize();
 
-        // Sadece öğretmenler kendi gruplarının devamsızlık kayıtlarını görebilir
-        if ($user['rutbe'] !== 'ogretmen') {
-            errorResponse('Bu işlem için yetkiniz yok. Sadece öğretmenler devamsızlık kayıtlarını görebilir.', 403);
+        // Yetki kontrolü - öğretmenler tüm grupları, öğrenciler sadece kendi kayıtlarını görebilir
+        if ($user['rutbe'] !== 'ogretmen' && $user['rutbe'] !== 'ogrenci') {
+            errorResponse('Bu işlem için yetkiniz yok.', 403);
+        }
+
+        // Öğrenci sadece kendi kayıtlarını görebilir
+        if ($user['rutbe'] === 'ogrenci') {
+            $ogrenci_id = $user['id']; // Öğrenci kendi ID'sini kullanır
         }
 
         $conn = getConnection();
@@ -41,8 +46,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $baslangic_tarih = $_GET['baslangic_tarih'] ?? '';
         $bitis_tarih = $_GET['bitis_tarih'] ?? '';
         $ders_tipi = $_GET['ders_tipi'] ?? ''; // 'normal', 'ek_ders' veya boş (hepsi)
+        $ogrenci_id = $_GET['ogrenci_id'] ?? ''; // Belirli bir öğrencinin kayıtları
+        $butun_kayitlar = $_GET['butun_kayitlar'] ?? ''; // Tüm kayıtları getir
 
-        if (empty($grup)) {
+        // Grup parametresi sadece öğretmenler için gerekli
+        if ($user['rutbe'] === 'ogretmen' && empty($grup) && empty($ogrenci_id)) {
             errorResponse('Grup parametresi gerekli', 400);
         }
 
@@ -72,14 +80,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             SELECT dk.*, o.adi_soyadi, o.email, o.avatar
             FROM devamsizlik_kayitlari dk
             LEFT JOIN ogrenciler o ON dk.ogrenci_id = o.id
-            WHERE dk.ogretmen_id = :ogretmen_id 
-            AND dk.grup = :grup
+            WHERE 1=1
         ";
 
-        $params = [
-            ':ogretmen_id' => $user['id'],
-            ':grup' => $grup
-        ];
+        $params = [];
+
+        // Öğrenci kendi kayıtlarını görüyorsa sadece kendi ID'si ile filtrele
+        if (!empty($ogrenci_id)) {
+            $sql .= " AND dk.ogrenci_id = :ogrenci_id";
+            $params[':ogrenci_id'] = $ogrenci_id;
+        } else {
+            // Öğretmen kendi gruplarının kayıtlarını görüyor
+            $sql .= " AND dk.ogretmen_id = :ogretmen_id";
+            $params[':ogretmen_id'] = $user['id'];
+            
+            if (!empty($grup)) {
+                $sql .= " AND dk.grup = :grup";
+                $params[':grup'] = $grup;
+            }
+        }
 
         // Ders tipi filtresi ekle
         if (!empty($ders_tipi)) {
@@ -97,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $params[':bitis_tarih'] = $bitis_tarih;
         }
 
-        $sql .= " ORDER BY dk.tarih DESC, o.adi_soyadi ASC";
+        $sql .= " ORDER BY dk.tarih DESC, dk.ders_tipi ASC, o.adi_soyadi ASC";
 
         // LIMIT kontrolü - herhangi bir LIMIT olup olmadığını kontrol et
         if (strpos(strtoupper($sql), 'LIMIT') !== false) {
@@ -121,14 +140,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $countSql = "
             SELECT COUNT(*) as toplam_kayit
             FROM devamsizlik_kayitlari dk
-            WHERE dk.ogretmen_id = :ogretmen_id 
-            AND dk.grup = :grup
+            WHERE 1=1
         ";
 
-        $countParams = [
-            ':ogretmen_id' => $user['id'],
-            ':grup' => $grup
-        ];
+        $countParams = [];
+
+        // Öğrenci kendi kayıtlarını görüyorsa
+        if (!empty($ogrenci_id)) {
+            $countSql .= " AND dk.ogrenci_id = :ogrenci_id";
+            $countParams[':ogrenci_id'] = $ogrenci_id;
+        } else {
+            // Öğretmen kendi gruplarının kayıtlarını görüyor
+            $countSql .= " AND dk.ogretmen_id = :ogretmen_id";
+            $countParams[':ogretmen_id'] = $user['id'];
+            
+            if (!empty($grup)) {
+                $countSql .= " AND dk.grup = :grup";
+                $countParams[':grup'] = $grup;
+            }
+        }
 
         // Tarih filtresi varsa count sorgusuna da ekle
         if (!empty($tarih)) {
