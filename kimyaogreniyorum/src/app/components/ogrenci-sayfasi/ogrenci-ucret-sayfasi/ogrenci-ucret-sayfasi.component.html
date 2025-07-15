@@ -17,7 +17,7 @@
           <p><i class="bi bi-people-fill"></i> {{ currentStudent.grubu }}</p>
           <p><i class="bi bi-building"></i> {{ currentStudent.okulu }}</p>
           <p><i class="bi bi-bookmark"></i> {{ currentStudent.sinifi }}</p>
-          <span class="badge bg-primary">{{ formatCurrency(parseFloat(currentStudent.ucret || '0')) }}</span>
+          <span class="badge bg-primary">{{ formatCurrency(currentStudent.ucret ? +currentStudent.ucret : 0) }}</span>
         </div>
       </div>
     </div>
