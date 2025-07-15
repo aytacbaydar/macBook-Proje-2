@@ -1,0 +1,72 @@
+
+X [ERROR] Expected identifier.
+    ╷
+879 │ :::-webkit-scrollbar {
+    │   ^
+    ╵
+  src\app\components\ogretmen-sayfasi\ogretmen-ogrenci-isleri\ogretmen-devamsizlik-sayfasi\ogretmen-devamsizlik-sayfasi.component.scss 879:3  root stylesheet [plugin angular-sass]
+
+
+X [ERROR] NG5002: Unexpected closing tag "span". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags
+ [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-devamsizlik-sayfasi/ogretmen-devamsizlik-sayfasi.component.html:823:32:
+      823 │       </div>n-index">{{ i + 1 }}</span>
+          ╵                                 ~~~~~~~
+
+  Error occurs in the template of component OgretmenDevamsizlikSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-devamsizlik-sayfasi/ogretmen-devamsizlik-sayfasi.component.ts:41:15:
+      41 │   templateUrl: './ogretmen-devamsizlik-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-devamsizlik-sayfasi/ogretmen-devamsizlik-sayfasi.component.html:930:8:
+      930 │         </div>
+          ╵         ~~~~~~
+
+  Error occurs in the template of component OgretmenDevamsizlikSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-devamsizlik-sayfasi/ogretmen-devamsizlik-sayfasi.component.ts:41:15:
+      41 │   templateUrl: './ogretmen-devamsizlik-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-devamsizlik-sayfasi/ogretmen-devamsizlik-sayfasi.component.html:931:6:
+      931 │       </div>
+          ╵       ~~~~~~
+
+  Error occurs in the template of component OgretmenDevamsizlikSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-devamsizlik-sayfasi/ogretmen-devamsizlik-sayfasi.component.ts:41:15:
+      41 │   templateUrl: './ogretmen-devamsizlik-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-devamsizlik-sayfasi/ogretmen-devamsizlik-sayfasi.component.html:947:4:
+      947 │     </div>
+          ╵     ~~~~~~
+
+  Error occurs in the template of component OgretmenDevamsizlikSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-devamsizlik-sayfasi/ogretmen-devamsizlik-sayfasi.component.ts:41:15:
+      41 │   templateUrl: './ogretmen-devamsizlik-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-devamsizlik-sayfasi/ogretmen-devamsizlik-sayfasi.component.html:951:0:
+      951 │ </div>
+          ╵ ~~~~~~
+
+  Error occurs in the template of component OgretmenDevamsizlikSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-devamsizlik-sayfasi/ogretmen-devamsizlik-sayfasi.component.ts:41:15:
+      41 │   templateUrl: './ogretmen-devamsizlik-sayfasi.component.html',
