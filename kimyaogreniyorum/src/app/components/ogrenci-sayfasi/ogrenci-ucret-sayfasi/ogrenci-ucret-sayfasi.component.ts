@@ -54,6 +54,13 @@ export class OgrenciUcretSayfasiComponent implements OnInit {
   viewHistoricalData: boolean = true;
   startDate: string = '';
   endDate: string = '';
+  
+  // Filtreleme için orijinal veriler
+  originalHistoricalAttendance: any[] = [];
+  originalGroupedAttendanceByDate: any[] = [];
+  
+  // Ders tipi filtreleme
+  selectedDersType: string = 'all'; // 'all', 'normal', 'ek_ders', 'etut_dersi'
 
   constructor(
     private http: HttpClient,
@@ -214,13 +221,17 @@ export class OgrenciUcretSayfasiComponent implements OnInit {
       }).toPromise();
 
       if (response && response.success && response.data) {
-        this.historicalAttendance = response.data.kayitlar || [];
+        // Orijinal verileri sakla
+        this.originalHistoricalAttendance = response.data.kayitlar || [];
+        this.originalGroupedAttendanceByDate = response.data.tarihlere_gore || [];
         
-        // Tarihlere göre gruplanan verileri al
-        this.groupedAttendanceByDate = response.data.tarihlere_gore || [];
+        // Filtrelenmiş verileri ayarla
+        this.applyDersTypeFilter();
         
-        console.log('Öğrenci geçmiş kayıtları yüklendi:', this.historicalAttendance.length, 'kayıt');
+        console.log('Öğrenci geçmiş kayıtları yüklendi:', this.originalHistoricalAttendance.length, 'kayıt');
       } else {
+        this.originalHistoricalAttendance = [];
+        this.originalGroupedAttendanceByDate = [];
         this.historicalAttendance = [];
         this.groupedAttendanceByDate = [];
       }
@@ -248,8 +259,12 @@ export class OgrenciUcretSayfasiComponent implements OnInit {
       }).toPromise();
 
       if (response && response.success && response.data) {
-        this.historicalAttendance = response.data.kayitlar || [];
-        this.groupedAttendanceByDate = response.data.tarihlere_gore || [];
+        // Orijinal verileri sakla
+        this.originalHistoricalAttendance = response.data.kayitlar || [];
+        this.originalGroupedAttendanceByDate = response.data.tarihlere_gore || [];
+        
+        // Filtrelenmiş verileri ayarla
+        this.applyDersTypeFilter();
         
         if (this.groupedAttendanceByDate.length === 0) {
           this.toastr.info('Seçilen tarih aralığında kayıt bulunamadı', 'Bilgi');
@@ -257,6 +272,8 @@ export class OgrenciUcretSayfasiComponent implements OnInit {
           this.toastr.success(`${this.groupedAttendanceByDate.length} günlük kayıt yüklendi`, 'Başarılı');
         }
       } else {
+        this.originalHistoricalAttendance = [];
+        this.originalGroupedAttendanceByDate = [];
         this.historicalAttendance = [];
         this.groupedAttendanceByDate = [];
         this.toastr.warning('Seçilen tarih aralığında kayıt bulunamadı', 'Uyarı');
@@ -336,8 +353,12 @@ export class OgrenciUcretSayfasiComponent implements OnInit {
       }).toPromise();
 
       if (response && response.success && response.data) {
-        this.historicalAttendance = response.data.kayitlar || [];
-        this.groupedAttendanceByDate = response.data.tarihlere_gore || [];
+        // Orijinal verileri sakla
+        this.originalHistoricalAttendance = response.data.kayitlar || [];
+        this.originalGroupedAttendanceByDate = response.data.tarihlere_gore || [];
+        
+        // Filtrelenmiş verileri ayarla
+        this.applyDersTypeFilter();
 
         // Tarih inputlarını temizle
         this.startDate = '';
@@ -345,6 +366,8 @@ export class OgrenciUcretSayfasiComponent implements OnInit {
 
         this.toastr.success('Tüm devamsızlık kayıtları yüklendi', 'Başarılı');
       } else {
+        this.originalHistoricalAttendance = [];
+        this.originalGroupedAttendanceByDate = [];
         this.historicalAttendance = [];
         this.groupedAttendanceByDate = [];
         this.toastr.warning('Herhangi bir kayıt bulunamadı', 'Uyarı');
@@ -444,5 +467,105 @@ export class OgrenciUcretSayfasiComponent implements OnInit {
 
     if (total === 0) return 0;
     return Math.round((totalPresent / total) * 100);
+  }
+
+  // Ders tipi filtreleme
+  applyDersTypeFilter() {
+    if (this.selectedDersType === 'all') {
+      // Tüm ders tiplerini göster
+      this.historicalAttendance = [...this.originalHistoricalAttendance];
+      this.groupedAttendanceByDate = [...this.originalGroupedAttendanceByDate];
+    } else {
+      // Seçilen ders tipine göre filtrele
+      this.historicalAttendance = this.originalHistoricalAttendance.filter(record => {
+        const dersType = record.ders_tipi || 'normal';
+        return dersType === this.selectedDersType;
+      });
+
+      // Tarihlere göre gruplanan verileri yeniden oluştur
+      this.regenerateGroupedByDate();
+    }
+  }
+
+  // Tarihlere göre gruplama işlemini yeniden yap
+  regenerateGroupedByDate() {
+    const groupedByDate: any = {};
+    
+    this.historicalAttendance.forEach(record => {
+      const date = record.tarih;
+      if (!groupedByDate[date]) {
+        groupedByDate[date] = {
+          tarih: date,
+          gun_adi: this.getDayName(date),
+          katilan_sayisi: 0,
+          katilmayan_sayisi: 0,
+          ogrenciler: []
+        };
+      }
+
+      groupedByDate[date].ogrenciler.push(record);
+
+      if (record.durum === 'present') {
+        groupedByDate[date].katilan_sayisi++;
+      } else {
+        groupedByDate[date].katilmayan_sayisi++;
+      }
+    });
+
+    this.groupedAttendanceByDate = Object.values(groupedByDate);
+  }
+
+  // Ders tipi filtreleme fonksiyonları
+  filterByDersType(dersType: string) {
+    this.selectedDersType = dersType;
+    this.applyDersTypeFilter();
+    
+    const typeNames: any = {
+      'all': 'Tüm Dersler',
+      'normal': 'Normal Dersler',
+      'ek_ders': 'Ek Dersler',
+      'etut_dersi': 'Etüt Dersleri'
+    };
+    
+    this.toastr.info(`${typeNames[dersType]} gösteriliyor`, 'Filtre');
+  }
+
+  // Hızlı filtreleme butonları
+  showAllLessons() {
+    this.filterByDersType('all');
+  }
+
+  showNormalLessons() {
+    this.filterByDersType('normal');
+  }
+
+  showEkDersLessons() {
+    this.filterByDersType('ek_ders');
+  }
+
+  showEtutLessons() {
+    this.filterByDersType('etut_dersi');
+  }
+
+  // Ders tipi görüntüleme
+  getDersTypeDisplayName(dersType: string): string {
+    const typeNames: any = {
+      'normal': 'Normal Ders',
+      'ek_ders': 'Ek Ders',
+      'etut_dersi': 'Etüt Dersi'
+    };
+    
+    return typeNames[dersType] || 'Normal Ders';
+  }
+
+  // Ders tipi badge class
+  getDersTypeBadgeClass(dersType: string): string {
+    const typeClasses: any = {
+      'normal': 'badge-primary',
+      'ek_ders': 'badge-success',
+      'etut_dersi': 'badge-warning'
+    };
+    
+    return typeClasses[dersType] || 'badge-primary';
   }
 }

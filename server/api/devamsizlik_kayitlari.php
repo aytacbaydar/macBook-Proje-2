@@ -100,11 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             }
         }
 
-        // Ders tipi filtresi ekle
-        if (!empty($ders_tipi)) {
-            $sql .= " AND dk.ders_tipi = :ders_tipi";
-            $params[':ders_tipi'] = $ders_tipi;
-        }
+        // Ders tipi filtresi kaldırıldı - Angular tarafında yapılacak
 
         // Tarih filtresi ekle
         if (!empty($tarih)) {
@@ -116,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $params[':bitis_tarih'] = $bitis_tarih;
         }
 
-        $sql .= " ORDER BY dk.tarih DESC, dk.ders_tipi ASC, o.adi_soyadi ASC";
+        $sql .= " ORDER BY dk.tarih DESC, o.adi_soyadi ASC";
 
         // LIMIT kontrolü - herhangi bir LIMIT olup olmadığını kontrol et
         if (strpos(strtoupper($sql), 'LIMIT') !== false) {
