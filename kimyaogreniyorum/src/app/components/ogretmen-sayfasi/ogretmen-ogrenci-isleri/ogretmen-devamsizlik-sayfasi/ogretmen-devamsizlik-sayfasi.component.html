@@ -213,7 +213,7 @@
     </div>
 
     <div class="timeline">
-      <div class="timeline-item" *ngFor="let dateGroup of groupedAttendanceByDate">
+      <div class="timeline-item"  *ngFor="let dateGroup of processedLessonsGroupedByDate">
         <div class="timeline-date">
           <div class="date-badge">
             <div class="day">{{ formatDate(dateGroup.tarih) }}</div>
@@ -240,14 +240,28 @@
                 <div class="card-header bg-success text-white">
                   <h6 class="mb-0">
                     <i class="bi bi-check-circle-fill me-2"></i>
-                    Katılanlar ({{ dateGroup.katilanlar?.length }})
+                    Katılanlar ({{ dateGroup.katilanlar?.length || 0 }})
                   </h6>
                 </div>
                 <div class="card-body">
                   <div class="student-tags">
                     <span class="student-tag present" *ngFor="let student of dateGroup.katilanlar">
                       <i class="bi bi-check-circle"></i>
-                      {{ student.adi_soyadi || student.name }}
+                      <!-- Yeni Style-->
+                      <div class="student-avatar">
+                        <img [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)" [alt]="student.adi_soyadi" class="rounded-circle"
+                          width="30" height="30" />
+                      </div>
+                      <div class="student-info">
+                        <div class="student-name">{{ student.adi_soyadi }}</div>
+                        <div class="student-email text-muted small">{{ student.email }}</div>
+                      </div>
+                      <div class="attendance-badge">
+                        <span class="badge bg-success">
+                          <i class="fas fa-check"></i>
+                        </span>
+                      </div>
+                      <!-- Yeni Style Son-->
                     </span>
                   </div>
                 </div>
@@ -258,14 +272,26 @@
                 <div class="card-header bg-danger text-white">
                   <h6 class="mb-0">
                     <i class="bi bi-x-circle-fill me-2"></i>
-                    Katılmayanlar ({{ dateGroup.katilmayanlar?.length }})
+                    Katılmayanlar ({{ dateGroup.katilmayanlar?.length || 0 }})
                   </h6>
                 </div>
                 <div class="card-body">
                   <div class="student-tags">
                     <span class="student-tag absent" *ngFor="let student of dateGroup.katilmayanlar">
                       <i class="bi bi-x-circle"></i>
-                      {{ student.adi_soyadi || student.name }}
+                      <div class="student-avatar">
+                        <img [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)" [alt]="student.adi_soyadi" class="rounded-circle"
+                          width="30" height="30" />
+                      </div>
+                      <div class="student-info">
+                        <div class="student-name">{{ student.adi_soyadi }}</div>
+                        <div class="student-email text-muted small">{{ student.email }}</div>
+                      </div>
+                      <div class="attendance-badge">
+                        <span class="badge bg-danger">
+                          <i class="fas fa-times"></i>
+                        </span>
+                      </div>
                     </span>
                   </div>
                 </div>
