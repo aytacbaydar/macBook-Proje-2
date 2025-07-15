@@ -1,4 +1,3 @@
-
 <div class="container-fluid">
   <div class="row">
     <div class="col-12">
@@ -208,6 +207,74 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid mt-4">
+  <div class="row">
+    <div class="col-12">
+      <h2><i class="bi bi-credit-card me-2"></i>Ücret Bilgileri</h2>
+      <p class="text-muted">Ders ücretleri ve ödeme durumunuzu buradan takip edebilirsiniz.</p>
+    </div>
+  </div>
+
+  <!-- Öğrenci Bilgi Kartları -->
+  <div class="row mb-4" *ngIf="studentStats.length > 0">
+    <div class="col-12">
+      <h4><i class="bi bi-person-badge me-2"></i>Öğrenci Bilgilerim</h4>
+    </div>
+    <div class="col-lg-6 col-xl-4 mb-4" *ngFor="let student of studentStats">
+      <div class="student-card">
+        <div class="student-card-header">
+          <img [src]="student.avatar || getDefaultAvatar(student.name)" 
+               class="student-avatar" 
+               alt="Avatar">
+          <div class="student-info">
+            <h5 class="student-name">{{ student.name }}</h5>
+            <p class="student-email">{{ student.email }}</p>
+            <span class="badge bg-primary">{{ formatCurrency(student.ucret) }}/Ders</span>
+          </div>
+        </div>
+
+        <div class="student-card-body">
+          <div class="stat-row">
+            <span class="stat-label">Toplam Ders:</span>
+            <span class="stat-value">{{ student.totalLessons }}</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Katıldığı Ders:</span>
+            <span class="stat-value text-success">{{ student.presentCount }}</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Katılmadığı Ders:</span>
+            <span class="stat-value text-danger">{{ student.absentCount }}</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Sonraki Ödemeye Kalan:</span>
+            <span class="stat-value">{{ student.lessonsUntilNextPayment }} Ders</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Beklenen Tutar:</span>
+            <span class="stat-value">{{ formatCurrency(student.expectedTotalAmount) }}</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Katılım Oranı:</span>
+            <span class="stat-value">
+              <span class="badge bg-{{ getAttendanceColor(student.attendancePercentage) }}">
+                %{{ student.attendancePercentage }}
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="student-card-footer">
+          <button class="btn btn-primary btn-sm" 
+                  (click)="loadStudentDetailedStats(student.id)">
+            <i class="bi bi-graph-up me-1"></i>
+            Detaylı İstatistikleri Gör
+          </button>
         </div>
       </div>
     </div>

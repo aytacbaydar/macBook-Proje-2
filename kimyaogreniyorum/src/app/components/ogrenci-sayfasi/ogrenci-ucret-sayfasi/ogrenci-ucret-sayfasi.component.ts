@@ -34,6 +34,9 @@ export class OgrenciUcretSayfasiComponent implements OnInit {
   
   // Kullanıcı bilgileri
   currentUser: any = null;
+  
+  // Öğrenci istatistik kartları
+  studentStats: any[] = [];
 
   constructor(
     private http: HttpClient,
@@ -42,6 +45,7 @@ export class OgrenciUcretSayfasiComponent implements OnInit {
 
   ngOnInit() {
     this.loadUserData();
+    this.loadStudentStats();
   }
 
   private loadUserData() {
@@ -60,18 +64,66 @@ export class OgrenciUcretSayfasiComponent implements OnInit {
     }
   }
 
-  // Detaylı öğrenci istatistiklerini getir
-  async loadStudentDetailedStats(studentId: number) {
+  // Öğrenci istatistiklerini yükle (kendi bilgilerini görmek için)
+  async loadStudentStats() {
+    if (!this.currentUser || !this.currentUser.id) {
+      return;
+    }
+
     this.isLoading = true;
 
     try {
-      const response = await this.http.get<any>(`server/api/ogrenci_detay_istatistik.php?ogrenci_id=${studentId}&grup=`, {
+      // Öğrencinin kendi istatistiklerini getir
+      const response = await this.http.get<any>(`server/api/ogrenci_detay_istatistik.php?ogrenci_id=${this.currentUser.id}&grup=`, {
+        headers: this.getAuthHeaders()
+      }).toPromise();
+
+      if (response && response.success) {
+        // Öğrenci bilgilerini student stats formatına çevir
+        const stats = response.data;
+        this.studentStats = [{
+          id: stats.student_info.id,
+          name: stats.student_info.name,
+          email: stats.student_info.email,
+          avatar: this.getDefaultAvatar(stats.student_info.name),
+          ucret: stats.student_info.ucret,
+          presentCount: stats.attendance_stats.present_count,
+          absentCount: stats.attendance_stats.absent_count,
+          totalLessons: stats.attendance_stats.total_lessons,
+          attendancePercentage: stats.attendance_stats.attendance_percentage,
+          expectedPaymentCycles: stats.payment_stats.expected_payment_cycles,
+          expectedTotalAmount: stats.payment_stats.expected_total_amount,
+          lessonsUntilNextPayment: stats.payment_stats.lessons_until_next_payment
+        }];
+      }
+    } catch (error: any) {
+      console.error('Öğrenci istatistikleri yüklenirken hata:', error);
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  // Detaylı öğrenci istatistiklerini getir (kendi bilgilerini görmek için)
+  async loadStudentDetailedStats(studentId?: number) {
+    this.isLoading = true;
+
+    // Öğrenci kendi bilgilerini görüyor, kendi ID'sini kullan
+    const targetStudentId = this.currentUser?.id || studentId;
+
+    if (!targetStudentId) {
+      this.toastr.error('Öğrenci bilgisi bulunamadı', 'Hata');
+      this.isLoading = false;
+      return;
+    }
+
+    try {
+      const response = await this.http.get<any>(`server/api/ogrenci_detay_istatistik.php?ogrenci_id=${targetStudentId}&grup=`, {
         headers: this.getAuthHeaders()
       }).toPromise();
 
       if (response.success) {
         this.selectedStudentStats = response.data;
-        this.selectedStudentId = studentId;
+        this.selectedStudentId = targetStudentId;
         this.showStudentStatsModal = true;
       } else {
         this.toastr.error(response.message || 'İstatistik yüklenemedi', 'Hata');

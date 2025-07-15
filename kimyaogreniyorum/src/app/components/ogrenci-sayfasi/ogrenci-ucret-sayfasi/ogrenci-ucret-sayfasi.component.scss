@@ -1,13 +1,12 @@
-
 .page-header {
   margin-bottom: 2rem;
-  
+
   h2 {
     color: #2c3e50;
     font-weight: 600;
     margin-bottom: 0.5rem;
   }
-  
+
   .text-muted {
     font-size: 0.9rem;
   }
@@ -19,19 +18,19 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: all 0.3s ease;
-  
+
   &:hover {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     transform: translateY(-2px);
   }
-  
+
   .student-card-header {
     display: flex;
     align-items: center;
     padding: 1rem;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    
+
     .student-avatar {
       width: 50px;
       height: 50px;
@@ -39,16 +38,16 @@
       border: 2px solid rgba(255, 255, 255, 0.3);
       margin-right: 1rem;
     }
-    
+
     .student-info {
       flex: 1;
-      
+
       .student-name {
         margin: 0;
         font-size: 1.1rem;
         font-weight: 600;
       }
-      
+
       .student-email {
         margin: 0;
         font-size: 0.85rem;
@@ -56,33 +55,33 @@
       }
     }
   }
-  
+
   .student-card-body {
     padding: 1rem;
-    
+
     .stat-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 0.5rem;
-      
+
       .stat-label {
         font-size: 0.9rem;
         color: #6c757d;
       }
-      
+
       .stat-value {
         font-weight: 600;
         color: #2c3e50;
       }
     }
   }
-  
+
   .student-card-footer {
     padding: 1rem;
     background-color: #f8f9fa;
     border-top: 1px solid #e9ecef;
-    
+
     .btn {
       width: 100%;
     }
@@ -110,7 +109,7 @@
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   animation: slideIn 0.3s ease;
-  
+
   &.large-modal {
     width: 90%;
     max-width: 1000px;
@@ -126,23 +125,23 @@
   padding: 1.5rem;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  
+
   .modal-title-section {
     display: flex;
     align-items: center;
-    
+
     .modal-icon {
       margin-right: 1rem;
       font-size: 1.5rem;
     }
-    
+
     .modal-title-text {
       h4 {
         margin: 0;
         font-size: 1.3rem;
         font-weight: 600;
       }
-      
+
       p {
         margin: 0;
         font-size: 0.9rem;
@@ -150,7 +149,7 @@
       }
     }
   }
-  
+
   .modern-close-btn {
     background: none;
     border: none;
@@ -160,7 +159,7 @@
     padding: 0.5rem;
     border-radius: 50%;
     transition: background-color 0.3s ease;
-    
+
     &:hover {
       background-color: rgba(255, 255, 255, 0.1);
     }
@@ -169,43 +168,43 @@
 
 .modern-modal-body {
   padding: 2rem;
-  
+
   .info-card {
     background: #f8f9fa;
     border-radius: 12px;
     padding: 1.5rem;
     margin-bottom: 1rem;
-    
+
     h6 {
       color: #2c3e50;
       margin-bottom: 1rem;
       font-weight: 600;
     }
-    
+
     .info-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 0.75rem;
-      
+
       .label {
         font-size: 0.9rem;
         color: #6c757d;
       }
-      
+
       .value {
         font-weight: 600;
         color: #2c3e50;
       }
     }
-    
+
     .stat-item {
       text-align: center;
       padding: 1rem;
       background: white;
       border-radius: 8px;
       margin-bottom: 1rem;
-      
+
       .stat-value {
         font-size: 1.5rem;
         font-weight: 700;
@@ -213,7 +212,7 @@
         display: block;
         margin-bottom: 0.5rem;
       }
-      
+
       .stat-label {
         font-size: 0.8rem;
         color: #6c757d;
@@ -221,11 +220,11 @@
       }
     }
   }
-  
+
   .attendance-list {
     max-height: 300px;
     overflow-y: auto;
-    
+
     .attendance-item {
       display: flex;
       justify-content: space-between;
@@ -235,18 +234,18 @@
       border-radius: 8px;
       margin-bottom: 0.5rem;
       border-left: 4px solid #e9ecef;
-      
+
       .attendance-date {
         font-weight: 600;
         color: #2c3e50;
-        
+
         .attendance-time {
           font-size: 0.8rem;
           color: #6c757d;
           margin-left: 0.5rem;
         }
       }
-      
+
       .attendance-status {
         display: flex;
         align-items: center;
@@ -278,16 +277,132 @@
     width: 95%;
     margin: 10px;
   }
-  
+
   .modern-modal-body {
     padding: 1rem;
   }
-  
+
   .student-card {
     margin-bottom: 1rem;
   }
-  
+
   .info-card .stat-item {
     margin-bottom: 0.5rem;
+  }
+}
+// Öğrenci bilgi kartları
+.student-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
+  padding: 0;
+  color: white;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  position: relative;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
+    background-size: 200% 100%;
+    animation: gradientShift 3s ease-in-out infinite;
+  }
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 0%; }
+  50% { background-position: 100% 0%; }
+}
+
+.student-card-header {
+  padding: 25px 25px 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.student-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.student-info {
+  flex: 1;
+}
+
+.student-name {
+  margin: 0 0 5px 0;
+  font-weight: 600;
+  font-size: 1.2rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.student-email {
+  margin: 0 0 10px 0;
+  opacity: 0.8;
+  font-size: 0.9rem;
+}
+
+.student-card-body {
+  padding: 20px 25px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 8px 0;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+.stat-label {
+  font-weight: 500;
+  opacity: 0.9;
+  font-size: 0.9rem;
+}
+
+.stat-value {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.student-card-footer {
+  padding: 20px 25px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+.student-card-footer .btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  font-weight: 500;
+  padding: 10px 20px;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   }
 }
