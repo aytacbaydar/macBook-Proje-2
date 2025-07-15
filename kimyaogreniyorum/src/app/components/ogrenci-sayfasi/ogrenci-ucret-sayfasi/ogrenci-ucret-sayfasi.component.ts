@@ -32,6 +32,9 @@ interface AttendanceRecord {
   styleUrl: './ogrenci-ucret-sayfasi.component.scss'
 })
 export class OgrenciUcretSayfasiComponent implements OnInit {
+  // Math nesnesini template'de kullanmak için expose et
+  Math = Math;
+  
   // Öğrenci bilgileri
   selectedStudentStats: any = null;
   showStudentStatsModal = false;
