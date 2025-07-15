@@ -61,11 +61,16 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
   selectedGroup: string = '';
   selectedDate: string = new Date().toISOString().split('T')[0];
   viewHistoricalData: boolean = false;
+  viewProcessedLessons: boolean = false;
   startDate: string = '';
   endDate: string = '';
   isQRScannerActive: boolean = false;
   isLoading: boolean = false;
   hasChanges: boolean = false;
+
+  // İşlenen dersler için değişkenler
+  processedLessons: any[] = [];
+  processedLessonsGroupedByDate: any[] = [];
 
   // Computed properties
   get totalStudents(): number {
@@ -205,6 +210,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       this.loadAttendanceData();
       this.loadPastWeekAttendance();
       this.loadHistoricalAttendance();
+      this.loadProcessedLessons();
       this.saveLastState(); // Save the state on group change
     } else {
       this.groupStudents = [];
@@ -1198,5 +1204,296 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     } else {
       this.toastr.warning('Lütfen önce bir grup seçiniz', 'Uyarı');
     }
+  }
+
+  // İşlenen dersleri görünüm değiştirme
+  toggleProcessedLessonsView() {
+    this.viewProcessedLessons = !this.viewProcessedLessons;
+    if (this.viewProcessedLessons) {
+      this.loadProcessedLessons();
+    }
+  }
+
+  // İşlenen dersleri yükle (sadece normal dersler)
+  loadProcessedLessons() {
+    if (!this.selectedGroup) return;
+
+    const params = new URLSearchParams({
+      grup: this.selectedGroup,
+      ders_tipi: 'normal'  // Sadece normal dersleri getir
+    });
+
+    // Tarih aralığı varsa ekle
+    if (this.startDate) {
+      params.append('baslangic_tarih', this.startDate);
+    }
+    if (this.endDate) {
+      params.append('bitis_tarih', this.endDate);
+    }
+
+    this.http.get<any>(`./server/api/devamsizlik_kayitlari.php?${params.toString()}`, {
+      headers: this.getAuthHeaders()
+    }).subscribe({
+      next: (response) => {
+        if (response.success) {
+          // Sadece normal ders kayıtlarını filtrele
+          this.processedLessons = (response.data.kayitlar || []).filter((record: any) => 
+            !record.ders_tipi || record.ders_tipi === 'normal'
+          );
+          
+          this.processedLessonsGroupedByDate = response.data.tarihlere_gore || [];
+
+          // Tarihlere göre gruplanan verilerde de normal ders filtresi uygula
+          this.processedLessonsGroupedByDate = this.processedLessonsGroupedByDate.filter((dateGroup: any) => {
+            // O tarihteki kayıtları kontrol et
+            const dateRecords = this.processedLessons.filter(record => 
+              record.tarih === dateGroup.tarih
+            );
+            return dateRecords.length > 0;
+          });
+
+          // Her tarih grubu için katılan ve katılmayan öğrenci detaylarını hazırla
+          this.processedLessonsGroupedByDate.forEach(dateGroup => {
+            const dateRecords = this.processedLessons.filter(record => 
+              record.tarih === dateGroup.tarih
+            );
+
+            // Katılan öğrenciler
+            const presentStudentIds = dateRecords
+              .filter(record => record.durum === 'present')
+              .map(record => record.ogrenci_id);
+
+            // Katılmayan öğrenciler  
+            const absentStudentIds = dateRecords
+              .filter(record => record.durum === 'absent')
+              .map(record => record.ogrenci_id);
+
+            // Öğrenci detaylarını bul
+            dateGroup.katilanlar = this.groupStudents.filter(student => 
+              presentStudentIds.includes(student.id)
+            );
+
+            dateGroup.katilmayanlar = this.groupStudents.filter(student => 
+              absentStudentIds.includes(student.id)
+            );
+
+            // Sayıları güncelle
+            dateGroup.katilan_sayisi = dateGroup.katilanlar.length;
+            dateGroup.katilmayan_sayisi = dateGroup.katilmayanlar.length;
+          });
+
+          console.log('İşlenen dersler yüklendi:', this.processedLessons.length, 'kayıt');
+        }
+      },
+      error: (error) => {
+        console.error('İşlenen dersler yüklenirken hata:', error);
+        this.toastr.error('İşlenen dersler yüklenemedi', 'Hata');
+      }
+    });
+  }
+
+  // İşlenen dersler için tarih aralığı ile yükleme
+  loadProcessedLessonsByDateRange() {
+    if (!this.selectedGroup || !this.startDate || !this.endDate) {
+      console.warn('İşlenen dersler için eksik parametreler:', {
+        selectedGroup: this.selectedGroup,
+        startDate: this.startDate,
+        endDate: this.endDate
+      });
+      return;
+    }
+
+    const params = new URLSearchParams({
+      grup: this.selectedGroup,
+      ders_tipi: 'normal',  // Sadece normal dersleri getir
+      baslangic_tarih: this.startDate,
+      bitis_tarih: this.endDate
+    });
+
+    this.http.get<any>(`./server/api/devamsizlik_kayitlari.php?${params.toString()}`, {
+      headers: this.getAuthHeaders()
+    }).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          // Sadece normal ders kayıtlarını filtrele
+          this.processedLessons = (response.data.kayitlar || []).filter((record: any) => 
+            !record.ders_tipi || record.ders_tipi === 'normal'
+          );
+          
+          this.processedLessonsGroupedByDate = response.data.tarihlere_gore || [];
+
+          // Tarihlere göre gruplanan verilerde de normal ders filtresi uygula
+          this.processedLessonsGroupedByDate = this.processedLessonsGroupedByDate.filter((dateGroup: any) => {
+            const dateRecords = this.processedLessons.filter(record => 
+              record.tarih === dateGroup.tarih
+            );
+            return dateRecords.length > 0;
+          });
+
+          // Her tarih grubu için öğrenci detaylarını hazırla
+          this.processedLessonsGroupedByDate.forEach(dateGroup => {
+            const dateRecords = this.processedLessons.filter(record => 
+              record.tarih === dateGroup.tarih
+            );
+
+            const presentStudentIds = dateRecords
+              .filter(record => record.durum === 'present')
+              .map(record => record.ogrenci_id);
+
+            const absentStudentIds = dateRecords
+              .filter(record => record.durum === 'absent')
+              .map(record => record.ogrenci_id);
+
+            dateGroup.katilanlar = this.groupStudents.filter(student => 
+              presentStudentIds.includes(student.id)
+            );
+
+            dateGroup.katilmayanlar = this.groupStudents.filter(student => 
+              absentStudentIds.includes(student.id)
+            );
+
+            dateGroup.katilan_sayisi = dateGroup.katilanlar.length;
+            dateGroup.katilmayan_sayisi = dateGroup.katilmayanlar.length;
+          });
+
+          if (this.processedLessonsGroupedByDate.length === 0) {
+            this.toastr.info('Seçilen tarih aralığında işlenen normal ders bulunamadı', 'Bilgi');
+          } else {
+            this.toastr.success(`${this.processedLessonsGroupedByDate.length} günlük işlenen ders kaydı yüklendi`, 'Başarılı');
+          }
+        } else {
+          this.processedLessons = [];
+          this.processedLessonsGroupedByDate = [];
+          this.toastr.warning('Seçilen tarih aralığında işlenen ders bulunamadı', 'Uyarı');
+        }
+      },
+      error: (error) => {
+        console.error('İşlenen dersler tarih aralığı yüklenirken hata:', error);
+        this.processedLessons = [];
+        this.processedLessonsGroupedByDate = [];
+        this.toastr.error('İşlenen dersler yüklenirken hata oluştu', 'Hata');
+      }
+    });
+  }
+
+  // İşlenen dersler için tüm kayıtları getir
+  loadAllProcessedLessons() {
+    if (!this.selectedGroup) return;
+
+    const params = new URLSearchParams({
+      grup: this.selectedGroup,
+      ders_tipi: 'normal',  // Sadece normal dersleri getir
+      butun_kayitlar: 'true'
+    });
+
+    this.http.get<any>(`./server/api/devamsizlik_kayitlari.php?${params.toString()}`, {
+      headers: this.getAuthHeaders()
+    }).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          // Sadece normal ders kayıtlarını filtrele
+          this.processedLessons = (response.data.kayitlar || []).filter((record: any) => 
+            !record.ders_tipi || record.ders_tipi === 'normal'
+          );
+          
+          this.processedLessonsGroupedByDate = response.data.tarihlere_gore || [];
+
+          // Tarihlere göre gruplanan verilerde de normal ders filtresi uygula
+          this.processedLessonsGroupedByDate = this.processedLessonsGroupedByDate.filter((dateGroup: any) => {
+            const dateRecords = this.processedLessons.filter(record => 
+              record.tarih === dateGroup.tarih
+            );
+            return dateRecords.length > 0;
+          });
+
+          // Her tarih grubu için öğrenci detaylarını hazırla
+          this.processedLessonsGroupedByDate.forEach(dateGroup => {
+            const dateRecords = this.processedLessons.filter(record => 
+              record.tarih === dateGroup.tarih
+            );
+
+            const presentStudentIds = dateRecords
+              .filter(record => record.durum === 'present')
+              .map(record => record.ogrenci_id);
+
+            const absentStudentIds = dateRecords
+              .filter(record => record.durum === 'absent')
+              .map(record => record.ogrenci_id);
+
+            dateGroup.katilanlar = this.groupStudents.filter(student => 
+              presentStudentIds.includes(student.id)
+            );
+
+            dateGroup.katilmayanlar = this.groupStudents.filter(student => 
+              absentStudentIds.includes(student.id)
+            );
+
+            dateGroup.katilan_sayisi = dateGroup.katilanlar.length;
+            dateGroup.katilmayan_sayisi = dateGroup.katilmayanlar.length;
+          });
+
+          // Tarih inputlarını temizle
+          this.startDate = '';
+          this.endDate = '';
+
+          this.toastr.success('Tüm işlenen normal ders kayıtları yüklendi', 'Başarılı');
+        } else {
+          this.processedLessons = [];
+          this.processedLessonsGroupedByDate = [];
+          this.toastr.warning('Herhangi bir işlenen ders kaydı bulunamadı', 'Uyarı');
+        }
+      },
+      error: (error) => {
+        console.error('Tüm işlenen dersler yüklenirken hata:', error);
+        this.processedLessons = [];
+        this.processedLessonsGroupedByDate = [];
+        this.toastr.error('İşlenen ders kayıtları yüklenirken hata oluştu', 'Hata');
+      }
+    });
+  }
+
+  // İşlenen dersler için hızlı tarih filtreleri
+  setProcessedLessonsDateRangeLastWeek() {
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(endDate.getDate() - 7);
+
+    this.startDate = startDate.toISOString().split('T')[0];
+    this.endDate = endDate.toISOString().split('T')[0];
+
+    this.loadProcessedLessonsByDateRange();
+  }
+
+  setProcessedLessonsDateRangeLastMonth() {
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(endDate.getDate() - 30);
+
+    this.startDate = startDate.toISOString().split('T')[0];
+    this.endDate = endDate.toISOString().split('T')[0];
+
+    this.loadProcessedLessonsByDateRange();
+  }
+
+  setProcessedLessonsDateRangeThisMonth() {
+    const now = new Date();
+    const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+    const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+    this.startDate = startDate.toISOString().split('T')[0];
+    this.endDate = endDate.toISOString().split('T')[0];
+
+    this.loadProcessedLessonsByDateRange();
+  }
+
+  setProcessedLessonsDateRangeThisYear() {
+    const now = new Date();
+    const startDate = new Date(now.getFullYear(), 0, 1);
+    const endDate = new Date(now.getFullYear(), 11, 31);
+
+    this.startDate = startDate.toISOString().split('T')[0];
+    this.endDate = endDate.toISOString().split('T')[0];
+
+    this.loadProcessedLessonsByDateRange();
   }
 }

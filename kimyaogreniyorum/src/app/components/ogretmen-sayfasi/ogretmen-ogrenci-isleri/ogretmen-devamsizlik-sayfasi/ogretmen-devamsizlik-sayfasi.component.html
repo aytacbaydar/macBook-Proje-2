@@ -545,3 +545,186 @@
     </div>
   </div>
 </div>
+<!-- Görünüm Toggle Buttons -->
+    <div class="view-toggle-buttons">
+      <button
+        class="btn btn-outline-info me-2"
+        (click)="toggleHistoricalView()"
+        [class.active]="viewHistoricalData"
+      >
+        <i class="fas fa-history"></i>
+        {{ viewHistoricalData ? 'Geçmiş Kayıtları Gizle' : 'Geçmiş Kayıtları Göster' }}
+      </button>
+
+      <button
+        class="btn btn-outline-success"
+        (click)="toggleProcessedLessonsView()"
+        [class.active]="viewProcessedLessons"
+      >
+        <i class="fas fa-chalkboard-teacher"></i>
+        {{ viewProcessedLessons ? 'İşlenen Dersleri Gizle' : 'İşlenen Dersleri Göster' }}
+      </button>
+    </div>
+<!-- İşlenen Dersler Bölümü -->
+    <div class="processed-lessons-section" *ngIf="viewProcessedLessons">
+      <div class="card">
+        <div class="card-header bg-success text-white">
+          <h5 class="mb-0">
+            <i class="fas fa-chalkboard-teacher"></i>
+            İşlenen Dersler (Normal Dersler)
+          </h5>
+        </div>
+        <div class="card-body">
+          <!-- Tarih Filtre Butonları -->
+          <div class="date-filter-buttons mb-3">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="quick-filters">
+                  <button class="btn btn-sm btn-outline-primary me-2" (click)="setProcessedLessonsDateRangeLastWeek()">
+                    Son 7 Gün
+                  </button>
+                  <button class="btn btn-sm btn-outline-primary me-2" (click)="setProcessedLessonsDateRangeLastMonth()">
+                    Son 30 Gün
+                  </button>
+                  <button class="btn btn-sm btn-outline-primary me-2" (click)="setProcessedLessonsDateRangeThisMonth()">
+                    Bu Ay
+                  </button>
+                  <button class="btn btn-sm btn-outline-primary me-2" (click)="setProcessedLessonsDateRangeThisYear()">
+                    Bu Yıl
+                  </button>
+                  <button class="btn btn-sm btn-outline-secondary" (click)="loadAllProcessedLessons()">
+                    Tüm Kayıtlar
+                  </button>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="custom-date-range">
+                  <div class="input-group">
+                    <input
+                      type="date"
+                      class="form-control form-control-sm"
+                      [(ngModel)]="startDate"
+                      placeholder="Başlangıç Tarihi"
+                    />
+                    <input
+                      type="date"
+                      class="form-control form-control-sm"
+                      [(ngModel)]="endDate"
+                      placeholder="Bitiş Tarihi"
+                    />
+                    <button
+                      class="btn btn-sm btn-primary"
+                      (click)="loadProcessedLessonsByDateRange()"
+                      [disabled]="!startDate || !endDate"
+                    >
+                      Filtrele
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- İşlenen Dersler Listesi -->
+          <div class="processed-lessons-list" *ngIf="processedLessonsGroupedByDate.length > 0; else noProcessedLessons">
+            <div class="lesson-date-group" *ngFor="let dateGroup of processedLessonsGroupedByDate">
+              <div class="date-header">
+                <h6 class="mb-2">
+                  <i class="fas fa-calendar-day"></i>
+                  {{ formatDate(dateGroup.tarih) }} - {{ getDayName(dateGroup.tarih) }}
+                  <span class="badge bg-success ms-2">{{ dateGroup.katilan_sayisi }} Katıldı</span>
+                  <span class="badge bg-danger ms-1">{{ dateGroup.katilmayan_sayisi }} Katılmadı</span>
+                </h6>
+              </div>
+
+              <div class="row">
+                <!-- Katılan Öğrenciler -->
+                <div class="col-md-6">
+                  <div class="attendance-group present-group">
+                    <h6 class="text-success">
+                      <i class="fas fa-check-circle"></i>
+                      Derse Katılan Öğrenciler ({{ dateGroup.katilanlar?.length || 0 }})
+                    </h6>
+                    <div class="student-list present-students" *ngIf="dateGroup.katilanlar && dateGroup.katilanlar.length > 0; else noPresent">
+                      <div class="student-item" *ngFor="let student of dateGroup.katilanlar">
+                        <div class="student-avatar">
+                          <img 
+                            [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)" 
+                            [alt]="student.adi_soyadi"
+                            class="rounded-circle"
+                            width="30" 
+                            height="30"
+                          />
+                        </div>
+                        <div class="student-info">
+                          <div class="student-name">{{ student.adi_soyadi }}</div>
+                          <div class="student-email text-muted small">{{ student.email }}</div>
+                        </div>
+                        <div class="attendance-badge">
+                          <span class="badge bg-success">
+                            <i class="fas fa-check"></i>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <ng-template #noPresent>
+                      <div class="text-muted">Bu derste katılan öğrenci yok</div>
+                    </ng-template>
+                  </div>
+                </div>
+
+                <!-- Katılmayan Öğrenciler -->
+                <div class="col-md-6">
+                  <div class="attendance-group absent-group">
+                    <h6 class="text-danger">
+                      <i class="fas fa-times-circle"></i>
+                      Derse Katılmayan Öğrenciler ({{ dateGroup.katilmayanlar?.length || 0 }})
+                    </h6>
+                    <div class="student-list absent-students" *ngIf="dateGroup.katilmayanlar && dateGroup.katilmayanlar.length > 0; else noAbsent">
+                      <div class="student-item" *ngFor="let student of dateGroup.katilmayanlar">
+                        <div class="student-avatar">
+                          <img 
+                            [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)" 
+                            [alt]="student.adi_soyadi"
+                            class="rounded-circle"
+                            width="30" 
+                            height="30"
+                          />
+                        </div>
+                        <div class="student-info">
+                          <div class="student-name">{{ student.adi_soyadi }}</div>
+                          <div class="student-email text-muted small">{{ student.email }}</div>
+                        </div>
+                        <div class="attendance-badge">
+                          <span class="badge bg-danger">
+                            <i class="fas fa-times"></i>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <ng-template #noAbsent>
+                      <div class="text-muted">Bu derste katılmayan öğrenci yok</div>
+                    </ng-template>
+                  </div>
+                </div>
+              </div>
+
+              <hr *ngIf="!$last" />
+            </div>
+          </div>
+
+          <ng-template #noProcessedLessons>
+            <div class="no-data text-center py-4">
+              <i class="fas fa-chalkboard-teacher fa-3x text-muted mb-3"></i>
+              <h5 class="text-muted">İşlenen Ders Bulunamadı</h5>
+              <p class="text-muted">
+                {{ selectedGroup ? 'Seçilen grup için işlenen normal ders kaydı bulunamadı.' : 'Önce bir grup seçiniz.' }}
+              </p>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <!-- Geçmiş Devamsızlık Kayıtları -->
+    <div class="historical-attendance" *ngIf="viewHistoricalData">
