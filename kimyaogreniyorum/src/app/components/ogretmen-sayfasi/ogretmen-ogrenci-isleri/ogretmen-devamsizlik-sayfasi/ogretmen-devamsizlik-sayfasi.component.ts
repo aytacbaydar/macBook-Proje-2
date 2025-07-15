@@ -671,9 +671,10 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       // Toplam kayıt sayısı (normal + ek ders = toplam)
       const totalRecordsCount = studentRecords.length;
 
-      // Katıldığı dersleri say 
+      // Katıldığı dersleri say (sadece normal ders ve ek ders)
       const presentCount = studentRecords.filter(
-        record => record.durum === 'present'
+        record => record.durum === 'present' && 
+        (!record.ders_tipi || record.ders_tipi === 'normal' || record.ders_tipi === 'ek_ders')
       ).length;
 
       // Katılmadığı dersleri say
