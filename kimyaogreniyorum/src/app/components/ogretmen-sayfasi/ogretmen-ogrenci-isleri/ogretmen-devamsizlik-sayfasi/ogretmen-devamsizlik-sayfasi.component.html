@@ -410,8 +410,8 @@
         <tr>
           <th>Öğrenci</th>
           <th>Toplam Kayıt</th>
-          <th colspan="3">Katıldı (Present)</th>
-          <th colspan="3">Katılmadı (Absent)</th>
+          <th colspan="4">Katıldı (Present)</th>
+          <th colspan="4">Katılmadı (Absent)</th>
           <th>Katılım %</th>
         </tr>
         <tr class="sub-header">
@@ -420,9 +420,11 @@
           <th>Toplam</th>
           <th>Normal Ders</th>
           <th>Ek Ders</th>
+          <th>Etüt Dersi</th>
           <th>Toplam</th>
           <th>Normal Ders</th>
           <th>Ek Ders</th>
+          <th>Etüt Dersi</th>
           <th></th>
         </tr>
       </thead>
@@ -441,9 +443,11 @@
           <td class="present-total">{{ analysis.present.total }}</td>
           <td class="present-normal">{{ analysis.present.normal }}</td>
           <td class="present-ek">{{ analysis.present.ek_ders }}</td>
+          <td class="present-etut">{{ analysis.present.etut_dersi }}</td>
           <td class="absent-total">{{ analysis.absent.total }}</td>
           <td class="absent-normal">{{ analysis.absent.normal }}</td>
           <td class="absent-ek">{{ analysis.absent.ek_ders }}</td>
+          <td class="absent-etut">{{ analysis.absent.etut_dersi }}</td>
           <td class="attendance-percentage">
             <div class="percentage-badge" [class.high]="analysis.attendancePercentage >= 80" 
                  [class.medium]="analysis.attendancePercentage >= 60 && analysis.attendancePercentage < 80"

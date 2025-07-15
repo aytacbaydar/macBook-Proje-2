@@ -540,12 +540,14 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       const presentRecords = studentRecords.filter(record => record.durum === 'present');
       const presentNormal = presentRecords.filter(record => !record.ders_tipi || record.ders_tipi === 'normal').length;
       const presentEkDers = presentRecords.filter(record => record.ders_tipi === 'ek_ders').length;
+      const presentEtutDersi = presentRecords.filter(record => record.ders_tipi === 'etut_dersi').length;
       const totalPresent = presentRecords.length;
 
       // Absent kayıtları
       const absentRecords = studentRecords.filter(record => record.durum === 'absent');
       const absentNormal = absentRecords.filter(record => !record.ders_tipi || record.ders_tipi === 'normal').length;
       const absentEkDers = absentRecords.filter(record => record.ders_tipi === 'ek_ders').length;
+      const absentEtutDersi = absentRecords.filter(record => record.ders_tipi === 'etut_dersi').length;
       const totalAbsent = absentRecords.length;
 
       // Toplam
@@ -563,12 +565,14 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
         present: {
           total: totalPresent,
           normal: presentNormal,
-          ek_ders: presentEkDers
+          ek_ders: presentEkDers,
+          etut_dersi: presentEtutDersi
         },
         absent: {
           total: totalAbsent,
           normal: absentNormal,
-          ek_ders: absentEkDers
+          ek_ders: absentEkDers,
+          etut_dersi: absentEtutDersi
         },
         attendancePercentage: attendancePercentage
       };
