@@ -72,6 +72,13 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
   processedLessons: any[] = [];
   processedLessonsGroupedByDate: any[] = [];
 
+  // Etüt Dersi için değişkenler
+  etutAttendanceRecords: Map<number, AttendanceRecord> = new Map();
+  etutDersiTarih: string = new Date().toISOString().split('T')[0];
+  etutDersiSaat: string = '19:00';
+  hasEtutChanges: boolean = false;
+  isEtutSaving: boolean = false;
+
   // Computed properties
   get totalStudents(): number {
     return this.groupStudents.length;
@@ -1517,5 +1524,190 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     this.endDate = endDate.toISOString().split('T')[0];
 
     this.loadProcessedLessonsByDateRange();
+  }
+
+  // Etüt Dersi Modal İşlemleri
+  openEtutDersiModal() {
+    if (!this.selectedGroup) {
+      this.toastr.warning('Lütfen önce bir grup seçiniz', 'Uyarı');
+      return;
+    }
+
+    // Etüt yoklama kayıtlarını başlat
+    this.initializeEtutAttendanceRecords();
+    
+    // Bootstrap modal'ını aç
+    const modalElement = document.getElementById('etutDersiModal');
+    if (modalElement) {
+      const modal = new (window as any).bootstrap.Modal(modalElement);
+      modal.show();
+    }
+  }
+
+  private initializeEtutAttendanceRecords() {
+    this.etutAttendanceRecords.clear();
+    this.groupStudents.forEach((student) => {
+      this.etutAttendanceRecords.set(student.id, {
+        student_id: student.id,
+        status: 'pending',
+        timestamp: new Date(),
+        method: 'manual',
+      });
+    });
+    this.hasEtutChanges = false;
+  }
+
+  markEtutAttendance(studentId: number, status: 'present' | 'absent') {
+    if (this.etutAttendanceRecords.has(studentId)) {
+      const currentRecord = this.etutAttendanceRecords.get(studentId);
+
+      if (!currentRecord || currentRecord.status !== status) {
+        this.etutAttendanceRecords.set(studentId, {
+          student_id: studentId,
+          status: status,
+          timestamp: new Date(),
+          method: 'manual',
+        });
+        this.hasEtutChanges = true;
+      }
+    }
+  }
+
+  markAllEtutPresent() {
+    this.groupStudents.forEach((student) => {
+      this.markEtutAttendance(student.id, 'present');
+    });
+  }
+
+  markAllEtutAbsent() {
+    this.groupStudents.forEach((student) => {
+      this.markEtutAttendance(student.id, 'absent');
+    });
+  }
+
+  getEtutAttendanceStatus(studentId: number): string {
+    const record = this.etutAttendanceRecords.get(studentId);
+    return record ? record.status : 'pending';
+  }
+
+  getEtutAttendanceStatusText(studentId: number): string {
+    const status = this.getEtutAttendanceStatus(studentId);
+    switch (status) {
+      case 'present':
+        return 'Katıldı';
+      case 'absent':
+        return 'Katılmadı';
+      default:
+        return 'Bekliyor';
+    }
+  }
+
+  getEtutAttendanceStatusClass(studentId: number): string {
+    const status = this.getEtutAttendanceStatus(studentId);
+    switch (status) {
+      case 'present':
+        return 'badge bg-success';
+      case 'absent':
+        return 'badge bg-danger';
+      default:
+        return 'badge bg-secondary';
+    }
+  }
+
+  getEtutPresentCount(): number {
+    return Array.from(this.etutAttendanceRecords.values()).filter(
+      (record) => record.status === 'present'
+    ).length;
+  }
+
+  getEtutAbsentCount(): number {
+    return Array.from(this.etutAttendanceRecords.values()).filter(
+      (record) => record.status === 'absent'
+    ).length;
+  }
+
+  saveEtutAttendance() {
+    if (!this.selectedGroup || !this.hasEtutChanges) return;
+
+    if (!this.etutDersiTarih) {
+      this.toastr.error('Lütfen etüt dersi tarihi seçiniz', 'Hata');
+      return;
+    }
+
+    // Kayıt edilecek veri var mı kontrol et
+    const recordsToSave = Array.from(this.etutAttendanceRecords.values())
+      .filter((record) => record.status !== 'pending');
+
+    if (recordsToSave.length === 0) {
+      this.toastr.warning('Kaydedilecek etüt dersi kaydı bulunamadı', 'Uyarı');
+      return;
+    }
+
+    this.isEtutSaving = true;
+
+    // Etüt dersi için özel zaman damgası oluştur
+    const etutDateTime = `${this.etutDersiTarih} ${this.etutDersiSaat}:00`;
+
+    const attendanceData = recordsToSave.map((record) => ({
+      ogrenci_id: record.student_id,
+      grup: this.selectedGroup,
+      tarih: this.etutDersiTarih,
+      durum: record.status,
+      zaman: etutDateTime,
+      yontem: record.method,
+      ders_tipi: 'etut_dersi'
+    }));
+
+    console.log('Kaydedilecek etüt dersi verisi:', {
+      grup: this.selectedGroup,
+      tarih: this.etutDersiTarih,
+      saat: this.etutDersiSaat,
+      kayit_sayisi: attendanceData.length,
+      data: attendanceData
+    });
+
+    this.http
+      .post<any>(
+        './server/api/devamsizlik_kaydet.php',
+        {
+          records: attendanceData,
+        },
+        {
+          headers: this.getAuthHeaders(),
+        }
+      )
+      .subscribe({
+        next: (response) => {
+          console.log('Etüt dersi kaydet API yanıtı:', response);
+
+          if (response.success) {
+            this.toastr.success(
+              `${attendanceData.length} öğrencinin etüt dersi kaydı başarıyla kaydedildi`,
+              'Başarılı'
+            );
+            this.hasEtutChanges = false;
+
+            // Modal'ı kapat
+            const modalElement = document.getElementById('etutDersiModal');
+            if (modalElement) {
+              const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
+              if (modal) {
+                modal.hide();
+              }
+            }
+
+            // Geçmiş verileri yeniden yükle
+            this.loadHistoricalAttendance();
+          } else {
+            this.toastr.error(response.message || 'Etüt dersi kaydı sırasında hata oluştu', 'Hata');
+          }
+          this.isEtutSaving = false;
+        },
+        error: (error) => {
+          console.error('Etüt dersi kaydedilirken hata:', error);
+          this.toastr.error('Etüt dersi kaydı sırasında hata oluştu', 'Hata');
+          this.isEtutSaving = false;
+        },
+      });
   }
 }

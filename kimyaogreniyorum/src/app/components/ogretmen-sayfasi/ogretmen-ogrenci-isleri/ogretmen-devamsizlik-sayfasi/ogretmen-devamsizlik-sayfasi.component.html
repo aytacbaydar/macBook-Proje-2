@@ -33,9 +33,16 @@
         </div>
 
         <div class="control-item">
-          <button type="button" class="btn btn-warning" (click)="navigateToEkDers()" [disabled]="!selectedGroup">
+          <button class="btn btn-info" (click)="navigateToEkDers()" [disabled]="!selectedGroup">
             <i class="bi bi-plus-circle"></i>
             Ek Ders Yoklaması
+          </button>
+        </div>
+
+        <div class="control-item">
+          <button class="btn btn-warning" (click)="openEtutDersiModal()" [disabled]="!selectedGroup">
+            <i class="bi bi-book"></i>
+            Etüt Dersi Yoklaması
           </button>
         </div>
       </div>
@@ -582,3 +589,140 @@
     </div>
   </div>
 </div>
+
+<!-- Etüt Dersi Yoklama Modal -->
+<div class="modal fade" id="etutDersiModal" tabindex="-1" aria-labelledby="etutDersiModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header bg-warning text-dark">
+        <h5 class="modal-title" id="etutDersiModalLabel">
+          <i class="bi bi-book"></i> Etüt Dersi Yoklaması - {{ selectedGroup }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Tarih</label>
+            <input type="date" class="form-control" [(ngModel)]="etutDersiTarih">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Etüt Başlangıç Saati</label>
+            <input type="time" class="form-control" [(ngModel)]="etutDersiSaat">
+          </div>
+        </div>
+
+        <div class="alert alert-info">
+          <i class="bi bi-info-circle"></i>
+          Etüt dersine katılan öğrencileri işaretleyiniz.
+        </div>
+
+        <!-- Öğrenci Listesi -->
+        <div class="table-responsive" *ngIf="groupStudents.length > 0">
+          <table class="table table-hover">
+            <thead class="table-warning">
+              <tr>
+                <th>Öğrenci</th>
+                <th>Durum</th>
+                <th>İşlemler</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let student of groupStudents">
+                <td>
+                  <div class="d-flex align-items-center">
+                    <img [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)" 
+                         [alt]="student.adi_soyadi" 
+                         class="rounded-circle me-2" 
+                         style="width: 40px; height: 40px;">
+                    <div>
+                      <div class="fw-bold">{{ student.adi_soyadi }}</div>
+                      <small class="text-muted">{{ student.email }}</small>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span [class]="getEtutAttendanceStatusClass(student.id)">
+                    {{ getEtutAttendanceStatusText(student.id) }}
+                  </span>
+                </td>
+                <td>
+                  <div class="btn-group" role="group">
+                    <button type="button" 
+                            class="btn btn-success btn-sm"
+                            [class.active]="getEtutAttendanceStatus(student.id) === 'present'"
+                            (click)="markEtutAttendance(student.id, 'present')">
+                      <i class="bi bi-check-circle"></i> Katıldı
+                    </button>
+                    <button type="button" 
+                            class="btn btn-danger btn-sm"
+                            [class.active]="getEtutAttendanceStatus(student.id) === 'absent'"
+                            (click)="markEtutAttendance(student.id, 'absent')">
+                      <i class="bi bi-x-circle"></i> Katılmadı
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Hızlı İşlemler -->
+        <div class="row mt-3">
+          <div class="col-md-6">
+            <button class="btn btn-success w-100" (click)="markAllEtutPresent()">
+              <i class="bi bi-check-all"></i> Hepsini Katıldı İşaretle
+            </button>
+          </div>
+          <div class="col-md-6">
+            <button class="btn btn-danger w-100" (click)="markAllEtutAbsent()">
+              <i class="bi bi-x-octagon"></i> Hepsini Katılmadı İşaretle
+            </button>
+          </div>
+        </div>
+
+        <!-- Özet Bilgiler -->
+        <div class="row mt-4">
+          <div class="col-md-4">
+            <div class="card bg-light">
+              <div class="card-body text-center">
+                <h5 class="card-title text-primary">{{ getEtutPresentCount() }}</h5>
+                <p class="card-text">Katılan Öğrenci</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card bg-light">
+              <div class="card-body text-center">
+                <h5 class="card-title text-danger">{{ getEtutAbsentCount() }}</h5>
+                <p class="card-text">Katılmayan Öğrenci</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card bg-light">
+              <div class="card-body text-center">
+                <h5 class="card-title text-info">{{ groupStudents.length }}</h5>
+                <p class="card-text">Toplam Öğrenci</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="bi bi-x-circle"></i> İptal
+        </button>
+        <button type="button" 
+                class="btn btn-warning" 
+                (click)="saveEtutAttendance()" 
+                [disabled]="!hasEtutChanges || isEtutSaving">
+          <i class="bi bi-save"></i> 
+          {{ isEtutSaving ? 'Kaydediliyor...' : 'Etüt Yoklamasını Kaydet' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--The code has been modified based on the user's intention to convert the "İşlenen Dersler (Normal Dersler)" section to a card design while preserving the "Geçmiş Kayıtlar" section in its original form.-->
