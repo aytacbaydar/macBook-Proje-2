@@ -247,28 +247,33 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
   loadHistoricalAttendance() {
     if (!this.selectedGroup) return;
 
-    // Son 30 gün için tarih aralığı belirle
-    const endDate = new Date();
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - 30);
-
-    const formattedStartDate = startDate.toISOString().split('T')[0];
-    const formattedEndDate = endDate.toISOString().split('T')[0];
-
     this.http
       .get<any>(`./server/api/devamsizlik_kayitlari.php`, {
         headers: this.getAuthHeaders(),
         params: {
           grup: this.selectedGroup,
-          baslangic_tarih: formattedStartDate,
-          bitis_tarih: formattedEndDate,
         },
       })
       .subscribe({
         next: (response) => {
           if (response.success && response.data) {
             this.historicalAttendance = response.data.kayitlar || [];
-            this.groupedAttendanceByDate = response.data.tarihlere_gore || [];
+
+            // Tarihlere göre gruplanan verileri al
+            const allGroupedByDate = response.data.tarihlere_gore || [];
+
+            // Sadece normal derslerin olduğu tarihleri filtrele
+            this.groupedAttendanceByDate = allGroupedByDate.filter((dateGroup: any) => {
+              // O tarihteki kayıtları kontrol et
+              const dateRecords = this.historicalAttendance.filter(record => 
+                record.tarih === dateGroup.tarih
+              );
+
+              // Normal ders kayıtları var mı kontrol et
+              return dateRecords.some(record => 
+                !record.ders_tipi || record.ders_tipi === 'normal'
+              );
+            });
 
             // Eksik katılmayan öğrenci listelerini hesapla
             this.groupedAttendanceByDate.forEach(dateGroup => {
@@ -333,7 +338,22 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
         next: (response) => {
           if (response.success && response.data) {
             this.historicalAttendance = response.data.kayitlar || [];
-            this.groupedAttendanceByDate = response.data.tarihlere_gore || [];
+
+            // Tarihlere göre gruplanan verileri al
+            const allGroupedByDate = response.data.tarihlere_gore || [];
+
+            // Sadece normal derslerin olduğu tarihleri filtrele
+            this.groupedAttendanceByDate = allGroupedByDate.filter((dateGroup: any) => {
+              // O tarihteki kayıtları kontrol et
+              const dateRecords = this.historicalAttendance.filter(record => 
+                record.tarih === dateGroup.tarih
+              );
+
+              // Normal ders kayıtları var mı kontrol et
+              return dateRecords.some(record => 
+                !record.ders_tipi || record.ders_tipi === 'normal'
+              );
+            });
 
             if (this.groupedAttendanceByDate.length === 0) {
               this.toastr.info('Seçilen tarih aralığında kayıt bulunamadı', 'Bilgi');
@@ -475,18 +495,18 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     }
 
     let totalPresent = 0;
-    
+
     this.groupedAttendanceByDate.forEach(dateGroup => {
       // O tarihteki kayıtları kontrol et
       const dateRecords = this.historicalAttendance.filter(record => 
         record.tarih === dateGroup.tarih
       );
-      
+
       // Sadece normal ders kayıtlarında present olanları say
       const normalPresentCount = dateRecords.filter(record => 
         (!record.ders_tipi || record.ders_tipi === 'normal') && record.durum === 'present'
       ).length;
-      
+
       totalPresent += normalPresentCount;
     });
 
@@ -499,18 +519,18 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     }
 
     let totalAbsent = 0;
-    
+
     this.groupedAttendanceByDate.forEach(dateGroup => {
       // O tarihteki kayıtları kontrol et
       const dateRecords = this.historicalAttendance.filter(record => 
         record.tarih === dateGroup.tarih
       );
-      
+
       // Sadece normal ders kayıtlarında absent olanları say
       const normalAbsentCount = dateRecords.filter(record => 
         (!record.ders_tipi || record.ders_tipi === 'normal') && record.durum === 'absent'
       ).length;
-      
+
       totalAbsent += normalAbsentCount;
     });
 
@@ -544,18 +564,18 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
 
     // Normal derslerin olduğu tarihleri say
     let normalLessonsCount = 0;
-    
+
     this.groupedAttendanceByDate.forEach(dateGroup => {
       // O tarihteki kayıtları kontrol et
       const dateRecords = this.historicalAttendance.filter(record => 
         record.tarih === dateGroup.tarih
       );
-      
+
       // Normal ders kayıtları var mı kontrol et
       const hasNormalLessons = dateRecords.some(record => 
         !record.ders_tipi || record.ders_tipi === 'normal'
       );
-      
+
       if (hasNormalLessons) {
         normalLessonsCount++;
       }
@@ -1330,7 +1350,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
           this.processedLessons = (response.data.kayitlar || []).filter((record: any) => 
             !record.ders_tipi || record.ders_tipi === 'normal'
           );
-          
+
           this.processedLessonsGroupedByDate = response.data.tarihlere_gore || [];
 
           // Tarihlere göre gruplanan verilerde de normal ders filtresi uygula
@@ -1409,7 +1429,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
           this.processedLessons = (response.data.kayitlar || []).filter((record: any) => 
             !record.ders_tipi || record.ders_tipi === 'normal'
           );
-          
+
           this.processedLessonsGroupedByDate = response.data.tarihlere_gore || [];
 
           // Tarihlere göre gruplanan verilerde de normal ders filtresi uygula
@@ -1485,7 +1505,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
           this.processedLessons = (response.data.kayitlar || []).filter((record: any) => 
             !record.ders_tipi || record.ders_tipi === 'normal'
           );
-          
+
           this.processedLessonsGroupedByDate = response.data.tarihlere_gore || [];
 
           // Tarihlere göre gruplanan verilerde de normal ders filtresi uygula
@@ -1596,7 +1616,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
 
     // Etüt yoklama kayıtlarını başlat
     this.initializeEtutAttendanceRecords();
-    
+
     // Bootstrap modal'ını aç
     const modalElement = document.getElementById('etutDersiModal');
     if (modalElement) {
