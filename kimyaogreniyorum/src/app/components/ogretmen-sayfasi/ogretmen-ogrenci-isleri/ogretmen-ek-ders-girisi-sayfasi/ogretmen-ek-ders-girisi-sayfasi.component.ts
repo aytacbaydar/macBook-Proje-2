@@ -50,7 +50,6 @@ export class OgretmenEkDersGirisiSayfasiComponent implements OnInit {
     this.route.params.subscribe((params) => {
       if (params['grupAdi']) {
         this.selectedGroup = decodeURIComponent(params['grupAdi']);
-        console.log('Route\'dan alınan grup:', this.selectedGroup);
       }
     });
 
@@ -72,8 +71,6 @@ export class OgretmenEkDersGirisiSayfasiComponent implements OnInit {
       try {
         const user = JSON.parse(userStr);
         token = user.token || '';
-        console.log('Token bulundu:', token ? 'Evet' : 'Hayır');
-        console.log('Token uzunluğu:', token.length);
       } catch (error) {
         console.error('User parse hatası:', error);
       }
@@ -96,7 +93,6 @@ export class OgretmenEkDersGirisiSayfasiComponent implements OnInit {
       })
       .subscribe({
         next: (response) => {
-          console.log('Gruplar API yanıtı:', response);
           if (response.success && response.data) {
             // Giriş yapan öğretmenin bilgilerini al
             const loggedInUser = this.getLoggedInUser();
@@ -114,8 +110,6 @@ export class OgretmenEkDersGirisiSayfasiComponent implements OnInit {
               'Tüm Gruplar',
               ...Array.from(new Set(actualStudents.map((student: any) => String(student.grubu)))) as string[],
             ];
-            console.log('Yüklenen gruplar:', this.groups);
-            console.log('Filtrelenen öğrenci sayısı:', actualStudents.length);
 
             // Eğer route'dan grup bilgisi geldiyse otomatik olarak yükle
             if (this.selectedGroup && this.groups.includes(this.selectedGroup)) {
@@ -166,14 +160,11 @@ export class OgretmenEkDersGirisiSayfasiComponent implements OnInit {
                 (student: any) => student.grubu === this.selectedGroup
               );
             }
-
-            console.log('Yüklenen öğrenci sayısı:', this.groupStudents.length);
             //this.loadEkDersKayitlari();
           }
           this.isLoading = false;
         },
         error: (error) => {
-          console.error('Öğrenciler yüklenirken hata:', error);
           this.toastr.error('Öğrenciler yüklenemedi', 'Hata');
           this.isLoading = false;
         },
@@ -265,7 +256,6 @@ export class OgretmenEkDersGirisiSayfasiComponent implements OnInit {
       })
       .subscribe({
         next: (response) => {
-          console.log('Ek ders kayıt response:', response);
           if (response.success) {
             const durumText = durum === 'geldi' ? 'katıldı' : 'katılmadı';
             this.toastr.success(
@@ -273,14 +263,11 @@ export class OgretmenEkDersGirisiSayfasiComponent implements OnInit {
               'Başarılı'
             );
           } else {
-            console.error('API Hatası:', response.message);
             this.toastr.error(response.message || 'Yoklama kaydedilirken hata oluştu', 'Hata');
           }
         },
         error: (error) => {
-          console.error('Ek ders kayıt hatası:', error);
-          console.error('Error details:', error.error);
-          
+        
           let errorMessage = 'Yoklama kaydedilirken hata oluştu';
           if (error.error && error.error.message) {
             errorMessage = error.error.message;
@@ -324,7 +311,6 @@ export class OgretmenEkDersGirisiSayfasiComponent implements OnInit {
       ders_tipi: 'ek_ders'
     }));
 
-    console.log('Toplu ek ders kaydı gönderiliyor:', { records });
 
     this.http
       .post<any>('./server/api/ek_ders_yoklama_kaydet.php', { records }, {
@@ -332,7 +318,6 @@ export class OgretmenEkDersGirisiSayfasiComponent implements OnInit {
       })
       .subscribe({
         next: (response) => {
-          console.log('Toplu ek ders kayıt response:', response);
           if (response.success) {
             this.toastr.success('Tüm ek ders yoklamaları başarıyla kaydedildi', 'Başarılı');
             // Attendance durumlarını temizle
@@ -340,14 +325,11 @@ export class OgretmenEkDersGirisiSayfasiComponent implements OnInit {
               student.attendance = null;
             });
           } else {
-            console.error('API Hatası:', response.message);
             this.toastr.error(response.message || 'Ek ders yoklamaları kaydedilirken hata oluştu', 'Hata');
           }
           this.isSaving = false;
         },
         error: (error) => {
-          console.error('Toplu ek ders kaydı hatası:', error);
-          console.error('Error details:', error.error);
           
           let errorMessage = 'Ek ders yoklamaları kaydedilirken hata oluştu';
           if (error.error && error.error.message) {
@@ -421,7 +403,6 @@ export class OgretmenEkDersGirisiSayfasiComponent implements OnInit {
         return null;
       }
     } else {
-      console.log('Kullanıcı bilgisi bulunamadı!');
       return null;
     }
   }
