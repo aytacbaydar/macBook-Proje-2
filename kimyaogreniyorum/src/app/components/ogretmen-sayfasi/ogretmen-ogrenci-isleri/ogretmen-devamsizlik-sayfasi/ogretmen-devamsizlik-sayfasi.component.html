@@ -235,23 +235,39 @@
             </div>
 
             <div class="students-list">
-              <div class="present-students" *ngIf="dateGroup.katilanlar?.length > 0">
-                <h5><i class="bi bi-person-check"></i> Derse Katılanlar ({{ dateGroup.katilanlar?.length }}):</h5>
-                <div class="student-tags">
-                  <span class="student-tag present" *ngFor="let student of dateGroup.katilanlar">
-                    <i class="bi bi-check-circle"></i>
-                    {{ student.adi_soyadi }}
-                  </span>
+              <!-- Katılan Öğrenciler -->
+              <div class="card mb-3" *ngIf="dateGroup.katilan_sayisi > 0">
+                <div class="card-header bg-success text-white">
+                  <h6 class="mb-0">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    Katılanlar ({{ dateGroup.katilanlar?.length }})
+                  </h6>
+                </div>
+                <div class="card-body">
+                  <div class="student-tags">
+                    <span class="student-tag present" *ngFor="let student of dateGroup.katilanlar">
+                      <i class="bi bi-check-circle"></i>
+                      {{ student.adi_soyadi || student.name }}
+                    </span>
+                  </div>
                 </div>
               </div>
 
-              <div class="absent-students" *ngIf="dateGroup.katilmayanlar?.length > 0">
-                <h5><i class="bi bi-person-x"></i> Derse Katılmayanlar ({{ dateGroup.katilmayanlar?.length }}):</h5>
-                <div class="student-tags">
-                  <span class="student-tag absent" *ngFor="let student of dateGroup.katilmayanlar">
-                    <i class="bi bi-x-circle"></i>
-                    {{ student.adi_soyadi || student.name }}
-                  </span>
+              <!-- Katılmayan Öğrenciler -->
+              <div class="card mb-3" *ngIf="dateGroup.katilmayan_sayisi > 0">
+                <div class="card-header bg-danger text-white">
+                  <h6 class="mb-0">
+                    <i class="bi bi-x-circle-fill me-2"></i>
+                    Katılmayanlar ({{ dateGroup.katilmayanlar?.length }})
+                  </h6>
+                </div>
+                <div class="card-body">
+                  <div class="student-tags">
+                    <span class="student-tag absent" *ngFor="let student of dateGroup.katilmayanlar">
+                      <i class="bi bi-x-circle"></i>
+                      {{ student.adi_soyadi || student.name }}
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -757,6 +773,7 @@
                 <i class="bi bi-calendar3"></i>
                 {{ formatDate(lesson.tarih) }}
               </div>
+```text
               <div class="lesson-time">
                 <i class="bi bi-clock"></i>
                 {{ getTimeFromDate(lesson.tarih) }}
@@ -854,6 +871,63 @@
           </button>
         </div>
         <hr />
+      </div>
+    </div>
+  </div>
+  <!-- Historical Data Filters -->
+  <div class="card mb-4" *ngIf="viewHistoricalData">
+    <div class="card-header bg-info text-white">
+      <h5 class="mb-0">
+        <i class="bi bi-funnel me-2"></i>
+        Geçmiş Kayıt Filtreleri
+      </h5>
+    </div>
+    <div class="card-body">
+      <div class="filter-section">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="startDate" class="form-label">Başlangıç Tarihi:</label>
+            <input type="date" id="startDate" class="form-control" [(ngModel)]="startDate">
+          </div>
+          <div class="col-md-6">
+            <label for="endDate" class="form-label">Bitiş Tarihi:</label>
+            <input type="date" id="endDate" class="form-control" [(ngModel)]="endDate">
+          </div>
+        </div>
+
+        <div class="quick-filter-buttons mb-3">
+          <div class="btn-group" role="group">
+            <button class="btn btn-outline-primary btn-sm" (click)="setDateRangeLastWeek()">
+              <i class="bi bi-calendar-week"></i> Son 1 Hafta
+            </button>
+            <button class="btn btn-outline-primary btn-sm" (click)="setDateRangeLastMonth()">
+              <i class="bi bi-calendar-month"></i> Son 1 Ay
+            </button>
+            <button class="btn btn-outline-primary btn-sm" (click)="setDateRangeThisMonth()">
+              <i class="bi bi-calendar3"></i> Bu Ay
+            </button>
+            <button class="btn btn-outline-primary btn-sm" (click)="setDateRangeThisYear()">
+              <i class="bi bi-calendar4-range"></i> Bu Yıl
+            </button>
+          </div>
+        </div>
+
+        <div class="filter-actions">
+          <div class="btn-group" role="group">
+            <button class="btn btn-primary" (click)="loadHistoricalAttendanceByDateRange()" 
+                    [disabled]="!startDate || !endDate">
+              <i class="bi bi-search"></i> Filtrele
+            </button>
+            <button class="btn btn-secondary" (click)="loadAllAttendanceRecords()" 
+                    [disabled]="!selectedGroup">
+              <i class="bi bi-collection"></i> Tümünü Getir
+            </button>
+            <button class="btn btn-warning" (click)="debugStudentRecords()" 
+                    [disabled]="!selectedGroup || groupStudents.length === 0">
+              <i class="bi bi-bug"></i> Debug Kayıtları
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
