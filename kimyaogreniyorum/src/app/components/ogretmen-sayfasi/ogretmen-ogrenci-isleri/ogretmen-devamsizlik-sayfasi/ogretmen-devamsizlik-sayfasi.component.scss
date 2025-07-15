@@ -1121,7 +1121,7 @@
         .detay-buton {
           width: 100%;
           background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-          color: white;
+          color: white,
           border: none;
           border-radius: 8px;
           padding: 0.75rem 1rem;
@@ -1972,4 +1972,86 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+}
+
+/* Geçmiş Kayıtlar bölümü için stiller */
+.past-records-section {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* İşlenen Dersler bölümü için stiller */
+.taught-lessons-section {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  h3 {
+    color: #333;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .lesson-record {
+    padding: 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    background: #fafafa;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .lesson-date {
+      font-weight: bold;
+      color: #2c3e50;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .lesson-description {
+      color: #555;
+      line-height: 1.5;
+      margin-bottom: 0.5rem;
+
+      .attendance-info {
+        margin-top: 0.5rem;
+        padding: 0.5rem;
+        background: #f8f9fa;
+        border-radius: 4px;
+        border-left: 4px solid #007bff;
+
+        .present-students {
+          color: #28a745;
+          font-weight: 500;
+          margin-bottom: 0.25rem;
+        }
+
+        .absent-students {
+          color: #dc3545;
+          font-weight: 500;
+        }
+      }
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #e0e0e0;
+      margin: 1rem 0;
+    }
+  }
+
+  .no-records {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+    padding: 2rem;
+  }
 }
