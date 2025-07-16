@@ -1,0 +1,63 @@
+▲ [WARNING] Duplicate member "paymentHistory" in class body [duplicate-class-member]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-ucret-sayfasi/ogrenci-ucret-sayfasi.component.ts:798:4:
+      798 │     paymentHistory: any[] = [];
+          ╵     ~~~~~~~~~~~~~~
+
+  The original member "paymentHistory" is here:
+
+    src/app/components/ogrenci-sayfasi/ogrenci-ucret-sayfasi/ogrenci-ucret-sayfasi.component.ts:795:4:
+      795 │     paymentHistory: Payment[] = [];
+          ╵     ~~~~~~~~~~~~~~
+
+
+▲ [WARNING] Duplicate member "error" in class body [duplicate-class-member]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-ucret-sayfasi/ogrenci-ucret-sayfasi.component.ts:808:4:
+      808 │     error: string = '';
+          ╵     ~~~~~
+
+  The original member "error" is here:
+
+    src/app/components/ogrenci-sayfasi/ogrenci-ucret-sayfasi/ogrenci-ucret-sayfasi.component.ts:796:4:
+      796 │     error: string | null = null;
+          ╵     ~~~~~
+
+
+X [ERROR] TS2300: Duplicate identifier 'paymentHistory'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-ucret-sayfasi/ogrenci-ucret-sayfasi.component.ts:66:2:
+      66 │   paymentHistory: any[] = [];
+         ╵   ~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2717: Subsequent property declarations must have the same type.  Property 'paymentHistory' must be of type 'Payment[]', but here has type 'any[]'. [plugin angular-compiler]        
+
+    src/app/components/ogrenci-sayfasi/ogrenci-ucret-sayfasi/ogrenci-ucret-sayfasi.component.ts:66:2:
+      66 │   paymentHistory: any[] = [];
+         ╵   ~~~~~~~~~~~~~~
+
+  'paymentHistory' was also declared here.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-ucret-sayfasi/ogrenci-ucret-sayfasi.component.ts:62:2:
+      62 │   paymentHistory: Payment[] = [];
+         ╵   ~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2300: Duplicate identifier 'error'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-ucret-sayfasi/ogrenci-ucret-sayfasi.component.ts:79:2:
+      79 │   error: string = '';
+         ╵   ~~~~~
+
+
+X [ERROR] TS2717: Subsequent property declarations must have the same type.  Property 'error' must be of type 'string | null', but here has type 'string'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-ucret-sayfasi/ogrenci-ucret-sayfasi.component.ts:79:2:
+      79 │   error: string = '';
+         ╵   ~~~~~
+
+  'error' was also declared here.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-ucret-sayfasi/ogrenci-ucret-sayfasi.component.ts:63:2:
+      63 │   error: string | null = null;
