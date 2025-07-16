@@ -2241,8 +2241,8 @@
               i {
                 color: #ef4444;
               }
-            }
-          }
+            }Adding styles for the devamsizlik-kayitlari-section to display student attendance records in a table format.
+```}
         }
 
         .detail-btn {
@@ -2523,6 +2523,106 @@
           }
         }
       }
+    }
+  }
+}
+// Component specific styles will go here
+
+.devamsizlik-kayitlari-section {
+  margin-top: 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+
+  .section-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1.5rem;
+    margin: 0;
+
+    h3 {
+      margin: 0;
+      font-weight: 600;
+
+      i {
+        margin-right: 0.5rem;
+      }
+    }
+  }
+
+  .table-responsive {
+    padding: 1.5rem;
+  }
+
+  .table {
+    margin-bottom: 0;
+
+    thead th {
+      border: none;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.875rem;
+      letter-spacing: 0.5px;
+    }
+
+    tbody td {
+      vertical-align: middle;
+      border-color: #e9ecef;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      padding: 0.5rem 0.75rem;
+    }
+  }
+}
+
+.stat-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+  color: white;
+
+  .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-label {
+    font-size: 0.875rem;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+}
+
+.no-data-message {
+  padding: 2rem;
+  text-align: center;
+
+  .alert {
+    border: none;
+    border-radius: 12px;
+    padding: 2rem;
+
+    i {
+      color: #17a2b8;
+      margin-bottom: 1rem;
+    }
+
+    h5 {
+      color: #495057;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      color: #6c757d;
+      margin-bottom: 0;
     }
   }
 }

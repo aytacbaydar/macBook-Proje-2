@@ -81,6 +81,7 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadStudentInfo();
+    this.loadPaymentData();
   }
 
   ngOnDestroy() {
