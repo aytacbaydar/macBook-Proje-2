@@ -80,8 +80,18 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.setCurrentMonthDates();
     this.loadStudentInfo();
     this.loadPaymentData();
+  }
+
+  private setCurrentMonthDates() {
+    const now = new Date();
+    const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+    const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+    this.startDate = startDate.toISOString().split('T')[0];
+    this.endDate = endDate.toISOString().split('T')[0];
   }
 
   ngOnDestroy() {
@@ -154,29 +164,34 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
   loadStudentAttendanceData() {
     if (!this.currentStudent) return;
 
-    this.http.get<any>(`./server/api/devamsizlik_kayitlari.php`, {
-      headers: this.getAuthHeaders(),
-      params: {
-        ogrenci_id: this.currentStudent.id.toString()
-      }
-    }).subscribe({
-      next: (response) => {
-        if (response.success && response.data) {
-          this.historicalAttendance = response.data.kayitlar || [];
+    // Eğer tarih aralığı varsa, o aralıkla yükle
+    if (this.startDate && this.endDate) {
+      this.loadHistoricalAttendanceByDateRange();
+    } else {
+      this.http.get<any>(`./server/api/devamsizlik_kayitlari.php`, {
+        headers: this.getAuthHeaders(),
+        params: {
+          ogrenci_id: this.currentStudent.id.toString()
+        }
+      }).subscribe({
+        next: (response) => {
+          if (response.success && response.data) {
+            this.historicalAttendance = response.data.kayitlar || [];
 
-          // Group by date
-          this.groupedAttendanceByDate = this.groupAttendanceByDate(this.historicalAttendance);
-        } else {
+            // Group by date
+            this.groupedAttendanceByDate = this.groupAttendanceByDate(this.historicalAttendance);
+          } else {
+            this.historicalAttendance = [];
+            this.groupedAttendanceByDate = [];
+          }
+        },
+        error: (error) => {
+          console.error('Devamsızlık verileri yüklenirken hata:', error);
           this.historicalAttendance = [];
           this.groupedAttendanceByDate = [];
         }
-      },
-      error: (error) => {
-        console.error('Devamsızlık verileri yüklenirken hata:', error);
-        this.historicalAttendance = [];
-        this.groupedAttendanceByDate = [];
-      }
-    });
+      });
+    }
   }
 
   private groupAttendanceByDate(records: AttendanceRecord[]): any[] {
