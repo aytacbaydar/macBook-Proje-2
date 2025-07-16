@@ -80,18 +80,8 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.setCurrentMonthDates();
     this.loadStudentInfo();
     this.loadPaymentData();
-  }
-
-  private setCurrentMonthDates() {
-    const now = new Date();
-    const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-    const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-
-    this.startDate = startDate.toISOString().split('T')[0];
-    this.endDate = endDate.toISOString().split('T')[0];
   }
 
   ngOnDestroy() {
@@ -168,10 +158,12 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
     if (this.startDate && this.endDate) {
       this.loadHistoricalAttendanceByDateRange();
     } else {
+      // Tüm kayıtları yükle (butun_kayitlar parametresi ile)
       this.http.get<any>(`./server/api/devamsizlik_kayitlari.php`, {
         headers: this.getAuthHeaders(),
         params: {
-          ogrenci_id: this.currentStudent.id.toString()
+          ogrenci_id: this.currentStudent.id.toString(),
+          butun_kayitlar: 'true'
         }
       }).subscribe({
         next: (response) => {
@@ -294,6 +286,15 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
     });
   }
 
+  private setCurrentMonthDates() {
+    const now = new Date();
+    const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+    const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+    this.startDate = startDate.toISOString().split('T')[0];
+    this.endDate = endDate.toISOString().split('T')[0];
+  }
+
   // Quick date filters
   setDateRangeLastWeek() {
     const endDate = new Date();
@@ -307,13 +308,7 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
   }
 
   setDateRangeThisMonth() {
-    const now = new Date();
-    const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-    const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-
-    this.startDate = startDate.toISOString().split('T')[0];
-    this.endDate = endDate.toISOString().split('T')[0];
-
+    this.setCurrentMonthDates();
     this.loadHistoricalAttendanceByDateRange();
   }
 
