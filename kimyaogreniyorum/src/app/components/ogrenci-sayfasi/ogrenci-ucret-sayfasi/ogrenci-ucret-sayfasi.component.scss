@@ -1122,22 +1122,21 @@
         }
       }
 
-      .detay-buton {
-        width: 100%;
-        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-        ```
-color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 0.75rem 1rem;
-        font-size: 0.875rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
+.detay-buton {
+  width: 100%;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 
         &:hover {
           background: linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 100%);
