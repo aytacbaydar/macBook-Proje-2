@@ -387,12 +387,8 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
     this.isLoading = true;
 
     try {
-      const response = await this.http.get<any>(`./server/api/ogrenci_detay_istatistik.php`, {
+      const response = await this.http.get<any>(`./server/api/ogrenci_kendi_istatistik.php`, {
         headers: this.getAuthHeaders(),
-        params: {
-          grup: this.selectedGroup,
-          ogrenci_id: this.currentStudent.id.toString()
-        },
         responseType: 'json'
       }).toPromise();
 
@@ -418,12 +414,9 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
     this.showStudentStatsModal = true;
 
     try {
-      // Detaylı istatistikleri yükle
-      const statsResponse = await this.http.get<any>(`./server/api/ogrenci_detay_istatistik.php`, {
-        headers: this.getAuthHeaders(),
-        params: {
-          ogrenci_id: this.currentStudent.id.toString()
-        }
+      // Öğrenci için özel istatistik API'sini çağır (grup parametresi olmadan)
+      const statsResponse = await this.http.get<any>(`./server/api/ogrenci_kendi_istatistik.php`, {
+        headers: this.getAuthHeaders()
       }).toPromise();
 
       if (statsResponse && statsResponse.success) {
