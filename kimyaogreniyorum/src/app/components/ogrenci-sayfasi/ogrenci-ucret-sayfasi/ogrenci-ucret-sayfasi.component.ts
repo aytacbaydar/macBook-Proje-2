@@ -82,6 +82,8 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadStudentInfo();
     this.loadPaymentData();
+    // Sayfa açılır açılmaz bu yıl kayıtlarını yükle
+    this.setDateRangeThisYear();
   }
 
   ngOnDestroy() {
@@ -136,7 +138,7 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
         if (response.success && response.data) {
           this.currentStudent = response.data;
           this.selectedGroup = response.data.grubu || '';
-          this.loadStudentAttendanceData();
+          // loadStudentAttendanceData'yı kaldırdık çünkü ngOnInit'te setDateRangeThisYear() çağrılıyor
           this.loadStudentDetailedStats();
         } else {
           this.toastr.error('Öğrenci bilgileri yüklenemedi', 'Hata');
