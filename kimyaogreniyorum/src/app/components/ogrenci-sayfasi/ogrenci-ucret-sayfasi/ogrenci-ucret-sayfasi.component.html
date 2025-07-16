@@ -281,6 +281,58 @@
     </div>
   </div>
 
+  <!-- Devamsızlık Kayıtları Tablosu -->
+  <div class="devamsizlik-kayitlari-section" *ngIf="currentStudent && historicalAttendance.length > 0">
+    <div class="section-header">
+      <h3><i class="bi bi-list-check"></i> Tüm Ders Kayıtlarım</h3>
+    </div>
+    
+    <div class="table-container">
+      <table class="kayitlar-tablosu">
+        <thead>
+          <tr>
+            <th>Tarih</th>
+            <th>Durum</th>
+            <th>Ders Tipi</th>
+            <th>Grup</th>
+            <th>Saat</th>
+            <th>Yöntem</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let kayit of historicalAttendance">
+            <td>{{ formatDate(kayit.tarih) }}</td>
+            <td>
+              <span class="status-badge" 
+                    [class.present]="kayit.durum === 'present'"
+                    [class.absent]="kayit.durum === 'absent'">
+                {{ kayit.durum === 'present' ? 'Katıldım' : 'Katılmadım' }}
+              </span>
+            </td>
+            <td>
+              <span class="lesson-type-badge" 
+                    [class.normal]="!kayit.ders_tipi || kayit.ders_tipi === 'normal'"
+                    [class.ek-ders]="kayit.ders_tipi === 'ek_ders'"
+                    [class.etut]="kayit.ders_tipi === 'etut_dersi'">
+                {{ kayit.ders_tipi === 'ek_ders' ? 'Ek Ders' : 
+                   kayit.ders_tipi === 'etut_dersi' ? 'Etüt' : 'Normal Ders' }}
+              </span>
+            </td>
+            <td>{{ kayit.grup }}</td>
+            <td>{{ kayit.zaman | date:'HH:mm' }}</td>
+            <td>
+              <span class="method-badge" 
+                    [class.manual]="kayit.yontem === 'manual'"
+                    [class.qr]="kayit.yontem === 'qr'">
+                {{ kayit.yontem === 'qr' ? 'QR Kod' : 'Manuel' }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
   <!-- Öğrenci Devamsızlık Analiz Tablosu -->
   <div class="student-analysis-section" *ngIf="currentStudent && historicalAttendance.length > 0">
     <div class="section-header">
