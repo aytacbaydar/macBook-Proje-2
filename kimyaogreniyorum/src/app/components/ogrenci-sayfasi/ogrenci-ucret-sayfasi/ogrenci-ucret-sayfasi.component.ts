@@ -408,12 +408,58 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
     }
   }
 
-  openStudentStatsModal() {
+  async openStudentStatsModal() {
+    if (!this.currentStudent) {
+      this.toastr.error('Öğrenci bilgisi bulunamadı', 'Hata');
+      return;
+    }
+
+    this.isLoading = true;
     this.showStudentStatsModal = true;
+
+    try {
+      // Detaylı istatistikleri yükle
+      const statsResponse = await this.http.get<any>(`./server/api/ogrenci_detay_istatistik.php`, {
+        headers: this.getAuthHeaders(),
+        params: {
+          ogrenci_id: this.currentStudent.id.toString()
+        }
+      }).toPromise();
+
+      if (statsResponse && statsResponse.success) {
+        this.studentStats = statsResponse.data;
+        console.log('Student stats loaded:', this.studentStats);
+      } else {
+        console.error('Öğrenci istatistikleri yüklenemedi:', statsResponse?.message);
+        this.toastr.error('Öğrenci istatistikleri yüklenemedi', 'Hata');
+      }
+
+      // Ödeme geçmişini yükle
+      const paymentResponse = await this.http.get<any>(`./server/api/ogrenci_ucret_bilgileri.php`, {
+        headers: this.getAuthHeaders()
+      }).toPromise();
+
+      if (paymentResponse && paymentResponse.success) {
+        this.paymentHistory = paymentResponse.data.payments || [];
+        console.log('Payment history loaded:', this.paymentHistory);
+      } else {
+        console.error('Ödeme geçmişi yüklenemedi:', paymentResponse?.message);
+        this.toastr.error('Ödeme geçmişi yüklenemedi', 'Hata');
+      }
+
+    } catch (error: any) {
+      console.error('Modal verileri yüklenirken hata:', error);
+      this.toastr.error('Veriler yüklenirken hata oluştu', 'Hata');
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   closeStudentStatsModal() {
     this.showStudentStatsModal = false;
+    // Modal kapanırken verileri temizle
+    this.studentStats = null;
+    this.paymentHistory = [];
   }
 
   // Get student attendance analysis for the current student
