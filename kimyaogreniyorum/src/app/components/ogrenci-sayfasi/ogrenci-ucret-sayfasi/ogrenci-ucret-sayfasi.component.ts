@@ -553,4 +553,11 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
       katilmayan_sayisi: data.katilmayan_sayisi
     })).sort((a: any, b: any) => new Date(b.tarih).getTime() - new Date(a.tarih).getTime());
   }
+
+  getTotalPaidAmount(): number {
+    if (!this.paymentHistory || this.paymentHistory.length === 0) {
+      return 0;
+    }
+    return this.paymentHistory.reduce((total, payment) => total + parseFloat(payment.tutar.toString()), 0);
+  }
 }
