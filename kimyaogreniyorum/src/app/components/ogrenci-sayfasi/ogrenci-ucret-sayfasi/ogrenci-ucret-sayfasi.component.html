@@ -48,46 +48,24 @@
     </div>
   </div>
 
-  <!-- Historical Data Filters -->
-  <div class="filters-card">
-    <div class="card-header">
+  <!-- Quick Filter Header -->
+  <div class="filters-header">
+    <div class="filters-title">
       <h3><i class="bi bi-filter"></i> Ders Geçmişim</h3>
     </div>
-    <div class="card-body">
-      <div class="filters-grid">
-        <div class="date-range">
-          <div class="date-input">
-            <label>Başlangıç Tarihi</label>
-            <input type="date" class="modern-input" [(ngModel)]="startDate">
-          </div>
-          <div class="date-input">
-            <label>Bitiş Tarihi</label>
-            <input type="date" class="modern-input" [(ngModel)]="endDate">
-          </div>
-        </div>
-
-        <div class="quick-filters">
-          <button class="btn btn-outline-primary btn-sm" (click)="setDateRangeLastWeek()">
-            <i class="bi bi-calendar-week"></i> Bu Hafta
-          </button>
-          <button class="btn btn-outline-primary btn-sm" (click)="setDateRangeThisMonth()">
-            <i class="bi bi-calendar3"></i> Bu Ay
-          </button>
-          <button class="btn btn-outline-primary btn-sm" (click)="setDateRangeThisYear()">
-            <i class="bi bi-calendar-range"></i> Bu Yıl
-          </button>
-        </div>
-
-        <div class="filter-actions">
-          <button class="btn btn-primary" (click)="loadHistoricalAttendanceByDateRange()"
-            [disabled]="!startDate || !endDate">
-            <i class="bi bi-search"></i> Filtrele
-          </button>
-          <button class="btn btn-secondary" (click)="loadAllAttendanceRecords()">
-            <i class="bi bi-collection"></i> Tümünü Getir
-          </button>
-        </div>
-      </div>
+    <div class="quick-filters-header">
+      <button class="btn btn-outline-primary btn-sm" (click)="setDateRangeLastWeek()">
+        <i class="bi bi-calendar-week"></i> Bu Hafta
+      </button>
+      <button class="btn btn-outline-primary btn-sm" (click)="setDateRangeThisMonth()">
+        <i class="bi bi-calendar3"></i> Bu Ay
+      </button>
+      <button class="btn btn-outline-primary btn-sm" (click)="setDateRangeThisYear()">
+        <i class="bi bi-calendar-range"></i> Bu Yıl
+      </button>
+      <button class="btn btn-secondary btn-sm" (click)="loadAllAttendanceRecords()">
+        <i class="bi bi-collection"></i> Tümünü Getir
+      </button>
     </div>
   </div>
 
