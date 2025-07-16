@@ -1,4 +1,21 @@
 <div class="modern-attendance-container">
+    <!-- Quick Filter Header -->
+    <div class="filters-header">
+      <div class="filters-title">
+        <h3><i class="bi bi-filter"></i> Ders Geçmişim</h3>
+      </div>
+      <div class="quick-filters-header">
+        <button class="btn btn-outline-primary btn-sm" (click)="setDateRangeThisMonth()">
+          <i class="bi bi-calendar3"></i> Bu Ay
+        </button>
+        <button class="btn btn-outline-primary btn-sm" (click)="setDateRangeThisYear()">
+          <i class="bi bi-calendar-range"></i> Bu Yıl
+        </button>
+        <button class="btn btn-secondary btn-sm" (click)="loadAllAttendanceRecords()">
+          <i class="bi bi-collection"></i> Tümünü Getir
+        </button>
+      </div>
+    </div>
   <!-- Statistics Section -->
   <div class="stats-section" *ngIf="groupedAttendanceByDate.length > 0">
     <div class="stats-cards">
@@ -43,88 +60,6 @@
           <div class="stat-number">{{ getAttendancePercentage() }}%</div>
           <div class="stat-label">Katılım Oranım</div>
           <div class="stat-description">Genel katılım yüzdem</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Quick Filter Header -->
-  <div class="filters-header">
-    <div class="filters-title">
-      <h3><i class="bi bi-filter"></i> Ders Geçmişim</h3>
-    </div>
-    <div class="quick-filters-header">
-      <button class="btn btn-outline-primary btn-sm" (click)="setDateRangeLastWeek()">
-        <i class="bi bi-calendar-week"></i> Bu Hafta
-      </button>
-      <button class="btn btn-outline-primary btn-sm" (click)="setDateRangeThisMonth()">
-        <i class="bi bi-calendar3"></i> Bu Ay
-      </button>
-      <button class="btn btn-outline-primary btn-sm" (click)="setDateRangeThisYear()">
-        <i class="bi bi-calendar-range"></i> Bu Yıl
-      </button>
-      <button class="btn btn-secondary btn-sm" (click)="loadAllAttendanceRecords()">
-        <i class="bi bi-collection"></i> Tümünü Getir
-      </button>
-    </div>
-  </div>
-
-  <!-- Öğrenci Bilgi Kartım -->
-  <div class="ogrenci-bilgi-kartlari" *ngIf="currentStudent">
-    <h3 class="section-title">
-      <i class="bi bi-credit-card"></i>
-      Ücret ve Katılım Bilgilerim
-    </h3>
-    <div class="bilgi-kartlari-grid">
-      <div class="ogrenci-bilgi-karti" *ngFor="let stats of getStudentAttendanceStats()">
-        <div class="kart-header">
-          <img [src]="stats.avatar || getDefaultAvatar(stats.name)" class="ogrenci-avatar" alt="Avatar">
-          <div class="ogrenci-bilgileri">
-            <h5 class="ogrenci-adi">{{ stats.name }}</h5>
-            <p class="ogrenci-email">{{ stats.email }}</p>
-            <div class="katilim-badge" [class.yuksek]="stats.attendancePercentage >= 80"
-              [class.orta]="stats.attendancePercentage >= 60 && stats.attendancePercentage < 80"
-              [class.dusuk]="stats.attendancePercentage < 60">
-              %{{ stats.attendancePercentage }} Katılım
-            </div>
-          </div>
-        </div>
-
-        <div class="kart-istatistikler">
-          <div class="istatistik-satiri">
-            <div class="istatistik-kutusu katildi">
-              <div class="istatistik-sayi">{{ stats.presentCount }}</div>
-              <div class="istatistik-etiket">Katıldığım Ders</div>
-            </div>
-            <div class="istatistik-kutusu katilmadi">
-              <div class="istatistik-sayi">{{ stats.absentCount }}</div>
-              <div class="istatistik-etiket">Devamsızlık</div>
-            </div>
-          </div>
-
-          <div class="odeme-bilgileri">
-            <div class="odeme-satiri">
-              <span class="odeme-etiket">Beklenen Ödeme:</span>
-              <span class="odeme-tutar">{{ formatCurrency(stats.expectedTotalAmount) }}</span>
-            </div>
-            <div class="sonraki-odeme" *ngIf="stats.lessonsUntilNextPayment > 0">
-              <i class="bi bi-clock"></i>
-              Sonraki ödemeye {{ stats.lessonsUntilNextPayment }} ders kaldı
-            </div>
-            <div class="odeme-zamani" *ngIf="stats.lessonsUntilNextPayment === 0">
-              <i class="bi bi-exclamation-circle"></i>
-              Ödeme Zamanı!
-            </div>
-          </div>
-        </div>
-
-        <div class="kart-footer">
-          <button type="button" class="detay-buton" (click)="openStudentStatsModal()"
-            [disabled]="isLoading">
-            <i class="bi bi-info-circle-fill"></i>
-            <span *ngIf="!isLoading">Detaylı İstatistikleri Gör</span>
-            <span *ngIf="isLoading">Yükleniyor...</span>
-          </button>
         </div>
       </div>
     </div>
@@ -346,6 +281,68 @@
           </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+
+  <!-- Öğrenci Bilgi Kartım -->
+  <div class="student-analysis-section">
+    <div class="ogrenci-bilgi-kartlari" *ngIf="currentStudent">
+      <h3 class="section-title">
+        <i class="bi bi-credit-card"></i>
+        Ücret ve Katılım Bilgilerim
+      </h3>
+      <div class="bilgi-kartlari-grid">
+        <div class="ogrenci-bilgi-karti" *ngFor="let stats of getStudentAttendanceStats()">
+          <div class="kart-header">
+            <img [src]="stats.avatar || getDefaultAvatar(stats.name)" class="ogrenci-avatar" alt="Avatar">
+            <div class="ogrenci-bilgileri">
+              <h5 class="ogrenci-adi">{{ stats.name }}</h5>
+              <p class="ogrenci-email">{{ stats.email }}</p>
+              <div class="katilim-badge" [class.yuksek]="stats.attendancePercentage >= 80"
+                [class.orta]="stats.attendancePercentage >= 60 && stats.attendancePercentage < 80"
+                [class.dusuk]="stats.attendancePercentage < 60">
+                %{{ stats.attendancePercentage }} Katılım
+              </div>
+            </div>
+          </div>
+    
+          <div class="kart-istatistikler">
+            <div class="istatistik-satiri">
+              <div class="istatistik-kutusu katildi">
+                <div class="istatistik-sayi">{{ stats.presentCount }}</div>
+                <div class="istatistik-etiket">Katıldığım Ders</div>
+              </div>
+              <div class="istatistik-kutusu katilmadi">
+                <div class="istatistik-sayi">{{ stats.absentCount }}</div>
+                <div class="istatistik-etiket">Devamsızlık</div>
+              </div>
+            </div>
+    
+            <div class="odeme-bilgileri">
+              <div class="odeme-satiri">
+                <span class="odeme-etiket">Beklenen Ödeme:</span>
+                <span class="odeme-tutar">{{ formatCurrency(stats.expectedTotalAmount) }}</span>
+              </div>
+              <div class="sonraki-odeme" *ngIf="stats.lessonsUntilNextPayment > 0">
+                <i class="bi bi-clock"></i>
+                Sonraki ödemeye {{ stats.lessonsUntilNextPayment }} ders kaldı
+              </div>
+              <div class="odeme-zamani" *ngIf="stats.lessonsUntilNextPayment === 0">
+                <i class="bi bi-exclamation-circle"></i>
+                Ödeme Zamanı!
+              </div>
+            </div>
+          </div>
+    
+          <div class="kart-footer">
+            <button type="button" class="detay-buton" (click)="openStudentStatsModal()" [disabled]="isLoading">
+              <i class="bi bi-info-circle-fill"></i>
+              <span *ngIf="!isLoading">Detaylı İstatistikleri Gör</span>
+              <span *ngIf="isLoading">Yükleniyor...</span>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 

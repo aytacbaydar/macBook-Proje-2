@@ -10,19 +10,16 @@
   font-weight: bold;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
-</style>
 
 .button:hover {
   opacity: 0.8;
 }
 
+
 .button:active {
   transform: translateY(1px);
   box-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
-}
-}
-
 // Quick filters header styles
 .filters-header {
   display: flex;
@@ -30,7 +27,7 @@
   align-items: center;
   background: white;
   padding: 1.5rem;
-  border-radius: 12px;
+  border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 2rem;
   border: 1px solid #e2e8f0;
@@ -115,7 +112,7 @@
 /* Modern Header */
 .modern-header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 16px;
+  border-radius: 8px;
   padding: 32px;
   margin-bottom: 24px;
   color: white;
@@ -170,7 +167,7 @@
 .stat-item {
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px);
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 16px;
   text-align: center;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -194,7 +191,7 @@
 .filters-card,
 .student-stats-card {
   background: white;
-  border-radius: 16px;
+  border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   margin-bottom: 24px;
   overflow: hidden;
@@ -355,7 +352,7 @@
   position: relative;
   max-width: 500px;
   margin: 0 auto;
-  border-radius: 12px;
+  border-radius: 8px;
   overflow: hidden;
 }
 
@@ -384,7 +381,7 @@
   width: 200px;
   height: 200px;
   border: 3px solid #667eea;
-  border-radius: 12px;
+  border-radius: 8px;
   margin-bottom: 16px;
   position: relative;
 }
@@ -432,7 +429,7 @@
 .student-card {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 20px;
   display: flex;
   justify-content: space-between;
@@ -573,7 +570,7 @@
 
 .stat-card {
   background: white;
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 24px;
   border: 1px solid #e2e8f0;
   transition: all 0.2s ease;
@@ -587,7 +584,7 @@
 .stat-icon {
   width: 50px;
   height: 50px;
-  border-radius: 12px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -636,7 +633,7 @@
 /* Timeline */
 .historical-records {
   background: white;
-  border-radius: 16px;
+  border-radius: 8px;
   padding: 24px;
   margin-bottom: 24px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -680,7 +677,7 @@
 .date-badge {
   background: #667eea;
   color: white;
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 12px;
   text-align: center;
   position: relative;
@@ -701,7 +698,7 @@
   flex: 1;
   margin-left: 24px;
   background: #f8fafc;
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 20px;
   border: 1px solid #e2e8f0;
 }
@@ -750,7 +747,7 @@
   align-items: center;
   gap: 4px;
   padding: 4px 8px;
-  border-radius: 12px;
+  border-radius: 8px;
   font-size: 11px;
   font-weight: 500;
   border: 1px solid;
@@ -781,7 +778,7 @@
 .student-stat-item {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 20px;
   display: flex;
   align-items: center;
@@ -1017,7 +1014,7 @@
 
   .ogrenci-bilgi-karti {
     background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-    border-radius: 16px;
+    border-radius: 8px;
     padding: 0;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     border: 1px solid #e2e8f0;
@@ -1106,7 +1103,7 @@
           flex: 1;
           text-align: center;
           padding: 1rem;
-          border-radius: 12px;
+          border-radius: 8px;
           transition: all 0.2s ease;
 
           &.katildi {
@@ -1146,7 +1143,7 @@
 
       .odeme-bilgileri {
         background: #f8fafc;
-        border-radius: 12px;
+        border-radius: 8px;
         padding: 1rem;
         border: 1px solid #e2e8f0;
 
@@ -1367,7 +1364,7 @@
 .student-basic-info {
   .info-card {
     background: #f8f9fa;
-    border-radius: 12px;
+    border-radius: 8px;
     padding: 20px;
     border: 1px solid #e9ecef;
 
@@ -1409,7 +1406,7 @@
   .info-card {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    border-radius: 12px;
+    border-radius: 8px;
     padding: 20px;
 
     h6 {
@@ -1441,7 +1438,7 @@
 .recent-attendance {
   .info-card {
     background: white;
-    border-radius: 12px;
+    border-radius: 8px;
     padding: 20px;
     border: 1px solid #e9ecef;
 
@@ -1530,7 +1527,7 @@
 
 .modern-modal-content {
   background: white;
-  border-radius: 16px;
+  border-radius: 8px;
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
   max-width: 800px;
   width: 100%;
@@ -1564,7 +1561,7 @@
   justify-content: space-between;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  border-radius: 16px 16px 0 0;
+  border-radius: 8px 16px 0 0;
   flex-shrink: 0;
 }
 
@@ -1580,7 +1577,7 @@
   width: 48px;
   height: 48px;
   background: rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1684,7 +1681,7 @@
 .info-card {
   background: #f8fafc;
   border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 20px;
   margin-bottom: 16px;
 }
@@ -1731,7 +1728,7 @@
 .stat-card {
   background: white;
   border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 20px;
   text-align: center;
   transition: all 0.2s ease;
@@ -1872,7 +1869,7 @@
   margin-top: 2rem;
   padding: 1.5rem;
   background: white;
-  border-radius: 12px;
+  border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 
   .section-header {
@@ -2018,7 +2015,7 @@
         .percentage-badge {
           display: inline-block;
           padding: 4px 8px;
-          border-radius: 12px;
+          border-radius: 8px;
           font-weight: 600;
           font-size: 0.8rem;
 
@@ -2100,7 +2097,7 @@
 /* Modern İşlenen Dersler Bölümü */
 .modern-lessons-section {
   background: white;
-  border-radius: 16px;
+  border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   padding: 2rem;
   margin-bottom: 2rem;
@@ -2171,7 +2168,7 @@
     .modern-lesson-card {
       background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
       border: 1px solid #e2e8f0;
-      border-radius: 12px;
+      border-radius: 8px;
       overflow: hidden;
       transition: all 0.3s ease;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
@@ -2658,7 +2655,7 @@
 
   .table-container {
     background: white;
-    border-radius: 12px;
+    border-radius: 8px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 
@@ -2796,7 +2793,7 @@
 
   .alert {
     border: none;
-    border-radius: 12px;
+    border-radius: 8px;
     padding: 2rem;
 
     i {
