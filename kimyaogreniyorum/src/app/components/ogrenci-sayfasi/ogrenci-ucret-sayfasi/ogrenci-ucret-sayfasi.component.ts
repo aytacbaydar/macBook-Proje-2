@@ -62,9 +62,6 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
   paymentHistory: Payment[] = [];
   error: string | null = null;
 
-  // Payment history
-  paymentHistory: any[] = [];
-
   // UI state
   selectedGroup: string = '';
   viewHistoricalData: boolean = false;
@@ -74,9 +71,6 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
 
   // Student info
   showStudentStatsModal = false;
-
-  // Error state
-  error: string = '';
 
   constructor(
     private http: HttpClient,
