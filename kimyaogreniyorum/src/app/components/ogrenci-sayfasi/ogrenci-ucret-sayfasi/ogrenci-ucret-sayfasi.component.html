@@ -271,7 +271,7 @@
   </div>
 
   <!-- Student Detail Modal -->
-  <div class="modern-modal-overlay" *ngIf="showStudentStatsModal" (click)="closeStudentStatsModal()">
+  <div class="modern-modal-overlay ucretSayfasi" *ngIf="showStudentStatsModal" (click)="closeStudentStatsModal()">
     <div class="modern-modal-content large-modal" (click)="$event.stopPropagation()">
       <div class="modern-modal-header">
         <div class="modal-title-section">
@@ -283,12 +283,15 @@
             <p *ngIf="studentStats">{{ studentStats.student_info.name }}</p>
           </div>
         </div>
+        <button class="btn btn-outline-primary btn-sm me-2" (click)="pdfKaydet()">
+          <i class="bi bi-file-earmark-pdf"></i> PDF Olarak Kaydet
+        </button>
         <button type="button" class="modern-close-btn" (click)="closeStudentStatsModal()">
           <i class="bi bi-x"></i>
         </button>
       </div>
 
-      <div class="modern-modal-body" *ngIf="studentStats">
+      <div class="modern-modal-body" id="ucretSayfasi" *ngIf="studentStats">
         <!-- Temel Bilgilerim -->
         <div class="student-basic-info mb-4">
           <div class="row">

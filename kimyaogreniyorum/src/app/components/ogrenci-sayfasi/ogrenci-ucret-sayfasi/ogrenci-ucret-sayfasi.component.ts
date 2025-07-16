@@ -6,6 +6,8 @@ import {
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 interface Student {
   id: number;
@@ -90,8 +92,78 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
     // Cleanup if needed
   }
 
+  pdfKaydet() {
+    const element = document.getElementById('ucretSayfasi');
+
+    if (element) {
+      html2canvas(element).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfPageHeight = pdf.internal.pageSize.getHeight();
+
+        // Kenar boşlukları: üst 8mm, sağ 5mm, sol 5mm, alt 5mm
+        const marginTop = 8;
+        const marginLeft = 5;
+        const marginRight = 5;
+        const marginBottom = 5;
+
+        // Kullanılabilir alan hesaplama
+        const availableWidth = pdfWidth - marginLeft - marginRight;
+        const availableHeight = pdfPageHeight - marginTop - marginBottom;
+        const imgHeight = (canvas.height * availableWidth) / canvas.width;
+
+        // Eğer içerik tek sayfaya sığıyorsa
+        if (imgHeight <= availableHeight) {
+          pdf.addImage(
+            imgData,
+            'PNG',
+            marginLeft,
+            marginTop,
+            availableWidth,
+            imgHeight
+          );
+        } else {
+          // İçerik birden fazla sayfaya yayılacak
+          let heightLeft = imgHeight;
+          let position = 0;
+
+          // İlk sayfa
+          pdf.addImage(
+            imgData,
+            'PNG',
+            marginLeft,
+            marginTop,
+            availableWidth,
+            imgHeight
+          );
+          heightLeft -= availableHeight;
+
+          // Gerekirse ek sayfalar
+          while (heightLeft > 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(
+              imgData,
+              'PNG',
+              marginLeft,
+              marginTop + position,
+              availableWidth,
+              imgHeight
+            );
+            heightLeft -= availableHeight;
+          }
+        }
+
+        pdf.save('ucret-bilgisi.pdf');
+      });
+    }
+  }
+
   private getAuthHeaders() {
-    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    const userStr =
+      localStorage.getItem('user') || sessionStorage.getItem('user');
     let token = '';
 
     if (userStr) {
@@ -106,13 +178,14 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
     }
 
     return new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
     });
   }
 
   private getLoggedInUser(): any {
-    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    const userStr =
+      localStorage.getItem('user') || sessionStorage.getItem('user');
     if (userStr) {
       return JSON.parse(userStr);
     }
@@ -130,27 +203,29 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
     }
 
     // Get student info
-    this.http.get<any>(`./server/api/ogrenci_bilgileri.php`, {
-      headers: this.getAuthHeaders(),
-      params: { ogrenci_id: loggedInUser.id.toString() }
-    }).subscribe({
-      next: (response) => {
-        if (response.success && response.data) {
-          this.currentStudent = response.data;
-          this.selectedGroup = response.data.grubu || '';
-          // loadStudentAttendanceData'yı kaldırdık çünkü ngOnInit'te setDateRangeThisYear() çağrılıyor
-          this.loadStudentDetailedStats();
-        } else {
+    this.http
+      .get<any>(`./server/api/ogrenci_bilgileri.php`, {
+        headers: this.getAuthHeaders(),
+        params: { ogrenci_id: loggedInUser.id.toString() },
+      })
+      .subscribe({
+        next: (response) => {
+          if (response.success && response.data) {
+            this.currentStudent = response.data;
+            this.selectedGroup = response.data.grubu || '';
+            // loadStudentAttendanceData'yı kaldırdık çünkü ngOnInit'te setDateRangeThisYear() çağrılıyor
+            this.loadStudentDetailedStats();
+          } else {
+            this.toastr.error('Öğrenci bilgileri yüklenemedi', 'Hata');
+          }
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Öğrenci bilgileri yüklenirken hata:', error);
           this.toastr.error('Öğrenci bilgileri yüklenemedi', 'Hata');
-        }
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Öğrenci bilgileri yüklenirken hata:', error);
-        this.toastr.error('Öğrenci bilgileri yüklenemedi', 'Hata');
-        this.isLoading = false;
-      }
-    });
+          this.isLoading = false;
+        },
+      });
   }
 
   loadStudentAttendanceData() {
@@ -161,44 +236,48 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
       this.loadHistoricalAttendanceByDateRange();
     } else {
       // Tüm kayıtları yükle (butun_kayitlar parametresi ile)
-      this.http.get<any>(`./server/api/devamsizlik_kayitlari.php`, {
-        headers: this.getAuthHeaders(),
-        params: {
-          ogrenci_id: this.currentStudent.id.toString(),
-          butun_kayitlar: 'true'
-        }
-      }).subscribe({
-        next: (response) => {
-          if (response.success && response.data) {
-            this.historicalAttendance = response.data.kayitlar || [];
+      this.http
+        .get<any>(`./server/api/devamsizlik_kayitlari.php`, {
+          headers: this.getAuthHeaders(),
+          params: {
+            ogrenci_id: this.currentStudent.id.toString(),
+            butun_kayitlar: 'true',
+          },
+        })
+        .subscribe({
+          next: (response) => {
+            if (response.success && response.data) {
+              this.historicalAttendance = response.data.kayitlar || [];
 
-            // Group by date
-            this.groupedAttendanceByDate = this.groupAttendanceByDate(this.historicalAttendance);
-          } else {
+              // Group by date
+              this.groupedAttendanceByDate = this.groupAttendanceByDate(
+                this.historicalAttendance
+              );
+            } else {
+              this.historicalAttendance = [];
+              this.groupedAttendanceByDate = [];
+            }
+          },
+          error: (error) => {
+            console.error('Devamsızlık verileri yüklenirken hata:', error);
             this.historicalAttendance = [];
             this.groupedAttendanceByDate = [];
-          }
-        },
-        error: (error) => {
-          console.error('Devamsızlık verileri yüklenirken hata:', error);
-          this.historicalAttendance = [];
-          this.groupedAttendanceByDate = [];
-        }
-      });
+          },
+        });
     }
   }
 
   private groupAttendanceByDate(records: AttendanceRecord[]): any[] {
     const grouped: { [key: string]: any } = {};
 
-    records.forEach(record => {
+    records.forEach((record) => {
       const date = record.tarih;
       if (!grouped[date]) {
         grouped[date] = {
           tarih: date,
           kayitlar: [],
           katilan_sayisi: 0,
-          katilmayan_sayisi: 0
+          katilmayan_sayisi: 0,
         };
       }
 
@@ -211,8 +290,9 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
       }
     });
 
-    return Object.values(grouped).sort((a: any, b: any) => 
-      new Date(b.tarih).getTime() - new Date(a.tarih).getTime()
+    return Object.values(grouped).sort(
+      (a: any, b: any) =>
+        new Date(b.tarih).getTime() - new Date(a.tarih).getTime()
     );
   }
 
@@ -221,71 +301,94 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.http.get<any>(`./server/api/devamsizlik_kayitlari.php`, {
-      headers: this.getAuthHeaders(),
-      params: {
-        ogrenci_id: this.currentStudent.id.toString(),
-        baslangic_tarih: this.startDate,
-        bitis_tarih: this.endDate,
-      },
-    }).subscribe({
-      next: (response) => {
-        if (response.success && response.data) {
-          this.historicalAttendance = response.data.kayitlar || [];
-          this.groupedAttendanceByDate = this.groupAttendanceByDate(this.historicalAttendance);
+    this.http
+      .get<any>(`./server/api/devamsizlik_kayitlari.php`, {
+        headers: this.getAuthHeaders(),
+        params: {
+          ogrenci_id: this.currentStudent.id.toString(),
+          baslangic_tarih: this.startDate,
+          bitis_tarih: this.endDate,
+        },
+      })
+      .subscribe({
+        next: (response) => {
+          if (response.success && response.data) {
+            this.historicalAttendance = response.data.kayitlar || [];
+            this.groupedAttendanceByDate = this.groupAttendanceByDate(
+              this.historicalAttendance
+            );
 
-          if (this.groupedAttendanceByDate.length === 0) {
-            this.toastr.info('Seçilen tarih aralığında kayıt bulunamadı', 'Bilgi');
+            if (this.groupedAttendanceByDate.length === 0) {
+              this.toastr.info(
+                'Seçilen tarih aralığında kayıt bulunamadı',
+                'Bilgi'
+              );
+            } else {
+              this.toastr.success(
+                `${this.groupedAttendanceByDate.length} günlük kayıt yüklendi`,
+                'Başarılı'
+              );
+            }
           } else {
-            this.toastr.success(`${this.groupedAttendanceByDate.length} günlük kayıt yüklendi`, 'Başarılı');
+            this.historicalAttendance = [];
+            this.groupedAttendanceByDate = [];
+            this.toastr.warning(
+              'Seçilen tarih aralığında kayıt bulunamadı',
+              'Uyarı'
+            );
           }
-        } else {
+        },
+        error: (error) => {
+          console.error(
+            'Tarih aralığına göre devamsızlık verileri yüklenirken hata:',
+            error
+          );
           this.historicalAttendance = [];
           this.groupedAttendanceByDate = [];
-          this.toastr.warning('Seçilen tarih aralığında kayıt bulunamadı', 'Uyarı');
-        }
-      },
-      error: (error) => {
-        console.error('Tarih aralığına göre devamsızlık verileri yüklenirken hata:', error);
-        this.historicalAttendance = [];
-        this.groupedAttendanceByDate = [];
-        this.toastr.error('Veriler yüklenirken hata oluştu', 'Hata');
-      },
-    });
+          this.toastr.error('Veriler yüklenirken hata oluştu', 'Hata');
+        },
+      });
   }
 
   loadAllAttendanceRecords() {
     if (!this.currentStudent) return;
 
-    this.http.get<any>(`./server/api/devamsizlik_kayitlari.php`, {
-      headers: this.getAuthHeaders(),
-      params: {
-        ogrenci_id: this.currentStudent.id.toString(),
-        butun_kayitlar: 'true'
-      },
-    }).subscribe({
-      next: (response) => {
-        if (response.success && response.data) {
-          this.historicalAttendance = response.data.kayitlar || [];
-          this.groupedAttendanceByDate = this.groupAttendanceByDate(this.historicalAttendance);
+    this.http
+      .get<any>(`./server/api/devamsizlik_kayitlari.php`, {
+        headers: this.getAuthHeaders(),
+        params: {
+          ogrenci_id: this.currentStudent.id.toString(),
+          butun_kayitlar: 'true',
+        },
+      })
+      .subscribe({
+        next: (response) => {
+          if (response.success && response.data) {
+            this.historicalAttendance = response.data.kayitlar || [];
+            this.groupedAttendanceByDate = this.groupAttendanceByDate(
+              this.historicalAttendance
+            );
 
-          this.startDate = '';
-          this.endDate = '';
+            this.startDate = '';
+            this.endDate = '';
 
-          this.toastr.success('Tüm devamsızlık kayıtları yüklendi', 'Başarılı');
-        } else {
+            this.toastr.success(
+              'Tüm devamsızlık kayıtları yüklendi',
+              'Başarılı'
+            );
+          } else {
+            this.historicalAttendance = [];
+            this.groupedAttendanceByDate = [];
+            this.toastr.warning('Herhangi bir kayıt bulunamadı', 'Uyarı');
+          }
+        },
+        error: (error) => {
+          console.error('Tüm devamsızlık kayıtları yüklenirken hata:', error);
           this.historicalAttendance = [];
           this.groupedAttendanceByDate = [];
-          this.toastr.warning('Herhangi bir kayıt bulunamadı', 'Uyarı');
-        }
-      },
-      error: (error) => {
-        console.error('Tüm devamsızlık kayıtları yüklenirken hata:', error);
-        this.historicalAttendance = [];
-        this.groupedAttendanceByDate = [];
-        this.toastr.error('Kayıtlar yüklenirken hata oluştu', 'Hata');
-      },
-    });
+          this.toastr.error('Kayıtlar yüklenirken hata oluştu', 'Hata');
+        },
+      });
   }
 
   private setCurrentMonthDates() {
@@ -326,7 +429,15 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
   }
 
   getDayName(date: string): string {
-    const days = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
+    const days = [
+      'Pazar',
+      'Pazartesi',
+      'Salı',
+      'Çarşamba',
+      'Perşembe',
+      'Cuma',
+      'Cumartesi',
+    ];
     const day = new Date(date).getDay();
     return days[day];
   }
@@ -338,19 +449,24 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
   formatCurrency(amount: number): string {
     return new Intl.NumberFormat('tr-TR', {
       style: 'currency',
-      currency: 'TRY'
+      currency: 'TRY',
     }).format(amount);
   }
 
   getDefaultAvatar(name: string): string {
-    return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=4f46e5&color=fff&size=40&font-size=0.6&rounded=true`;
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(
+      name
+    )}&background=4f46e5&color=fff&size=40&font-size=0.6&rounded=true`;
   }
 
   // Ders tipine göre filtreleme
-  getLessonsByType(lessons: AttendanceRecord[], lessonType: string): AttendanceRecord[] {
+  getLessonsByType(
+    lessons: AttendanceRecord[],
+    lessonType: string
+  ): AttendanceRecord[] {
     if (!lessons) return [];
 
-    return lessons.filter(lesson => {
+    return lessons.filter((lesson) => {
       if (lessonType === 'normal') {
         return !lesson.ders_tipi || lesson.ders_tipi === 'normal';
       }
@@ -360,11 +476,15 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
 
   // Statistics methods
   getTotalPresentCount(): number {
-    return this.historicalAttendance.filter(record => record.durum === 'present').length;
+    return this.historicalAttendance.filter(
+      (record) => record.durum === 'present'
+    ).length;
   }
 
   getTotalAbsentCount(): number {
-    return this.historicalAttendance.filter(record => record.durum === 'absent').length;
+    return this.historicalAttendance.filter(
+      (record) => record.durum === 'absent'
+    ).length;
   }
 
   getTotalLessonsCount(): number {
@@ -387,10 +507,12 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
     this.isLoading = true;
 
     try {
-      const response = await this.http.get<any>(`./server/api/ogrenci_kendi_istatistik.php`, {
-        headers: this.getAuthHeaders(),
-        responseType: 'json'
-      }).toPromise();
+      const response = await this.http
+        .get<any>(`./server/api/ogrenci_kendi_istatistik.php`, {
+          headers: this.getAuthHeaders(),
+          responseType: 'json',
+        })
+        .toPromise();
 
       if (response && response.success) {
         this.studentStats = response.data;
@@ -415,22 +537,29 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
 
     try {
       // Öğrenci için özel istatistik API'sini çağır (grup parametresi olmadan)
-      const statsResponse = await this.http.get<any>(`./server/api/ogrenci_kendi_istatistik.php`, {
-        headers: this.getAuthHeaders()
-      }).toPromise();
+      const statsResponse = await this.http
+        .get<any>(`./server/api/ogrenci_kendi_istatistik.php`, {
+          headers: this.getAuthHeaders(),
+        })
+        .toPromise();
 
       if (statsResponse && statsResponse.success) {
         this.studentStats = statsResponse.data;
         console.log('Student stats loaded:', this.studentStats);
       } else {
-        console.error('Öğrenci istatistikleri yüklenemedi:', statsResponse?.message);
+        console.error(
+          'Öğrenci istatistikleri yüklenemedi:',
+          statsResponse?.message
+        );
         this.toastr.error('Öğrenci istatistikleri yüklenemedi', 'Hata');
       }
 
       // Ödeme geçmişini yükle
-      const paymentResponse = await this.http.get<any>(`./server/api/ogrenci_ucret_bilgileri.php`, {
-        headers: this.getAuthHeaders()
-      }).toPromise();
+      const paymentResponse = await this.http
+        .get<any>(`./server/api/ogrenci_ucret_bilgileri.php`, {
+          headers: this.getAuthHeaders(),
+        })
+        .toPromise();
 
       if (paymentResponse && paymentResponse.success) {
         this.paymentHistory = paymentResponse.data.payments || [];
@@ -439,7 +568,6 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
         console.error('Ödeme geçmişi yüklenemedi:', paymentResponse?.message);
         this.toastr.error('Ödeme geçmişi yüklenemedi', 'Hata');
       }
-
     } catch (error: any) {
       console.error('Modal verileri yüklenirken hata:', error);
       this.toastr.error('Veriler yüklenirken hata oluştu', 'Hata');
@@ -464,43 +592,62 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
     const studentRecords = this.historicalAttendance;
 
     // Present records by lesson type
-    const presentRecords = studentRecords.filter(record => record.durum === 'present');
-    const presentNormal = presentRecords.filter(record => !record.ders_tipi || record.ders_tipi === 'normal').length;
-    const presentEkDers = presentRecords.filter(record => record.ders_tipi === 'ek_ders').length;
-    const presentEtutDersi = presentRecords.filter(record => record.ders_tipi === 'etut_dersi').length;
+    const presentRecords = studentRecords.filter(
+      (record) => record.durum === 'present'
+    );
+    const presentNormal = presentRecords.filter(
+      (record) => !record.ders_tipi || record.ders_tipi === 'normal'
+    ).length;
+    const presentEkDers = presentRecords.filter(
+      (record) => record.ders_tipi === 'ek_ders'
+    ).length;
+    const presentEtutDersi = presentRecords.filter(
+      (record) => record.ders_tipi === 'etut_dersi'
+    ).length;
     const totalPresent = presentRecords.length;
 
     // Absent records by lesson type
-    const absentRecords = studentRecords.filter(record => record.durum === 'absent');
-    const absentNormal = absentRecords.filter(record => !record.ders_tipi || record.ders_tipi === 'normal').length;
-    const absentEkDers = absentRecords.filter(record => record.ders_tipi === 'ek_ders').length;
-    const absentEtutDersi = absentRecords.filter(record => record.ders_tipi === 'etut_dersi').length;
+    const absentRecords = studentRecords.filter(
+      (record) => record.durum === 'absent'
+    );
+    const absentNormal = absentRecords.filter(
+      (record) => !record.ders_tipi || record.ders_tipi === 'normal'
+    ).length;
+    const absentEkDers = absentRecords.filter(
+      (record) => record.ders_tipi === 'ek_ders'
+    ).length;
+    const absentEtutDersi = absentRecords.filter(
+      (record) => record.ders_tipi === 'etut_dersi'
+    ).length;
     const totalAbsent = absentRecords.length;
 
     // Total
     const totalRecords = studentRecords.length;
-    const attendancePercentage = totalRecords > 0 ? Math.round((totalPresent / totalRecords) * 100) : 0;
+    const attendancePercentage =
+      totalRecords > 0 ? Math.round((totalPresent / totalRecords) * 100) : 0;
 
-    return [{
-      id: this.currentStudent.id,
-      name: this.currentStudent.adi_soyadi,
-      email: this.currentStudent.email,
-      avatar: this.currentStudent.avatar,
-      totalRecords: totalRecords,
-      present: {
-        total: totalPresent,
-        normal: presentNormal,
-        ek_ders: presentEkDers,
-        etut_dersi: presentEtutDersi
+    return [
+      {
+        id: this.currentStudent.id,
+        name: this.currentStudent.adi_soyadi,
+        email: this.currentStudent.email,
+        avatar: this.currentStudent.avatar,
+        totalRecords: totalRecords,
+        present: {
+          total: totalPresent,
+          normal: presentNormal,
+          ek_ders: presentEkDers,
+          etut_dersi: presentEtutDersi,
+        },
+        absent: {
+          total: totalAbsent,
+          normal: absentNormal,
+          ek_ders: absentEkDers,
+          etut_dersi: absentEtutDersi,
+        },
+        attendancePercentage: attendancePercentage,
       },
-      absent: {
-        total: totalAbsent,
-        normal: absentNormal,
-        ek_ders: absentEkDers,
-        etut_dersi: absentEtutDersi
-      },
-      attendancePercentage: attendancePercentage
-    }];
+    ];
   }
 
   // Get student attendance stats for payment calculation
@@ -513,47 +660,54 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
 
     // Count present lessons (normal + ek ders)
     const presentCount = studentRecords.filter(
-      record => record.durum === 'present' && 
-      (!record.ders_tipi || record.ders_tipi === 'normal' || record.ders_tipi === 'ek_ders')
+      (record) =>
+        record.durum === 'present' &&
+        (!record.ders_tipi ||
+          record.ders_tipi === 'normal' ||
+          record.ders_tipi === 'ek_ders')
     ).length;
 
     // Count absent lessons
     const absentCount = studentRecords.filter(
-      record => record.durum === 'absent'
+      (record) => record.durum === 'absent'
     ).length;
 
     const totalLessons = presentCount + absentCount;
-    const attendancePercentage = totalLessons > 0 
-      ? Math.round((presentCount / totalLessons) * 100) 
-      : 0;
+    const attendancePercentage =
+      totalLessons > 0 ? Math.round((presentCount / totalLessons) * 100) : 0;
 
     // Payment calculations
     const ucret = parseFloat(this.currentStudent.ucret || '0');
     const expectedPaymentCycles = Math.floor(presentCount / 4);
     const expectedTotalAmount = expectedPaymentCycles * ucret;
-    const lessonsUntilNextPayment = presentCount > 0 ? 4 - (presentCount % 4) : 4;
+    const lessonsUntilNextPayment =
+      presentCount > 0 ? 4 - (presentCount % 4) : 4;
 
-    return [{
-      id: this.currentStudent.id,
-      name: this.currentStudent.adi_soyadi,
-      email: this.currentStudent.email,
-      avatar: this.currentStudent.avatar,
-      ucret: ucret,
-      presentCount: presentCount,
-      absentCount: absentCount,
-      totalLessons: totalLessons,
-      attendancePercentage: attendancePercentage,
-      expectedPaymentCycles: expectedPaymentCycles,
-      expectedTotalAmount: expectedTotalAmount,
-      lessonsUntilNextPayment: lessonsUntilNextPayment === 4 ? 0 : lessonsUntilNextPayment
-    }];
+    return [
+      {
+        id: this.currentStudent.id,
+        name: this.currentStudent.adi_soyadi,
+        email: this.currentStudent.email,
+        avatar: this.currentStudent.avatar,
+        ucret: ucret,
+        presentCount: presentCount,
+        absentCount: absentCount,
+        totalLessons: totalLessons,
+        attendancePercentage: attendancePercentage,
+        expectedPaymentCycles: expectedPaymentCycles,
+        expectedTotalAmount: expectedTotalAmount,
+        lessonsUntilNextPayment:
+          lessonsUntilNextPayment === 4 ? 0 : lessonsUntilNextPayment,
+      },
+    ];
   }
 
   loadPaymentData(): void {
     this.isLoading = true;
     const headers = this.getAuthHeaders();
 
-    this.http.get<any>('./server/api/ogrenci_ucret_bilgileri.php', { headers })
+    this.http
+      .get<any>('./server/api/ogrenci_ucret_bilgileri.php', { headers })
       .subscribe({
         next: (response) => {
           console.log('API Response:', response);
@@ -562,41 +716,53 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
             this.currentStudent = response.data.student_info;
             this.historicalAttendance = response.data.attendance_records || [];
             this.paymentHistory = response.data.payments || [];
-            this.groupedAttendanceByDate = this.convertGroupedAttendance(response.data.grouped_attendance || {});
+            this.groupedAttendanceByDate = this.convertGroupedAttendance(
+              response.data.grouped_attendance || {}
+            );
 
             console.log('Loaded data:', {
               student: this.currentStudent,
               attendance: this.historicalAttendance.length,
               payments: this.paymentHistory.length,
-              grouped: Object.keys(this.groupedAttendanceByDate).length
+              grouped: Object.keys(this.groupedAttendanceByDate).length,
             });
           } else {
             console.error('API failed response:', response);
-            this.error = 'Veri yüklenemedi: ' + (response?.message || 'Bilinmeyen hata');
+            this.error =
+              'Veri yüklenemedi: ' + (response?.message || 'Bilinmeyen hata');
           }
           this.isLoading = false;
         },
         error: (error) => {
           console.error('API Error:', error);
-          this.error = 'Bağlantı hatası: ' + (error.message || 'Bilinmeyen hata');
+          this.error =
+            'Bağlantı hatası: ' + (error.message || 'Bilinmeyen hata');
           this.isLoading = false;
-        }
+        },
       });
   }
-  
+
   convertGroupedAttendance(groupedAttendance: any): any[] {
-    return Object.entries(groupedAttendance).map(([date, data]: [string, any]) => ({
-      tarih: date,
-      kayitlar: data.kayitlar,
-      katilan_sayisi: data.katilan_sayisi,
-      katilmayan_sayisi: data.katilmayan_sayisi
-    })).sort((a: any, b: any) => new Date(b.tarih).getTime() - new Date(a.tarih).getTime());
+    return Object.entries(groupedAttendance)
+      .map(([date, data]: [string, any]) => ({
+        tarih: date,
+        kayitlar: data.kayitlar,
+        katilan_sayisi: data.katilan_sayisi,
+        katilmayan_sayisi: data.katilmayan_sayisi,
+      }))
+      .sort(
+        (a: any, b: any) =>
+          new Date(b.tarih).getTime() - new Date(a.tarih).getTime()
+      );
   }
 
   getTotalPaidAmount(): number {
     if (!this.paymentHistory || this.paymentHistory.length === 0) {
       return 0;
     }
-    return this.paymentHistory.reduce((total, payment) => total + parseFloat(payment.tutar.toString()), 0);
+    return this.paymentHistory.reduce(
+      (total, payment) => total + parseFloat(payment.tutar.toString()),
+      0
+    );
   }
 }
