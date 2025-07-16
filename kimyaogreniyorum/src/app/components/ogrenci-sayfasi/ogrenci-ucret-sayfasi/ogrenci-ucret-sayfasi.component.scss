@@ -22,20 +22,18 @@
 }
 // Modern Payment Card Styles
 .modern-payment-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 20px;
+  border-radius: 8px;
   padding: 0;
   margin-bottom: 2rem;
-  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   overflow: hidden;
-  color: white;
+  color: rgb(29, 29, 29);
 
   .payment-card-header {
     display: flex;
     align-items: center;
-    padding: 2rem 2rem 1rem 2rem;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
+    justify-content: center;
+    padding: 10px 10px 5px 10px;
 
     .header-icon {
       width: 60px;
@@ -49,7 +47,7 @@
 
       i {
         font-size: 1.8rem;
-        color: white;
+        color: rgb(29, 29, 29);
       }
     }
 
@@ -58,12 +56,12 @@
         margin: 0;
         font-size: 1.5rem;
         font-weight: 600;
-        color: white;
+        color: rgb(29, 29, 29);
       }
 
       p {
         margin: 0;
-        color: rgba(255, 255, 255, 0.8);
+        color: rgb(29, 29, 29);
         font-size: 0.9rem;
       }
     }
@@ -78,7 +76,7 @@
     align-items: center;
     margin-bottom: 2rem;
     padding: 1.5rem;
-    background: rgba(255, 255, 255, 0.1);
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     border-radius: 15px;
     backdrop-filter: blur(10px);
 
@@ -97,12 +95,12 @@
         margin: 0 0 0.5rem 0;
         font-size: 1.3rem;
         font-weight: 600;
-        color: white;
+        color: rgb(29, 29, 29);
       }
 
       p {
         margin: 0 0 1rem 0;
-        color: rgba(255, 255, 255, 0.8);
+        color: rgb(29, 29, 29);
         font-size: 0.9rem;
       }
 
@@ -150,9 +148,10 @@
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
     margin-bottom: 2rem;
+    color: rgb(29, 29, 29);
 
     .stat-item {
-      background: rgba(255, 255, 255, 0.1);
+      box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
       border-radius: 15px;
       padding: 1.5rem;
       display: flex;
@@ -203,20 +202,20 @@
         .stat-number {
           font-size: 1.5rem;
           font-weight: 700;
-          color: white;
+          color: rgb(29, 29, 29);
           margin-bottom: 0.25rem;
         }
 
         .stat-label {
           font-size: 0.85rem;
-          color: rgba(255, 255, 255, 0.8);
+          color: rgba(29, 29, 29);
         }
       }
     }
   }
 
   .payment-status-section {
-    background: rgba(255, 255, 255, 0.1);
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     border-radius: 15px;
     padding: 1.5rem;
     margin-bottom: 2rem;
@@ -276,9 +275,9 @@
   .payment-card-footer {
     .detail-button {
       width: 100%;
-      background: rgba(255, 255, 255, 0.15);
+      box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
       border: 1px solid rgba(255, 255, 255, 0.2);
-      color: white;
+      color: rgb(29, 29, 29);
       padding: 1rem 2rem;
       border-radius: 12px;
       font-size: 0.95rem;

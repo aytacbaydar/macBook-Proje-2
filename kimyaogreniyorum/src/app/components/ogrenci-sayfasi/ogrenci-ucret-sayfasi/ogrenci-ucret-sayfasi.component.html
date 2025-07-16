@@ -1,4 +1,111 @@
 <div class="modern-attendance-container">
+
+    <!-- Ücret ve Katılım Bilgilerim -->
+    <div class="modern-payment-card" *ngIf="currentStudent">
+      <div class="payment-card-header">
+        <!--<div class="header-icon">
+          <i class="bi bi-credit-card-2-front"></i>
+        </div>
+        <div class="header-text">
+          <h3>Ücret ve Katılım Bilgilerim</h3>
+          <p>Ders katılımım ve ödeme durumum</p>
+        </div>-->
+      </div>
+    
+      <div class="payment-card-content" *ngFor="let stats of getStudentAttendanceStats()">
+        <!-- Öğrenci Profil Bilgileri -->
+        <div class="student-profile-section">
+          <div class="profile-avatar">
+            <img [src]="stats.avatar || getDefaultAvatar(stats.name)" alt="Avatar">
+          </div>
+          <div class="profile-info">
+            <h4>{{ stats.name }}</h4>
+            <p>{{ stats.email }}</p>
+            <div class="attendance-badge" [class.excellent]="stats.attendancePercentage >= 90"
+              [class.good]="stats.attendancePercentage >= 75 && stats.attendancePercentage < 90"
+              [class.average]="stats.attendancePercentage >= 60 && stats.attendancePercentage < 75"
+              [class.poor]="stats.attendancePercentage < 60">
+              <i class="bi bi-graph-up"></i>
+              %{{ stats.attendancePercentage }} Katılım
+            </div>
+          </div>
+        </div>
+    
+        <!-- İstatistik Kartları -->
+        <div class="stats-grid">
+          <div class="stat-item present">
+            <div class="stat-icon">
+              <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-number">{{ stats.presentCount }}</div>
+              <div class="stat-label">Katıldığım Ders</div>
+            </div>
+          </div>
+    
+          <div class="stat-item absent">
+            <div class="stat-icon">
+              <i class="bi bi-x-circle-fill"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-number">{{ stats.absentCount }}</div>
+              <div class="stat-label">Devamsızlık</div>
+            </div>
+          </div>
+    
+          <div class="stat-item payment">
+            <div class="stat-icon">
+              <i class="bi bi-currency-exchange"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-number">{{ formatCurrency(stats.expectedTotalAmount) }}</div>
+              <div class="stat-label">Beklenen Ödeme</div>
+            </div>
+          </div>
+    
+          <div class="stat-item cycles">
+            <div class="stat-icon">
+              <i class="bi bi-arrow-repeat"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-number">{{ stats.expectedPaymentCycles }}</div>
+              <div class="stat-label">Ödeme Dönemi</div>
+            </div>
+          </div>
+        </div>
+    
+        <!-- Ödeme Durumu -->
+        <div class="payment-status-section">
+          <div class="payment-progress">
+            <div class="progress-info">
+              <span class="progress-label">Sonraki Ödemeye</span>
+              <span class="progress-value">{{ stats.lessonsUntilNextPayment === 0 ? 'Ödeme Zamanı!' :
+                stats.lessonsUntilNextPayment + ' ders kaldı' }}</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill"
+                [style.width.%]="stats.lessonsUntilNextPayment === 0 ? 100 : ((4 - stats.lessonsUntilNextPayment) / 4) * 100">
+              </div>
+            </div>
+          </div>
+    
+          <div class="payment-alert" *ngIf="stats.lessonsUntilNextPayment === 0">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span>Ödeme yapmanız gereken zaman geldi!</span>
+          </div>
+        </div>
+    
+        <!-- Detay Butonu -->
+        <div class="payment-card-footer">
+          <button type="button" class="detail-button" (click)="openStudentStatsModal()" [disabled]="isLoading">
+            <i class="bi bi-bar-chart-fill"></i>
+            <span *ngIf="!isLoading">Detaylı İstatistikleri ve Ödeme Geçmişimi Gör</span>
+            <span *ngIf="isLoading">Yükleniyor...</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Quick Filter Header -->
     <div class="filters-header">
       <div class="filters-title">
@@ -165,110 +272,7 @@
     </div>
   </div>
 
-  <!-- Ücret ve Katılım Bilgilerim -->
-  <div class="modern-payment-card" *ngIf="currentStudent">
-    <div class="payment-card-header">
-      <div class="header-icon">
-        <i class="bi bi-credit-card-2-front"></i>
-      </div>
-      <div class="header-text">
-        <h3>Ücret ve Katılım Bilgilerim</h3>
-        <p>Ders katılımım ve ödeme durumum</p>
-      </div>
-    </div>
 
-    <div class="payment-card-content" *ngFor="let stats of getStudentAttendanceStats()">
-      <!-- Öğrenci Profil Bilgileri -->
-      <div class="student-profile-section">
-        <div class="profile-avatar">
-          <img [src]="stats.avatar || getDefaultAvatar(stats.name)" alt="Avatar">
-        </div>
-        <div class="profile-info">
-          <h4>{{ stats.name }}</h4>
-          <p>{{ stats.email }}</p>
-          <div class="attendance-badge" [class.excellent]="stats.attendancePercentage >= 90"
-               [class.good]="stats.attendancePercentage >= 75 && stats.attendancePercentage < 90"
-               [class.average]="stats.attendancePercentage >= 60 && stats.attendancePercentage < 75"
-               [class.poor]="stats.attendancePercentage < 60">
-            <i class="bi bi-graph-up"></i>
-            %{{ stats.attendancePercentage }} Katılım
-          </div>
-        </div>
-      </div>
-
-      <!-- İstatistik Kartları -->
-      <div class="stats-grid">
-        <div class="stat-item present">
-          <div class="stat-icon">
-            <i class="bi bi-check-circle-fill"></i>
-          </div>
-          <div class="stat-info">
-            <div class="stat-number">{{ stats.presentCount }}</div>
-            <div class="stat-label">Katıldığım Ders</div>
-          </div>
-        </div>
-
-        <div class="stat-item absent">
-          <div class="stat-icon">
-            <i class="bi bi-x-circle-fill"></i>
-          </div>
-          <div class="stat-info">
-            <div class="stat-number">{{ stats.absentCount }}</div>
-            <div class="stat-label">Devamsızlık</div>
-          </div>
-        </div>
-
-        <div class="stat-item payment">
-          <div class="stat-icon">
-            <i class="bi bi-currency-exchange"></i>
-          </div>
-          <div class="stat-info">
-            <div class="stat-number">{{ formatCurrency(stats.expectedTotalAmount) }}</div>
-            <div class="stat-label">Beklenen Ödeme</div>
-          </div>
-        </div>
-
-        <div class="stat-item cycles">
-          <div class="stat-icon">
-            <i class="bi bi-arrow-repeat"></i>
-          </div>
-          <div class="stat-info">
-            <div class="stat-number">{{ stats.expectedPaymentCycles }}</div>
-            <div class="stat-label">Ödeme Dönemi</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Ödeme Durumu -->
-      <div class="payment-status-section">
-        <div class="payment-progress">
-          <div class="progress-info">
-            <span class="progress-label">Sonraki Ödemeye</span>
-            <span class="progress-value">{{ stats.lessonsUntilNextPayment === 0 ? 'Ödeme Zamanı!' : stats.lessonsUntilNextPayment + ' ders kaldı' }}</span>
-          </div>
-          <div class="progress-bar">
-            <div class="progress-fill" 
-                 [style.width.%]="stats.lessonsUntilNextPayment === 0 ? 100 : ((4 - stats.lessonsUntilNextPayment) / 4) * 100">
-            </div>
-          </div>
-        </div>
-
-        <div class="payment-alert" *ngIf="stats.lessonsUntilNextPayment === 0">
-          <i class="bi bi-exclamation-triangle-fill"></i>
-          <span>Ödeme yapmanız gereken zaman geldi!</span>
-        </div>
-      </div>
-
-      <!-- Detay Butonu -->
-      <div class="payment-card-footer">
-        <button type="button" class="detail-button" (click)="openStudentStatsModal()" [disabled]="isLoading">
-          <i class="bi bi-bar-chart-fill"></i>
-          <span *ngIf="!isLoading">Detaylı İstatistikleri ve Ödeme Geçmişimi Gör</span>
-          <span *ngIf="isLoading">Yükleniyor...</span>
-        </button>
-      </div>
-    </div>
-  </div>
 
   <!-- Student Detail Modal -->
   <div class="modern-modal-overlay ucretSayfasi" *ngIf="showStudentStatsModal" (click)="closeStudentStatsModal()">
