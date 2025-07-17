@@ -237,13 +237,15 @@
                   placeholder="A"
                   required
                 >
-                <input 
-                  type="text" 
+                <select 
                   class="topic-input"
                   [(ngModel)]="cevapAnahtari.konular['ka' + (i + 1)]"
-                  [name]="'ka' + (i + 1)"
-                  placeholder="Konu"
-                >
+                  [name]="'ka' + (i + 1)">
+                  <option value="">Konu Seçin</option>
+                  <option *ngFor="let konu of konular" [value]="konu.konu_adi">
+                    {{ konu.konu_adi }}
+                  </option>
+                </select>
                 <input 
                   type="text" 
                   class="video-input"
@@ -491,13 +493,15 @@
                     placeholder="A"
                     required
                   >
-                  <input 
-                    type="text" 
+                  <select 
                     class="topic-input"
                     [(ngModel)]="currentEditingCevapAnahtari.konular['ka' + (idx + 1)]"
-                    [name]="'edit_ka' + (idx + 1)"
-                    placeholder="Konu"
-                  >
+                    [name]="'edit_ka' + (idx + 1)">
+                    <option value="">Konu Seçin</option>
+                    <option *ngFor="let konu of konular" [value]="konu.konu_adi">
+                      {{ konu.konu_adi }}
+                    </option>
+                  </select>
                   <input 
                     type="text" 
                     class="video-input"

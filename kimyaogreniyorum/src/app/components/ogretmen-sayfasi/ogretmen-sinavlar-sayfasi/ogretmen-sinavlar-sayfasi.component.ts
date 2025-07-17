@@ -23,6 +23,8 @@ export class OgretmenSinavlarSayfasiComponent implements OnInit, OnDestroy {
   searchQuery = '';
   showAddForm = false;
   error: string | null = null;
+  konular: any[] = [];
+  loadingKonular = false;
 
   sinavTurleri = [
     { id: 'TYT', label: 'TYT Deneme' },
@@ -37,6 +39,7 @@ export class OgretmenSinavlarSayfasiComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.initModel();
     this.loadCevapAnahtarlari();
+    this.loadKonular();
 
     // ESC tuşu ile modalı kapatma
     document.addEventListener('keydown', (event) => {
@@ -453,5 +456,34 @@ export class OgretmenSinavlarSayfasiComponent implements OnInit, OnDestroy {
       'TEST': 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
     };
     return colors[sinavTuru] || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+  }
+
+  loadKonular() {
+    this.loadingKonular = true;
+    this.http.get<any>('./server/api/konu_listesi.php').subscribe({
+      next: (response) => {
+        this.loadingKonular = false;
+        if (response.success) {
+          this.konular = response.konular || [];
+          console.log('Konular yüklendi:', this.konular);
+        } else {
+          console.error('Konular yüklenirken hata:', response.message);
+          this.konular = [];
+        }
+      },
+      error: (error) => {
+        this.loadingKonular = false;
+        console.error('Konular yüklenirken hata:', error);
+        this.konular = [];
+      }
+    });
+  }
+
+  // Konu seçimi için filtreleme
+  filterKonular(searchTerm: string): any[] {
+    if (!searchTerm) return this.konular;
+    return this.konular.filter(konu => 
+      konu.konu_adi.toLowerCase().includes(searchTerm.toLowerCase())
+    );
   }
 }
