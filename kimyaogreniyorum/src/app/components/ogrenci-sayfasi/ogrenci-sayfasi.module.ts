@@ -21,6 +21,7 @@ import { OgrenciProfilSayfasiComponent } from './ogrenci-profil-sayfasi/ogrenci-
 
 @NgModule({
   declarations: [
+    OgrenciProfilSayfasiComponent,
     OgrenciQrKodSayfasiComponent,
     OgrenciAnaSayfasiComponent,
     OgrenciTaslakSayfasiComponent,

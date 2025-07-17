@@ -1,1 +1,236 @@
-<p>ogrenci-profil-sayfasi works!</p>
+
+<div class="edit-container">
+  <header class="page-header">
+    <h1>Profil Bilgilerim</h1>
+    <button class="back-button" (click)="navigateBack()">
+      <i class="bi bi-arrow-left"></i> Geri Dön
+    </button>
+  </header>
+
+  <!-- Yükleniyor Durumu -->
+  <div class="loading-spinner" *ngIf="isLoading">
+    <div class="spinner">
+      <span class="visually-hidden">Yükleniyor...</span>
+    </div>
+    <p class="loading-text">Yükleniyor...</p>
+  </div>
+
+  <!-- Hata Gösterimi -->
+  <div class="alert alert-error" *ngIf="error">
+    <div class="alert-icon">
+      <i class="bi bi-exclamation-triangle"></i>
+    </div>
+    <div class="alert-content">
+      <h3 class="alert-title">Hata</h3>
+      <p class="alert-message">{{ error }}</p>
+    </div>
+  </div>
+
+  <!-- Başarılı Gösterimi -->
+  <div class="alert alert-success" *ngIf="success">
+    <div class="alert-icon">
+      <i class="bi bi-check-circle"></i>
+    </div>
+    <div class="alert-content">
+      <h3 class="alert-title">Başarılı</h3>
+      <p class="alert-message">{{ success }}</p>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <div class="edit-form" *ngIf="!isLoading && student">
+    <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+      <!-- Profil Bölümü - Her zaman üstte sabitlenmiş -->
+      <div class="profile-header">
+        <div class="avatar-upload">
+          <div class="avatar-container" (click)="fileInput.click()">
+            <img [src]="student.avatar || 'assets/images/default-avatar.png'" alt="Avatar" class="avatar-image">
+            <div class="avatar-overlay">
+              <i class="bi bi-camera"></i>
+              <span class="avatar-text">Fotoğraf Değiştir</span>
+            </div>
+          </div>
+
+          <input #fileInput type="file" hidden accept="image/jpeg,image/png,image/gif,image/webp"
+            (change)="onFileChange($event)">
+
+          <div class="avatar-info">
+            <h2 class="student-name">{{ student.adi_soyadi }}</h2>
+            <p class="student-email">{{ student.email }}</p>
+
+            <div *ngIf="selectedFile" class="selected-file-info">
+              <span class="file-name">{{ selectedFile.name }}</span>
+              <span class="file-size">({{ (selectedFile.size / 1024).toFixed(1) }} KB)</span>
+              <small class="file-notice">Kaydet butonuna basınca yüklenecektir</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <!-- Form Bölümleri -->
+        <div class="form-column">
+          <!-- Temel Bilgiler Kartı -->
+          <div class="info-card">
+            <div class="card-header">
+              <i class="bi bi-person card-icon"></i>
+              <h2 class="card-title">Düzenlenebilir Bilgiler</h2>
+            </div>
+
+            <div class="card-body">
+              <div class="form-row">
+                <div class="form-group" [class.raised]="isRaised('adi_soyadi')" [class.focused]="isFocused('adi_soyadi')" [class.invalid]="isInvalid('adi_soyadi')">
+                  <input type="text" id="adi_soyadi" formControlName="adi_soyadi" class="form-control"
+                    (focus)="onFocus('adi_soyadi')" (blur)="onBlur('adi_soyadi')">
+                  <label for="adi_soyadi" class="form-label">Ad Soyad *</label>
+                  <div class="error-message" *ngIf="isInvalid('adi_soyadi')">
+                    Ad soyad zorunludur.
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group" [class.raised]="isRaised('email')" [class.focused]="isFocused('email')" [class.invalid]="isInvalid('email')">
+                  <input type="email" id="email" formControlName="email" class="form-control"
+                    (focus)="onFocus('email')" (blur)="onBlur('email')">
+                  <label for="email" class="form-label">E-posta *</label>
+                  <div class="error-message" *ngIf="isInvalid('email')">
+                    Geçerli bir e-posta adresi giriniz.
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group" [class.raised]="isRaised('cep_telefonu')" [class.focused]="isFocused('cep_telefonu')">
+                  <input type="tel" id="cep_telefonu" formControlName="cep_telefonu" class="form-control"
+                    (focus)="onFocus('cep_telefonu')" (blur)="onBlur('cep_telefonu')">
+                  <label for="cep_telefonu" class="form-label">Cep Telefonu</label>
+                </div>
+              </div>
+
+              <!-- Şifre Değiştirme -->
+              <div class="form-section">
+                <h3 class="section-title">Şifre Değiştir</h3>
+                <p class="section-description">Şifrenizi değiştirmek istemiyorsanız bu alanları boş bırakınız.</p>
+
+                <div class="form-row">
+                  <div class="form-group" [class.raised]="isRaised('sifre')" [class.focused]="isFocused('sifre')" [class.invalid]="isInvalid('sifre')">
+                    <input type="password" id="sifre" formControlName="sifre" class="form-control"
+                      (focus)="onFocus('sifre')" (blur)="onBlur('sifre')">
+                    <label for="sifre" class="form-label">Yeni Şifre</label>
+                    <div class="error-message" *ngIf="editForm.get('sifre')?.invalid && editForm.get('sifre')?.touched">
+                      Şifre en az 6 karakter olmalıdır.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group" [class.raised]="isRaised('sifre_tekrar')" [class.focused]="isFocused('sifre_tekrar')" [class.invalid]="isInvalid('sifre_tekrar') || editForm.hasError('passwordMismatch')">
+                    <input type="password" id="sifre_tekrar" formControlName="sifre_tekrar" class="form-control"
+                      (focus)="onFocus('sifre_tekrar')" (blur)="onBlur('sifre_tekrar')">
+                    <label for="sifre_tekrar" class="form-label">Yeni Şifre (Tekrar)</label>
+                    <div class="error-message" *ngIf="editForm.hasError('passwordMismatch') && editForm.get('sifre_tekrar')?.touched">
+                      Şifreler eşleşmiyor.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Eğitim Bilgileri Kartı (Sadece Görüntüleme) -->
+          <div class="info-card">
+            <div class="card-header">
+              <i class="bi bi-book card-icon"></i>
+              <h2 class="card-title">Eğitim Bilgileri</h2>
+              <p class="card-subtitle">Bu bilgiler sadece öğretmeniniz tarafından düzenlenebilir</p>
+            </div>
+
+            <div class="card-body">
+              <div class="form-row-split">
+                <div class="form-group readonly">
+                  <input type="text" id="okulu" formControlName="okulu" class="form-control" readonly>
+                  <label for="okulu" class="form-label">Okul</label>
+                </div>
+
+                <div class="form-group readonly">
+                  <input type="text" id="sinifi" formControlName="sinifi" class="form-control" readonly>
+                  <label for="sinifi" class="form-label">Sınıf</label>
+                </div>
+              </div>
+
+              <div class="form-row-split">
+                <div class="form-group readonly">
+                  <input type="text" id="grubu" formControlName="grubu" class="form-control" readonly>
+                  <label for="grubu" class="form-label">Grup</label>
+                </div>
+
+                <div class="form-group readonly">
+                  <input type="text" id="ders_adi" formControlName="ders_adi" class="form-control" readonly>
+                  <label for="ders_adi" class="form-label">Ders Adı</label>
+                </div>
+              </div>
+
+              <div class="form-row-split">
+                <div class="form-group readonly">
+                  <input type="text" id="ders_gunu" formControlName="ders_gunu" class="form-control" readonly>
+                  <label for="ders_gunu" class="form-label">Ders Günü</label>
+                </div>
+
+                <div class="form-group readonly">
+                  <input type="text" id="ders_saati" formControlName="ders_saati" class="form-control" readonly>
+                  <label for="ders_saati" class="form-label">Ders Saati</label>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group readonly">
+                  <input type="text" id="ucret" formControlName="ucret" class="form-control" readonly>
+                  <label for="ucret" class="form-label">Ücret</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Veli Bilgileri Kartı (Sadece Görüntüleme) -->
+          <div class="info-card">
+            <div class="card-header">
+              <i class="bi bi-people card-icon"></i>
+              <h2 class="card-title">Veli Bilgileri</h2>
+              <p class="card-subtitle">Bu bilgiler sadece öğretmeniniz tarafından düzenlenebilir</p>
+            </div>
+
+            <div class="card-body">
+              <div class="form-row">
+                <div class="form-group readonly">
+                  <input type="text" id="veli_adi" formControlName="veli_adi" class="form-control" readonly>
+                  <label for="veli_adi" class="form-label">Veli Adı</label>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group readonly">
+                  <input type="tel" id="veli_cep" formControlName="veli_cep" class="form-control" readonly>
+                  <label for="veli_cep" class="form-label">Veli Telefonu</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Butonları -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="navigateBack()">
+          <i class="bi bi-x-circle"></i>
+          İptal
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="editForm.invalid || isSubmitting">
+          <span class="spinner-border spinner-border-sm me-2" *ngIf="isSubmitting"></span>
+          <i class="bi bi-check-circle" *ngIf="!isSubmitting"></i>
+          {{ isSubmitting ? 'Kaydediliyor...' : 'Kaydet' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
