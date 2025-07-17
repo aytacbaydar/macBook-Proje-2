@@ -51,7 +51,7 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
     {
       icon: 'bi-camera-reels',
       label: 'Konu Anlatımı Video',
-      link: 'ogrenci-sayfasi',
+      link: 'ogrenci-sayfasi/ogrenci-profil-sayfasi',
     },
     {
       icon: 'bi-pencil-square',
