@@ -138,79 +138,50 @@
             </div>
           </div>
 
-          <!-- Eğitim Bilgileri Kartı (Sadece Görüntüleme) -->
+          <!-- Eğitim Bilgileri Kartı -->
           <div class="info-card">
             <div class="card-header">
               <i class="bi bi-book card-icon"></i>
               <h2 class="card-title">Eğitim Bilgileri</h2>
-              <p class="card-subtitle">Bu bilgiler sadece öğretmeniniz tarafından düzenlenebilir</p>
             </div>
 
             <div class="card-body">
               <div class="form-row-split">
-                <div class="form-group readonly">
-                  <input type="text" id="okulu" formControlName="okulu" class="form-control" readonly>
+                <div class="form-group" [class.raised]="isRaised('okulu')" [class.focused]="isFocused('okulu')">
+                  <input type="text" id="okulu" formControlName="okulu" class="form-control"
+                    (focus)="onFocus('okulu')" (blur)="onBlur('okulu')">
                   <label for="okulu" class="form-label">Okul</label>
                 </div>
 
-                <div class="form-group readonly">
-                  <input type="text" id="sinifi" formControlName="sinifi" class="form-control" readonly>
+                <div class="form-group" [class.raised]="isRaised('sinifi')" [class.focused]="isFocused('sinifi')">
+                  <input type="text" id="sinifi" formControlName="sinifi" class="form-control"
+                    (focus)="onFocus('sinifi')" (blur)="onBlur('sinifi')">
                   <label for="sinifi" class="form-label">Sınıf</label>
-                </div>
-              </div>
-
-              <div class="form-row-split">
-                <div class="form-group readonly">
-                  <input type="text" id="grubu" formControlName="grubu" class="form-control" readonly>
-                  <label for="grubu" class="form-label">Grup</label>
-                </div>
-
-                <div class="form-group readonly">
-                  <input type="text" id="ders_adi" formControlName="ders_adi" class="form-control" readonly>
-                  <label for="ders_adi" class="form-label">Ders Adı</label>
-                </div>
-              </div>
-
-              <div class="form-row-split">
-                <div class="form-group readonly">
-                  <input type="text" id="ders_gunu" formControlName="ders_gunu" class="form-control" readonly>
-                  <label for="ders_gunu" class="form-label">Ders Günü</label>
-                </div>
-
-                <div class="form-group readonly">
-                  <input type="text" id="ders_saati" formControlName="ders_saati" class="form-control" readonly>
-                  <label for="ders_saati" class="form-label">Ders Saati</label>
-                </div>
-              </div>
-
-              <div class="form-row">
-                <div class="form-group readonly">
-                  <input type="text" id="ucret" formControlName="ucret" class="form-control" readonly>
-                  <label for="ucret" class="form-label">Ücret</label>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Veli Bilgileri Kartı (Sadece Görüntüleme) -->
+          <!-- Veli Bilgileri Kartı -->
           <div class="info-card">
             <div class="card-header">
               <i class="bi bi-people card-icon"></i>
               <h2 class="card-title">Veli Bilgileri</h2>
-              <p class="card-subtitle">Bu bilgiler sadece öğretmeniniz tarafından düzenlenebilir</p>
             </div>
 
             <div class="card-body">
               <div class="form-row">
-                <div class="form-group readonly">
-                  <input type="text" id="veli_adi" formControlName="veli_adi" class="form-control" readonly>
+                <div class="form-group" [class.raised]="isRaised('veli_adi')" [class.focused]="isFocused('veli_adi')">
+                  <input type="text" id="veli_adi" formControlName="veli_adi" class="form-control"
+                    (focus)="onFocus('veli_adi')" (blur)="onBlur('veli_adi')">
                   <label for="veli_adi" class="form-label">Veli Adı</label>
                 </div>
               </div>
 
               <div class="form-row">
-                <div class="form-group readonly">
-                  <input type="tel" id="veli_cep" formControlName="veli_cep" class="form-control" readonly>
+                <div class="form-group" [class.raised]="isRaised('veli_cep')" [class.focused]="isFocused('veli_cep')">
+                  <input type="tel" id="veli_cep" formControlName="veli_cep" class="form-control"
+                    (focus)="onFocus('veli_cep')" (blur)="onBlur('veli_cep')">
                   <label for="veli_cep" class="form-label">Veli Telefonu</label>
                 </div>
               </div>
