@@ -80,44 +80,7 @@ try {
         $updateFields = [];
         $params = [];
 
-        $allowed_detay = ['okulu', 'sinifi', 'grubu', 'ders_adi', 'ders_gunu', 'ders_saati', 'ucret', 'veli_adi', 'veli_cep'];
-        
-        // Eğer öğrenci kendi profilini güncelliyorsa, bazı alanları kısıtla
-        if ($user['rutbe'] !== 'admin' && $user['rutbe'] !== 'ogretmen') {
-            $allowed_detay = ['okulu', 'sinifi', 'veli_adi', 'veli_cep'];
-        }
-
-        foreach ($allowed_detay as $field) {
-            if (isset($detay[$field])) {
-                $updateFields[] = "$field = :$field";
-                $params[":$field"] = $detay[$field];
-            }
-        }
-
-        if (!empty($updateFields)) {
-            // Önce mevcut kayıt var mı kontrol et
-            $stmt = $conn->prepare("SELECT id FROM ogrenci_bilgileri WHERE ogrenci_id = :ogrenci_id");
-            $stmt->execute([':ogrenci_id' => $studentId]);
-            $exists = $stmt->fetch();
-
-            if ($exists) {
-                // Güncelle
-                $sql = "UPDATE ogrenci_bilgileri SET " . implode(', ', $updateFields) . " WHERE ogrenci_id = :ogrenci_id";
-                $params[':ogrenci_id'] = $studentId;
-                $stmt = $conn->prepare($sql);
-                $stmt->execute($params);
-            } else {
-                // Yeni kayıt oluştur
-                $params[':ogrenci_id'] = $studentId;
-                $fields = array_keys($params);
-                $placeholders = implode(', ', $fields);
-                $columns = str_replace(':', '', $placeholders) . ', ogrenci_id';
-                
-                $sql = "INSERT INTO ogrenci_bilgileri ($columns) VALUES ($placeholders, :ogrenci_id)";
-                $stmt = $conn->prepare($sql);
-                $stmt->execute($params);
-            }
-        }veli_adi', 'veli_cep'];
+        $ogrenci_detay_bilgi = ['okulu', 'sinifi', 'grubu', 'ders_adi', 'ders_gunu', 'ders_saati', 'ucret', 'veli_adi', 'veli_cep'];
 
         foreach ($ogrenci_detay_bilgi as $field) {
             if (isset($detay[$field])) {
