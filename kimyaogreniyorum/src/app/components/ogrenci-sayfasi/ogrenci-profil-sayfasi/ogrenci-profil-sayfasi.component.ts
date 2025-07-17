@@ -300,11 +300,9 @@ export class OgrenciProfilSayfasiComponent implements OnInit {
         email: formValues.email,
         cep_telefonu: formValues.cep_telefonu,
       },
-      egitim_bilgileri: {
+      detay_bilgiler: {
         okulu: formValues.okulu,
         sinifi: formValues.sinifi,
-      },
-      veli_bilgileri: {
         veli_adi: formValues.veli_adi,
         veli_cep: formValues.veli_cep,
       }
