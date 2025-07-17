@@ -17,6 +17,7 @@ import { OgrenciSinavSonuclariSayfasiComponent } from './ogrenci-sinav-islemleri
 import { OgrenciKonuAnalizSayfasiComponent } from './ogrenci-konu-analiz-sayfasi/ogrenci-konu-analiz-sayfasi.component';
 import { OgrenciSoruCozumuSayfasiComponent } from './ogrenci-soru-cozumu-sayfasi/ogrenci-soru-cozumu-sayfasi.component';
 import { OgrenciUcretSayfasiComponent } from './ogrenci-ucret-sayfasi/ogrenci-ucret-sayfasi.component';
+import { OgrenciProfilSayfasiComponent } from './ogrenci-profil-sayfasi/ogrenci-profil-sayfasi.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { OgrenciUcretSayfasiComponent } from './ogrenci-ucret-sayfasi/ogrenci-uc
     OgrenciKonuAnalizSayfasiComponent,
     OgrenciSoruCozumuSayfasiComponent,
     OgrenciUcretSayfasiComponent,
+    OgrenciProfilSayfasiComponent,
   ],
   imports: [
     CommonModule,
