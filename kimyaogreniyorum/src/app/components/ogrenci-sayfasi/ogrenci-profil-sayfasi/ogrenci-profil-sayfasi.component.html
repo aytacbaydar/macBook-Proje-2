@@ -159,6 +159,34 @@
                   <label for="sinifi" class="form-label">Sınıf</label>
                 </div>
               </div>
+
+              <!-- Ders Bilgileri - Sadece Görüntüleme -->
+              <div class="form-section">
+                <h3 class="section-title">Ders Bilgileri</h3>
+                <p class="section-description">Bu bilgiler sadece görüntüleme amaçlıdır.</p>
+
+                <div class="form-row-split">
+                  <div class="info-display-field">
+                    <div class="info-label">
+                      <i class="bi bi-calendar me-2"></i>
+                      Ders Günü
+                    </div>
+                    <div class="info-value">
+                      {{ student.ders_gunu || 'Belirtilmemiş' }}
+                    </div>
+                  </div>
+
+                  <div class="info-display-field">
+                    <div class="info-label">
+                      <i class="bi bi-clock me-2"></i>
+                      Ders Saati
+                    </div>
+                    <div class="info-value">
+                      {{ student.ders_saati || 'Belirtilmemiş' }}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
