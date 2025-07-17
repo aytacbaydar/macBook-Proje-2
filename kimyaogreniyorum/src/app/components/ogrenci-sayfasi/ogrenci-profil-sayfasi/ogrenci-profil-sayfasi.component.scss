@@ -1,4 +1,3 @@
-
 .edit-container {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
@@ -276,23 +275,46 @@
 }
 
 .form-section {
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid #e5e7eb;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e9ecef;
 
-  .section-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #374151;
-    margin: 0 0 8px 0;
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #495057;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-description {
+      font-size: 0.9rem;
+      color: #6c757d;
+      margin-bottom: 1rem;
+    }
   }
 
-  .section-description {
-    color: #6b7280;
-    font-size: 0.9rem;
-    margin: 0 0 20px 0;
+  .info-display-field {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+
+    .info-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #495057;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .info-value {
+      font-size: 1rem;
+      color: #212529;
+      font-weight: 500;
+    }
   }
-}
 
 .form-row, .form-row-split {
   margin-bottom: 20px;

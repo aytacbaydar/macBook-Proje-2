@@ -51,7 +51,7 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
     {
       icon: 'bi-camera-reels',
       label: 'Konu Anlatımı Video',
-      link: 'ogrenci-sayfasi/ogrenci-profil-sayfasi',
+      link: 'ogrenci-sayfasi',
     },
     {
       icon: 'bi-pencil-square',
@@ -83,6 +83,11 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
       icon: 'bi-qr-code-scan',
       label: 'QR Kod',
       link: 'ogrenci-sayfasi/ogrenci-qr-kod-sayfasi',
+    },
+    {
+      icon: 'bi-person-fill-gear',
+      label: 'Ayarlar',
+      link: 'ogrenci-sayfasi/ogrenci-profil-sayfasi',
     },
   ];
 

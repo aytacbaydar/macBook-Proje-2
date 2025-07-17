@@ -1,1 +1,0 @@
-<?php echo "<h2>Local Bridge Test</h2>"; ?>

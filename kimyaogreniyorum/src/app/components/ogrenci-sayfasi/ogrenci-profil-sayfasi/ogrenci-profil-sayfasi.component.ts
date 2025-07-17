@@ -61,19 +61,13 @@ export class OgrenciProfilSayfasiComponent implements OnInit {
         sifre: [''],
         sifre_tekrar: [''],
 
-        // Eğitim bilgileri (read-only for students)
-        okulu: [{value: '', disabled: true}],
-        sinifi: [{value: '', disabled: true}],
-        grubu: [{value: '', disabled: true}],
-        ders_adi: [{value: '', disabled: true}],
-        ders_gunu: [{value: '', disabled: true}],
-        ders_saati: [{value: '', disabled: true}],
-        ucret: [{value: '', disabled: true}],
-        brans: [{value: '', disabled: true}],
+        // Eğitim bilgileri
+        okulu: [''],
+        sinifi: [''],
 
-        // Veli bilgileri (read-only for students)
-        veli_adi: [{value: '', disabled: true}],
-        veli_cep: [{value: '', disabled: true}],
+        // Veli bilgileri
+        veli_adi: [''],
+        veli_cep: [''],
       },
       { validators: this.passwordMatchValidator }
     );
@@ -126,17 +120,11 @@ export class OgrenciProfilSayfasiComponent implements OnInit {
               email: this.student.email || '',
               cep_telefonu: this.student.cep_telefonu || '',
 
-              // Eğitim bilgileri (disabled)
+              // Eğitim bilgileri
               okulu: this.student.okulu || '',
               sinifi: this.student.sinifi || '',
-              grubu: this.student.grubu || '',
-              ders_adi: this.student.ders_adi || '',
-              ders_gunu: this.student.ders_gunu || '',
-              ders_saati: this.student.ders_saati || '',
-              ucret: this.student.ucret || '',
-              brans: this.student.brans || '',
 
-              // Veli bilgileri (disabled)
+              // Veli bilgileri
               veli_adi: this.student.veli_adi || '',
               veli_cep: this.student.veli_cep || '',
             });
@@ -311,6 +299,12 @@ export class OgrenciProfilSayfasiComponent implements OnInit {
         adi_soyadi: formValues.adi_soyadi,
         email: formValues.email,
         cep_telefonu: formValues.cep_telefonu,
+      },
+      detay_bilgiler: {
+        okulu: formValues.okulu,
+        sinifi: formValues.sinifi,
+        veli_adi: formValues.veli_adi,
+        veli_cep: formValues.veli_cep,
       }
     };
 
