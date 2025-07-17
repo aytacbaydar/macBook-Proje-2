@@ -10,8 +10,13 @@
     </div>
     <button class="btn btn-outline-primary" (click)="goToExams()">
       <i class="bi bi-arrow-left me-1"></i>
-      Sınavlara Dön
+      Sınavlar Git
     </button>
+  </div>
+
+  <!-- Grafik -->
+  <div class="comparison-chart-container page-header mt-4">
+    <canvas id="comparisonChart" width="800" height="400"></canvas>
   </div>
 
   <!-- Loading State -->
@@ -32,20 +37,6 @@
         <i class="bi bi-arrow-clockwise me-1"></i>
         Tekrar Dene
       </button>
-    </div>
-  </div>
-
-  <!-- Comparison Chart Section -->
-  <div *ngIf="!loading && !error && sinavSonuclari.length > 0" class="comparison-chart-section">
-    <div class="chart-header">
-      <h2>
-        <i class="bi bi-bar-chart-fill me-2"></i>
-        Sınav Karşılaştırması
-      </h2>
-      <p class="chart-description">Tüm sınavlarınızın başarı oranlarını karşılaştırın</p>
-    </div>
-    <div class="comparison-chart-container">
-      <canvas id="comparisonChart" width="800" height="400"></canvas>
     </div>
   </div>
 

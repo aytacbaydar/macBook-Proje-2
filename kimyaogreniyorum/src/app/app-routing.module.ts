@@ -125,7 +125,7 @@ const routes: Routes = [
         component: OgrenciOptikSayfasiComponent,
       },
       {
-        path: 'sinav-sonuclari',
+        path: 'sinav-sonuclari-sayfasi',
         component: OgrenciSinavSonuclariSayfasiComponent,
       },
       {

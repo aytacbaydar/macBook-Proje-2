@@ -1,8 +1,10 @@
+//box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 .sinav-container {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  height: 100%;
   position: relative;
   overflow-x: hidden;
+  padding: 20px;
+  border-radius: 8px;
 
   &::before {
     content: '';
@@ -11,26 +13,22 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: 
-      radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%);
     pointer-events: none;
   }
 }
 
 .main-header {
   padding: 2rem 1.5rem;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  border-radius: 8px;
   position: relative;
   z-index: 2;
 
   .header-content {
-    max-width: 1400px;
+    width: 100%;
     margin: 0 auto;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     gap: 2rem;
 
@@ -45,16 +43,17 @@
     .main-title {
       font-size: 2.5rem;
       font-weight: 700;
-      color: white;
+      color: rgb(21, 127, 248);
       margin: 0 0 0.5rem 0;
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 1rem;
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
       i {
         font-size: 2rem;
-        color: #ffd700;
+        color: rgb(21, 127, 248);
       }
 
       @media (max-width: 768px) {
@@ -65,9 +64,9 @@
 
     .subtitle {
       font-size: 1.1rem;
-      color: rgba(255, 255, 255, 0.9);
+      color: rgb(28, 28, 28);
       margin: 0;
-      font-weight: 300;
+      font-weight: 500;
     }
   }
 
@@ -76,9 +75,9 @@
     gap: 1rem;
 
     .stat-card {
-      background: rgba(255, 255, 255, 0.15);
+      box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
       padding: 1.5rem;
-      border-radius: 1rem;
+      border-radius: 8px;
       text-align: center;
       border: 1px solid rgba(255, 255, 255, 0.2);
       backdrop-filter: blur(10px);
@@ -87,14 +86,14 @@
       .stat-number {
         font-size: 2rem;
         font-weight: 700;
-        color: white;
+        color: rgb(28, 28, 28);
         line-height: 1;
         margin-bottom: 0.25rem;
       }
 
       .stat-label {
         font-size: 0.875rem;
-        color: rgba(255, 255, 255, 0.8);
+        color: rgb(28, 28, 28);
         font-weight: 500;
       }
     }
@@ -102,11 +101,12 @@
 }
 
 .content-area {
-  padding: 2rem 1.5rem;
-  max-width: 1400px;
-  margin: 0 auto;
+  width: 100%;
   position: relative;
   z-index: 2;
+  margin-top: 20px;
+  padding: 0px !important;
+  background-color: #fff;
 }
 
 .filter-section {
@@ -115,11 +115,10 @@
   .filter-tabs {
     display: flex;
     gap: 0.5rem;
-    background: rgba(255, 255, 255, 0.1);
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     padding: 0.5rem;
-    border-radius: 1rem;
+    border-radius: 8px;
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
     overflow-x: auto;
 
     @media (max-width: 768px) {
@@ -130,8 +129,8 @@
       background: transparent;
       border: none;
       padding: 0.75rem 1.5rem;
-      border-radius: 0.75rem;
-      color: rgba(255, 255, 255, 0.7);
+      border-radius: 8px;
+      color: rgb(28, 28, 28);
       font-weight: 500;
       display: flex;
       align-items: center;
@@ -146,7 +145,7 @@
       }
 
       .count {
-        background: rgba(255, 255, 255, 0.2);
+        box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
         padding: 0.125rem 0.5rem;
         border-radius: 10px;
         font-size: 0.75rem;
@@ -155,12 +154,12 @@
 
       &:hover {
         background: rgba(255, 255, 255, 0.1);
-        color: white;
+        color: rgb(28, 28, 28)
       }
 
       &.active {
         background: var(--tab-color, #667eea);
-        color: white;
+        color: rgb(28, 28, 28);
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 
         .count {
@@ -173,7 +172,7 @@
 
 .exams-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.5rem;
 
   @media (max-width: 768px) {
@@ -184,11 +183,10 @@
 
 .exam-item {
   background: rgba(255, 255, 255, 0.95);
-  border-radius: 1.5rem;
+  border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.2);
   --exam-color: #667eea;
 
   &:hover {
@@ -263,6 +261,7 @@
 
   .exam-info {
     padding: 1.5rem;
+    min-height: 190px;
 
     .exam-title {
       font-size: 1.25rem;

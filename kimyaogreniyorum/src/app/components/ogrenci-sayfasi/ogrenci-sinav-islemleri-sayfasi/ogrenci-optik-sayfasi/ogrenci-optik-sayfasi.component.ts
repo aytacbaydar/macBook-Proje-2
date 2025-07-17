@@ -132,7 +132,7 @@ export class OgrenciOptikSayfasiComponent implements OnInit {
             this.submitting = false;
             this.successMessage = 'Cevaplarınız başarıyla kaydedildi! Sonuçlar sayfasına yönlendiriliyorsunuz...';
             this.error = null;
-            console.log('Cevaplar kaydedildi:', response);
+            
 
             // Başarılı kayıt sonrası sınav sonuçları sayfasına yönlendir
             setTimeout(() => {
@@ -140,7 +140,7 @@ export class OgrenciOptikSayfasiComponent implements OnInit {
               const userData = JSON.parse(localStorage.getItem('user') || '{}');
               const ogrenciId = userData.id;
 
-              this.router.navigate(['/ogrenci-sayfasi/sinav-sonuclari'], {
+              this.router.navigate(['/ogrenci-sayfasi/sinav-sonuclari-sayfasi'], {
                 queryParams: {
                   sinavId: this.sinavId,
                   ogrenciId: ogrenciId

@@ -25,10 +25,10 @@ export class OgrenciSinavIslemleriSayfasiComponent implements OnInit {
   selectedFilter: string = 'ALL';
 
   sinavTurleri = [
-    { id: 'TYT', label: 'TYT Deneme', icon: 'bi-journal-text', color: '#667eea' },
-    { id: 'AYT', label: 'AYT Deneme', icon: 'bi-journal-code', color: '#4facfe' },
-    { id: 'TAR', label: 'Tarama', icon: 'bi-search', color: '#43e97b' },
-    { id: 'TEST', label: 'Konu Testi', icon: 'bi-clipboard-check', color: '#fa709a' }
+    { id: 'TYT', label: 'TYT Deneme', icon: 'bi-journal-text', color: '#ff7d04ff' },
+    { id: 'AYT', label: 'AYT Deneme', icon: 'bi-journal-code', color: '#218ff0ff' },
+    { id: 'TAR', label: 'Tarama', icon: 'bi-search', color: '#14a544ff' },
+    { id: 'TEST', label: 'Konu Testi', icon: 'bi-clipboard-check', color: '#fc3873ff' }
   ];
 
   constructor(

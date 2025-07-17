@@ -56,7 +56,7 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
     {
       icon: 'bi-pencil-square',
       label: 'Sınavlar',
-      link: 'ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi',
+      link: 'ogrenci-sayfasi/sinav-sonuclari-sayfasi',
     },
     {
       icon: 'bi-archive',
