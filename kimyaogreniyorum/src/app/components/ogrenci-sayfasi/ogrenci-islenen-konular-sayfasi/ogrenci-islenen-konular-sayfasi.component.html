@@ -20,79 +20,50 @@
 
   <!-- Main Content -->
   <div *ngIf="!isLoading && !error">
-
-    <!-- Student Info Card -->
-    <div class="student-info-card" *ngIf="studentInfo">
-      <div class="student-details">
-        <div class="student-avatar">
-          <i class="bi bi-person-circle"></i>
+    <!-- Summary Stats -->
+    <div class="summary-stats" *ngIf="getUnitesByGroup().length > 0">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon bg-blue">
+            <i class="bi bi-bookmark-check-fill"></i>
+          </div>
+          <div class="stat-content">
+            <h4>{{ getTotalProcessedTopics() }}</h4>
+            <p>İşlenen Konu</p>
+          </div>
         </div>
-        <div class="student-text">
-          <h3>{{ studentInfo.adi_soyadi }}</h3>
-          <div class="student-meta">
-            <span class="meta-item">
-              <i class="bi bi-mortarboard me-1"></i>
-              {{ studentInfo.sinifi }}
-            </span>
-            <span class="meta-item" *ngIf="studentInfo.grup || studentInfo.grubu">
-              <i class="bi bi-people me-1"></i>
-              {{ studentInfo.grup || studentInfo.grubu }}
-            </span>
-            <span class="meta-item" *ngIf="studentInfo.ogretmeni">
-              <i class="bi bi-person-badge me-1"></i>
-              {{ studentInfo.ogretmeni }}
-            </span>
+
+        <div class="stat-card">
+          <div class="stat-icon bg-green">
+            <i class="bi bi-journal-text"></i>
+          </div>
+          <div class="stat-content">
+            <h4>{{ getTotalTopics() }}</h4>
+            <p>Toplam Konu</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon bg-red">
+            <i class="bi bi-graph-up"></i>
+          </div>
+          <div class="stat-content">
+            <h4>{{ getOverallProgress() }}%</h4>
+            <p>İlerleme</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon bg-orange">
+            <i class="bi bi-folder-check"></i>
+          </div>
+          <div class="stat-content">
+            <h4>{{ getUnitesByGroup().length }}</h4>
+            <p>Ünite</p>
           </div>
         </div>
       </div>
     </div>
-
-        <!-- Summary Stats -->
-        <div class="summary-stats" *ngIf="getUnitesByGroup().length > 0">
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-icon">
-                <i class="bi bi-bookmark-check-fill"></i>
-              </div>
-              <div class="stat-content">
-                <h4>{{ getTotalProcessedTopics() }}</h4>
-                <p>İşlenen Konu</p>
-              </div>
-            </div>
-
-            <div class="stat-card">
-              <div class="stat-icon">
-                <i class="bi bi-journal-text"></i>
-              </div>
-              <div class="stat-content">
-                <h4>{{ getTotalTopics() }}</h4>
-                <p>Toplam Konu</p>
-              </div>
-            </div>
-
-            <div class="stat-card">
-              <div class="stat-icon">
-                <i class="bi bi-graph-up"></i>
-              </div>
-              <div class="stat-content">
-                <h4>{{ getOverallProgress() }}%</h4>
-                <p>İlerleme</p>
-              </div>
-            </div>
-
-            <div class="stat-card">
-              <div class="stat-icon">
-                <i class="bi bi-folder-check"></i>
-              </div>
-              <div class="stat-content">
-                <h4>{{ getUnitesByGroup().length }}</h4>
-                <p>Ünite</p>
-              </div>
-            </div>
-          </div>
-          </div>
-
-
     <!-- Topics by Units -->
     <div class="topics-container" *ngIf="getUnitesByGroup().length > 0">
       <div class="unit-section" *ngFor="let unit of getUnitesByGroup(); let unitIndex = index">
@@ -177,7 +148,6 @@
         </div>
       </div>
     </div>
-
     <!-- Empty State -->
     <div *ngIf="!isLoading && !error && getUnitesByGroup().length === 0" class="empty-state">
       <div class="empty-content">

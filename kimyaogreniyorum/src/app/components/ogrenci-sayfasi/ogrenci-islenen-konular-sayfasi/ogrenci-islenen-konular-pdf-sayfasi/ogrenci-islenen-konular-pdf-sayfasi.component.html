@@ -1,141 +1,82 @@
-
-<div class="modern-page-container">
-  <!-- Minimal Navbar -->
-
-
-  <!-- Loading State -->
-  <div *ngIf="isLoading" class="loading-container">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Yükleniyor...</span>
-    </div>
-    <p class="mt-2 text-muted">Ders notları yükleniyor...</p>
-  </div>
-
-  <!-- Error State -->
-  <div *ngIf="error && !isLoading" class="alert alert-danger">
-    <i class="bi bi-exclamation-triangle"></i> {{ error }}
-    <button class="btn btn-sm btn-outline-danger ms-2" (click)="loadDersKayitlari()">
-      Tekrar Dene
-    </button>
-  </div>
-
-  <!-- Main Content -->
-  <div *ngIf="!isLoading && !error" class="content-wrapper">
-  
-
-    <!-- Ders Kayıtları -->
-    <div class="lessons-section">
-      <div class="section-header">
-        <i class="bi bi-collection-fill me-2"></i>
-        <h2>Ders Notları ve Dokümanlar</h2>
-        <span class="lessons-count" *ngIf="dersKayitlari.length > 0">
-          {{ dersKayitlari.length }} döküman
-        </span>
-      </div>
-
-      <div *ngIf="dersKayitlari.length === 0" class="empty-state">
-        <i class="bi bi-file-earmark-pdf fs-1 text-muted"></i>
-        <h4>Henüz Ders Notu Bulunmuyor</h4>
-        <p class="text-muted">Bu grup için henüz hiç ders notu yüklenmemiş.</p>
-      </div>
-
-      <div *ngIf="dersKayitlari.length > 0" class="lessons-grid">
-        <div *ngFor="let ders of dersKayitlari" class="lesson-card">
-          <div class="lesson-header">
-            <div class="lesson-icon">
-              <i class="bi bi-file-earmark-pdf-fill"></i>
-            </div>
-            <div class="lesson-title">
-              <h3>{{ ders.pdf_adi }}</h3>
-              <span class="lesson-type">PDF Dokümanı</span>
-            </div>
-          </div>
-
-          <div class="lesson-info">
-            <div class="info-item">
-              <span class="label">
-                <i class="bi bi-calendar3 me-1"></i>
-                Tarih:
-              </span>
-              <span class="value">{{ formatDate(ders.olusturma_zamani) }}</span>
-            </div>
-            <div class="info-item">
-              <span class="label">
-                <i class="bi bi-file-text me-1"></i>
-                Sayfa Sayısı:
-              </span>
-              <span class="value">{{ ders.sayfa_sayisi }} sayfa</span>
-            </div>
-            <div class="info-item">
-              <span class="label">
-                <i class="bi bi-person-badge me-1"></i>
-                Öğretmen:
-              </span>
-              <span class="value">{{ ders.ogretmen_adi || 'Belirtilmemiş' }}</span>
-            </div>
-          </div>
-
-          <div class="lesson-actions">
-            <button 
-              class="action-btn view-btn" 
-              (click)="viewLessonPdf(ders.pdf_dosya_yolu)"
-              [disabled]="!ders.pdf_dosya_yolu">
-              <i class="bi bi-eye-fill"></i>
-              PDF Görüntüle
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- PDF Modal -->
-<div class="pdf-modal-overlay" *ngIf="showPdfModal" (click)="closePdfViewer()">
-  <div class="pdf-modal-content" (click)="$event.stopPropagation()">
-    <div class="pdf-modal-header">
-      <h3>
-        <i class="bi bi-file-earmark-pdf-fill me-2"></i>
-        PDF Görüntüleyici
-      </h3>
-      <div class="modal-actions">
-        <button class="header-action-btn" (click)="openPdfInNewTab()" *ngIf="selectedPdf">
-          <i class="bi bi-box-arrow-up-right"></i>
-          Yeni Sekmede Aç
-        </button>
-        <button class="header-action-btn" (click)="downloadPdf()" *ngIf="selectedPdf">
-          <i class="bi bi-download"></i>
-          İndir
-        </button>
-        <button class="close-btn" (click)="closePdfViewer()">
-          <i class="bi bi-x-lg"></i>
-        </button>
-      </div>
-    </div>
-    
-    <div class="pdf-viewer">
-      <div class="pdf-loading" *ngIf="!pdfLoaded && selectedPdf">
+<div class="container-full">
+  <div class="row">
+    <div class="col-12 mt-1">
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="loading-container">
         <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">PDF yükleniyor...</span>
+          <span class="visually-hidden">Yükleniyor...</span>
         </div>
-        <p class="mt-2">PDF yükleniyor...</p>
+        <p class="mt-2 text-muted">Ders notları yükleniyor...</p>
+      </div>
+      
+      <!-- Error State -->
+      <div *ngIf="error && !isLoading" class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle"></i> {{ error }}
+        <button class="btn btn-sm btn-outline-danger ms-2" (click)="loadDersKayitlari()">
+          Tekrar Dene
+        </button>
       </div>
 
-      <iframe 
-        *ngIf="selectedPdf"
-        [src]="selectedPdf + '#toolbar=1'" 
-        width="100%" 
-        height="600px"
-        style="border: none;"
-        (load)="onPdfLoad()"
-        (error)="onPdfLoadError($event)">
-      </iframe>
-
-      <div class="pdf-fallback" *ngIf="!selectedPdf">
-        <div class="fallback-content">
-          <i class="bi bi-file-earmark-pdf pdf-icon"></i>
-          <h4>PDF Seçilmedi</h4>
-          <p>Görüntülemek için bir PDF seçin.</p>
+      <!-- Card State -->
+      <div class="card-ana bg-green">
+        <div class="card-ana-header">
+          <h4><i class="bi bi-collection-fill me-2"></i>Ders Notları ve Dokümanlar</h4>
+          <button *ngIf="dersKayitlari.length > 0">{{ dersKayitlari.length }} döküman</button>
+        </div>
+        <div class="card-ana-body" *ngIf="!isLoading && !error">
+          <!--İçerik-->
+          <div *ngIf="dersKayitlari.length === 0" class="empty-state">
+            <i class="bi bi-file-earmark-pdf fs-1 text-muted"></i>
+            <h4>Henüz Ders Notu Bulunmuyor</h4>
+            <p class="text-muted">Bu grup için henüz hiç ders notu yüklenmemiş.</p>
+          </div>
+          
+          <div *ngIf="dersKayitlari.length > 0" class="lessons-grid">
+            <div *ngFor="let ders of dersKayitlari" class="lesson-card">
+              <div class="lesson-header">
+                <div class="lesson-icon">
+                  <i class="bi bi-file-earmark-pdf-fill"></i>
+                </div>
+                <div class="lesson-title">
+                  <h3>{{ ders.pdf_adi }}</h3>
+                  <span class="lesson-type">PDF Dokümanı</span>
+                </div>
+              </div>
+          
+              <div class="lesson-info">
+                <div class="info-item">
+                  <span class="label">
+                    <i class="bi bi-calendar3 me-1"></i>
+                    Tarih:
+                  </span>
+                  <span class="value">{{ formatDate(ders.olusturma_zamani) }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">
+                    <i class="bi bi-file-text me-1"></i>
+                    Sayfa Sayısı:
+                  </span>
+                  <span class="value">{{ ders.sayfa_sayisi }} sayfa</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">
+                    <i class="bi bi-person-badge me-1"></i>
+                    Öğretmen:
+                  </span>
+                  <span class="value">{{ ders.ogretmen_adi || 'Belirtilmemiş' }}</span>
+                </div>
+              </div>
+          
+              <div class="lesson-actions">
+                <button class="action-btn view-btn" (click)="viewLessonPdf(ders.pdf_dosya_yolu)"
+                  [disabled]="!ders.pdf_dosya_yolu">
+                  <i class="bi bi-eye-fill"></i>
+                  PDF Görüntüle
+                </button>
+              </div>
+            </div>
+          </div>
+          <!--İçerik Son-->
         </div>
       </div>
     </div>

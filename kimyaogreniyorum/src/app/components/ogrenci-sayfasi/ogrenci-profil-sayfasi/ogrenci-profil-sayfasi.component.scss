@@ -10,7 +10,7 @@
   align-items: center;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
   backdrop-filter: blur(10px);
-  border-radius: 15px;
+  border-radius: 8px;
   padding: 20px 30px;
   margin-bottom: 30px;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -25,7 +25,7 @@
 }
 
 .back-button {
-  background: rgba(2, 119, 253, 0.623);
+  background: rgba(2, 119, 253, 0.349);
   border: 1px solid rgba(54, 54, 54, 0.685);
   color: rgb(28, 28, 28);
   padding: 12px 20px;
@@ -233,7 +233,7 @@
 
 .info-card {
   background: white;
-  border-radius: 15px;
+  border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(0, 0, 0, 0.05);
   overflow: hidden;
@@ -350,7 +350,7 @@
 
   &.raised .form-label,
   &.focused .form-label {
-    top: -8px;
+    top: -1px;
     font-size: 0.75rem;
     background: white;
     padding: 0 5px;

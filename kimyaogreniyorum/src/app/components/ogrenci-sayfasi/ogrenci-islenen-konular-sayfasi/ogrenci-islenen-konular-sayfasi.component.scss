@@ -1,8 +1,37 @@
+.bg-blue {
+  background: linear-gradient(135deg, #244bfc 0%, #637ffd 100%);
+  color: white;
+}
+
+.bg-orange {
+  background: linear-gradient(135deg, #ff6600 0%, #fc924b 100%);
+  color: white;
+}
+
+.bg-green {
+  background: linear-gradient(135deg, #36a00d 0%, #88fd02 100%);
+  color: white;
+}
+
+.bg-red {
+  background: linear-gradient(135deg, #ff0000 0%, #fc4b4b 100%);
+  color: white;
+}
+
+.bg-purple {
+  background: linear-gradient(135deg, #f700ff 0%, #ed4bfc 100%);
+  color: white;
+}
+
+.bg-yellow {
+  background: linear-gradient(135deg, #f7fc01 0%, #f0fc4b 100%);
+  color: white;
+}
+
 .student-processed-topics-page {
-  min-height: 100vh;
-  background: #f8f9fa;
+  min-height: 100%;
   color: #333;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Roboto', sans-serif;
 
   .loading-section {
     display: flex;
@@ -86,22 +115,20 @@
   }
 
   .topics-container {
-    margin: 1rem;
+    margin-top: 1rem;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
   }
 
   .unit-section {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-radius: 16px;
+    
+    border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 
     .unit-header {
-      background: linear-gradient(135deg, #667eea, #764ba2);
+      background: linear-gradient(135deg, #1cc1f3, #0399fdc2);
       color: white;
       padding: 1.5rem;
       display: flex;
@@ -167,20 +194,17 @@
     }
 
     .unit-progress {
-      padding: 0 1.5rem 1rem 1.5rem;
       margin-top: -0.5rem;
 
       .progress-bar {
         width: 100%;
         height: 8px;
         background: rgba(102, 126, 234, 0.2);
-        border-radius: 4px;
         overflow: hidden;
 
         .progress-fill {
           height: 100%;
-          background: linear-gradient(90deg, #667eea, #764ba2);
-          border-radius: 4px;
+          background: linear-gradient(90deg, #f7b605, #f5c33b);
           transition: width 0.5s ease;
         }
       }
@@ -222,7 +246,7 @@
 
         .topic-status {
           margin-right: 1rem;
-          margin-top: 0.2rem;
+          margin-top: -5px;
 
           i {
             font-size: 1.5rem;
@@ -249,14 +273,14 @@
             }
 
             .topic-class-badge {
-              background: linear-gradient(135deg, #667eea, #764ba2);
-              color: white;
-              padding: 0.25rem 0.75rem;
-              border-radius: 15px;
+              background: rgb(253, 165, 3);
+              color: rgb(49, 49, 49);
+              padding: 0.5rem 1rem;
+              border-radius: 8px;
               font-size: 0.8rem;
               font-weight: 500;
               white-space: nowrap;
-              margin-left: 1rem;
+              margin-right: 1rem;
             }
           }
 
@@ -283,12 +307,12 @@
 
         .topic-actions {
           .completed-badge {
-            background: rgba(72, 187, 120, 0.1);
-            color: #48bb78;
+            background: rgb(253, 165, 3);
+            color: rgb(49, 49, 49);
             padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
             display: flex;
             align-items: center;
             white-space: nowrap;
@@ -332,7 +356,7 @@
   }
 
   .summary-stats {
-    margin: 2rem 1rem;
+    margin: 0px;
 
     .stats-grid {
       display: grid;
@@ -340,14 +364,12 @@
       gap: 1rem;
 
       .stat-card {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border-radius: 16px;
+        border-radius: 8px;
         padding: 1.5rem;
         display: flex;
         align-items: center;
         gap: 1rem;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
         border: 1px solid rgba(255, 255, 255, 0.2);
         transition: transform 0.3s ease;
 
@@ -358,8 +380,7 @@
         .stat-icon {
           width: 60px;
           height: 60px;
-          border-radius: 12px;
-          background: linear-gradient(135deg, #667eea, #764ba2);
+          border-radius: 8px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -442,5 +463,11 @@
     .stats-grid {
       grid-template-columns: 1fr;
     }
+  }
+}
+
+@media (max-width: 768px) {
+  .student-processed-topics-page{
+    margin-top: 20px;
   }
 }

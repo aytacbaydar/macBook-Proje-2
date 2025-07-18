@@ -49,7 +49,7 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
       link: 'ogrenci-sayfasi/ogrenci-islene-konular-sayfasi',
     },
     {
-      icon: 'bi-camera-reels',
+      icon: 'bi-book',
       label: 'Konu Anlatımı Video',
       link: 'ogrenci-sayfasi',
     },
@@ -59,7 +59,7 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
       link: 'ogrenci-sayfasi/sinav-sonuclari-sayfasi',
     },
     {
-      icon: 'bi-archive',
+      icon: 'bi-clipboard2-check',
       label: 'Testler',
       link: 'ogrenci-sayfasi/sinav-sonuclari',
     },

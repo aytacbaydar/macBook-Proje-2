@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr';
 
 interface DersKaydi {
   id: number;
@@ -15,7 +16,7 @@ interface DersKaydi {
   selector: 'app-ogrenci-islenen-konular-pdf-sayfasi',
   standalone: false,
   templateUrl: './ogrenci-islenen-konular-pdf-sayfasi.component.html',
-  styleUrl: './ogrenci-islenen-konular-pdf-sayfasi.component.scss'
+  styleUrl: './ogrenci-islenen-konular-pdf-sayfasi.component.scss',
 })
 export class OgrenciIslenenKonularPdfSayfasiComponent implements OnInit {
   dersKayitlari: DersKaydi[] = [];
@@ -26,7 +27,7 @@ export class OgrenciIslenenKonularPdfSayfasiComponent implements OnInit {
   pdfLoaded: boolean = false;
   studentInfo: any = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toaster: ToastrService) {}
 
   ngOnInit(): void {
     this.loadData();
@@ -37,30 +38,47 @@ export class OgrenciIslenenKonularPdfSayfasiComponent implements OnInit {
     this.error = null;
 
     // Load student info first
-    this.loadStudentInfo().then(() => {
-      if (this.studentInfo) {
-        // Then load PDF lessons
-        this.loadDersKayitlari().then(() => {
+    this.loadStudentInfo()
+      .then(() => {
+        if (this.studentInfo) {
+          // Then load PDF lessons
+          this.loadDersKayitlari()
+            .then(() => {
+              this.isLoading = false;
+            })
+            .catch((error) => {
+              console.error('Error loading lessons:', error);
+              this.toaster.error(
+                'Ders kayıtları yüklenirken hata oluştu.',
+                'Hata'
+              );
+              this.error = 'Ders kayıtları yüklenirken hata oluştu.';
+              this.isLoading = false;
+            });
+        } else {
+          this.toaster.error(
+            'Öğrenci bilgileri alınamadı.',
+            'Hata'
+          );
+          this.error = 'Öğrenci bilgileri alınamadı.';
           this.isLoading = false;
-        }).catch(error => {
-          console.error('Error loading lessons:', error);
-          this.error = 'Ders kayıtları yüklenirken hata oluştu.';
-          this.isLoading = false;
-        });
-      } else {
-        this.error = 'Öğrenci bilgileri alınamadı.';
+        }
+      })
+      .catch((error) => {
+        console.error('Error loading student info:', error);
+        this.toaster.error(
+          'Öğrenci bilgileri yüklenirken hata oluştu.',
+          'Hata'
+        );
+        this.error = 'Öğrenci bilgileri yüklenirken hata oluştu.';
         this.isLoading = false;
-      }
-    }).catch(error => {
-      console.error('Error loading student info:', error);
-      this.error = 'Öğrenci bilgileri yüklenirken hata oluştu.';
-      this.isLoading = false;
-    });
+      });
   }
 
   loadStudentInfo(): Promise<void> {
     return new Promise((resolve, reject) => {
-      const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+      const userStr =
+        localStorage.getItem('user') || sessionStorage.getItem('user');
       if (userStr) {
         this.studentInfo = JSON.parse(userStr);
         resolve();
@@ -73,6 +91,10 @@ export class OgrenciIslenenKonularPdfSayfasiComponent implements OnInit {
   loadDersKayitlari(): Promise<void> {
     return new Promise((resolve, reject) => {
       if (!this.studentInfo || !this.studentInfo.grubu) {
+        this.toaster.error(
+          'Öğrenci grup bilgisi bulunamadı.',
+          'Hata'
+        );
         this.error = 'Öğrenci grup bilgisi bulunamadı';
         this.isLoading = false;
         reject('Öğrenci grup bilgisi bulunamadı');
@@ -80,24 +102,28 @@ export class OgrenciIslenenKonularPdfSayfasiComponent implements OnInit {
       }
 
       let token = '';
-      const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+      const userStr =
+        localStorage.getItem('user') || sessionStorage.getItem('user');
       if (userStr) {
         const user = JSON.parse(userStr);
         token = user.token || '';
       }
 
       const headers = new HttpHeaders({
-        'Authorization': `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       });
 
-      const apiUrl = `./server/api/grup_ders_kayitlari.php?grup=${encodeURIComponent(this.studentInfo.grubu)}`;
+      const apiUrl = `./server/api/grup_ders_kayitlari.php?grup=${encodeURIComponent(
+        this.studentInfo.grubu
+      )}`;
       this.http.get<any>(apiUrl, { headers }).subscribe({
         next: (response) => {
           if (response.success && response.data) {
             // Ders kayıtlarına öğretmen bilgisi ekle
             this.dersKayitlari = response.data.map((ders: any) => ({
               ...ders,
-              ogretmen_adi: this.studentInfo?.ogretmeni || 'Bilinmeyen Öğretmen'
+              ogretmen_adi:
+                this.studentInfo?.ogretmeni || 'Bilinmeyen Öğretmen',
             }));
           } else {
             this.dersKayitlari = [];
@@ -105,10 +131,15 @@ export class OgrenciIslenenKonularPdfSayfasiComponent implements OnInit {
           resolve();
         },
         error: (error) => {
-          this.error = 'Sunucu hatası: ' + (error.error?.message || error.message);
+          this.toaster.error(
+            'Ders kayıtları yüklenirken sunucu hatası oluştu.',
+            'Hata'
+          );
+          this.error =
+            'Sunucu hatası: ' + (error.error?.message || error.message);
           this.isLoading = false;
           reject(error);
-        }
+        },
       });
     });
   }
@@ -119,14 +150,8 @@ export class OgrenciIslenenKonularPdfSayfasiComponent implements OnInit {
       return;
     }
 
-    this.pdfLoaded = false;
-    this.selectedPdf = null;
-
-    this.showPdfModal = true;
-
-    setTimeout(() => {
-      this.selectedPdf = `./server/api/pdf_viewer.php?file=${encodeURIComponent(fileName)}`;
-    }, 100);
+    const pdfUrl = `./server/api/pdf_viewer.php?file=${encodeURIComponent(fileName)}`;
+    window.open(pdfUrl, '_blank'); // Yeni sekmede aç
   }
 
   closePdfViewer(): void {
@@ -142,8 +167,14 @@ export class OgrenciIslenenKonularPdfSayfasiComponent implements OnInit {
   onPdfLoadError(event: any): void {
     console.error('PDF yüklenemedi:', this.selectedPdf, event);
     this.pdfLoaded = false;
+    this.toaster.error(
+      'PDF dosyası yüklenirken hata oluştu. Dosya mevcut olmayabilir veya bozuk olabilir.',
+      'Hata'
+    );
     setTimeout(() => {
-      alert('PDF dosyası yüklenirken hata oluştu. Dosya mevcut olmayabilir veya bozuk olabilir.');
+      alert(
+        'PDF dosyası yüklenirken hata oluştu. Dosya mevcut olmayabilir veya bozuk olabilir.'
+      );
     }, 100);
   }
 
@@ -154,7 +185,7 @@ export class OgrenciIslenenKonularPdfSayfasiComponent implements OnInit {
       month: 'long',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   }
 

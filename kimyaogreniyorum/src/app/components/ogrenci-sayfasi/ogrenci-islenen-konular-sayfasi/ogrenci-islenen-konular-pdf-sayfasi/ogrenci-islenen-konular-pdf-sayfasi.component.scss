@@ -1,7 +1,102 @@
+.container-full{
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 768px) {
+.container-full {
+    margin-top: 20px !important;
+  }
+}
+.card-ana {
+  border-radius: 8px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  overflow: hidden;
+  background-color: #fff;
+  width: 100%;
+  margin: 0 auto;
+  font-family: sans-serif;
+  margin-bottom: 20px;
+}
+
+/* Header */
+.card-ana-header {
+  color: white;
+  padding: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-ana-header h4 {
+  font-size: 16px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  margin: 0;
+  padding-left: 10px;
+}
+
+/* Body */
+.card-ana-body {
+  background-color: white;
+  padding: 20px;
+  color: #333;
+}
+
+/* Button */
+.card-ana-header button {
+  background-color: #ffffff50;
+  border: none;
+  color: white;
+  padding: 4px 8px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.card-ana-header button:hover {
+  background-color: #ffffffe1;
+  color: #333;
+}
+
+.bg-blue {
+  background: linear-gradient(135deg, #244bfc 0%, #637ffd 100%);
+  color: white;
+}
+
+.bg-orange {
+  background: linear-gradient(135deg, #ff6600 0%, #fc924b 100%);
+  color: white;
+}
+
+.bg-green {
+  background: linear-gradient(135deg, #36a00d 0%, #66b60c 100%);
+  color: white;
+}
+
+.bg-red {
+  background: linear-gradient(135deg, #ff0000 0%, #fc4b4b 100%);
+  color: white;
+}
+
+.bg-purple {
+  background: linear-gradient(135deg, #f700ff 0%, #ed4bfc 100%);
+  color: white;
+}
+
+.bg-yellow {
+  background: linear-gradient(135deg, #f7fc01 0%, #f0fc4b 100%);
+  color: white;
+}
+
 
 .modern-page-container {
   height: auto;
   font-family: 'Roboto', sans-serif;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  border-radius: 8px;
 }
 
 .loading-container {
@@ -79,9 +174,9 @@
 .lesson-card {
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(10px);
-  border-radius: 16px;
+  border-radius: 8px;
   padding: 1.5rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
   transition: all 0.3s ease;
   border: 1px solid rgba(255, 255, 255, 0.2);
 
@@ -181,7 +276,7 @@
       font-size: 0.9rem;
 
       &.view-btn {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #fd8701 0%, #f3cd25 100%);
         color: white;
 
         &:hover:not(:disabled) {

@@ -318,7 +318,7 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit, AfterViewI
     const sinavAdlari = this.sinavSonuclari.map(sinav => {
       // Sınav adını kısalt (çok uzunsa)
       const ad = sinav.sinav_adi;
-      return ad.length > 20 ? ad.substring(0, 17) + '...' : ad;
+      return ad.length > 20 ? ad.substring(0, 7) + '...' : ad;
     });
 
     const basariOranlari = this.sinavSonuclari.map(sinav => this.getSuccessPercentage(sinav));
@@ -388,7 +388,7 @@ export class OgrenciSinavSonuclariSayfasiComponent implements OnInit, AfterViewI
               text: 'Sınavlar'
             },
             ticks: {
-              maxRotation: 45,
+              maxRotation: 15,
               minRotation: 0
             }
           }

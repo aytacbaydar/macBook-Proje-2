@@ -3,12 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-ogrenci-profil-sayfasi',
   standalone: false,
   templateUrl: './ogrenci-profil-sayfasi.component.html',
-  styleUrl: './ogrenci-profil-sayfasi.component.scss'
+  styleUrl: './ogrenci-profil-sayfasi.component.scss',
 })
 export class OgrenciProfilSayfasiComponent implements OnInit {
   student: any = {
@@ -28,7 +29,7 @@ export class OgrenciProfilSayfasiComponent implements OnInit {
     ucret: '',
     brans: '',
     veli_adi: '',
-    veli_cep: ''
+    veli_cep: '',
   };
   editForm!: FormGroup;
   isLoading: boolean = true;
@@ -43,7 +44,8 @@ export class OgrenciProfilSayfasiComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -95,7 +97,8 @@ export class OgrenciProfilSayfasiComponent implements OnInit {
 
     // LocalStorage veya sessionStorage'dan token'ı al
     let token = '';
-    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    const userStr =
+      localStorage.getItem('user') || sessionStorage.getItem('user');
     if (userStr) {
       const user = JSON.parse(userStr);
       token = user.token || '';
@@ -112,7 +115,7 @@ export class OgrenciProfilSayfasiComponent implements OnInit {
           if (response.success) {
             this.student = response.data;
             console.log('Öğrenci verileri:', this.student);
-            
+
             // Form'u doldur
             this.editForm.patchValue({
               // Temel bilgiler
@@ -185,7 +188,8 @@ export class OgrenciProfilSayfasiComponent implements OnInit {
 
         // Token'ı al
         let token = '';
-        const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+        const userStr =
+          localStorage.getItem('user') || sessionStorage.getItem('user');
         if (userStr) {
           const user = JSON.parse(userStr);
           token = user.token || '';
@@ -202,11 +206,14 @@ export class OgrenciProfilSayfasiComponent implements OnInit {
           .subscribe({
             next: (response: any) => {
               if (response.success) {
+                this.toastr.success('Profil bilgileriniz başarıyla güncellendi!','Başarılı');
                 this.success = 'Profil bilgileriniz başarıyla güncellendi!';
                 this.student = { ...this.student, ...response.data };
 
                 // localStorage'daki user bilgilerini güncelle
-                const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+                const userStr =
+                  localStorage.getItem('user') ||
+                  sessionStorage.getItem('user');
                 if (userStr) {
                   const user = JSON.parse(userStr);
                   user.adi_soyadi = response.data.adi_soyadi;
@@ -215,7 +222,7 @@ export class OgrenciProfilSayfasiComponent implements OnInit {
                   if (response.data.avatar) {
                     user.avatar = response.data.avatar;
                   }
-                  
+
                   if (localStorage.getItem('user')) {
                     localStorage.setItem('user', JSON.stringify(user));
                   } else {
@@ -228,7 +235,8 @@ export class OgrenciProfilSayfasiComponent implements OnInit {
                   this.success = null;
                 }, 3000);
               } else {
-                this.error = response.message || 'Güncelleme sırasında hata oluştu.';
+                this.error =
+                  response.message || 'Güncelleme sırasında hata oluştu.';
               }
               this.isSubmitting = false;
             },
@@ -258,7 +266,8 @@ export class OgrenciProfilSayfasiComponent implements OnInit {
 
       // LocalStorage veya sessionStorage'dan token'ı al
       let token = '';
-      const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+      const userStr =
+        localStorage.getItem('user') || sessionStorage.getItem('user');
       if (userStr) {
         const user = JSON.parse(userStr);
         token = user.token || '';
@@ -305,7 +314,7 @@ export class OgrenciProfilSayfasiComponent implements OnInit {
         sinifi: formValues.sinifi,
         veli_adi: formValues.veli_adi,
         veli_cep: formValues.veli_cep,
-      }
+      },
     };
 
     // Avatar ekle (eğer güncellendiyse)
