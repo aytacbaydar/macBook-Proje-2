@@ -10,4 +10,14 @@ import { CevapAnahtari } from '../modeller/cevap-anahtari';
   templateUrl: './ogretmen-sinavlar-sayfasi.component.html',
   styleUrl: './ogretmen-sinavlar-sayfasi.component.scss',
 })
-export class OgretmenSinavlarSayfasiComponent {}
+export class OgretmenSinavlarSayfasiComponent implements OnInit {
+  activeTab: string = 'cevap-anahtari';
+
+  constructor() {}
+
+  ngOnInit(): void {}
+
+  setActiveTab(tab: string): void {
+    this.activeTab = tab;
+  }
+}

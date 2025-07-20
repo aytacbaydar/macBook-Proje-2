@@ -1,1 +1,194 @@
-<p>ogretmen-ogrenci-sinav-sonuclari-sayfasi works!</p>
+
+<div class="exam-results-container">
+  <!-- Header -->
+  <div class="results-header">
+    <h2 class="section-title">
+      <i class="bi bi-graph-up me-2"></i>
+      Sınav Sonuçları
+    </h2>
+    <p class="section-description">Öğrencilerin sınav performanslarını görüntüleyin</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Sınav sonuçları yükleniyor...</p>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-container">
+    <div class="error-card">
+      <i class="bi bi-exclamation-triangle-fill error-icon"></i>
+      <h3>Hata Oluştu</h3>
+      <p>{{ error }}</p>
+      <button class="retry-button" (click)="loadSinavSonuclari()">
+        <i class="bi bi-arrow-clockwise me-1"></i>
+        Tekrar Dene
+      </button>
+    </div>
+  </div>
+
+  <!-- Exams List -->
+  <div *ngIf="!loading && !error && sinavlar.length > 0" class="exams-grid">
+    <div 
+      class="exam-card" 
+      *ngFor="let sinav of sinavlar; trackBy: trackBySinavId"
+      (click)="selectSinav(sinav)"
+      [class.selected]="selectedSinav?.id === sinav.id">
+      
+      <!-- Exam Header -->
+      <div class="exam-header" [style.background]="getExamTypeColor(sinav.sinav_turu)">
+        <div class="exam-type-badge">
+          <i class="{{ getExamTypeIcon(sinav.sinav_turu) }}"></i>
+          {{ getExamTypeLabel(sinav.sinav_turu) }}
+        </div>
+        <div class="exam-date">
+          <i class="bi bi-calendar3"></i>
+          {{ formatDate(sinav.tarih) }}
+        </div>
+      </div>
+
+      <!-- Exam Info -->
+      <div class="exam-info">
+        <h3 class="exam-title">{{ sinav.sinav_adi }}</h3>
+        <div class="exam-stats">
+          <div class="stat-item">
+            <i class="bi bi-people"></i>
+            <span>{{ sinav.katilimci_sayisi || 0 }} Katılımcı</span>
+          </div>
+          <div class="stat-item">
+            <i class="bi bi-list-ol"></i>
+            <span>{{ sinav.soru_sayisi }} Soru</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Selection Indicator -->
+      <div class="selection-indicator" *ngIf="selectedSinav?.id === sinav.id">
+        <i class="bi bi-check-circle-fill"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Exams State -->
+  <div *ngIf="!loading && !error && sinavlar.length === 0" class="empty-state">
+    <div class="empty-card">
+      <i class="bi bi-file-earmark-text empty-icon"></i>
+      <h3>Henüz Sınav Bulunamadı</h3>
+      <p>Sınav sonuçlarını görüntülemek için önce cevap anahtarı oluşturun.</p>
+    </div>
+  </div>
+
+  <!-- Selected Exam Results -->
+  <div *ngIf="selectedSinav && studentResults.length > 0" class="results-section">
+    <div class="results-header-section">
+      <h3 class="results-title">
+        {{ selectedSinav.sinav_adi }} - Sonuçlar
+      </h3>
+      <div class="results-summary">
+        <div class="summary-item">
+          <span class="label">Toplam Katılımcı:</span>
+          <span class="value">{{ studentResults.length }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Ortalama Net:</span>
+          <span class="value">{{ calculateAverageNet() | number:'1.2-2' }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">En Yüksek Net:</span>
+          <span class="value">{{ getHighestNet() | number:'1.2-2' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Table -->
+    <div class="results-table-container">
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>Sıra</th>
+            <th>Öğrenci Adı</th>
+            <th class="text-center">Doğru</th>
+            <th class="text-center">Yanlış</th>
+            <th class="text-center">Boş</th>
+            <th class="text-center">Net</th>
+            <th class="text-center">Puan</th>
+            <th class="text-center">Yüzde</th>
+            <th class="text-center">Tarih</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr 
+            *ngFor="let result of studentResults; let i = index; trackBy: trackByStudentResult"
+            [class.top-performer]="i < 3">
+            <td class="rank-cell">
+              <div class="rank-badge" [class]="getRankClass(i)">
+                <span *ngIf="i < 3" class="rank-icon">
+                  <i class="bi bi-trophy-fill" *ngIf="i === 0"></i>
+                  <i class="bi bi-award-fill" *ngIf="i === 1"></i>
+                  <i class="bi bi-award" *ngIf="i === 2"></i>
+                </span>
+                <span class="rank-number">{{ i + 1 }}</span>
+              </div>
+            </td>
+            <td class="student-cell">
+              <div class="student-info">
+                <strong>{{ result.ogrenci_adi }}</strong>
+                <small class="text-muted">ID: {{ result.ogrenci_id }}</small>
+              </div>
+            </td>
+            <td class="text-center">
+              <span class="stat-badge success">{{ result.dogru_sayisi }}</span>
+            </td>
+            <td class="text-center">
+              <span class="stat-badge danger">{{ result.yanlis_sayisi }}</span>
+            </td>
+            <td class="text-center">
+              <span class="stat-badge warning">{{ result.bos_sayisi }}</span>
+            </td>
+            <td class="text-center">
+              <span class="stat-badge info">{{ result.net_sayisi | number:'1.2-2' }}</span>
+            </td>
+            <td class="text-center">
+              <span class="score-badge">{{ result.puan | number:'1.2-2' }}</span>
+            </td>
+            <td class="text-center">
+              <div class="percentage-container">
+                <span class="percentage-text">{{ result.yuzde | number:'1.2-2' }}%</span>
+                <div class="percentage-bar">
+                  <div 
+                    class="percentage-fill" 
+                    [style.width.%]="result.yuzde"
+                    [style.background]="getPercentageColor(result.yuzde)">
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td class="text-center text-muted">
+              <small>{{ formatDateTime(result.gonderim_tarihi) }}</small>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- No Results for Selected Exam -->
+  <div *ngIf="selectedSinav && studentResults.length === 0 && !loadingResults" class="no-results">
+    <div class="no-results-card">
+      <i class="bi bi-graph-down no-results-icon"></i>
+      <h3>Bu Sınav İçin Sonuç Bulunamadı</h3>
+      <p>{{ selectedSinav.sinav_adi }} sınavına henüz öğrenci katılmamış veya sonuçlar hesaplanmamış.</p>
+    </div>
+  </div>
+
+  <!-- Loading Results -->
+  <div *ngIf="loadingResults" class="loading-results">
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Sınav sonuçları yükleniyor...</p>
+    </div>
+  </div>
+</div>
