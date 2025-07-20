@@ -8,34 +8,38 @@
     <p class="page-description">Cevap anahtarlarını yönetin ve sınav sonuçlarını görüntüleyin</p>
   </div>
 
-  <!-- Tab Navigation -->
-  <div class="tab-navigation">
-    <button 
-      class="tab-button" 
-      [class.active]="activeTab === 'cevap-anahtari'"
-      (click)="setActiveTab('cevap-anahtari')">
-      <i class="bi bi-key me-2"></i>
-      Cevap Anahtarları
-    </button>
-    <button 
-      class="tab-button" 
-      [class.active]="activeTab === 'sinav-sonuclari'"
-      (click)="setActiveTab('sinav-sonuclari')">
-      <i class="bi bi-graph-up me-2"></i>
-      Sınav Sonuçları
-    </button>
-  </div>
-
-  <!-- Tab Content -->
-  <div class="tab-content">
-    <!-- Cevap Anahtari Tab -->
-    <div *ngIf="activeTab === 'cevap-anahtari'" class="tab-pane">
-      <app-ogretmen-cevap-anahtari-sayfasi></app-ogretmen-cevap-anahtari-sayfasi>
+  <!-- Cards Grid -->
+  <div class="cards-grid">
+    <!-- Cevap Anahtarları Card -->
+    <div class="exam-card cevap-anahtari-card">
+      <div class="card-header">
+        <div class="card-icon">
+          <i class="bi bi-key"></i>
+        </div>
+        <div class="card-title-section">
+          <h3>Cevap Anahtarları</h3>
+          <p>Sınav cevap anahtarlarını yönetin</p>
+        </div>
+      </div>
+      <div class="card-content">
+        <app-ogretmen-cevap-anahtari-sayfasi></app-ogretmen-cevap-anahtari-sayfasi>
+      </div>
     </div>
 
-    <!-- Sinav Sonuclari Tab -->
-    <div *ngIf="activeTab === 'sinav-sonuclari'" class="tab-pane">
-      <app-ogretmen-ogrenci-sinav-sonuclari-sayfasi></app-ogretmen-ogrenci-sinav-sonuclari-sayfasi>
+    <!-- Sınav Sonuçları Card -->
+    <div class="exam-card sinav-sonuclari-card">
+      <div class="card-header">
+        <div class="card-icon">
+          <i class="bi bi-graph-up"></i>
+        </div>
+        <div class="card-title-section">
+          <h3>Sınav Sonuçları</h3>
+          <p>Öğrenci sınav sonuçlarını görüntüleyin</p>
+        </div>
+      </div>
+      <div class="card-content">
+        <app-ogretmen-ogrenci-sinav-sonuclari-sayfasi></app-ogretmen-ogrenci-sinav-sonuclari-sayfasi>
+      </div>
     </div>
   </div>
 </div>
