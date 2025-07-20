@@ -37,6 +37,7 @@ import { OgrenciSinavSonuclariSayfasiComponent } from './components/ogrenci-sayf
 import { OgrenciKonuAnalizSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-konu-analiz-sayfasi/ogrenci-konu-analiz-sayfasi.component';
 import { OgrenciSoruCozumuSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-soru-cozumu-sayfasi/ogrenci-soru-cozumu-sayfasi.component';
 import { OgretmenSoruCozumuSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component';
+import { OgretmenOgrenciSinavSonuclariSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component';
 import { OgretmenEkDersGirisiSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ek-ders-girisi-sayfasi/ogretmen-ek-ders-girisi-sayfasi.component';
 import { OgrenciUcretSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-ucret-sayfasi/ogrenci-ucret-sayfasi.component';
 import { OgrenciProfilSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-profil-sayfasi/ogrenci-profil-sayfasi.component';
@@ -207,6 +208,10 @@ const routes: Routes = [
       {
         path: 'ogretmen-ucret-sayfasi',
         component: OgretmenUcretSayfasiComponent,
+      },
+      {
+        path: 'ogretmen-ogrenci-sinav-sonuclari-sayfasi',
+        component: OgretmenOgrenciSinavSonuclariSayfasiComponent,
       },
     ],
   },
