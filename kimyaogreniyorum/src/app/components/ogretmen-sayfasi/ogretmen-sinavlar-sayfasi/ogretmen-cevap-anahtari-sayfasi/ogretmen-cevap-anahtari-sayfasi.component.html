@@ -1,0 +1,448 @@
+<div class="groups-container">
+    <!-- Header Section -->
+    <div class="page-header">
+        <div class="header-content">
+            <div class="header-text">
+                <h1 class="page-title">
+                    <i class="bi bi-clipboard2-check-fill me-2"></i>
+                    Cevap Anahtarı Yönetimi
+                </h1>
+                <p class="page-description">Sınav cevap anahtarlarınızı kolayca yönetin ve düzenleyin</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-icon bg-primary">
+                        <i class="bi bi-file-earmark-text-fill"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ cevapAnahtarlari.length }}</div>
+                        <div class="stat-label">Toplam Sınav</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon bg-success">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ getActiveSinavCount() }}</div>
+                        <div class="stat-label">Aktif Sınav</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon bg-info">
+                        <i class="bi bi-calendar3"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ getThisMonthCount() }}</div>
+                        <div class="stat-label">Bu Ay Eklenen</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Section -->
+        <div class="search-section">
+            <div class="search-container">
+                <div class="search-input-wrapper">
+                    <i class="bi bi-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Sınav ara..." [(ngModel)]="searchQuery">
+                    <button *ngIf="searchQuery" class="clear-search-btn" (click)="searchQuery = ''">
+                        <i class="bi bi-x"></i>
+                    </button>
+                </div>
+                <button class="add-exam-btn" (click)="showAddForm = !showAddForm">
+                    <i class="bi bi-plus-circle me-1"></i>
+                    Yeni Sınav Ekle
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Messages -->
+    <div class="alerts-container" *ngIf="successMessage || errorMessage">
+        <div *ngIf="successMessage" class="modern-alert success">
+            <div class="alert-icon">
+                <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <div class="alert-content">{{ successMessage }}</div>
+            <button class="alert-close" (click)="successMessage = ''">
+                <i class="bi bi-x"></i>
+            </button>
+        </div>
+
+        <div *ngIf="errorMessage" class="modern-alert error">
+            <div class="alert-icon">
+                <i class="bi bi-exclamation-circle-fill"></i>
+            </div>
+            <div class="alert-content">{{ errorMessage }}</div>
+            <button class="alert-close" (click)="errorMessage = ''">
+                <i class="bi bi-x"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Add Form (Collapsible) -->
+    <div class="add-form-container" *ngIf="showAddForm" [@slideInOut]>
+        <div class="form-card">
+            <div class="form-header">
+                <h2>
+                    <i class="bi bi-plus-circle me-2"></i>
+                    Yeni Cevap Anahtarı Ekle
+                </h2>
+                <button class="close-btn" (click)="showAddForm = false">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+
+            <form (ngSubmit)="submitForm()" class="exam-form">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label class="field-label">
+                            <i class="bi bi-file-earmark-text me-1"></i>
+                            Sınav Adı
+                        </label>
+                        <input type="text" class="form-input" [(ngModel)]="cevapAnahtari.sinav_adi" name="sinav_adi"
+                            placeholder="Örn: TYT-AYT Kimya Sınavı" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="field-label">
+                            <i class="bi bi-tag me-1"></i>
+                            Sınav Türü
+                        </label>
+                        <select class="form-select" [(ngModel)]="cevapAnahtari.sinav_turu" name="sinav_turu" required>
+                            <option value="">Sınav türünü seçin</option>
+                            <option *ngFor="let tur of sinavTurleri" [value]="tur.id">{{ tur.label }}</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="field-label">
+                            <i class="bi bi-list-ol me-1"></i>
+                            Soru Sayısı
+                        </label>
+                        <input type="number" class="form-input" [(ngModel)]="cevapAnahtari.soru_sayisi"
+                            (ngModelChange)="updateSorular($event)" name="soru_sayisi" min="1" [max]="maxSoruSayisi"
+                            required>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="field-label">
+                            <i class="bi bi-calendar3 me-1"></i>
+                            Sınav Tarihi
+                        </label>
+                        <input type="date" class="form-input" [(ngModel)]="cevapAnahtari.tarih" name="tarih" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="field-label">
+                            <i class="bi bi-toggle-on me-1"></i>
+                            Sınav Durumu
+                        </label>
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" id="aktiflik" class="checkbox-input"
+                                [(ngModel)]="cevapAnahtari.aktiflik" name="aktiflik">
+                            <label for="aktiflik" class="checkbox-label">
+                                <span class="checkbox-text">{{ cevapAnahtari.aktiflik ? 'Aktif' : 'Pasif' }}</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- File Upload -->
+                <div class="form-field">
+                    <label class="field-label">
+                        <i class="bi bi-image me-1"></i>
+                        Sınav Kapağı
+                    </label>
+                    <div class="upload-area" [class.has-file]="imagePreview">
+                        <input type="file" id="sinav_kapagi" accept="image/*" (change)="onImageSelected($event)"
+                            class="file-input">
+                        <label for="sinav_kapagi" class="upload-label">
+                            <div class="upload-content" *ngIf="!imagePreview">
+                                <i class="bi bi-cloud-upload"></i>
+                                <span>Dosya yüklemek için tıklayın</span>
+                                <small>PNG, JPG, JPEG (Max: 5MB)</small>
+                            </div>
+                            <div class="image-preview" *ngIf="imagePreview">
+                                <img [src]="imagePreview" alt="Önizleme">
+                                <div class="image-overlay">
+                                    <i class="bi bi-pencil-square"></i>
+                                    <span>Değiştir</span>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Answers Section -->
+                <div class="answers-section" *ngIf="sorular.length > 0">
+                    <h3 class="section-title">
+                        <i class="bi bi-list-check me-2"></i>
+                        Cevap Anahtarı
+                    </h3>
+                    <div class="answers-grid">
+                        <div class="answer-item" *ngFor="let soru of sorular; let i = index">
+                            <div class="question-number">{{ i + 1 }}</div>
+                            <div class="answer-inputs">
+                                <input type="text" class="answer-input"
+                                    [(ngModel)]="cevapAnahtari.cevaplar['ca' + (i + 1)]" [name]="'ca' + (i + 1)"
+                                    maxlength="1" placeholder="A" required>
+                                <select class="topic-input" [(ngModel)]="cevapAnahtari.konular['ka' + (i + 1)]"
+                                    [name]="'ka' + (i + 1)">
+                                    <option value="">Konu Seçin</option>
+                                    <option *ngFor="let konu of konular" [value]="konu.konu_adi">
+                                        {{ konu.konu_adi }}
+                                    </option>
+                                </select>
+                                <input type="text" class="video-input"
+                                    [(ngModel)]="cevapAnahtari.videolar['va' + (i + 1)]" [name]="'va' + (i + 1)"
+                                    placeholder="Video URL">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" (click)="initModel()">
+                        <i class="bi bi-arrow-clockwise me-1"></i>
+                        Sıfırla
+                    </button>
+                    <button type="submit" class="btn-primary" [disabled]="submitting">
+                        <i class="bi bi-check-circle me-1"></i>
+                        {{ submitting ? 'Kaydediliyor...' : 'Kaydet' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-container">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Sınavlar yükleniyor...</p>
+        </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error && !loading" class="error-container">
+        <div class="error-card">
+            <i class="bi bi-exclamation-triangle-fill error-icon"></i>
+            <h3>Hata Oluştu</h3>
+            <p>{{ error }}</p>
+            <button class="retry-button" (click)="loadCevapAnahtarlari()">
+                <i class="bi bi-arrow-clockwise me-1"></i>
+                Tekrar Dene
+            </button>
+        </div>
+    </div>
+
+    <!-- Exams List -->
+    <div *ngIf="!loading && !error && filteredCevapAnahtarlari.length > 0" class="exams-list">
+        <div class="exam-card" *ngFor="let cevap of filteredCevapAnahtarlari">
+            <!-- Exam Header -->
+            <div class="exam-header" [style.background]="getExamTypeColor(cevap.sinav_turu)">
+                <div class="exam-header-left">
+                    <div class="exam-icon">
+                        <i class="bi bi-file-earmark-text-fill"></i>
+                    </div>
+                    <div class="exam-info">
+                        <h3 class="exam-title">{{ cevap.sinav_adi }}</h3>
+                        <div class="exam-meta">
+                            <span class="exam-type">
+                                <i class="bi bi-tag-fill me-1"></i>
+                                {{ getSinavTuruLabel(cevap.sinav_turu) }}
+                            </span>
+                            <span class="exam-date">
+                                <i class="bi bi-calendar3 me-1"></i>
+                                {{ cevap.tarih }}
+                            </span>
+                            <span class="question-count">
+                                <i class="bi bi-list-ol me-1"></i>
+                                {{ cevap.soru_sayisi }} soru
+                            </span>
+                            <span class="aktiflik-badge" [class.active]="cevap.aktiflik"
+                                [class.inactive]="!cevap.aktiflik">
+                                <i class="bi" [class.bi-check-circle-fill]="cevap.aktiflik"
+                                    [class.bi-x-circle-fill]="!cevap.aktiflik"></i>
+                                {{ cevap.aktiflik ? 'Aktif' : 'Pasif' }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exam-header-actions">
+                    <button class="header-action-btn edit-btn" (click)="editCevapAnahtari(cevap)">
+                        <i class="bi bi-pencil-square"></i>
+                        <span>Düzenle</span>
+                    </button>
+
+                    <button class="header-action-btn delete-btn" (click)="cevap.id && deleteCevapAnahtari(cevap.id)">
+                        <i class="bi bi-trash3-fill"></i>
+                        <span>Sil</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Exam Content -->
+            <div class="exam-content">
+                <!-- Image Preview -->
+                <div class="exam-image" *ngIf="cevap.sinav_kapagi">
+                    <img [src]="'/uploads/' + cevap.sinav_kapagi" alt="Sınav Kapağı" class="exam-cover">
+                </div>
+
+                <!-- Answers Preview -->
+                <div class="answers-preview" *ngIf="cevap.cevaplar">
+                    <h4>
+                        <i class="bi bi-check-circle me-1"></i>
+                        Cevap Anahtarı
+                    </h4>
+                    <div class="answers-grid-preview">
+                        <div class="answer-preview" *ngFor="let i of getSoruDizisi(cevap); let idx = index"
+                            [attr.data-tooltip]="cevap.konular && cevap.konular['ka' + (idx + 1)] ? cevap.konular['ka' + (idx + 1)] : 'Konu bilgisi yok'"
+                            [class.has-tooltip]="cevap.konular && cevap.konular['ka' + (idx + 1)]">
+                            <span class="q-num">{{ idx + 1 }}.</span>
+                            <span class="q-answer">{{ cevap.cevaplar['ca' + (idx + 1)] || '-' }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && !error && filteredCevapAnahtarlari.length === 0 && cevapAnahtarlari.length > 0"
+        class="empty-state">
+        <div class="empty-content">
+            <div class="empty-icon">
+                <i class="bi bi-search"></i>
+            </div>
+            <h3>Arama Sonucu Bulunamadı</h3>
+            <p>Aradığınız kriterlere uygun sınav bulunamadı.</p>
+            <button class="empty-action-btn" (click)="searchQuery = ''">
+                <i class="bi bi-arrow-clockwise me-1"></i>
+                Filtreleri Temizle
+            </button>
+        </div>
+    </div>
+
+    <!-- No Exams State -->
+    <div *ngIf="!loading && !error && cevapAnahtarlari.length === 0" class="empty-state">
+        <div class="empty-content">
+            <div class="empty-icon">
+                <i class="bi bi-file-earmark-plus"></i>
+            </div>
+            <h3>Henüz Sınav Bulunmuyor</h3>
+            <p>İlk cevap anahtarınızı oluşturmak için yukarıdaki "Yeni Sınav Ekle" butonunu kullanın.</p>
+            <button class="empty-action-btn" (click)="showAddForm = true">
+                <i class="bi bi-plus-circle me-1"></i>
+                İlk Sınavı Ekle
+            </button>
+        </div>
+    </div>
+
+    <!-- Edit Modal (Less Blur) -->
+    <div class="edit-modal" [class.active]="editMode" (click)="onModalBackdropClick($event)">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h3>
+                    <i class="bi bi-pencil-square me-2"></i>
+                    Cevap Anahtarı Düzenle
+                </h3>
+                <button class="modal-close" (click)="cancelEdit()">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+
+            <div class="modal-body" *ngIf="currentEditingCevapAnahtari">
+                <form (ngSubmit)="submitEditForm()" class="exam-form">
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label class="field-label">Sınav Adı</label>
+                            <input type="text" class="form-input" [(ngModel)]="currentEditingCevapAnahtari.sinav_adi"
+                                name="edit_sinav_adi" required>
+                        </div>
+
+                        <div class="form-field">
+                            <label class="field-label">Sınav Türü</label>
+                            <select class="form-select" [(ngModel)]="currentEditingCevapAnahtari.sinav_turu"
+                                name="edit_sinav_turu" required>
+                                <option value="">Sınav türünü seçin</option>
+                                <option *ngFor="let tur of sinavTurleri" [value]="tur.id">{{ tur.label }}</option>
+                            </select>
+                        </div>
+
+                        <div class="form-field">
+                            <label class="field-label">Soru Sayısı</label>
+                            <input type="number" class="form-input"
+                                [(ngModel)]="currentEditingCevapAnahtari.soru_sayisi"
+                                (ngModelChange)="updateSorular($event)" name="edit_soru_sayisi" min="1"
+                                [max]="maxSoruSayisi" required>
+                        </div>
+
+                        <div class="form-field">
+                            <label class="field-label">Sınav Tarihi</label>
+                            <input type="date" class="form-input" [(ngModel)]="currentEditingCevapAnahtari.tarih"
+                                name="edit_tarih" required>
+                        </div>
+
+                        <div class="form-field">
+                            <label class="field-label">Sınav Durumu</label>
+                            <div class="checkbox-wrapper">
+                                <input type="checkbox" id="edit_aktiflik" class="checkbox-input"
+                                    [(ngModel)]="currentEditingCevapAnahtari.aktiflik" name="edit_aktiflik">
+                                <label for="edit_aktiflik" class="checkbox-label">
+                                    <span class="checkbox-text">{{ currentEditingCevapAnahtari.aktiflik ? 'Aktif' :
+                                        'Pasif' }}</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="answers-section" *ngIf="getSoruDizisi(currentEditingCevapAnahtari).length > 0">
+                        <h3 class="section-title">Cevap Anahtarı</h3>
+                        <div class="answers-grid">
+                            <div class="answer-item"
+                                *ngFor="let i of getSoruDizisi(currentEditingCevapAnahtari); let idx = index">
+                                <div class="question-number">{{ idx + 1 }}</div>
+                                <div class="answer-inputs">
+                                    <input type="text" class="answer-input"
+                                        [(ngModel)]="currentEditingCevapAnahtari.cevaplar['ca' + (idx + 1)]"
+                                        [name]="'edit_ca' + (idx + 1)" maxlength="1" placeholder="A" required>
+                                    <select class="topic-input"
+                                        [(ngModel)]="currentEditingCevapAnahtari.konular['ka' + (idx + 1)]"
+                                        [name]="'edit_ka' + (idx + 1)">
+                                        <option value="">Konu Seçin</option>
+                                        <option *ngFor="let konu of konular" [value]="konu.konu_adi">
+                                            {{ konu.konu_adi }}
+                                        </option>
+                                    </select>
+                                    <input type="text" class="video-input"
+                                        [(ngModel)]="currentEditingCevapAnahtari.videolar['va' + (idx + 1)]"
+                                        [name]="'edit_va' + (idx + 1)" placeholder="Video URL">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" (click)="cancelEdit()">
+                    <i class="bi bi-x me-1"></i>
+                    İptal
+                </button>
+                <button type="button" class="btn-primary" [disabled]="submitting" (click)="submitEditForm()">
+                    <i class="bi bi-check-circle me-1"></i>
+                    {{ submitting ? 'Güncelleniyor...' : 'Güncelle' }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
