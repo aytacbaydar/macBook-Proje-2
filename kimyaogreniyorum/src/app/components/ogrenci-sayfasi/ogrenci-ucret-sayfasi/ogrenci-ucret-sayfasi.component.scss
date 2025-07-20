@@ -1,3 +1,33 @@
+.bg-blue {
+  background: linear-gradient(135deg, #244bfc 0%, #637ffd 100%);
+  color: white;
+}
+
+.bg-orange {
+  background: linear-gradient(135deg, #ff6600 0%, #fc924b 100%);
+  color: white;
+}
+
+.bg-green {
+  background: linear-gradient(135deg, #36a00d 0%, #88fd02 100%);
+  color: white;
+}
+
+.bg-red {
+  background: linear-gradient(135deg, #ff0000 0%, #fc4b4b 100%);
+  color: white;
+}
+
+.bg-purple {
+  background: linear-gradient(135deg, #f700ff 0%, #ed4bfc 100%);
+  color: white;
+}
+
+.bg-yellow {
+  background: linear-gradient(135deg, #f7fc01 0%, #f0fc4b 100%);
+  color: white;
+}
+
 .button {
   padding: 12px 24px;
   border: none;
@@ -216,7 +246,7 @@
 
   .payment-status-section {
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-    border-radius: 15px;
+    border-radius: 8px;
     padding: 1.5rem;
     margin-bottom: 2rem;
     backdrop-filter: blur(10px);
@@ -232,12 +262,12 @@
 
         .progress-label {
           font-size: 0.9rem;
-          color: rgba(255, 255, 255, 0.8);
+          color: rgba(41, 41, 41);
         }
 
         .progress-value {
           font-weight: 600;
-          color: white;
+          color: rgba(41, 41, 41);
         }
       }
 
@@ -1979,6 +2009,7 @@
 /* Öğrenci Detay İstatistik Modal Stilleri */
 .modern-modal-overlay {
   position: fixed;
+  width: 100%;
   top: 0;
   left: 0;
   right: 0;

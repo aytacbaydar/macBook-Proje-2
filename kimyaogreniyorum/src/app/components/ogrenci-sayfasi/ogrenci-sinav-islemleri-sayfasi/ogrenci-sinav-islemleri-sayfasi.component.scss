@@ -127,10 +127,6 @@
     backdrop-filter: blur(10px);
     overflow-x: auto;
 
-    @media (max-width: 768px) {
-      justify-content: flex-start;
-    }
-
     .filter-tab {
       background: transparent;
       border: none;
@@ -567,84 +563,86 @@
     padding: 1.5rem 1rem;
   }
 
-    .filter-section {
-      margin-bottom: 2rem;
-  
-      .filter-tabs {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem; // Daha fazla boşluk
+  .filter-section {
+    margin-bottom: 2rem;
+
+    .filter-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem; // Daha fazla boşluk
+      box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+        rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+      padding: 1rem;
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+
+      .filter-tab {
+        background: transparent;
+        border: none;
         box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-          rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-        padding: 1rem;
+            rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
         border-radius: 8px;
-        backdrop-filter: blur(10px);
-  
-        .filter-tab {
-          background: transparent;
-          border: none;
-          border-radius: 12px;
+        color: rgb(28, 28, 28);
+        font-weight: 500;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 0.3rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+        --tab-color: #667eea;
+        padding: 1.25rem;
+        box-sizing: border-box;
+
+        i {
+          font-size: 1.2rem;
+        }
+
+        .count {
+          box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+            rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+          padding: 0.25rem 0.6rem;
+          border-radius: 10px;
+          font-size: 0.75rem;
+          font-weight: 600;
+          background-color: #f2f2f2;
+        }
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.2);
           color: rgb(28, 28, 28);
-          font-weight: 500;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          gap: 0.3rem;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          white-space: nowrap;
-          --tab-color: #667eea;
-          padding: 1.25rem;
-          box-sizing: border-box;
-  
-          i {
-            font-size: 1.2rem;
-          }
-  
+        }
+
+        &.active {
+          background: var(--tab-color, #667eea);
+          color: white;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+
           .count {
-            box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-              rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-            padding: 0.25rem 0.6rem;
-            border-radius: 10px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            background-color: #f2f2f2;
+            background: rgba(255, 255, 255, 0.3);
           }
-  
-          &:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: rgb(28, 28, 28);
-          }
-  
-          &.active {
-            background: var(--tab-color, #667eea);
-            color: white;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  
-            .count {
-              background: rgba(255, 255, 255, 0.3);
-            }
-          }
-  
-          // Tümü butonu geniş
-          &:first-child {
-            flex: 1 1 100%;
-          }
-  
-          // Diğer 4 buton - sayfanın yarısını paylaşsınlar
-          &:not(:first-child) {
-            flex: 1 1 calc(25% - 1rem); // 4 buton toplam %50 alanı 1rem boşlukla paylaşır
-            min-width: 120px; // daralmayı önler
-          }
-  
-          @media (max-width: 768px) {
-            flex: 1 1 100%;
-          }
+        }
+
+        // Tümü butonu geniş
+        &:first-child {
+          flex: 1 1 100%;
+        }
+
+        // Diğer 4 buton - sayfanın yarısını paylaşsınlar
+        &:not(:first-child) {
+          flex: 1 1 calc(25% - 1rem); // 4 buton toplam %50 alanı 1rem boşlukla paylaşır
+          min-width: 120px; // daralmayı önler
+        }
+
+        @media (max-width: 768px) {
+          flex: 1 1 100%;
         }
       }
     }
+  }
 
   .exam-item {
     .exam-info {
