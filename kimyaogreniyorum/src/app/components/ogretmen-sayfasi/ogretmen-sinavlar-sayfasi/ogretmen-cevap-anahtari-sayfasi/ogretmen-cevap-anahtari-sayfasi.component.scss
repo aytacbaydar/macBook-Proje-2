@@ -909,13 +909,13 @@
                         bottom: -40px;
                         left: 50%;
                         transform: translateX(-50%);
-                        background: #1e293b;
+                        background: #203b1e;
                         color: white;
                         padding: 0.5rem 0.75rem;
                         border-radius: 6px;
                         font-size: 0.75rem;
                         white-space: nowrap;
-                        z-index: 1000;
+                        z-index: 99998;
                         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
                         animation: tooltipFadeIn 0.2s ease-out;
                     }
@@ -931,7 +931,7 @@
                         border-left: 6px solid transparent;
                         border-right: 6px solid transparent;
                         border-bottom: 8px solid #1e293b;
-                        z-index: 1001;
+                        z-index: 99999;
                         animation: tooltipFadeIn 0.2s ease-out;
                     }
 

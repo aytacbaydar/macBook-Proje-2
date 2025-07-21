@@ -18,6 +18,7 @@ import { OgrenciKonuAnalizSayfasiComponent } from './ogrenci-konu-analiz-sayfasi
 import { OgrenciSoruCozumuSayfasiComponent } from './ogrenci-soru-cozumu-sayfasi/ogrenci-soru-cozumu-sayfasi.component';
 import { OgrenciUcretSayfasiComponent } from './ogrenci-ucret-sayfasi/ogrenci-ucret-sayfasi.component';
 import { OgrenciProfilSayfasiComponent } from './ogrenci-profil-sayfasi/ogrenci-profil-sayfasi.component';
+import { OgrenciYapayZekaliTestlerSayfasiComponent } from './ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { OgrenciProfilSayfasiComponent } from './ogrenci-profil-sayfasi/ogrenci-
     OgrenciSoruCozumuSayfasiComponent,
     OgrenciUcretSayfasiComponent,
     OgrenciProfilSayfasiComponent,
+    OgrenciYapayZekaliTestlerSayfasiComponent,
   ],
   imports: [
     CommonModule,

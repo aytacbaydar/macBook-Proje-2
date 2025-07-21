@@ -3,7 +3,18 @@
   min-height: 100%;
   font-family: 'Roboto',  sans-serif;
 }
-
+.stat-card{
+  color: #FFF;
+}
+.stat-content{
+  text-align: center;
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 1.2rem;
+  }
+.text-white{
+  color: #FFF;
+}
 /* Header */
 .results-header {
   text-align: center;
@@ -29,7 +40,7 @@
 
   .section-title {
     font-size: 2.5rem;
-    font-weight: 700;
+    font-weight: 500;
     margin-bottom: 0.5rem;
     text-shadow: 0 2px 10px rgba(0,0,0,0.1);
     position: relative;
@@ -115,7 +126,7 @@
     h3 {
       color: #dc2626;
       font-size: 1.5rem;
-      font-weight: 600;
+      font-weight: 500;
       margin-bottom: 1rem;
     }
 
@@ -216,7 +227,7 @@
         padding: 0.5rem 1rem;
         border-radius: 2rem;
         font-size: 0.9rem;
-        font-weight: 600;
+        font-weight: 500;
         backdrop-filter: blur(10px);
 
         i {
@@ -326,7 +337,7 @@
     h3 {
       color: #334155;
       font-size: 1.5rem;
-      font-weight: 600;
+      font-weight: 500;
       margin-bottom: 1rem;
     }
 
@@ -366,7 +377,7 @@
 
   .results-title {
     font-size: 1.8rem;
-    font-weight: 700;
+    font-weight: 500;
     margin: 0;
     position: relative;
     z-index: 1;
@@ -389,20 +400,12 @@
         th {
           padding: 1.5rem 1rem;
           text-align: left;
-          font-weight: 600;
+          font-weight: 500;
           color: #374151;
           font-size: 0.9rem;
           text-transform: uppercase;
           letter-spacing: 0.05em;
           border-bottom: 2px solid #e5e7eb;
-
-          &:first-child {
-            border-top-left-radius: 1rem;
-          }
-
-          &:last-child {
-            border-top-right-radius: 1rem;
-          }
         }
       }
     }
@@ -438,7 +441,7 @@
             width: 2.5rem;
             height: 2.5rem;
             border-radius: 50%;
-            font-weight: 700;
+            font-weight: 500;
             font-size: 0.9rem;
 
             &.gold {
@@ -461,7 +464,7 @@
           }
 
           .student-name {
-            font-weight: 600;
+            font-weight: 500;
             color: #1e293b;
             font-size: 1rem;
           }
@@ -472,7 +475,7 @@
             color: white;
             padding: 0.5rem 1rem;
             border-radius: 2rem;
-            font-weight: 600;
+            font-weight: 500;
             font-size: 0.9rem;
             min-width: 60px;
             text-align: center;
@@ -486,7 +489,7 @@
             min-width: 120px;
 
             .percentage-text {
-              font-weight: 600;
+              font-weight: 500;
               color: #1e293b;
               text-align: center;
             }
@@ -551,7 +554,7 @@
     h3 {
       color: #334155;
       font-size: 1.5rem;
-      font-weight: 600;
+      font-weight: 500;
       margin-bottom: 1rem;
     }
 
@@ -728,7 +731,7 @@
 
     .question-number {
       font-size: 1.2rem;
-      font-weight: bold;
+      font-weight: 500;
       color: #495057;
       min-width: 30px;
     }
@@ -748,7 +751,7 @@
         display: inline-block;
         padding: 0.25rem 0.75rem;
         border-radius: 20px;
-        font-weight: bold;
+        font-weight: 500;
         min-width: 40px;
         text-align: center;
 
@@ -804,8 +807,8 @@
   border-bottom: 2px solid #e9ecef;
 
   .modal-title {
-    color: #495057;
-    font-weight: 600;
+    color: #ffffff;
+    font-weight: 500;
   }
 }
 

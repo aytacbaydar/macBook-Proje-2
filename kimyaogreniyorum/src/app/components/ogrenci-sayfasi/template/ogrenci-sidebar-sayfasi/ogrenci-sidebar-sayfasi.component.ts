@@ -61,7 +61,7 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
     {
       icon: 'bi-clipboard2-check',
       label: 'Testler',
-      link: 'ogrenci-sayfasi/sinav-sonuclari',
+      link: 'ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi',
     },
     {
       icon: 'bi-graph-up-arrow',
