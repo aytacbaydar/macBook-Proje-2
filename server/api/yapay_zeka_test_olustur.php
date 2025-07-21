@@ -1,11 +1,15 @@
 <?php
-// Error handling başlat
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+// JSON parsing hataları için temiz output
+ini_set('display_errors', 0); // JSON için hataları gizle
+ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
 
-// Output buffering ile hata yakalama
+// Output buffering ile temiz JSON çıktısı sağla
 ob_start();
+
+// Tüm hata ve warning'leri log dosyasına yönlendir
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/../../logs/api_errors.log');
 
 require_once '../config.php';
 
@@ -37,11 +41,13 @@ register_shutdown_function(function() {
 try {
     $pdo = getConnection();
 } catch (Exception $e) {
+    ob_clean(); // Buffer'ı temizle
     echo json_encode(['success' => false, 'message' => 'Veritabanı bağlantısı başarısız: ' . $e->getMessage()]);
     exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    ob_clean();
     echo json_encode(['success' => false, 'message' => 'Sadece POST metodu desteklenir']);
     exit;
 }
@@ -49,6 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $input = json_decode(file_get_contents('php://input'), true);
 
 if (!$input) {
+    ob_clean();
     echo json_encode(['success' => false, 'message' => 'Geçersiz JSON verisi']);
     exit;
 }
@@ -149,10 +156,6 @@ if (!empty($gelistirilmesi_gereken_konular)) {
 
     $params = $gelistirilmesi_gereken_konular;
     
-    // Debug için
-    error_log("Kolay sorular SQL: " . $sql);
-    error_log("Kolay sorular parametreleri: " . json_encode($params));
-    
     try {
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
@@ -180,10 +183,6 @@ if (!empty($en_iyi_konular)) {
             LIMIT " . intval($zor_soru_sayisi);
 
     $params = $en_iyi_konular;
-    
-    // Debug için
-    error_log("Zor sorular SQL: " . $sql);
-    error_log("Zor sorular parametreleri: " . json_encode($params));
     
     try {
         $stmt = $pdo->prepare($sql);
@@ -234,8 +233,14 @@ if (!empty($test_sorulari)) {
     echo json_encode(['success' => false, 'message' => 'Seçilen konular için soru bulunamadı']);
 }
 
-// Output buffer'ı temizle ve gönder
-if (ob_get_length()) {
-    ob_end_flush();
+// Output buffer'dan fazla içeriği temizle ve sadece JSON gönder
+$output = ob_get_clean();
+
+// Eğer output buffer'da beklenmeyen içerik varsa logla
+if (!empty($output) && trim($output) !== '') {
+    error_log("Unexpected output in yapay_zeka_test_olustur.php: " . $output);
 }
+
+// Clean exit - sadece JSON döndür
+exit;
 ?>
