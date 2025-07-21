@@ -207,7 +207,7 @@
       <div class="modal-header bg-primary text-white">
         <h5 class="modal-title">
           <i class="bi bi-person-lines-fill me-2"></i>
-          {{ selectedStudentDetail?.ogrenci_adi }} - Sınav Detayı
+          {{ selectedStudentResult?.ogrenci_adi || selectedStudentDetail?.ogrenci_adi }} - Sınav Detayı
         </h5>
         <button type="button" class="btn-close btn-close-white" (click)="closeStudentDetailModal()"></button>
       </div>
