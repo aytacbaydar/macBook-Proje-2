@@ -103,15 +103,9 @@ try {
     $params = [$sinav_id];
     
     if ($tokenData['rutbe'] === 'ogretmen') {
-        // Öğretmenin adını token'dan al
-        $teacherName = $tokenData['adi_soyadi'];
-        
-        if ($teacherName) {
-            // Öğretmen adı kontrolü daha esnek hale getir
-            $whereClause = " AND (o.ogretmen_adi = ? OR o.ogretmen_adi LIKE ? OR o.ogretmen_adi IS NULL)";
-            $params[] = $teacherName;
-            $params[] = '%' . $teacherName . '%';
-        }
+        // Öğretmenler için ek filtreleme gerekiyorsa buraya eklenebilir
+        // Şimdilik tüm sınav sonuçlarını göster
+        error_log("Teacher access: showing all results for teacher " . $tokenData['adi_soyadi']);
     }
     
     // Sınav sonuçlarını öğrenci bilgileriyle birlikte al
@@ -124,8 +118,7 @@ try {
     $sql = "
         SELECT 
             sr.*,
-            o.adi_soyadi as ogrenci_adi,
-            o.ogretmen_adi
+            o.adi_soyadi as ogrenci_adi
         FROM sinav_sonuclari sr
         LEFT JOIN ogrenciler o ON sr.ogrenci_id = o.id
         WHERE sr.sinav_id = ? $whereClause
