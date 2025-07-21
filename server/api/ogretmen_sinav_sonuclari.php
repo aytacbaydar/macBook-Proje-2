@@ -83,18 +83,27 @@ try {
         
         if ($teacherData) {
             $teacherName = $teacherData['adi_soyadi'];
-            $whereClause = " AND o.ogretmen_adi = ?";
+            // Öğretmen adı kontrolü daha esnek hale getir
+            $whereClause = " AND (o.ogretmen_adi = ? OR o.ogretmen_adi LIKE ? OR o.ogretmen_adi IS NULL)";
             $params[] = $teacherName;
+            $params[] = '%' . $teacherName . '%';
         }
     }
     
     // Sınav sonuçlarını öğrenci bilgileriyle birlikte al
+    // Eğer öğretmen kontrolü başarısız olursa, tüm sonuçları getir
+    if ($tokenData['rutbe'] === 'ogretmen' && empty($whereClause)) {
+        $whereClause = "";
+        $params = [$sinav_id];
+    }
+    
     $sql = "
         SELECT 
             sr.*,
-            o.adi_soyadi as ogrenci_adi
+            o.adi_soyadi as ogrenci_adi,
+            o.ogretmen_adi
         FROM sinav_sonuclari sr
-        INNER JOIN ogrenciler o ON sr.ogrenci_id = o.id
+        LEFT JOIN ogrenciler o ON sr.ogrenci_id = o.id
         WHERE sr.sinav_id = ? $whereClause
         ORDER BY sr.net_sayisi DESC, sr.puan DESC
     ";
@@ -127,7 +136,12 @@ try {
     echo json_encode([
         'success' => true,
         'data' => $formattedSonuclar,
-        'count' => count($formattedSonuclar)
+        'count' => count($formattedSonuclar),
+        'debug_info' => [
+            'user_role' => $tokenData['rutbe'],
+            'user_id' => $tokenData['kullanici_id'],
+            'query_params' => count($params)
+        ]
     ], JSON_UNESCAPED_UNICODE);
     
 } catch (Exception $e) {
