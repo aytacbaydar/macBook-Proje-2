@@ -57,12 +57,12 @@ export class OgretmenOgrenciSinavSonuclariSayfasiComponent implements OnInit {
 
   getExamTypeColor(sinavTuru: string): string {
     const colorMap: { [key: string]: string } = {
-      'TEST': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      'TAR': 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-      'TYT': 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-      'AYT': 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
+      'TEST': 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+      'TAR': 'linear-gradient(135deg, #10b981 0%, #059669 100%)', 
+      'TYT': 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+      'AYT': 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)'
     };
-    return colorMap[sinavTuru] || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+    return colorMap[sinavTuru] || 'linear-gradient(135deg, #6b7280 0%, #4b5563 100%)';
   }
 
   getExamTypeIcon(sinavTuru: string): string {
@@ -125,11 +125,11 @@ export class OgretmenOgrenciSinavSonuclariSayfasiComponent implements OnInit {
     return Math.max(...this.studentResults.map(result => result.net));
   }
 
-  getPercentageColor(percentage: number): string {
-    if (percentage >= 80) return '#28a745';
-    if (percentage >= 60) return '#ffc107';
-    if (percentage >= 40) return '#fd7e14';
-    return '#dc3545';
+  getPercentageColor(yuzde: number): string {
+    if (yuzde >= 85) return 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+    if (yuzde >= 70) return 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)';
+    if (yuzde >= 50) return 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)';
+    return 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
   }
 
   trackByStudentResult(index: number, result: SinavSonucu): number {
@@ -213,7 +213,7 @@ export class OgretmenOgrenciSinavSonuclariSayfasiComponent implements OnInit {
     // Önce user bilgilerinden token al
     const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
     let token = '';
-    
+
     if (userStr) {
       try {
         const user = JSON.parse(userStr);
@@ -222,19 +222,19 @@ export class OgretmenOgrenciSinavSonuclariSayfasiComponent implements OnInit {
         console.error('User bilgileri parse edilemedi:', error);
       }
     }
-    
+
     // Eğer user'dan token alınamazsa, direkt token'ı kontrol et
     if (!token) {
       token = localStorage.getItem('token') || sessionStorage.getItem('token') || '';
     }
-    
+
     if (!token) {
       console.error('Token bulunamadı - login sayfasına yönlendiriliyor');
       // Token yoksa login sayfasına yönlendir
       window.location.href = '/ogrenci-giris';
       return new HttpHeaders();
     }
-    
+
     console.log('Token bulundu, Authorization header oluşturuluyor');
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`,
@@ -242,3 +242,4 @@ export class OgretmenOgrenciSinavSonuclariSayfasiComponent implements OnInit {
     });
   }
 }
+`
