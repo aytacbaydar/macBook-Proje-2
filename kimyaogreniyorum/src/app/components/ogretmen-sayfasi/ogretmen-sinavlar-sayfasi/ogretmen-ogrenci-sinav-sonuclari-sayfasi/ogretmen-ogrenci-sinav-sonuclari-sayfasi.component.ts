@@ -10,6 +10,8 @@ interface SinavSonucu {
   yanlis_sayisi: number;
   bos_sayisi: number;
   net: number;
+  net_sayisi: number;
+  puan: number;
   yuzde: number;
   gonderim_tarihi: string;
 }
