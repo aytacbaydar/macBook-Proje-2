@@ -46,25 +46,19 @@ try {
     
     $conn = getConnection();
     
-    // Token kontrolü ve kullanıcı bilgilerini al
-    error_log("Checking token: " . substr($token, 0, 20) . "...");
+    // Legacy token sistemi ile kullanıcı doğrulama
+    error_log("Checking legacy token: " . substr($token, 0, 20) . "...");
     
-    $tokenStmt = $conn->prepare("SELECT kullanici_id, rutbe FROM tokens WHERE token = ? AND expires_at > NOW()");
+    $tokenStmt = $conn->prepare("SELECT id, adi_soyadi, email, rutbe FROM ogrenciler WHERE MD5(CONCAT(id, email, sifre)) = ? AND aktif = 1");
     $tokenStmt->execute([$token]);
     $tokenData = $tokenStmt->fetch(PDO::FETCH_ASSOC);
     
     if (!$tokenData) {
-        error_log("Token not found or expired in database");
-        // Token tablosunu kontrol et
-        $allTokensStmt = $conn->prepare("SELECT COUNT(*) as count FROM tokens WHERE token = ?");
-        $allTokensStmt->execute([$token]);
-        $tokenExists = $allTokensStmt->fetch(PDO::FETCH_ASSOC);
-        error_log("Token exists in DB: " . ($tokenExists['count'] > 0 ? 'Yes' : 'No'));
-        
-        throw new Exception('Geçersiz veya süresi dolmuş token');
+        error_log("Legacy token not found or user not active");
+        throw new Exception('Geçersiz token veya hesap aktif değil');
     }
     
-    error_log("Token validated for user: " . $tokenData['kullanici_id'] . " with role: " . $tokenData['rutbe']);
+    error_log("Legacy token validated for user: " . $tokenData['id'] . " with role: " . $tokenData['rutbe']);
     
     // Sadece öğretmen ve admin erişebilir
     if (!in_array($tokenData['rutbe'], ['ogretmen', 'admin'])) {
@@ -109,13 +103,10 @@ try {
     $params = [$sinav_id];
     
     if ($tokenData['rutbe'] === 'ogretmen') {
-        // Öğretmenin adını al
-        $teacherStmt = $conn->prepare("SELECT adi_soyadi FROM kullanicilar WHERE id = ?");
-        $teacherStmt->execute([$tokenData['kullanici_id']]);
-        $teacherData = $teacherStmt->fetch(PDO::FETCH_ASSOC);
+        // Öğretmenin adını token'dan al
+        $teacherName = $tokenData['adi_soyadi'];
         
-        if ($teacherData) {
-            $teacherName = $teacherData['adi_soyadi'];
+        if ($teacherName) {
             // Öğretmen adı kontrolü daha esnek hale getir
             $whereClause = " AND (o.ogretmen_adi = ? OR o.ogretmen_adi LIKE ? OR o.ogretmen_adi IS NULL)";
             $params[] = $teacherName;
@@ -172,7 +163,8 @@ try {
         'count' => count($formattedSonuclar),
         'debug_info' => [
             'user_role' => $tokenData['rutbe'],
-            'user_id' => $tokenData['kullanici_id'],
+            'user_id' => $tokenData['id'],
+            'user_name' => $tokenData['adi_soyadi'],
             'query_params' => count($params)
         ]
     ], JSON_UNESCAPED_UNICODE);
