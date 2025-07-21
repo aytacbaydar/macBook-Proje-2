@@ -13,9 +13,7 @@ header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
 try {
     $pdo = getConnection();
-    $pdo = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8mb4", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
+} catch (Exception $e) {
     echo json_encode(['success' => false, 'message' => 'Veritabanı bağlantısı başarısız: ' . $e->getMessage()]);
     exit;
 }
