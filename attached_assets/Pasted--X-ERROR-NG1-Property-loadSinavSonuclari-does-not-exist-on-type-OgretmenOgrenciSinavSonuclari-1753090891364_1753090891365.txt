@@ -1,0 +1,77 @@
+
+X [ERROR] NG1: Property 'loadSinavSonuclari' does not exist on type 'OgretmenOgrenciSinavSonuclariSayfasiComponent'. Did you mean 'loadSinavlar'? [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.html:26:44:
+      26 │       <button class="retry-button" (click)="loadSinavSonuclari()">
+         ╵                                             ~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:32:15:
+      32 │ ...plateUrl: './ogretmen-ogrenci-sinav-sonuclari-sayfasi.component...
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'trackBySinavId' does not exist on type 'OgretmenOgrenciSinavSonuclariSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.html:37:46:
+      37 │       *ngFor="let sinav of sinavlar; trackBy: trackBySinavId"
+         ╵                                               ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:32:15:
+      32 │ ...plateUrl: './ogretmen-ogrenci-sinav-sonuclari-sayfasi.component...
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'getExamTypeColor' does not exist on type 'OgretmenOgrenciSinavSonuclariSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.html:42:51:
+      42 │ ...m-header" [style.background]="getExamTypeColor(sinav.sinav_turu)">
+         ╵                                  ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:32:15:
+      32 │ ...plateUrl: './ogretmen-ogrenci-sinav-sonuclari-sayfasi.component...
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'getExamTypeIcon' does not exist on type 'OgretmenOgrenciSinavSonuclariSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.html:44:23:
+      44 │           <i class="{{ getExamTypeIcon(sinav.sinav_turu) }}"></i>
+         ╵                        ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:32:15:
+      32 │ ...plateUrl: './ogretmen-ogrenci-sinav-sonuclari-sayfasi.component...
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'getExamTypeLabel' does not exist on type 'OgretmenOgrenciSinavSonuclariSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.html:45:13:
+      45 │           {{ getExamTypeLabel(sinav.sinav_turu) }}
+         ╵              ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:32:15:
+      32 │ ...plateUrl: './ogretmen-ogrenci-sinav-sonuclari-sayfasi.component...
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'getRankClass' does not exist on type 'OgretmenOgrenciSinavSonuclariSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.html:127:47:
+      127 │               <div class="rank-badge" [class]="getRankClass(i)">
+          ╵                                                ~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:32:15:
+      32 │ ...plateUrl: './ogretmen-ogrenci-sinav-sonuclari-sayfasi.component...
+         ╵      
