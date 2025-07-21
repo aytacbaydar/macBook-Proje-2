@@ -1,44 +1,77 @@
 
-<div class="exams-container">
-  <div class="exams-header">
-    <h1 class="page-title">
-      <i class="bi bi-file-earmark-text me-2"></i>
-      Sınav İşlemleri
-    </h1>
-    <p class="page-description">Cevap anahtarlarını yönetin ve sınav sonuçlarını görüntüleyin</p>
+<div class="exam-operations-container">
+  <div class="modern-page-header">
+    <div class="header-content">
+      <div class="header-text">
+        <h1 class="modern-page-title">
+          <i class="bi bi-journal-text me-2"></i>
+          Sınav İşlemleri
+        </h1>
+        <p class="modern-page-description">
+          Sınav cevap anahtarlarını yönetin ve öğrenci sonuçlarını görüntüleyin
+        </p>
+      </div>
+    </div>
   </div>
 
-  <!-- Cards Grid -->
-  <div class="cards-grid">
-    <!-- Cevap Anahtarları Card -->
-    <div class="exam-card cevap-anahtari-card">
-      <div class="card-header">
-        <div class="card-icon">
-          <i class="bi bi-key"></i>
-        </div>
-        <div class="card-title-section">
-          <h3>Cevap Anahtarları</h3>
-          <p>Sınav cevap anahtarlarını yönetin</p>
-        </div>
+  <div class="cards-container">
+    <!-- Cevap Anahtarı Card -->
+    <div class="operation-card" (click)="navigateToCevapAnahtari()">
+      <div class="card-icon">
+        <i class="bi bi-key-fill"></i>
       </div>
       <div class="card-content">
-        <app-ogretmen-cevap-anahtari-sayfasi></app-ogretmen-cevap-anahtari-sayfasi>
+        <h3 class="card-title">Cevap Anahtarı</h3>
+        <p class="card-description">
+          Sınav cevap anahtarlarını oluşturun, düzenleyin ve yönetin
+        </p>
+        <div class="card-features">
+          <span class="feature-item">
+            <i class="bi bi-plus-circle"></i>
+            Yeni anahtar oluştur
+          </span>
+          <span class="feature-item">
+            <i class="bi bi-pencil-square"></i>
+            Mevcut anahtarları düzenle
+          </span>
+          <span class="feature-item">
+            <i class="bi bi-list-check"></i>
+            Anahtar listesi
+          </span>
+        </div>
+      </div>
+      <div class="card-arrow">
+        <i class="bi bi-arrow-right"></i>
       </div>
     </div>
 
     <!-- Sınav Sonuçları Card -->
-    <div class="exam-card sinav-sonuclari-card">
-      <div class="card-header">
-        <div class="card-icon">
-          <i class="bi bi-graph-up"></i>
-        </div>
-        <div class="card-title-section">
-          <h3>Sınav Sonuçları</h3>
-          <p>Öğrenci sınav sonuçlarını görüntüleyin</p>
-        </div>
+    <div class="operation-card" (click)="navigateToSinavSonuclari()">
+      <div class="card-icon">
+        <i class="bi bi-graph-up"></i>
       </div>
       <div class="card-content">
-        <app-ogretmen-ogrenci-sinav-sonuclari-sayfasi></app-ogretmen-ogrenci-sinav-sonuclari-sayfasi>
+        <h3 class="card-title">Sınav Sonuçları</h3>
+        <p class="card-description">
+          Öğrencilerin sınav sonuçlarını görüntüleyin ve analiz edin
+        </p>
+        <div class="card-features">
+          <span class="feature-item">
+            <i class="bi bi-table"></i>
+            Detaylı sonuç tabloları
+          </span>
+          <span class="feature-item">
+            <i class="bi bi-bar-chart"></i>
+            İstatistiksel analizler
+          </span>
+          <span class="feature-item">
+            <i class="bi bi-sort-numeric-down"></i>
+            Net sıralaması
+          </span>
+        </div>
+      </div>
+      <div class="card-arrow">
+        <i class="bi bi-arrow-right"></i>
       </div>
     </div>
   </div>

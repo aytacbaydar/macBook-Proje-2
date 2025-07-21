@@ -1,146 +1,174 @@
 
-.exams-container {
-  padding: 2rem;
+.exam-operations-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem;
 }
 
-.exams-header {
-  margin-bottom: 2rem;
+.modern-page-header {
   text-align: center;
-
-  .page-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #2c3e50;
-    margin-bottom: 0.5rem;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-
-  .page-description {
-    font-size: 1.1rem;
-    color: #7f8c8d;
-    margin: 0;
+  margin-bottom: 3rem;
+  
+  .header-content {
+    .header-text {
+      .modern-page-title {
+        color: white;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      }
+      
+      .modern-page-description {
+        color: rgba(255,255,255,0.9);
+        font-size: 1.1rem;
+        margin-bottom: 0;
+      }
+    }
   }
 }
 
-.cards-grid {
+.cards-container {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   gap: 2rem;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.exam-card {
+.operation-card {
   background: white;
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
   }
-
-  .card-header {
-    padding: 1.5rem 2rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+  
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    
+    &::before {
+      left: 100%;
+    }
+    
+    .card-arrow {
+      transform: translateX(10px);
+    }
+  }
+  
+  .card-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 20px;
     display: flex;
     align-items: center;
-    gap: 1rem;
-
-    .card-icon {
-      width: 50px;
-      height: 50px;
-      background: rgba(255,255,255,0.2);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-    }
-
-    .card-title-section {
-      h3 {
-        margin: 0 0 0.25rem 0;
-        font-size: 1.4rem;
-        font-weight: 600;
-      }
-
-      p {
-        margin: 0;
-        opacity: 0.9;
-        font-size: 0.9rem;
-      }
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    
+    i {
+      font-size: 2rem;
+      color: white;
     }
   }
-
+  
   .card-content {
-    padding: 0;
-    min-height: 400px;
-  }
-
-  &.cevap-anahtari-card .card-header {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  }
-
-  &.sinav-sonuclari-card .card-header {
-    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-  }
-}
-
-@media (min-width: 1024px) {
-  .cards-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-  }
-
-  .exam-card {
-    &:first-child {
-      grid-column: 1 / -1;
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 1rem;
     }
-
-    &:last-child {
-      grid-column: 1 / -1;
+    
+    .card-description {
+      color: #666;
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
     }
-  }
-}
-
-@media (max-width: 768px) {
-  .exams-container {
-    padding: 1rem;
-  }
-
-  .exams-header .page-title {
-    font-size: 2rem;
-  }
-
-  .exam-card {
-    .card-header {
-      padding: 1rem 1.5rem;
+    
+    .card-features {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
       
-      .card-icon {
-        width: 40px;
-        height: 40px;
-        font-size: 1.25rem;
-      }
-
-      .card-title-section {
-        h3 {
-          font-size: 1.2rem;
-        }
-
-        p {
+      .feature-item {
+        display: flex;
+        align-items: center;
+        color: #555;
+        font-size: 0.9rem;
+        
+        i {
+          width: 16px;
+          height: 16px;
+          margin-right: 0.5rem;
+          color: #667eea;
           font-size: 0.8rem;
         }
       }
     }
-
-    .card-content {
-      min-height: 300px;
+  }
+  
+  .card-arrow {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+    
+    i {
+      color: white;
+      font-size: 1rem;
     }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .exam-operations-container {
+    padding: 1rem;
+  }
+  
+  .modern-page-header {
+    .header-content {
+      .header-text {
+        .modern-page-title {
+          font-size: 2rem;
+        }
+        
+        .modern-page-description {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+  
+  .cards-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .operation-card {
+    padding: 1.5rem;
   }
 }
