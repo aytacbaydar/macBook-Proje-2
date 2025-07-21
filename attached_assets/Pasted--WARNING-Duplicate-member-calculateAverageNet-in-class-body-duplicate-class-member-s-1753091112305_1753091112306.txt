@@ -1,0 +1,175 @@
+
+▲ [WARNING] Duplicate member "calculateAverageNet" in class body [duplicate-class-member]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:471:4:
+      471 │     calculateAverageNet(): number {
+          ╵     ~~~~~~~~~~~~~~~~~~~
+
+  The original member "calculateAverageNet" is here:
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:390:4:
+      390 │     calculateAverageNet(): number {
+          ╵     ~~~~~~~~~~~~~~~~~~~
+
+
+▲ [WARNING] Duplicate member "getHighestNet" in class body [duplicate-class-member]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:477:4:
+      477 │     getHighestNet(): number {
+          ╵     ~~~~~~~~~~~~~
+
+  The original member "getHighestNet" is here:
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:396:4:
+      396 │     getHighestNet(): number {
+          ╵     ~~~~~~~~~~~~~
+
+
+▲ [WARNING] Duplicate member "getPercentageColor" in class body [duplicate-class-member]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:482:4:
+      482 │     getPercentageColor(percentage: number): string {
+          ╵     ~~~~~~~~~~~~~~~~~~
+
+  The original member "getPercentageColor" is here:
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:401:4:
+      401 │     getPercentageColor(percentage: number): string {
+          ╵     ~~~~~~~~~~~~~~~~~~
+
+
+▲ [WARNING] Duplicate member "formatDate" in class body [duplicate-class-member]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:491:4:
+      491 │     formatDate(dateString: string): string {
+          ╵     ~~~~~~~~~~
+
+  The original member "formatDate" is here:
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:370:4:
+      370 │     formatDate(dateString: string): string {
+          ╵     ~~~~~~~~~~
+
+
+▲ [WARNING] Duplicate member "formatDateTime" in class body [duplicate-class-member]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:500:4:
+      500 │     formatDateTime(dateString: string): string {
+          ╵     ~~~~~~~~~~~~~~
+
+  The original member "formatDateTime" is here:
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:379:4:
+      379 │     formatDateTime(dateString: string): string {
+          ╵     ~~~~~~~~~~~~~~
+
+
+▲ [WARNING] Duplicate member "trackByStudentResult" in class body [duplicate-class-member]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:511:4:
+      511 │     trackByStudentResult(index: number, result: SinavSonucu): num...
+          ╵     ~~~~~~~~~~~~~~~~~~~~
+
+  The original member "trackByStudentResult" is here:
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:410:4:
+      410 │     trackByStudentResult(index: number, result: any): any {
+          ╵     ~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:97:2:
+      97 │   formatDate(dateString: string): string {
+         ╵   ~~~~~~~~~~
+
+
+X [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:107:2:
+      107 │   formatDateTime(dateString: string): string {
+          ╵   ~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:119:2:
+      119 │   calculateAverageNet(): number {
+          ╵   ~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2339: Property 'net' does not exist on type 'SinavSonucu'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:121:78:
+      121 │ ...this.studentResults.reduce((sum, result) => sum + result.net, 0);
+          ╵                                                             ~~~
+
+
+X [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:125:2:
+      125 │   getHighestNet(): number {
+          ╵   ~~~~~~~~~~~~~
+
+
+X [ERROR] TS2339: Property 'net' does not exist on type 'SinavSonucu'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:127:64:
+      127 │ ...eturn Math.max(...this.studentResults.map(result => result.net));
+          ╵                                                               ~~~
+
+
+X [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:130:2:
+      130 │   getPercentageColor(percentage: number): string {
+          ╵   ~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:137:2:
+      137 │   trackByStudentResult(index: number, result: any): any {
+          ╵   ~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:204:2:
+      204 │   calculateAverageNet(): number {
+          ╵   ~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:210:2:
+      210 │   getHighestNet(): number {
+          ╵   ~~~~~~~~~~~~~
+
+
+X [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:215:2:
+      215 │   getPercentageColor(percentage: number): string {
+          ╵   ~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:222:2:
+      222 │   formatDate(dateString: string): string {
+          ╵   ~~~~~~~~~~
+
+
+X [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:232:2:
+      232 │   formatDateTime(dateString: string): string {
+          ╵   ~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:244:2:
+      244 │   trackByStudentResult(index: number, result: SinavSonucu): number {
+          ╵   ~~~~~~~~~~~~~~~~~~~~
