@@ -297,12 +297,19 @@
             </div>
           </div>
 
-          <div *ngIf="!studentQuestionDetails || studentQuestionDetails.length === 0" class="text-center py-4">
+          <div *ngIf="(!studentQuestionDetails || studentQuestionDetails.length === 0) && !loadingStudentDetail" class="text-center py-4">
             <div class="empty-state">
               <i class="bi bi-question-circle text-muted" style="font-size: 3rem;"></i>
               <h5 class="text-muted mt-3">Soru detayları yüklenemedi</h5>
               <p class="text-muted">Bu sınava ait soru detayları bulunamadı.</p>
             </div>
+          </div>
+
+          <div *ngIf="loadingStudentDetail" class="text-center p-3">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Yükleniyor...</span>
+            </div>
+            <p class="mt-2 mb-0">Soru detayları yükleniyor...</p>
           </div>
         </div>
       </div>

@@ -126,6 +126,7 @@ export class OgretmenOgrenciSinavSonuclariSayfasiComponent implements OnInit {
     this.showStudentDetailModal = true;
     this.loadingStudentDetail = true;
     this.selectedStudentDetail = null;
+    this.studentQuestionDetails = [];
 
     // Load student detail from API
     this.http.get<any>(`./server/api/sinav_detay_sonuc.php?sinav_id=${studentResult.sinav_id}&ogrenci_id=${studentResult.ogrenci_id}`)
@@ -134,9 +135,15 @@ export class OgretmenOgrenciSinavSonuclariSayfasiComponent implements OnInit {
           this.loadingStudentDetail = false;
           if (response.success && response.data) {
             this.selectedStudentDetail = response.data;
+            // Soru detayları zaten API'den geliyor
+            if (response.data.sorular && response.data.sorular.length > 0) {
+              this.studentQuestionDetails = response.data.sorular;
+              console.log('Soru detayları yüklendi:', this.studentQuestionDetails);
+            } else {
+              console.warn('API\'den soru detayları gelmedi');
+              this.studentQuestionDetails = [];
+            }
             console.log('Student detail loaded:', this.selectedStudentDetail);
-            // Soru detaylarını da yükle
-            this.loadStudentQuestionDetails(studentResult.ogrenci_id);
           } else {
             console.error('Failed to load student detail:', response.message);
           }
@@ -298,24 +305,23 @@ export class OgretmenOgrenciSinavSonuclariSayfasiComponent implements OnInit {
 
     const headers = this.getAuthHeaders();
 
-    this.http.get<any>('./server/api/ogrenci_sinav_detay.php', {
-      headers,
-      params: {
-        sinav_id: this.selectedSinav.id.toString(),
-        ogrenci_id: ogrenciId.toString()
-      }
-    }).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.studentQuestionDetails = response.data.soru_detaylari;
-        } else {
-          console.error('Soru detayları yüklenemedi:', response.message);
+    // sinav_detay_sonuc.php API'sini kullan - bu zaten soru detaylarını da döndürüyor
+    this.http.get<any>(`./server/api/sinav_detay_sonuc.php?sinav_id=${this.selectedSinav.id}&ogrenci_id=${ogrenciId}`, { headers })
+      .subscribe({
+        next: (response) => {
+          if (response.success && response.data && response.data.sorular) {
+            this.studentQuestionDetails = response.data.sorular;
+            console.log('Soru detayları yüklendi:', this.studentQuestionDetails);
+          } else {
+            console.error('Soru detayları yüklenemedi:', response.message);
+            this.studentQuestionDetails = [];
+          }
+        },
+        error: (error) => {
+          console.error('Soru detayları yükleme hatası:', error);
+          this.studentQuestionDetails = [];
         }
-      },
-      error: (error) => {
-        console.error('Soru detayları yükleme hatası:', error);
-      }
-    });
+      });
   }
 
   
