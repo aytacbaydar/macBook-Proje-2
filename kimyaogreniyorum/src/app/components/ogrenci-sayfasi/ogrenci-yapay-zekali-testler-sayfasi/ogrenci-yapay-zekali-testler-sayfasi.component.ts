@@ -24,6 +24,8 @@ interface TestSoru {
   sinif_seviyesi: string;
   zorluk_derecesi: string;
   soru_metni: string;
+  soru_resmi?: string;
+  aciklama?: string;
   secenekler: {
     A: string;
     B: string;
@@ -36,6 +38,7 @@ interface TestSoru {
 
 interface Test {
   id: string;
+  test_adi?: string;
   sorular: TestSoru[];
   olusturma_tarihi: string;
   toplam_soru: number;
@@ -56,6 +59,21 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   selectedBestTopics: string[] = [];
   improvementQuestionCount = 5;
   advancedQuestionCount = 3;
+  challengeQuestionCount = 3;
+  
+  // Template'de kullanılan computed properties
+  get improvementTopics(): KonuAnalizi[] {
+    return this.getGelistirilmesiGerekenKonular();
+  }
+  
+  get bestTopics(): KonuAnalizi[] {
+    return this.getEnIyiKonular();
+  }
+  
+  get currentQuestion(): TestSoru | null {
+    if (!this.currentTest || !this.currentTest.sorular) return null;
+    return this.currentTest.sorular[this.currentQuestionIndex] || null;
+  }
   
   // Mevcut test
   currentTest: Test | null = null;
@@ -351,5 +369,10 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   clearMessages(): void {
     this.error = null;
     this.success = null;
+  }
+
+  // Template'de kullanılan PDF indirme metodu
+  downloadTestPDF(): void {
+    this.generatePDF();
   }
 }
