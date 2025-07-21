@@ -66,25 +66,13 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
     { value: 'zor', label: 'Zor' }
   ];
   
-  konuListesi = [
-    'Atom ve Molekül',
-    'Periyodik Sistem',
-    'Kimyasal Bağlar',
-    'Maddenin Halleri',
-    'Çözeltiler',
-    'Asit ve Bazlar',
-    'Kimyasal Tepkimeler',
-    'Gazlar',
-    'Termokimya',
-    'Kimyasal Denge',
-    'Elektrokimya',
-    'Organik Kimya'
-  ];
+  konuListesi: string[] = [];
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     this.loadTeacherInfo();
+    this.loadKonuListesi();
     this.loadSorular();
   }
 
@@ -323,5 +311,52 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
       return `./server/uploads/soru_resimleri/${soru.soru_resmi}`;
     }
     return '';
+  }
+
+  loadKonuListesi(): void {
+    this.http.get<any>('./server/api/konu_listesi.php').subscribe({
+      next: (response) => {
+        if (response.success && response.konular) {
+          // Tekrar eden konu adlarını kaldır ve alfabetik sırala
+          const benzersizKonular = [...new Set(response.konular.map((konu: any) => konu.konu_adi))];
+          this.konuListesi = benzersizKonular.sort();
+        } else {
+          console.error('Konular yüklenirken hata:', response.message);
+          // Hata durumunda varsayılan liste
+          this.konuListesi = [
+            'Atom ve Molekül',
+            'Periyodik Sistem',
+            'Kimyasal Bağlar',
+            'Maddenin Halleri',
+            'Çözeltiler',
+            'Asit ve Bazlar',
+            'Kimyasal Tepkimeler',
+            'Gazlar',
+            'Termokimya',
+            'Kimyasal Denge',
+            'Elektrokimya',
+            'Organik Kimya'
+          ];
+        }
+      },
+      error: (error) => {
+        console.error('Konular yüklenirken hata:', error);
+        // Hata durumunda varsayılan liste
+        this.konuListesi = [
+          'Atom ve Molekül',
+          'Periyodik Sistem',
+          'Kimyasal Bağlar',
+          'Maddenin Halleri',
+          'Çözeltiler',
+          'Asit ve Bazlar',
+          'Kimyasal Tepkimeler',
+          'Gazlar',
+          'Termokimya',
+          'Kimyasal Denge',
+          'Elektrokimya',
+          'Organik Kimya'
+        ];
+      }
+    });
   }
 }
