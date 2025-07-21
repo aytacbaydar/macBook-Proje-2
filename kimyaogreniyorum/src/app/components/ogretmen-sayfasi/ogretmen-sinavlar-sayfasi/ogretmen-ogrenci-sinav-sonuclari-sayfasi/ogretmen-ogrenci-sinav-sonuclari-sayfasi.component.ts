@@ -44,6 +44,7 @@ export class OgretmenOgrenciSinavSonuclariSayfasiComponent implements OnInit {
   loading = false;
   loadingResults = false;
   error: string | null = null;
+  studentQuestionDetails: any[] = [];
 
   private apiUrl = 'https://www.kimyaogreniyorum.com/server/api';
 
@@ -284,5 +285,83 @@ export class OgretmenOgrenciSinavSonuclariSayfasiComponent implements OnInit {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
+  }
+
+  // Öğrenci soru detaylarını yükle
+  loadStudentQuestionDetails(ogrenciId: number) {
+    if (!this.selectedSinav) {
+      return;
+    }
+
+    const headers = this.getAuthHeaders();
+
+    this.http.get<any>('./server/api/ogrenci_sinav_detay.php', {
+      headers,
+      params: {
+        sinav_id: this.selectedSinav.id.toString(),
+        ogrenci_id: ogrenciId.toString()
+      }
+    }).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.studentQuestionDetails = response.data.soru_detaylari;
+        } else {
+          console.error('Soru detayları yüklenemedi:', response.message);
+        }
+      },
+      error: (error) => {
+        console.error('Soru detayları yükleme hatası:', error);
+      }
+    });
+  }
+
+  // Modal işlemleri
+  showStudentDetail(ogrenci: any) {
+    this.selectedStudentDetail = ogrenci;
+    this.showStudentDetailModal = true;
+    // Soru detaylarını yükle
+    this.loadStudentQuestionDetails(ogrenci.id);
+  }
+
+  closeStudentDetailModal() {
+    this.showStudentDetailModal = false;
+    this.selectedStudentDetail = null;
+    this.studentQuestionDetails = [];
+  }
+
+  // Soru detayları için yardımcı metodlar
+  getQuestionRowClass(soru: any): string {
+    if (!soru.ogrenci_cevabi) {
+      return 'table-warning'; // Boş cevap
+    }
+    return soru.ogrenci_cevabi === soru.dogru_cevap ? 'table-success' : 'table-danger';
+  }
+
+  getAnswerBadgeClass(ogrenciCevabi: string): string {
+    if (!ogrenciCevabi) {
+      return 'bg-warning text-dark';
+    }
+    return 'bg-primary';
+  }
+
+  getStatusBadgeClass(soru: any): string {
+    if (!soru.ogrenci_cevabi) {
+      return 'bg-warning text-dark';
+    }
+    return soru.ogrenci_cevabi === soru.dogru_cevap ? 'bg-success' : 'bg-danger';
+  }
+
+  getStatusIcon(soru: any): string {
+    if (!soru.ogrenci_cevabi) {
+      return 'bi bi-dash-circle';
+    }
+    return soru.ogrenci_cevabi === soru.dogru_cevap ? 'bi bi-check-circle' : 'bi bi-x-circle';
+  }
+
+  getStatusText(soru: any): string {
+    if (!soru.ogrenci_cevabi) {
+      return 'BOŞ';
+    }
+    return soru.ogrenci_cevabi === soru.dogru_cevap ? 'DOĞRU' : 'YANLIŞ';
   }
 }

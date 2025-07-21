@@ -192,3 +192,118 @@
     </div>
   </div>
 </div>
+<!-- Öğrenci Sınav Detayı Modal -->
+<div class="modal fade" [class.show]="showStudentDetailModal" [style.display]="showStudentDetailModal ? 'block' : 'none'" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">
+          <i class="bi bi-person-lines-fill me-2"></i>
+          {{ selectedStudentDetail?.ogrenci_adi }} - Sınav Detayı
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeStudentDetailModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="selectedStudentDetail" class="student-exam-detail">
+          <!-- Özet Bilgiler -->
+          <div class="row mb-4">
+            <div class="col-md-3">
+              <div class="stat-card bg-success text-white">
+                <div class="stat-icon">
+                  <i class="bi bi-check-circle-fill"></i>
+                </div>
+                <div class="stat-content">
+                  <h3>{{ selectedStudentDetail.dogru_sayisi }}</h3>
+                  <p>Doğru</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-card bg-danger text-white">
+                <div class="stat-icon">
+                  <i class="bi bi-x-circle-fill"></i>
+                </div>
+                <div class="stat-content">
+                  <h3>{{ selectedStudentDetail.yanlis_sayisi }}</h3>
+                  <p>Yanlış</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-card bg-warning text-white">
+                <div class="stat-icon">
+                  <i class="bi bi-dash-circle-fill"></i>
+                </div>
+                <div class="stat-content">
+                  <h3>{{ selectedStudentDetail.bos_sayisi }}</h3>
+                  <p>Boş</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-card bg-info text-white">
+                <div class="stat-icon">
+                  <i class="bi bi-calculator"></i>
+                </div>
+                <div class="stat-content">
+                  <h3>{{ calculateNet(selectedStudentDetail) }}</h3>
+                  <p>Net</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Soru Detayları -->
+          <div class="question-details" *ngIf="studentQuestionDetails && studentQuestionDetails.length > 0">
+            <h6 class="fw-bold mb-3">Soru Bazında Analiz:</h6>
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead class="table-dark">
+                  <tr>
+                    <th>Soru No</th>
+                    <th>Öğrenci Cevabı</th>
+                    <th>Doğru Cevap</th>
+                    <th>Durum</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let soru of studentQuestionDetails" [class]="getQuestionRowClass(soru)">
+                    <td class="fw-bold">{{ soru.soru_no }}</td>
+                    <td>
+                      <span class="badge fs-6" [class]="getAnswerBadgeClass(soru.ogrenci_cevabi)">
+                        {{ soru.ogrenci_cevabi || 'BOŞ' }}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="badge bg-success fs-6">{{ soru.dogru_cevap }}</span>
+                    </td>
+                    <td>
+                      <span class="badge fs-6" [class]="getStatusBadgeClass(soru)">
+                        <i [class]="getStatusIcon(soru)" class="me-1"></i>
+                        {{ getStatusText(soru) }}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div *ngIf="!studentQuestionDetails || studentQuestionDetails.length === 0" class="text-center py-4">
+            <div class="empty-state">
+              <i class="bi bi-question-circle text-muted" style="font-size: 3rem;"></i>
+              <h5 class="text-muted mt-3">Soru detayları yüklenemedi</h5>
+              <p class="text-muted">Bu sınava ait soru detayları bulunamadı.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeStudentDetailModal()">
+          <i class="bi bi-x-lg me-1"></i>
+          Kapat
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
