@@ -1,0 +1,140 @@
+X [ERROR] NG9: Property 'improvementTopics' does not exist on type 'OgrenciYapayZekaliTestlerSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:48:35:
+      48 │                *ngFor="let konu of improvementTopics"
+         ╵                                    ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:47:15:
+      47 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'bestTopics' does not exist on type 'OgrenciYapayZekaliTestlerSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:60:35:
+      60 │                *ngFor="let konu of bestTopics"
+         ╵                                    ~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:47:15:
+      47 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'challengeQuestionCount' does not exist on type 'OgrenciYapayZekaliTestlerSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:79:34:
+      79 │                      [(ngModel)]="challengeQuestionCount"
+         ╵                                   ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:47:15:
+      47 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'challengeQuestionCount' does not exist on type 'OgrenciYapayZekaliTestlerSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:79:34:
+      79 │                      [(ngModel)]="challengeQuestionCount"
+         ╵                                   ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:47:15:
+      47 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'test_adi' does not exist on type 'Test'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:101:27:
+      101 │         <h3>{{ currentTest.test_adi }}</h3>
+          ╵                            ~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:47:15:
+      47 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'downloadTestPDF' does not exist on type 'OgrenciYapayZekaliTestlerSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:112:57:
+      112 │ ...utline-primary" (click)="downloadTestPDF()" [disabled]="loading">
+          ╵                             ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:47:15:
+      47 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'soru_resmi' does not exist on type 'TestSoru'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:132:61:
+      132 │ ...  <div class="question-image" *ngIf="currentQuestion.soru_resmi">
+          ╵                                                         ~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:47:15:
+      47 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'soru_resmi' does not exist on type 'TestSoru'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:133:40:
+      133 │ ...mg [src]="currentQuestion.soru_resmi" alt="Soru Görseli" clas...
+          ╵                              ~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:47:15:
+      47 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'aciklama' does not exist on type 'TestSoru'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:136:67:
+      136 │ ...iv class="question-description" *ngIf="currentQuestion.aciklama">
+          ╵                                                           ~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:47:15:
+      47 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'aciklama' does not exist on type 'TestSoru'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:137:34:
+      137 │             <p>{{ currentQuestion.aciklama }}</p>
+          ╵                                   ~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:47:15:
+      47 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'downloadTestPDF' does not exist on type 'OgrenciYapayZekaliTestlerSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:236:59:
+      236 │ ...on class="btn btn-outline-secondary" (click)="downloadTestPDF()">
+          ╵                                                  ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:47:15:
+      47 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
