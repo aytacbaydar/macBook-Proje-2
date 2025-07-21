@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CevapAnahtari } from '../../modeller/cevap-anahtari';
@@ -173,7 +173,20 @@ export class OgretmenCevapAnahtariSayfasiComponent
   }
   loadCevapAnahtarlari() {
     this.loading = true;
-    this.http.get<any>('./server/api/cevap-anahtarlari-listele.php').subscribe({
+    
+    // Token'ı al
+    let token = '';
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      token = user.token || '';
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    this.http.get<any>('./server/api/cevap-anahtarlari-listele.php', { headers }).subscribe({
       next: (response: any) => {
         this.loading = false;
         if (response.success) {
