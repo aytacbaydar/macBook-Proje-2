@@ -308,7 +308,7 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
 
   getSoruResmiUrl(soru: Soru): string {
     if (soru.soru_resmi) {
-      return `./server/uploads/soru_resimleri/${soru.soru_resmi}`;
+      return `./uploads/soru_resimleri/${soru.soru_resmi}`;
     }
     return '';
   }
