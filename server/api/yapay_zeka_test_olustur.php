@@ -1,4 +1,12 @@
 <?php
+// Error handling başlat
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Output buffering ile hata yakalama
+ob_start();
+
 require_once '../config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -10,6 +18,21 @@ header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+// PHP hatalarını yakala
+register_shutdown_function(function() {
+    $error = error_get_last();
+    if ($error !== NULL && $error['type'] === E_ERROR) {
+        ob_clean();
+        http_response_code(500);
+        echo json_encode([
+            'success' => false, 
+            'message' => 'PHP Fatal Error: ' . $error['message'],
+            'file' => $error['file'],
+            'line' => $error['line']
+        ]);
+    }
+});
 
 try {
     $pdo = getConnection();
@@ -189,5 +212,10 @@ if (!empty($test_sorulari)) {
     ]);
 } else {
     echo json_encode(['success' => false, 'message' => 'Seçilen konular için soru bulunamadı']);
+}
+
+// Output buffer'ı temizle ve gönder
+if (ob_get_length()) {
+    ob_end_flush();
 }
 ?>

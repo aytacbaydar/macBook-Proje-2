@@ -132,6 +132,14 @@ if (strpos($requestUri, $basePath) === 0) {
             require_once 'api/mesaj_okundu.php';
             break;
 
+        case 'yapay_zeka_test_olustur':
+            require_once 'api/yapay_zeka_test_olustur.php';
+            break;
+
+        case 'yapay_zeka_test_pdf':
+            require_once 'api/yapay_zeka_test_pdf.php';
+            break;
+
         default:
             http_response_code(404);
             echo json_encode(['error' => 'API endpoint bulunamadı']);
