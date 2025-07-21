@@ -57,8 +57,24 @@ try {
 
     $token = trim($matches[1]);
 
-    // Cevap anahtarlarını al
-    $stmt = $pdo->query("SELECT * FROM cevapAnahtari ORDER BY created_at DESC");
+    // Sınavları katılımcı sayısı ile birlikte listele
+    $sql = "
+        SELECT 
+            ca.*,
+            COALESCE(katilimci.katilimci_sayisi, 0) as katilimci_sayisi
+        FROM cevap_anahtarlari ca
+        LEFT JOIN (
+            SELECT 
+                sinav_id,
+                COUNT(DISTINCT ogrenci_id) as katilimci_sayisi
+            FROM sinav_sonuclari 
+            GROUP BY sinav_id
+        ) katilimci ON ca.id = katilimci.sinav_id
+        ORDER BY ca.olusturma_tarihi DESC
+    ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+
     $cevapAnahtarlari = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // JSON alanlarını decode et
