@@ -23,7 +23,7 @@ try {
     $pdo = getConnection();
 
     // Tablo var mı kontrol et
-    $stmt = $pdo->query("SHOW TABLES LIKE 'cevapAnahtari'");
+    $stmt = $pdo->query("SHOW TABLES LIKE 'cevap_anahtarlari'");
     if ($stmt->rowCount() == 0) {
         // Tablo yoksa boş dizi döndür
         successResponse([], 'Tablo bulunamadı, boş liste döndürülüyor.');
@@ -70,7 +70,7 @@ try {
             FROM sinav_sonuclari 
             GROUP BY sinav_id
         ) katilimci ON ca.id = katilimci.sinav_id
-        ORDER BY ca.olusturma_tarihi DESC
+        ORDER BY ca.created_at DESC
     ";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
