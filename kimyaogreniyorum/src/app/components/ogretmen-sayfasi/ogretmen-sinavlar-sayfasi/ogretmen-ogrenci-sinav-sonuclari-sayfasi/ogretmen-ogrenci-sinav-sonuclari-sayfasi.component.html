@@ -169,6 +169,14 @@
             <td class="text-center text-muted">
               <small>{{ formatDateTime(result.gonderim_tarihi) }}</small>
             </td>
+            <td class="text-center">
+              <button 
+                class="btn btn-sm btn-outline-primary me-1" 
+                (click)="showStudentDetail(result)"
+                title="Detay Görüntüle">
+                <i class="bi bi-eye"></i>
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
