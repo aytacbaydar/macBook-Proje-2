@@ -318,7 +318,7 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
       next: (response) => {
         if (response.success && response.konular) {
           // Tekrar eden konu adlarını kaldır ve alfabetik sırala
-          const benzersizKonular = [...new Set(response.konular.map((konu: any) => konu.konu_adi))];
+          const benzersizKonular = [...new Set(response.konular.map((konu: any) => konu.konu_adi))] as string[];
           this.konuListesi = benzersizKonular.sort();
         } else {
           console.error('Konular yüklenirken hata:', response.message);
