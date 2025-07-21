@@ -1,15 +1,15 @@
-
 <?php
+require_once '../config.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
-
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    exit(0);
-}
-
-require_once '../config.php';
 
 try {
     $pdo = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8mb4", $username, $password);
@@ -95,14 +95,14 @@ foreach ($sorular as $index => $soru) {
             <span class="zorluk-badge ' . $soru['zorluk_derecesi'] . '">' . ucfirst($soru['zorluk_derecesi']) . '</span>
         </div>
         <div class="secenekler">';
-    
+
     $secenekler = ['A', 'B', 'C', 'D'];
     foreach ($secenekler as $harf) {
         if (isset($soru['secenekler'][$harf])) {
             $html_content .= '<div class="secenek">' . $harf . ') ' . htmlspecialchars($soru['secenekler'][$harf]) . '</div>';
         }
     }
-    
+
     $html_content .= '
         </div>
     </div>';

@@ -1,15 +1,15 @@
-
 <?php
+require_once '../config.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
-
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    exit(0);
-}
-
-require_once '../config.php';
 
 try {
     $pdo = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8mb4", $username, $password);
@@ -52,17 +52,17 @@ if (!empty($gelistirilmesi_gereken_konular)) {
             AND zorluk_derecesi = 'kolay' 
             ORDER BY RAND() 
             LIMIT ?";
-    
+
     $params = array_merge($gelistirilmesi_gereken_konular, [$kolay_soru_sayisi]);
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
     $kolay_sorular = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
     foreach ($kolay_sorular as &$soru) {
         $soru['secenekler'] = json_decode($soru['secenekler'], true);
         $soru['test_tipi'] = 'gelistirilmesi_gereken';
     }
-    
+
     $test_sorulari = array_merge($test_sorulari, $kolay_sorular);
 }
 
@@ -74,24 +74,24 @@ if (!empty($en_iyi_konular)) {
             AND zorluk_derecesi = 'zor' 
             ORDER BY RAND() 
             LIMIT ?";
-    
+
     $params = array_merge($en_iyi_konular, [$zor_soru_sayisi]);
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
     $zor_sorular = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
     foreach ($zor_sorular as &$soru) {
         $soru['secenekler'] = json_decode($soru['secenekler'], true);
         $soru['test_tipi'] = 'en_iyi';
     }
-    
+
     $test_sorulari = array_merge($test_sorulari, $zor_sorular);
 }
 
 // Test sonuçlarını kaydet
 if (!empty($test_sorulari)) {
     $test_id = uniqid('test_');
-    
+
     // Test tablosunu oluştur
     $createTestTableSQL = "
     CREATE TABLE IF NOT EXISTS yapay_zeka_testler (
@@ -102,13 +102,13 @@ if (!empty($test_sorulari)) {
         tamamlanma_tarihi TIMESTAMP NULL,
         sonuc JSON NULL
     )";
-    
+
     $pdo->exec($createTestTableSQL);
-    
+
     $sql = "INSERT INTO yapay_zeka_testler (id, ogrenci_id, sorular) VALUES (?, ?, ?)";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$test_id, $ogrenci_id, json_encode($test_sorulari)]);
-    
+
     echo json_encode([
         'success' => true, 
         'message' => 'Test başarıyla oluşturuldu',
