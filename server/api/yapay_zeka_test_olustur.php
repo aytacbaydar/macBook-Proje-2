@@ -140,7 +140,7 @@ $test_sorulari = [];
 
 // Geliştirilmesi gereken konulardan kolay sorular
 if (!empty($gelistirilmesi_gereken_konular)) {
-    $konu_placeholders = str_repeat('?,', count($gelistirilmesi_gereken_konular) - 1) . '?';
+    $konu_placeholders = implode(',', array_fill(0, count($gelistirilmesi_gereken_konular), '?'));
     $sql = "SELECT * FROM yapay_zeka_sorular 
             WHERE konu_adi IN ($konu_placeholders) 
             AND zorluk_derecesi = 'kolay' 
@@ -148,9 +148,19 @@ if (!empty($gelistirilmesi_gereken_konular)) {
             LIMIT ?";
 
     $params = array_merge($gelistirilmesi_gereken_konular, [$kolay_soru_sayisi]);
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute($params);
-    $kolay_sorular = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Debug için
+    error_log("Kolay sorular SQL: " . $sql);
+    error_log("Kolay sorular parametreleri: " . json_encode($params));
+    
+    try {
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        $kolay_sorular = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'message' => 'Kolay sorular sorgusu hatası: ' . $e->getMessage()]);
+        exit;
+    }
 
     foreach ($kolay_sorular as &$soru) {
         $soru['secenekler'] = json_decode($soru['secenekler'], true);
@@ -162,7 +172,7 @@ if (!empty($gelistirilmesi_gereken_konular)) {
 
 // En iyi konulardan zor sorular
 if (!empty($en_iyi_konular)) {
-    $konu_placeholders = str_repeat('?,', count($en_iyi_konular) - 1) . '?';
+    $konu_placeholders = implode(',', array_fill(0, count($en_iyi_konular), '?'));
     $sql = "SELECT * FROM yapay_zeka_sorular 
             WHERE konu_adi IN ($konu_placeholders) 
             AND zorluk_derecesi = 'zor' 
@@ -170,9 +180,19 @@ if (!empty($en_iyi_konular)) {
             LIMIT ?";
 
     $params = array_merge($en_iyi_konular, [$zor_soru_sayisi]);
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute($params);
-    $zor_sorular = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Debug için
+    error_log("Zor sorular SQL: " . $sql);
+    error_log("Zor sorular parametreleri: " . json_encode($params));
+    
+    try {
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        $zor_sorular = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'message' => 'Zor sorular sorgusu hatası: ' . $e->getMessage()]);
+        exit;
+    }
 
     foreach ($zor_sorular as &$soru) {
         $soru['secenekler'] = json_decode($soru['secenekler'], true);
