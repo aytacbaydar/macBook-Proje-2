@@ -8,6 +8,7 @@ interface Soru {
   sinif_seviyesi: string;
   zorluk_derecesi: 'kolay' | 'orta' | 'zor';
   soru_metni: string;
+  soru_resmi?: string;
   secenekler: {
     A: string;
     B: string;
@@ -56,6 +57,10 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
   loading = false;
   error: string | null = null;
   success: string | null = null;
+  
+  // Resim upload
+  selectedFile: File | null = null;
+  imagePreview: string | null = null;
   
   // Filtreler
   filterKonu = '';
@@ -170,6 +175,8 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
       dogru_cevap: 'A',
       ogretmen_id: this.teacherInfo?.id || 0
     };
+    this.selectedFile = null;
+    this.imagePreview = null;
     this.error = null;
     this.success = null;
   }
@@ -180,8 +187,9 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
       return false;
     }
     
-    if (!this.yeniSoru.soru_metni.trim()) {
-      this.error = 'Soru metni gerekli';
+    // Soru metni veya resim en az birisi olmalı
+    if (!this.yeniSoru.soru_metni.trim() && !this.selectedFile) {
+      this.error = 'Soru metni veya soru resmi gerekli';
       return false;
     }
     
@@ -202,7 +210,20 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
     this.error = null;
     this.success = null;
     
-    this.http.post<any>('./server/api/soru_yonetimi.php', this.yeniSoru).subscribe({
+    const formData = new FormData();
+    formData.append('konu_adi', this.yeniSoru.konu_adi);
+    formData.append('sinif_seviyesi', this.yeniSoru.sinif_seviyesi);
+    formData.append('zorluk_derecesi', this.yeniSoru.zorluk_derecesi);
+    formData.append('soru_metni', this.yeniSoru.soru_metni);
+    formData.append('secenekler', JSON.stringify(this.yeniSoru.secenekler));
+    formData.append('dogru_cevap', this.yeniSoru.dogru_cevap);
+    formData.append('ogretmen_id', this.yeniSoru.ogretmen_id.toString());
+    
+    if (this.selectedFile) {
+      formData.append('soru_resmi', this.selectedFile);
+    }
+    
+    this.http.post<any>('./server/api/soru_yonetimi.php', formData).subscribe({
       next: (response) => {
         this.loading = false;
         if (response.success) {
@@ -288,5 +309,45 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
   clearMessages(): void {
     this.error = null;
     this.success = null;
+  }
+
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      // Dosya türü kontrolü
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+      if (!allowedTypes.includes(file.type)) {
+        this.error = 'Sadece JPG, PNG ve GIF dosyaları kabul edilir';
+        return;
+      }
+      
+      // Dosya boyutu kontrolü (5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        this.error = 'Dosya boyutu 5MB\'dan büyük olamaz';
+        return;
+      }
+      
+      this.selectedFile = file;
+      this.error = null;
+      
+      // Resim önizlemesi
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.imagePreview = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  removeImage(): void {
+    this.selectedFile = null;
+    this.imagePreview = null;
+  }
+
+  getSoruResmiUrl(soru: Soru): string {
+    if (soru.soru_resmi) {
+      return `./server/uploads/soru_resimleri/${soru.soru_resmi}`;
+    }
+    return '';
   }
 }

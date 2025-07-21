@@ -17,9 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 
 try {
-    $pdo = getConnection()
-    $pdo = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8mb4", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo = getConnection();
 } catch (PDOException $e) {
     echo json_encode(['success' => false, 'message' => 'Veritabanı bağlantısı başarısız: ' . $e->getMessage()]);
     exit;
@@ -32,7 +30,8 @@ CREATE TABLE IF NOT EXISTS yapay_zeka_sorular (
     konu_adi VARCHAR(255) NOT NULL,
     sinif_seviyesi VARCHAR(50) NOT NULL,
     zorluk_derecesi ENUM('kolay', 'orta', 'zor') NOT NULL,
-    soru_metni TEXT NOT NULL,
+    soru_metni TEXT,
+    soru_resmi VARCHAR(255),
     secenekler JSON NOT NULL,
     dogru_cevap VARCHAR(1) NOT NULL,
     ogretmen_id INT NOT NULL,
@@ -89,43 +88,127 @@ switch ($method) {
         break;
 
     case 'POST':
-        $input = json_decode(file_get_contents('php://input'), true);
+        // FormData ile gelen veriler için
+        if (isset($_POST['konu_adi'])) {
+            // FormData verilerini al
+            $konu_adi = $_POST['konu_adi'] ?? '';
+            $sinif_seviyesi = $_POST['sinif_seviyesi'] ?? '';
+            $zorluk_derecesi = $_POST['zorluk_derecesi'] ?? '';
+            $soru_metni = $_POST['soru_metni'] ?? '';
+            $secenekler_json = $_POST['secenekler'] ?? '';
+            $dogru_cevap = $_POST['dogru_cevap'] ?? '';
+            $ogretmen_id = $_POST['ogretmen_id'] ?? '';
 
-        if (!$input) {
-            echo json_encode(['success' => false, 'message' => 'Geçersiz JSON verisi']);
-            exit;
-        }
-
-        $required_fields = ['konu_adi', 'sinif_seviyesi', 'zorluk_derecesi', 'soru_metni', 'secenekler', 'dogru_cevap', 'ogretmen_id'];
-
-        foreach ($required_fields as $field) {
-            if (!isset($input[$field]) || empty($input[$field])) {
-                echo json_encode(['success' => false, 'message' => "Gerekli alan eksik: $field"]);
+            // Seçenekleri JSON'dan array'e çevir
+            $secenekler = json_decode($secenekler_json, true);
+            if (!$secenekler) {
+                echo json_encode(['success' => false, 'message' => 'Geçersiz seçenekler formatı']);
                 exit;
             }
-        }
 
-        // Seçenekleri JSON'a çevir
-        $secenekler = json_encode($input['secenekler']);
+            // Resim upload işlemi
+            $soru_resmi = '';
+            if (isset($_FILES['soru_resmi']) && $_FILES['soru_resmi']['error'] === UPLOAD_ERR_OK) {
+                $uploadDir = '../../uploads/soru_resimleri/';
+                if (!file_exists($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
 
-        $sql = "INSERT INTO yapay_zeka_sorular (konu_adi, sinif_seviyesi, zorluk_derecesi, soru_metni, secenekler, dogru_cevap, ogretmen_id) 
-                VALUES (:konu_adi, :sinif_seviyesi, :zorluk_derecesi, :soru_metni, :secenekler, :dogru_cevap, :ogretmen_id)";
+                $fileInfo = pathinfo($_FILES['soru_resmi']['name']);
+                $fileExt = strtolower($fileInfo['extension']);
+                
+                $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+                if (!in_array($fileExt, $allowedExtensions)) {
+                    echo json_encode(['success' => false, 'message' => 'Sadece JPG, PNG ve GIF dosyaları kabul edilir']);
+                    exit;
+                }
 
-        $stmt = $pdo->prepare($sql);
-        $result = $stmt->execute([
-            'konu_adi' => $input['konu_adi'],
-            'sinif_seviyesi' => $input['sinif_seviyesi'],
-            'zorluk_derecesi' => $input['zorluk_derecesi'],
-            'soru_metni' => $input['soru_metni'],
-            'secenekler' => $secenekler,
-            'dogru_cevap' => $input['dogru_cevap'],
-            'ogretmen_id' => $input['ogretmen_id']
-        ]);
+                if ($_FILES['soru_resmi']['size'] > 5 * 1024 * 1024) {
+                    echo json_encode(['success' => false, 'message' => 'Dosya boyutu 5MB\'dan büyük olamaz']);
+                    exit;
+                }
 
-        if ($result) {
-            echo json_encode(['success' => true, 'message' => 'Soru başarıyla eklendi', 'id' => $pdo->lastInsertId()]);
+                $soru_resmi = 'soru_' . $ogretmen_id . '_' . time() . '.' . $fileExt;
+                $targetFile = $uploadDir . $soru_resmi;
+
+                if (!move_uploaded_file($_FILES['soru_resmi']['tmp_name'], $targetFile)) {
+                    echo json_encode(['success' => false, 'message' => 'Resim yüklenirken hata oluştu']);
+                    exit;
+                }
+            }
+
+            // Zorunlu alanları kontrol et
+            $required_fields = ['konu_adi', 'sinif_seviyesi', 'zorluk_derecesi', 'dogru_cevap', 'ogretmen_id'];
+            foreach ($required_fields as $field) {
+                if (empty($$field)) {
+                    echo json_encode(['success' => false, 'message' => "Gerekli alan eksik: $field"]);
+                    exit;
+                }
+            }
+
+            // Soru metni veya resmi en az birisi olmalı
+            if (empty($soru_metni) && empty($soru_resmi)) {
+                echo json_encode(['success' => false, 'message' => 'Soru metni veya soru resmi gerekli']);
+                exit;
+            }
+
+            $sql = "INSERT INTO yapay_zeka_sorular (konu_adi, sinif_seviyesi, zorluk_derecesi, soru_metni, soru_resmi, secenekler, dogru_cevap, ogretmen_id) 
+                    VALUES (:konu_adi, :sinif_seviyesi, :zorluk_derecesi, :soru_metni, :soru_resmi, :secenekler, :dogru_cevap, :ogretmen_id)";
+
+            $stmt = $pdo->prepare($sql);
+            $result = $stmt->execute([
+                'konu_adi' => $konu_adi,
+                'sinif_seviyesi' => $sinif_seviyesi,
+                'zorluk_derecesi' => $zorluk_derecesi,
+                'soru_metni' => $soru_metni,
+                'soru_resmi' => $soru_resmi,
+                'secenekler' => json_encode($secenekler),
+                'dogru_cevap' => $dogru_cevap,
+                'ogretmen_id' => $ogretmen_id
+            ]);
+
+            if ($result) {
+                echo json_encode(['success' => true, 'message' => 'Soru başarıyla eklendi', 'id' => $pdo->lastInsertId()]);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Soru eklenirken hata oluştu']);
+            }
         } else {
-            echo json_encode(['success' => false, 'message' => 'Soru eklenirken hata oluştu']);
+            // JSON verilerini kontrol et (eski format için uyumluluk)
+            $input = json_decode(file_get_contents('php://input'), true);
+
+            if (!$input) {
+                echo json_encode(['success' => false, 'message' => 'Geçersiz veri formatı']);
+                exit;
+            }
+
+            $required_fields = ['konu_adi', 'sinif_seviyesi', 'zorluk_derecesi', 'soru_metni', 'secenekler', 'dogru_cevap', 'ogretmen_id'];
+
+            foreach ($required_fields as $field) {
+                if (!isset($input[$field]) || empty($input[$field])) {
+                    echo json_encode(['success' => false, 'message' => "Gerekli alan eksik: $field"]);
+                    exit;
+                }
+            }
+
+            $sql = "INSERT INTO yapay_zeka_sorular (konu_adi, sinif_seviyesi, zorluk_derecesi, soru_metni, secenekler, dogru_cevap, ogretmen_id) 
+                    VALUES (:konu_adi, :sinif_seviyesi, :zorluk_derecesi, :soru_metni, :secenekler, :dogru_cevap, :ogretmen_id)";
+
+            $stmt = $pdo->prepare($sql);
+            $result = $stmt->execute([
+                'konu_adi' => $input['konu_adi'],
+                'sinif_seviyesi' => $input['sinif_seviyesi'],
+                'zorluk_derecesi' => $input['zorluk_derecesi'],
+                'soru_metni' => $input['soru_metni'],
+                'secenekler' => json_encode($input['secenekler']),
+                'dogru_cevap' => $input['dogru_cevap'],
+                'ogretmen_id' => $input['ogretmen_id']
+            ]);
+
+            if ($result) {
+                echo json_encode(['success' => true, 'message' => 'Soru başarıyla eklendi', 'id' => $pdo->lastInsertId()]);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Soru eklenirken hata oluştu']);
+            }
         }
         break;
 
