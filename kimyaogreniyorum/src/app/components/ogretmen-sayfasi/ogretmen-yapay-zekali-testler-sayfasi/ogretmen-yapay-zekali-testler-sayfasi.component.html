@@ -1,1 +1,322 @@
-<p>ogretmen-yapay-zekali-testler-sayfasi works!</p>
+
+<div class="teacher-ai-tests-page">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <i class="bi bi-robot me-2"></i>
+        Yapay Zeka Destekli Test Sistemi
+      </h1>
+      <p class="page-description">
+        Öğrenciler için özelleştirilmiş testler oluşturmak üzere sorular ekleyin ve yönetin
+      </p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-primary" (click)="toggleAddForm()" [disabled]="loading">
+        <i class="bi bi-plus-circle me-2"></i>
+        {{ showAddForm ? 'İptal' : 'Yeni Soru Ekle' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Success/Error Messages -->
+  <div *ngIf="success" class="alert alert-success alert-dismissible">
+    <i class="bi bi-check-circle me-2"></i>
+    {{ success }}
+    <button type="button" class="btn-close" (click)="clearMessages()"></button>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger alert-dismissible">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    {{ error }}
+    <button type="button" class="btn-close" (click)="clearMessages()"></button>
+  </div>
+
+  <!-- Add Question Form -->
+  <div *ngIf="showAddForm" class="add-form-container">
+    <div class="form-card">
+      <h3 class="form-title">
+        <i class="bi bi-plus-circle me-2"></i>
+        Yeni Soru Ekle
+      </h3>
+
+      <form (ngSubmit)="saveSoru()" #soruForm="ngForm">
+        <div class="row">
+          <!-- Konu Adı -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="konuAdi" class="form-label">Konu Adı *</label>
+              <select class="form-select" 
+                      id="konuAdi" 
+                      [(ngModel)]="yeniSoru.konu_adi" 
+                      name="konuAdi" 
+                      required>
+                <option value="">Konu seçiniz</option>
+                <option *ngFor="let konu of konuListesi" [value]="konu">{{ konu }}</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Sınıf Seviyesi -->
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="sinifSeviyesi" class="form-label">Sınıf Seviyesi *</label>
+              <select class="form-select" 
+                      id="sinifSeviyesi" 
+                      [(ngModel)]="yeniSoru.sinif_seviyesi" 
+                      name="sinifSeviyesi" 
+                      required>
+                <option *ngFor="let sinif of sinifSeviyeleri" [value]="sinif">{{ sinif }}. Sınıf</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Zorluk Derecesi -->
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="zorlukDerecesi" class="form-label">Zorluk Derecesi *</label>
+              <select class="form-select" 
+                      id="zorlukDerecesi" 
+                      [(ngModel)]="yeniSoru.zorluk_derecesi" 
+                      name="zorlukDerecesi" 
+                      required>
+                <option *ngFor="let zorluk of zorlukDereceleri" [value]="zorluk.value">
+                  {{ zorluk.label }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Soru Metni -->
+        <div class="form-group">
+          <label for="soruMetni" class="form-label">Soru Metni *</label>
+          <textarea class="form-control" 
+                    id="soruMetni" 
+                    [(ngModel)]="yeniSoru.soru_metni" 
+                    name="soruMetni" 
+                    rows="4" 
+                    placeholder="Soru metnini buraya yazınız..."
+                    required></textarea>
+        </div>
+
+        <!-- Seçenekler -->
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="secenekA" class="form-label">A Seçeneği *</label>
+              <input type="text" 
+                     class="form-control" 
+                     id="secenekA" 
+                     [(ngModel)]="yeniSoru.secenekler.A" 
+                     name="secenekA" 
+                     placeholder="A seçeneği"
+                     required>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="secenekB" class="form-label">B Seçeneği *</label>
+              <input type="text" 
+                     class="form-control" 
+                     id="secenekB" 
+                     [(ngModel)]="yeniSoru.secenekler.B" 
+                     name="secenekB" 
+                     placeholder="B seçeneği"
+                     required>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="secenekC" class="form-label">C Seçeneği *</label>
+              <input type="text" 
+                     class="form-control" 
+                     id="secenekC" 
+                     [(ngModel)]="yeniSoru.secenekler.C" 
+                     name="secenekC" 
+                     placeholder="C seçeneği"
+                     required>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="secenekD" class="form-label">D Seçeneği *</label>
+              <input type="text" 
+                     class="form-control" 
+                     id="secenekD" 
+                     [(ngModel)]="yeniSoru.secenekler.D" 
+                     name="secenekD" 
+                     placeholder="D seçeneği"
+                     required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Doğru Cevap -->
+        <div class="form-group">
+          <label for="dogruCevap" class="form-label">Doğru Cevap *</label>
+          <select class="form-select w-auto" 
+                  id="dogruCevap" 
+                  [(ngModel)]="yeniSoru.dogru_cevap" 
+                  name="dogruCevap" 
+                  required>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+          </select>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" (click)="toggleAddForm()">
+            <i class="bi bi-x-circle me-2"></i>
+            İptal
+          </button>
+          <button type="submit" 
+                  class="btn btn-primary" 
+                  [disabled]="loading || !soruForm.form.valid">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+            <i *ngIf="!loading" class="bi bi-check-circle me-2"></i>
+            {{ loading ? 'Kaydediliyor...' : 'Kaydet' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Filters and Search -->
+  <div class="filters-container" *ngIf="!showAddForm">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label for="filterKonu" class="form-label">Konu Filtresi</label>
+          <input type="text" 
+                 class="form-control" 
+                 id="filterKonu" 
+                 [(ngModel)]="filterKonu" 
+                 (ngModelChange)="loadSorular()"
+                 placeholder="Konu adı ile ara...">
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="filterZorluk" class="form-label">Zorluk Filtresi</label>
+          <select class="form-select" 
+                  id="filterZorluk" 
+                  [(ngModel)]="filterZorluk" 
+                  (ngModelChange)="loadSorular()">
+            <option value="">Tümü</option>
+            <option *ngFor="let zorluk of zorlukDereceleri" [value]="zorluk.value">
+              {{ zorluk.label }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="col-md-5">
+        <div class="statistics">
+          <div class="stat-item">
+            <span class="stat-number">{{ sorular.length }}</span>
+            <span class="stat-label">Toplam Soru</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Questions List -->
+  <div class="questions-container" *ngIf="!showAddForm">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-container">
+      <div class="spinner-border text-primary"></div>
+      <p class="mt-3">Sorular yükleniyor...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && sorular.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <i class="bi bi-question-circle"></i>
+      </div>
+      <h4>Henüz soru eklenmemiş</h4>
+      <p>Yapay zeka destekli testler için sorularınızı eklemeye başlayın</p>
+      <button class="btn btn-primary" (click)="toggleAddForm()">
+        <i class="bi bi-plus-circle me-2"></i>
+        İlk Soruyu Ekle
+      </button>
+    </div>
+
+    <!-- Questions Table -->
+    <div *ngIf="!loading && sorular.length > 0" class="table-container">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Soru</th>
+            <th>Konu</th>
+            <th>Sınıf</th>
+            <th>Zorluk</th>
+            <th>Doğru Cevap</th>
+            <th>Tarih</th>
+            <th>İşlemler</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let soru of getPaginatedSorular(); let i = index">
+            <td>
+              <div class="question-preview">
+                {{ soru.soru_metni.length > 80 ? (soru.soru_metni | slice:0:80) + '...' : soru.soru_metni }}
+              </div>
+            </td>
+            <td>
+              <span class="badge badge-info">{{ soru.konu_adi }}</span>
+            </td>
+            <td>{{ soru.sinif_seviyesi }}. Sınıf</td>
+            <td>
+              <span class="badge" [ngClass]="getZorlukBadgeClass(soru.zorluk_derecesi)">
+                {{ getZorlukText(soru.zorluk_derecesi) }}
+              </span>
+            </td>
+            <td>
+              <strong>{{ soru.dogru_cevap }}</strong>
+            </td>
+            <td>
+              {{ soru.olusturma_tarihi | date:'dd.MM.yyyy' }}
+            </td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn btn-sm btn-outline-danger" 
+                        (click)="deleteSoru(soru)"
+                        [disabled]="loading">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+      <nav *ngIf="getTotalPages() > 1" class="pagination-container">
+        <ul class="pagination">
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <button class="page-link" (click)="changePage(currentPage - 1)">
+              <span>&laquo;</span>
+            </button>
+          </li>
+          <li class="page-item" 
+              *ngFor="let page of [].constructor(getTotalPages()); let i = index"
+              [class.active]="currentPage === i + 1">
+            <button class="page-link" (click)="changePage(i + 1)">{{ i + 1 }}</button>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === getTotalPages()">
+            <button class="page-link" (click)="changePage(currentPage + 1)">
+              <span>&raquo;</span>
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>

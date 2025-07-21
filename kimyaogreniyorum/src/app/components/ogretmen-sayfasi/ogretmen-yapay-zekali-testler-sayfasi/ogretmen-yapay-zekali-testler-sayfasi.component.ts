@@ -1,4 +1,29 @@
-import { Component } from '@angular/core';
+
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
+interface Soru {
+  id?: number;
+  konu_adi: string;
+  sinif_seviyesi: string;
+  zorluk_derecesi: 'kolay' | 'orta' | 'zor';
+  soru_metni: string;
+  secenekler: {
+    A: string;
+    B: string;
+    C: string;
+    D: string;
+  };
+  dogru_cevap: 'A' | 'B' | 'C' | 'D';
+  ogretmen_id: number;
+  olusturma_tarihi?: string;
+}
+
+interface TeacherInfo {
+  id: number;
+  adi_soyadi: string;
+  email: string;
+}
 
 @Component({
   selector: 'app-ogretmen-yapay-zekali-testler-sayfasi',
@@ -6,6 +31,262 @@ import { Component } from '@angular/core';
   templateUrl: './ogretmen-yapay-zekali-testler-sayfasi.component.html',
   styleUrl: './ogretmen-yapay-zekali-testler-sayfasi.component.scss'
 })
-export class OgretmenYapayZekaliTestlerSayfasiComponent {
+export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
+  teacherInfo: TeacherInfo | null = null;
+  sorular: Soru[] = [];
+  
+  // Form verileri
+  yeniSoru: Soru = {
+    konu_adi: '',
+    sinif_seviyesi: '9',
+    zorluk_derecesi: 'kolay',
+    soru_metni: '',
+    secenekler: {
+      A: '',
+      B: '',
+      C: '',
+      D: ''
+    },
+    dogru_cevap: 'A',
+    ogretmen_id: 0
+  };
+  
+  // UI state
+  showAddForm = false;
+  loading = false;
+  error: string | null = null;
+  success: string | null = null;
+  
+  // Filtreler
+  filterKonu = '';
+  filterZorluk = '';
+  
+  // Sayfalama
+  currentPage = 1;
+  itemsPerPage = 10;
+  
+  // Sabitler
+  sinifSeviyeleri = ['9', '10', '11', '12'];
+  zorlukDereceleri = [
+    { value: 'kolay', label: 'Kolay' },
+    { value: 'orta', label: 'Orta' },
+    { value: 'zor', label: 'Zor' }
+  ];
+  
+  konuListesi = [
+    'Atom ve Molekül',
+    'Periyodik Sistem',
+    'Kimyasal Bağlar',
+    'Maddenin Halleri',
+    'Çözeltiler',
+    'Asit ve Bazlar',
+    'Kimyasal Tepkimeler',
+    'Gazlar',
+    'Termokimya',
+    'Kimyasal Denge',
+    'Elektrokimya',
+    'Organik Kimya'
+  ];
 
+  constructor(private http: HttpClient) {}
+
+  ngOnInit(): void {
+    this.loadTeacherInfo();
+    this.loadSorular();
+  }
+
+  private loadTeacherInfo(): void {
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        this.teacherInfo = {
+          id: user.id,
+          adi_soyadi: user.adi_soyadi || 'Öğretmen',
+          email: user.email || ''
+        };
+        this.yeniSoru.ogretmen_id = user.id;
+      } catch (error) {
+        console.error('Teacher info loading error:', error);
+        this.error = 'Öğretmen bilgileri yüklenemedi';
+      }
+    } else {
+      this.error = 'Öğretmen bilgisi bulunamadı';
+    }
+  }
+
+  loadSorular(): void {
+    if (!this.teacherInfo) return;
+    
+    this.loading = true;
+    this.error = null;
+    
+    let url = `./server/api/soru_yonetimi.php?action=list&ogretmen_id=${this.teacherInfo.id}`;
+    
+    if (this.filterKonu) {
+      url += `&konu_adi=${encodeURIComponent(this.filterKonu)}`;
+    }
+    
+    if (this.filterZorluk) {
+      url += `&zorluk_derecesi=${this.filterZorluk}`;
+    }
+    
+    this.http.get<any>(url).subscribe({
+      next: (response) => {
+        this.loading = false;
+        if (response.success) {
+          this.sorular = response.data || [];
+        } else {
+          this.error = response.message || 'Sorular yüklenemedi';
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+        this.error = 'Sorular yüklenirken hata oluştu: ' + (error.error?.message || error.message);
+      }
+    });
+  }
+
+  toggleAddForm(): void {
+    this.showAddForm = !this.showAddForm;
+    if (this.showAddForm) {
+      this.resetForm();
+    }
+  }
+
+  resetForm(): void {
+    this.yeniSoru = {
+      konu_adi: '',
+      sinif_seviyesi: '9',
+      zorluk_derecesi: 'kolay',
+      soru_metni: '',
+      secenekler: {
+        A: '',
+        B: '',
+        C: '',
+        D: ''
+      },
+      dogru_cevap: 'A',
+      ogretmen_id: this.teacherInfo?.id || 0
+    };
+    this.error = null;
+    this.success = null;
+  }
+
+  validateForm(): boolean {
+    if (!this.yeniSoru.konu_adi.trim()) {
+      this.error = 'Konu adı gerekli';
+      return false;
+    }
+    
+    if (!this.yeniSoru.soru_metni.trim()) {
+      this.error = 'Soru metni gerekli';
+      return false;
+    }
+    
+    // Tüm seçeneklerin dolu olup olmadığını kontrol et
+    const secenekler = Object.values(this.yeniSoru.secenekler);
+    if (secenekler.some(secenek => !secenek.trim())) {
+      this.error = 'Tüm seçenekler doldurulmalı';
+      return false;
+    }
+    
+    return true;
+  }
+
+  saveSoru(): void {
+    if (!this.validateForm()) return;
+    
+    this.loading = true;
+    this.error = null;
+    this.success = null;
+    
+    this.http.post<any>('./server/api/soru_yonetimi.php', this.yeniSoru).subscribe({
+      next: (response) => {
+        this.loading = false;
+        if (response.success) {
+          this.success = 'Soru başarıyla eklendi';
+          this.showAddForm = false;
+          this.resetForm();
+          this.loadSorular();
+        } else {
+          this.error = response.message || 'Soru eklenemedi';
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+        this.error = 'Soru eklenirken hata oluştu: ' + (error.error?.message || error.message);
+      }
+    });
+  }
+
+  deleteSoru(soru: Soru): void {
+    if (!confirm('Bu soruyu silmek istediğinizden emin misiniz?')) return;
+    
+    this.loading = true;
+    
+    this.http.delete<any>(`./server/api/soru_yonetimi.php?id=${soru.id}&ogretmen_id=${this.teacherInfo?.id}`).subscribe({
+      next: (response) => {
+        this.loading = false;
+        if (response.success) {
+          this.success = 'Soru başarıyla silindi';
+          this.loadSorular();
+        } else {
+          this.error = response.message || 'Soru silinemedi';
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+        this.error = 'Soru silinirken hata oluştu: ' + (error.error?.message || error.message);
+      }
+    });
+  }
+
+  getFilteredSorular(): Soru[] {
+    return this.sorular.filter(soru => {
+      const konuMatch = !this.filterKonu || soru.konu_adi.toLowerCase().includes(this.filterKonu.toLowerCase());
+      const zorlukMatch = !this.filterZorluk || soru.zorluk_derecesi === this.filterZorluk;
+      return konuMatch && zorlukMatch;
+    });
+  }
+
+  getPaginatedSorular(): Soru[] {
+    const filtered = this.getFilteredSorular();
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return filtered.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  getTotalPages(): number {
+    return Math.ceil(this.getFilteredSorular().length / this.itemsPerPage);
+  }
+
+  changePage(page: number): void {
+    if (page >= 1 && page <= this.getTotalPages()) {
+      this.currentPage = page;
+    }
+  }
+
+  getZorlukBadgeClass(zorluk: string): string {
+    switch (zorluk) {
+      case 'kolay': return 'badge-success';
+      case 'orta': return 'badge-warning';
+      case 'zor': return 'badge-danger';
+      default: return 'badge-secondary';
+    }
+  }
+
+  getZorlukText(zorluk: string): string {
+    switch (zorluk) {
+      case 'kolay': return 'Kolay';
+      case 'orta': return 'Orta';
+      case 'zor': return 'Zor';
+      default: return zorluk;
+    }
+  }
+
+  clearMessages(): void {
+    this.error = null;
+    this.success = null;
+  }
 }
