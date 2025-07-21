@@ -1,1 +1,243 @@
-<p>ogrenci-yapay-zekali-testler-sayfasi works!</p>
+
+<div class="student-ai-tests-page">
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Yükleniyor...</p>
+  </div>
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <i class="bi bi-robot me-2"></i>
+        Yapay Zeka Destekli Testler
+      </h1>
+      <p class="page-description">
+        Size özel hazırlanmış testleri çözerek kimya bilginizi geliştirin
+      </p>
+    </div>
+  </div>
+
+  <!-- Success/Error Messages -->
+  <div *ngIf="success" class="alert alert-success alert-dismissible">
+    <i class="bi bi-check-circle me-2"></i>
+    {{ success }}
+    <button type="button" class="btn-close" (click)="success = null"></button>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger alert-dismissible">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    {{ error }}
+    <button type="button" class="btn-close" (click)="error = null"></button>
+  </div>
+
+  <!-- Test Creation Section -->
+  <div *ngIf="currentStep === 1" class="test-creation-section">
+    <div class="creation-card">
+      <h3 class="section-title">
+        <i class="bi bi-plus-circle me-2"></i>
+        Yeni Test Oluştur
+      </h3>
+
+      <div class="topic-selection">
+        <h4>Geliştirilmesi Gereken Konular</h4>
+        <p class="help-text">Bu konulardan kolay sorular sorulacak</p>
+        <div class="topics-grid">
+          <div class="topic-item" 
+               *ngFor="let konu of improvementTopics"
+               [class.selected]="isImprovementTopicSelected(konu)"
+               (click)="toggleImprovementTopic(konu)">
+            <i class="bi bi-arrow-up-circle"></i>
+            <span>{{ konu }}</span>
+          </div>
+        </div>
+
+        <h4 class="mt-4">En İyi Olduğunuz Konular</h4>
+        <p class="help-text">Bu konulardan zor sorular sorulacak</p>
+        <div class="topics-grid">
+          <div class="topic-item"
+               *ngFor="let konu of bestTopics"
+               [class.selected]="isBestTopicSelected(konu)"
+               (click)="toggleBestTopic(konu)">
+            <i class="bi bi-star-fill"></i>
+            <span>{{ konu }}</span>
+          </div>
+        </div>
+
+        <div class="question-counts mt-4">
+          <div class="row">
+            <div class="col-md-6">
+              <label class="form-label">Kolay Soru Sayısı</label>
+              <input type="number" class="form-control" 
+                     [(ngModel)]="improvementQuestionCount" 
+                     min="1" max="20">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Zor Soru Sayısı</label>
+              <input type="number" class="form-control" 
+                     [(ngModel)]="challengeQuestionCount" 
+                     min="1" max="20">
+            </div>
+          </div>
+        </div>
+
+        <div class="actions mt-4">
+          <button class="btn btn-primary" 
+                  (click)="createTest()" 
+                  [disabled]="loading || (selectedImprovementTopics.length === 0 && selectedBestTopics.length === 0)">
+            <i class="bi bi-magic me-2"></i>
+            Test Oluştur
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Test Questions Section -->
+  <div *ngIf="currentStep === 2 && currentTest && !showResults" class="test-section">
+    <div class="test-header">
+      <div class="test-info">
+        <h3>{{ currentTest.test_adi }}</h3>
+        <div class="test-stats">
+          <span class="badge bg-info me-2">
+            Soru {{ currentQuestionIndex + 1 }}/{{ currentTest.sorular.length }}
+          </span>
+          <span class="badge bg-secondary">
+            {{ getAnsweredQuestionsCount() }} Cevaplandı
+          </span>
+        </div>
+      </div>
+      <div class="test-actions">
+        <button class="btn btn-outline-primary" (click)="downloadTestPDF()" [disabled]="loading">
+          <i class="bi bi-file-pdf me-2"></i>
+          PDF İndir
+        </button>
+      </div>
+    </div>
+
+    <div class="question-container">
+      <div class="question-card" *ngIf="currentTest.sorular[currentQuestionIndex] as currentQuestion">
+        <div class="question-header">
+          <div class="question-info">
+            <span class="badge bg-primary me-2">{{ currentQuestion.konu_adi }}</span>
+            <span class="badge" [class]="'bg-' + (currentQuestion.zorluk_derecesi === 'kolay' ? 'success' : 
+                     currentQuestion.zorluk_derecesi === 'orta' ? 'warning' : 'danger')">
+              {{ currentQuestion.zorluk_derecesi }}
+            </span>
+          </div>
+        </div>
+
+        <div class="question-content">
+          <div class="question-image" *ngIf="currentQuestion.soru_resmi">
+            <img [src]="currentQuestion.soru_resmi" alt="Soru Görseli" class="img-fluid">
+          </div>
+          
+          <div class="question-description" *ngIf="currentQuestion.aciklama">
+            <p>{{ currentQuestion.aciklama }}</p>
+          </div>
+
+          <div class="answer-options">
+            <div class="option-item" 
+                 *ngFor="let option of ['A', 'B', 'C', 'D', 'E']"
+                 [class.selected]="userAnswers[currentQuestion.id] === option"
+                 (click)="selectAnswer(currentQuestion.id, option)">
+              <div class="option-circle">{{ option }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="question-navigation">
+          <button class="btn btn-outline-secondary" 
+                  (click)="previousQuestion()" 
+                  [disabled]="currentQuestionIndex === 0">
+            <i class="bi bi-arrow-left me-2"></i>
+            Önceki
+          </button>
+
+          <div class="question-dots">
+            <span class="dot" 
+                  *ngFor="let soru of currentTest.sorular; let i = index"
+                  [class.current]="i === currentQuestionIndex"
+                  [class.answered]="userAnswers[soru.id]"
+                  (click)="goToQuestion(i)">
+              {{ i + 1 }}
+            </span>
+          </div>
+
+          <button class="btn btn-outline-secondary" 
+                  (click)="nextQuestion()" 
+                  [disabled]="currentQuestionIndex === currentTest.sorular.length - 1">
+            Sonraki
+            <i class="bi bi-arrow-right ms-2"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="test-completion" *ngIf="isTestCompleted()">
+      <button class="btn btn-success btn-lg" (click)="finishTest()">
+        <i class="bi bi-check-circle me-2"></i>
+        Testi Bitir
+      </button>
+    </div>
+  </div>
+
+  <!-- Test Results Section -->
+  <div *ngIf="showResults && testResults" class="results-section">
+    <div class="results-card">
+      <div class="results-header">
+        <h3>
+          <i class="bi bi-trophy me-2"></i>
+          Test Sonuçları
+        </h3>
+        <div class="score-badge">
+          <span class="score">{{ testResults.dogru_sayisi }}/{{ testResults.toplam_soru }}</span>
+          <span class="percentage">%{{ testResults.yuzde.toFixed(1) }}</span>
+        </div>
+      </div>
+
+      <div class="results-stats">
+        <div class="stat-item success">
+          <i class="bi bi-check-circle"></i>
+          <div>
+            <span class="count">{{ testResults.dogru_sayisi }}</span>
+            <span class="label">Doğru</span>
+          </div>
+        </div>
+        <div class="stat-item danger">
+          <i class="bi bi-x-circle"></i>
+          <div>
+            <span class="count">{{ testResults.yanlis_sayisi }}</span>
+            <span class="label">Yanlış</span>
+          </div>
+        </div>
+        <div class="stat-item secondary">
+          <i class="bi bi-circle"></i>
+          <div>
+            <span class="count">{{ testResults.bos_sayisi }}</span>
+            <span class="label">Boş</span>
+          </div>
+        </div>
+        <div class="stat-item info">
+          <i class="bi bi-calculator"></i>
+          <div>
+            <span class="count">{{ testResults.net.toFixed(2) }}</span>
+            <span class="label">Net</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="results-actions">
+        <button class="btn btn-primary" (click)="resetTest()">
+          <i class="bi bi-arrow-repeat me-2"></i>
+          Yeni Test Oluştur
+        </button>
+        <button class="btn btn-outline-secondary" (click)="downloadTestPDF()">
+          <i class="bi bi-file-pdf me-2"></i>
+          Test PDF
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
