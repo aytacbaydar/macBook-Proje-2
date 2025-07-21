@@ -1,8 +1,7 @@
 .exam-results-container {
-  padding: 1.5rem;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  padding: 1px;
+  min-height: 100%;
+  font-family: 'Roboto',  sans-serif;
 }
 
 /* Header */
@@ -11,9 +10,9 @@
   margin-bottom: 3rem;
   padding: 2rem;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 2rem;
+  border-radius: 8px;
   color: white;
-  box-shadow: 0 20px 40px rgba(102, 126, 234, 0.15);
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
   position: relative;
   overflow: hidden;
 
@@ -148,19 +147,18 @@
 /* Exams Grid */
 .exams-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
   margin-bottom: 3rem;
 
   .exam-card {
     background: white;
-    border-radius: 1.5rem;
+    border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     cursor: pointer;
     position: relative;
-    border: 2px solid transparent;
 
     &:hover {
       transform: translateY(-8px);
@@ -243,8 +241,8 @@
       padding: 1.5rem;
 
       .exam-title {
-        font-size: 1.3rem;
-        font-weight: 700;
+        font-size: 16px;
+        font-weight: 500;
         margin-bottom: 1rem;
         color: #1e293b;
         line-height: 1.3;
@@ -279,6 +277,10 @@
     }
 
     .selection-indicator {
+      width: 30px;
+      height: 30px;
+      align-items: center;
+      justify-content: center;
       display: none;
       position: absolute;
       top: 1rem;
@@ -339,7 +341,8 @@
 /* Results Section */
 .results-section {
   background: white;
-  border-radius: 2rem;
+  border-radius: 8px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   margin-top: 2rem;
