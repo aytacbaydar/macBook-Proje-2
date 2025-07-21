@@ -1,4 +1,3 @@
-
 <div class="student-ai-tests-page">
   <!-- Loading Overlay -->
   <div class="loading-overlay" *ngIf="loading">
@@ -46,8 +45,8 @@
         <div class="topics-grid">
           <div class="topic-item" 
                *ngFor="let konu of improvementTopics"
-               [class.selected]="isImprovementTopicSelected(konu)"
-               (click)="toggleImprovementTopic(konu)">
+               [class.selected]="isImprovementTopicSelected(konu.konu_adi)"
+               (click)="toggleImprovementTopic(konu.konu_adi)">
             <i class="bi bi-arrow-up-circle"></i>
             <span>{{ konu }}</span>
           </div>
@@ -58,8 +57,8 @@
         <div class="topics-grid">
           <div class="topic-item"
                *ngFor="let konu of bestTopics"
-               [class.selected]="isBestTopicSelected(konu)"
-               (click)="toggleBestTopic(konu)">
+               [class.selected]="isBestTopicSelected(konu.konu_adi)"
+               (click)="toggleBestTopic(konu.konu_adi)">
             <i class="bi bi-star-fill"></i>
             <span>{{ konu }}</span>
           </div>
@@ -132,7 +131,7 @@
           <div class="question-image" *ngIf="currentQuestion.soru_resmi">
             <img [src]="currentQuestion.soru_resmi" alt="Soru Görseli" class="img-fluid">
           </div>
-          
+
           <div class="question-description" *ngIf="currentQuestion.aciklama">
             <p>{{ currentQuestion.aciklama }}</p>
           </div>
