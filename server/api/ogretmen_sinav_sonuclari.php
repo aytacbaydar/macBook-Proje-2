@@ -12,26 +12,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require_once '../config.php';
 
 try {
-    // Authorization kontrolü
-    $headers = getallheaders();
-    $authHeader = $headers['Authorization'] ?? '';
+    // Authorization kontrolü - multiple methods to get headers
+    $headers = array();
+    
+    // Method 1: getallheaders() (Apache)
+    if (function_exists('getallheaders')) {
+        $headers = getallheaders();
+    }
+    
+    // Method 2: $_SERVER variables (Nginx/other servers)
+    if (empty($headers)) {
+        foreach ($_SERVER as $key => $value) {
+            if (substr($key, 0, 5) === 'HTTP_') {
+                $header_name = str_replace(' ', '-', ucwords(str_replace('_', ' ', strtolower(substr($key, 5)))));
+                $headers[$header_name] = $value;
+            }
+        }
+    }
+    
+    // Authorization header kontrolü
+    $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+    
+    // Debug bilgisi
+    error_log("Headers received: " . json_encode($headers));
+    error_log("Auth header: " . $authHeader);
     
     if (empty($authHeader) || !preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
+        error_log("Authorization header missing or invalid: " . $authHeader);
         throw new Exception('Yetkisiz erişim');
     }
     
-    $token = $matches[1];
+    $token = trim($matches[1]);
     
     $conn = getConnection();
     
     // Token kontrolü ve kullanıcı bilgilerini al
+    error_log("Checking token: " . substr($token, 0, 20) . "...");
+    
     $tokenStmt = $conn->prepare("SELECT kullanici_id, rutbe FROM tokens WHERE token = ? AND expires_at > NOW()");
     $tokenStmt->execute([$token]);
     $tokenData = $tokenStmt->fetch(PDO::FETCH_ASSOC);
     
     if (!$tokenData) {
+        error_log("Token not found or expired in database");
+        // Token tablosunu kontrol et
+        $allTokensStmt = $conn->prepare("SELECT COUNT(*) as count FROM tokens WHERE token = ?");
+        $allTokensStmt->execute([$token]);
+        $tokenExists = $allTokensStmt->fetch(PDO::FETCH_ASSOC);
+        error_log("Token exists in DB: " . ($tokenExists['count'] > 0 ? 'Yes' : 'No'));
+        
         throw new Exception('Geçersiz veya süresi dolmuş token');
     }
+    
+    error_log("Token validated for user: " . $tokenData['kullanici_id'] . " with role: " . $tokenData['rutbe']);
     
     // Sadece öğretmen ve admin erişebilir
     if (!in_array($tokenData['rutbe'], ['ogretmen', 'admin'])) {

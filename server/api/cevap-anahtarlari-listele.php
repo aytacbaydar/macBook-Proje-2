@@ -1,4 +1,3 @@
-
 <?php
 // CORS başlıkları
 header('Content-Type: application/json');
@@ -22,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 try {
     // Bağlantıyı al
     $pdo = getConnection();
-    
+
     // Tablo var mı kontrol et
     $stmt = $pdo->query("SHOW TABLES LIKE 'cevapAnahtari'");
     if ($stmt->rowCount() == 0) {
@@ -30,20 +29,47 @@ try {
         successResponse([], 'Tablo bulunamadı, boş liste döndürülüyor.');
         exit;
     }
-    
+
+    // Authorization kontrolü - multiple methods to get headers
+    $headers = array();
+
+    // Method 1: getallheaders() (Apache)
+    if (function_exists('getallheaders')) {
+        $headers = getallheaders();
+    }
+
+    // Method 2: $_SERVER variables (Nginx/other servers)
+    if (empty($headers)) {
+        foreach ($_SERVER as $key => $value) {
+            if (substr($key, 0, 5) === 'HTTP_') {
+                $header_name = str_replace(' ', '-', ucwords(str_replace('_', ' ', strtolower(substr($key, 5)))));
+                $headers[$header_name] = $value;
+            }
+        }
+    }
+
+    // Authorization header kontrolü
+    $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+
+    if (empty($authHeader) || !preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
+        throw new Exception('Yetkisiz erişim');
+    }
+
+    $token = trim($matches[1]);
+
     // Cevap anahtarlarını al
     $stmt = $pdo->query("SELECT * FROM cevapAnahtari ORDER BY created_at DESC");
     $cevapAnahtarlari = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
     // JSON alanlarını decode et
     foreach ($cevapAnahtarlari as &$row) {
         $row['cevaplar'] = json_decode($row['cevaplar'], true);
         $row['konular'] = json_decode($row['konular'], true);
         $row['videolar'] = json_decode($row['videolar'], true);
     }
-    
+
     successResponse($cevapAnahtarlari, 'Cevap anahtarları başarıyla getirildi.');
-    
+
 } catch (Exception $e) {
     errorResponse($e->getMessage());
 }

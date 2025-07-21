@@ -210,13 +210,32 @@ export class OgretmenOgrenciSinavSonuclariSayfasiComponent implements OnInit {
   }
 
   private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    // Önce user bilgilerinden token al
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    let token = '';
+    
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        token = user.token || '';
+      } catch (error) {
+        console.error('User bilgileri parse edilemedi:', error);
+      }
+    }
+    
+    // Eğer user'dan token alınamazsa, direkt token'ı kontrol et
     if (!token) {
-      console.error('Token bulunamadı');
+      token = localStorage.getItem('token') || sessionStorage.getItem('token') || '';
+    }
+    
+    if (!token) {
+      console.error('Token bulunamadı - login sayfasına yönlendiriliyor');
       // Token yoksa login sayfasına yönlendir
-      window.location.href = '/';
+      window.location.href = '/ogrenci-giris';
       return new HttpHeaders();
     }
+    
+    console.log('Token bulundu, Authorization header oluşturuluyor');
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
