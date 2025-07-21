@@ -1,0 +1,50 @@
+X [ERROR] NG5: Argument of type 'KonuAnalizi' is not assignable to parameter of type 'string'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:49:60:
+      49 │                [class.selected]="isImprovementTopicSelected(konu)"
+         ╵                                                             ~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:50:15:
+      50 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5: Argument of type 'KonuAnalizi' is not assignable to parameter of type 'string'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:50:47:
+      50 │                (click)="toggleImprovementTopic(konu)">
+         ╵                                                ~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:50:15:
+      50 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5: Argument of type 'KonuAnalizi' is not assignable to parameter of type 'string'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:61:53:
+      61 │                [class.selected]="isBestTopicSelected(konu)"
+         ╵                                                      ~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:50:15:
+      50 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5: Argument of type 'KonuAnalizi' is not assignable to parameter of type 'string'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:62:40:
+      62 │                (click)="toggleBestTopic(konu)">
+         ╵                                         ~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:50:15:
+      50 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
