@@ -30,9 +30,8 @@ CREATE TABLE IF NOT EXISTS yapay_zeka_sorular (
     konu_adi VARCHAR(255) NOT NULL,
     sinif_seviyesi VARCHAR(50) NOT NULL,
     zorluk_derecesi ENUM('kolay', 'orta', 'zor') NOT NULL,
-    soru_metni TEXT,
-    soru_resmi VARCHAR(255),
-    secenekler JSON NOT NULL,
+    soru_aciklamasi TEXT,
+    soru_resmi VARCHAR(255) NOT NULL,
     dogru_cevap VARCHAR(1) NOT NULL,
     ogretmen_id INT NOT NULL,
     olusturma_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -76,10 +75,8 @@ switch ($method) {
             $stmt->execute($params);
             $sorular = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            // JSON seçeneklerini decode et
-            foreach ($sorular as &$soru) {
-                $soru['secenekler'] = json_decode($soru['secenekler'], true);
-            }
+            // Soru verilerini hazırla (artık seçenekler yok)
+            // Veriler olduğu gibi döndürülecek
 
             echo json_encode(['success' => true, 'data' => $sorular]);
         } else {
@@ -94,17 +91,9 @@ switch ($method) {
             $konu_adi = $_POST['konu_adi'] ?? '';
             $sinif_seviyesi = $_POST['sinif_seviyesi'] ?? '';
             $zorluk_derecesi = $_POST['zorluk_derecesi'] ?? '';
-            $soru_metni = $_POST['soru_metni'] ?? '';
-            $secenekler_json = $_POST['secenekler'] ?? '';
+            $soru_aciklamasi = $_POST['soru_aciklamasi'] ?? '';
             $dogru_cevap = $_POST['dogru_cevap'] ?? '';
             $ogretmen_id = $_POST['ogretmen_id'] ?? '';
-
-            // Seçenekleri JSON'dan array'e çevir
-            $secenekler = json_decode($secenekler_json, true);
-            if (!$secenekler) {
-                echo json_encode(['success' => false, 'message' => 'Geçersiz seçenekler formatı']);
-                exit;
-            }
 
             // Resim upload işlemi
             $soru_resmi = '';
@@ -146,23 +135,22 @@ switch ($method) {
                 }
             }
 
-            // Soru metni veya resmi en az birisi olmalı
-            if (empty($soru_metni) && empty($soru_resmi)) {
-                echo json_encode(['success' => false, 'message' => 'Soru metni veya soru resmi gerekli']);
+            // Soru resmi zorunlu (çünkü şıklar fotoğrafta olacak)
+            if (empty($soru_resmi)) {
+                echo json_encode(['success' => false, 'message' => 'Soru resmi gerekli']);
                 exit;
             }
 
-            $sql = "INSERT INTO yapay_zeka_sorular (konu_adi, sinif_seviyesi, zorluk_derecesi, soru_metni, soru_resmi, secenekler, dogru_cevap, ogretmen_id) 
-                    VALUES (:konu_adi, :sinif_seviyesi, :zorluk_derecesi, :soru_metni, :soru_resmi, :secenekler, :dogru_cevap, :ogretmen_id)";
+            $sql = "INSERT INTO yapay_zeka_sorular (konu_adi, sinif_seviyesi, zorluk_derecesi, soru_aciklamasi, soru_resmi, dogru_cevap, ogretmen_id) 
+                    VALUES (:konu_adi, :sinif_seviyesi, :zorluk_derecesi, :soru_aciklamasi, :soru_resmi, :dogru_cevap, :ogretmen_id)";
 
             $stmt = $pdo->prepare($sql);
             $result = $stmt->execute([
                 'konu_adi' => $konu_adi,
                 'sinif_seviyesi' => $sinif_seviyesi,
                 'zorluk_derecesi' => $zorluk_derecesi,
-                'soru_metni' => $soru_metni,
+                'soru_aciklamasi' => $soru_aciklamasi,
                 'soru_resmi' => $soru_resmi,
-                'secenekler' => json_encode($secenekler),
                 'dogru_cevap' => $dogru_cevap,
                 'ogretmen_id' => $ogretmen_id
             ]);

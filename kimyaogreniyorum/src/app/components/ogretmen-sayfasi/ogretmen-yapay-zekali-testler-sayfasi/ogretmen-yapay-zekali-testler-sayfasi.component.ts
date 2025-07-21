@@ -7,15 +7,9 @@ interface Soru {
   konu_adi: string;
   sinif_seviyesi: string;
   zorluk_derecesi: 'kolay' | 'orta' | 'zor';
-  soru_metni: string;
+  soru_aciklamasi: string;
   soru_resmi?: string;
-  secenekler: {
-    A: string;
-    B: string;
-    C: string;
-    D: string;
-  };
-  dogru_cevap: 'A' | 'B' | 'C' | 'D';
+  dogru_cevap: 'A' | 'B' | 'C' | 'D' | 'E';
   ogretmen_id: number;
   olusturma_tarihi?: string;
 }
@@ -41,13 +35,7 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
     konu_adi: '',
     sinif_seviyesi: '9',
     zorluk_derecesi: 'kolay',
-    soru_metni: '',
-    secenekler: {
-      A: '',
-      B: '',
-      C: '',
-      D: ''
-    },
+    soru_aciklamasi: '',
     dogru_cevap: 'A',
     ogretmen_id: 0
   };
@@ -165,13 +153,7 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
       konu_adi: '',
       sinif_seviyesi: '9',
       zorluk_derecesi: 'kolay',
-      soru_metni: '',
-      secenekler: {
-        A: '',
-        B: '',
-        C: '',
-        D: ''
-      },
+      soru_aciklamasi: '',
       dogru_cevap: 'A',
       ogretmen_id: this.teacherInfo?.id || 0
     };
@@ -187,16 +169,9 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
       return false;
     }
     
-    // Soru metni veya resim en az birisi olmalı
-    if (!this.yeniSoru.soru_metni.trim() && !this.selectedFile) {
-      this.error = 'Soru metni veya soru resmi gerekli';
-      return false;
-    }
-    
-    // Tüm seçeneklerin dolu olup olmadığını kontrol et
-    const secenekler = Object.values(this.yeniSoru.secenekler);
-    if (secenekler.some(secenek => !secenek.trim())) {
-      this.error = 'Tüm seçenekler doldurulmalı';
+    // Soru resmi zorunlu (çünkü şıklar fotoğrafta olacak)
+    if (!this.selectedFile) {
+      this.error = 'Soru resmi gerekli';
       return false;
     }
     
@@ -214,8 +189,7 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
     formData.append('konu_adi', this.yeniSoru.konu_adi);
     formData.append('sinif_seviyesi', this.yeniSoru.sinif_seviyesi);
     formData.append('zorluk_derecesi', this.yeniSoru.zorluk_derecesi);
-    formData.append('soru_metni', this.yeniSoru.soru_metni);
-    formData.append('secenekler', JSON.stringify(this.yeniSoru.secenekler));
+    formData.append('soru_aciklamasi', this.yeniSoru.soru_aciklamasi);
     formData.append('dogru_cevap', this.yeniSoru.dogru_cevap);
     formData.append('ogretmen_id', this.yeniSoru.ogretmen_id.toString());
     

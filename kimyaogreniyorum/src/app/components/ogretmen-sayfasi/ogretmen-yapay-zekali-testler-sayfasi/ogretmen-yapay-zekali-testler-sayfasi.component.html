@@ -87,26 +87,28 @@
           </div>
         </div>
 
-        <!-- Soru Metni -->
+        <!-- Soru Açıklaması -->
         <div class="form-group">
-          <label for="soruMetni" class="form-label">Soru Metni</label>
+          <label for="soruAciklamasi" class="form-label">Soru Açıklaması</label>
           <textarea class="form-control" 
-                    id="soruMetni" 
-                    [(ngModel)]="yeniSoru.soru_metni" 
-                    name="soruMetni" 
-                    rows="4" 
-                    placeholder="Soru metnini buraya yazınız... (Soru resmi yüklediyseniz opsiyonel)"></textarea>
+                    id="soruAciklamasi" 
+                    [(ngModel)]="yeniSoru.soru_aciklamasi" 
+                    name="soruAciklamasi" 
+                    rows="3" 
+                    placeholder="Soru ile ilgili açıklama (opsiyonel)"></textarea>
         </div>
 
-        <div class="mb-3">
-          <label for="soru_resmi" class="form-label">Soru Resmi</label>
+        <!-- Soru Resmi -->
+        <div class="form-group">
+          <label for="soru_resmi" class="form-label">Soru Resmi *</label>
           <input 
             type="file" 
             id="soru_resmi" 
             class="form-control" 
             accept="image/jpeg,image/png,image/gif"
-            (change)="onFileSelected($event)">
-          <div class="form-text">JPG, PNG veya GIF formatında, maksimum 5MB</div>
+            (change)="onFileSelected($event)"
+            required>
+          <div class="form-text">JPG, PNG veya GIF formatında, maksimum 5MB. Şıklar fotoğrafta olmalıdır.</div>
 
           <!-- Resim önizlemesi -->
           <div *ngIf="imagePreview" class="mt-2">
@@ -115,61 +117,6 @@
               <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeImage()">
                 <i class="fas fa-trash"></i> Kaldır
               </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Seçenekler -->
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="secenekA" class="form-label">A Seçeneği *</label>
-              <input type="text" 
-                     class="form-control" 
-                     id="secenekA" 
-                     [(ngModel)]="yeniSoru.secenekler.A" 
-                     name="secenekA" 
-                     placeholder="A seçeneği"
-                     required>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="secenekB" class="form-label">B Seçeneği *</label>
-              <input type="text" 
-                     class="form-control" 
-                     id="secenekB" 
-                     [(ngModel)]="yeniSoru.secenekler.B" 
-                     name="secenekB" 
-                     placeholder="B seçeneği"
-                     required>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="secenekC" class="form-label">C Seçeneği *</label>
-              <input type="text" 
-                     class="form-control" 
-                     id="secenekC" 
-                     [(ngModel)]="yeniSoru.secenekler.C" 
-                     name="secenekC" 
-                     placeholder="C seçeneği"
-                     required>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="secenekD" class="form-label">D Seçeneği *</label>
-              <input type="text" 
-                     class="form-control" 
-                     id="secenekD" 
-                     [(ngModel)]="yeniSoru.secenekler.D" 
-                     name="secenekD" 
-                     placeholder="D seçeneği"
-                     required>
             </div>
           </div>
         </div>
@@ -186,6 +133,7 @@
             <option value="B">B</option>
             <option value="C">C</option>
             <option value="D">D</option>
+            <option value="E">E</option>
           </select>
         </div>
 
@@ -285,22 +233,15 @@
           <tr *ngFor="let soru of getPaginatedSorular(); let i = index">
             <td>
               <div class="soru-detay">
-                <div *ngIf="soru.soru_metni">
-                  <strong>{{ soru.soru_metni }}</strong>
+                <div *ngIf="soru.soru_aciklamasi" class="mb-2">
+                  <strong>{{ soru.soru_aciklamasi }}</strong>
                 </div>
                 <div *ngIf="soru.soru_resmi" class="mt-2">
                   <img [src]="getSoruResmiUrl(soru)" alt="Soru resmi" class="soru-resmi">
                 </div>
-                <div class="secenekler mt-2">
-                  <span class="badge me-1" 
-                        [class]="secenek.key === soru.dogru_cevap ? 'bg-success' : 'bg-secondary'"
-                        *ngFor="let secenek of [
-                          {key: 'A', value: soru.secenekler.A},
-                          {key: 'B', value: soru.secenekler.B},
-                          {key: 'C', value: soru.secenekler.C},
-                          {key: 'D', value: soru.secenekler.D}
-                        ]">
-                    {{ secenek.key }}) {{ secenek.value }}
+                <div class="mt-2">
+                  <span class="badge bg-success">
+                    Doğru Cevap: {{ soru.dogru_cevap }}
                   </span>
                 </div>
               </div>
