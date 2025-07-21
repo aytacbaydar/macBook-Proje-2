@@ -173,41 +173,58 @@ export class OgretmenCevapAnahtariSayfasiComponent
   }
   loadCevapAnahtarlari() {
     this.loading = true;
+    this.error = null;
     
-    // Token'ı al
+    // Token'ı al ve kontrol et
     let token = '';
+    let user = null;
     const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
     if (userStr) {
-      const user = JSON.parse(userStr);
-      token = user.token || '';
+      try {
+        user = JSON.parse(userStr);
+        token = user.token || '';
+        console.log('Token bulundu:', token ? 'Var' : 'Yok');
+        console.log('Kullanıcı bilgileri:', { id: user.id, name: user.adi_soyadi, rutbe: user.rutbe });
+      } catch (e) {
+        console.error('Kullanıcı bilgisi parse hatası:', e);
+      }
+    }
+
+    if (!token) {
+      this.loading = false;
+      this.error = 'Oturum bilgileri bulunamadı. Lütfen tekrar giriş yapın.';
+      return;
     }
 
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
     });
+
+    console.log('API çağrısı yapılıyor: cevap-anahtarlari-listele.php');
 
     this.http.get<any>('./server/api/cevap-anahtarlari-listele.php', { headers }).subscribe({
       next: (response: any) => {
+        console.log('API yanıtı:', response);
         this.loading = false;
         if (response.success) {
           this.cevapAnahtarlari = response.data || [];
-          console.log('Yüklenen cevap anahtarları:', this.cevapAnahtarlari);
+          console.log('Yüklenen cevap anahtarları sayısı:', this.cevapAnahtarlari.length);
         } else {
-          console.error('API hatası:', response.message);
+          console.error('API hatası:', response);
           this.cevapAnahtarlari = [];
+          this.error = response.error || response.message || 'Bilinmeyen hata';
           this.showError(
-            'Cevap anahtarları yüklenirken bir hata oluştu: ' +
-              (response.message || 'Bilinmeyen hata')
+            'Cevap anahtarları yüklenirken bir hata oluştu: ' + this.error
           );
         }
       },
       error: (error) => {
-        console.error('HTTP hatası:', error);
+        console.error('HTTP hatası detayı:', error);
         this.loading = false;
         this.cevapAnahtarlari = [];
-        this.showError(
-          'Sunucu hatası: ' + (error.message || 'Bağlantı hatası')
-        );
+        this.error = error.error?.error || error.error?.message || error.message || 'Bağlantı hatası';
+        this.showError('Sunucu hatası: ' + this.error);
       },
     });
   }

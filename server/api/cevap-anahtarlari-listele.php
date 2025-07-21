@@ -39,32 +39,49 @@ try {
         exit;
     }
 
-    // Authorization kontrolü - multiple methods to get headers
-    $headers = array();
-
-    // Method 1: getallheaders() (Apache)
+    // Authorization header kontrolü - çoklu yöntem
+    $authHeader = '';
+    
+    // Method 1: Apache getallheaders()
     if (function_exists('getallheaders')) {
         $headers = getallheaders();
+        $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
     }
-
-    // Method 2: $_SERVER variables (Nginx/other servers)
-    if (empty($headers)) {
+    
+    // Method 2: $_SERVER HTTP_AUTHORIZATION
+    if (empty($authHeader)) {
+        $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+    }
+    
+    // Method 3: Manual $_SERVER parsing
+    if (empty($authHeader)) {
         foreach ($_SERVER as $key => $value) {
-            if (substr($key, 0, 5) === 'HTTP_') {
-                $header_name = str_replace(' ', '-', ucwords(str_replace('_', ' ', strtolower(substr($key, 5)))));
-                $headers[$header_name] = $value;
+            if (strtolower($key) === 'http_authorization') {
+                $authHeader = $value;
+                break;
             }
         }
     }
 
-    // Authorization header kontrolü
-    $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+    error_log("Authorization header: " . $authHeader);
+    
+    if (empty($authHeader)) {
+        errorResponse('Authorization header bulunamadı');
+    }
 
-    if (empty($authHeader) || !preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
-        throw new Exception('Yetkisiz erişim');
+    if (!preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
+        errorResponse('Geçersiz authorization format');
     }
 
     $token = trim($matches[1]);
+    
+    if (empty($token)) {
+        errorResponse('Token bulunamadı');
+    }
+
+    // Token'ı doğrula (config.php'de tanımlı fonksiyon kullanarak)
+    // Bu kısımda actual token validation yapılabilir
+    error_log("Token: " . substr($token, 0, 10) . "...");
 
     // Tablo sütunlarını kontrol et
     $columnsStmt = $pdo->query("SHOW COLUMNS FROM $tableName");
