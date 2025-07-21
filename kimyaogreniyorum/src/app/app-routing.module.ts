@@ -43,6 +43,7 @@ import { OgrenciUcretSayfasiComponent } from './components/ogrenci-sayfasi/ogren
 import { OgrenciProfilSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-profil-sayfasi/ogrenci-profil-sayfasi.component';
 import { OgretmenCevapAnahtariSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-cevap-anahtari-sayfasi/ogretmen-cevap-anahtari-sayfasi.component';
 import { OgrenciYapayZekaliTestlerSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component';
+import { OgretmenYapayZekaliTestlerSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-yapay-zekali-testler-sayfasi/ogretmen-yapay-zekali-testler-sayfasi.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/giris-sayfasi', pathMatch: 'full' },
@@ -206,6 +207,10 @@ const routes: Routes = [
       {
         path: 'ogretmen-soru-cozumu-sayfasi',
         component: OgretmenSoruCozumuSayfasiComponent,
+      },
+      {
+        path: 'ogretmen-yapay-zekali-testler-sayfasi',
+        component: OgretmenYapayZekaliTestlerSayfasiComponent,
       },
       {
         path: 'ogretmen-sinavlar-sayfasi',
