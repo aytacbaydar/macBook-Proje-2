@@ -235,6 +235,11 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
           this.userAnswers = {};
           this.currentStep = 3;
           this.success = 'Test başarıyla oluşturuldu!';
+          
+          // 2 saniye sonra mesajı temizle
+          setTimeout(() => {
+            this.clearMessages();
+          }, 2000);
         } else {
           this.error = response.message || 'Test oluşturulamadı';
         }

@@ -182,6 +182,22 @@
     </div>
   </div>
 
+  <!-- Test Çözme (Step 3) -->
+  <div *ngIf="currentStep === 3 && currentTest" class="test-solving-container">
+    <div class="test-header">
+      <h2>Yapay Zeka Testi</h2>
+      <div class="test-progress">
+        <div class="progress-info">
+          <span>Soru {{currentQuestionIndex + 1}} / {{currentTest.sorular.length}}</span>
+          <span class="answered-count">Cevaplanan: {{getAnsweredQuestionsCount()}}</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="getProgressPercentage()"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Test Results Section -->
   <div *ngIf="showResults && testResults" class="results-section">
     <div class="results-card">
