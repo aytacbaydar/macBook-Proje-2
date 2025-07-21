@@ -1,0 +1,64 @@
+▲ [WARNING] Duplicate member "showStudentDetail" in class body [duplicate-class-member]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:700:4:
+      700 │     showStudentDetail(ogrenci: any) {
+          ╵     ~~~~~~~~~~~~~~~~~
+
+  The original member "showStudentDetail" is here:
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:518:4:
+      518 │     showStudentDetail(studentResult: any) {
+          ╵     ~~~~~~~~~~~~~~~~~
+
+
+▲ [WARNING] Duplicate member "closeStudentDetailModal" in class body [duplicate-class-member]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:706:4:
+      706 │     closeStudentDetailModal() {
+          ╵     ~~~~~~~~~~~~~~~~~~~~~~~
+
+  The original member "closeStudentDetailModal" is here:
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:542:4:
+      542 │     closeStudentDetailModal() {
+          ╵     ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'calculateNet' does not exist on type 'OgretmenOgrenciSinavSonuclariSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.html:249:25:
+      249 │                   <h3>{{ calculateNet(selectedStudentDetail) }}</h3>
+          ╵                          ~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:30:15:
+      30 │ ...plateUrl: './ogretmen-ogrenci-sinav-sonuclari-sayfasi.component...
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:124:2:
+      124 │   showStudentDetail(studentResult: any) {
+          ╵   ~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:149:2:
+      149 │   closeStudentDetailModal() {
+          ╵   ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:319:2:
+      319 │   showStudentDetail(ogrenci: any) {
+          ╵   ~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:326:2:
+      326 │   closeStudentDetailModal() {
