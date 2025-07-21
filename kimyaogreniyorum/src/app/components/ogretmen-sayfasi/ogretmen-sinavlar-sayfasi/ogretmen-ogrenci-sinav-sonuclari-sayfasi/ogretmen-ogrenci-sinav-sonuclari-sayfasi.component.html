@@ -1,4 +1,3 @@
-
 <div class="exam-results-container">
   <!-- Header -->
   <div class="results-header">
@@ -37,7 +36,7 @@
       *ngFor="let sinav of sinavlar; trackBy: trackBySinavId"
       (click)="selectSinav(sinav)"
       [class.selected]="selectedSinav?.id === sinav.id">
-      
+
       <!-- Exam Header -->
       <div class="exam-header" [style.background]="getExamTypeColor(sinav.sinav_turu)">
         <div class="exam-type-badge">
@@ -117,6 +116,7 @@
             <th class="text-center">Puan</th>
             <th class="text-center">Yüzde</th>
             <th class="text-center">Tarih</th>
+            <th class="text-center">İşlemler</th>
           </tr>
         </thead>
         <tbody>

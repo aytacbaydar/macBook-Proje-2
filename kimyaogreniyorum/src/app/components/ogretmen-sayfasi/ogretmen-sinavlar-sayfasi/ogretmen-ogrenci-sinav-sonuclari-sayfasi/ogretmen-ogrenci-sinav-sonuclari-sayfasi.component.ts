@@ -33,7 +33,13 @@ interface Sinav {
 })
 export class OgretmenOgrenciSinavSonuclariSayfasiComponent implements OnInit {
   sinavlar: Sinav[] = [];
-  studentResults: SinavSonucu[] = [];
+  studentResults: any[] = [];
+
+  // Student detail modal properties
+  showStudentDetailModal = false;
+  selectedStudentResult: any = null;
+  selectedStudentDetail: any = null;
+  loadingStudentDetail = false;
   selectedSinav: Sinav | null = null;
   loading = false;
   loadingResults = false;
@@ -105,13 +111,51 @@ export class OgretmenOgrenciSinavSonuclariSayfasiComponent implements OnInit {
   formatDateTime(dateString: string): string {
     const date = new Date(dateString);
     const options: Intl.DateTimeFormatOptions = {
-      day: 'numeric',
-      month: 'short',
       year: 'numeric',
+      month: 'short',
+      day: 'numeric',
       hour: '2-digit',
       minute: '2-digit'
     };
     return date.toLocaleDateString('tr-TR', options);
+  }
+
+  showStudentDetail(studentResult: any) {
+    this.selectedStudentResult = studentResult;
+    this.showStudentDetailModal = true;
+    this.loadingStudentDetail = true;
+    this.selectedStudentDetail = null;
+
+    // Load student detail from API
+    this.http.get<any>(`./server/api/sinav_detay_sonuc.php?sinav_id=${studentResult.sinav_id}&ogrenci_id=${studentResult.ogrenci_id}`)
+      .subscribe({
+        next: (response) => {
+          this.loadingStudentDetail = false;
+          if (response.success && response.data) {
+            this.selectedStudentDetail = response.data;
+            console.log('Student detail loaded:', this.selectedStudentDetail);
+          } else {
+            console.error('Failed to load student detail:', response.message);
+          }
+        },
+        error: (error) => {
+          this.loadingStudentDetail = false;
+          console.error('Error loading student detail:', error);
+        }
+      });
+  }
+
+  closeStudentDetailModal() {
+    this.showStudentDetailModal = false;
+    this.selectedStudentResult = null;
+    this.selectedStudentDetail = null;
+    this.loadingStudentDetail = false;
+  }
+
+  openVideo(videoUrl: string) {
+    if (videoUrl) {
+      window.open(videoUrl, '_blank');
+    }
   }
 
   calculateAverageNet(): number {
