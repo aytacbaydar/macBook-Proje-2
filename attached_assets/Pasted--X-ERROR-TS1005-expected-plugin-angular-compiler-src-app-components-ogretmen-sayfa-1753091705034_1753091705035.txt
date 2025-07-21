@@ -1,0 +1,47 @@
+
+X [ERROR] TS1005: ',' expected. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:222:40:
+      222 │       'Content-Type': 'application/json'son'
+          ╵                                         ~~~
+
+
+X [ERROR] TS2552: Cannot find name 'son'. Did you mean 'JSON'? [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:222:40:
+      222 │       'Content-Type': 'application/json'son'
+          ╵                                         ~~~
+
+  'JSON' is declared here.
+
+    node_modules/typescript/lib/lib.es5.d.ts:1182:12:
+      1182 │ declare var JSON: JSON;
+           ╵             ~~~~
+
+
+X [ERROR] TS1005: ',' expected. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:222:43:
+      222 │       'Content-Type': 'application/json'son'
+          ╵                                            ^
+
+
+X [ERROR] TS1002: Unterminated string literal. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:222:44:
+      222 │       'Content-Type': 'application/json'son'
+          ╵                                             ^
+
+
+X [ERROR] TS1005: ':' expected. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:223:4:
+      223 │     });
+          ╵     ^
+
+
+X [ERROR] Unterminated string literal
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component.ts:489:56:
+      489 │             'Content-Type': 'application/json', son, ':
+          ╵       
