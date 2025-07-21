@@ -1,4 +1,3 @@
-
 .student-ai-tests-page {
   padding: 20px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -606,6 +605,249 @@
 
     .results-section .results-card .results-stats {
       grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
+
+.student-ai-tests-page {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+// Test çözme ekranı stilleri
+.test-solving-container {
+  .test-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+
+    h2 {
+      margin: 0 0 15px 0;
+      font-size: 1.5rem;
+    }
+
+    .test-progress {
+      .progress-info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+      }
+
+      .progress-bar {
+        background: rgba(255, 255, 255, 0.3);
+        height: 6px;
+        border-radius: 3px;
+        overflow: hidden;
+
+        .progress-fill {
+          background: #28a745;
+          height: 100%;
+          transition: width 0.3s ease;
+        }
+      }
+    }
+  }
+
+  .question-content {
+    .question-card {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+
+      .question-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #f8f9fa;
+
+        h4 {
+          margin: 0;
+          color: #2c3e50;
+        }
+
+        .question-info {
+          display: flex;
+          gap: 10px;
+
+          .topic-badge {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+          }
+
+          .difficulty-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+
+            &.kolay {
+              background: #e8f5e8;
+              color: #2e7d32;
+            }
+
+            &.zor {
+              background: #fff3e0;
+              color: #f57c00;
+            }
+          }
+        }
+      }
+
+      .question-text {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: #2c3e50;
+        margin-bottom: 25px;
+        padding: 15px 0;
+      }
+
+      .options-container {
+        .option {
+          display: flex;
+          align-items: center;
+          padding: 15px;
+          margin-bottom: 10px;
+          border: 2px solid #e9ecef;
+          border-radius: 10px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+
+          &:hover {
+            border-color: #007bff;
+            background: #f8f9ff;
+          }
+
+          &.selected {
+            border-color: #007bff;
+            background: #e3f2fd;
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+          }
+
+          .option-letter {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #007bff;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+          }
+
+          .option-text {
+            flex: 1;
+            font-size: 1rem;
+            line-height: 1.4;
+          }
+        }
+      }
+    }
+
+    .question-navigation {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+
+      .nav-btn {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover:not(:disabled) {
+          background: #0056b3;
+          transform: translateY(-1px);
+        }
+
+        &:disabled {
+          background: #6c757d;
+          cursor: not-allowed;
+        }
+
+        i {
+          font-size: 0.9rem;
+        }
+      }
+
+      .question-numbers {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+
+        .question-number {
+          width: 40px;
+          height: 40px;
+          border: 2px solid #dee2e6;
+          background: white;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          font-weight: 500;
+
+          &.current {
+            border-color: #007bff;
+            background: #007bff;
+            color: white;
+          }
+
+          &.answered {
+            border-color: #28a745;
+            background: #28a745;
+            color: white;
+          }
+
+          &:hover {
+            border-color: #007bff;
+          }
+        }
+      }
+    }
+
+    .test-finish {
+      text-align: center;
+      padding: 30px;
+
+      .finish-test-btn {
+        padding: 15px 40px;
+        font-size: 1.1rem;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        &:not(:disabled):hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+      }
     }
   }
 }

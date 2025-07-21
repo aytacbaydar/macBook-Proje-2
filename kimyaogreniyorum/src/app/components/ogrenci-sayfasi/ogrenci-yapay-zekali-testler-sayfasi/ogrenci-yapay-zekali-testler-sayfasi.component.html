@@ -196,6 +196,71 @@
         </div>
       </div>
     </div>
+
+    <!-- Soru İçeriği -->
+    <div class="question-content" *ngIf="currentQuestion">
+      <div class="question-card">
+        <div class="question-header">
+          <h4>Soru {{currentQuestionIndex + 1}}</h4>
+          <div class="question-info">
+            <span class="topic-badge">{{currentQuestion.konu_adi}}</span>
+            <span class="difficulty-badge" [class]="currentQuestion.zorluk_derecesi">
+              {{currentQuestion.zorluk_derecesi === 'kolay' ? 'Kolay' : 'Zor'}}
+            </span>
+          </div>
+        </div>
+        
+        <div class="question-text">
+          {{currentQuestion.soru_metni}}
+        </div>
+
+        <!-- Seçenekler -->
+        <div class="options-container">
+          <div class="option" 
+               *ngFor="let option of ['A', 'B', 'C', 'D']"
+               [class.selected]="userAnswers[currentQuestionIndex] === option"
+               (click)="selectAnswer(currentQuestionIndex, option)">
+            <div class="option-letter">{{option}}</div>
+            <div class="option-text">{{currentQuestion.secenekler[option]}}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Soru Navigasyonu -->
+      <div class="question-navigation">
+        <button class="nav-btn prev" 
+                (click)="previousQuestion()" 
+                [disabled]="currentQuestionIndex === 0">
+          <i class="bi bi-arrow-left"></i> Önceki
+        </button>
+        
+        <div class="question-numbers">
+          <button *ngFor="let soru of currentTest.sorular; let i = index"
+                  class="question-number"
+                  [class.current]="i === currentQuestionIndex"
+                  [class.answered]="userAnswers[i]"
+                  (click)="goToQuestion(i)">
+            {{i + 1}}
+          </button>
+        </div>
+
+        <button class="nav-btn next" 
+                (click)="nextQuestion()" 
+                [disabled]="currentQuestionIndex === currentTest.sorular.length - 1">
+          Sonraki <i class="bi bi-arrow-right"></i>
+        </button>
+      </div>
+
+      <!-- Test Bitir -->
+      <div class="test-finish">
+        <button class="btn btn-success btn-lg finish-test-btn" 
+                (click)="finishTest()"
+                [disabled]="!isTestCompleted()">
+          <i class="bi bi-check-circle me-2"></i>
+          Testi Bitir ({{getAnsweredQuestionsCount()}}/{{currentTest.sorular.length}})
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- Test Results Section -->
