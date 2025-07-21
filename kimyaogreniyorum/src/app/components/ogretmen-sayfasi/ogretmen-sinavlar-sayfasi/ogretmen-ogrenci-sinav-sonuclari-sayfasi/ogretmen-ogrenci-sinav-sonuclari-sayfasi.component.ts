@@ -219,7 +219,7 @@ export class OgretmenOgrenciSinavSonuclariSayfasiComponent implements OnInit {
     }
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'son'
+      'Content-Type': 'application/json'
     });
   }
 }
