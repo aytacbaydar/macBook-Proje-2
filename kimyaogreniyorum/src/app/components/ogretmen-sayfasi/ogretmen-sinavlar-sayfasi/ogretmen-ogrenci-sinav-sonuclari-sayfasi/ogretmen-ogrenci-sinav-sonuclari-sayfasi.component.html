@@ -276,7 +276,7 @@
                 </thead>
                 <tbody>
                   <tr *ngFor="let soru of studentQuestionDetails" [class]="getQuestionRowClass(soru)">
-                    <td class="fw-bold">{{ soru.soru_no }}</td>
+                    <td class="fw-bold">{{ getQuestionNumber(soru.soru_no) }}</td>
                     <td>
                       <span class="badge fs-6" [class]="getAnswerBadgeClass(soru.ogrenci_cevabi)">
                         {{ soru.ogrenci_cevabi || 'BOŞ' }}

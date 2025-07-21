@@ -324,7 +324,7 @@ export class OgretmenOgrenciSinavSonuclariSayfasiComponent implements OnInit {
       });
   }
 
-  
+
 
   // Soru detayları için yardımcı metodlar
   getQuestionRowClass(soru: any): string {
@@ -356,10 +356,15 @@ export class OgretmenOgrenciSinavSonuclariSayfasiComponent implements OnInit {
   }
 
   getStatusText(soru: any): string {
-    if (!soru.ogrenci_cevabi) {
-      return 'BOŞ';
-    }
+    if (!soru.ogrenci_cevabi) return 'BOŞ';
     return soru.ogrenci_cevabi === soru.dogru_cevap ? 'DOĞRU' : 'YANLIŞ';
+  }
+
+  getQuestionNumber(soruNo: any): string {
+    if (typeof soruNo === 'string' && soruNo.startsWith('ca')) {
+      return soruNo.substring(2); // "ca1" -> "1", "ca2" -> "2"
+    }
+    return soruNo?.toString() || '';
   }
 
   // Net hesaplama metodu
