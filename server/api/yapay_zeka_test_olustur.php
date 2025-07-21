@@ -41,6 +41,78 @@ if (!$ogrenci_id) {
     exit;
 }
 
+// Yapay zeka sorular tablosunu oluştur
+$createSorularTableSQL = "
+CREATE TABLE IF NOT EXISTS yapay_zeka_sorular (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    konu_adi VARCHAR(255) NOT NULL,
+    soru_metni TEXT NOT NULL,
+    secenekler JSON NOT NULL,
+    dogru_cevap VARCHAR(255) NOT NULL,
+    zorluk_derecesi ENUM('kolay', 'orta', 'zor') DEFAULT 'orta',
+    olusturma_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)";
+
+try {
+    $pdo->exec($createSorularTableSQL);
+    
+    // Tablo boşsa örnek sorular ekle
+    $checkSQL = "SELECT COUNT(*) as count FROM yapay_zeka_sorular";
+    $checkStmt = $pdo->prepare($checkSQL);
+    $checkStmt->execute();
+    $count = $checkStmt->fetch(PDO::FETCH_ASSOC)['count'];
+    
+    if ($count == 0) {
+        // Örnek sorular ekle
+        $ornekSorular = [
+            [
+                'konu_adi' => 'Asitler ve Bazlar',
+                'soru_metni' => 'Aşağıdakilerden hangisi güçlü asit örneğidir?',
+                'secenekler' => json_encode(['A) CH3COOH', 'B) HCl', 'C) NH3', 'D) H2O']),
+                'dogru_cevap' => 'B',
+                'zorluk_derecesi' => 'kolay'
+            ],
+            [
+                'konu_adi' => 'Asitler ve Bazlar',
+                'soru_metni' => 'pH = 2 olan bir çözeltinin [H+] konsantrasyonu nedir?',
+                'secenekler' => json_encode(['A) 10^-2 M', 'B) 10^-12 M', 'C) 2 M', 'D) 12 M']),
+                'dogru_cevap' => 'A',
+                'zorluk_derecesi' => 'zor'
+            ],
+            [
+                'konu_adi' => 'Periyodik Sistem',
+                'soru_metni' => 'Periyodik tabloda aynı grupta bulunan elementlerin ortak özelliği nedir?',
+                'secenekler' => json_encode(['A) Aynı atom numarası', 'B) Aynı kütle numarası', 'C) Aynı valans elektron sayısı', 'D) Aynı nötron sayısı']),
+                'dogru_cevap' => 'C',
+                'zorluk_derecesi' => 'kolay'
+            ],
+            [
+                'konu_adi' => 'Periyodik Sistem',
+                'soru_metni' => 'Alkali metallerin iyonlaşma enerjileri periyodik tabloda aşağı doğru nasıl değişir?',
+                'secenekler' => json_encode(['A) Artar', 'B) Azalır', 'C) Sabit kalır', 'D) Önce artar sonra azalır']),
+                'dogru_cevap' => 'B',
+                'zorluk_derecesi' => 'zor'
+            ]
+        ];
+        
+        $insertSQL = "INSERT INTO yapay_zeka_sorular (konu_adi, soru_metni, secenekler, dogru_cevap, zorluk_derecesi) VALUES (?, ?, ?, ?, ?)";
+        $insertStmt = $pdo->prepare($insertSQL);
+        
+        foreach ($ornekSorular as $soru) {
+            $insertStmt->execute([
+                $soru['konu_adi'],
+                $soru['soru_metni'],
+                $soru['secenekler'],
+                $soru['dogru_cevap'],
+                $soru['zorluk_derecesi']
+            ]);
+        }
+    }
+} catch (PDOException $e) {
+    echo json_encode(['success' => false, 'message' => 'Tablo oluşturma hatası: ' . $e->getMessage()]);
+    exit;
+}
+
 $test_sorulari = [];
 
 // Geliştirilmesi gereken konulardan kolay sorular
