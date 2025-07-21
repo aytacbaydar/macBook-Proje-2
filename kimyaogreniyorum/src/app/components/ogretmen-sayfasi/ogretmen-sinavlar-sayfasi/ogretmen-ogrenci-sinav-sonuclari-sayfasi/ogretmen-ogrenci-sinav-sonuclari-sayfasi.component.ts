@@ -150,12 +150,22 @@ export class OgretmenOgrenciSinavSonuclariSayfasiComponent implements OnInit {
             this.sinavlar = response.data || [];
           } else {
             this.error = response.message || 'Sınavlar yüklenirken hata oluştu';
+            if (response.message === 'Yetkisiz erişim') {
+              localStorage.removeItem('token');
+              sessionStorage.removeItem('token');
+              window.location.href = '/';
+            }
           }
         },
         error: (error) => {
           this.loading = false;
           this.error = 'Sınavlar yüklenirken hata oluştu';
           console.error('Sınavlar yükleme hatası:', error);
+          if (error.status === 401 || error.status === 403) {
+            localStorage.removeItem('token');
+            sessionStorage.removeItem('token');
+            window.location.href = '/';
+          }
         }
       });
   }
@@ -179,21 +189,37 @@ export class OgretmenOgrenciSinavSonuclariSayfasiComponent implements OnInit {
             this.studentResults = response.data || [];
           } else {
             this.error = response.message || 'Sonuçlar yüklenirken hata oluştu';
+            if (response.message === 'Yetkisiz erişim') {
+              localStorage.removeItem('token');
+              sessionStorage.removeItem('token');
+              window.location.href = '/';
+            }
           }
         },
         error: (error) => {
           this.loadingResults = false;
           this.error = 'Sonuçlar yüklenirken hata oluştu';
           console.error('Sonuçlar yükleme hatası:', error);
+          if (error.status === 401 || error.status === 403) {
+            localStorage.removeItem('token');
+            sessionStorage.removeItem('token');
+            window.location.href = '/';
+          }
         }
       });
   }
 
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    if (!token) {
+      console.error('Token bulunamadı');
+      // Token yoksa login sayfasına yönlendir
+      window.location.href = '/';
+      return new HttpHeaders();
+    }
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json'son'
     });
   }
 }
