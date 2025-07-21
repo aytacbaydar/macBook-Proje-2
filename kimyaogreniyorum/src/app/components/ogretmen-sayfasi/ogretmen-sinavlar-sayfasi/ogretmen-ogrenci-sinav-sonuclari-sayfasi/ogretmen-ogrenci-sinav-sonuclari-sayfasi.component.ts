@@ -171,13 +171,29 @@ export class OgretmenOgrenciSinavSonuclariSayfasiComponent implements OnInit {
 
   calculateAverageNet(): number {
     if (this.studentResults.length === 0) return 0;
-    const totalNet = this.studentResults.reduce((sum, result) => sum + result.net, 0);
+    const totalNet = this.studentResults.reduce((sum, result) => {
+      const net = this.calculateStudentNet(result);
+      return sum + net;
+    }, 0);
     return totalNet / this.studentResults.length;
   }
 
   getHighestNet(): number {
     if (this.studentResults.length === 0) return 0;
-    return Math.max(...this.studentResults.map(result => result.net));
+    const netValues = this.studentResults.map(result => this.calculateStudentNet(result));
+    return Math.max(...netValues);
+  }
+
+  calculateStudentNet(result: any): number {
+    if (!result) return 0;
+    // net property varsa onu kullan, yoksa hesapla
+    if (result.net !== undefined && result.net !== null) {
+      return result.net;
+    }
+    // Net hesaplama: doğru - (yanlış / 4)
+    const dogru = result.dogru_sayisi || 0;
+    const yanlis = result.yanlis_sayisi || 0;
+    return Math.max(0, dogru - (yanlis / 4));
   }
 
   getPercentageColor(yuzde: number): string {
