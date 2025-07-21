@@ -145,9 +145,9 @@ if (!empty($gelistirilmesi_gereken_konular)) {
             WHERE konu_adi IN ($konu_placeholders) 
             AND zorluk_derecesi = 'kolay' 
             ORDER BY RAND() 
-            LIMIT ?";
+            LIMIT " . intval($kolay_soru_sayisi);
 
-    $params = array_merge($gelistirilmesi_gereken_konular, [$kolay_soru_sayisi]);
+    $params = $gelistirilmesi_gereken_konular;
     
     // Debug için
     error_log("Kolay sorular SQL: " . $sql);
@@ -177,9 +177,9 @@ if (!empty($en_iyi_konular)) {
             WHERE konu_adi IN ($konu_placeholders) 
             AND zorluk_derecesi = 'zor' 
             ORDER BY RAND() 
-            LIMIT ?";
+            LIMIT " . intval($zor_soru_sayisi);
 
-    $params = array_merge($en_iyi_konular, [$zor_soru_sayisi]);
+    $params = $en_iyi_konular;
     
     // Debug için
     error_log("Zor sorular SQL: " . $sql);
