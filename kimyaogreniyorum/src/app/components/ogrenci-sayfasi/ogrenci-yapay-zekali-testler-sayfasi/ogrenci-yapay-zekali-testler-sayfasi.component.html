@@ -223,7 +223,7 @@
           [class.selected]="userAnswers[currentQuestionIndex] === option"
           (click)="selectAnswer(currentQuestionIndex, option)">
           <div class="option-letter">{{option}}</div>
-          <div class="option-text">{{currentQuestion.secenekler[option]}}</div>
+          <div class="option-text">{{currentQuestion.secenekler[option as keyof typeof currentQuestion.secenekler]}}</div>
         </div>
       </div>
 
