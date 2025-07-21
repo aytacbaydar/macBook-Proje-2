@@ -135,6 +135,8 @@ export class OgretmenOgrenciSinavSonuclariSayfasiComponent implements OnInit {
           if (response.success && response.data) {
             this.selectedStudentDetail = response.data;
             console.log('Student detail loaded:', this.selectedStudentDetail);
+            // Soru detaylarını da yükle
+            this.loadStudentQuestionDetails(studentResult.ogrenci_id);
           } else {
             console.error('Failed to load student detail:', response.message);
           }
@@ -151,6 +153,7 @@ export class OgretmenOgrenciSinavSonuclariSayfasiComponent implements OnInit {
     this.selectedStudentResult = null;
     this.selectedStudentDetail = null;
     this.loadingStudentDetail = false;
+    this.studentQuestionDetails = [];
   }
 
   openVideo(videoUrl: string) {
@@ -315,19 +318,7 @@ export class OgretmenOgrenciSinavSonuclariSayfasiComponent implements OnInit {
     });
   }
 
-  // Modal işlemleri
-  showStudentDetail(ogrenci: any) {
-    this.selectedStudentDetail = ogrenci;
-    this.showStudentDetailModal = true;
-    // Soru detaylarını yükle
-    this.loadStudentQuestionDetails(ogrenci.id);
-  }
-
-  closeStudentDetailModal() {
-    this.showStudentDetailModal = false;
-    this.selectedStudentDetail = null;
-    this.studentQuestionDetails = [];
-  }
+  
 
   // Soru detayları için yardımcı metodlar
   getQuestionRowClass(soru: any): string {
@@ -363,5 +354,11 @@ export class OgretmenOgrenciSinavSonuclariSayfasiComponent implements OnInit {
       return 'BOŞ';
     }
     return soru.ogrenci_cevabi === soru.dogru_cevap ? 'DOĞRU' : 'YANLIŞ';
+  }
+
+  // Net hesaplama metodu
+  calculateNet(studentDetail: any): number {
+    if (!studentDetail) return 0;
+    return Math.max(0, studentDetail.dogru_sayisi - (studentDetail.yanlis_sayisi / 4));
   }
 }
