@@ -48,7 +48,7 @@
                [class.selected]="isImprovementTopicSelected(konu.konu_adi)"
                (click)="toggleImprovementTopic(konu.konu_adi)">
             <i class="bi bi-arrow-up-circle"></i>
-            <span>{{ konu }}</span>
+            <span>{{ konu.konu_adi }}</span>
           </div>
         </div>
 
@@ -60,7 +60,7 @@
                [class.selected]="isBestTopicSelected(konu.konu_adi)"
                (click)="toggleBestTopic(konu.konu_adi)">
             <i class="bi bi-star-fill"></i>
-            <span>{{ konu }}</span>
+            <span>{{ konu.konu_adi }}</span>
           </div>
         </div>
 
