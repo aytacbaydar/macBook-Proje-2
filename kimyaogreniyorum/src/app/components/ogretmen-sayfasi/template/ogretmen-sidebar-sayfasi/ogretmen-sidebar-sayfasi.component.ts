@@ -74,7 +74,13 @@ export class OgretmenSidebarSayfasiComponent implements OnInit, OnDestroy {
       icon: 'bi-pencil-square',
       label: 'Soru Çözümü',
       link: 'ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi',
-      badgeCount: 0
+      badgeCount: 0,
+    },
+    {
+      icon: 'bi-pencil-square',
+      label: 'Soru Çözümü',
+      link: 'ogretmen-sayfasi/ogretmen-yapay-zekali-testler-sayfasi',
+      badgeCount: 0,
     },
   ];
 
@@ -83,7 +89,7 @@ export class OgretmenSidebarSayfasiComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadTeacherInfo();
     this.loadUnreadMessageCount();
-    
+
     // 30 saniyede bir mesaj sayısını güncelle
     this.refreshInterval = setInterval(() => {
       this.loadUnreadMessageCount();
@@ -97,7 +103,8 @@ export class OgretmenSidebarSayfasiComponent implements OnInit, OnDestroy {
   }
 
   private loadTeacherInfo(): void {
-    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    const userStr =
+      localStorage.getItem('user') || sessionStorage.getItem('user');
     if (userStr) {
       try {
         const user = JSON.parse(userStr);
@@ -111,7 +118,8 @@ export class OgretmenSidebarSayfasiComponent implements OnInit, OnDestroy {
   private getTokenFromStorage(): string {
     let token = localStorage.getItem('token');
     if (!token) {
-      const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+      const userStr =
+        localStorage.getItem('user') || sessionStorage.getItem('user');
       if (userStr) {
         try {
           const user = JSON.parse(userStr);
@@ -128,29 +136,34 @@ export class OgretmenSidebarSayfasiComponent implements OnInit, OnDestroy {
     if (!this.teacherId) return;
 
     const headers = {
-      'Authorization': `Bearer ${this.getTokenFromStorage()}`
+      Authorization: `Bearer ${this.getTokenFromStorage()}`,
     };
 
-    this.http.get<any>(`./server/api/soru_mesajlari.php`, { headers }).subscribe({
-      next: (response) => {
-        if (response.success && response.data) {
-          // Öğrencilerden gelen okunmamış mesajları say
-          const unreadMessages = response.data.filter((mesaj: SoruMesaj) => 
-            mesaj.gonderen_tip === 'ogrenci' && !mesaj.okundu
-          );
-          this.unreadMessageCount = unreadMessages.length;
-          
-          // Soru Çözümü menü öğesindeki badge sayısını güncelle
-          const soruCozumuMenuItem = this.menuItems.find(item => item.label === 'Soru Çözümü');
-          if (soruCozumuMenuItem) {
-            soruCozumuMenuItem.badgeCount = this.unreadMessageCount;
+    this.http
+      .get<any>(`./server/api/soru_mesajlari.php`, { headers })
+      .subscribe({
+        next: (response) => {
+          if (response.success && response.data) {
+            // Öğrencilerden gelen okunmamış mesajları say
+            const unreadMessages = response.data.filter(
+              (mesaj: SoruMesaj) =>
+                mesaj.gonderen_tip === 'ogrenci' && !mesaj.okundu
+            );
+            this.unreadMessageCount = unreadMessages.length;
+
+            // Soru Çözümü menü öğesindeki badge sayısını güncelle
+            const soruCozumuMenuItem = this.menuItems.find(
+              (item) => item.label === 'Soru Çözümü'
+            );
+            if (soruCozumuMenuItem) {
+              soruCozumuMenuItem.badgeCount = this.unreadMessageCount;
+            }
           }
-        }
-      },
-      error: (error) => {
-        console.error('Mesaj sayısı yüklenirken hata:', error);
-      }
-    });
+        },
+        error: (error) => {
+          console.error('Mesaj sayısı yüklenirken hata:', error);
+        },
+      });
   }
 
   toggleSidebar() {
