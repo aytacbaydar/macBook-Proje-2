@@ -391,6 +391,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   }
 
   resetTest(): void {
+    console.log('Test reset ediliyor...');
     this.currentTest = null;
     this.currentQuestionIndex = 0;
     this.userAnswers = {};
@@ -398,7 +399,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     this.testResults = null;
     this.selectedImprovementTopics = [];
     this.selectedBestTopics = [];
-    this.currentStep = 1;
+    // currentStep'i burada sıfırlamayalım, startNewTest() bunu hallediyor
     this.error = null;
     this.success = null;
   }
@@ -613,8 +614,10 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
 
   // Yeni test oluşturmaya başla
   startNewTest(): void {
+    console.log('Yeni test oluşturma başlatılıyor...');
     this.currentStep = 2;
     this.resetTest();
+    console.log('Current step:', this.currentStep);
   }
 
   // Test listesine geri dön
