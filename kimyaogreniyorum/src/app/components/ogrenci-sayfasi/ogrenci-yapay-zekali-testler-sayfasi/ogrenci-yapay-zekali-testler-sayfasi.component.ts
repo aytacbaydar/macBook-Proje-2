@@ -89,14 +89,19 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   success: string | null = null;
   
   // Test oluşturma adımları
-  currentStep = 1; // 1: Analiz, 2: Konu seçimi, 3: Test çözme, 4: Sonuçlar
-  totalSteps = 4;
+  currentStep = 1; // 1: Test listesi, 2: Analiz, 3: Konu seçimi, 4: Test çözme, 5: Sonuçlar
+  totalSteps = 5;
+  
+  // Test listesi
+  testListesi: any[] = [];
+  loadingTestList = false;
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     this.loadStudentInfo();
     this.loadKonuAnalizi();
+    this.loadTestListesi();
   }
 
   private loadStudentInfo(): void {
@@ -233,7 +238,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
           };
           this.currentQuestionIndex = 0;
           this.userAnswers = {};
-          this.currentStep = 3;
+          this.currentStep = 4;
           this.success = 'Test başarıyla oluşturuldu!';
           
           // 2 saniye sonra mesajı temizle
@@ -386,5 +391,127 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     if (!this.currentQuestion || !this.currentQuestion.secenekler) return '';
     const secenekler = this.currentQuestion.secenekler;
     return secenekler[option as 'A' | 'B' | 'C' | 'D'] || '';
+  }
+
+  // Test listesi yükleme
+  private loadTestListesi(): void {
+    if (!this.studentInfo) return;
+
+    this.loadingTestList = true;
+    this.error = null;
+
+    this.http.get<any>(`./server/api/ogrenci_testleri_listesi.php?ogrenci_id=${this.studentInfo.id}`).subscribe({
+      next: (response) => {
+        this.loadingTestList = false;
+        if (response.success) {
+          this.testListesi = response.data || [];
+        } else {
+          this.error = response.message || 'Test listesi yüklenemedi';
+        }
+      },
+      error: (error) => {
+        this.loadingTestList = false;
+        this.error = 'Test listesi yüklenirken hata oluştu: ' + (error.error?.message || error.message);
+      }
+    });
+  }
+
+  // Testi devam ettir veya sonuçlarını görüntüle
+  continueTest(test: any): void {
+    if (test.tamamlandi) {
+      // Test tamamlanmış, sonuçları göster
+      this.testResults = {
+        dogru_sayisi: test.dogru_sayisi,
+        yanlis_sayisi: test.yanlis_sayisi,
+        bos_sayisi: test.bos_sayisi,
+        toplam_soru: test.toplam_soru,
+        net: test.net,
+        yuzde: test.yuzde
+      };
+      this.currentStep = 5;
+      this.showResults = true;
+    } else {
+      // Test devam ettirilebilir, test detaylarını yükle
+      this.loadTestDetails(test.id);
+    }
+  }
+
+  // Test detaylarını yükle
+  private loadTestDetails(testId: string): void {
+    this.loading = true;
+    this.error = null;
+
+    this.http.get<any>(`./server/api/yapay_zeka_test_detay.php?test_id=${testId}`).subscribe({
+      next: (response) => {
+        this.loading = false;
+        if (response.success) {
+          this.currentTest = response.test;
+          this.currentQuestionIndex = 0;
+          this.userAnswers = response.user_answers || {};
+          this.currentStep = 4;
+          this.showResults = false;
+        } else {
+          this.error = response.message || 'Test detayları yüklenemedi';
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+        this.error = 'Test detayları yüklenirken hata oluştu: ' + (error.error?.message || error.message);
+      }
+    });
+  }
+
+  // Test PDF'ini indir
+  downloadTestPdfById(testId: string): void {
+    this.loading = true;
+    
+    this.http.get<any>(`./server/api/yapay_zeka_test_pdf.php?test_id=${testId}`).subscribe({
+      next: (response) => {
+        this.loading = false;
+        if (response.success) {
+          // HTML içeriğini yeni pencerede aç
+          const newWindow = window.open('', '_blank');
+          if (newWindow) {
+            newWindow.document.write(response.html_content);
+            newWindow.document.close();
+            // Print dialog'u aç
+            setTimeout(() => {
+              newWindow.print();
+            }, 500);
+          }
+        } else {
+          this.error = 'PDF oluşturulamadı';
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+        this.error = 'PDF oluşturulurken hata oluştu: ' + (error.error?.message || error.message);
+      }
+    });
+  }
+
+  // Yeni test oluşturmaya başla
+  startNewTest(): void {
+    this.currentStep = 2;
+    this.resetTest();
+  }
+
+  // Test listesine geri dön
+  backToTestList(): void {
+    this.currentStep = 1;
+    this.resetTest();
+    this.loadTestListesi();
+  }
+
+  // Tarih formatlama
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('tr-TR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   }
 }

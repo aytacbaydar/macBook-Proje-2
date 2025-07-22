@@ -31,8 +31,92 @@
     <button type="button" class="btn-close" (click)="error = null"></button>
   </div>
 
+  <!-- Test List Section -->
+  <div *ngIf="currentStep === 1" class="test-list-section">
+    <div class="list-header">
+      <h3 class="section-title">
+        <i class="bi bi-list-ul me-2"></i>
+        Testlerim
+      </h3>
+      <button class="btn btn-primary" (click)="startNewTest()" [disabled]="loading">
+        <i class="bi bi-plus-circle me-2"></i>
+        Yeni Test Oluştur
+      </button>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loadingTestList" class="text-center p-4">
+      <div class="spinner-border text-primary me-2"></div>
+      <span>Testler yükleniyor...</span>
+    </div>
+
+    <!-- Test List -->
+    <div *ngIf="!loadingTestList && testListesi.length > 0" class="test-cards">
+      <div *ngFor="let test of testListesi" class="test-card">
+        <div class="test-card-header">
+          <div class="test-info">
+            <h5 class="test-title">
+              <i class="bi bi-file-text me-2"></i>
+              Test #{{ test.id }}
+            </h5>
+            <p class="test-date">
+              <i class="bi bi-calendar me-1"></i>
+              {{ formatDate(test.olusturma_tarihi) }}
+            </p>
+          </div>
+          <div class="test-status">
+            <span class="badge" [class.bg-success]="test.tamamlandi" [class.bg-warning]="!test.tamamlandi">
+              {{ test.tamamlandi ? 'Tamamlandı' : 'Devam Ediyor' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="test-card-body">
+          <div class="test-stats">
+            <div class="stat-item">
+              <i class="bi bi-question-circle"></i>
+              <span>{{ test.toplam_soru }} Soru</span>
+            </div>
+            <div *ngIf="test.tamamlandi" class="stat-item">
+              <i class="bi bi-check-circle text-success"></i>
+              <span>{{ test.dogru_sayisi }} Doğru</span>
+            </div>
+            <div *ngIf="test.tamamlandi" class="stat-item">
+              <i class="bi bi-percent"></i>
+              <span>%{{ test.yuzde?.toFixed(1) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="test-card-actions">
+          <button class="btn btn-outline-primary btn-sm me-2" (click)="continueTest(test)" [disabled]="loading">
+            <i class="bi" [class.bi-play]="!test.tamamlandi" [class.bi-eye]="test.tamamlandi"></i>
+            {{ test.tamamlandi ? 'Sonuçları Gör' : 'Devam Et' }}
+          </button>
+          <button class="btn btn-outline-secondary btn-sm" (click)="downloadTestPdfById(test.id)" [disabled]="loading">
+            <i class="bi bi-file-pdf"></i>
+            PDF
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loadingTestList && testListesi.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <i class="bi bi-inbox"></i>
+      </div>
+      <h4>Henüz Test Oluşturmamışsınız</h4>
+      <p>Yapay zeka destekli kişiselleştirilmiş testler oluşturarak kimya bilginizi geliştirin.</p>
+      <button class="btn btn-primary" (click)="startNewTest()">
+        <i class="bi bi-plus-circle me-2"></i>
+        İlk Testinizi Oluşturun
+      </button>
+    </div>
+  </div>
+
   <!-- Test Creation Section -->
-  <div *ngIf="currentStep === 1" class="test-creation-section">
+  <div *ngIf="currentStep === 2" class="test-creation-section">
     <div class="creation-card">
       <h3 class="section-title">
         <i class="bi bi-plus-circle me-2"></i>
@@ -82,6 +166,10 @@
         </div>
 
         <div class="actions mt-4">
+          <button class="btn btn-outline-secondary me-2" (click)="backToTestList()" [disabled]="loading">
+            <i class="bi bi-arrow-left me-2"></i>
+            Geri Dön
+          </button>
           <button class="btn btn-primary" 
                   (click)="createTest()" 
                   [disabled]="loading || (selectedImprovementTopics.length === 0 && selectedBestTopics.length === 0)">
@@ -94,7 +182,7 @@
   </div>
 
   <!-- Test Questions Section -->
-  <div *ngIf="currentStep === 2 && currentTest && !showResults" class="test-section">
+  <div *ngIf="currentStep === 4 && currentTest && !showResults" class="test-section">
     <div class="test-header">
       <div class="test-info">
         <h3>{{ currentTest.test_adi }}</h3>

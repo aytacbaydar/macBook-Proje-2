@@ -1,0 +1,106 @@
+
+.test-list-section {
+  .list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    
+    .section-title {
+      margin: 0;
+      color: #2c3e50;
+    }
+  }
+
+  .test-cards {
+    display: grid;
+    gap: 1.5rem;
+    
+    .test-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+      
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+      }
+      
+      .test-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 1.5rem 1.5rem 0;
+        
+        .test-info {
+          .test-title {
+            margin: 0 0 0.5rem;
+            color: #2c3e50;
+            font-size: 1.1rem;
+          }
+          
+          .test-date {
+            margin: 0;
+            color: #6c757d;
+            font-size: 0.9rem;
+          }
+        }
+      }
+      
+      .test-card-body {
+        padding: 1rem 1.5rem;
+        
+        .test-stats {
+          display: flex;
+          gap: 1.5rem;
+          
+          .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #6c757d;
+            
+            i {
+              font-size: 1rem;
+            }
+          }
+        }
+      }
+      
+      .test-card-actions {
+        display: flex;
+        gap: 0.5rem;
+        padding: 0 1.5rem 1.5rem;
+        border-top: 1px solid #f8f9fa;
+        margin-top: 1rem;
+        padding-top: 1rem;
+      }
+    }
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    
+    .empty-icon {
+      font-size: 4rem;
+      color: #dee2e6;
+      margin-bottom: 1.5rem;
+    }
+    
+    h4 {
+      color: #495057;
+      margin-bottom: 1rem;
+    }
+    
+    p {
+      color: #6c757d;
+      margin-bottom: 2rem;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+}
