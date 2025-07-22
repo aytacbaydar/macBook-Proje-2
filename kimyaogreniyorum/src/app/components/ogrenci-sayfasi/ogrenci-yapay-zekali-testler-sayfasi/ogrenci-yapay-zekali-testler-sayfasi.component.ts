@@ -380,4 +380,11 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   downloadTestPDF(): void {
     this.generatePDF();
   }
+
+  // Template'de seçenekleri güvenli şekilde almak için helper method
+  getOptionText(option: string): string {
+    if (!this.currentQuestion || !this.currentQuestion.secenekler) return '';
+    const secenekler = this.currentQuestion.secenekler;
+    return secenekler[option as 'A' | 'B' | 'C' | 'D'] || '';
+  }
 }
