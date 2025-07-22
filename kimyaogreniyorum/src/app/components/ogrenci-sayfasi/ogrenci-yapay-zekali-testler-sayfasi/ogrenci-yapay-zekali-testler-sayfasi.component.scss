@@ -1,7 +1,332 @@
 @use 'test-list-styles.scss';
 
-// Ana container stilleri burada olacak
+// Ana container stilleri
 .student-ai-tests-page {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+// Test section stilleri
+.test-section {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.test-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+
+  h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .test-stats {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+
+    .badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+  }
+
+  .test-actions {
+    .btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.3);
+        color: white;
+      }
+    }
+  }
+}
+
+// Question container
+.question-container {
+  padding: 0;
+}
+
+.question-card {
+  background: white;
+  
+  .question-header {
+    padding: 20px;
+    border-bottom: 1px solid #e9ecef;
+    background: #f8f9fa;
+
+    .question-info {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+
+      .badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .question-content {
+    padding: 30px;
+
+    .question-text {
+      h5 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        line-height: 1.6;
+        color: #2c3e50;
+        margin-bottom: 20px;
+      }
+    }
+
+    .question-image {
+      text-align: center;
+      margin: 20px 0;
+
+      img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+    }
+
+    .question-description {
+      p {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #555;
+      }
+    }
+  }
+}
+
+// Answer options - Kritik kısım
+.answer-options {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.option-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-height: 60px;
+
+  &:hover {
+    background: #e3f2fd;
+    border-color: #2196f3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.15);
+  }
+
+  &.selected {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    border-color: #4CAF50;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+
+    .option-circle {
+      background: white;
+      color: #4CAF50;
+      border-color: white;
+    }
+
+    .option-text {
+      color: white;
+      font-weight: 500;
+    }
+  }
+}
+
+.option-circle {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #333;
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+
+.option-text {
+  flex: 1;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #333;
+  word-wrap: break-word;
+}
+
+// Question navigation
+.question-navigation {
+  padding: 25px 30px;
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 15px;
+
+  .btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .question-dots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    max-width: 400px;
+    justify-content: center;
+  }
+}
+
+.dot {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: #e9ecef;
+  border: 2px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #666;
+
+  &:hover {
+    background: #007bff;
+    border-color: #007bff;
+    color: white;
+    transform: scale(1.1);
+  }
+
+  &.current {
+    background: #007bff;
+    border-color: #007bff;
+    color: white;
+    transform: scale(1.15);
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+  }
+
+  &.answered {
+    background: #28a745;
+    border-color: #28a745;
+    color: white;
+    
+    &.current {
+      background: #007bff;
+      border-color: #007bff;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .student-ai-tests-page {
+    padding: 10px;
+  }
+
+  .test-header {
+    flex-direction: column;
+    text-align: center;
+    
+    h3 {
+      font-size: 1.3rem;
+    }
+  }
+
+  .question-card .question-content {
+    padding: 20px;
+  }
+
+  .question-navigation {
+    padding: 20px;
+    flex-direction: column;
+    
+    .question-dots {
+      order: -1;
+      margin-bottom: 15px;
+    }
+  }
+
+  .option-item {
+    padding: 12px 15px;
+    
+    .option-circle {
+      width: 30px;
+      height: 30px;
+      margin-right: 12px;
+      font-size: 0.9rem;
+    }
+    
+    .option-text {
+      font-size: 0.95rem;
+    }
+  }
+
+  .dot {
+    width: 32px;
+    height: 32px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .question-dots {
+    max-width: none;
+    gap: 6px;
+  }
+
+  .dot {
+    width: 28px;
+    height: 28px;
+    font-size: 0.75rem;
+  }
+}
   padding: 20px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
