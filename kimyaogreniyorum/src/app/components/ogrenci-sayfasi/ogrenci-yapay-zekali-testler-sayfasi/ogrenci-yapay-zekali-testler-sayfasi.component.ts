@@ -434,6 +434,37 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     return secenekler[option as 'A' | 'B' | 'C' | 'D' | 'E'] || '';
   }
 
+  // Seçenekleri formatlamak için yeni metod
+  getFormattedSecenekler(): { harf: string, metin: string }[] {
+    if (!this.currentQuestion || !this.currentQuestion.secenekler) return [];
+    
+    const secenekler = this.currentQuestion.secenekler;
+    const formattedSecenekler: { harf: string, metin: string }[] = [];
+    
+    // Eğer secenekler bir dizi ise (sunucudan gelen format)
+    if (Array.isArray(secenekler)) {
+      secenekler.forEach((secenek: string) => {
+        if (secenek && secenek.includes(')')) {
+          const parts = secenek.split(')');
+          const harf = parts[0].trim();
+          const metin = parts.slice(1).join(')').trim();
+          formattedSecenekler.push({ harf, metin });
+        }
+      });
+    } 
+    // Eğer secenekler bir nesne ise
+    else if (typeof secenekler === 'object') {
+      const harfler = ['A', 'B', 'C', 'D', 'E'];
+      harfler.forEach(harf => {
+        if (secenekler[harf]) {
+          formattedSecenekler.push({ harf, metin: secenekler[harf] });
+        }
+      });
+    }
+    
+    return formattedSecenekler;
+  }
+
   // Mevcut soru için kullanılabilir seçenekleri döndür
   getAvailableOptions(): string[] {
     if (!this.currentQuestion || !this.currentQuestion.secenekler) return [];

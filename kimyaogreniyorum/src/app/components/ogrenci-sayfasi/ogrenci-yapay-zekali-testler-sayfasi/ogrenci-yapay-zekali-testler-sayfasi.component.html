@@ -235,39 +235,11 @@
           <!-- Seçenekler -->
           <div class="answer-options">
             <div class="option-item" 
-                 *ngIf="currentQuestion.secenekler.A"
-                 [class.selected]="userAnswers[currentQuestionIndex] === 'A'"
-                 (click)="selectAnswer(currentQuestionIndex, 'A')">
-              <div class="option-circle">A</div>
-              <div class="option-text">{{ currentQuestion.secenekler.A }}</div>
-            </div>
-            <div class="option-item" 
-                 *ngIf="currentQuestion.secenekler.B"
-                 [class.selected]="userAnswers[currentQuestionIndex] === 'B'"
-                 (click)="selectAnswer(currentQuestionIndex, 'B')">
-              <div class="option-circle">B</div>
-              <div class="option-text">{{ currentQuestion.secenekler.B }}</div>
-            </div>
-            <div class="option-item" 
-                 *ngIf="currentQuestion.secenekler.C"
-                 [class.selected]="userAnswers[currentQuestionIndex] === 'C'"
-                 (click)="selectAnswer(currentQuestionIndex, 'C')">
-              <div class="option-circle">C</div>
-              <div class="option-text">{{ currentQuestion.secenekler.C }}</div>
-            </div>
-            <div class="option-item" 
-                 *ngIf="currentQuestion.secenekler.D"
-                 [class.selected]="userAnswers[currentQuestionIndex] === 'D'"
-                 (click)="selectAnswer(currentQuestionIndex, 'D')">
-              <div class="option-circle">D</div>
-              <div class="option-text">{{ currentQuestion.secenekler.D }}</div>
-            </div>
-            <div class="option-item" 
-                 *ngIf="currentQuestion.secenekler.E"
-                 [class.selected]="userAnswers[currentQuestionIndex] === 'E'"
-                 (click)="selectAnswer(currentQuestionIndex, 'E')">
-              <div class="option-circle">E</div>
-              <div class="option-text">{{ currentQuestion.secenekler.E }}</div>
+                 *ngFor="let secenek of getFormattedSecenekler(); let i = index"
+                 [class.selected]="userAnswers[currentQuestionIndex] === secenek.harf"
+                 (click)="selectAnswer(currentQuestionIndex, secenek.harf)">
+              <div class="option-circle">{{ secenek.harf }}</div>
+              <div class="option-text">{{ secenek.metin }}</div>
             </div>
           </div>
         </div>
