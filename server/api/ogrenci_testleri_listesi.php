@@ -28,7 +28,7 @@ if (!$ogrenci_id) {
 
 try {
     // Öğrencinin testlerini getir
-    $sql = "SELECT id, olusturma_tarihi, tamamlanma_tarihi, sonuc, 
+    $sql = "SELECT id, test_adi, olusturma_tarihi, tamamlanma_tarihi, sonuc, 
             JSON_LENGTH(sorular) as toplam_soru
             FROM yapay_zeka_testler 
             WHERE ogrenci_id = ? 

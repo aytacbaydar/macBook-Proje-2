@@ -185,7 +185,7 @@
   <div *ngIf="currentStep === 4 && currentTest && !showResults" class="test-section">
     <div class="test-header">
       <div class="test-info">
-        <h3>{{ currentTest.test_adi || 'Yapay Zeka Testi' }}</h3>
+        <h3>{{ currentTest?.test_adi || 'Yapay Zeka Testi' }}</h3>
         <div class="test-stats">
           <span class="badge bg-info me-2">
             Soru {{ currentQuestionIndex + 1 }}/{{ currentTest.sorular.length }}
