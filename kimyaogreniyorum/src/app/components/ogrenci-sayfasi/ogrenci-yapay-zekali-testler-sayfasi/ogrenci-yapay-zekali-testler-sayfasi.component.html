@@ -234,14 +234,15 @@
 
           <!-- Seçenekler -->
           <div class="answer-options">
-            <div class="option-item" 
-                 *ngFor="let option of ['A', 'B', 'C', 'D', 'E']"
-                 *ngIf="currentQuestion.secenekler[option] && currentQuestion.secenekler[option].trim() !== ''"
-                 [class.selected]="userAnswers[currentQuestionIndex] === option"
-                 (click)="selectAnswer(currentQuestionIndex, option)">
-              <div class="option-circle">{{ option }}</div>
-              <div class="option-text">{{ currentQuestion.secenekler[option] }}</div>
-            </div>
+            <ng-container *ngFor="let option of ['A', 'B', 'C', 'D', 'E']">
+              <div class="option-item" 
+                   *ngIf="getOptionText(option) && getOptionText(option).trim() !== ''"
+                   [class.selected]="userAnswers[currentQuestionIndex] === option"
+                   (click)="selectAnswer(currentQuestionIndex, option)">
+                <div class="option-circle">{{ option }}</div>
+                <div class="option-text">{{ getOptionText(option) }}</div>
+              </div>
+            </ng-container>
           </div>
         </div>
 
