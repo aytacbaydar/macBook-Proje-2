@@ -92,7 +92,20 @@ foreach ($sorular as $index => $soru) {
             <br>
             <span class="konu-badge">' . htmlspecialchars($soru['konu_adi']) . '</span>
             <span class="zorluk-badge ' . $soru['zorluk_derecesi'] . '">' . ucfirst($soru['zorluk_derecesi']) . '</span>
-        </div>
+        </div>';
+    
+    // Soru resmi varsa ekle
+    if (!empty($soru['soru_resmi'])) {
+        $resim_yolu = '../../uploads/soru_resimleri/' . $soru['soru_resmi'];
+        if (file_exists($resim_yolu)) {
+            $html_content .= '
+            <div class="soru-resim">
+                <img src="data:image/jpeg;base64,' . base64_encode(file_get_contents($resim_yolu)) . '" alt="Soru Resmi" style="max-width: 100%; height: auto; margin: 10px 0;">
+            </div>';
+        }
+    }
+    
+    $html_content .= '
         <div class="secenekler">';
 
     $secenekler = ['A', 'B', 'C', 'D'];
