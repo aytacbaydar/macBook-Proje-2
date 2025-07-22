@@ -46,52 +46,113 @@ $html_content = '
     <meta charset="UTF-8">
     <title>Yapay Zeka Test - ' . $test_id . '</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .header { text-align: center; margin-bottom: 30px; }
-        .soru { margin-bottom: 25px; page-break-inside: avoid; }
-        .soru-baslik { font-weight: bold; margin-bottom: 10px; }
-        .secenekler { margin-left: 20px; }
-        .secenek { margin-bottom: 5px; }
+        @page { size: A4; margin: 15mm; }
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 0; 
+            padding: 0;
+            font-size: 11px;
+            line-height: 1.3;
+        }
+        .header { 
+            text-align: center; 
+            margin-bottom: 20px; 
+            padding-bottom: 10px;
+            border-bottom: 2px solid #333;
+        }
+        .header h1 { font-size: 16px; margin: 5px 0; }
+        .header p { font-size: 10px; margin: 2px 0; }
+        
+        .container {
+            column-count: 2;
+            column-gap: 20px;
+            column-rule: 1px solid #ddd;
+        }
+        
+        .soru { 
+            margin-bottom: 15px; 
+            page-break-inside: avoid;
+            break-inside: avoid;
+            padding: 8px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+        }
+        
+        .soru-baslik { 
+            font-weight: bold; 
+            margin-bottom: 8px; 
+            font-size: 11px;
+            line-height: 1.4;
+        }
+        
+        .badges {
+            margin-bottom: 8px;
+        }
+        
         .konu-badge { 
             background: #e3f2fd; 
-            padding: 2px 8px; 
-            border-radius: 12px; 
-            font-size: 12px; 
+            padding: 1px 6px; 
+            border-radius: 8px; 
+            font-size: 9px; 
             color: #1976d2;
             display: inline-block;
-            margin-bottom: 10px;
+            margin-right: 5px;
         }
+        
         .zorluk-badge { 
-            padding: 2px 8px; 
-            border-radius: 12px; 
-            font-size: 12px; 
+            padding: 1px 6px; 
+            border-radius: 8px; 
+            font-size: 9px; 
             color: white;
             display: inline-block;
-            margin-left: 10px;
         }
+        
         .kolay { background: #4caf50; }
         .orta { background: #ff9800; }
         .zor { background: #f44336; }
+        
+        .secenekler { 
+            margin-left: 10px; 
+            font-size: 10px;
+        }
+        
+        .secenek { 
+            margin-bottom: 3px; 
+            line-height: 1.3;
+        }
+        
+        .soru-resim {
+            text-align: center;
+            margin: 8px 0;
+        }
+        
+        .soru-resim img {
+            max-width: 100%;
+            max-height: 80px;
+            border-radius: 3px;
+        }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>Yapay Zeka Destekli Test</h1>
-        <p>Test ID: ' . $test_id . '</p>
-        <p>Oluşturulma Tarihi: ' . date('d.m.Y H:i', strtotime($test['olusturma_tarihi'])) . '</p>
-        <p>Toplam Soru: ' . count($sorular) . '</p>
+        <p>Test Adı: ' . htmlspecialchars($test['test_adi']) . '</p>
+        <p>Test ID: ' . $test_id . ' | Tarih: ' . date('d.m.Y H:i', strtotime($test['olusturma_tarihi'])) . ' | Toplam Soru: ' . count($sorular) . '</p>
     </div>
+    
+    <div class="container">
 ';
 
 foreach ($sorular as $index => $soru) {
     $soru_no = $index + 1;
     $html_content .= '
     <div class="soru">
-        <div class="soru-baslik">
-            ' . $soru_no . '. ' . htmlspecialchars($soru['soru_metni']) . '
-            <br>
+        <div class="badges">
             <span class="konu-badge">' . htmlspecialchars($soru['konu_adi']) . '</span>
             <span class="zorluk-badge ' . $soru['zorluk_derecesi'] . '">' . ucfirst($soru['zorluk_derecesi']) . '</span>
+        </div>
+        <div class="soru-baslik">
+            ' . $soru_no . '. ' . htmlspecialchars($soru['soru_metni']) . '
         </div>';
     
     // Soru resmi varsa ekle
@@ -100,7 +161,7 @@ foreach ($sorular as $index => $soru) {
         if (file_exists($resim_yolu)) {
             $html_content .= '
             <div class="soru-resim">
-                <img src="data:image/jpeg;base64,' . base64_encode(file_get_contents($resim_yolu)) . '" alt="Soru Resmi" style="max-width: 100%; height: auto; margin: 10px 0;">
+                <img src="data:image/jpeg;base64,' . base64_encode(file_get_contents($resim_yolu)) . '" alt="Soru Resmi">
             </div>';
         }
     }
@@ -108,11 +169,18 @@ foreach ($sorular as $index => $soru) {
     $html_content .= '
         <div class="secenekler">';
 
-    $secenekler = ['A', 'B', 'C', 'D'];
-    foreach ($secenekler as $harf) {
-        if (isset($soru['secenekler'][$harf])) {
-            $html_content .= '<div class="secenek">' . $harf . ') ' . htmlspecialchars($soru['secenekler'][$harf]) . '</div>';
+    // Seçenekleri daha kompakt formatta yazdır
+    $secenekler_array = [];
+    if (is_array($soru['secenekler'])) {
+        foreach (['A', 'B', 'C', 'D', 'E'] as $harf) {
+            if (isset($soru['secenekler'][$harf]) && !empty($soru['secenekler'][$harf])) {
+                $secenekler_array[] = $harf . ') ' . htmlspecialchars($soru['secenekler'][$harf]);
+            }
         }
+    }
+    
+    foreach ($secenekler_array as $secenek) {
+        $html_content .= '<div class="secenek">' . $secenek . '</div>';
     }
 
     $html_content .= '
@@ -121,6 +189,7 @@ foreach ($sorular as $index => $soru) {
 }
 
 $html_content .= '
+    </div>
 </body>
 </html>';
 

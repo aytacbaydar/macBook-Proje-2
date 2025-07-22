@@ -63,8 +63,24 @@ if (!$input) {
 $ogrenci_id = $input['ogrenci_id'] ?? null;
 $gelistirilmesi_gereken_konular = $input['gelistirilmesi_gereken_konular'] ?? [];
 $en_iyi_konular = $input['en_iyi_konular'] ?? [];
-$kolay_soru_sayisi = $input['kolay_soru_sayisi'] ?? 5;
-$zor_soru_sayisi = $input['zor_soru_sayisi'] ?? 3;
+$kolay_soru_sayisi = max(1, min(30, $input['kolay_soru_sayisi'] ?? 5));
+$zor_soru_sayisi = max(1, min(30, $input['zor_soru_sayisi'] ?? 3));
+
+// Toplam soru sayısını kontrol et (12-40 arası)
+$toplam_soru = $kolay_soru_sayisi + $zor_soru_sayisi;
+if ($toplam_soru < 12) {
+    $ekstra = 12 - $toplam_soru;
+    $kolay_soru_sayisi += ceil($ekstra / 2);
+    $zor_soru_sayisi += floor($ekstra / 2);
+} elseif ($toplam_soru > 40) {
+    $oran = 40 / $toplam_soru;
+    $kolay_soru_sayisi = floor($kolay_soru_sayisi * $oran);
+    $zor_soru_sayisi = floor($zor_soru_sayisi * $oran);
+    if ($kolay_soru_sayisi + $zor_soru_sayisi < 12) {
+        $kolay_soru_sayisi = 8;
+        $zor_soru_sayisi = 4;
+    }
+}
 
 if (!$ogrenci_id) {
     echo json_encode(['success' => false, 'message' => 'Öğrenci ID gerekli']);
@@ -148,10 +164,13 @@ $test_sorulari = [];
 // Geliştirilmesi gereken konulardan kolay sorular
 if (!empty($gelistirilmesi_gereken_konular)) {
     $konu_placeholders = implode(',', array_fill(0, count($gelistirilmesi_gereken_konular), '?'));
+    
+    // Benzersiz random seçim için seed kullan
+    $random_seed = time() . $ogrenci_id . implode('', $gelistirilmesi_gereken_konular);
     $sql = "SELECT * FROM yapay_zeka_sorular 
             WHERE konu_adi IN ($konu_placeholders) 
             AND zorluk_derecesi = 'kolay' 
-            ORDER BY RAND() 
+            ORDER BY RAND(" . crc32($random_seed) . ") 
             LIMIT " . intval($kolay_soru_sayisi);
 
     $params = $gelistirilmesi_gereken_konular;
@@ -176,10 +195,13 @@ if (!empty($gelistirilmesi_gereken_konular)) {
 // En iyi konulardan zor sorular
 if (!empty($en_iyi_konular)) {
     $konu_placeholders = implode(',', array_fill(0, count($en_iyi_konular), '?'));
+    
+    // Benzersiz random seçim için farklı seed
+    $random_seed = time() . $ogrenci_id . implode('', $en_iyi_konular) . 'zor';
     $sql = "SELECT * FROM yapay_zeka_sorular 
             WHERE konu_adi IN ($konu_placeholders) 
             AND zorluk_derecesi = 'zor' 
-            ORDER BY RAND() 
+            ORDER BY RAND(" . crc32($random_seed) . ") 
             LIMIT " . intval($zor_soru_sayisi);
 
     $params = $en_iyi_konular;

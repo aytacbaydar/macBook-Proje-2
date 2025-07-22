@@ -58,9 +58,9 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   // Test oluşturma form verileri
   selectedImprovementTopics: string[] = [];
   selectedBestTopics: string[] = [];
-  improvementQuestionCount = 5;
-  advancedQuestionCount = 3;
-  challengeQuestionCount = 3;
+  improvementQuestionCount = 8;
+  advancedQuestionCount = 4;
+  challengeQuestionCount = 4;
   
   // Template'de kullanılan computed properties
   get improvementTopics(): KonuAnalizi[] {
@@ -514,6 +514,41 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
       return `./uploads/soru_resimleri/${soru.soru_resmi}`;
     }
     return '';
+  }
+
+  // Test silme
+  deleteTest(testId: string): void {
+    if (!confirm('Bu testi silmek istediğinizden emin misiniz?')) {
+      return;
+    }
+
+    if (!this.studentInfo) {
+      this.error = 'Öğrenci bilgileri bulunamadı';
+      return;
+    }
+
+    this.loading = true;
+    const deleteData = {
+      test_id: testId,
+      ogrenci_id: this.studentInfo.id
+    };
+
+    this.http.request('DELETE', './server/api/yapay_zeka_test_sil.php', { body: deleteData }).subscribe({
+      next: (response: any) => {
+        this.loading = false;
+        if (response.success) {
+          this.success = 'Test başarıyla silindi';
+          this.loadTestListesi(); // Listeyi yenile
+          setTimeout(() => this.clearMessages(), 2000);
+        } else {
+          this.error = response.message || 'Test silinemedi';
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+        this.error = 'Test silinirken hata oluştu: ' + (error.error?.message || error.message);
+      }
+    });
   }
 
   // Test listesi yükleme
