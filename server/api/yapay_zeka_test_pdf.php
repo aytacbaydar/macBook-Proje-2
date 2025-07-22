@@ -76,13 +76,30 @@ $html_content = '
             padding: 8px;
             border: 1px solid #e0e0e0;
             border-radius: 5px;
+            display: flex;
+            flex-direction: column;
         }
         
-        .soru-baslik { 
+        .soru-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+        
+        .soru-numara {
+            font-weight: bold;
+            font-size: 11px;
+            margin-right: 8px;
+            min-width: 25px;
+            flex-shrink: 0;
+            color: #333;
+        }
+        
+        .soru-metin { 
             font-weight: bold; 
-            margin-bottom: 8px; 
             font-size: 11px;
             line-height: 1.4;
+            flex: 1;
         }
         
         .badges {
@@ -112,13 +129,27 @@ $html_content = '
         .zor { background: #f44336; }
         
         .secenekler { 
-            margin-left: 10px; 
+            margin-left: 33px; 
             font-size: 10px;
+            margin-top: 5px;
         }
         
         .secenek { 
-            margin-bottom: 3px; 
-            line-height: 1.3;
+            margin-bottom: 4px; 
+            line-height: 1.4;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .secenek-harf {
+            font-weight: bold;
+            margin-right: 6px;
+            min-width: 15px;
+            flex-shrink: 0;
+        }
+        
+        .secenek-metin {
+            flex: 1;
         }
         
         .soru-resim {
@@ -151,8 +182,9 @@ foreach ($sorular as $index => $soru) {
             <span class="konu-badge">' . htmlspecialchars($soru['konu_adi']) . '</span>
             <span class="zorluk-badge ' . $soru['zorluk_derecesi'] . '">' . ucfirst($soru['zorluk_derecesi']) . '</span>
         </div>
-        <div class="soru-baslik">
-            ' . $soru_no . '. ' . htmlspecialchars($soru['soru_metni']) . '
+        <div class="soru-header">
+            <span class="soru-numara">' . $soru_no . '.</span>
+            <span class="soru-metin">' . htmlspecialchars($soru['soru_metni']) . '</span>
         </div>';
     
     // Soru resmi varsa ekle
@@ -180,7 +212,18 @@ foreach ($sorular as $index => $soru) {
     }
     
     foreach ($secenekler_array as $secenek) {
-        $html_content .= '<div class="secenek">' . $secenek . '</div>';
+        // A) formatından harfi ve metni ayır
+        if (preg_match('/^([A-E])\)\s*(.*)$/', $secenek, $matches)) {
+            $harf = $matches[1];
+            $metin = $matches[2];
+            $html_content .= '
+            <div class="secenek">
+                <span class="secenek-harf">' . $harf . ')</span>
+                <span class="secenek-metin">' . htmlspecialchars($metin) . '</span>
+            </div>';
+        } else {
+            $html_content .= '<div class="secenek">' . $secenek . '</div>';
+        }
     }
 
     $html_content .= '

@@ -353,3 +353,15 @@
     </div>
   </div>
 </div>
+
+<!-- Modern Confirm Dialog -->
+<app-confirm-dialog
+  [isVisible]="showConfirmDialog"
+  [title]="confirmDialogData.title"
+  [message]="confirmDialogData.message"
+  [confirmText]="confirmDialogData.confirmText"
+  [cancelText]="confirmDialogData.cancelText"
+  [type]="confirmDialogData.type"
+  (confirmed)="onConfirmDialogConfirmed()"
+  (cancelled)="onConfirmDialogCancelled()">
+</app-confirm-dialog>

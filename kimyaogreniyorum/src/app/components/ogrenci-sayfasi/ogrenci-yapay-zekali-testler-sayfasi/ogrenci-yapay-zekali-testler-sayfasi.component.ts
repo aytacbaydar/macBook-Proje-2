@@ -97,6 +97,17 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   testListesi: any[] = [];
   loadingTestList = false;
 
+  // Confirm dialog
+  showConfirmDialog = false;
+  confirmDialogData = {
+    title: 'Onay',
+    message: 'Bu işlemi gerçekleştirmek istediğinizden emin misiniz?',
+    confirmText: 'Evet',
+    cancelText: 'Hayır',
+    type: 'warning' as 'warning' | 'danger' | 'info' | 'success',
+    action: null as (() => void) | null
+  };
+
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
@@ -518,10 +529,18 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
 
   // Test silme
   deleteTest(testId: string): void {
-    if (!confirm('Bu testi silmek istediğinizden emin misiniz?')) {
-      return;
-    }
+    this.confirmDialogData = {
+      title: 'Test Silme',
+      message: 'Bu testi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.',
+      confirmText: 'Sil',
+      cancelText: 'İptal',
+      type: 'danger',
+      action: () => this.performDeleteTest(testId)
+    };
+    this.showConfirmDialog = true;
+  }
 
+  private performDeleteTest(testId: string): void {
     if (!this.studentInfo) {
       this.error = 'Öğrenci bilgileri bulunamadı';
       return;
@@ -549,6 +568,17 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
         this.error = 'Test silinirken hata oluştu: ' + (error.error?.message || error.message);
       }
     });
+  }
+
+  // Confirm dialog metodları
+  onConfirmDialogConfirmed(): void {
+    if (this.confirmDialogData.action) {
+      this.confirmDialogData.action();
+    }
+  }
+
+  onConfirmDialogCancelled(): void {
+    this.showConfirmDialog = false;
   }
 
   // Test listesi yükleme
