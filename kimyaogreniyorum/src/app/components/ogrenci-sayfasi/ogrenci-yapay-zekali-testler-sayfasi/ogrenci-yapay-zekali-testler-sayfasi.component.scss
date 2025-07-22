@@ -612,6 +612,126 @@
   }
 }
 
+// Test sayfası stilleri
+.question-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.question-content {
+  .question-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #2c3e50;
+    margin-bottom: 20px;
+  }
+
+  .question-image {
+    text-align: center;
+
+    img {
+      border: 2px solid #e9ecef;
+      border-radius: 8px;
+      max-height: 400px;
+    }
+  }
+}
+
+.answer-options {
+  .option-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: #007bff;
+      background-color: #f8f9fa;
+    }
+
+    &.selected {
+      border-color: #007bff;
+      background-color: #e3f2fd;
+    }
+
+    .option-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: #6c757d;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+
+    .option-text {
+      flex: 1;
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+
+    &.selected .option-circle {
+      background-color: #007bff;
+    }
+  }
+}
+
+.question-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #e9ecef;
+  padding-top: 20px;
+
+  .question-dots {
+    display: flex;
+    gap: 8px;
+
+    .dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #e9ecef;
+      background: white;
+      color: #6c757d;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: bold;
+      transition: all 0.3s ease;
+
+      &.current {
+        border-color: #007bff;
+        background-color: #007bff;
+        color: white;
+      }
+
+      &.answered {
+        border-color: #28a745;
+        background-color: #28a745;
+        color: white;
+      }
+
+      &:hover {
+        border-color: #007bff;
+      }
+    }
+  }
+}
+
 // Test Çözme Stilleri
 .test-solving-container {
   .test-header {

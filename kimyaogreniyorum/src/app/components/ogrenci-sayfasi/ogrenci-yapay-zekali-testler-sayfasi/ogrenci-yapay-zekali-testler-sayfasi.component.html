@@ -185,7 +185,7 @@
   <div *ngIf="currentStep === 4 && currentTest && !showResults" class="test-section">
     <div class="test-header">
       <div class="test-info">
-        <h3>{{ currentTest.test_adi }}</h3>
+        <h3>Yapay Zeka Testi</h3>
         <div class="test-stats">
           <span class="badge bg-info me-2">
             Soru {{ currentQuestionIndex + 1 }}/{{ currentTest.sorular.length }}
@@ -203,8 +203,8 @@
       </div>
     </div>
 
-    <div class="question-container">
-      <div class="question-card" *ngIf="currentTest.sorular[currentQuestionIndex] as currentQuestion">
+    <div class="question-container" *ngIf="currentTest.sorular[currentQuestionIndex] as currentQuestion">
+      <div class="question-card">
         <div class="question-header">
           <div class="question-info">
             <span class="badge bg-primary me-2">{{ currentQuestion.konu_adi }}</span>
@@ -216,25 +216,35 @@
         </div>
 
         <div class="question-content">
-          <div class="question-image" *ngIf="currentQuestion.soru_resmi">
-            <img [src]="currentQuestion.soru_resmi" alt="Soru Görseli" class="img-fluid">
+          <div class="question-text mb-3">
+            <h5>{{ currentQuestion.soru_metni }}</h5>
           </div>
 
-          <div class="question-description" *ngIf="currentQuestion.aciklama">
+          <!-- Soru resmi varsa göster -->
+          <div *ngIf="currentQuestion.soru_resmi" class="question-image mb-3">
+            <img [src]="getSoruResmiUrl(currentQuestion)" 
+                 alt="Soru Resmi" 
+                 class="img-fluid"
+                 style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+          </div>
+
+          <div class="question-description mb-3" *ngIf="currentQuestion.aciklama">
             <p>{{ currentQuestion.aciklama }}</p>
           </div>
 
+          <!-- Seçenekler -->
           <div class="answer-options">
             <div class="option-item" 
-                 *ngFor="let option of ['A', 'B', 'C', 'D', 'E']"
-                 [class.selected]="userAnswers[currentQuestion.id] === option"
-                 (click)="selectAnswer(currentQuestion.id, option)">
+                 *ngFor="let option of ['A', 'B', 'C', 'D']"
+                 [class.selected]="userAnswers[currentQuestionIndex] === option"
+                 (click)="selectAnswer(currentQuestionIndex, option)">
               <div class="option-circle">{{ option }}</div>
+              <div class="option-text">{{ getOptionText(option) }}</div>
             </div>
           </div>
         </div>
 
-        <div class="question-navigation">
+        <div class="question-navigation mt-4">
           <button class="btn btn-outline-secondary" 
                   (click)="previousQuestion()" 
                   [disabled]="currentQuestionIndex === 0">
@@ -242,11 +252,11 @@
             Önceki
           </button>
 
-          <div class="question-dots">
-            <span class="dot" 
+          <div class="question-dots mx-3">
+            <span class="dot me-1" 
                   *ngFor="let soru of currentTest.sorular; let i = index"
                   [class.current]="i === currentQuestionIndex"
-                  [class.answered]="userAnswers[soru.id]"
+                  [class.answered]="userAnswers[i]"
                   (click)="goToQuestion(i)">
               {{ i + 1 }}
             </span>
@@ -258,106 +268,12 @@
             Sonraki
             <i class="bi bi-arrow-right ms-2"></i>
           </button>
-        </div>
-      </div>
-    </div>
 
-    <div class="test-completion" *ngIf="isTestCompleted()">
-      <button class="btn btn-success btn-lg" (click)="finishTest()">
-        <i class="bi bi-check-circle me-2"></i>
-        Testi Bitir
-      </button>
-    </div>
-  </div>
-
-  <!-- Test Çözme (Step 3) -->
-  <div *ngIf="currentStep === 3 && currentTest" class="test-solving-container">
-    <div class="test-header">
-      <h2>Yapay Zeka Testi</h2>
-      <div class="test-progress">
-        <div class="progress-info">
-          <span>Soru {{currentQuestionIndex + 1}} / {{currentTest.sorular.length}}</span>
-          <span class="answered-count">Cevaplanan: {{getAnsweredQuestionsCount()}}</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" [style.width.%]="getProgressPercentage()"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Mevcut Soru -->
-    <div *ngIf="currentQuestion" class="question-container">
-      <div class="question-header">
-        <span class="question-badge">Soru {{currentQuestionIndex + 1}}</span>
-        <span class="topic-badge">{{currentQuestion.konu_adi}}</span>
-        <span class="difficulty-badge" [class]="'difficulty-' + currentQuestion.zorluk_derecesi">
-          {{currentQuestion.zorluk_derecesi}}
-        </span>
-      </div>
-
-      <div class="question-text">
-        {{currentQuestion.soru_metni}}
-      </div>
-
-      <!-- Soru resmi varsa göster -->
-      <div *ngIf="currentQuestion.soru_resmi" class="question-image mb-3">
-        <img [src]="getSoruResmiUrl(currentQuestion)" 
-             alt="Soru Resmi" 
-             class="question-img"
-             style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-      </div>
-
-      <!-- Seçenekler -->
-      <div class="options-container">
-        <div 
-          *ngFor="let option of ['A', 'B', 'C', 'D']" 
-          class="option-item"
-          [class.selected]="userAnswers[currentQuestionIndex] === option"
-          (click)="selectAnswer(currentQuestionIndex, option)">
-          <div class="option-letter">{{option}}</div>
-          <div class="option-text">{{getOptionText(option)}}</div>
-        </div>
-      </div>
-
-      <!-- Navigasyon -->
-      <div class="question-navigation">
-        <button 
-          class="btn btn-outline-secondary" 
-          (click)="previousQuestion()" 
-          [disabled]="currentQuestionIndex === 0">
-          <i class="bi bi-arrow-left me-2"></i>
-          Önceki
-        </button>
-
-        <button 
-          class="btn btn-outline-secondary" 
-          (click)="nextQuestion()" 
-          [disabled]="currentQuestionIndex >= currentTest.sorular.length - 1">
-          Sonraki
-          <i class="bi bi-arrow-right ms-2"></i>
-        </button>
-
-        <button 
-          *ngIf="currentQuestionIndex === currentTest.sorular.length - 1" 
-          class="btn btn-success ms-3" 
-          (click)="finishTest()"
-          [disabled]="!isTestCompleted()">
-          <i class="bi bi-check-circle me-2"></i>
-          Testi Bitir
-        </button>
-      </div>
-
-      <!-- Soru Haritası -->
-      <div class="question-map">
-        <div class="map-title">Soru Haritası:</div>
-        <div class="map-items">
-          <button
-            *ngFor="let soru of currentTest.sorular; let i = index"
-            class="map-item"
-            [class.current]="i === currentQuestionIndex"
-            [class.answered]="userAnswers[i]"
-            (click)="goToQuestion(i)">
-            {{i + 1}}
+          <button *ngIf="isTestCompleted()" 
+                  class="btn btn-success ms-3" 
+                  (click)="finishTest()">
+            <i class="bi bi-check-circle me-2"></i>
+            Testi Bitir
           </button>
         </div>
       </div>

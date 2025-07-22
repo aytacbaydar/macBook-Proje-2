@@ -436,7 +436,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   // Soru resmi URL'ini oluştur
   getSoruResmiUrl(soru: TestSoru): string {
     if (soru.soru_resmi) {
-      return `./server/uploads/soru_resimleri/${soru.soru_resmi}`;
+      return `./uploads/soru_resimleri/${soru.soru_resmi}`;
     }
     return '';
   }
