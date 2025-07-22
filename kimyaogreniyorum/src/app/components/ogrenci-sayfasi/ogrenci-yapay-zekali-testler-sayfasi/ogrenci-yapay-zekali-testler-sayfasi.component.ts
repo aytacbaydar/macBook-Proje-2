@@ -32,7 +32,7 @@ interface TestSoru {
     C: string;
     D: string;
     E?: string;
-  };
+  } | { [key: string]: string } | string[];
   dogru_cevap: string;
   test_tipi: string;
 }
@@ -454,10 +454,11 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     } 
     // Eğer secenekler bir nesne ise
     else if (typeof secenekler === 'object') {
-      const harfler: (keyof typeof secenekler)[] = ['A', 'B', 'C', 'D', 'E'];
+      const harfler = ['A', 'B', 'C', 'D', 'E'];
       harfler.forEach(harf => {
-        if (secenekler[harf]) {
-          formattedSecenekler.push({ harf, metin: secenekler[harf] });
+        const seceneklerObj = secenekler as any;
+        if (seceneklerObj[harf]) {
+          formattedSecenekler.push({ harf, metin: seceneklerObj[harf] });
         }
       });
     }
