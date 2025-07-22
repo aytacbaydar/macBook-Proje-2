@@ -203,22 +203,25 @@ if (!empty($en_iyi_konular)) {
 
 // Test sonuçlarını kaydet
 if (!empty($test_sorulari)) {
-    // Test adını konulara göre oluştur
-    $test_konulari = array_merge($gelistirilmesi_gereken_konular, $en_iyi_konular);
-    $konu_metni = '';
+    // Test ID'si oluştur
+    $test_id = 'test_' . uniqid();
 
-    if (count($test_konulari) > 0) {
-        if (count($test_konulari) <= 2) {
-            $konu_metni = implode(' - ', $test_konulari);
-        } else {
-            $konu_metni = $test_konulari[0] . ' ve ' . (count($test_konulari) - 1) . ' konu daha';
+    // Test adını oluştur
+    $konu_listesi = array_merge($gelistirilmesi_gereken_konular, $en_iyi_konular);
+    $test_adi = '';
+
+    if (!empty($konu_listesi)) {
+        // İlk 2-3 konuyu al ve test adını oluştur
+        $secili_konular = array_slice($konu_listesi, 0, min(3, count($konu_listesi)));
+        $test_adi = implode(', ', $secili_konular) . ' - Yapay Zeka Testi';
+
+        // Çok uzun ise kısalt
+        if (strlen($test_adi) > 100) {
+            $test_adi = substr($test_adi, 0, 97) . '...';
         }
     } else {
-        $konu_metni = 'Karma Test';
+        $test_adi = 'Yapay Zeka Testi - ' . date('d.m.Y H:i');
     }
-
-    $test_id = 'test_' . uniqid();
-    $test_adi = 'Yapay Zeka Testi - ' . $konu_metni;
 
     // Test tablosunu oluştur
     $createTestTableSQL = "
@@ -234,7 +237,9 @@ if (!empty($test_sorulari)) {
 
     $pdo->exec($createTestTableSQL);
 
-    $sql = "INSERT INTO yapay_zeka_testler (id, test_adi, ogrenci_id, sorular) VALUES (?, ?, ?, ?)";
+    // Test verilerini veritabanına kaydet
+    $sql = "INSERT INTO yapay_zeka_testler (id, test_adi, ogrenci_id, sorular, olusturma_tarihi) 
+            VALUES (?, ?, ?, ?, NOW())";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$test_id, $test_adi, $ogrenci_id, json_encode($test_sorulari)]);
 
