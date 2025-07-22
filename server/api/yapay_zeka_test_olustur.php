@@ -85,13 +85,13 @@ CREATE TABLE IF NOT EXISTS yapay_zeka_sorular (
 
 try {
     $pdo->exec($createSorularTableSQL);
-    
+
     // Tablo boşsa örnek sorular ekle
     $checkSQL = "SELECT COUNT(*) as count FROM yapay_zeka_sorular";
     $checkStmt = $pdo->prepare($checkSQL);
     $checkStmt->execute();
     $count = $checkStmt->fetch(PDO::FETCH_ASSOC)['count'];
-    
+
     if ($count == 0) {
         // Örnek sorular ekle
         $ornekSorular = [
@@ -124,10 +124,10 @@ try {
                 'zorluk_derecesi' => 'zor'
             ]
         ];
-        
+
         $insertSQL = "INSERT INTO yapay_zeka_sorular (konu_adi, soru_metni, secenekler, dogru_cevap, zorluk_derecesi) VALUES (?, ?, ?, ?, ?)";
         $insertStmt = $pdo->prepare($insertSQL);
-        
+
         foreach ($ornekSorular as $soru) {
             $insertStmt->execute([
                 $soru['konu_adi'],
@@ -155,7 +155,7 @@ if (!empty($gelistirilmesi_gereken_konular)) {
             LIMIT " . intval($kolay_soru_sayisi);
 
     $params = $gelistirilmesi_gereken_konular;
-    
+
     try {
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
@@ -183,7 +183,7 @@ if (!empty($en_iyi_konular)) {
             LIMIT " . intval($zor_soru_sayisi);
 
     $params = $en_iyi_konular;
-    
+
     try {
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
@@ -203,12 +203,28 @@ if (!empty($en_iyi_konular)) {
 
 // Test sonuçlarını kaydet
 if (!empty($test_sorulari)) {
-    $test_id = uniqid('test_');
+    // Test adını konulara göre oluştur
+    $test_konulari = array_merge($gelistirilmesi_gereken_konular, $en_iyi_konular);
+    $konu_metni = '';
+
+    if (count($test_konulari) > 0) {
+        if (count($test_konulari) <= 2) {
+            $konu_metni = implode(' - ', $test_konulari);
+        } else {
+            $konu_metni = $test_konulari[0] . ' ve ' . (count($test_konulari) - 1) . ' konu daha';
+        }
+    } else {
+        $konu_metni = 'Karma Test';
+    }
+
+    $test_id = 'test_' . uniqid();
+    $test_adi = 'Yapay Zeka Testi - ' . $konu_metni;
 
     // Test tablosunu oluştur
     $createTestTableSQL = "
     CREATE TABLE IF NOT EXISTS yapay_zeka_testler (
         id VARCHAR(50) PRIMARY KEY,
+        test_adi VARCHAR(255) NOT NULL,
         ogrenci_id INT NOT NULL,
         sorular JSON NOT NULL,
         olusturma_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -218,14 +234,15 @@ if (!empty($test_sorulari)) {
 
     $pdo->exec($createTestTableSQL);
 
-    $sql = "INSERT INTO yapay_zeka_testler (id, ogrenci_id, sorular) VALUES (?, ?, ?)";
+    $sql = "INSERT INTO yapay_zeka_testler (id, test_adi, ogrenci_id, sorular) VALUES (?, ?, ?, ?)";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([$test_id, $ogrenci_id, json_encode($test_sorulari)]);
+    $stmt->execute([$test_id, $test_adi, $ogrenci_id, json_encode($test_sorulari)]);
 
     echo json_encode([
-        'success' => true, 
+        'success' => true,
         'message' => 'Test başarıyla oluşturuldu',
         'test_id' => $test_id,
+        'test_adi' => $test_adi,
         'sorular' => $test_sorulari,
         'toplam_soru' => count($test_sorulari)
     ]);

@@ -233,6 +233,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
         if (response.success) {
           this.currentTest = {
             id: response.test_id,
+            test_adi: response.test_adi,
             sorular: response.sorular,
             olusturma_tarihi: new Date().toISOString(),
             toplam_soru: response.toplam_soru
