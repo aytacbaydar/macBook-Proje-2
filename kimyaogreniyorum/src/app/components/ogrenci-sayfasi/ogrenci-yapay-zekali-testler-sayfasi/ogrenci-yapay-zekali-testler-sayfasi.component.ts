@@ -282,35 +282,75 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
 
     // Sonuçları hesapla
     let correctAnswers = 0;
+    let incorrectAnswers = 0;
+    let emptyAnswers = 0;
     const results: any[] = [];
 
     this.currentTest.sorular.forEach((soru, index) => {
       const userAnswer = this.userAnswers[index];
-      const isCorrect = userAnswer === soru.dogru_cevap;
+      let isCorrect = false;
       
-      if (isCorrect) {
+      if (!userAnswer) {
+        emptyAnswers++;
+      } else if (userAnswer === soru.dogru_cevap) {
         correctAnswers++;
+        isCorrect = true;
+      } else {
+        incorrectAnswers++;
       }
 
       results.push({
         soru_index: index,
         soru: soru,
-        user_answer: userAnswer,
+        user_answer: userAnswer || '',
         correct_answer: soru.dogru_cevap,
         is_correct: isCorrect
       });
     });
 
+    // Net hesaplama (doğru - yanlış/4)
+    const net = correctAnswers - (incorrectAnswers * 0.25);
+    const yuzde = Math.round((correctAnswers / this.currentTest.sorular.length) * 100);
+
     this.testResults = {
-      totalQuestions: this.currentTest.sorular.length,
-      correctAnswers: correctAnswers,
-      incorrectAnswers: this.currentTest.sorular.length - correctAnswers,
-      score: Math.round((correctAnswers / this.currentTest.sorular.length) * 100),
+      dogru_sayisi: correctAnswers,
+      yanlis_sayisi: incorrectAnswers,
+      bos_sayisi: emptyAnswers,
+      toplam_soru: this.currentTest.sorular.length,
+      net: net,
+      yuzde: yuzde,
       details: results
     };
 
+    // Test sonuçlarını sunucuya kaydet
+    this.saveTestResults();
+
     this.showResults = true;
-    this.currentStep = 4;
+    this.currentStep = 5;
+  }
+
+  // Test sonuçlarını sunucuya kaydet
+  private saveTestResults(): void {
+    if (!this.currentTest || !this.testResults) return;
+
+    const saveData = {
+      test_id: this.currentTest.id,
+      user_answers: this.userAnswers,
+      test_results: this.testResults
+    };
+
+    this.http.post<any>('./server/api/yapay_zeka_test_tamamla.php', saveData).subscribe({
+      next: (response) => {
+        if (response.success) {
+          console.log('Test sonuçları başarıyla kaydedildi');
+        } else {
+          console.error('Test sonuçları kaydedilemedi:', response.message);
+        }
+      },
+      error: (error) => {
+        console.error('Test sonuçları kaydetme hatası:', error);
+      }
+    });
   }
 
   // PDF oluşturma
@@ -396,7 +436,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   // Soru resmi URL'ini oluştur
   getSoruResmiUrl(soru: TestSoru): string {
     if (soru.soru_resmi) {
-      return `./uploads/soru_resimleri/${soru.soru_resmi}`;
+      return `./server/uploads/soru_resimleri/${soru.soru_resmi}`;
     }
     return '';
   }

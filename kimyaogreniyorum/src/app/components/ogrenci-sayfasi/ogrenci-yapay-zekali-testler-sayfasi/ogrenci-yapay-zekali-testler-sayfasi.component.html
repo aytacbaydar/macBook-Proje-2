@@ -287,30 +287,27 @@
 
     <!-- Mevcut Soru -->
     <div *ngIf="currentQuestion" class="question-container">
-      
-<div class="soru-content">
-        <div class="soru-text">
-          {{currentQuestion.soru_metni}}
-        </div>
-
-        <!-- Soru resmi varsa göster -->
-        <div *ngIf="currentQuestion.soru_resmi" class="soru-resim mb-3">
-          <img [src]="getSoruResmiUrl(currentQuestion)" 
-               alt="Soru Resmi" 
-               class="img-fluid"
-               style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-        </div>
-
-        <div class="soru-badges">
-          <span class="badge bg-primary">{{currentQuestion.konu_adi}}</span>
-          <span class="badge" [ngClass]="{
-            'bg-success': currentQuestion.zorluk_derecesi === 'kolay',
-            'bg-warning': currentQuestion.zorluk_derecesi === 'orta',
-            'bg-danger': currentQuestion.zorluk_derecesi === 'zor'
-          }">{{currentQuestion.zorluk_derecesi}}</span>
-        </div>
+      <div class="question-header">
+        <span class="question-badge">Soru {{currentQuestionIndex + 1}}</span>
+        <span class="topic-badge">{{currentQuestion.konu_adi}}</span>
+        <span class="difficulty-badge" [class]="'difficulty-' + currentQuestion.zorluk_derecesi">
+          {{currentQuestion.zorluk_derecesi}}
+        </span>
       </div>
 
+      <div class="question-text">
+        {{currentQuestion.soru_metni}}
+      </div>
+
+      <!-- Soru resmi varsa göster -->
+      <div *ngIf="currentQuestion.soru_resmi" class="question-image mb-3">
+        <img [src]="getSoruResmiUrl(currentQuestion)" 
+             alt="Soru Resmi" 
+             class="question-img"
+             style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+      </div>
+
+      <!-- Seçenekler -->
       <div class="options-container">
         <div 
           *ngFor="let option of ['A', 'B', 'C', 'D']" 
