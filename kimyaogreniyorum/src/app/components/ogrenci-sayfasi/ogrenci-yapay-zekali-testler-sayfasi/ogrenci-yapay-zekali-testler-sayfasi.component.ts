@@ -454,7 +454,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     } 
     // Eğer secenekler bir nesne ise
     else if (typeof secenekler === 'object') {
-      const harfler = ['A', 'B', 'C', 'D', 'E'];
+      const harfler: (keyof typeof secenekler)[] = ['A', 'B', 'C', 'D', 'E'];
       harfler.forEach(harf => {
         if (secenekler[harf]) {
           formattedSecenekler.push({ harf, metin: secenekler[harf] });
