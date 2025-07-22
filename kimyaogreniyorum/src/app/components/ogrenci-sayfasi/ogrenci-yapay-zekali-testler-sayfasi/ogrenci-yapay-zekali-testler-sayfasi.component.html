@@ -235,7 +235,7 @@
           <!-- Seçenekler -->
           <div class="answer-options">
             <div class="option-item" 
-                 *ngFor="let option of ['A', 'B', 'C', 'D']"
+                 *ngFor="let option of getAvailableOptions()"
                  [class.selected]="userAnswers[currentQuestionIndex] === option"
                  (click)="selectAnswer(currentQuestionIndex, option)">
               <div class="option-circle">{{ option }}</div>
@@ -269,11 +269,12 @@
             <i class="bi bi-arrow-right ms-2"></i>
           </button>
 
-          <button *ngIf="isTestCompleted()" 
-                  class="btn btn-success ms-3" 
-                  (click)="finishTest()">
+          <!-- Testi Bitir butonu - her zaman görünür -->
+          <button class="btn btn-success ms-3" 
+                  (click)="finishTest()"
+                  [disabled]="getAnsweredQuestionsCount() === 0">
             <i class="bi bi-check-circle me-2"></i>
-            Testi Bitir
+            Testi Bitir ({{ getAnsweredQuestionsCount() }}/{{ currentTest.sorular.length }})
           </button>
         </div>
       </div>

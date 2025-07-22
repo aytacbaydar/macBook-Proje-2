@@ -31,6 +31,7 @@ interface TestSoru {
     B: string;
     C: string;
     D: string;
+    E?: string;
   };
   dogru_cevap: string;
   test_tipi: string;
@@ -430,7 +431,24 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   getOptionText(option: string): string {
     if (!this.currentQuestion || !this.currentQuestion.secenekler) return '';
     const secenekler = this.currentQuestion.secenekler;
-    return secenekler[option as 'A' | 'B' | 'C' | 'D'] || '';
+    return secenekler[option as 'A' | 'B' | 'C' | 'D' | 'E'] || '';
+  }
+
+  // Mevcut soru için kullanılabilir seçenekleri döndür
+  getAvailableOptions(): string[] {
+    if (!this.currentQuestion || !this.currentQuestion.secenekler) return [];
+    
+    const allOptions = ['A', 'B', 'C', 'D', 'E'];
+    const availableOptions: string[] = [];
+    
+    for (const option of allOptions) {
+      const optionText = this.currentQuestion.secenekler[option as keyof typeof this.currentQuestion.secenekler];
+      if (optionText && optionText.trim() !== '') {
+        availableOptions.push(option);
+      }
+    }
+    
+    return availableOptions;
   }
 
   // Soru resmi URL'ini oluştur
