@@ -431,7 +431,14 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   getOptionText(option: string): string {
     if (!this.currentQuestion || !this.currentQuestion.secenekler) return '';
     const secenekler = this.currentQuestion.secenekler;
-    return secenekler[option as 'A' | 'B' | 'C' | 'D' | 'E'] || '';
+    
+    // Eğer secenekler bir nesne ise (string indeksli veya A,B,C,D,E formatında)
+    if (typeof secenekler === 'object' && !Array.isArray(secenekler)) {
+      const seceneklerObj = secenekler as any;
+      return seceneklerObj[option] || '';
+    }
+    
+    return '';
   }
 
   // Seçenekleri formatlamak için yeni metod
@@ -470,14 +477,30 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   getAvailableOptions(): string[] {
     if (!this.currentQuestion || !this.currentQuestion.secenekler) return [];
     
+    const secenekler = this.currentQuestion.secenekler;
     const allOptions = ['A', 'B', 'C', 'D', 'E'];
     const availableOptions: string[] = [];
     
-    for (const option of allOptions) {
-      const optionText = this.currentQuestion.secenekler[option as keyof typeof this.currentQuestion.secenekler];
-      if (optionText && optionText.trim() !== '') {
-        availableOptions.push(option);
+    // Eğer secenekler bir nesne ise (string indeksli veya A,B,C,D,E formatında)
+    if (typeof secenekler === 'object' && !Array.isArray(secenekler)) {
+      const seceneklerObj = secenekler as any;
+      for (const option of allOptions) {
+        const optionText = seceneklerObj[option];
+        if (optionText && typeof optionText === 'string' && optionText.trim() !== '') {
+          availableOptions.push(option);
+        }
       }
+    }
+    // Eğer secenekler bir dizi ise
+    else if (Array.isArray(secenekler)) {
+      secenekler.forEach((secenek: string) => {
+        if (secenek && secenek.includes(')')) {
+          const harf = secenek.split(')')[0].trim();
+          if (allOptions.includes(harf)) {
+            availableOptions.push(harf);
+          }
+        }
+      });
     }
     
     return availableOptions;
