@@ -1,0 +1,297 @@
+X [ERROR] NG5002: Parser Error: Missing expected ] at column 35 in [{{currentQuestion.secenekler[option as keyof typeof currentQuestion.secenekler]}}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogrenci-sayfasi\ogrenci-yapay-zekali-testler-sayfasi\ogrenci-yapay-zekali-testler-sayfasi.component.html@225:35 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:226:35:
+      226 │ ...ion-text">{{currentQuestion.secenekler[option as keyof typeof ...
+          ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:50:15:
+      50 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG3: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ A: string; B: string; C: string; D: string; }'.
+  No index signature with a parameter of type 'string' was found on type '{ A: string; B: string; C: string; D: string; }'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:226:37:
+      226 │ ...n-text">{{currentQuestion.secenekler[option as keyof typeof cu...
+          ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:50:15:
+      50 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Missing expected ] at column 35 in [{{currentQuestion.secenekler[option as keyof typeof currentQuestion.secenekler]}}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogrenci-sayfasi\ogrenci-yapay-zekali-testler-sayfasi\ogrenci-yapay-zekali-testler-sayfasi.component.html@225:35 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:234:19:
+      234 │           (click)="previousQuestion()"
+          ╵                    ~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:50:15:
+      50 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Missing expected ] at column 35 in [{{currentQuestion.secenekler[option as keyof typeof currentQuestion.secenekler]}}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogrenci-sayfasi\ogrenci-yapay-zekali-testler-sayfasi\ogrenci-yapay-zekali-testler-sayfasi.component.html@225:35 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:235:22:
+      235 │           [disabled]="currentQuestionIndex === 0">
+          ╵                       ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:50:15:
+      50 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Missing expected ] at column 35 in [{{currentQuestion.secenekler[option as keyof typeof currentQuestion.secenekler]}}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogrenci-sayfasi\ogrenci-yapay-zekali-testler-sayfasi\ogrenci-yapay-zekali-testler-sayfasi.component.html@225:35 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:242:19:
+      242 │           (click)="nextQuestion()"
+          ╵                    ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:50:15:
+      50 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Missing expected ] at column 35 in [{{currentQuestion.secenekler[option as keyof typeof currentQuestion.secenekler]}}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogrenci-sayfasi\ogrenci-yapay-zekali-testler-sayfasi\ogrenci-yapay-zekali-testler-sayfasi.component.html@225:35 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:243:22:
+      243 │ ...isabled]="currentQuestionIndex >= currentTest.sorular.length -...
+          ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:50:15:
+      50 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Missing expected ] at column 35 in [{{currentQuestion.secenekler[option as keyof typeof currentQuestion.secenekler]}}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogrenci-sayfasi\ogrenci-yapay-zekali-testler-sayfasi\ogrenci-yapay-zekali-testler-sayfasi.component.html@225:35 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:249:10:
+      249 │           *ngIf="currentQuestionIndex === currentTest.sorular.len...
+          ╵           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:50:15:
+      50 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Missing expected ] at column 35 in [{{currentQuestion.secenekler[option as keyof typeof currentQuestion.secenekler]}}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogrenci-sayfasi\ogrenci-yapay-zekali-testler-sayfasi\ogrenci-yapay-zekali-testler-sayfasi.component.html@225:35 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:251:19:
+      251 │           (click)="finishTest()"
+          ╵                    ~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:50:15:
+      50 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Missing expected ] at column 35 in [{{currentQuestion.secenekler[option as keyof typeof currentQuestion.secenekler]}}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogrenci-sayfasi\ogrenci-yapay-zekali-testler-sayfasi\ogrenci-yapay-zekali-testler-sayfasi.component.html@225:35 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:252:22:
+      252 │           [disabled]="!isTestCompleted()">
+          ╵                       ~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:50:15:
+      50 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Missing expected ] at column 35 in [{{currentQuestion.secenekler[option as keyof typeof currentQuestion.secenekler]}}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogrenci-sayfasi\ogrenci-yapay-zekali-testler-sayfasi\ogrenci-yapay-zekali-testler-sayfasi.component.html@225:35 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:263:12:
+      263 │             *ngFor="let soru of currentTest.sorular; let i = index"
+          ╵             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:50:15:
+      50 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Missing expected ] at column 35 in [{{currentQuestion.secenekler[option as keyof typeof currentQuestion.secenekler]}}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogrenci-sayfasi\ogrenci-yapay-zekali-testler-sayfasi\ogrenci-yapay-zekali-testler-sayfasi.component.html@225:35 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:265:29:
+      265 │             [class.current]="i === currentQuestionIndex"
+          ╵                              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:50:15:
+      50 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Missing expected ] at column 35 in [{{currentQuestion.secenekler[option as keyof typeof currentQuestion.secenekler]}}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogrenci-sayfasi\ogrenci-yapay-zekali-testler-sayfasi\ogrenci-yapay-zekali-testler-sayfasi.component.html@225:35 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:266:30:
+      266 │             [class.answered]="userAnswers[i]"
+          ╵                               ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:50:15:
+      50 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Missing expected ] at column 35 in [{{currentQuestion.secenekler[option as keyof typeof currentQuestion.secenekler]}}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogrenci-sayfasi\ogrenci-yapay-zekali-testler-sayfasi\ogrenci-yapay-zekali-testler-sayfasi.component.html@225:35 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:267:21:
+      267 │             (click)="goToQuestion(i)">
+          ╵                      ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:50:15:
+      50 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Missing expected ] at column 35 in [{{currentQuestion.secenekler[option as keyof typeof currentQuestion.secenekler]}}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogrenci-sayfasi\ogrenci-yapay-zekali-testler-sayfasi\ogrenci-yapay-zekali-testler-sayfasi.component.html@225:35 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:268:12:
+      268 │             {{i + 1}}
+          ╵             ~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:50:15:
+      50 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Missing expected ] at column 35 in [{{currentQuestion.secenekler[option as keyof typeof currentQuestion.secenekler]}}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogrenci-sayfasi\ogrenci-yapay-zekali-testler-sayfasi\ogrenci-yapay-zekali-testler-sayfasi.component.html@225:35 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:276:7:
+      276 │   <div *ngIf="showResults && testResults" class="results-section">
+          ╵        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:50:15:
+      50 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Missing expected ] at column 35 in [{{currentQuestion.secenekler[option as keyof typeof currentQuestion.secenekler]}}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogrenci-sayfasi\ogrenci-yapay-zekali-testler-sayfasi\ogrenci-yapay-zekali-testler-sayfasi.component.html@225:35 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:284:30:
+      284 │ ...s="score">{{ testResults.dogru_sayisi }}/{{ testResults.toplam...
+          ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:50:15:
+      50 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Missing expected ] at column 35 in [{{currentQuestion.secenekler[option as keyof typeof currentQuestion.secenekler]}}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogrenci-sayfasi\ogrenci-yapay-zekali-testler-sayfasi\ogrenci-yapay-zekali-testler-sayfasi.component.html@225:35 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:285:35:
+      285 │ ...pan class="percentage">%{{ testResults.yuzde.toFixed(1) }}</span>
+          ╵                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:50:15:
+      50 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Missing expected ] at column 35 in [{{currentQuestion.secenekler[option as keyof typeof currentQuestion.secenekler]}}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogrenci-sayfasi\ogrenci-yapay-zekali-testler-sayfasi\ogrenci-yapay-zekali-testler-sayfasi.component.html@225:35 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:293:32:
+      293 │ ...        <span class="count">{{ testResults.dogru_sayisi }}</span>
+          ╵                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:50:15:
+      50 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Missing expected ] at column 35 in [{{currentQuestion.secenekler[option as keyof typeof currentQuestion.secenekler]}}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogrenci-sayfasi\ogrenci-yapay-zekali-testler-sayfasi\ogrenci-yapay-zekali-testler-sayfasi.component.html@225:35 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:300:32:
+      300 │ ...       <span class="count">{{ testResults.yanlis_sayisi }}</span>
+          ╵                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:50:15:
+      50 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Missing expected ] at column 35 in [{{currentQuestion.secenekler[option as keyof typeof currentQuestion.secenekler]}}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogrenci-sayfasi\ogrenci-yapay-zekali-testler-sayfasi\ogrenci-yapay-zekali-testler-sayfasi.component.html@225:35 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:307:32:
+      307 │             <span class="count">{{ testResults.bos_sayisi }}</span>
+          ╵                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:50:15:
+      50 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Missing expected ] at column 35 in [{{currentQuestion.secenekler[option as keyof typeof currentQuestion.secenekler]}}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogrenci-sayfasi\ogrenci-yapay-zekali-testler-sayfasi\ogrenci-yapay-zekali-testler-sayfasi.component.html@225:35 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:314:32:
+      314 │ ...      <span class="count">{{ testResults.net.toFixed(2) }}</span>
+          ╵                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:50:15:
+      50 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Missing expected ] at column 35 in [{{currentQuestion.secenekler[option as keyof typeof currentQuestion.secenekler]}}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogrenci-sayfasi\ogrenci-yapay-zekali-testler-sayfasi\ogrenci-yapay-zekali-testler-sayfasi.component.html@225:35 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:321:49:
+      321 │         <button class="btn btn-primary" (click)="resetTest()">
+          ╵                                                  ~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:50:15:
+      50 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Missing expected ] at column 35 in [{{currentQuestion.secenekler[option as keyof typeof currentQuestion.secenekler]}}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogrenci-sayfasi\ogrenci-yapay-zekali-testler-sayfasi\ogrenci-yapay-zekali-testler-sayfasi.component.html@225:35 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:325:59:
+      325 │ ...on class="btn btn-outline-secondary" (click)="downloadTestPDF()">
+          ╵                                                  ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:50:15:
+      50 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
