@@ -49,7 +49,7 @@
       background: rgba(255, 255, 255, 0.2);
       border: 1px solid rgba(255, 255, 255, 0.3);
       color: white;
-      
+
       &:hover {
         background: rgba(255, 255, 255, 0.3);
         color: white;
@@ -65,7 +65,7 @@
 
 .question-card {
   background: white;
-  
+
   .question-header {
     padding: 20px;
     border-bottom: 1px solid #e9ecef;
@@ -256,7 +256,7 @@
     background: #28a745;
     border-color: #28a745;
     color: white;
-    
+
     &.current {
       background: #007bff;
       border-color: #007bff;
@@ -273,7 +273,7 @@
   .test-header {
     flex-direction: column;
     text-align: center;
-    
+
     h3 {
       font-size: 1.3rem;
     }
@@ -286,7 +286,7 @@
   .question-navigation {
     padding: 20px;
     flex-direction: column;
-    
+
     .question-dots {
       order: -1;
       margin-bottom: 15px;
@@ -295,14 +295,14 @@
 
   .option-item {
     padding: 12px 15px;
-    
+
     .option-circle {
       width: 30px;
       height: 30px;
       margin-right: 12px;
       font-size: 0.9rem;
     }
-    
+
     .option-text {
       font-size: 0.95rem;
     }
@@ -965,51 +965,61 @@
 }
 
 .answer-options {
-  .option-item {
-    display: flex;
-    align-items: center;
-    padding: 12px 16px;
-    margin-bottom: 8px;
-    border: 2px solid #e9ecef;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
+      .option-item {
+        margin-bottom: 8px;
 
-    &:hover {
-      border-color: #007bff;
-      background-color: #f8f9fa;
-    }
+        .option-radio {
+          input[type="radio"] {
+            display: none;
+          }
 
-    &.selected {
-      border-color: #007bff;
-      background-color: #e3f2fd;
-    }
+          .option-label {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0;
 
-    .option-circle {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background-color: #6c757d;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      margin-right: 12px;
-      flex-shrink: 0;
-    }
+            &:hover {
+              border-color: #007bff;
+              background-color: #f8f9fa;
+            }
 
-    .option-text {
-      flex: 1;
-      font-size: 1rem;
-      line-height: 1.4;
-    }
+            .option-circle {
+              width: 30px;
+              height: 30px;
+              border-radius: 50%;
+              background-color: #6c757d;
+              color: white;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-weight: bold;
+              margin-right: 12px;
+              flex-shrink: 0;
+              transition: background-color 0.3s ease;
+            }
 
-    &.selected .option-circle {
-      background-color: #007bff;
+            .option-text {
+              flex: 1;
+              color: #495057;
+            }
+          }
+
+          input[type="radio"]:checked + .option-label {
+            border-color: #007bff;
+            background-color: #e7f3ff;
+
+            .option-circle {
+              background-color: #007bff;
+            }
+          }
+        }
+      }
     }
-  }
-}
 
 .question-navigation {
   display: flex;
@@ -1079,7 +1089,9 @@
       }
 
       .progress-bar {
-        height: 8px;
+        CSS styles modified for radio button implementation.
+```css
+          height: 8px;
         background: rgba(255,255,255,0.3);
         border-radius: 4px;
         overflow: hidden;

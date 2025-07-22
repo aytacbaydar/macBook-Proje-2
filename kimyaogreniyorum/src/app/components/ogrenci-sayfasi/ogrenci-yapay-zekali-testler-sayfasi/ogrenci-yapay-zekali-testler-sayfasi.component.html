@@ -235,11 +235,19 @@
           <!-- Seçenekler -->
           <div class="answer-options">
             <div class="option-item" 
-                 *ngFor="let secenek of getFormattedSecenekler(); let i = index"
-                 [class.selected]="userAnswers[currentQuestionIndex] === secenek.harf"
-                 (click)="selectAnswer(currentQuestionIndex, secenek.harf)">
-              <div class="option-circle">{{ secenek.harf }}</div>
-              <div class="option-text">{{ secenek.metin }}</div>
+                 *ngFor="let option of ['A', 'B', 'C', 'D', 'E']; let i = index">
+              <div class="option-radio">
+                <input type="radio" 
+                       [id]="'option_' + currentQuestionIndex + '_' + option" 
+                       [name]="'question_' + currentQuestionIndex"
+                       [value]="option"
+                       [checked]="userAnswers[currentQuestionIndex] === option"
+                       (change)="selectAnswer(currentQuestionIndex, option)">
+                <label [for]="'option_' + currentQuestionIndex + '_' + option" class="option-label">
+                  <span class="option-circle">{{ option }}</span>
+                  <span class="option-text">{{ getOptionText(option) }}</span>
+                </label>
+              </div>
             </div>
           </div>
         </div>
