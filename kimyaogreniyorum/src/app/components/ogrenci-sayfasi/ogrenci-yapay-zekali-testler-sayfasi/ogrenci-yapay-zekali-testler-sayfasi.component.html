@@ -156,7 +156,7 @@
 
         <h4 class="mt-4">Diğer Konular</h4>
         <p class="help-text">Tüm konulardan istediğiniz konuları seçebilirsiniz</p>
-        
+
         <div *ngIf="loadingKonular" class="text-center py-3">
           <div class="spinner-border text-primary me-2"></div>
           <span>Konular yükleniyor...</span>
@@ -201,9 +201,9 @@
             <i class="bi bi-arrow-left me-2"></i>
             Geri Dön
           </button>
-          <button class="btn btn-primary" 
-                  (click)="createTest()" 
+          <button class="btn btn-primary"
                   [disabled]="loading || (selectedImprovementTopics.length === 0 && selectedBestTopics.length === 0 && selectedOtherTopics.length === 0)"
+                  (click)="createTest()">
             <i class="bi bi-magic me-2"></i>
             Test Oluştur
           </button>
