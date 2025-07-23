@@ -3,6 +3,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-confirm-dialog',
+  standalone: false,
   template: `
     <div class="modal-overlay" *ngIf="isVisible" (click)="onCancel()">
       <div class="confirm-dialog" (click)="$event.stopPropagation()">

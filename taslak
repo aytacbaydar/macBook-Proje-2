@@ -97,3 +97,47 @@ color: white;
 background: linear-gradient(135deg, #f7fc01 0%, #f0fc4b 100%);
 color: white;
 }
+
+
+<app-confirm-dialog
+  [isVisible]="showConfirmDialog"
+  [title]="confirmDialogData.title"
+  [message]="confirmDialogData.message"
+  [confirmText]="confirmDialogData.confirmText"
+  [cancelText]="confirmDialogData.cancelText"
+  [type]="confirmDialogData.type"
+  (confirmed)="onConfirmDialogConfirmed()"
+  (cancelled)="onConfirmDialogCancelled()">
+</app-confirm-dialog>
+
+// Silme işlemi için
+deleteTest(testId: string): void {
+  this.confirmDialogData = {
+    title: 'Test Silme',
+    message: 'Bu testi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.',
+    confirmText: 'Sil',
+    cancelText: 'İptal',
+    type: 'danger',
+    action: () => this.performDeleteTest(testId)
+  };
+  this.showConfirmDialog = true;
+}
+// Kaydetme işlemi için
+saveData(): void {
+  this.confirmDialogData = {
+    title: 'Verileri Kaydet',
+    message: 'Yaptığınız değişiklikleri kaydetmek istiyor musunuz?',
+    confirmText: 'Kaydet',
+    cancelText: 'İptal',
+    type: 'info',
+    action: () => this.performSave()
+  };
+  this.showConfirmDialog = true;
+}
+
+onConfirmDialogConfirmed(): void {
+  if (this.confirmDialogData.action) {
+    this.confirmDialogData.action();
+  }
+  this.showConfirmDialog = false;
+}
