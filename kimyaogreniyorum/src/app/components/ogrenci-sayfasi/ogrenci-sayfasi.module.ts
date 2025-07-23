@@ -27,7 +27,6 @@ import { OgrenciSoruCozumuSayfasiComponent } from './ogrenci-soru-cozumu-sayfasi
 import { OgrenciUcretSayfasiComponent } from './ogrenci-ucret-sayfasi/ogrenci-ucret-sayfasi.component';
 import { OgrenciYapayZekaliTestlerSayfasiComponent } from './ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component';
 
-import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 
 
 @NgModule({
@@ -47,7 +46,6 @@ import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dial
     OgrenciSoruCozumuSayfasiComponent,
     OgrenciUcretSayfasiComponent,
     OgrenciYapayZekaliTestlerSayfasiComponent,
-    ConfirmDialogComponent,
   ],
   imports: [
     CommonModule,
