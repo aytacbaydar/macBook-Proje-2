@@ -1,3 +1,10 @@
+/* no-arrow sınıfı */
+.no-arrow {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  background-image: none !important;
+}
 .teacher-ai-tests-page {
   padding: 20px;
   max-width: 1200px;

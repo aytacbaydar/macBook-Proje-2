@@ -1,3 +1,8 @@
+<app-confirm-dialog [isVisible]="showConfirmDialog" [title]="confirmDialogData.title"
+  [message]="confirmDialogData.message" [confirmText]="confirmDialogData.confirmText"
+  [cancelText]="confirmDialogData.cancelText" [type]="confirmDialogData.type" (confirmed)="onConfirmDialogConfirmed()"
+  (cancelled)="onConfirmDialogCancelled()">
+</app-confirm-dialog>
 <div class="teacher-ai-tests-page">
   <!-- Header -->
   <div class="page-header">
@@ -124,7 +129,7 @@
         <!-- Doğru Cevap -->
         <div class="form-group">
           <label for="dogruCevap" class="form-label">Doğru Cevap *</label>
-          <select class="form-select w-auto" 
+          <select class="form-select w-auto no-arrow" 
                   id="dogruCevap" 
                   [(ngModel)]="yeniSoru.dogru_cevap" 
                   name="dogruCevap" 

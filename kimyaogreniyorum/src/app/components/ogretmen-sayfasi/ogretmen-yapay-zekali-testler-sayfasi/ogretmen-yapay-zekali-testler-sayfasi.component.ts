@@ -24,12 +24,23 @@ interface TeacherInfo {
   selector: 'app-ogretmen-yapay-zekali-testler-sayfasi',
   standalone: false,
   templateUrl: './ogretmen-yapay-zekali-testler-sayfasi.component.html',
-  styleUrl: './ogretmen-yapay-zekali-testler-sayfasi.component.scss'
+  styleUrl: './ogretmen-yapay-zekali-testler-sayfasi.component.scss',
 })
 export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
   teacherInfo: TeacherInfo | null = null;
   sorular: Soru[] = [];
-  
+
+  // Confirm dialog
+  showConfirmDialog = false;
+  confirmDialogData = {
+    title: 'Onay',
+    message: 'Bu işlemi gerçekleştirmek istediğinizden emin misiniz?',
+    confirmText: 'Evet',
+    cancelText: 'Hayır',
+    type: 'warning' as 'warning' | 'danger' | 'info' | 'success',
+    action: null as (() => void) | null,
+  };
+
   // Form verileri
   yeniSoru: Soru = {
     konu_adi: '',
@@ -37,35 +48,35 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
     zorluk_derecesi: 'kolay',
     soru_aciklamasi: '',
     dogru_cevap: 'A',
-    ogretmen_id: 0
+    ogretmen_id: 0,
   };
-  
+
   // UI state
   showAddForm = false;
   loading = false;
   error: string | null = null;
   success: string | null = null;
-  
+
   // Resim upload
   selectedFile: File | null = null;
   imagePreview: string | null = null;
-  
+
   // Filtreler
   filterKonu = '';
   filterZorluk = '';
-  
+
   // Sayfalama
   currentPage = 1;
   itemsPerPage = 10;
-  
+
   // Sabitler
   sinifSeviyeleri = ['9', '10', '11', '12'];
   zorlukDereceleri = [
     { value: 'kolay', label: 'Kolay' },
     { value: 'orta', label: 'Orta' },
-    { value: 'zor', label: 'Zor' }
+    { value: 'zor', label: 'Zor' },
   ];
-  
+
   konuListesi: string[] = [];
 
   constructor(private http: HttpClient) {}
@@ -77,15 +88,16 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
   }
 
   private loadTeacherInfo(): void {
-    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
-    
+    const userStr =
+      localStorage.getItem('user') || sessionStorage.getItem('user');
+
     if (userStr) {
       try {
         const user = JSON.parse(userStr);
         this.teacherInfo = {
           id: user.id,
           adi_soyadi: user.adi_soyadi || 'Öğretmen',
-          email: user.email || ''
+          email: user.email || '',
         };
         this.yeniSoru.ogretmen_id = user.id;
       } catch (error) {
@@ -99,20 +111,20 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
 
   loadSorular(): void {
     if (!this.teacherInfo) return;
-    
+
     this.loading = true;
     this.error = null;
-    
+
     let url = `./server/api/soru_yonetimi.php?action=list&ogretmen_id=${this.teacherInfo.id}`;
-    
+
     if (this.filterKonu) {
       url += `&konu_adi=${encodeURIComponent(this.filterKonu)}`;
     }
-    
+
     if (this.filterZorluk) {
       url += `&zorluk_derecesi=${this.filterZorluk}`;
     }
-    
+
     this.http.get<any>(url).subscribe({
       next: (response) => {
         this.loading = false;
@@ -124,8 +136,10 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
       },
       error: (error) => {
         this.loading = false;
-        this.error = 'Sorular yüklenirken hata oluştu: ' + (error.error?.message || error.message);
-      }
+        this.error =
+          'Sorular yüklenirken hata oluştu: ' +
+          (error.error?.message || error.message);
+      },
     });
   }
 
@@ -143,7 +157,7 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
       zorluk_derecesi: 'kolay',
       soru_aciklamasi: '',
       dogru_cevap: 'A',
-      ogretmen_id: this.teacherInfo?.id || 0
+      ogretmen_id: this.teacherInfo?.id || 0,
     };
     this.selectedFile = null;
     this.imagePreview = null;
@@ -156,23 +170,23 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
       this.error = 'Konu adı gerekli';
       return false;
     }
-    
+
     // Soru resmi zorunlu (çünkü şıklar fotoğrafta olacak)
     if (!this.selectedFile) {
       this.error = 'Soru resmi gerekli';
       return false;
     }
-    
+
     return true;
   }
 
   saveSoru(): void {
     if (!this.validateForm()) return;
-    
+
     this.loading = true;
     this.error = null;
     this.success = null;
-    
+
     const formData = new FormData();
     formData.append('konu_adi', this.yeniSoru.konu_adi);
     formData.append('sinif_seviyesi', this.yeniSoru.sinif_seviyesi);
@@ -180,11 +194,11 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
     formData.append('soru_aciklamasi', this.yeniSoru.soru_aciklamasi);
     formData.append('dogru_cevap', this.yeniSoru.dogru_cevap);
     formData.append('ogretmen_id', this.yeniSoru.ogretmen_id.toString());
-    
+
     if (this.selectedFile) {
       formData.append('soru_resmi', this.selectedFile);
     }
-    
+
     this.http.post<any>('./server/api/soru_yonetimi.php', formData).subscribe({
       next: (response) => {
         this.loading = false;
@@ -199,37 +213,64 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
       },
       error: (error) => {
         this.loading = false;
-        this.error = 'Soru eklenirken hata oluştu: ' + (error.error?.message || error.message);
-      }
+        this.error =
+          'Soru eklenirken hata oluştu: ' +
+          (error.error?.message || error.message);
+      },
     });
   }
 
   deleteSoru(soru: Soru): void {
-    if (!confirm('Bu soruyu silmek istediğinizden emin misiniz?')) return;
-    
-    this.loading = true;
-    
-    this.http.delete<any>(`./server/api/soru_yonetimi.php?id=${soru.id}&ogretmen_id=${this.teacherInfo?.id}`).subscribe({
-      next: (response) => {
-        this.loading = false;
-        if (response.success) {
-          this.success = 'Soru başarıyla silindi';
-          this.loadSorular();
-        } else {
-          this.error = response.message || 'Soru silinemedi';
-        }
-      },
-      error: (error) => {
-        this.loading = false;
-        this.error = 'Soru silinirken hata oluştu: ' + (error.error?.message || error.message);
-      }
-    });
+    // Set confirm dialog data
+    this.confirmDialogData.action = () => {
+      this.loading = true;
+
+      this.http
+        .delete<any>(
+          `./server/api/soru_yonetimi.php?id=${soru.id}&ogretmen_id=${this.teacherInfo?.id}`
+        )
+        .subscribe({
+          next: (response) => {
+            this.loading = false;
+            if (response.success) {
+              this.success = 'Soru başarıyla silindi';
+              this.loadSorular();
+            } else {
+              this.error = response.message || 'Soru silinemedi';
+            }
+          },
+          error: (error) => {
+            this.loading = false;
+            this.error =
+              'Soru silinirken hata oluştu: ' +
+              (error.error?.message || error.message);
+          },
+        });
+    };
+
+    // Show confirm dialog
+    this.showConfirmDialog = true;
+  }
+
+  // Confirm dialog metodu
+  onConfirmDialogConfirmed(): void {
+    if (this.confirmDialogData.action) {
+      this.confirmDialogData.action();
+    }
+    this.showConfirmDialog = false;
+  }
+
+  onConfirmDialogCancelled(): void {
+    this.showConfirmDialog = false;
   }
 
   getFilteredSorular(): Soru[] {
-    return this.sorular.filter(soru => {
-      const konuMatch = !this.filterKonu || soru.konu_adi.toLowerCase().includes(this.filterKonu.toLowerCase());
-      const zorlukMatch = !this.filterZorluk || soru.zorluk_derecesi === this.filterZorluk;
+    return this.sorular.filter((soru) => {
+      const konuMatch =
+        !this.filterKonu ||
+        soru.konu_adi.toLowerCase().includes(this.filterKonu.toLowerCase());
+      const zorlukMatch =
+        !this.filterZorluk || soru.zorluk_derecesi === this.filterZorluk;
       return konuMatch && zorlukMatch;
     });
   }
@@ -252,19 +293,27 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
 
   getZorlukBadgeClass(zorluk: string): string {
     switch (zorluk) {
-      case 'kolay': return 'badge-success';
-      case 'orta': return 'badge-warning';
-      case 'zor': return 'badge-danger';
-      default: return 'badge-secondary';
+      case 'kolay':
+        return 'badge-success';
+      case 'orta':
+        return 'badge-warning';
+      case 'zor':
+        return 'badge-danger';
+      default:
+        return 'badge-secondary';
     }
   }
 
   getZorlukText(zorluk: string): string {
     switch (zorluk) {
-      case 'kolay': return 'Kolay';
-      case 'orta': return 'Orta';
-      case 'zor': return 'Zor';
-      default: return zorluk;
+      case 'kolay':
+        return 'Kolay';
+      case 'orta':
+        return 'Orta';
+      case 'zor':
+        return 'Zor';
+      default:
+        return zorluk;
     }
   }
 
@@ -282,16 +331,16 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
         this.error = 'Sadece JPG, PNG ve GIF dosyaları kabul edilir';
         return;
       }
-      
+
       // Dosya boyutu kontrolü (5MB)
       if (file.size > 5 * 1024 * 1024) {
-        this.error = 'Dosya boyutu 5MB\'dan büyük olamaz';
+        this.error = "Dosya boyutu 5MB'dan büyük olamaz";
         return;
       }
-      
+
       this.selectedFile = file;
       this.error = null;
-      
+
       // Resim önizlemesi
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -318,7 +367,9 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
       next: (response) => {
         if (response.success && response.konular) {
           // Tekrar eden konu adlarını kaldır ve alfabetik sırala
-          const benzersizKonular = [...new Set(response.konular.map((konu: any) => konu.konu_adi))] as string[];
+          const benzersizKonular = [
+            ...new Set(response.konular.map((konu: any) => konu.konu_adi)),
+          ] as string[];
           this.konuListesi = benzersizKonular.sort();
         } else {
           console.error('Konular yüklenirken hata:', response.message);
@@ -335,7 +386,7 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
             'Termokimya',
             'Kimyasal Denge',
             'Elektrokimya',
-            'Organik Kimya'
+            'Organik Kimya',
           ];
         }
       },
@@ -354,9 +405,9 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
           'Termokimya',
           'Kimyasal Denge',
           'Elektrokimya',
-          'Organik Kimya'
+          'Organik Kimya',
         ];
-      }
+      },
     });
   }
 }

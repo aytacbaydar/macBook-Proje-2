@@ -27,6 +27,7 @@ import { OgretmenEkDersGirisiSayfasiComponent } from './ogretmen-ogrenci-isleri/
 import { OgretmenCevapAnahtariSayfasiComponent } from './ogretmen-sinavlar-sayfasi/ogretmen-cevap-anahtari-sayfasi/ogretmen-cevap-anahtari-sayfasi.component';
 import { OgretmenOgrenciSinavSonuclariSayfasiComponent } from './ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component';
 import { OgretmenYapayZekaliTestlerSayfasiComponent } from './ogretmen-yapay-zekali-testler-sayfasi/ogretmen-yapay-zekali-testler-sayfasi.component';
+import { SharedModule } from '../../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import { OgretmenYapayZekaliTestlerSayfasiComponent } from './ogretmen-yapay-zek
     BrowserModule,
     FormsModule,
     RouterModule,
+    SharedModule,
   ],
 })
 export class OgretmenSayfasiModule {}
