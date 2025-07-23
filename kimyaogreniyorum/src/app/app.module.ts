@@ -13,6 +13,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { YoneticiSayfasiModule } from './components/yonetici-sayfasi/yonetici-sayfasi.module';
 import { OgretmenSayfasiModule } from './components/ogretmen-sayfasi/ogretmen-sayfasi.module';
 import { OgrenciSayfasiModule } from './components/ogrenci-sayfasi/ogrenci-sayfasi.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -34,7 +35,8 @@ import { OgrenciSayfasiModule } from './components/ogrenci-sayfasi/ogrenci-sayfa
     IndexSayfasiModule,
     YoneticiSayfasiModule,
     OgretmenSayfasiModule,
-    OgrenciSayfasiModule
+    OgrenciSayfasiModule,
+    SharedModule
   ],
   providers: [],
   bootstrap: [AppComponent],
