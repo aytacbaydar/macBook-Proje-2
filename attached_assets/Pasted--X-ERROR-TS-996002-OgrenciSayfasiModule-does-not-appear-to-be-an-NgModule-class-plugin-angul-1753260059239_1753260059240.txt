@@ -1,0 +1,333 @@
+
+X [ERROR] TS-996002: 'OgrenciSayfasiModule' does not appear to be an NgModule class. [plugin angular-compiler]
+
+    src/app/app.module.ts:38:4:
+      38 │     OgrenciSayfasiModule,
+         ╵     ~~~~~~~~~~~~~~~~~~~~
+
+  Is it missing an @NgModule annotation?
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sayfasi.module.ts:57:13:
+      57 │ export class OgrenciSayfasiModule {}
+         ╵              ~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8002: Can't bind to 'formGroup' since it isn't a known property of 'form'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-profil-sayfasi/ogrenci-profil-sayfasi.component.html:42:10:
+      42 │     <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+         ╵           ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciProfilSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-profil-sayfasi/ogrenci-profil-sayfasi.component.ts:11:15:
+      11 │   templateUrl: './ogrenci-profil-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG1: Object is possibly 'null'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-profil-sayfasi/ogrenci-profil-sayfasi.component.html:62:54:
+      62 │               <span class="file-name">{{ selectedFile.name }}</span>
+         ╵                                                       ~~~~
+
+  Error occurs in the template of component OgrenciProfilSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-profil-sayfasi/ogrenci-profil-sayfasi.component.ts:11:15:
+      11 │   templateUrl: './ogrenci-profil-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG1: Object is possibly 'null'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-profil-sayfasi/ogrenci-profil-sayfasi.component.html:63:56:
+      63 │ ..."file-size">({{ (selectedFile.size / 1024).toFixed(1) }} KB)</s...
+         ╵                                  ~~~~
+
+  Error occurs in the template of component OgrenciProfilSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-profil-sayfasi/ogrenci-profil-sayfasi.component.ts:11:15:
+      11 │   templateUrl: './ogrenci-profil-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] Could not resolve "./ogrenci-yapay-zekali-testler-sayfasi/confirm-dialog.component"
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sayfasi.module.ts:23:39:
+      23 │ ...nt } from './ogrenci-yapay-zekali-testler-sayfasi/confirm-dialo...
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2307: Cannot find module './ogrenci-yapay-zekali-testler-sayfasi/confirm-dialog.component' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sayfasi.module.ts:23:39:
+      23 │ ...nt } from './ogrenci-yapay-zekali-testler-sayfasi/confirm-dialo...
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS-991010: Value at position 16 in the NgModule.declarations of OgrenciSayfasiModule is not a reference
+  Value could not be determined statically. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sayfasi.module.ts:26:16:
+      26 │   declarations: [
+         ╵                 ^
+
+  Unknown reference.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sayfasi.module.ts:43:4:
+      43 │     ConfirmDialogComponent,
+         ╵     ~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG1: Object is possibly 'null'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.html:90:29:
+      90 │             {{ selectedSinav.sinav_adi }} - Detaylı Sonuç
+         ╵                              ~~~~~~~~~
+
+  Error occurs in the template of component OgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:45:15:
+      45 │   templateUrl: './ogrenci-sinav-sonuclari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG1: Object is possibly 'null'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.html:113:69:
+      113 │ ...class="stat-number">{{ selectedSinavDetails.dogru_sayisi }}</div>
+          ╵                                                ~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:45:15:
+      45 │   templateUrl: './ogrenci-sinav-sonuclari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG1: Object is possibly 'null'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.html:124:69:
+      124 │ ...lass="stat-number">{{ selectedSinavDetails.yanlis_sayisi }}</div>
+          ╵                                               ~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:45:15:
+      45 │   templateUrl: './ogrenci-sinav-sonuclari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG1: Object is possibly 'null'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.html:135:69:
+      135 │ ...v class="stat-number">{{ selectedSinavDetails.bos_sayisi }}</div>
+          ╵                                                  ~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:45:15:
+      45 │   templateUrl: './ogrenci-sinav-sonuclari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5: Argument of type 'SinavSonucu | null' is not assignable to parameter of type 'SinavSonucu'.
+  Type 'null' is not assignable to type 'SinavSonucu'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.html:146:69:
+      146 │ ...ss="stat-number">{{ getSuccessPercentage(selectedSinav) }}%</div>
+          ╵                                             ~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:45:15:
+      45 │   templateUrl: './ogrenci-sinav-sonuclari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8002: Can't bind to 'ngClass' since it isn't a known property of 'span'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.html:173:30:
+      173 │                               [ngClass]="{
+          ╵                               ~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:45:15:
+      45 │   templateUrl: './ogrenci-sinav-sonuclari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8002: Can't bind to 'ngClass' since it isn't a known property of 'span'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.html:183:30:
+      183 │                               [ngClass]="{
+          ╵                               ~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:45:15:
+      45 │   templateUrl: './ogrenci-sinav-sonuclari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8002: Can't bind to 'ngClass' since it isn't a known property of 'i'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.html:189:29:
+      189 │                              [ngClass]="{
+          ╵                              ~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciSinavSonuclariSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component.ts:45:15:
+      45 │   templateUrl: './ogrenci-sinav-sonuclari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8002: Can't bind to 'ngClass' since it isn't a known property of 'span'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-soru-cozumu-sayfasi/ogrenci-soru-cozumu-sayfasi.component.html:10:29:
+      10 │ ...pan class="status" [ngClass]="autoRefresh ? 'online' : 'offline'">
+         ╵                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciSoruCozumuSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-soru-cozumu-sayfasi/ogrenci-soru-cozumu-sayfasi.component.ts:31:15:
+      31 │   templateUrl: './ogrenci-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8002: Can't bind to 'ngClass' since it isn't a known property of 'i'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-soru-cozumu-sayfasi/ogrenci-soru-cozumu-sayfasi.component.html:17:22:
+      17 │ ...lass="bi" [ngClass]="autoRefresh ? 'bi-wifi' : 'bi-wifi-off'"></i>
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciSoruCozumuSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-soru-cozumu-sayfasi/ogrenci-soru-cozumu-sayfasi.component.ts:31:15:
+      31 │   templateUrl: './ogrenci-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8002: Can't bind to 'ngClass' since it isn't a known property of 'div'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-soru-cozumu-sayfasi/ogrenci-soru-cozumu-sayfasi.component.html:65:11:
+      65 │            [ngClass]="{'sent': mesaj.gonderen_tip === 'ogrenci', '...
+         ╵            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciSoruCozumuSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-soru-cozumu-sayfasi/ogrenci-soru-cozumu-sayfasi.component.ts:31:15:
+      31 │   templateUrl: './ogrenci-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-soru-cozumu-sayfasi/ogrenci-soru-cozumu-sayfasi.component.html:114:15:
+      114 │                [(ngModel)]="yeniMesaj"
+          ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciSoruCozumuSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-soru-cozumu-sayfasi/ogrenci-soru-cozumu-sayfasi.component.ts:31:15:
+      31 │   templateUrl: './ogrenci-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8002: Can't bind to 'ngClass' since it isn't a known property of 'i'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-soru-cozumu-sayfasi/ogrenci-soru-cozumu-sayfasi.component.html:122:22:
+      122 │ ...lass="bi" [ngClass]="isSending ? 'bi-hourglass-split' : 'bi-se...
+          ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciSoruCozumuSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-soru-cozumu-sayfasi/ogrenci-soru-cozumu-sayfasi.component.ts:31:15:
+      31 │   templateUrl: './ogrenci-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'date'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-ucret-sayfasi/ogrenci-ucret-sayfasi.component.html:456:80:
+      456 │ ...ne-time text-muted small">{{ record.zaman | date:'HH:mm' }}</div>
+          ╵                                                ~~~~
+
+  Error occurs in the template of component OgrenciUcretSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-ucret-sayfasi/ogrenci-ucret-sayfasi.component.ts:50:15:
+      50 │   templateUrl: './ogrenci-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Opening tag "button" not terminated. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:204:10:
+      204 │           <button class="btn btn-primary"
+          ╵           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:58:15:
+      58 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Unexpected closing tag "button". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:209:10:
+      209 │           </button>
+          ╵           ~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:58:15:
+      58 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'app-ogrenci-navbar-sayfasi' is not a known element:
+1. If 'app-ogrenci-navbar-sayfasi' is an Angular component, then verify that it is part of this module.
+2. If 'app-ogrenci-navbar-sayfasi' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/template/ogrenci-taslak-sayfasi/ogrenci-taslak-sayfasi.component.html:0:0:
+      0 │
+        ╵ ^
+
+  Error occurs in the template of component OgrenciTaslakSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/template/ogrenci-taslak-sayfasi/ogrenci-taslak-sayfasi.component.ts:6:15:
+      6 │   templateUrl: './ogrenci-taslak-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'app-ogrenci-sidebar-sayfasi' is not a known element:
+1. If 'app-ogrenci-sidebar-sayfasi' is an Angular component, then verify that it is part of this module.
+2. If 'app-ogrenci-sidebar-sayfasi' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/template/ogrenci-taslak-sayfasi/ogrenci-taslak-sayfasi.component.html:4:8:
+      4 │         <app-ogrenci-sidebar-sayfasi></app-ogrenci-sidebar-sayfasi>
+        ╵         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciTaslakSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/template/ogrenci-taslak-sayfasi/ogrenci-taslak-sayfasi.component.ts:6:15:
+      6 │   templateUrl: './ogrenci-taslak-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'router-outlet' is not a known element:
+1. If 'router-outlet' is an Angular component, then verify that it is part of this module.
+2. If 'router-outlet' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/template/ogrenci-taslak-sayfasi/ogrenci-taslak-sayfasi.component.html:7:8:
+      7 │         <router-outlet></router-outlet>
+        ╵         ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciTaslakSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/template/ogrenci-taslak-sayfasi/ogrenci-taslak-sayfasi.component.ts:6:15:
+      6 │   templateUrl: './ogrenci-taslak-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
