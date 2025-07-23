@@ -79,6 +79,11 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   ortaQuestionCount = 5;
   zorQuestionCount = 5;
   
+  // Tek zorluk seviyesi seçim özellikleri
+  singleDifficultyMode = false;
+  selectedSingleDifficulty = 'kolay';
+  totalQuestionCount = 15;
+  
   // Template'de kullanılan computed properties
   get improvementTopics(): KonuAnalizi[] {
     return this.getGelistirilmesiGerekenKonular();
@@ -284,17 +289,44 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
       return;
     }
 
+    // Toplam soru sayısı kontrolü
+    if (this.getTotalQuestionCount() < 1) {
+      this.error = 'En az 1 soru seçmelisiniz';
+      return;
+    }
+
     this.loading = true;
     this.error = null;
+
+    // Tek zorluk modu için soru sayılarını ayarla
+    let kolayCount = this.kolayQuestionCount;
+    let ortaCount = this.ortaQuestionCount;
+    let zorCount = this.zorQuestionCount;
+
+    if (this.singleDifficultyMode) {
+      kolayCount = 0;
+      ortaCount = 0;
+      zorCount = 0;
+      
+      if (this.selectedSingleDifficulty === 'kolay') {
+        kolayCount = this.totalQuestionCount;
+      } else if (this.selectedSingleDifficulty === 'orta') {
+        ortaCount = this.totalQuestionCount;
+      } else if (this.selectedSingleDifficulty === 'zor') {
+        zorCount = this.totalQuestionCount;
+      }
+    }
 
     const testData = {
       ogrenci_id: this.studentInfo.id,
       gelistirilmesi_gereken_konular: this.selectedImprovementTopics,
       en_iyi_konular: this.selectedBestTopics,
       diger_konular: this.selectedOtherTopics,
-      kolay_soru_sayisi: this.kolayQuestionCount,
-      orta_soru_sayisi: this.ortaQuestionCount,
-      zor_soru_sayisi: this.zorQuestionCount
+      kolay_soru_sayisi: kolayCount,
+      orta_soru_sayisi: ortaCount,
+      zor_soru_sayisi: zorCount,
+      single_difficulty_mode: this.singleDifficultyMode,
+      selected_single_difficulty: this.selectedSingleDifficulty
     };
 
     this.http.post<any>('./server/api/yapay_zeka_test_olustur.php', testData).subscribe({
@@ -471,6 +503,15 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     this.selectedImprovementTopics = [];
     this.selectedBestTopics = [];
     this.selectedOtherTopics = [];
+    
+    // Zorluk seviyesi ayarlarını sıfırla
+    this.singleDifficultyMode = false;
+    this.selectedSingleDifficulty = 'kolay';
+    this.totalQuestionCount = 15;
+    this.kolayQuestionCount = 5;
+    this.ortaQuestionCount = 5;
+    this.zorQuestionCount = 5;
+    
     // currentStep'i burada sıfırlamayalım, startNewTest() bunu hallediyor
     this.error = null;
     this.success = null;
@@ -763,5 +804,14 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
       hour: '2-digit',
       minute: '2-digit'
     });
+  }
+
+  // Toplam soru sayısını hesapla
+  getTotalQuestionCount(): number {
+    if (this.singleDifficultyMode) {
+      return this.totalQuestionCount;
+    } else {
+      return this.kolayQuestionCount + this.ortaQuestionCount + this.zorQuestionCount;
+    }
   }
 }

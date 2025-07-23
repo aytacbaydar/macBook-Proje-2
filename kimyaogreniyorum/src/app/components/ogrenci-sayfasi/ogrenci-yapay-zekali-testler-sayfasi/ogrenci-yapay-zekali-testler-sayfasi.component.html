@@ -174,24 +174,81 @@
 
         <div class="question-counts mt-4">
           <h5>Soru Sayıları ve Zorluk Seviyeleri</h5>
-          <div class="row">
+          
+          <!-- Zorluk Seviyesi Seçim Yöntemi -->
+          <div class="row mb-3">
+            <div class="col-12">
+              <label class="form-label fw-bold">Zorluk Seviyesi Seçim Yöntemi:</label>
+              <div class="form-check-container d-flex gap-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="difficultyMode" 
+                         id="mixedMode" [value]="false" [(ngModel)]="singleDifficultyMode">
+                  <label class="form-check-label" for="mixedMode">
+                    Karışık Zorluk (Kolay + Orta + Zor)
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="difficultyMode" 
+                         id="singleMode" [value]="true" [(ngModel)]="singleDifficultyMode">
+                  <label class="form-check-label" for="singleMode">
+                    Tek Zorluk Seviyesi
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Karışık Zorluk Modu -->
+          <div *ngIf="!singleDifficultyMode" class="row">
             <div class="col-md-4">
               <label class="form-label">Kolay Soru Sayısı</label>
               <input type="number" class="form-control" 
                      [(ngModel)]="kolayQuestionCount" 
-                     min="1" max="15">
+                     min="0" max="20">
             </div>
             <div class="col-md-4">
               <label class="form-label">Orta Soru Sayısı</label>
               <input type="number" class="form-control" 
                      [(ngModel)]="ortaQuestionCount" 
-                     min="1" max="15">
+                     min="0" max="20">
             </div>
             <div class="col-md-4">
               <label class="form-label">Zor Soru Sayısı</label>
               <input type="number" class="form-control" 
                      [(ngModel)]="zorQuestionCount" 
-                     min="1" max="15">
+                     min="0" max="20">
+            </div>
+          </div>
+
+          <!-- Tek Zorluk Modu -->
+          <div *ngIf="singleDifficultyMode" class="row">
+            <div class="col-md-6">
+              <label class="form-label">Zorluk Seviyesi</label>
+              <select class="form-select" [(ngModel)]="selectedSingleDifficulty">
+                <option value="kolay">Kolay</option>
+                <option value="orta">Orta</option>
+                <option value="zor">Zor</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Toplam Soru Sayısı</label>
+              <input type="number" class="form-control" 
+                     [(ngModel)]="totalQuestionCount" 
+                     min="1" max="25">
+            </div>
+          </div>
+
+          <!-- Toplam Soru Sayısı Göstergesi -->
+          <div class="mt-3">
+            <div class="alert alert-info">
+              <i class="bi bi-info-circle me-2"></i>
+              <strong>Toplam Soru Sayısı: {{ getTotalQuestionCount() }}</strong>
+              <span *ngIf="!singleDifficultyMode"> 
+                ({{ kolayQuestionCount }} Kolay + {{ ortaQuestionCount }} Orta + {{ zorQuestionCount }} Zor)
+              </span>
+              <span *ngIf="singleDifficultyMode">
+                ({{ totalQuestionCount }} {{ selectedSingleDifficulty | titlecase }})
+              </span>
             </div>
           </div>
         </div>
@@ -202,7 +259,7 @@
             Geri Dön
           </button>
           <button class="btn btn-primary"
-                  [disabled]="loading || (selectedImprovementTopics.length === 0 && selectedBestTopics.length === 0 && selectedOtherTopics.length === 0)"
+                  [disabled]="loading || (selectedImprovementTopics.length === 0 && selectedBestTopics.length === 0 && selectedOtherTopics.length === 0) || getTotalQuestionCount() < 1"
                   (click)="createTest()">
             <i class="bi bi-magic me-2"></i>
             Test Oluştur
