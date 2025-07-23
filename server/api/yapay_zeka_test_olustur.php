@@ -63,23 +63,22 @@ if (!$input) {
 $ogrenci_id = $input['ogrenci_id'] ?? null;
 $gelistirilmesi_gereken_konular = $input['gelistirilmesi_gereken_konular'] ?? [];
 $en_iyi_konular = $input['en_iyi_konular'] ?? [];
-$kolay_soru_sayisi = max(1, min(30, $input['kolay_soru_sayisi'] ?? 5));
-$zor_soru_sayisi = max(1, min(30, $input['zor_soru_sayisi'] ?? 3));
+$diger_konular = $input['diger_konular'] ?? [];
+$kolay_soru_sayisi = max(1, min(15, $input['kolay_soru_sayisi'] ?? 5));
+$orta_soru_sayisi = max(1, min(15, $input['orta_soru_sayisi'] ?? 5));
+$zor_soru_sayisi = max(1, min(15, $input['zor_soru_sayisi'] ?? 5));
 
-// Toplam soru sayısını kontrol et (12-40 arası)
-$toplam_soru = $kolay_soru_sayisi + $zor_soru_sayisi;
-if ($toplam_soru < 12) {
-    $ekstra = 12 - $toplam_soru;
-    $kolay_soru_sayisi += ceil($ekstra / 2);
-    $zor_soru_sayisi += floor($ekstra / 2);
-} elseif ($toplam_soru > 40) {
-    $oran = 40 / $toplam_soru;
-    $kolay_soru_sayisi = floor($kolay_soru_sayisi * $oran);
-    $zor_soru_sayisi = floor($zor_soru_sayisi * $oran);
-    if ($kolay_soru_sayisi + $zor_soru_sayisi < 12) {
-        $kolay_soru_sayisi = 8;
-        $zor_soru_sayisi = 4;
-    }
+// Toplam soru sayısını kontrol et (5-45 arası)
+$toplam_soru = $kolay_soru_sayisi + $orta_soru_sayisi + $zor_soru_sayisi;
+if ($toplam_soru < 5) {
+    $kolay_soru_sayisi = 2;
+    $orta_soru_sayisi = 2;
+    $zor_soru_sayisi = 1;
+} elseif ($toplam_soru > 45) {
+    $oran = 45 / $toplam_soru;
+    $kolay_soru_sayisi = max(1, floor($kolay_soru_sayisi * $oran));
+    $orta_soru_sayisi = max(1, floor($orta_soru_sayisi * $oran));
+    $zor_soru_sayisi = max(1, floor($zor_soru_sayisi * $oran));
 }
 
 if (!$ogrenci_id) {
@@ -120,6 +119,13 @@ try {
             ],
             [
                 'konu_adi' => 'Asitler ve Bazlar',
+                'soru_metni' => 'Zayıf asitlerin özellikleri hakkında aşağıdakilerden hangisi doğrudur?',
+                'secenekler' => json_encode(['A) Tamamen iyonlaşırlar', 'B) Kısmen iyonlaşırlar', 'C) Hiç iyonlaşmazlar', 'D) Sadece yüksek sıcaklıkta iyonlaşırlar']),
+                'dogru_cevap' => 'B',
+                'zorluk_derecesi' => 'orta'
+            ],
+            [
+                'konu_adi' => 'Asitler ve Bazlar',
                 'soru_metni' => 'pH = 2 olan bir çözeltinin [H+] konsantrasyonu nedir?',
                 'secenekler' => json_encode(['A) 10^-2 M', 'B) 10^-12 M', 'C) 2 M', 'D) 12 M']),
                 'dogru_cevap' => 'A',
@@ -131,6 +137,13 @@ try {
                 'secenekler' => json_encode(['A) Aynı atom numarası', 'B) Aynı kütle numarası', 'C) Aynı valans elektron sayısı', 'D) Aynı nötron sayısı']),
                 'dogru_cevap' => 'C',
                 'zorluk_derecesi' => 'kolay'
+            ],
+            [
+                'konu_adi' => 'Periyodik Sistem',
+                'soru_metni' => 'Periyodik cetvelde metalik özellik nasıl değişir?',
+                'secenekler' => json_encode(['A) Soldan sağa artar', 'B) Soldan sağa azalır', 'C) Yukarıdan aşağıya azalır', 'D) Değişmez']),
+                'dogru_cevap' => 'B',
+                'zorluk_derecesi' => 'orta'
             ],
             [
                 'konu_adi' => 'Periyodik Sistem',
@@ -161,66 +174,90 @@ try {
 
 $test_sorulari = [];
 
-// Geliştirilmesi gereken konulardan kolay sorular
-if (!empty($gelistirilmesi_gereken_konular)) {
-    $konu_placeholders = implode(',', array_fill(0, count($gelistirilmesi_gereken_konular), '?'));
+// Tüm seçili konuları birleştir
+$tum_secili_konular = array_merge($gelistirilmesi_gereken_konular, $en_iyi_konular, $diger_konular);
+$tum_secili_konular = array_unique($tum_secili_konular); // Tekrar eden konuları kaldır
+
+if (!empty($tum_secili_konular)) {
+    $konu_placeholders = implode(',', array_fill(0, count($tum_secili_konular), '?'));
     
-    // Benzersiz random seçim için seed kullan
-    $random_seed = time() . $ogrenci_id . implode('', $gelistirilmesi_gereken_konular);
-    $sql = "SELECT * FROM yapay_zeka_sorular 
-            WHERE konu_adi IN ($konu_placeholders) 
-            AND zorluk_derecesi = 'kolay' 
-            ORDER BY RAND(" . crc32($random_seed) . ") 
-            LIMIT " . intval($kolay_soru_sayisi);
+    // Kolay sorular
+    if ($kolay_soru_sayisi > 0) {
+        $random_seed = time() . $ogrenci_id . implode('', $tum_secili_konular) . 'kolay';
+        $sql = "SELECT * FROM yapay_zeka_sorular 
+                WHERE konu_adi IN ($konu_placeholders) 
+                AND zorluk_derecesi = 'kolay' 
+                ORDER BY RAND(" . crc32($random_seed) . ") 
+                LIMIT " . intval($kolay_soru_sayisi);
 
-    $params = $gelistirilmesi_gereken_konular;
-
-    try {
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute($params);
-        $kolay_sorular = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        echo json_encode(['success' => false, 'message' => 'Kolay sorular sorgusu hatası: ' . $e->getMessage()]);
-        exit;
+        try {
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($tum_secili_konular);
+            $kolay_sorular = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            foreach ($kolay_sorular as &$soru) {
+                $soru['secenekler'] = json_decode($soru['secenekler'], true);
+                $soru['test_tipi'] = 'kolay';
+            }
+            
+            $test_sorulari = array_merge($test_sorulari, $kolay_sorular);
+        } catch (PDOException $e) {
+            echo json_encode(['success' => false, 'message' => 'Kolay sorular sorgusu hatası: ' . $e->getMessage()]);
+            exit;
+        }
     }
-
-    foreach ($kolay_sorular as &$soru) {
-        $soru['secenekler'] = json_decode($soru['secenekler'], true);
-        $soru['test_tipi'] = 'gelistirilmesi_gereken';
-    }
-
-    $test_sorulari = array_merge($test_sorulari, $kolay_sorular);
-}
-
-// En iyi konulardan zor sorular
-if (!empty($en_iyi_konular)) {
-    $konu_placeholders = implode(',', array_fill(0, count($en_iyi_konular), '?'));
     
-    // Benzersiz random seçim için farklı seed
-    $random_seed = time() . $ogrenci_id . implode('', $en_iyi_konular) . 'zor';
-    $sql = "SELECT * FROM yapay_zeka_sorular 
-            WHERE konu_adi IN ($konu_placeholders) 
-            AND zorluk_derecesi = 'zor' 
-            ORDER BY RAND(" . crc32($random_seed) . ") 
-            LIMIT " . intval($zor_soru_sayisi);
+    // Orta sorular
+    if ($orta_soru_sayisi > 0) {
+        $random_seed = time() . $ogrenci_id . implode('', $tum_secili_konular) . 'orta';
+        $sql = "SELECT * FROM yapay_zeka_sorular 
+                WHERE konu_adi IN ($konu_placeholders) 
+                AND zorluk_derecesi = 'orta' 
+                ORDER BY RAND(" . crc32($random_seed) . ") 
+                LIMIT " . intval($orta_soru_sayisi);
 
-    $params = $en_iyi_konular;
-
-    try {
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute($params);
-        $zor_sorular = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        echo json_encode(['success' => false, 'message' => 'Zor sorular sorgusu hatası: ' . $e->getMessage()]);
-        exit;
+        try {
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($tum_secili_konular);
+            $orta_sorular = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            foreach ($orta_sorular as &$soru) {
+                $soru['secenekler'] = json_decode($soru['secenekler'], true);
+                $soru['test_tipi'] = 'orta';
+            }
+            
+            $test_sorulari = array_merge($test_sorulari, $orta_sorular);
+        } catch (PDOException $e) {
+            echo json_encode(['success' => false, 'message' => 'Orta sorular sorgusu hatası: ' . $e->getMessage()]);
+            exit;
+        }
     }
 
-    foreach ($zor_sorular as &$soru) {
-        $soru['secenekler'] = json_decode($soru['secenekler'], true);
-        $soru['test_tipi'] = 'en_iyi';
-    }
+    // Zor sorular
+    if ($zor_soru_sayisi > 0) {
+        $random_seed = time() . $ogrenci_id . implode('', $tum_secili_konular) . 'zor';
+        $sql = "SELECT * FROM yapay_zeka_sorular 
+                WHERE konu_adi IN ($konu_placeholders) 
+                AND zorluk_derecesi = 'zor' 
+                ORDER BY RAND(" . crc32($random_seed) . ") 
+                LIMIT " . intval($zor_soru_sayisi);
 
-    $test_sorulari = array_merge($test_sorulari, $zor_sorular);
+        try {
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($tum_secili_konular);
+            $zor_sorular = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            foreach ($zor_sorular as &$soru) {
+                $soru['secenekler'] = json_decode($soru['secenekler'], true);
+                $soru['test_tipi'] = 'zor';
+            }
+            
+            $test_sorulari = array_merge($test_sorulari, $zor_sorular);
+        } catch (PDOException $e) {
+            echo json_encode(['success' => false, 'message' => 'Zor sorular sorgusu hatası: ' . $e->getMessage()]);
+            exit;
+        }
+    }
 }
 
 // Test sonuçlarını kaydet
@@ -229,7 +266,8 @@ if (!empty($test_sorulari)) {
     $test_id = 'test_' . uniqid();
 
     // Test adını oluştur
-    $konu_listesi = array_merge($gelistirilmesi_gereken_konular, $en_iyi_konular);
+    $konu_listesi = array_merge($gelistirilmesi_gereken_konular, $en_iyi_konular, $diger_konular);
+    $konu_listesi = array_unique($konu_listesi); // Tekrar eden konuları kaldır
     $test_adi = '';
 
     if (!empty($konu_listesi)) {
