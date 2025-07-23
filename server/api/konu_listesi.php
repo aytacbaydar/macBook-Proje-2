@@ -1,29 +1,4 @@
 <?php
-require_once '../config.php';
-
-try {
-    $conn = getConnection();
-    
-    // Tüm konuları ID sırasına göre getir - hiçbir filtreleme yok
-    $stmt = $conn->prepare("SELECT * FROM konular ORDER BY id ASC");
-    $stmt->execute();
-    $konular = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    echo json_encode([
-        'success' => true,
-        'konular' => $konular,
-        'total_count' => count($konular),
-        'message' => 'Tüm konular filtresiz olarak getirildi'
-    ]);
-
-} catch(PDOException $e) {
-    echo json_encode([
-        'success' => false,
-        'message' => 'Veritabanı hatası: ' . $e->getMessage()
-    ]);
-}
-?>
-<?php
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
@@ -38,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 try {
     $pdo = getConnection();
-    
+
     // Konular tablosunu kontrol et ve oluştur
     $createTableSQL = "
     CREATE TABLE IF NOT EXISTS konular (
@@ -49,15 +24,15 @@ try {
         aciklama TEXT DEFAULT NULL,
         olusturma_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )";
-    
+
     $pdo->exec($createTableSQL);
-    
+
     // Tablo boşsa örnek konular ekle
     $checkSQL = "SELECT COUNT(*) as count FROM konular";
     $checkStmt = $pdo->prepare($checkSQL);
     $checkStmt->execute();
     $count = $checkStmt->fetch(PDO::FETCH_ASSOC)['count'];
-    
+
     if ($count == 0) {
         $ornekKonular = [
             ['Asitler ve Bazlar', '9', 'Asit-Baz Dengesi'],
@@ -78,27 +53,27 @@ try {
             ['Kimyasal Denge', '12', 'Kimyasal Denge'],
             ['Elektrokimya', '12', 'Elektrokimya']
         ];
-        
+
         $insertSQL = "INSERT INTO konular (konu_adi, sinif_seviyesi, unite_adi) VALUES (?, ?, ?)";
         $insertStmt = $pdo->prepare($insertSQL);
-        
+
         foreach ($ornekKonular as $konu) {
             $insertStmt->execute($konu);
         }
     }
-    
+
     // Konuları getir
     $sql = "SELECT * FROM konular ORDER BY sinif_seviyesi, konu_adi";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     $konular = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
     echo json_encode([
         'success' => true,
         'konular' => $konular,
         'message' => 'Konular başarıyla getirildi'
     ]);
-    
+
 } catch (PDOException $e) {
     echo json_encode([
         'success' => false,
