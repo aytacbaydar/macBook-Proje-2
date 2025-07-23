@@ -18,6 +18,13 @@ interface KonuAnalizi {
   toplam_soru: number;
 }
 
+interface Konu {
+  id: number;
+  konu_adi: string;
+  sinif_seviyesi: string;
+  unite_adi?: string;
+}
+
 interface TestSoru {
   id: number;
   konu_adi: string;
@@ -58,9 +65,19 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   // Test oluşturma form verileri
   selectedImprovementTopics: string[] = [];
   selectedBestTopics: string[] = [];
+  selectedOtherTopics: string[] = [];
   improvementQuestionCount = 8;
   advancedQuestionCount = 4;
   challengeQuestionCount = 4;
+  
+  // Diğer konular
+  tumKonular: Konu[] = [];
+  loadingKonular = false;
+  
+  // Soru zorluk seviyeleri
+  kolayQuestionCount = 5;
+  ortaQuestionCount = 5;
+  zorQuestionCount = 5;
   
   // Template'de kullanılan computed properties
   get improvementTopics(): KonuAnalizi[] {
@@ -69,6 +86,10 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   
   get bestTopics(): KonuAnalizi[] {
     return this.getEnIyiKonular();
+  }
+  
+  get otherTopics(): Konu[] {
+    return this.tumKonular;
   }
   
   get currentQuestion(): TestSoru | null {
@@ -114,6 +135,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     this.loadStudentInfo();
     this.loadKonuAnalizi();
     this.loadTestListesi();
+    this.loadTumKonular();
   }
 
   private loadStudentInfo(): void {
@@ -191,6 +213,26 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     return 'Geliştirilmeli';
   }
 
+  // Tüm konuları yükle
+  private loadTumKonular(): void {
+    this.loadingKonular = true;
+    
+    this.http.get<any>('./server/api/konu_listesi.php').subscribe({
+      next: (response) => {
+        this.loadingKonular = false;
+        if (response.success && response.konular) {
+          this.tumKonular = response.konular;
+        } else {
+          this.error = 'Konular yüklenemedi';
+        }
+      },
+      error: (error) => {
+        this.loadingKonular = false;
+        this.error = 'Konular yüklenirken hata oluştu: ' + (error.error?.message || error.message);
+      }
+    });
+  }
+
   // Konu seçimi metodları
   toggleImprovementTopic(konuAdi: string): void {
     const index = this.selectedImprovementTopics.indexOf(konuAdi);
@@ -210,6 +252,15 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     }
   }
 
+  toggleOtherTopic(konuAdi: string): void {
+    const index = this.selectedOtherTopics.indexOf(konuAdi);
+    if (index > -1) {
+      this.selectedOtherTopics.splice(index, 1);
+    } else {
+      this.selectedOtherTopics.push(konuAdi);
+    }
+  }
+
   isImprovementTopicSelected(konuAdi: string): boolean {
     return this.selectedImprovementTopics.includes(konuAdi);
   }
@@ -218,11 +269,17 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     return this.selectedBestTopics.includes(konuAdi);
   }
 
+  isOtherTopicSelected(konuAdi: string): boolean {
+    return this.selectedOtherTopics.includes(konuAdi);
+  }
+
   // Test oluşturma
   createTest(): void {
     if (!this.studentInfo) return;
 
-    if (this.selectedImprovementTopics.length === 0 && this.selectedBestTopics.length === 0) {
+    if (this.selectedImprovementTopics.length === 0 && 
+        this.selectedBestTopics.length === 0 && 
+        this.selectedOtherTopics.length === 0) {
       this.error = 'En az bir konu seçmelisiniz';
       return;
     }
@@ -234,8 +291,10 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
       ogrenci_id: this.studentInfo.id,
       gelistirilmesi_gereken_konular: this.selectedImprovementTopics,
       en_iyi_konular: this.selectedBestTopics,
-      kolay_soru_sayisi: this.improvementQuestionCount,
-      zor_soru_sayisi: this.advancedQuestionCount
+      diger_konular: this.selectedOtherTopics,
+      kolay_soru_sayisi: this.kolayQuestionCount,
+      orta_soru_sayisi: this.ortaQuestionCount,
+      zor_soru_sayisi: this.zorQuestionCount
     };
 
     this.http.post<any>('./server/api/yapay_zeka_test_olustur.php', testData).subscribe({
@@ -411,6 +470,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     this.testResults = null;
     this.selectedImprovementTopics = [];
     this.selectedBestTopics = [];
+    this.selectedOtherTopics = [];
     // currentStep'i burada sıfırlamayalım, startNewTest() bunu hallediyor
     this.error = null;
     this.success = null;
