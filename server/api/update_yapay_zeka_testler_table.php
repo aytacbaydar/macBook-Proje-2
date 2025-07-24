@@ -1,52 +1,35 @@
 <?php
+header('Content-Type: application/json; charset=utf-8');
+header('Access-Control-Allow-Origin: *');
+
 require_once '../config.php';
 
 try {
     $pdo = getConnection();
 
-    // Kullanıcı cevapları sütunu ekle
-    $sql = "ALTER TABLE yapay_zeka_testler 
-            ADD COLUMN IF NOT EXISTS kullanici_cevaplari JSON NULL";
+    // Tabloyu kontrol et ve gerekirse sonuc sütununu ekle
+    $checkColumnSQL = "
+        SELECT COLUMN_NAME 
+        FROM INFORMATION_SCHEMA.COLUMNS 
+        WHERE TABLE_SCHEMA = DATABASE() 
+        AND TABLE_NAME = 'yapay_zeka_testler' 
+        AND COLUMN_NAME = 'sonuc'
+    ";
 
-    $pdo->exec($sql);
+    $stmt = $pdo->prepare($checkColumnSQL);
+    $stmt->execute();
+    $columnExists = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    echo "Tablo başarıyla güncellendi";
-
-} catch (PDOException $e) {
-    echo "Hata: " . $e->getMessage();
-}
-?>
-```
-
-```text
-Adding the test_adi column to the yapay_zeka_testler table.
-```
-
-```php
-<?php
-require_once '../config.php';
-
-try {
-    $pdo = getConnection();
-
-    // Kullanıcı cevapları sütunu ekle
-    $sql = "ALTER TABLE yapay_zeka_testler 
-            ADD COLUMN IF NOT EXISTS kullanici_cevaplari JSON NULL";
-
-    $pdo->exec($sql);
-
-    // test_adi sütunu kontrol et ve ekle
-    $check_test_adi = $pdo->query("SHOW COLUMNS FROM yapay_zeka_testler LIKE 'test_adi'");
-    if ($check_test_adi->rowCount() == 0) {
-        $pdo->exec("ALTER TABLE yapay_zeka_testler ADD COLUMN test_adi VARCHAR(255) DEFAULT NULL AFTER test_id");
-        echo "test_adi sütunu eklendi\n";
+    if (!$columnExists) {
+        // sonuc sütununu ekle
+        $addColumnSQL = "ALTER TABLE yapay_zeka_testler ADD COLUMN sonuc JSON NULL AFTER tamamlanma_tarihi";
+        $pdo->exec($addColumnSQL);
+        echo json_encode(['success' => true, 'message' => 'sonuc sütunu başarıyla eklendi']);
+    } else {
+        echo json_encode(['success' => true, 'message' => 'sonuc sütunu zaten mevcut']);
     }
 
-    // Tablolar ve sütunlar kontrol edilip eklendi
-    echo json_encode(['success' => true, 'message' => 'Tüm gerekli sütunlar mevcut']);
-
 } catch (PDOException $e) {
-    echo "Hata: " . $e->getMessage();
+    echo json_encode(['success' => false, 'message' => 'Veritabanı hatası: ' . $e->getMessage()]);
 }
 ?>
-```

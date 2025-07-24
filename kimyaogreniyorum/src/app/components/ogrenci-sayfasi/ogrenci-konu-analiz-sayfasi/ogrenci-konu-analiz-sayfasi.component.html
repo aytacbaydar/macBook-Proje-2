@@ -1,4 +1,3 @@
-
 <div class="konu-analiz-container">
 
   <!-- Loading State -->
@@ -21,7 +20,7 @@
 
   <!-- Main Content -->
   <div *ngIf="!loadingKonuAnalizi && !error">
-    
+
     <!-- Summary Statistics -->
     <div class="summary-stats-section" *ngIf="konuAnalizi.length > 0">
       <div class="stats-grid">
@@ -165,7 +164,14 @@
     <!-- Detailed Topic Analysis -->
     <div class="detailed-analysis" *ngIf="konuAnalizi.length > 0">
       <h3><i class="bi bi-list-check me-2"></i>Detaylı Konu Analizi</h3>
-      
+
+      <div class="analysis-description">
+          <p class="text-muted">
+            Bu analiz, çözdüğünüz tüm sınavlar ve yapay zeka destekli testlerdeki performansınıza dayanarak hazırlanmıştır.
+            Her konudaki başarı oranınız, doğru ve yanlış cevaplarınız detaylı olarak görüntülenmektedir.
+          </p>
+        </div>
+
       <div class="konu-analizi-container">
         <div class="konu-item mb-4" *ngFor="let konu of konuAnalizi; let i = index">
           <div class="konu-header d-flex justify-content-between align-items-center mb-2">
@@ -174,7 +180,7 @@
               {{ getKonuSuccessText(konu.basari_orani) }}
             </span>
           </div>
-          
+
           <div class="progress mb-2" style="height: 25px;">
             <div class="progress-bar" 
                  [style.width.%]="konu.basari_orani"

@@ -46,8 +46,21 @@ try {
     $stmt->execute([$ogrenci_id]);
     $sinavlar = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    // Yapay zeka testlerini de al
+    $yapay_zeka_sql = "
+        SELECT yzt.id, yzt.test_adi, yzt.sorular, yzt.sonuc, yzt.tamamlanma_tarihi
+        FROM yapay_zeka_testler yzt
+        WHERE yzt.ogrenci_id = ? AND yzt.sonuc IS NOT NULL AND yzt.tamamlanma_tarihi IS NOT NULL
+        ORDER BY yzt.tamamlanma_tarihi DESC
+    ";
+
+    $yapay_zeka_stmt = $conn->prepare($yapay_zeka_sql);
+    $yapay_zeka_stmt->execute([$ogrenci_id]);
+    $yapay_zeka_testler = $yapay_zeka_stmt->fetchAll(PDO::FETCH_ASSOC);
+
     $konu_istatistikleri = [];
 
+    // Normal sınavları işle
     foreach ($sinavlar as $sinav) {
         $ogrenci_cevaplar = json_decode($sinav['cevaplar'], true);
         $soru_konulari = json_decode($sinav['soru_konulari'], true);
@@ -85,6 +98,51 @@ try {
             if (empty($ogrenci_cevap)) {
                 $konu_istatistikleri[$konu_adi]['bos_sayisi']++;
             } elseif ($ogrenci_cevap === $dogru_cevap) {
+                $konu_istatistikleri[$konu_adi]['dogru_sayisi']++;
+            } else {
+                $konu_istatistikleri[$konu_adi]['yanlis_sayisi']++;
+            }
+        }
+    }
+
+    // Yapay zeka testlerini işle
+    foreach ($yapay_zeka_testler as $test) {
+        $sorular = json_decode($test['sorular'], true);
+        $sonuc = json_decode($test['sonuc'], true);
+        
+        if (!$sorular || !$sonuc || !isset($sonuc['details'])) continue;
+
+        foreach ($sonuc['details'] as $detay) {
+            if (!isset($detay['soru']) || !isset($detay['soru']['konu_adi'])) continue;
+            
+            $konu_adi = $detay['soru']['konu_adi'];
+            $is_correct = $detay['is_correct'] ?? false;
+            $user_answer = $detay['user_answer'] ?? '';
+
+            // Konu istatistiklerini başlat
+            if (!isset($konu_istatistikleri[$konu_adi])) {
+                $konu_istatistikleri[$konu_adi] = [
+                    'konu_adi' => $konu_adi,
+                    'toplam_soru' => 0,
+                    'dogru_sayisi' => 0,
+                    'yanlis_sayisi' => 0,
+                    'bos_sayisi' => 0,
+                    'basari_orani' => 0,
+                    'sinavlar' => []
+                ];
+            }
+
+            $konu_istatistikleri[$konu_adi]['toplam_soru']++;
+
+            // Test bilgisini ekle
+            $test_adi = $test['test_adi'] . ' (YZ)';
+            if (!in_array($test_adi, $konu_istatistikleri[$konu_adi]['sinavlar'])) {
+                $konu_istatistikleri[$konu_adi]['sinavlar'][] = $test_adi;
+            }
+
+            if (empty($user_answer)) {
+                $konu_istatistikleri[$konu_adi]['bos_sayisi']++;
+            } elseif ($is_correct) {
                 $konu_istatistikleri[$konu_adi]['dogru_sayisi']++;
             } else {
                 $konu_istatistikleri[$konu_adi]['yanlis_sayisi']++;
