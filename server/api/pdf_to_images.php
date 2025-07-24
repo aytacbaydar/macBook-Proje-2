@@ -116,7 +116,7 @@ function convertPdfToImages($pdfPath, $fileId) {
     if (extension_loaded('imagick')) {
         try {
             $imagick = new Imagick();
-            $imagick->setResolution(150, 150);
+            $imagick->setResolution(200, 200);
             $imagick->readImage($pdfPath);
             
             $pageCount = $imagick->getNumberImages();
@@ -164,7 +164,7 @@ function convertWithGhostscript($pdfPath, $fileId, $imageDir) {
     
     // Ghostscript komutu
     $outputPattern = $imageDir . $fileId . "_page_%d.jpg";
-    $command = "gs -dNOPAUSE -dBATCH -sDEVICE=jpeg -r150 -dJPEGQ=85 -sOutputFile=" . 
+    $command = "gs -dNOPAUSE -dBATCH -sDEVICE=jpeg -r200 -dJPEGQ=90 -sOutputFile=" . 
                escapeshellarg($outputPattern) . " " . escapeshellarg($pdfPath) . " 2>&1";
     
     error_log("Ghostscript komutu: " . $command);
@@ -176,7 +176,7 @@ function convertWithGhostscript($pdfPath, $fileId, $imageDir) {
     
     if ($returnCode !== 0) {
         // Alternatif komut dene
-        $command2 = "convert -density 150 " . escapeshellarg($pdfPath) . " -quality 85 " . 
+        $command2 = "convert -density 200 " . escapeshellarg($pdfPath) . " -quality 90 " . 
                    $imageDir . $fileId . "_page_%d.jpg 2>&1";
         
         error_log("ImageMagick convert komutu: " . $command2);

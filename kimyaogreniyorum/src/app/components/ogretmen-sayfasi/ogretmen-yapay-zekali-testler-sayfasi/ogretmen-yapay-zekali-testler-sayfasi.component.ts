@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
@@ -85,11 +84,12 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
   pdfUploadData = {
     konu_adi: '',
     sinif_seviyesi: '9',
-    zorluk_derecesi: 'kolay' as 'kolay' | 'orta' | 'zor'
+    zorluk_derecesi: 'kolay' as 'kolay' | 'orta' | 'zor',
+    dogru_cevap: 'A'
   };
   pdfPages: string[] = [];
   currentPdfPage = 0;
-  
+
   // PDF selection değişkenleri
   currentSelection: any = null;
   isSelecting = false;
@@ -442,7 +442,8 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
     this.pdfUploadData = {
       konu_adi: '',
       sinif_seviyesi: '9',
-      zorluk_derecesi: 'kolay'
+      zorluk_derecesi: 'kolay',
+      dogru_cevap: 'A'
     };
     this.pdfPages = [];
     this.currentPdfPage = 0;
@@ -488,6 +489,7 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
     formData.append('konu_adi', this.pdfUploadData.konu_adi);
     formData.append('sinif_seviyesi', this.pdfUploadData.sinif_seviyesi);
     formData.append('zorluk_derecesi', this.pdfUploadData.zorluk_derecesi);
+	formData.append('dogru_cevap', this.pdfUploadData.dogru_cevap);
 
     this.http.post<any>('./server/api/pdf_to_images.php', formData).subscribe({
       next: (response) => {
@@ -562,7 +564,7 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
     if (!this.isSelecting || !this.currentSelection) return;
 
     this.isSelecting = false;
-    
+
     // Minimum boyut kontrolü
     if (this.currentSelection.width > 20 && this.currentSelection.height > 20) {
       this.currentPageSelections.push({
@@ -617,7 +619,8 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
       konu_adi: this.pdfUploadData.konu_adi,
       sinif_seviyesi: this.pdfUploadData.sinif_seviyesi,
       zorluk_derecesi: this.pdfUploadData.zorluk_derecesi,
-      ogretmen_id: this.teacherInfo?.id
+      ogretmen_id: this.teacherInfo?.id,
+      dogru_cevap: this.pdfUploadData.dogru_cevap
     };
 
     this.http.post<any>('./server/api/save_pdf_questions.php', requestData).subscribe({

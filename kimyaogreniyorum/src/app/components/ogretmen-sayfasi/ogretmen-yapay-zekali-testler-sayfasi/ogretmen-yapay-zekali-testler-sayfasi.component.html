@@ -114,6 +114,30 @@
           <div class="form-text">PDF formatında, maksimum 10MB. Sorular ve şıklar açık bir şekilde görünmelidir.</div>
         </div>
 
+        <!-- Doğru Cevap Seçeneği -->
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="pdfDogruCevap" class="form-label">Varsayılan Doğru Cevap</label>
+              <select class="form-select" 
+                      id="pdfDogruCevap" 
+                      [(ngModel)]="pdfUploadData.dogru_cevap" 
+                      name="pdfDogruCevap">
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+                <option value="E">E</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="alert alert-info mb-0">
+              <small><i class="bi bi-info-circle me-1"></i>Tüm sorular için varsayılan doğru cevap. Daha sonra düzenleyebilirsiniz.</small>
+            </div>
+          </div>
+        </div>
+
         <!-- Form Actions -->
         <div class="form-actions">
           <button type="button" class="btn btn-secondary" (click)="togglePdfUploadForm()">
@@ -158,7 +182,7 @@
                alt="PDF Sayfa {{ currentPdfPage + 1 }}" 
                class="pdf-page-image"
                (load)="onPdfPageImageLoad($event)">
-          
+
           <!-- Selection overlay -->
           <div class="selection-overlay" 
                (mousedown)="startSelection($event)"
@@ -193,7 +217,7 @@
             <i class="bi bi-info-circle me-2"></i>
             Mouse ile sürükleyerek soruları seçin. Her seçim bir soru olarak kaydedilecek.
           </div>
-          
+
           <div class="d-flex justify-content-between align-items-center">
             <div>
               Bu sayfada {{ currentPageSelections.length }} soru seçildi

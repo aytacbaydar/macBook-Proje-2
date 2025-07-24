@@ -33,6 +33,7 @@ $selections = $input['selections'] ?? [];
 $konuAdi = $input['konu_adi'] ?? '';
 $sinifSeviyesi = $input['sinif_seviyesi'] ?? '9';
 $zorlukDerecesi = $input['zorluk_derecesi'] ?? 'kolay';
+$dogruCevap = $input['dogru_cevap'] ?? 'A';
 $ogretmenId = $input['ogretmen_id'] ?? null;
 
 if (empty($selections) || !$konuAdi || !$ogretmenId) {
@@ -62,7 +63,7 @@ try {
                 if ($questionImage) {
                     // Veritabanına kaydet
                     $sql = "INSERT INTO yapay_zeka_sorular (konu_adi, sinif_seviyesi, zorluk_derecesi, soru_resmi, dogru_cevap, ogretmen_id, olusturma_tarihi) 
-                            VALUES (?, ?, ?, ?, 'A', ?, NOW())";
+                            VALUES (?, ?, ?, ?, ?, ?, NOW())";
                     
                     $stmt = $pdo->prepare($sql);
                     $stmt->execute([
@@ -70,6 +71,7 @@ try {
                         $sinifSeviyesi,
                         $zorlukDerecesi,
                         $questionImage,
+                        $dogruCevap,
                         $ogretmenId
                     ]);
                     
