@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 
@@ -135,7 +135,11 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     action: null as (() => void) | null
   };
 
-  constructor(private http: HttpClient, private toaster: ToastrService) {}
+  constructor(
+    private http: HttpClient, 
+    private toaster: ToastrService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadStudentInfo();
@@ -176,10 +180,15 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     this.http.get<any>(`./server/api/ogrenci_konu_analizi.php?ogrenci_id=${ogrenciId}`).subscribe({
       next: (response) => {
         this.loadingAnalysis = false;
-        if (response.success && response.data) {
+        console.log('Konu analizi response:', response);
+        
+        if (response && response.success && response.data) {
           this.konuAnalizi = response.data.konu_istatistikleri || [];
         } else {
           this.konuAnalizi = [];
+          if (response && !response.success) {
+            console.warn('Konu analizi başarısız:', response.message);
+          }
         }
       },
       error: (error) => {
@@ -226,14 +235,19 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     this.http.get<any>('./server/api/konu_listesi.php').subscribe({
       next: (response) => {
         this.loadingKonular = false;
-        if (response.success && response.konular) {
+        console.log('Konu listesi response:', response);
+        
+        if (response && response.success && response.konular) {
           this.tumKonular = response.konular;
+        } else if (response) {
+          this.error = response.message || 'Konular yüklenemedi';
         } else {
-          this.error = 'Konular yüklenemedi';
+          this.error = 'Sunucudan geçersiz yanıt alındı';
         }
       },
       error: (error) => {
         this.loadingKonular = false;
+        console.error('Konu listesi yükleme hatası:', error);
         this.error = 'Konular yüklenirken hata oluştu: ' + (error.error?.message || error.message);
       }
     });
@@ -708,14 +722,19 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     this.http.get<any>(`./server/api/ogrenci_testleri_listesi.php?ogrenci_id=${this.studentInfo.id}`).subscribe({
       next: (response) => {
         this.loadingTestList = false;
-        if (response.success) {
+        console.log('Test listesi response:', response);
+        
+        if (response && response.success) {
           this.testListesi = response.data || [];
-        } else {
+        } else if (response) {
           this.error = response.message || 'Test listesi yüklenemedi';
+        } else {
+          this.error = 'Sunucudan geçersiz yanıt alındı';
         }
       },
       error: (error) => {
         this.loadingTestList = false;
+        console.error('Test listesi yükleme hatası:', error);
         this.error = 'Test listesi yüklenirken hata oluştu: ' + (error.error?.message || error.message);
       }
     });
@@ -798,15 +817,25 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   // Yeni test oluşturmaya başla
   startNewTest(): void {
     console.log('Yeni test oluşturma başlatılıyor...');
+    console.log('Mevcut step (başlangıç):', this.currentStep);
+    
     this.resetTest();
     this.currentStep = 2;
     this.clearMessages();
-    console.log('Current step:', this.currentStep);
+    
+    console.log('Step değiştirildi:', this.currentStep);
     
     // UI'ın güncellenmesini zorla
+    this.cdr.detectChanges();
+    
     setTimeout(() => {
-      console.log('Step değişikliği tamamlandı, currentStep:', this.currentStep);
-    }, 0);
+      console.log('Timeout sonrası step:', this.currentStep);
+      console.log('Template elementleri kontrol ediliyor...');
+      
+      // DOM'da step 2 elementlerinin varlığını kontrol et
+      const step2Element = document.querySelector('.analysis-section');
+      console.log('Step 2 elementi bulundu mu?', !!step2Element);
+    }, 100);
   }
 
   // Test listesine geri dön
