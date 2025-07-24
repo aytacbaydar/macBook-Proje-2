@@ -572,11 +572,18 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
         y: this.currentSelection.y,
         width: this.currentSelection.width,
         height: this.currentSelection.height,
-        pageIndex: this.currentPdfPage
+        pageIndex: this.currentPdfPage,
+        dogru_cevap: this.pdfUploadData.dogru_cevap // Varsayılan cevap
       });
     }
 
     this.currentSelection = null;
+  }
+
+  updateSelectionAnswer(selectionIndex: number, answer: string): void {
+    if (this.currentPageSelections[selectionIndex]) {
+      this.currentPageSelections[selectionIndex].dogru_cevap = answer;
+    }
   }
 
   removeSelection(index: number): void {
@@ -589,6 +596,12 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
 
   saveCurrentPageSelections(): void {
     if (this.currentPageSelections.length > 0) {
+      // Her seçimin doğru cevabının set edilmiş olduğundan emin ol
+      this.currentPageSelections.forEach(selection => {
+        if (!selection.dogru_cevap) {
+          selection.dogru_cevap = this.pdfUploadData.dogru_cevap;
+        }
+      });
       this.allSelections[this.currentPdfPage] = [...this.currentPageSelections];
     } else if (this.allSelections[this.currentPdfPage]) {
       delete this.allSelections[this.currentPdfPage];
