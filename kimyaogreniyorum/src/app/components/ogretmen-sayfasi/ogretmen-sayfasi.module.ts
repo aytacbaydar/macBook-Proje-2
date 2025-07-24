@@ -28,6 +28,7 @@ import { OgretmenCevapAnahtariSayfasiComponent } from './ogretmen-sinavlar-sayfa
 import { OgretmenOgrenciSinavSonuclariSayfasiComponent } from './ogretmen-sinavlar-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi.component';
 import { OgretmenYapayZekaliTestlerSayfasiComponent } from './ogretmen-yapay-zekali-testler-sayfasi/ogretmen-yapay-zekali-testler-sayfasi.component';
 import { SharedModule } from '../../shared/shared.module';
+import { OgretmenDuyuruSayfasiComponent } from './ogretmen-duyuru-sayfasi/ogretmen-duyuru-sayfasi.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { SharedModule } from '../../shared/shared.module';
     OgretmenCevapAnahtariSayfasiComponent,
     OgretmenOgrenciSinavSonuclariSayfasiComponent,
     OgretmenYapayZekaliTestlerSayfasiComponent,
+    OgretmenDuyuruSayfasiComponent,
   ],
   imports: [
     CommonModule,
