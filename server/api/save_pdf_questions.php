@@ -96,8 +96,8 @@ try {
 }
 
 function cropQuestionFromPdf($selection, $pageIndex) {
-    $imageDir = '../uploads/pdf_images/';
-    $uploadDir = '../uploads/soru_resimleri/';
+    $imageDir = '../../uploads/pdf_images/';
+    $uploadDir = '../../uploads/soru_resimleri/';
     
     // PDF'den oluşturulan resmi bul
     $pageFiles = glob($imageDir . '*_page_' . ($pageIndex + 1) . '.jpg');

@@ -48,7 +48,7 @@ if ($uploadedFile['size'] > 10 * 1024 * 1024) {
 }
 
 // Upload dizinini oluştur
-$uploadDir = '../uploads/pdf_temp/';
+$uploadDir = '../../uploads/pdf_temp/';
 if (!is_dir($uploadDir)) {
     mkdir($uploadDir, 0755, true);
 }
@@ -93,7 +93,7 @@ try {
 }
 
 function convertPdfToImages($pdfPath, $fileId) {
-    $imageDir = '../uploads/pdf_images/';
+    $imageDir = '../../uploads/pdf_images/';
     
     // Dizin oluşturma ve izin kontrolü
     if (!is_dir($imageDir)) {
@@ -131,7 +131,7 @@ function convertPdfToImages($pdfPath, $fileId) {
                 $imagePath = $imageDir . $filename;
                 
                 if ($imagick->writeImage($imagePath)) {
-                    $pages[] = './uploads/pdf_images/' . $filename;
+                    $pages[] = '../uploads/pdf_images/' . $filename;
                     error_log("Sayfa oluşturuldu: " . $filename);
                 } else {
                     error_log("Sayfa oluşturulamadı: " . $filename);
@@ -210,7 +210,7 @@ function convertWithGhostscript($pdfPath, $fileId, $imageDir) {
         sort($files);
         foreach ($files as $file) {
             $filename = basename($file);
-            $pages[] = './uploads/pdf_images/' . $filename;
+            $pages[] = '../uploads/pdf_images/' . $filename;
         }
     }
     
