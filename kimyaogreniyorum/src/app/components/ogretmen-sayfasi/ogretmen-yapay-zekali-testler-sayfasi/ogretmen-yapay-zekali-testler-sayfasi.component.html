@@ -16,6 +16,10 @@
       </p>
     </div>
     <div class="header-actions">
+      <button class="btn btn-outline-primary me-2" (click)="togglePdfUploadForm()" [disabled]="loading">
+        <i class="bi bi-file-earmark-pdf me-2"></i>
+        {{ showPdfUploadForm ? 'İptal' : 'PDF\'den Toplu Soru Ekle' }}
+      </button>
       <button class="btn btn-primary" (click)="toggleAddForm()" [disabled]="loading">
         <i class="bi bi-plus-circle me-2"></i>
         {{ showAddForm ? 'İptal' : 'Yeni Soru Ekle' }}
@@ -34,6 +38,183 @@
     <i class="bi bi-exclamation-triangle me-2"></i>
     {{ error }}
     <button type="button" class="btn-close" (click)="clearMessages()"></button>
+  </div>
+
+  <!-- PDF Upload Form -->
+  <div *ngIf="showPdfUploadForm" class="add-form-container">
+    <div class="form-card">
+      <h3 class="form-title">
+        <i class="bi bi-file-earmark-pdf me-2"></i>
+        PDF'den Toplu Soru Ekle
+      </h3>
+
+      <div class="alert alert-info">
+        <i class="bi bi-info-circle me-2"></i>
+        PDF dosyasını yükleyin, sistem soruları otomatik olarak algılayacak ve size onaylatacak.
+      </div>
+
+      <form (ngSubmit)="processPdfQuestions()" #pdfForm="ngForm">
+        <div class="row">
+          <!-- Konu Adı -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="pdfKonuAdi" class="form-label">Konu Adı *</label>
+              <select class="form-select" 
+                      id="pdfKonuAdi" 
+                      [(ngModel)]="pdfUploadData.konu_adi" 
+                      name="pdfKonuAdi" 
+                      required>
+                <option value="">Konu seçiniz</option>
+                <option *ngFor="let konu of konuListesi" [value]="konu">{{ konu }}</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Sınıf Seviyesi -->
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="pdfSinifSeviyesi" class="form-label">Sınıf Seviyesi *</label>
+              <select class="form-select" 
+                      id="pdfSinifSeviyesi" 
+                      [(ngModel)]="pdfUploadData.sinif_seviyesi" 
+                      name="pdfSinifSeviyesi" 
+                      required>
+                <option *ngFor="let sinif of sinifSeviyeleri" [value]="sinif">{{ sinif }}. Sınıf</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Zorluk Derecesi -->
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="pdfZorlukDerecesi" class="form-label">Zorluk Derecesi *</label>
+              <select class="form-select" 
+                      id="pdfZorlukDerecesi" 
+                      [(ngModel)]="pdfUploadData.zorluk_derecesi" 
+                      name="pdfZorlukDerecesi" 
+                      required>
+                <option *ngFor="let zorluk of zorlukDereceleri" [value]="zorluk.value">
+                  {{ zorluk.label }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- PDF Dosyası -->
+        <div class="form-group">
+          <label for="pdf_file" class="form-label">PDF Dosyası *</label>
+          <input 
+            type="file" 
+            id="pdf_file" 
+            class="form-control" 
+            accept=".pdf"
+            (change)="onPdfFileSelected($event)"
+            required>
+          <div class="form-text">PDF formatında, maksimum 10MB. Sorular ve şıklar açık bir şekilde görünmelidir.</div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" (click)="togglePdfUploadForm()">
+            <i class="bi bi-x-circle me-2"></i>
+            İptal
+          </button>
+          <button type="submit" 
+                  class="btn btn-primary" 
+                  [disabled]="loading || !pdfForm.form.valid || !selectedPdfFile">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+            <i *ngIf="!loading" class="bi bi-upload me-2"></i>
+            {{ loading ? 'İşleniyor...' : 'PDF\'i İşle' }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- PDF Preview Section -->
+    <div *ngIf="pdfPages.length > 0" class="pdf-preview-container mt-4">
+      <div class="form-card">
+        <h4 class="form-title">
+          <i class="bi bi-eye me-2"></i>
+          PDF Önizleme ve Soru Seçimi
+        </h4>
+
+        <div class="pdf-navigation mb-3">
+          <button class="btn btn-outline-primary btn-sm" 
+                  (click)="previousPdfPage()" 
+                  [disabled]="currentPdfPage === 0">
+            <i class="bi bi-arrow-left"></i> Önceki
+          </button>
+          <span class="mx-3">Sayfa {{ currentPdfPage + 1 }} / {{ pdfPages.length }}</span>
+          <button class="btn btn-outline-primary btn-sm" 
+                  (click)="nextPdfPage()" 
+                  [disabled]="currentPdfPage === pdfPages.length - 1">
+            Sonraki <i class="bi bi-arrow-right"></i>
+          </button>
+        </div>
+
+        <div class="pdf-page-container">
+          <img [src]="pdfPages[currentPdfPage]" 
+               alt="PDF Sayfa {{ currentPdfPage + 1 }}" 
+               class="pdf-page-image"
+               (load)="onPdfPageImageLoad($event)">
+          
+          <!-- Selection overlay -->
+          <div class="selection-overlay" 
+               (mousedown)="startSelection($event)"
+               (mousemove)="updateSelection($event)"
+               (mouseup)="endSelection($event)">
+            <div *ngFor="let selection of currentPageSelections; let i = index"
+                 class="selection-box"
+                 [style.left.px]="selection.x"
+                 [style.top.px]="selection.y"
+                 [style.width.px]="selection.width"
+                 [style.height.px]="selection.height">
+              <div class="selection-controls">
+                <span class="selection-number">{{ i + 1 }}</span>
+                <button class="btn btn-sm btn-danger" (click)="removeSelection(i)">
+                  <i class="bi bi-x"></i>
+                </button>
+              </div>
+            </div>
+            <!-- Current selection being drawn -->
+            <div *ngIf="currentSelection" 
+                 class="selection-box current"
+                 [style.left.px]="currentSelection.x"
+                 [style.top.px]="currentSelection.y"
+                 [style.width.px]="currentSelection.width"
+                 [style.height.px]="currentSelection.height">
+            </div>
+          </div>
+        </div>
+
+        <div class="selection-actions mt-3">
+          <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            Mouse ile sürükleyerek soruları seçin. Her seçim bir soru olarak kaydedilecek.
+          </div>
+          
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              Bu sayfada {{ currentPageSelections.length }} soru seçildi
+            </div>
+            <div>
+              <button class="btn btn-outline-warning me-2" (click)="clearCurrentPageSelections()">
+                <i class="bi bi-trash me-2"></i>
+                Sayfayı Temizle
+              </button>
+              <button class="btn btn-success" 
+                      (click)="saveSelectedQuestions()" 
+                      [disabled]="getTotalSelections() === 0 || loading">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                <i *ngIf="!loading" class="bi bi-check-circle me-2"></i>
+                {{ getTotalSelections() }} Soruyu Kaydet
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Add Question Form -->

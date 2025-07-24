@@ -53,6 +53,7 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
 
   // UI state
   showAddForm = false;
+  showPdfUploadForm = false;
   loading = false;
   error: string | null = null;
   success: string | null = null;
@@ -78,6 +79,22 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
   ];
 
   konuListesi: string[] = [];
+
+  // PDF upload değişkenleri
+  selectedPdfFile: File | null = null;
+  pdfUploadData = {
+    konu_adi: '',
+    sinif_seviyesi: '9',
+    zorluk_derecesi: 'kolay' as 'kolay' | 'orta' | 'zor'
+  };
+  pdfPages: string[] = [];
+  currentPdfPage = 0;
+  
+  // PDF selection değişkenleri
+  currentSelection: any = null;
+  isSelecting = false;
+  allSelections: { [pageIndex: number]: any[] } = {};
+  currentPageSelections: any[] = [];
 
   constructor(private http: HttpClient) {}
 
@@ -408,6 +425,217 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
           'Organik Kimya',
         ];
       },
+    });
+  }
+
+  // PDF Upload metodları
+  togglePdfUploadForm(): void {
+    this.showPdfUploadForm = !this.showPdfUploadForm;
+    if (this.showPdfUploadForm) {
+      this.showAddForm = false;
+      this.resetPdfUploadData();
+    }
+  }
+
+  resetPdfUploadData(): void {
+    this.selectedPdfFile = null;
+    this.pdfUploadData = {
+      konu_adi: '',
+      sinif_seviyesi: '9',
+      zorluk_derecesi: 'kolay'
+    };
+    this.pdfPages = [];
+    this.currentPdfPage = 0;
+    this.allSelections = {};
+    this.currentPageSelections = [];
+    this.currentSelection = null;
+    this.isSelecting = false;
+    this.error = null;
+    this.success = null;
+  }
+
+  onPdfFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      // Dosya türü kontrolü
+      if (file.type !== 'application/pdf') {
+        this.error = 'Sadece PDF dosyaları kabul edilir';
+        return;
+      }
+
+      // Dosya boyutu kontrolü (10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        this.error = "Dosya boyutu 10MB'dan büyük olamaz";
+        return;
+      }
+
+      this.selectedPdfFile = file;
+      this.error = null;
+    }
+  }
+
+  processPdfQuestions(): void {
+    if (!this.selectedPdfFile || !this.pdfUploadData.konu_adi) {
+      this.error = 'PDF dosyası ve konu adı gerekli';
+      return;
+    }
+
+    this.loading = true;
+    this.error = null;
+
+    const formData = new FormData();
+    formData.append('pdf_file', this.selectedPdfFile);
+    formData.append('konu_adi', this.pdfUploadData.konu_adi);
+    formData.append('sinif_seviyesi', this.pdfUploadData.sinif_seviyesi);
+    formData.append('zorluk_derecesi', this.pdfUploadData.zorluk_derecesi);
+
+    this.http.post<any>('./server/api/pdf_to_images.php', formData).subscribe({
+      next: (response) => {
+        this.loading = false;
+        if (response.success) {
+          this.pdfPages = response.pages;
+          this.currentPdfPage = 0;
+          this.allSelections = {};
+          this.currentPageSelections = [];
+          this.success = `PDF başarıyla işlendi. ${this.pdfPages.length} sayfa yüklendi.`;
+        } else {
+          this.error = response.message || 'PDF işlenemedi';
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+        this.error = 'PDF işlenirken hata oluştu: ' + (error.error?.message || error.message);
+      }
+    });
+  }
+
+  // PDF Navigation metodları
+  nextPdfPage(): void {
+    if (this.currentPdfPage < this.pdfPages.length - 1) {
+      this.saveCurrentPageSelections();
+      this.currentPdfPage++;
+      this.loadCurrentPageSelections();
+    }
+  }
+
+  previousPdfPage(): void {
+    if (this.currentPdfPage > 0) {
+      this.saveCurrentPageSelections();
+      this.currentPdfPage--;
+      this.loadCurrentPageSelections();
+    }
+  }
+
+  // Selection metodları
+  onPdfPageImageLoad(event: any): void {
+    // Image yüklendiğinde mevcut seçimleri yükle
+    this.loadCurrentPageSelections();
+  }
+
+  startSelection(event: MouseEvent): void {
+    const rect = (event.target as HTMLElement).getBoundingClientRect();
+    this.isSelecting = true;
+    this.currentSelection = {
+      startX: event.clientX - rect.left,
+      startY: event.clientY - rect.top,
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
+      width: 0,
+      height: 0
+    };
+  }
+
+  updateSelection(event: MouseEvent): void {
+    if (!this.isSelecting || !this.currentSelection) return;
+
+    const rect = (event.target as HTMLElement).getBoundingClientRect();
+    const currentX = event.clientX - rect.left;
+    const currentY = event.clientY - rect.top;
+
+    this.currentSelection.x = Math.min(this.currentSelection.startX, currentX);
+    this.currentSelection.y = Math.min(this.currentSelection.startY, currentY);
+    this.currentSelection.width = Math.abs(currentX - this.currentSelection.startX);
+    this.currentSelection.height = Math.abs(currentY - this.currentSelection.startY);
+  }
+
+  endSelection(event: MouseEvent): void {
+    if (!this.isSelecting || !this.currentSelection) return;
+
+    this.isSelecting = false;
+    
+    // Minimum boyut kontrolü
+    if (this.currentSelection.width > 20 && this.currentSelection.height > 20) {
+      this.currentPageSelections.push({
+        x: this.currentSelection.x,
+        y: this.currentSelection.y,
+        width: this.currentSelection.width,
+        height: this.currentSelection.height,
+        pageIndex: this.currentPdfPage
+      });
+    }
+
+    this.currentSelection = null;
+  }
+
+  removeSelection(index: number): void {
+    this.currentPageSelections.splice(index, 1);
+  }
+
+  clearCurrentPageSelections(): void {
+    this.currentPageSelections = [];
+  }
+
+  saveCurrentPageSelections(): void {
+    if (this.currentPageSelections.length > 0) {
+      this.allSelections[this.currentPdfPage] = [...this.currentPageSelections];
+    } else if (this.allSelections[this.currentPdfPage]) {
+      delete this.allSelections[this.currentPdfPage];
+    }
+  }
+
+  loadCurrentPageSelections(): void {
+    this.currentPageSelections = this.allSelections[this.currentPdfPage] || [];
+  }
+
+  getTotalSelections(): number {
+    return Object.values(this.allSelections).reduce((total, selections) => total + selections.length, 0) + this.currentPageSelections.length;
+  }
+
+  saveSelectedQuestions(): void {
+    this.saveCurrentPageSelections();
+
+    if (Object.keys(this.allSelections).length === 0) {
+      this.error = 'En az bir soru seçmelisiniz';
+      return;
+    }
+
+    this.loading = true;
+    this.error = null;
+
+    const requestData = {
+      selections: this.allSelections,
+      konu_adi: this.pdfUploadData.konu_adi,
+      sinif_seviyesi: this.pdfUploadData.sinif_seviyesi,
+      zorluk_derecesi: this.pdfUploadData.zorluk_derecesi,
+      ogretmen_id: this.teacherInfo?.id
+    };
+
+    this.http.post<any>('./server/api/save_pdf_questions.php', requestData).subscribe({
+      next: (response) => {
+        this.loading = false;
+        if (response.success) {
+          this.success = `${response.saved_count} soru başarıyla kaydedildi`;
+          this.showPdfUploadForm = false;
+          this.resetPdfUploadData();
+          this.loadSorular();
+        } else {
+          this.error = response.message || 'Sorular kaydedilemedi';
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+        this.error = 'Sorular kaydedilirken hata oluştu: ' + (error.error?.message || error.message);
+      }
     });
   }
 }
