@@ -180,9 +180,9 @@ function convertPdfWithGhostscript($pdfPath, $fileId, $imageDir) {
     for ($page = 1; $page <= $pageCount; $page++) {
         $outputFile = $imageDir . $fileId . '_page_' . $page . '.jpg';
 
-        // Çok düşük kaliteli ama hızlı işleme
+        // Daha yüksek kalite ve daha iyi görünürlük için ayarları artırdık
         $command = sprintf(
-            'gs -dNOPAUSE -dBATCH -sDEVICE=jpeg -r150 -dFirstPage=%d -dLastPage=%d -dJPEGQ=60 -dDownScaleFactor=2 -sOutputFile=%s %s 2>&1',
+            'gs -dNOPAUSE -dBATCH -sDEVICE=jpeg -r200 -dFirstPage=%d -dLastPage=%d -dJPEGQ=85 -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -sOutputFile=%s %s 2>&1',
             $page,
             $page,
             escapeshellarg($outputFile),
@@ -190,28 +190,42 @@ function convertPdfWithGhostscript($pdfPath, $fileId, $imageDir) {
         );
 
         error_log("Sayfa $page işleniyor: $command");
+        error_log("Çıktı dosyası: $outputFile");
 
         exec($command, $output, $returnCode);
+        
+        error_log("Ghostscript çıktısı: " . implode("\n", $output));
+        error_log("Return code: $returnCode");
 
         if ($returnCode === 0 && file_exists($outputFile) && filesize($outputFile) > 0) {
-            $pages[] = 'server/uploads/pdf_images/' . $fileId . '_page_' . $page . '.jpg';
+            // URL'yi doğru şekilde oluştur
+            $imageUrl = 'https://www.kimyaogreniyorum.com/server/uploads/pdf_images/' . $fileId . '_page_' . $page . '.jpg';
+            $pages[] = $imageUrl;
             error_log("Sayfa $page başarıyla oluşturuldu: " . filesize($outputFile) . " bytes");
+            error_log("URL: $imageUrl");
+            
+            // Dosya izinlerini kontrol et
+            chmod($outputFile, 0644);
         } else {
             error_log("Sayfa $page oluşturulamadı. Return code: $returnCode, Output: " . implode("\n", $output));
 
-            // Alternatif komut dene - düşük kalite
+            // Alternatif komut dene - daha iyi kalite
             $altCommand = sprintf(
-                'convert -density 150 %s[%d] -quality 60 -colorspace RGB -resize 50%% %s 2>&1',
+                'convert -density 200 %s[%d] -quality 85 -colorspace RGB %s 2>&1',
                 escapeshellarg($pdfPath),
                 $page - 1, // ImageMagick 0'dan başlar
                 escapeshellarg($outputFile)
             );
 
+            error_log("Alternatif komut deneniyor: $altCommand");
             exec($altCommand, $altOutput, $altReturn);
+            error_log("ImageMagick çıktısı: " . implode("\n", $altOutput));
 
             if ($altReturn === 0 && file_exists($outputFile) && filesize($outputFile) > 0) {
-                $pages[] = 'server/uploads/pdf_images/' . $fileId . '_page_' . $page . '.jpg';
+                $imageUrl = 'https://www.kimyaogreniyorum.com/server/uploads/pdf_images/' . $fileId . '_page_' . $page . '.jpg';
+                $pages[] = $imageUrl;
                 error_log("Sayfa $page alternatif yöntemle oluşturuldu");
+                chmod($outputFile, 0644);
             } else {
                 error_log("Alternatif yöntem de başarısız: " . implode("\n", $altOutput));
                 throw new Exception("Sayfa $page işlenemedi");

@@ -181,7 +181,9 @@
           <img [src]="pdfPages[currentPdfPage]" 
                alt="PDF Sayfa {{ currentPdfPage + 1 }}" 
                class="pdf-page-image"
-               (load)="onPdfPageImageLoad($event)">
+               (load)="onPdfPageImageLoad($event)"
+               (error)="onPdfPageImageError($event)"
+               style="max-width: 100%; height: auto; border: 1px solid #ccc;">
 
           <!-- Selection overlay -->
           <div class="selection-overlay" 

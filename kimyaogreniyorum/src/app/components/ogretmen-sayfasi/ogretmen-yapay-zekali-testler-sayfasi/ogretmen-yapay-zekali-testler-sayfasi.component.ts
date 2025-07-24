@@ -530,21 +530,26 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
 
   // Selection metodları
   onPdfPageImageLoad(event: any): void {
-    // Image yüklendiğinde mevcut seçimleri yükle
-    this.loadCurrentPageSelections();
+    // Görüntü yüklendiğinde çalışır
+    console.log('PDF sayfa görüntüsü yüklendi:', this.pdfPages[this.currentPdfPage]);
+  }
+
+  onPdfPageImageError(event: any): void {
+    console.error('PDF sayfa görüntüsü yüklenemedi:', this.pdfPages[this.currentPdfPage]);
+    this.error = 'PDF sayfası yüklenemedi. Lütfen tekrar deneyin.';
   }
 
   startSelection(event: MouseEvent): void {
     const img = event.target as HTMLImageElement;
     const rect = img.getBoundingClientRect();
-    
+
     // Görüntülenen resmin gerçek boyutlarını al
     const scaleX = img.naturalWidth / img.clientWidth;
     const scaleY = img.naturalHeight / img.clientHeight;
-    
+
     const relativeX = (event.clientX - rect.left) * scaleX;
     const relativeY = (event.clientY - rect.top) * scaleY;
-    
+
     this.isSelecting = true;
     this.currentSelection = {
       startX: relativeX,
@@ -563,7 +568,7 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
 
     const img = event.target as HTMLImageElement;
     const rect = img.getBoundingClientRect();
-    
+
     const currentX = (event.clientX - rect.left) * this.currentSelection.scaleX;
     const currentY = (event.clientY - rect.top) * this.currentSelection.scaleY;
 
