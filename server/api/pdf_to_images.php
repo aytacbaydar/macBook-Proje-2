@@ -116,7 +116,7 @@ function convertPdfToImages($pdfPath, $fileId) {
     if (extension_loaded('imagick')) {
         try {
             $imagick = new Imagick();
-            $imagick->setResolution(300, 300);
+            $imagick->setResolution(600, 600); // Çözünürlüğü 300'den 600'e çıkardık
             $imagick->readImage($pdfPath);
             
             $pageCount = $imagick->getNumberImages();
@@ -125,7 +125,13 @@ function convertPdfToImages($pdfPath, $fileId) {
             for ($i = 0; $i < $pageCount; $i++) {
                 $imagick->setIteratorIndex($i);
                 $imagick->setImageFormat('jpeg');
-                $imagick->setImageCompressionQuality(95);
+                $imagick->setImageCompressionQuality(98); // Kaliteyi 95'ten 98'e çıkardık
+                
+                // Daha iyi görüntü kalitesi için ek ayarlar
+                $imagick->setImageColorspace(Imagick::COLORSPACE_RGB);
+                $imagick->stripImage(); // Metadata'yı temizle
+                $imagick->setImageUnits(Imagick::RESOLUTION_PIXELSPERINCH);
+                $imagick->resampleImage(600, 600, Imagick::FILTER_LANCZOS, 1);
                 
                 $filename = $fileId . '_page_' . ($i + 1) . '.jpg';
                 $imagePath = $imageDir . $filename;
@@ -162,9 +168,9 @@ function convertPdfToImages($pdfPath, $fileId) {
 function convertWithGhostscript($pdfPath, $fileId, $imageDir) {
     $pages = [];
     
-    // Ghostscript komutu
+    // Ghostscript komutu - yüksek kalite ayarları
     $outputPattern = $imageDir . $fileId . "_page_%d.jpg";
-    $command = "gs -dNOPAUSE -dBATCH -sDEVICE=jpeg -r300 -dJPEGQ=95 -sOutputFile=" . 
+    $command = "gs -dNOPAUSE -dBATCH -sDEVICE=jpeg -r600 -dJPEGQ=98 -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -dUseCropBox -sOutputFile=" . 
                escapeshellarg($outputPattern) . " " . escapeshellarg($pdfPath) . " 2>&1";
     
     error_log("Ghostscript komutu: " . $command);
@@ -175,8 +181,8 @@ function convertWithGhostscript($pdfPath, $fileId, $imageDir) {
     error_log("Ghostscript return code: " . $returnCode);
     
     if ($returnCode !== 0) {
-        // Alternatif komut dene
-        $command2 = "convert -density 300 " . escapeshellarg($pdfPath) . " -quality 95 " . 
+        // Alternatif komut dene - yüksek kalite
+        $command2 = "convert -density 600 " . escapeshellarg($pdfPath) . " -quality 98 -colorspace RGB -strip " . 
                    $imageDir . $fileId . "_page_%d.jpg 2>&1";
         
         error_log("ImageMagick convert komutu: " . $command2);
