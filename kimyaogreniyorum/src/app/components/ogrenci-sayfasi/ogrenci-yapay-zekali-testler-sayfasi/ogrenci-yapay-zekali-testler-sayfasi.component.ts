@@ -520,9 +520,9 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     this.ortaQuestionCount = 5;
     this.zorQuestionCount = 5;
     
-    // currentStep'i burada sıfırlamayalım, startNewTest() bunu hallediyor
     this.error = null;
     this.success = null;
+    console.log('Test reset tamamlandı');
   }
 
   // Yardımcı metodlar
@@ -798,16 +798,25 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   // Yeni test oluşturmaya başla
   startNewTest(): void {
     console.log('Yeni test oluşturma başlatılıyor...');
-    this.currentStep = 2;
     this.resetTest();
+    this.currentStep = 2;
+    this.clearMessages();
     console.log('Current step:', this.currentStep);
+    
+    // UI'ın güncellenmesini zorla
+    setTimeout(() => {
+      console.log('Step değişikliği tamamlandı, currentStep:', this.currentStep);
+    }, 0);
   }
 
   // Test listesine geri dön
   backToTestList(): void {
-    this.currentStep = 1;
+    console.log('Test listesine geri dönülüyor...');
     this.resetTest();
+    this.currentStep = 1;
+    this.clearMessages();
     this.loadTestListesi();
+    console.log('Test listesi sayfasına dönüldü, currentStep:', this.currentStep);
   }
 
   // Tarih formatlama
