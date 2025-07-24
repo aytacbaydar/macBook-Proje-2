@@ -3,9 +3,15 @@
 require_once '../config.php';
 
 // Bellek ve zaman sınırlarını artır
-ini_set('memory_limit', '512M');
-ini_set('max_execution_time', 300); // 5 dakika
-ini_set('max_input_time', 300);
+ini_set('memory_limit', '1024M'); // 1GB
+ini_set('max_execution_time', 600); // 10 dakika
+ini_set('max_input_time', 600);
+set_time_limit(600);
+
+// PHP output buffering'i kapat
+if (ob_get_level()) {
+    ob_end_clean();
+}
 
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
@@ -141,27 +147,26 @@ function convertPdfToImages($pdfPath, $fileId) {
             $imagick->setResourceLimit(Imagick::RESOURCETYPE_MEMORY, 256 * 1024 * 1024); // 256MB
             $imagick->setResourceLimit(Imagick::RESOURCETYPE_MAP, 512 * 1024 * 1024); // 512MB
             
-            $imagick->setResolution(600, 600); // Çözünürlüğü 300'den 600'e çıkardık
+            $imagick->setResolution(400, 400); // Çözünürlüğü azalttık (600'den 400'e)
             $imagick->readImage($pdfPath);
             
             $pageCount = $imagick->getNumberImages();
             error_log("PDF sayfa sayısı: " . $pageCount);
             
-            // Çok fazla sayfa varsa hata ver
-            if ($pageCount > 20) {
-                throw new Exception('PDF çok fazla sayfa içeriyor. Maksimum 20 sayfa desteklenir.');
+            // Sayfa sayısını daha da sınırla
+            if ($pageCount > 10) {
+                throw new Exception('PDF çok fazla sayfa içeriyor. Maksimum 10 sayfa desteklenir.');
             }
             
             for ($i = 0; $i < $pageCount; $i++) {
                 $imagick->setIteratorIndex($i);
                 $imagick->setImageFormat('jpeg');
-                $imagick->setImageCompressionQuality(98); // Kaliteyi 95'ten 98'e çıkardık
+                $imagick->setImageCompressionQuality(85); // Kaliteyi düşürdük (98'den 85'e)
                 
-                // Daha iyi görüntü kalitesi için ek ayarlar
+                // Bellek tasarrufu için basit ayarlar
                 $imagick->setImageColorspace(Imagick::COLORSPACE_RGB);
                 $imagick->stripImage(); // Metadata'yı temizle
-                $imagick->setImageUnits(Imagick::RESOLUTION_PIXELSPERINCH);
-                $imagick->resampleImage(600, 600, Imagick::FILTER_LANCZOS, 1);
+                $imagick->resampleImage(400, 400, Imagick::FILTER_LANCZOS, 1);
                 
                 $filename = $fileId . '_page_' . ($i + 1) . '.jpg';
                 $imagePath = $imageDir . $filename;
@@ -173,11 +178,19 @@ function convertPdfToImages($pdfPath, $fileId) {
                     error_log("Sayfa oluşturulamadı: " . $filename);
                 }
                 
-                // Her 5 sayfada bir bellek temizliği yap
-                if (($i + 1) % 5 === 0) {
-                    if (function_exists('gc_collect_cycles')) {
-                        gc_collect_cycles();
-                    }
+                // Her sayfada bellek temizliği yap
+                if (function_exists('gc_collect_cycles')) {
+                    gc_collect_cycles();
+                }
+                
+                // Bellek kullanımını kontrol et
+                $memoryUsage = memory_get_usage(true);
+                $memoryLimit = ini_get('memory_limit');
+                $memoryLimitBytes = $this->convertToBytes($memoryLimit);
+                
+                if ($memoryUsage > ($memoryLimitBytes * 0.8)) {
+                    error_log("Bellek kulımı kritik seviyede: " . round($memoryUsage / 1024 / 1024, 2) . "MB");
+                    break; // Bellek doluysa durur
                 }
             }
             
@@ -202,12 +215,27 @@ function convertPdfToImages($pdfPath, $fileId) {
     return $pages;
 }
 
+function convertToBytes($val) {
+    $val = trim($val);
+    $last = strtolower($val[strlen($val)-1]);
+    $val = (int)$val;
+    switch($last) {
+        case 'g':
+            $val *= 1024;
+        case 'm':
+            $val *= 1024;
+        case 'k':
+            $val *= 1024;
+    }
+    return $val;
+}
+
 function convertWithGhostscript($pdfPath, $fileId, $imageDir) {
     $pages = [];
     
-    // Ghostscript komutu - yüksek kalite ayarları
+    // Ghostscript komutu - orta kalite ayarları (bellek tasarrufu için)
     $outputPattern = $imageDir . $fileId . "_page_%d.jpg";
-    $command = "gs -dNOPAUSE -dBATCH -sDEVICE=jpeg -r600 -dJPEGQ=98 -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -dUseCropBox -sOutputFile=" . 
+    $command = "gs -dNOPAUSE -dBATCH -sDEVICE=jpeg -r400 -dJPEGQ=85 -dTextAlphaBits=2 -dGraphicsAlphaBits=2 -dUseCropBox -sOutputFile=" . 
                escapeshellarg($outputPattern) . " " . escapeshellarg($pdfPath) . " 2>&1";
     
     error_log("Ghostscript komutu: " . $command);
@@ -218,8 +246,8 @@ function convertWithGhostscript($pdfPath, $fileId, $imageDir) {
     error_log("Ghostscript return code: " . $returnCode);
     
     if ($returnCode !== 0) {
-        // Alternatif komut dene - yüksek kalite
-        $command2 = "convert -density 600 " . escapeshellarg($pdfPath) . " -quality 98 -colorspace RGB -strip " . 
+        // Alternatif komut dene - orta kalite
+        $command2 = "convert -density 400 " . escapeshellarg($pdfPath) . " -quality 85 -colorspace RGB -strip " . 
                    $imageDir . $fileId . "_page_%d.jpg 2>&1";
         
         error_log("ImageMagick convert komutu: " . $command2);
