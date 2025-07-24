@@ -94,20 +94,33 @@ try {
 
 function convertPdfToImages($pdfPath, $fileId) {
     $imageDir = '../uploads/pdf_images/';
+    
+    // Dizin oluşturma ve izin kontrolü
     if (!is_dir($imageDir)) {
-        mkdir($imageDir, 0755, true);
+        if (!mkdir($imageDir, 0777, true)) {
+            throw new Exception('Görsel dizini oluşturulamadı: ' . $imageDir);
+        }
+    }
+    
+    // Dizin yazılabilir mi kontrol et
+    if (!is_writable($imageDir)) {
+        chmod($imageDir, 0777);
+        if (!is_writable($imageDir)) {
+            throw new Exception('Görsel dizinine yazma izni yok: ' . $imageDir);
+        }
     }
     
     $pages = [];
     
-    // ImageMagick kullanarak PDF'i resimlere çevir
+    // İlk olarak ImageMagick ile dene
     if (extension_loaded('imagick')) {
         try {
             $imagick = new Imagick();
-            $imagick->setResolution(150, 150); // DPI ayarı
+            $imagick->setResolution(150, 150);
             $imagick->readImage($pdfPath);
             
             $pageCount = $imagick->getNumberImages();
+            error_log("PDF sayfa sayısı: " . $pageCount);
             
             for ($i = 0; $i < $pageCount; $i++) {
                 $imagick->setIteratorIndex($i);
@@ -117,39 +130,88 @@ function convertPdfToImages($pdfPath, $fileId) {
                 $filename = $fileId . '_page_' . ($i + 1) . '.jpg';
                 $imagePath = $imageDir . $filename;
                 
-                $imagick->writeImage($imagePath);
-                $pages[] = './uploads/pdf_images/' . $filename;
+                if ($imagick->writeImage($imagePath)) {
+                    $pages[] = './uploads/pdf_images/' . $filename;
+                    error_log("Sayfa oluşturuldu: " . $filename);
+                } else {
+                    error_log("Sayfa oluşturulamadı: " . $filename);
+                }
             }
             
             $imagick->clear();
             $imagick->destroy();
             
         } catch (Exception $e) {
-            throw new Exception('ImageMagick hatası: ' . $e->getMessage());
+            error_log('ImageMagick hatası: ' . $e->getMessage());
+            // ImageMagick başarısızsa Ghostscript'e geç
+            return convertWithGhostscript($pdfPath, $fileId, $imageDir);
         }
     } else {
         // ImageMagick yoksa Ghostscript kullan
-        $command = "gs -dNOPAUSE -dBATCH -sDEVICE=jpeg -r150 -sOutputFile=" . 
-                   $imageDir . $fileId . "_page_%d.jpg " . escapeshellarg($pdfPath);
+        return convertWithGhostscript($pdfPath, $fileId, $imageDir);
+    }
+    
+    if (empty($pages)) {
+        throw new Exception('PDF sayfaları işlenemedi - hiçbir sayfa oluşturulamadı');
+    }
+    
+    error_log("Toplam " . count($pages) . " sayfa oluşturuldu");
+    return $pages;
+}
+
+function convertWithGhostscript($pdfPath, $fileId, $imageDir) {
+    $pages = [];
+    
+    // Ghostscript komutu
+    $outputPattern = $imageDir . $fileId . "_page_%d.jpg";
+    $command = "gs -dNOPAUSE -dBATCH -sDEVICE=jpeg -r150 -dJPEGQ=85 -sOutputFile=" . 
+               escapeshellarg($outputPattern) . " " . escapeshellarg($pdfPath) . " 2>&1";
+    
+    error_log("Ghostscript komutu: " . $command);
+    
+    exec($command, $output, $returnCode);
+    
+    error_log("Ghostscript çıktısı: " . implode("\n", $output));
+    error_log("Ghostscript return code: " . $returnCode);
+    
+    if ($returnCode !== 0) {
+        // Alternatif komut dene
+        $command2 = "convert -density 150 " . escapeshellarg($pdfPath) . " -quality 85 " . 
+                   $imageDir . $fileId . "_page_%d.jpg 2>&1";
         
-        exec($command, $output, $returnCode);
+        error_log("ImageMagick convert komutu: " . $command2);
+        exec($command2, $output2, $returnCode2);
         
-        if ($returnCode !== 0) {
-            throw new Exception('Ghostscript hatası: PDF işlenemedi');
+        if ($returnCode2 !== 0) {
+            throw new Exception('PDF işlenemedi. Ghostscript hatası: ' . implode("\n", $output) . 
+                              '. Convert hatası: ' . implode("\n", $output2));
         }
-        
-        // Oluşturulan dosyaları listele
-        $files = glob($imageDir . $fileId . '_page_*.jpg');
+    }
+    
+    // Oluşturulan dosyaları listele
+    $files = glob($imageDir . $fileId . '_page_*.jpg');
+    
+    if (!$files) {
+        // Alternatif isimlendirme dene
+        $files = glob($imageDir . $fileId . '_page-*.jpg');
+    }
+    
+    if (!$files) {
+        // Tek sayfa durumu için
+        $singleFile = $imageDir . $fileId . '_page_0.jpg';
+        if (file_exists($singleFile)) {
+            $files = [$singleFile];
+        }
+    }
+    
+    error_log("Bulunan dosyalar: " . print_r($files, true));
+    
+    if ($files) {
         sort($files);
-        
         foreach ($files as $file) {
             $filename = basename($file);
             $pages[] = './uploads/pdf_images/' . $filename;
         }
-    }
-    
-    if (empty($pages)) {
-        throw new Exception('PDF sayfaları işlenemedi');
     }
     
     return $pages;
