@@ -2,6 +2,11 @@
 <?php
 require_once '../config.php';
 
+// Bellek ve zaman sınırlarını artır
+ini_set('memory_limit', '512M');
+ini_set('max_execution_time', 300); // 5 dakika
+ini_set('max_input_time', 300);
+
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
@@ -71,7 +76,14 @@ try {
     $pages = convertPdfToImages($pdfPath, $fileId);
     
     // Geçici PDF dosyasını sil
-    unlink($pdfPath);
+    if (file_exists($pdfPath)) {
+        unlink($pdfPath);
+    }
+    
+    // Bellek temizliği
+    if (function_exists('gc_collect_cycles')) {
+        gc_collect_cycles();
+    }
     
     echo json_encode([
         'success' => true,
@@ -86,9 +98,17 @@ try {
         unlink($pdfPath);
     }
     
+    // Bellek temizliği
+    if (function_exists('gc_collect_cycles')) {
+        gc_collect_cycles();
+    }
+    
+    error_log('PDF işleme hatası: ' . $e->getMessage());
+    
     echo json_encode([
         'success' => false,
-        'message' => 'PDF işlenemedi: ' . $e->getMessage()
+        'message' => 'PDF işlenemedi: ' . $e->getMessage(),
+        'error_code' => 'PDF_PROCESSING_ERROR'
     ]);
 }
 
@@ -116,11 +136,21 @@ function convertPdfToImages($pdfPath, $fileId) {
     if (extension_loaded('imagick')) {
         try {
             $imagick = new Imagick();
+            
+            // Bellek sınırını ayarla
+            $imagick->setResourceLimit(Imagick::RESOURCETYPE_MEMORY, 256 * 1024 * 1024); // 256MB
+            $imagick->setResourceLimit(Imagick::RESOURCETYPE_MAP, 512 * 1024 * 1024); // 512MB
+            
             $imagick->setResolution(600, 600); // Çözünürlüğü 300'den 600'e çıkardık
             $imagick->readImage($pdfPath);
             
             $pageCount = $imagick->getNumberImages();
             error_log("PDF sayfa sayısı: " . $pageCount);
+            
+            // Çok fazla sayfa varsa hata ver
+            if ($pageCount > 20) {
+                throw new Exception('PDF çok fazla sayfa içeriyor. Maksimum 20 sayfa desteklenir.');
+            }
             
             for ($i = 0; $i < $pageCount; $i++) {
                 $imagick->setIteratorIndex($i);
@@ -141,6 +171,13 @@ function convertPdfToImages($pdfPath, $fileId) {
                     error_log("Sayfa oluşturuldu: " . $filename);
                 } else {
                     error_log("Sayfa oluşturulamadı: " . $filename);
+                }
+                
+                // Her 5 sayfada bir bellek temizliği yap
+                if (($i + 1) % 5 === 0) {
+                    if (function_exists('gc_collect_cycles')) {
+                        gc_collect_cycles();
+                    }
                 }
             }
             
