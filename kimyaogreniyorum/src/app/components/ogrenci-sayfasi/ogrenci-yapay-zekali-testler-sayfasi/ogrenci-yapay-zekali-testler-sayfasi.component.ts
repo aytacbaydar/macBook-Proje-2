@@ -356,6 +356,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
             }
           };
           this.showConfirmDialog = true;
+          console.log('Success dialog gösteriliyor:', this.confirmDialogData);
         } else {
           this.error = response.message || 'Test oluşturulamadı';
         }
