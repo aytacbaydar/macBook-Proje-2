@@ -545,6 +545,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     
     this.error = null;
     this.success = null;
+    // currentStep'i sıfırlama - bunu çağıran metod hallediyor
     console.log('Test reset tamamlandı');
   }
 
@@ -829,7 +830,16 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     console.log('Yeni test oluşturma başlatılıyor...');
     console.log('Mevcut step (başlangıç):', this.currentStep);
     
-    this.resetTest();
+    // resetTest() çağrısını kaldır - sadece gerekli temizlikleri yap
+    this.currentTest = null;
+    this.currentQuestionIndex = 0;
+    this.userAnswers = {};
+    this.showResults = false;
+    this.testResults = null;
+    this.selectedImprovementTopics = [];
+    this.selectedBestTopics = [];
+    this.selectedOtherTopics = [];
+    
     this.currentStep = 2;
     this.clearMessages();
     
@@ -842,9 +852,9 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
       console.log('Timeout sonrası step:', this.currentStep);
       console.log('Template elementleri kontrol ediliyor...');
       
-      // DOM'da step 2 elementlerinin varlığını kontrol et
-      const step2Element = document.querySelector('.analysis-section');
-      console.log('Step 2 elementi bulundu mu?', !!step2Element);
+      // DOM'da step 2 elementlerinin varlığını kontrol et (doğru class adı)
+      const step2Element = document.querySelector('.test-creation-section');
+      console.log('Step 2 elementi (.test-creation-section) bulundu mu?', !!step2Element);
     }, 100);
   }
 
