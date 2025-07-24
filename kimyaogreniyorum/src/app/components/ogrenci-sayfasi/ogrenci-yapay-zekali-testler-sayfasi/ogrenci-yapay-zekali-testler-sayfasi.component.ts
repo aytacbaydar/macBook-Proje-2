@@ -352,7 +352,6 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
             type: 'success',
             action: () => {
               this.currentStep = 4;
-              this.showConfirmDialog = false;
             }
           };
           this.showConfirmDialog = true;
@@ -681,8 +680,11 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
 
   // Confirm dialog metodları
   onConfirmDialogConfirmed(): void {
+    this.showConfirmDialog = false;
     if (this.confirmDialogData.action) {
-      this.confirmDialogData.action();
+      setTimeout(() => {
+        this.confirmDialogData.action!();
+      }, 100);
     }
   }
 
