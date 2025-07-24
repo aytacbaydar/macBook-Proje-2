@@ -256,12 +256,15 @@
               </div>
               
               <div class="question-preview">
-                <img [src]="pdfPages[currentPdfPage]" 
-                     alt="Soru {{ i + 1 }}" 
-                     class="question-crop-preview"
-                     [style.object-position.px]="'-' + selection.x + 'px -' + selection.y + 'px'"
-                     [style.width.px]="selection.width"
+                <div class="crop-container" 
+                     [style.width.px]="selection.width" 
                      [style.height.px]="selection.height">
+                  <img [src]="pdfPages[currentPdfPage]" 
+                       alt="Soru {{ i + 1 }}" 
+                       class="question-crop-preview"
+                       [style.margin-left.px]="'-' + selection.x"
+                       [style.margin-top.px]="'-' + selection.y">
+                </div>
               </div>
               
               <div class="answer-selection">

@@ -122,11 +122,26 @@ function cropQuestionFromPdf($selection, $pageIndex) {
         throw new Exception('Kaynak resim açılamadı');
     }
 
-    // Seçim koordinatları
-    $x = (int)$selection['x'];
-    $y = (int)$selection['y'];
-    $width = (int)$selection['width'];
-    $height = (int)$selection['height'];
+    // Seçim koordinatları - güvenlik kontrolü
+    $x = max(0, (int)$selection['x']);
+    $y = max(0, (int)$selection['y']);
+    $width = max(1, (int)$selection['width']);
+    $height = max(1, (int)$selection['height']);
+
+    // Kaynak resim boyutlarını al
+    $sourceWidth = imagesx($source);
+    $sourceHeight = imagesy($source);
+
+    // Koordinatları sınırlar içinde tut
+    $x = min($x, $sourceWidth - 1);
+    $y = min($y, $sourceHeight - 1);
+    $width = min($width, $sourceWidth - $x);
+    $height = min($height, $sourceHeight - $y);
+
+    // Minimum boyut kontrolü
+    if ($width < 10 || $height < 10) {
+        throw new Exception('Seçim alanı çok küçük');
+    }
 
     // Yeni resim oluştur
     $cropped = imagecreatetruecolor($width, $height);

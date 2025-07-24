@@ -563,11 +563,18 @@
       overflow: hidden;
       background: white;
 
+      .crop-container {
+        overflow: hidden;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        position: relative;
+        max-height: 200px;
+      }
+
       .question-crop-preview {
         display: block;
-        max-width: 100%;
+        max-width: none;
         height: auto;
-        min-height: 80px;
       }
     }
 
