@@ -15,7 +15,7 @@ try {
     $pdo = getConnection();
 
     // First check if table exists
-    $stmt = $pdo->prepare("SHOW TABLES LIKE 'cevap_anahtarlari'");
+    $stmt = $pdo->prepare("SHOW TABLES LIKE 'cevapAnahtari'");
     $stmt->execute();
     $tableExists = $stmt->rowCount() > 0;
 
@@ -23,7 +23,7 @@ try {
         echo json_encode([
             'success' => false,
             'message' => 'Cevap anahtarları tablosu bulunamadı',
-            'debug' => 'Table cevap_anahtarlari does not exist'
+            'debug' => 'Table cevapAnahtari does not exist'
         ]);
         exit;
     }
@@ -34,7 +34,7 @@ try {
             WHEN aktiflik = 1 OR aktiflik = '1' OR aktiflik = true THEN 1 
             ELSE 0 
         END as aktiflik_normalized 
-        FROM cevap_anahtarlari 
+        FROM cevapAnahtari 
         ORDER BY tarih DESC");
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
