@@ -334,7 +334,6 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
       next: (response) => {
         this.loading = false;
         if (response.success) {
-          this.toaster.success('Test başarıyla oluşturuldu', 'Başarılı');
           this.currentTest = {
             id: response.test_id,
             test_adi: response.test_adi,

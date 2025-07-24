@@ -191,10 +191,10 @@ export class ConfirmDialogComponent {
 
   get iconClass(): string {
     const icons = {
-      warning: 'fas fa-exclamation-triangle warning',
-      danger: 'fas fa-trash danger',
-      info: 'fas fa-info-circle info',
-      success: 'fas fa-check success'
+      warning: 'bi bi-exclamation-triangle warning',
+      danger: 'bi bi-trash danger',
+      info: 'bi bi-info-circle info',
+      success: 'bi bi-check-circle success'
     };
     return icons[this.type];
   }
