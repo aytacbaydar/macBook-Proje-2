@@ -2,7 +2,7 @@ modules = ["nodejs-20", "web", "php-8.2"]
 run = "node index.js"
 
 [nix]
-channel = "stable-24_05"
+channel = "stable-25_05"
 
 [workflows]
 runButton = "Angular Dev Server HTTPS"
