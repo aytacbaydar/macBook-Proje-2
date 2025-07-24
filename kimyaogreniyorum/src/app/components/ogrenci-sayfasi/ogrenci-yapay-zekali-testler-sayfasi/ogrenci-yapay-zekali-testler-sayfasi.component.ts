@@ -347,7 +347,9 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     this.http.post<any>('./server/api/yapay_zeka_test_olustur.php', testData).subscribe({
       next: (response) => {
         this.loading = false;
-        if (response.success) {
+        console.log('Test oluşturma response:', response);
+        
+        if (response && response.success) {
           this.currentTest = {
             id: response.test_id,
             test_adi: response.test_adi,
@@ -366,18 +368,25 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
             cancelText: 'Test Listesine Dön',
             type: 'success',
             action: () => {
+              console.log('Teste başla tıklandı, step 4\'e geçiliyor...');
               this.currentStep = 4;
+              this.cdr.detectChanges();
             }
           };
+          
+          // Dialog'u göstermeden önce UI'ı güncelle
+          this.cdr.detectChanges();
           this.showConfirmDialog = true;
           console.log('Success dialog gösteriliyor:', this.confirmDialogData);
         } else {
-          this.error = response.message || 'Test oluşturulamadı';
+          this.error = response?.message || 'Test oluşturulamadı - Sunucudan geçersiz yanıt alındı';
+          console.error('Test oluşturma başarısız:', response);
         }
       },
       error: (error) => {
         this.loading = false;
-        this.error = 'Test oluşturulurken hata oluştu: ' + (error.error?.message || error.message);
+        console.error('Test oluşturma HTTP hatası:', error);
+        this.error = 'Test oluşturulurken hata oluştu: ' + (error.error?.message || error.message || 'Bilinmeyen hata');
       }
     });
   }
@@ -556,6 +565,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   clearMessages(): void {
     this.error = null;
     this.success = null;
+    // Console log'u kaldır çünkü bu metod sık çağrılıyor
   }
 
   // Template'de kullanılan PDF indirme metodu
