@@ -350,34 +350,16 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
         console.log('Test oluşturma response:', response);
         
         if (response && response.success) {
-          this.currentTest = {
-            id: response.test_id,
-            test_adi: response.test_adi,
-            sorular: response.sorular,
-            olusturma_tarihi: new Date().toISOString(),
-            toplam_soru: response.toplam_soru
-          };
-          this.currentQuestionIndex = 0;
-          this.userAnswers = {};
+          // Test başarıyla oluşturuldu mesajını göster
+          this.success = `Test başarıyla oluşturuldu! ${response.toplam_soru} soruluk test hazır.`;
           
-          // Success dialog göster
-          this.confirmDialogData = {
-            title: 'Test Oluşturuldu',
-            message: `Test başarıyla oluşturuldu! ${response.toplam_soru} soru ile test çözmeye başlayabilirsiniz.`,
-            confirmText: 'Teste Başla',
-            cancelText: 'Test Listesine Dön',
-            type: 'success',
-            action: () => {
-              console.log('Teste başla tıklandı, step 4\'e geçiliyor...');
-              this.currentStep = 4;
-              this.cdr.detectChanges();
-            }
-          };
+          // 2 saniye sonra mesajı temizle
+          setTimeout(() => {
+            this.clearMessages();
+          }, 2000);
           
-          // Dialog'u göstermeden önce UI'ı güncelle
-          this.cdr.detectChanges();
-          this.showConfirmDialog = true;
-          console.log('Success dialog gösteriliyor:', this.confirmDialogData);
+          // Test listesine geri dön
+          this.backToTestList();
         } else {
           this.error = response?.message || 'Test oluşturulamadı - Sunucudan geçersiz yanıt alındı';
           console.error('Test oluşturma başarısız:', response);
