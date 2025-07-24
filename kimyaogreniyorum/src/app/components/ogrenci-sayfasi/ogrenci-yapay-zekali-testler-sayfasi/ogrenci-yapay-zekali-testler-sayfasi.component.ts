@@ -348,21 +348,24 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
       next: (response) => {
         this.loading = false;
         console.log('Test oluşturma response:', response);
+        console.log('Response type:', typeof response);
+        console.log('Response.success:', response?.success);
+        console.log('Response keys:', response ? Object.keys(response) : 'response is null/undefined');
         
-        if (response && response.success) {
+        // Daha esnek kontrol - response varsa ve success true ise
+        if (response && (response.success === true || response.success === 'true')) {
+          console.log('Test başarıyla oluşturuldu, test listesine dönülüyor...');
           // Test başarıyla oluşturuldu mesajını göster
-          this.success = `Test başarıyla oluşturuldu! ${response.toplam_soru} soruluk test hazır.`;
+          this.success = `Test başarıyla oluşturuldu! ${response.toplam_soru || 'Bilinmeyen sayıda'} soruluk test hazır.`;
           
-          // 2 saniye sonra mesajı temizle
+          // 2 saniye sonra mesajı temizle ve test listesine dön
           setTimeout(() => {
             this.clearMessages();
+            this.backToTestList();
           }, 2000);
-          
-          // Test listesine geri dön
-          this.backToTestList();
         } else {
+          console.error('Test oluşturma başarısız - Response:', response);
           this.error = response?.message || 'Test oluşturulamadı - Sunucudan geçersiz yanıt alındı';
-          console.error('Test oluşturma başarısız:', response);
         }
       },
       error: (error) => {
@@ -843,7 +846,16 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   // Test listesine geri dön
   backToTestList(): void {
     console.log('Test listesine geri dönülüyor...');
-    this.resetTest();
+    // resetTest() çağrısını kaldır - sadece gerekli temizlikleri yap
+    this.currentTest = null;
+    this.currentQuestionIndex = 0;
+    this.userAnswers = {};
+    this.showResults = false;
+    this.testResults = null;
+    this.selectedImprovementTopics = [];
+    this.selectedBestTopics = [];
+    this.selectedOtherTopics = [];
+    
     this.currentStep = 1;
     this.clearMessages();
     this.loadTestListesi();
