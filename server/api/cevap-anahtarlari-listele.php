@@ -1,131 +1,91 @@
+php
 <?php
-// CORS başlıkları
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Methods: GET, POST, DELETE, PUT, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
-// OPTIONS isteklerini işle
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
-// Config dosyasını dahil et
 require_once '../config.php';
 
-// GET isteği kontrolü
-if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-    errorResponse('Sadece GET istekleri kabul edilir');
-}
-
 try {
-    // Bağlantıyı al
-    $pdo = getConnection();
+    $conn = getConnection();
 
-    // Hangi tablo adının kullanıldığını kontrol et
-    $tableName = null;
-    $possibleTables = ['cevap_anahtarlari', 'cevapAnahtari'];
-    
-    foreach ($possibleTables as $table) {
-        $stmt = $pdo->query("SHOW TABLES LIKE '$table'");
-        if ($stmt->rowCount() > 0) {
-            $tableName = $table;
-            break;
-        }
-    }
-    
-    if (!$tableName) {
-        successResponse([], 'Cevap anahtarı tablosu bulunamadı, boş liste döndürülüyor.');
-        exit;
-    }
+    // Cevap anahtarları tablosunun var olup olmadığını kontrol et
+    $tableCheckQuery = "SHOW TABLES LIKE 'cevap_anahtarlari'";
+    $result = $conn->query($tableCheckQuery);
 
-    // Authorization header kontrolü - çoklu yöntem
-    $authHeader = '';
-    
-    // Method 1: Apache getallheaders()
-    if (function_exists('getallheaders')) {
-        $headers = getallheaders();
-        $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
-    }
-    
-    // Method 2: $_SERVER HTTP_AUTHORIZATION
-    if (empty($authHeader)) {
-        $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
-    }
-    
-    // Method 3: Manual $_SERVER parsing
-    if (empty($authHeader)) {
-        foreach ($_SERVER as $key => $value) {
-            if (strtolower($key) === 'http_authorization') {
-                $authHeader = $value;
-                break;
-            }
+    if ($result->rowCount() == 0) {
+        // Tablo yoksa oluştur
+        $createTableSQL = "
+        CREATE TABLE IF NOT EXISTS cevap_anahtarlari (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            sinav_adi VARCHAR(255) NOT NULL,
+            sinav_turu VARCHAR(50) NOT NULL,
+            soru_sayisi INT NOT NULL,
+            cevaplar JSON NOT NULL,
+            tarih DATETIME DEFAULT CURRENT_TIMESTAMP,
+            aktiflik BOOLEAN DEFAULT TRUE,
+            sinav_kapagi VARCHAR(255) DEFAULT NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+        ";
+        $conn->exec($createTableSQL);
+
+        // Örnek veri ekle
+        $sampleData = [
+            ['Matematik TYT Deneme 1', 'TYT', 40, json_encode(array_fill(1, 40, 'A')), true],
+            ['Kimya AYT Test', 'AYT', 13, json_encode(array_fill(1, 13, 'B')), true],
+            ['Fizik Konu Testi', 'TEST', 20, json_encode(array_fill(1, 20, 'C')), true]
+        ];
+
+        $insertSQL = "INSERT INTO cevap_anahtarlari (sinav_adi, sinav_turu, soru_sayisi, cevaplar, aktiflik) VALUES (?, ?, ?, ?, ?)";
+        $insertStmt = $conn->prepare($insertSQL);
+
+        foreach ($sampleData as $data) {
+            $insertStmt->execute($data);
         }
     }
 
-    error_log("Authorization header: " . $authHeader);
-    
-    if (empty($authHeader)) {
-        errorResponse('Authorization header bulunamadı');
-    }
-
-    if (!preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
-        errorResponse('Geçersiz authorization format');
-    }
-
-    $token = trim($matches[1]);
-    
-    if (empty($token)) {
-        errorResponse('Token bulunamadı');
-    }
-
-    // Token'ı doğrula (config.php'de tanımlı fonksiyon kullanarak)
-    // Bu kısımda actual token validation yapılabilir
-    error_log("Token: " . substr($token, 0, 10) . "...");
-
-    // Tablo sütunlarını kontrol et
-    $columnsStmt = $pdo->query("SHOW COLUMNS FROM $tableName");
-    $columns = $columnsStmt->fetchAll(PDO::FETCH_COLUMN);
-    
-    // Tarih sütunu adını belirle
-    $dateColumn = 'created_at';
-    if (in_array('tarih', $columns)) {
-        $dateColumn = 'tarih';
-    }
-    
-    // Sınavları katılımcı sayısı ile birlikte listele
-    $sql = "
-        SELECT 
-            ca.*,
-            COALESCE(katilimci.katilimci_sayisi, 0) as katilimci_sayisi
-        FROM $tableName ca
-        LEFT JOIN (
-            SELECT 
-                sinav_id,
-                COUNT(DISTINCT ogrenci_id) as katilimci_sayisi
-            FROM sinav_sonuclari 
-            GROUP BY sinav_id
-        ) katilimci ON ca.id = katilimci.sinav_id
-        ORDER BY ca.$dateColumn DESC
-    ";
-    $stmt = $pdo->prepare($sql);
+    // Tüm cevap anahtarlarını getir
+    $stmt = $conn->prepare("SELECT * FROM cevap_anahtarlari ORDER BY tarih DESC");
     $stmt->execute();
-
     $cevapAnahtarlari = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // JSON alanlarını decode et
-    foreach ($cevapAnahtarlari as &$row) {
-        $row['cevaplar'] = json_decode($row['cevaplar'], true);
-        $row['konular'] = json_decode($row['konular'], true);
-        $row['videolar'] = json_decode($row['videolar'], true);
+    // JSON field'ları düzelt
+    foreach ($cevapAnahtarlari as &$item) {
+        if (isset($item['aktiflik'])) {
+            $item['aktiflik'] = (bool)$item['aktiflik'];
+        }
+        if (isset($item['cevaplar']) && is_string($item['cevaplar'])) {
+            $item['cevaplar'] = json_decode($item['cevaplar'], true);
+        }
     }
 
-    successResponse($cevapAnahtarlari, 'Cevap anahtarları başarıyla getirildi.');
+    // Debug bilgisi
+    error_log("Toplam sınav sayısı: " . count($cevapAnahtarlari));
+    error_log("Aktif sınav sayısı: " . count(array_filter($cevapAnahtarlari, function($s) { return $s['aktiflik']; })));
 
-} catch (Exception $e) {
-    errorResponse($e->getMessage());
+    echo json_encode([
+        'success' => true,
+        'data' => $cevapAnahtarlari,
+        'total_count' => count($cevapAnahtarlari),
+        'active_count' => count(array_filter($cevapAnahtarlari, function($s) { return $s['aktiflik']; }))
+    ], JSON_UNESCAPED_UNICODE);
+
+} catch(PDOException $e) {
+    error_log("Database error: " . $e->getMessage());
+    echo json_encode([
+        'success' => false,
+        'message' => 'Veritabanı hatası: ' . $e->getMessage()
+    ], JSON_UNESCAPED_UNICODE);
+} catch(Exception $e) {
+    error_log("General error: " . $e->getMessage());
+    echo json_encode([
+        'success' => false,
+        'message' => 'Genel hata: ' . $e->getMessage()
+    ], JSON_UNESCAPED_UNICODE);
 }
-
-// Bağlantıyı kapat
-closeConnection();
 ?>

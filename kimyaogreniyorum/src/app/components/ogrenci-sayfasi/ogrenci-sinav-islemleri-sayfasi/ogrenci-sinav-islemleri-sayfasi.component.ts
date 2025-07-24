@@ -48,16 +48,28 @@ export class OgrenciSinavIslemleriSayfasiComponent implements OnInit {
       .subscribe({
         next: (response) => {
           this.loading = false;
+          console.log('API Response:', response); // Debug için
+          
           if (response.success) {
+            const allSinavlar = response.data || [];
+            console.log('Tüm sınavlar:', allSinavlar); // Debug için
+            
             // Sadece aktif sınavları göster
-            this.sinavlar = (response.data || []).filter((sinav: Sinav) => sinav.aktiflik);
+            this.sinavlar = allSinavlar.filter((sinav: Sinav) => sinav.aktiflik === true || sinav.aktiflik === 1);
+            console.log('Aktif sınavlar:', this.sinavlar); // Debug için
+            
+            if (this.sinavlar.length === 0) {
+              this.error = 'Henüz aktif sınav bulunmuyor.';
+            }
           } else {
-            this.error = 'Sınavlar yüklenirken hata oluştu.';
+            this.error = response.message || 'Sınavlar yüklenirken hata oluştu.';
+            console.error('API Hatası:', response.message);
           }
         },
         error: (error) => {
           this.loading = false;
           this.error = 'Sunucu hatası: ' + (error.message || 'Bağlantı hatası');
+          console.error('HTTP Hatası:', error);
         }
       });
   }
