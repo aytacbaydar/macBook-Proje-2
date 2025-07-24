@@ -1,7 +1,4 @@
-The code is modified to include better error handling and debug information for the exams page.
-```
 
-```php
 <?php
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
@@ -15,8 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require_once '../config.php';
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo = getConnection();
 
     // First check if table exists
     $stmt = $pdo->prepare("SHOW TABLES LIKE 'cevap_anahtarlari'");
