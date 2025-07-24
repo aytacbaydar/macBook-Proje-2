@@ -115,7 +115,7 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
   }
 
   private loadUnreadMessageCount(): void {
-    console.log('loadUnreadMessageCount çağrıldı, studentId:', this.studentId);
+    
 
     // Önce badge'i 0 olarak ayarla
     const soruCozumuMenuItem = this.menuItems.find(
@@ -127,7 +127,7 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
     }
 
     if (!this.studentId) {
-      console.log('Student ID yok, badge 0 olarak ayarlandı');
+      
       return;
     }
 
@@ -135,10 +135,7 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
       Authorization: `Bearer ${this.getTokenFromStorage()}`,
     };
 
-    console.log(
-      'API çağrısı yapılıyor:',
-      `./server/api/soru_mesajlari.php?ogrenci_id=${this.studentId}`
-    );
+
 
     this.http
       .get<any>(
@@ -147,7 +144,6 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (response) => {
-          console.log('API Response:', response);
           if (response && response.success && response.data) {
             // Öğretmenden gelen okunmamış mesajları say
             const unreadMessages = response.data.filter(
@@ -156,15 +152,10 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
             );
 
             this.unreadMessageCount = unreadMessages.length;
-            console.log('Okunmamış mesaj sayısı:', this.unreadMessageCount);
 
             // Badge sayısını güncelle
             if (soruCozumuMenuItem) {
               soruCozumuMenuItem.badgeCount = this.unreadMessageCount;
-              console.log(
-                'Badge count güncellendi:',
-                soruCozumuMenuItem.badgeCount
-              );
               this.cdr.detectChanges();
             }
           } else {
