@@ -1,6 +1,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr';
 
 interface StudentInfo {
   id: number;
@@ -134,7 +135,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     action: null as (() => void) | null
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toaster: ToastrService) {}
 
   ngOnInit(): void {
     this.loadStudentInfo();
@@ -333,6 +334,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
       next: (response) => {
         this.loading = false;
         if (response.success) {
+          this.toaster.success('Test başarıyla oluşturuldu', 'Başarılı');
           this.currentTest = {
             id: response.test_id,
             test_adi: response.test_adi,
