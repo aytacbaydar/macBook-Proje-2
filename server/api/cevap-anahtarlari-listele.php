@@ -1,9 +1,12 @@
-php
+The code is modified to include better error handling and debug information for the exams page.
+```
+
+```php
 <?php
-header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, DELETE, PUT, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
+header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
@@ -12,80 +15,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require_once '../config.php';
 
 try {
-    $conn = getConnection();
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Cevap anahtarları tablosunun var olup olmadığını kontrol et
-    $tableCheckQuery = "SHOW TABLES LIKE 'cevap_anahtarlari'";
-    $result = $conn->query($tableCheckQuery);
-
-    if ($result->rowCount() == 0) {
-        // Tablo yoksa oluştur
-        $createTableSQL = "
-        CREATE TABLE IF NOT EXISTS cevap_anahtarlari (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            sinav_adi VARCHAR(255) NOT NULL,
-            sinav_turu VARCHAR(50) NOT NULL,
-            soru_sayisi INT NOT NULL,
-            cevaplar JSON NOT NULL,
-            tarih DATETIME DEFAULT CURRENT_TIMESTAMP,
-            aktiflik BOOLEAN DEFAULT TRUE,
-            sinav_kapagi VARCHAR(255) DEFAULT NULL
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
-        ";
-        $conn->exec($createTableSQL);
-
-        // Örnek veri ekle
-        $sampleData = [
-            ['Matematik TYT Deneme 1', 'TYT', 40, json_encode(array_fill(1, 40, 'A')), true],
-            ['Kimya AYT Test', 'AYT', 13, json_encode(array_fill(1, 13, 'B')), true],
-            ['Fizik Konu Testi', 'TEST', 20, json_encode(array_fill(1, 20, 'C')), true]
-        ];
-
-        $insertSQL = "INSERT INTO cevap_anahtarlari (sinav_adi, sinav_turu, soru_sayisi, cevaplar, aktiflik) VALUES (?, ?, ?, ?, ?)";
-        $insertStmt = $conn->prepare($insertSQL);
-
-        foreach ($sampleData as $data) {
-            $insertStmt->execute($data);
-        }
-    }
-
-    // Tüm cevap anahtarlarını getir
-    $stmt = $conn->prepare("SELECT * FROM cevap_anahtarlari ORDER BY tarih DESC");
+    // First check if table exists
+    $stmt = $pdo->prepare("SHOW TABLES LIKE 'cevap_anahtarlari'");
     $stmt->execute();
-    $cevapAnahtarlari = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $tableExists = $stmt->rowCount() > 0;
 
-    // JSON field'ları düzelt
-    foreach ($cevapAnahtarlari as &$item) {
-        if (isset($item['aktiflik'])) {
-            $item['aktiflik'] = (bool)$item['aktiflik'];
-        }
-        if (isset($item['cevaplar']) && is_string($item['cevaplar'])) {
-            $item['cevaplar'] = json_decode($item['cevaplar'], true);
-        }
+    if (!$tableExists) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Cevap anahtarları tablosu bulunamadı',
+            'debug' => 'Table cevap_anahtarlari does not exist'
+        ]);
+        exit;
     }
 
-    // Debug bilgisi
-    error_log("Toplam sınav sayısı: " . count($cevapAnahtarlari));
-    error_log("Aktif sınav sayısı: " . count(array_filter($cevapAnahtarlari, function($s) { return $s['aktiflik']; })));
+    // Get all records
+    $stmt = $pdo->prepare("SELECT *, 
+        CASE 
+            WHEN aktiflik = 1 OR aktiflik = '1' OR aktiflik = true THEN 1 
+            ELSE 0 
+        END as aktiflik_normalized 
+        FROM cevap_anahtarlari 
+        ORDER BY tarih DESC");
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Debug information
+    $totalCount = count($result);
+    $activeCount = count(array_filter($result, function($item) {
+        return $item['aktiflik_normalized'] == 1;
+    }));
 
     echo json_encode([
         'success' => true,
-        'data' => $cevapAnahtarlari,
-        'total_count' => count($cevapAnahtarlari),
-        'active_count' => count(array_filter($cevapAnahtarlari, function($s) { return $s['aktiflik']; }))
-    ], JSON_UNESCAPED_UNICODE);
+        'data' => $result,
+        'debug' => [
+            'total_count' => $totalCount,
+            'active_count' => $activeCount,
+            'table_exists' => $tableExists
+        ]
+    ]);
 
 } catch(PDOException $e) {
-    error_log("Database error: " . $e->getMessage());
     echo json_encode([
         'success' => false,
-        'message' => 'Veritabanı hatası: ' . $e->getMessage()
-    ], JSON_UNESCAPED_UNICODE);
-} catch(Exception $e) {
-    error_log("General error: " . $e->getMessage());
-    echo json_encode([
-        'success' => false,
-        'message' => 'Genel hata: ' . $e->getMessage()
-    ], JSON_UNESCAPED_UNICODE);
+        'message' => 'Veritabanı hatası: ' . $e->getMessage(),
+        'debug' => $e->getTraceAsString()
+    ]);
 }
 ?>

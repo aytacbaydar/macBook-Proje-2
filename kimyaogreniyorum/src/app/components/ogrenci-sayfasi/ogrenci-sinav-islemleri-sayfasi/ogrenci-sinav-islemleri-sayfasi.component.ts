@@ -44,32 +44,48 @@ export class OgrenciSinavIslemleriSayfasiComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
+    console.log('Sınavlar yükleniyor...');
     this.http.get<any>('./server/api/cevap-anahtarlari-listele.php')
       .subscribe({
         next: (response) => {
           this.loading = false;
-          console.log('API Response:', response); // Debug için
+          console.log('API Response:', response);
           
           if (response.success) {
             const allSinavlar = response.data || [];
-            console.log('Tüm sınavlar:', allSinavlar); // Debug için
+            console.log('Tüm sınavlar:', allSinavlar);
+            console.log('Debug bilgileri:', response.debug);
+            
+            if (allSinavlar.length === 0) {
+              this.error = 'Veritabanında hiç sınav bulunamadı. Lütfen önce cevap anahtarı oluşturun.';
+              return;
+            }
             
             // Sadece aktif sınavları göster
-            this.sinavlar = allSinavlar.filter((sinav: Sinav) => sinav.aktiflik == true || sinav.aktiflik == 1);
-            console.log('Aktif sınavlar:', this.sinavlar); // Debug için
+            this.sinavlar = allSinavlar.filter((sinav: Sinav) => {
+              const isActive = sinav.aktiflik == true || sinav.aktiflik == 1 || sinav.aktiflik === '1';
+              console.log(`Sınav ${sinav.sinav_adi}: aktiflik=${sinav.aktiflik}, isActive=${isActive}`);
+              return isActive;
+            });
+            
+            console.log('Aktif sınavlar:', this.sinavlar);
             
             if (this.sinavlar.length === 0) {
-              this.error = 'Henüz aktif sınav bulunmuyor.';
+              this.error = `Toplam ${allSinavlar.length} sınav var ama hiçbiri aktif değil. Aktif sınav bulunmuyor.`;
             }
           } else {
             this.error = response.message || 'Sınavlar yüklenirken hata oluştu.';
-            console.error('API Hatası:', response.message);
+            console.error('API Hatası:', response);
+            if (response.debug) {
+              console.error('Debug bilgisi:', response.debug);
+            }
           }
         },
         error: (error) => {
           this.loading = false;
           this.error = 'Sunucu hatası: ' + (error.message || 'Bağlantı hatası');
           console.error('HTTP Hatası:', error);
+          console.error('Error details:', error.error);
         }
       });
   }
