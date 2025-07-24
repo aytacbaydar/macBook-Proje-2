@@ -342,13 +342,20 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
           };
           this.currentQuestionIndex = 0;
           this.userAnswers = {};
-          this.currentStep = 4;
-          this.success = 'Test başarıyla oluşturuldu!';
           
-          // 2 saniye sonra mesajı temizle
-          setTimeout(() => {
-            this.clearMessages();
-          }, 2000);
+          // Success dialog göster
+          this.confirmDialogData = {
+            title: 'Test Oluşturuldu',
+            message: `Test başarıyla oluşturuldu! ${response.toplam_soru} soru ile test çözmeye başlayabilirsiniz.`,
+            confirmText: 'Teste Başla',
+            cancelText: 'Test Listesine Dön',
+            type: 'success',
+            action: () => {
+              this.currentStep = 4;
+              this.showConfirmDialog = false;
+            }
+          };
+          this.showConfirmDialog = true;
         } else {
           this.error = response.message || 'Test oluşturulamadı';
         }
@@ -680,6 +687,11 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
 
   onConfirmDialogCancelled(): void {
     this.showConfirmDialog = false;
+    
+    // Eğer test oluşturma başarı dialog'uysa, test listesine dön
+    if (this.confirmDialogData.title === 'Test Oluşturuldu') {
+      this.backToTestList();
+    }
   }
 
   // Test listesi yükleme
