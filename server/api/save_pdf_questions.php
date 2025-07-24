@@ -61,7 +61,11 @@ try {
 
                 if ($questionImage) {
                     // Seçimin kendi doğru cevabını kullan, yoksa varsayılanı kullan
-                    $dogruCevap = isset($selection['dogru_cevap']) ? $selection['dogru_cevap'] : $input['dogru_cevap'];
+                    $selectionDogruCevap = isset($selection['dogru_cevap']) && !empty($selection['dogru_cevap']) 
+                        ? $selection['dogru_cevap'] 
+                        : $dogruCevap;
+                    
+                    error_log("Soru kaydediliyor - Doğru cevap: " . $selectionDogruCevap);
 
                     // Veritabanına kaydet
                     $sql = "INSERT INTO yapay_zeka_sorular (konu_adi, sinif_seviyesi, zorluk_derecesi, soru_resmi, dogru_cevap, ogretmen_id, olusturma_tarihi) 
@@ -73,7 +77,7 @@ try {
                         $sinifSeviyesi,
                         $zorlukDerecesi,
                         $questionImage,
-                        $dogruCevap,
+                        $selectionDogruCevap,
                         $ogretmenId
                     ]);
 

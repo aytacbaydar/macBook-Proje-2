@@ -535,24 +535,37 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
   }
 
   startSelection(event: MouseEvent): void {
-    const rect = (event.target as HTMLElement).getBoundingClientRect();
+    const img = event.target as HTMLImageElement;
+    const rect = img.getBoundingClientRect();
+    
+    // Görüntülenen resmin gerçek boyutlarını al
+    const scaleX = img.naturalWidth / img.clientWidth;
+    const scaleY = img.naturalHeight / img.clientHeight;
+    
+    const relativeX = (event.clientX - rect.left) * scaleX;
+    const relativeY = (event.clientY - rect.top) * scaleY;
+    
     this.isSelecting = true;
     this.currentSelection = {
-      startX: event.clientX - rect.left,
-      startY: event.clientY - rect.top,
-      x: event.clientX - rect.left,
-      y: event.clientY - rect.top,
+      startX: relativeX,
+      startY: relativeY,
+      x: relativeX,
+      y: relativeY,
       width: 0,
-      height: 0
+      height: 0,
+      scaleX: scaleX,
+      scaleY: scaleY
     };
   }
 
   updateSelection(event: MouseEvent): void {
     if (!this.isSelecting || !this.currentSelection) return;
 
-    const rect = (event.target as HTMLElement).getBoundingClientRect();
-    const currentX = event.clientX - rect.left;
-    const currentY = event.clientY - rect.top;
+    const img = event.target as HTMLImageElement;
+    const rect = img.getBoundingClientRect();
+    
+    const currentX = (event.clientX - rect.left) * this.currentSelection.scaleX;
+    const currentY = (event.clientY - rect.top) * this.currentSelection.scaleY;
 
     this.currentSelection.x = Math.min(this.currentSelection.startX, currentX);
     this.currentSelection.y = Math.min(this.currentSelection.startY, currentY);
@@ -565,13 +578,13 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
 
     this.isSelecting = false;
 
-    // Minimum boyut kontrolü
-    if (this.currentSelection.width > 20 && this.currentSelection.height > 20) {
+    // Minimum boyut kontrolü (ölçeklenmiş koordinatlar için)
+    if (this.currentSelection.width > 50 && this.currentSelection.height > 50) {
       this.currentPageSelections.push({
-        x: this.currentSelection.x,
-        y: this.currentSelection.y,
-        width: this.currentSelection.width,
-        height: this.currentSelection.height,
+        x: Math.round(this.currentSelection.x),
+        y: Math.round(this.currentSelection.y),
+        width: Math.round(this.currentSelection.width),
+        height: Math.round(this.currentSelection.height),
         pageIndex: this.currentPdfPage,
         dogru_cevap: this.pdfUploadData.dogru_cevap // Varsayılan cevap
       });
@@ -598,9 +611,10 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
     if (this.currentPageSelections.length > 0) {
       // Her seçimin doğru cevabının set edilmiş olduğundan emin ol
       this.currentPageSelections.forEach(selection => {
-        if (!selection.dogru_cevap) {
+        if (!selection.dogru_cevap || selection.dogru_cevap === '') {
           selection.dogru_cevap = this.pdfUploadData.dogru_cevap;
         }
+        console.log(`Sayfa ${this.currentPdfPage} - Soru doğru cevabı: ${selection.dogru_cevap}`);
       });
       this.allSelections[this.currentPdfPage] = [...this.currentPageSelections];
     } else if (this.allSelections[this.currentPdfPage]) {
@@ -626,6 +640,14 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
 
     this.loading = true;
     this.error = null;
+
+    // Debug: Kaydedilecek verileri logla
+    console.log('Kaydedilecek seçimler:', this.allSelections);
+    Object.keys(this.allSelections).forEach(pageIndex => {
+      this.allSelections[parseInt(pageIndex)].forEach((selection, index) => {
+        console.log(`Sayfa ${pageIndex} - Soru ${index + 1}: Doğru cevap = ${selection.dogru_cevap}`);
+      });
+    });
 
     const requestData = {
       selections: this.allSelections,
