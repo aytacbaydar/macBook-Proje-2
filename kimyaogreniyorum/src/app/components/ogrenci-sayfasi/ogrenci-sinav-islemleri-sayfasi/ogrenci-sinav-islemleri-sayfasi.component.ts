@@ -63,7 +63,7 @@ export class OgrenciSinavIslemleriSayfasiComponent implements OnInit {
             
             // Sadece aktif sınavları göster
             this.sinavlar = allSinavlar.filter((sinav: Sinav) => {
-              const isActive = sinav.aktiflik == true || sinav.aktiflik == 1 || sinav.aktiflik === '1';
+              const isActive = sinav.aktiflik == true || String(sinav.aktiflik) === '1';
               console.log(`Sınav ${sinav.sinav_adi}: aktiflik=${sinav.aktiflik}, isActive=${isActive}`);
               return isActive;
             });
