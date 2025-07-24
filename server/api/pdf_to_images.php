@@ -1,10 +1,10 @@
 <?php
 require_once '../config.php';
 
-// Temel ayarlar
-ini_set('memory_limit', '256M');
-ini_set('max_execution_time', 180); // 3 dakika
-ini_set('max_input_time', 180);
+// Temel ayarlar - optimize edildi
+ini_set('memory_limit', '128M'); // 256M'den 128M'ye düşürdük
+ini_set('max_execution_time', 90); // 3 dakikadan 1.5 dakikaya düşürdük
+ini_set('max_input_time', 90);
 ini_set('upload_max_filesize', '10M');
 ini_set('post_max_size', '10M');
 
@@ -31,9 +31,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// Sunucu yükü kontrolü
+// Sunucu yükü kontrolü - daha esnek
 $currentLoad = sys_getloadavg()[0];
-if ($currentLoad > 3.0) {
+if ($currentLoad > 8.0) { // Eşiği 3.0'dan 8.0'a çıkardık
     http_response_code(503);
     echo json_encode([
         'success' => false,
@@ -68,12 +68,12 @@ if ($mimeType !== 'application/pdf') {
     exit;
 }
 
-// Dosya boyutu kontrolü (5MB)
-if ($uploadedFile['size'] > 5 * 1024 * 1024) {
+// Dosya boyutu kontrolü (3MB) - Daha küçük dosyalar için optimize ettik
+if ($uploadedFile['size'] > 3 * 1024 * 1024) {
     http_response_code(400);
     echo json_encode([
         'success' => false,
-        'message' => 'Dosya boyutu 5MB\'dan büyük olamaz'
+        'message' => 'Dosya boyutu 3MB\'dan büyük olamaz'
     ]);
     exit;
 }
@@ -171,18 +171,18 @@ function convertPdfWithGhostscript($pdfPath, $fileId, $imageDir) {
         $pageCount = intval(trim($pageCountOutput[0]));
     }
 
-    // Maksimum 10 sayfa
-    if ($pageCount > 10) {
-        throw new Exception('PDF çok fazla sayfa içeriyor. Maksimum 10 sayfa desteklenir.');
+    // Maksimum 5 sayfa - daha az kaynak kullanımı için
+    if ($pageCount > 5) {
+        throw new Exception('PDF çok fazla sayfa içeriyor. Maksimum 5 sayfa desteklenir.');
     }
 
     // Her sayfayı ayrı ayrı işle (bellek tasarrufu için)
     for ($page = 1; $page <= $pageCount; $page++) {
         $outputFile = $imageDir . $fileId . '_page_' . $page . '.jpg';
 
-        // Basit Ghostscript komutu - düşük çözünürlük
+        // Çok düşük kaliteli ama hızlı işleme
         $command = sprintf(
-            'gs -dNOPAUSE -dBATCH -sDEVICE=jpeg -r200 -dFirstPage=%d -dLastPage=%d -dJPEGQ=75 -sOutputFile=%s %s 2>&1',
+            'gs -dNOPAUSE -dBATCH -sDEVICE=jpeg -r150 -dFirstPage=%d -dLastPage=%d -dJPEGQ=60 -dDownScaleFactor=2 -sOutputFile=%s %s 2>&1',
             $page,
             $page,
             escapeshellarg($outputFile),
@@ -199,9 +199,9 @@ function convertPdfWithGhostscript($pdfPath, $fileId, $imageDir) {
         } else {
             error_log("Sayfa $page oluşturulamadı. Return code: $returnCode, Output: " . implode("\n", $output));
 
-            // Alternatif komut dene
+            // Alternatif komut dene - düşük kalite
             $altCommand = sprintf(
-                'convert -density 200 %s[%d] -quality 75 -colorspace RGB %s 2>&1',
+                'convert -density 150 %s[%d] -quality 60 -colorspace RGB -resize 50%% %s 2>&1',
                 escapeshellarg($pdfPath),
                 $page - 1, // ImageMagick 0'dan başlar
                 escapeshellarg($outputFile)
