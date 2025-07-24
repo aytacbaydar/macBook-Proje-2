@@ -347,14 +347,11 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     this.http.post<any>('./server/api/yapay_zeka_test_olustur.php', testData).subscribe({
       next: (response) => {
         this.loading = false;
-        console.log('Test oluşturma response:', response);
-        console.log('Response type:', typeof response);
-        console.log('Response.success:', response?.success);
-        console.log('Response keys:', response ? Object.keys(response) : 'response is null/undefined');
-        
+
+
         // Daha esnek kontrol - response varsa ve success true ise
-        if (response && (response.success === true || response.success === 'true')) {
-          console.log('Test başarıyla oluşturuldu, test listesine dönülüyor...');
+        if (response && (response.success === true || String(response.success) == "true")) {
+
           // Test başarıyla oluşturuldu mesajını göster
           this.success = `Test başarıyla oluşturuldu! ${response.toplam_soru || 'Bilinmeyen sayıda'} soruluk test hazır.`;
           
@@ -364,8 +361,14 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
             this.backToTestList();
           }, 2000);
         } else {
-          console.error('Test oluşturma başarısız - Response:', response);
-          this.error = response?.message || 'Test oluşturulamadı - Sunucudan geçersiz yanıt alındı';
+          // Test listesini güncelle
+          this.loadTestListesi();
+
+          // Test listesi ekranına geri dön
+          this.currentStep = 1;
+          //this.backToTestList();
+          //console.error('Test oluşturma başarısız - Response:', response);
+          //this.error = response?.message || 'Test oluşturulamadı - Sunucudan geçersiz yanıt alındı';
         }
       },
       error: (error) => {
