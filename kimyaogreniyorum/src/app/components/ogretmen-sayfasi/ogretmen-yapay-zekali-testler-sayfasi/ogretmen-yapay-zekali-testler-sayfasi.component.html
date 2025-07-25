@@ -199,10 +199,10 @@
             <!-- Mevcut seçimler -->
             <div *ngFor="let selection of currentPageSelections; let i = index"
                  class="existing-selection"
-                 [style.left.px]="selection.x / (currentSelection?.scaleX || 1)"
-                 [style.top.px]="selection.y / (currentSelection?.scaleY || 1)"
-                 [style.width.px]="selection.width / (currentSelection?.scaleX || 1)"
-                 [style.height.px]="selection.height / (currentSelection?.scaleY || 1)">
+                 [style.left.px]="getSelectionDisplayCoordinates(selection).x"
+                 [style.top.px]="getSelectionDisplayCoordinates(selection).y"
+                 [style.width.px]="getSelectionDisplayCoordinates(selection).width"
+                 [style.height.px]="getSelectionDisplayCoordinates(selection).height">
               <span class="selection-number">{{ i + 1 }}</span>
             </div>
 </div>

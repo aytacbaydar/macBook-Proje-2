@@ -661,6 +661,24 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
     this.currentPageSelections = this.allSelections[this.currentPdfPage] || [];
   }
 
+  getSelectionDisplayCoordinates(selection: any): any {
+    // Görüntülenen image elementini bul
+    const imgElement = document.querySelector('.pdf-page-container img') as HTMLImageElement;
+    if (!imgElement) {
+      return { x: 0, y: 0, width: 0, height: 0 };
+    }
+
+    const scaleX = imgElement.clientWidth / imgElement.naturalWidth;
+    const scaleY = imgElement.clientHeight / imgElement.naturalHeight;
+
+    return {
+      x: selection.x * scaleX,
+      y: selection.y * scaleY,
+      width: selection.width * scaleX,
+      height: selection.height * scaleY
+    };
+  }
+
   getTotalSelections(): number {
     return Object.values(this.allSelections).reduce((total, selections) => total + selections.length, 0) + this.currentPageSelections.length;
   }
