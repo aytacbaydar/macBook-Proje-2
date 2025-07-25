@@ -540,6 +540,9 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
   }
 
   startSelection(event: MouseEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    
     const img = event.target as HTMLImageElement;
     const rect = img.getBoundingClientRect();
 
@@ -561,14 +564,22 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
       scaleX: scaleX,
       scaleY: scaleY
     };
+
+    // Mouse capture için event listener'ları ekle
+    document.addEventListener('mousemove', this.handleMouseMove.bind(this));
+    document.addEventListener('mouseup', this.handleMouseUp.bind(this));
   }
 
-  updateSelection(event: MouseEvent): void {
+  private handleMouseMove(event: MouseEvent): void {
     if (!this.isSelecting || !this.currentSelection) return;
 
-    const img = event.target as HTMLImageElement;
-    const rect = img.getBoundingClientRect();
-
+    event.preventDefault();
+    
+    // PDF container'ı bul
+    const pdfContainer = document.querySelector('.pdf-page-container img') as HTMLImageElement;
+    if (!pdfContainer) return;
+    
+    const rect = pdfContainer.getBoundingClientRect();
     const currentX = (event.clientX - rect.left) * this.currentSelection.scaleX;
     const currentY = (event.clientY - rect.top) * this.currentSelection.scaleY;
 
@@ -578,13 +589,18 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
     this.currentSelection.height = Math.abs(currentY - this.currentSelection.startY);
   }
 
-  endSelection(event: MouseEvent): void {
+  private handleMouseUp(event: MouseEvent): void {
     if (!this.isSelecting || !this.currentSelection) return;
 
+    event.preventDefault();
     this.isSelecting = false;
 
+    // Event listener'ları temizle
+    document.removeEventListener('mousemove', this.handleMouseMove.bind(this));
+    document.removeEventListener('mouseup', this.handleMouseUp.bind(this));
+
     // Minimum boyut kontrolü (ölçeklenmiş koordinatlar için)
-    if (this.currentSelection.width > 50 && this.currentSelection.height > 50) {
+    if (this.currentSelection.width > 30 && this.currentSelection.height > 30) {
       this.currentPageSelections.push({
         x: Math.round(this.currentSelection.x),
         y: Math.round(this.currentSelection.y),
@@ -593,9 +609,23 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
         pageIndex: this.currentPdfPage,
         dogru_cevap: this.pdfUploadData.dogru_cevap // Varsayılan cevap
       });
+      
+      console.log('Yeni soru seçimi eklendi:', this.currentSelection);
+    } else {
+      console.log('Seçim alanı çok küçük, atlandı.');
     }
 
     this.currentSelection = null;
+  }
+
+  updateSelection(event: MouseEvent): void {
+    // Bu metod artık kullanılmıyor, handleMouseMove ile değiştirildi
+    return;
+  }
+
+  endSelection(event: MouseEvent): void {
+    // Bu metod artık kullanılmıyor, handleMouseUp ile değiştirildi
+    return;
   }
 
   updateSelectionAnswer(selectionIndex: number, answer: string): void {

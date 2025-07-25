@@ -177,42 +177,35 @@
           </button>
         </div>
 
-        <div class="pdf-page-container">
-          <img [src]="pdfPages[currentPdfPage]" 
-               alt="PDF Sayfa {{ currentPdfPage + 1 }}" 
-               class="pdf-page-image"
-               (load)="onPdfPageImageLoad($event)"
-               (error)="onPdfPageImageError($event)"
-               style="max-width: 100%; height: auto; border: 1px solid #ccc;">
+        <div class="pdf-page-container position-relative" style="overflow: hidden;">
+            <img [src]="pdfPages[currentPdfPage]" 
+                 class="pdf-page-image img-fluid"
+                 (load)="onPdfPageImageLoad($event)"
+                 (error)="onPdfPageImageError($event)"
+                 (mousedown)="startSelection($event)"
+                 style="max-width: 100%; height: auto; cursor: crosshair; user-select: none; display: block;"
+                 draggable="false"
+                 alt="PDF Sayfası" />
 
-          <!-- Selection overlay -->
-          <div class="selection-overlay" 
-               (mousedown)="startSelection($event)"
-               (mousemove)="updateSelection($event)"
-               (mouseup)="endSelection($event)">
+            <!-- Aktif seçim overlay'i -->
+            <div *ngIf="currentSelection && isSelecting" 
+                 class="selection-overlay"
+                 [style.left.px]="currentSelection.x / currentSelection.scaleX"
+                 [style.top.px]="currentSelection.y / currentSelection.scaleY"
+                 [style.width.px]="currentSelection.width / currentSelection.scaleX"
+                 [style.height.px]="currentSelection.height / currentSelection.scaleY">
+            </div>
+
+            <!-- Mevcut seçimler -->
             <div *ngFor="let selection of currentPageSelections; let i = index"
-                 class="selection-box"
-                 [style.left.px]="selection.x"
-                 [style.top.px]="selection.y"
-                 [style.width.px]="selection.width"
-                 [style.height.px]="selection.height">
-              <div class="selection-controls">
-                <span class="selection-number">{{ i + 1 }}</span>
-                <button class="btn btn-sm btn-danger" (click)="removeSelection(i)">
-                  <i class="bi bi-x"></i>
-                </button>
-              </div>
+                 class="existing-selection"
+                 [style.left.px]="selection.x / (currentSelection?.scaleX || 1)"
+                 [style.top.px]="selection.y / (currentSelection?.scaleY || 1)"
+                 [style.width.px]="selection.width / (currentSelection?.scaleX || 1)"
+                 [style.height.px]="selection.height / (currentSelection?.scaleY || 1)">
+              <span class="selection-number">{{ i + 1 }}</span>
             </div>
-            <!-- Current selection being drawn -->
-            <div *ngIf="currentSelection" 
-                 class="selection-box current"
-                 [style.left.px]="currentSelection.x"
-                 [style.top.px]="currentSelection.y"
-                 [style.width.px]="currentSelection.width"
-                 [style.height.px]="currentSelection.height">
-            </div>
-          </div>
-        </div>
+</div>
 
         <div class="selection-actions mt-3">
           <div class="alert alert-info">
@@ -246,7 +239,7 @@
             <i class="bi bi-list-check me-2"></i>
             Seçilen Sorular ve Doğru Cevaplar
           </h5>
-          
+
           <div class="questions-grid">
             <div *ngFor="let selection of currentPageSelections; let i = index" 
                  class="question-card">
@@ -256,7 +249,7 @@
                   <i class="bi bi-x"></i>
                 </button>
               </div>
-              
+
               <div class="question-preview">
                 <div class="crop-container" 
                      [style.width.px]="selection.width" 
@@ -268,7 +261,7 @@
                        [style.margin-top.px]="'-' + selection.y">
                 </div>
               </div>
-              
+
               <div class="answer-selection">
                 <label class="form-label">Doğru Cevap:</label>
                 <div class="answer-options">
