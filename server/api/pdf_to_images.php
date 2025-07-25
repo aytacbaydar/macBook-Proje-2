@@ -199,7 +199,7 @@ function convertPdfWithGhostscript($pdfPath, $fileId, $imageDir) {
 
         if ($returnCode === 0 && file_exists($outputFile) && filesize($outputFile) > 0) {
             // URL'yi doğru şekilde oluştur
-            $imageUrl = 'https://www.kimyaogreniyorum.com/server/uploads/pdf_images/' . $fileId . '_page_' . $page . '.jpg';
+            $imageUrl = 'https://www.kimyaogreniyorum.com/uploads/pdf_images/' . $fileId . '_page_' . $page . '.jpg';
             $pages[] = $imageUrl;
             error_log("Sayfa $page başarıyla oluşturuldu: " . filesize($outputFile) . " bytes");
             error_log("URL: $imageUrl");
@@ -222,7 +222,7 @@ function convertPdfWithGhostscript($pdfPath, $fileId, $imageDir) {
             error_log("ImageMagick çıktısı: " . implode("\n", $altOutput));
 
             if ($altReturn === 0 && file_exists($outputFile) && filesize($outputFile) > 0) {
-                $imageUrl = 'https://www.kimyaogreniyorum.com/server/uploads/pdf_images/' . $fileId . '_page_' . $page . '.jpg';
+                $imageUrl = 'https://www.kimyaogreniyorum.com/uploads/pdf_images/' . $fileId . '_page_' . $page . '.jpg';
                 $pages[] = $imageUrl;
                 error_log("Sayfa $page alternatif yöntemle oluşturuldu");
                 chmod($outputFile, 0644);
