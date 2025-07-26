@@ -140,15 +140,38 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
     }
   }
 
+  private getAuthHeaders(): HttpHeaders {
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        if (user.token) {
+          headers = headers.set('Authorization', `Bearer ${user.token}`);
+        }
+      } catch (error) {
+        console.error('User data parse hatası:', error);
+      }
+    }
+    
+    // Fallback olarak localStorage'dan token'ı kontrol et
+    const token = localStorage.getItem('token');
+    if (token && !headers.has('Authorization')) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+    
+    return headers;
+  }
+
   loadOgrenciBilgileri(): Promise<void> {
     return new Promise((resolve, reject) => {
       console.log('Öğrenci bilgileri yükleniyor, ID:', this.ogrenciId);
       
-      const token = localStorage.getItem('token');
-      let headers = new HttpHeaders();
-      if (token) {
-        headers = headers.set('Authorization', `Bearer ${token}`);
-      }
+      const headers = this.getAuthHeaders();
+      console.log('Headers:', headers.keys());
       
       this.http.get<any>(`server/api/ogrenci_bilgileri.php?id=${this.ogrenciId}`, { headers })
         .subscribe({
@@ -166,7 +189,11 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
           },
           error: (error) => {
             console.error('HTTP Error - Öğrenci bilgileri:', error);
-            reject('Öğrenci bilgileri yüklenirken ağ hatası: ' + error.message);
+            if (error.status === 401) {
+              reject('Yetkilendirme hatası. Lütfen tekrar giriş yapın.');
+            } else {
+              reject('Öğrenci bilgileri yüklenirken ağ hatası: ' + error.message);
+            }
           }
         });
     });
@@ -176,11 +203,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
     return new Promise((resolve, reject) => {
       console.log('Sınav sonuçları yükleniyor...');
       
-      const token = localStorage.getItem('token');
-      let headers = new HttpHeaders();
-      if (token) {
-        headers = headers.set('Authorization', `Bearer ${token}`);
-      }
+      const headers = this.getAuthHeaders();
       
       this.http.get<any>(`server/api/ogrenci_tum_sinav_sonuclari.php?ogrenci_id=${this.ogrenciId}`, { headers })
         .subscribe({
@@ -208,11 +231,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
     return new Promise((resolve, reject) => {
       console.log('Konu analizleri yükleniyor...');
       
-      const token = localStorage.getItem('token');
-      let headers = new HttpHeaders();
-      if (token) {
-        headers = headers.set('Authorization', `Bearer ${token}`);
-      }
+      const headers = this.getAuthHeaders();
       
       this.http.get<any>(`server/api/ogrenci_konu_analizi.php?ogrenci_id=${this.ogrenciId}`, { headers })
         .subscribe({
@@ -240,11 +259,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
     return new Promise((resolve, reject) => {
       console.log('Ödeme bilgileri yükleniyor...');
       
-      const token = localStorage.getItem('token');
-      let headers = new HttpHeaders();
-      if (token) {
-        headers = headers.set('Authorization', `Bearer ${token}`);
-      }
+      const headers = this.getAuthHeaders();
       
       this.http.get<any>(`server/api/ogrenci_ucret_bilgileri.php?ogrenci_id=${this.ogrenciId}`, { headers })
         .subscribe({
@@ -272,11 +287,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
     return new Promise((resolve, reject) => {
       console.log('Devamsızlık kayıtları yükleniyor...');
       
-      const token = localStorage.getItem('token');
-      let headers = new HttpHeaders();
-      if (token) {
-        headers = headers.set('Authorization', `Bearer ${token}`);
-      }
+      const headers = this.getAuthHeaders();
       
       this.http.get<any>(`server/api/devamsizlik_kayitlari.php?ogrenci_id=${this.ogrenciId}`, { headers })
         .subscribe({
