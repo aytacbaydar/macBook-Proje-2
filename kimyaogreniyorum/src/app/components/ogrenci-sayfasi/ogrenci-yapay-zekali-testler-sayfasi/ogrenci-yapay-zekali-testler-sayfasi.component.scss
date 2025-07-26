@@ -2,17 +2,67 @@
 
 // Ana container stilleri
 .student-ai-tests-page {
-  padding: 20px;
-  max-width: 1200px;
+  padding: 1px;
+  max-width: 100%;
   margin: 0 auto;
 }
 
 // Test section stilleri
 .test-section {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+}
+
+.test-list-section{
+  width: 100%;
+  height: auto;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  border-radius: 8px;
+
+  .list-header{
+    padding: 20px;
+    background: linear-gradient(135deg, #4aec45 0%, #1abd17 100%);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 8px 8px 0 0;
+
+    h3 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: white;
+    }
+
+
+    .btn {
+      background: rgba(255, 255, 255, 0.3);
+      color: white;
+      border-radius: 8px;
+      padding: 10px 15px;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.4);
+      }
+    }
+    
+  }
+
+  .test-cards {
+    padding: 10px;
+    display: flex !important;
+    flex-direction: column !important;
+    flex-wrap: wrap !important;
+    gap: 15px;
+    justify-content: center;
+
+    .test-card {
+      width: 100%;
+      background: white;
+      border-radius: 8px;
+      padding: 5px;
+      box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    }
+  }
 }
 
 .test-header {
@@ -38,9 +88,11 @@
 
     .badge {
       padding: 6px 12px;
-      border-radius: 20px;
+      border-radius: 8px;
       font-size: 0.85rem;
       font-weight: 500;
+      background-color: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
     }
   }
 
@@ -67,9 +119,7 @@
   background: white;
 
   .question-header {
-    padding: 20px;
-    border-bottom: 1px solid #e9ecef;
-    background: #f8f9fa;
+    padding: 5px;
 
     .question-info {
       display: flex;
@@ -124,27 +174,18 @@
 .answer-options {
   margin-top: 25px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 12px;
 }
 
 .option-item {
   display: flex;
   align-items: center;
-  padding: 15px 20px;
-  background: #f8f9fa;
-  border: 2px solid #e9ecef;
-  border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
-  min-height: 60px;
+  height: 50px;
+  width: 50px;
 
-  &:hover {
-    background: #e3f2fd;
-    border-color: #2196f3;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.15);
-  }
 
   &.selected {
     background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
@@ -364,13 +405,12 @@
   .page-header {
     text-align: center;
     margin-bottom: 30px;
-    color: white;
+    color: rgb(8, 8, 8);
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 
     .page-title {
       font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      font-weight: 500;
 
       i {
         color: #ffd700;
@@ -381,6 +421,8 @@
       font-size: 1.1rem;
       opacity: 0.9;
       margin: 0;
+      font-weight: 500;
+      font-style: italic;
     }
   }
 
@@ -716,18 +758,18 @@
   // Test Section
   .test-section {
     .test-header {
-      background: white;
-      border-radius: 16px;
+      background: rgb(252, 15, 15);
+      border-radius: 8px;
       padding: 20px 30px;
       margin-bottom: 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 
       .test-info {
         h3 {
-          color: #333;
+          color: #ffffff;
           font-weight: 600;
           margin-bottom: 10px;
         }
@@ -749,15 +791,17 @@
     }
 
     .question-container {
-      .question-card {
-        background: white;
-        border-radius: 16px;
-        padding: 30px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+      border: 2px solid #f0f4f8;
+      
+      .question-card-sinav {
+        margin: 0px !important;
+        padding: 0px !important;
 
         .question-header {
-          margin-bottom: 25px;
+          margin-bottom: 5px;
 
           .question-info {
             .badge {
@@ -774,8 +818,8 @@
             margin-bottom: 20px;
 
             img {
-              max-width: 100%;
-              max-height: 400px;
+              width: 500px;
+              max-height: auto;
               border-radius: 8px;
               box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             }
@@ -797,26 +841,24 @@
 
           .answer-options {
             display: flex;
-            gap: 15px;
+            gap: 5px;
             justify-content: center;
-            margin: 30px 0;
+            margin: 20px 0;
 
             .option-item {
               cursor: pointer;
               transition: all 0.3s ease;
 
               .option-circle {
-                width: 60px;
-                height: 60px;
-                border-radius: 50%;
-                background: #f8f9fa;
-                border: 3px solid #e9ecef;
+                width: 40px;
+                height: 40px;
+                background-color: #252222;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 font-weight: 600;
                 font-size: 1.2rem;
-                color: #333;
+                color: #ffffff;
                 transition: all 0.3s ease;
               }
 
@@ -846,7 +888,7 @@
 
           .btn {
             border-radius: 8px;
-            padding: 8px 16px;
+            padding: 6px 10px;
             font-weight: 500;
           }
 
@@ -919,11 +961,11 @@
   // Results Section
   .results-section {
     .results-card {
-      background: white;
-      border-radius: 16px;
-      padding: 30px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      background: rgb(255, 255, 255);
+      border-radius: 8px;
+      box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
       text-align: center;
+      padding: 15px 20px;
 
       .results-header {
         margin-bottom: 30px;
@@ -943,7 +985,7 @@
           display: inline-flex;
           align-items: center;
           gap: 15px;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: linear-gradient(135deg, #f8c844 0%, #ff8800 100%);
           color: white;
           padding: 15px 30px;
           border-radius: 25px;
@@ -1025,7 +1067,7 @@
           transition: all 0.3s ease;
 
           &.btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #95ccff 0%, #5aa3f7 100%);
             border: none;
 
             &:hover {
@@ -1058,19 +1100,19 @@
 // Responsive Design
 @media (max-width: 768px) {
   .student-ai-tests-page {
-    padding: 15px;
+    padding: 5px;
 
     .page-header .page-title {
       font-size: 2rem;
     }
 
     .test-creation-section .creation-card {
-      padding: 20px;
+      padding: 10px;
     }
 
     .test-section {
       .question-container .question-card {
-        padding: 20px;
+        padding: 10px;
       }
 
       .question-navigation {
@@ -1085,7 +1127,7 @@
     }
 
     .results-section .results-card {
-      padding: 20px;
+      padding: 10px;
 
       .results-actions {
         flex-direction: column;
@@ -1151,7 +1193,7 @@
     img {
       border: 2px solid #e9ecef;
       border-radius: 8px;
-      max-height: 400px;
+      height: auto;
     }
   }
 }
@@ -1175,27 +1217,23 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 15px;
-            border: 2px solid #e9ecef;
-            border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
             margin: 0;
-            min-width: 80px;
+            max-width: 50px;
             text-align: center;
 
             &:hover {
-              border-color: #007bff;
-              background-color: #f8f9fa;
+              border-color: #007bff00;
+              background-color: #f8f9fa00;
               transform: translateY(-2px);
-              box-shadow: 0 4px 8px rgba(0, 123, 255, 0.15);
             }
 
             .option-circle {
               width: 50px;
               height: 50px;
               border-radius: 50%;
-              background-color: #6c757d;
+              background-color: #6c757d04;
               color: white;
               display: flex;
               align-items: center;
@@ -1217,14 +1255,10 @@
           }
 
           input[type="radio"]:checked + .option-label {
-            border-color: #007bff;
-            background-color: #e7f3ff;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
-
             .option-circle {
-              background-color: #007bff;
+              background-color: #ff0000;
               transform: scale(1.1);
+              color: white;
             }
           }
         }
@@ -1507,3 +1541,4 @@
     }
   }
 }
+
