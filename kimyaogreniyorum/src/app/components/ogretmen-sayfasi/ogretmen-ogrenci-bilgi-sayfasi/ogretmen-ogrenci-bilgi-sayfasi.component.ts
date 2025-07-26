@@ -300,6 +300,10 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
           },
           error: (error) => {
             console.error('HTTP Error - Ödeme bilgileri:', error);
+            if (error.status === 403) {
+              console.warn('Ödeme bilgileri erişim reddedildi - öğretmen yetkilendirme sorunu');
+              this.toastr.warning('Ödeme bilgilerine erişim için özel yetki gerekli', 'Uyarı');
+            }
             this.odemeBilgileri = [];
             resolve(); // Hata olsa da devam et
           }
@@ -318,7 +322,18 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
           next: (response) => {
             console.log('Devamsızlık kayıtları response:', response);
             if (response && response.success) {
-              this.devamsizlikKayitlari = response.data || [];
+              // API'den gelen veri object ise array'e çevir
+              if (response.data && Array.isArray(response.data)) {
+                this.devamsizlikKayitlari = response.data;
+              } else if (response.data && typeof response.data === 'object') {
+                // Eğer object ise, values'larını al veya boş array yap
+                this.devamsizlikKayitlari = Object.values(response.data).filter(item => 
+                  item && typeof item === 'object' && item.id
+                );
+              } else {
+                this.devamsizlikKayitlari = [];
+              }
+              console.log('İşlenmiş devamsızlık kayıtları:', this.devamsizlikKayitlari);
               resolve();
             } else {
               console.warn('Devamsızlık kayıtları bulunamadı:', response?.message);
@@ -336,8 +351,10 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
   }
 
   calculateStatistics(): void {
-    // Toplam ödenen hesapla
-    this.toplamOdenen = this.odemeBilgileri.reduce((total, odeme) => total + odeme.tutar, 0);
+    // Toplam ödenen hesapla - array kontrolü ile
+    this.toplamOdenen = Array.isArray(this.odemeBilgileri) 
+      ? this.odemeBilgileri.reduce((total, odeme) => total + (odeme.tutar || 0), 0)
+      : 0;
     
     // Kalan borç hesapla (örnek hesaplama)
     const aylikUcret = this.ogrenciBilgileri?.ucret || 0;
@@ -346,13 +363,24 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
     const gecenAy = bugunTarihi.getMonth() + 1 - baslangicAyi + 1;
     this.kalanBorc = Math.max(0, (gecenAy * aylikUcret) - this.toplamOdenen);
     
-    // Devamsızlık sayısı
-    this.devamsizlikSayisi = this.devamsizlikKayitlari.filter(kayit => kayit.durum === 'absent').length;
+    // Devamsızlık sayısı - array kontrolü ile
+    this.devamsizlikSayisi = Array.isArray(this.devamsizlikKayitlari) 
+      ? this.devamsizlikKayitlari.filter(kayit => kayit && kayit.durum === 'absent').length
+      : 0;
     
-    // Ortalama puan
-    if (this.sinavSonuclari.length > 0) {
-      this.ortalamaPuan = this.sinavSonuclari.reduce((total, sinav) => total + sinav.puan, 0) / this.sinavSonuclari.length;
+    // Ortalama puan - array kontrolü ile
+    if (Array.isArray(this.sinavSonuclari) && this.sinavSonuclari.length > 0) {
+      this.ortalamaPuan = this.sinavSonuclari.reduce((total, sinav) => total + (sinav.puan || 0), 0) / this.sinavSonuclari.length;
+    } else {
+      this.ortalamaPuan = 0;
     }
+    
+    console.log('İstatistikler hesaplandı:', {
+      toplamOdenen: this.toplamOdenen,
+      kalanBorc: this.kalanBorc,
+      devamsizlikSayisi: this.devamsizlikSayisi,
+      ortalamaPuan: this.ortalamaPuan
+    });
   }
 
   prepareChartData(): void {
