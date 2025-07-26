@@ -1,0 +1,301 @@
+
+▲ [WARNING] NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.html:389:64:
+      389 │ ...        <h4 class="fw-bold">₺{{ ogrenciBilgileri?.ucret }}</h4>
+          ╵                                                    ~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciBilgiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:64:15:
+      64 │   templateUrl: './ogretmen-ogrenci-bilgi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2769: No overload matches this call.
+  Overload 1 of 15, '(url: string, options: { headers?: HttpHeaders | Record<string, string | string[]> | undefined; observe: "events"; context?: HttpContext | undefined; ... 4 more ...; transferCache?: boolean | ... 1 more ... | undefined; }): Observable<...>', gave the following error.
+    Type '{ Authorization: string; } | { Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+      Type '{ Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+        Type '{ Authorization?: undefined; }' is not assignable to type 'Record<string, string | string[]>'.
+          Property ''Authorization'' is incompatible with index signature.
+            Type 'undefined' is not assignable to type 'string | string[]'.
+  Overload 2 of 15, '(url: string, options: { headers?: HttpHeaders | Record<string, string | string[]> | undefined; observe: "response"; context?: HttpContext | undefined; ... 4 more ...; transferCache?: boolean | ... 1 more ... | undefined; }): Observable<...>', gave the following error.
+    Type '{ Authorization: string; } | { Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+      Type '{ Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+        Type '{ Authorization?: undefined; }' is not assignable to type 'Record<string, string | string[]>'.
+          Property ''Authorization'' is incompatible with index signature.
+            Type 'undefined' is not assignable to type 'string | string[]'.
+  Overload 3 of 15, '(url: string, options?: { headers?: HttpHeaders | Record<string, string | string[]> | undefined; context?: HttpContext | undefined; observe?: "body" | undefined; ... 4 more ...; transferCache?: boolean | ... 1 more ... | undefined; } | undefined): Observable<...>', gave the following error.
+    Type '{ Authorization: string; } | { Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+      Type '{ Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+        Type '{ Authorization?: undefined; }' is not assignable to type 'Record<string, string | string[]>'.
+          Property ''Authorization'' is incompatible with index signature.
+            Type 'undefined' is not assignable to type 'string | string[]'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:150:84:
+      150 │ ...ver/api/ogrenci_bilgileri.php?id=${this.ogrenciId}`, { headers })
+          ╵                                                           ~~~~~~~
+
+  The expected type comes from property 'headers' which is declared here on type '{ headers?: HttpHeaders | Record<string, string | string[]> | undefined; observe: "events"; context?: HttpContext | undefined; params?: HttpParams | Record<...> | undefined; reportProgress?: boolean | undefined; responseType?: "json" | undefined; withCredentials?: boolean | undefined; transferCache?: boolean | ... 1...'
+
+    node_modules/@angular/common/http/index.d.ts:924:8:
+      924 │         headers?: HttpHeaders | Record<string, string | string[]>;
+          ╵         ~~~~~~~
+
+  The expected type comes from property 'headers' which is declared here on type '{ headers?: HttpHeaders | Record<string, string | string[]> | undefined; observe: "response"; context?: HttpContext | undefined; params?: HttpParams | Record<...> | undefined; reportProgress?: boolean | undefined; responseType?: "json" | undefined; withCredentials?: boolean | undefined; transferCache?: boolean | ......'
+
+    node_modules/@angular/common/http/index.d.ts:1034:8:
+      1034 │         headers?: HttpHeaders | Record<string, string | string[]>;
+           ╵         ~~~~~~~
+
+
+X [ERROR] TS2339: Property 'success' does not exist on type 'ArrayBuffer'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:154:37:
+      154 │             if (response && response.success) {
+          ╵                                      ~~~~~~~
+
+
+X [ERROR] TS2339: Property 'data' does not exist on type 'ArrayBuffer'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:155:47:
+      155 │               this.ogrenciBilgileri = response.data;
+          ╵                                                ~~~~
+
+
+X [ERROR] TS2339: Property 'message' does not exist on type 'ArrayBuffer'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:159:41:
+      159 │ ... const errorMsg = response?.message || 'Öğrenci bilgileri al...
+          ╵                                ~~~~~~~
+
+
+X [ERROR] TS2769: No overload matches this call.
+  Overload 1 of 15, '(url: string, options: { headers?: HttpHeaders | Record<string, string | string[]> | undefined; observe: "events"; context?: HttpContext | undefined; ... 4 more ...; transferCache?: boolean | ... 1 more ... | undefined; }): Observable<...>', gave the following error.
+    Type '{ Authorization: string; } | { Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+      Type '{ Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+        Type '{ Authorization?: undefined; }' is not assignable to type 'Record<string, string | string[]>'.
+          Property ''Authorization'' is incompatible with index signature.
+            Type 'undefined' is not assignable to type 'string | string[]'.
+  Overload 2 of 15, '(url: string, options: { headers?: HttpHeaders | Record<string, string | string[]> | undefined; observe: "response"; context?: HttpContext | undefined; ... 4 more ...; transferCache?: boolean | ... 1 more ... | undefined; }): Observable<...>', gave the following error.
+    Type '{ Authorization: string; } | { Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+      Type '{ Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+        Type '{ Authorization?: undefined; }' is not assignable to type 'Record<string, string | string[]>'.
+          Property ''Authorization'' is incompatible with index signature.
+            Type 'undefined' is not assignable to type 'string | string[]'.
+  Overload 3 of 15, '(url: string, options?: { headers?: HttpHeaders | Record<string, string | string[]> | undefined; context?: HttpContext | undefined; observe?: "body" | undefined; ... 4 more ...; transferCache?: boolean | ... 1 more ... | undefined; } | undefined): Observable<...>', gave the following error.
+    Type '{ Authorization: string; } | { Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+      Type '{ Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+        Type '{ Authorization?: undefined; }' is not assignable to type 'Record<string, string | string[]>'.
+          Property ''Authorization'' is incompatible with index signature.
+            Type 'undefined' is not assignable to type 'string | string[]'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:179:102:
+      179 │ ...m_sinav_sonuclari.php?ogrenci_id=${this.ogrenciId}`, { headers })
+          ╵                                                           ~~~~~~~
+
+  The expected type comes from property 'headers' which is declared here on type '{ headers?: HttpHeaders | Record<string, string | string[]> | undefined; observe: "events"; context?: HttpContext | undefined; params?: HttpParams | Record<...> | undefined; reportProgress?: boolean | undefined; responseType?: "json" | undefined; withCredentials?: boolean | undefined; transferCache?: boolean | ... 1...'
+
+    node_modules/@angular/common/http/index.d.ts:924:8:
+      924 │         headers?: HttpHeaders | Record<string, string | string[]>;
+          ╵         ~~~~~~~
+
+  The expected type comes from property 'headers' which is declared here on type '{ headers?: HttpHeaders | Record<string, string | string[]> | undefined; observe: "response"; context?: HttpContext | undefined; params?: HttpParams | Record<...> | undefined; reportProgress?: boolean | undefined; responseType?: "json" | undefined; withCredentials?: boolean | undefined; transferCache?: boolean | ......'
+
+    node_modules/@angular/common/http/index.d.ts:1034:8:
+      1034 │         headers?: HttpHeaders | Record<string, string | string[]>;
+           ╵         ~~~~~~~
+
+
+X [ERROR] TS2339: Property 'success' does not exist on type 'ArrayBuffer'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:183:37:
+      183 │             if (response && response.success) {
+          ╵                                      ~~~~~~~
+
+
+X [ERROR] TS2339: Property 'data' does not exist on type 'ArrayBuffer'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:184:45:
+      184 │               this.sinavSonuclari = response.data || [];
+          ╵                                              ~~~~
+
+
+X [ERROR] TS2339: Property 'message' does not exist on type 'ArrayBuffer'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:187:68:
+      187 │ ...nsole.warn('Sınav sonuçları bulunamadı:', response?.message);
+          ╵                                                    ~~~~~~~
+
+
+X [ERROR] TS2769: No overload matches this call.
+  Overload 1 of 15, '(url: string, options: { headers?: HttpHeaders | Record<string, string | string[]> | undefined; observe: "events"; context?: HttpContext | undefined; ... 4 more ...; transferCache?: boolean | ... 1 more ... | undefined; }): Observable<...>', gave the following error.
+    Type '{ Authorization: string; } | { Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+      Type '{ Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+        Type '{ Authorization?: undefined; }' is not assignable to type 'Record<string, string | string[]>'.
+          Property ''Authorization'' is incompatible with index signature.
+            Type 'undefined' is not assignable to type 'string | string[]'.
+  Overload 2 of 15, '(url: string, options: { headers?: HttpHeaders | Record<string, string | string[]> | undefined; observe: "response"; context?: HttpContext | undefined; ... 4 more ...; transferCache?: boolean | ... 1 more ... | undefined; }): Observable<...>', gave the following error.
+    Type '{ Authorization: string; } | { Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+      Type '{ Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+        Type '{ Authorization?: undefined; }' is not assignable to type 'Record<string, string | string[]>'.
+          Property ''Authorization'' is incompatible with index signature.
+            Type 'undefined' is not assignable to type 'string | string[]'.
+  Overload 3 of 15, '(url: string, options?: { headers?: HttpHeaders | Record<string, string | string[]> | undefined; context?: HttpContext | undefined; observe?: "body" | undefined; ... 4 more ...; transferCache?: boolean | ... 1 more ... | undefined; } | undefined): Observable<...>', gave the following error.
+    Type '{ Authorization: string; } | { Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+      Type '{ Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+        Type '{ Authorization?: undefined; }' is not assignable to type 'Record<string, string | string[]>'.
+          Property ''Authorization'' is incompatible with index signature.
+            Type 'undefined' is not assignable to type 'string | string[]'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:208:95:
+      208 │ ...enci_konu_analizi.php?ogrenci_id=${this.ogrenciId}`, { headers })
+          ╵                                                           ~~~~~~~
+
+  The expected type comes from property 'headers' which is declared here on type '{ headers?: HttpHeaders | Record<string, string | string[]> | undefined; observe: "events"; context?: HttpContext | undefined; params?: HttpParams | Record<...> | undefined; reportProgress?: boolean | undefined; responseType?: "json" | undefined; withCredentials?: boolean | undefined; transferCache?: boolean | ... 1...'
+
+    node_modules/@angular/common/http/index.d.ts:924:8:
+      924 │         headers?: HttpHeaders | Record<string, string | string[]>;
+          ╵         ~~~~~~~
+
+  The expected type comes from property 'headers' which is declared here on type '{ headers?: HttpHeaders | Record<string, string | string[]> | undefined; observe: "response"; context?: HttpContext | undefined; params?: HttpParams | Record<...> | undefined; reportProgress?: boolean | undefined; responseType?: "json" | undefined; withCredentials?: boolean | undefined; transferCache?: boolean | ......'
+
+    node_modules/@angular/common/http/index.d.ts:1034:8:
+      1034 │         headers?: HttpHeaders | Record<string, string | string[]>;
+           ╵         ~~~~~~~
+
+
+X [ERROR] TS2339: Property 'success' does not exist on type 'ArrayBuffer'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:212:37:
+      212 │             if (response && response.success) {
+          ╵                                      ~~~~~~~
+
+
+X [ERROR] TS2339: Property 'data' does not exist on type 'ArrayBuffer'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:213:45:
+      213 │               this.konuAnalizleri = response.data || [];
+          ╵                                              ~~~~
+
+
+X [ERROR] TS2339: Property 'message' does not exist on type 'ArrayBuffer'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:216:68:
+      216 │ ... console.warn('Konu analizleri bulunamadı:', response?.message);
+          ╵                                                          ~~~~~~~
+
+
+X [ERROR] TS2769: No overload matches this call.
+  Overload 1 of 15, '(url: string, options: { headers?: HttpHeaders | Record<string, string | string[]> | undefined; observe: "events"; context?: HttpContext | undefined; ... 4 more ...; transferCache?: boolean | ... 1 more ... | undefined; }): Observable<...>', gave the following error.
+    Type '{ Authorization: string; } | { Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+      Type '{ Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+        Type '{ Authorization?: undefined; }' is not assignable to type 'Record<string, string | string[]>'.
+          Property ''Authorization'' is incompatible with index signature.
+            Type 'undefined' is not assignable to type 'string | string[]'.
+  Overload 2 of 15, '(url: string, options: { headers?: HttpHeaders | Record<string, string | string[]> | undefined; observe: "response"; context?: HttpContext | undefined; ... 4 more ...; transferCache?: boolean | ... 1 more ... | undefined; }): Observable<...>', gave the following error.
+    Type '{ Authorization: string; } | { Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+      Type '{ Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+        Type '{ Authorization?: undefined; }' is not assignable to type 'Record<string, string | string[]>'.
+          Property ''Authorization'' is incompatible with index signature.
+            Type 'undefined' is not assignable to type 'string | string[]'.
+  Overload 3 of 15, '(url: string, options?: { headers?: HttpHeaders | Record<string, string | string[]> | undefined; context?: HttpContext | undefined; observe?: "body" | undefined; ... 4 more ...; transferCache?: boolean | ... 1 more ... | undefined; } | undefined): Observable<...>', gave the following error.
+    Type '{ Authorization: string; } | { Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+      Type '{ Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+        Type '{ Authorization?: undefined; }' is not assignable to type 'Record<string, string | string[]>'.
+          Property ''Authorization'' is incompatible with index signature.
+            Type 'undefined' is not assignable to type 'string | string[]'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:237:98:
+      237 │ ...i_ucret_bilgileri.php?ogrenci_id=${this.ogrenciId}`, { headers })
+          ╵                                                           ~~~~~~~
+
+  The expected type comes from property 'headers' which is declared here on type '{ headers?: HttpHeaders | Record<string, string | string[]> | undefined; observe: "events"; context?: HttpContext | undefined; params?: HttpParams | Record<...> | undefined; reportProgress?: boolean | undefined; responseType?: "json" | undefined; withCredentials?: boolean | undefined; transferCache?: boolean | ... 1...'
+
+    node_modules/@angular/common/http/index.d.ts:924:8:
+      924 │         headers?: HttpHeaders | Record<string, string | string[]>;
+          ╵         ~~~~~~~
+
+  The expected type comes from property 'headers' which is declared here on type '{ headers?: HttpHeaders | Record<string, string | string[]> | undefined; observe: "response"; context?: HttpContext | undefined; params?: HttpParams | Record<...> | undefined; reportProgress?: boolean | undefined; responseType?: "json" | undefined; withCredentials?: boolean | undefined; transferCache?: boolean | ......'
+
+    node_modules/@angular/common/http/index.d.ts:1034:8:
+      1034 │         headers?: HttpHeaders | Record<string, string | string[]>;
+           ╵         ~~~~~~~
+
+
+X [ERROR] TS2339: Property 'success' does not exist on type 'ArrayBuffer'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:241:37:
+      241 │             if (response && response.success) {
+          ╵                                      ~~~~~~~
+
+
+X [ERROR] TS2339: Property 'data' does not exist on type 'ArrayBuffer'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:242:45:
+      242 │               this.odemeBilgileri = response.data || [];
+          ╵                                              ~~~~
+
+
+X [ERROR] TS2339: Property 'message' does not exist on type 'ArrayBuffer'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:245:68:
+      245 │ ...console.warn('Ödeme bilgileri bulunamadı:', response?.message);
+          ╵                                                        ~~~~~~~
+
+
+X [ERROR] TS2769: No overload matches this call.
+  Overload 1 of 15, '(url: string, options: { headers?: HttpHeaders | Record<string, string | string[]> | undefined; observe: "events"; context?: HttpContext | undefined; ... 4 more ...; transferCache?: boolean | ... 1 more ... | undefined; }): Observable<...>', gave the following error.
+    Type '{ Authorization: string; } | { Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+      Type '{ Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+        Type '{ Authorization?: undefined; }' is not assignable to type 'Record<string, string | string[]>'.
+          Property ''Authorization'' is incompatible with index signature.
+            Type 'undefined' is not assignable to type 'string | string[]'.
+  Overload 2 of 15, '(url: string, options: { headers?: HttpHeaders | Record<string, string | string[]> | undefined; observe: "response"; context?: HttpContext | undefined; ... 4 more ...; transferCache?: boolean | ... 1 more ... | undefined; }): Observable<...>', gave the following error.
+    Type '{ Authorization: string; } | { Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+      Type '{ Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+        Type '{ Authorization?: undefined; }' is not assignable to type 'Record<string, string | string[]>'.
+          Property ''Authorization'' is incompatible with index signature.
+            Type 'undefined' is not assignable to type 'string | string[]'.
+  Overload 3 of 15, '(url: string, options?: { headers?: HttpHeaders | Record<string, string | string[]> | undefined; context?: HttpContext | undefined; observe?: "body" | undefined; ... 4 more ...; transferCache?: boolean | ... 1 more ... | undefined; } | undefined): Observable<...>', gave the following error.
+    Type '{ Authorization: string; } | { Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+      Type '{ Authorization?: undefined; }' is not assignable to type 'HttpHeaders | Record<string, string | string[]> | undefined'.
+        Type '{ Authorization?: undefined; }' is not assignable to type 'Record<string, string | string[]>'.
+          Property ''Authorization'' is incompatible with index signature.
+            Type 'undefined' is not assignable to type 'string | string[]'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:266:96:
+      266 │ ...msizlik_kayitlari.php?ogrenci_id=${this.ogrenciId}`, { headers })
+          ╵                                                           ~~~~~~~
+
+  The expected type comes from property 'headers' which is declared here on type '{ headers?: HttpHeaders | Record<string, string | string[]> | undefined; observe: "events"; context?: HttpContext | undefined; params?: HttpParams | Record<...> | undefined; reportProgress?: boolean | undefined; responseType?: "json" | undefined; withCredentials?: boolean | undefined; transferCache?: boolean | ... 1...'
+
+    node_modules/@angular/common/http/index.d.ts:924:8:
+      924 │         headers?: HttpHeaders | Record<string, string | string[]>;
+          ╵         ~~~~~~~
+
+  The expected type comes from property 'headers' which is declared here on type '{ headers?: HttpHeaders | Record<string, string | string[]> | undefined; observe: "response"; context?: HttpContext | undefined; params?: HttpParams | Record<...> | undefined; reportProgress?: boolean | undefined; responseType?: "json" | undefined; withCredentials?: boolean | undefined; transferCache?: boolean | ......'
+
+    node_modules/@angular/common/http/index.d.ts:1034:8:
+      1034 │         headers?: HttpHeaders | Record<string, string | string[]>;
+           ╵         ~~~~~~~
+
+
+X [ERROR] TS2339: Property 'success' does not exist on type 'ArrayBuffer'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:270:37:
+      270 │             if (response && response.success) {
+          ╵                                      ~~~~~~~
+
+
+X [ERROR] TS2339: Property 'data' does not exist on type 'ArrayBuffer'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:271:51:
+      271 │               this.devamsizlikKayitlari = response.data || [];
+          ╵                                                    ~~~~
+
+
+X [ERROR] TS2339: Property 'message' does not exist on type 'ArrayBuffer'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:274:74:
+      274 │ ...arn('Devamsızlık kayıtları bulunamadı:', response?.message);
