@@ -144,7 +144,10 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
     return new Promise((resolve, reject) => {
       console.log('Öğrenci bilgileri yükleniyor, ID:', this.ogrenciId);
       
-      this.http.get<any>(`server/api/ogrenci_bilgileri.php?id=${this.ogrenciId}`)
+      const token = localStorage.getItem('token');
+      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+      
+      this.http.get<any>(`server/api/ogrenci_bilgileri.php?id=${this.ogrenciId}`, { headers })
         .subscribe({
           next: (response) => {
             console.log('Öğrenci bilgileri response:', response);
@@ -170,7 +173,10 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
     return new Promise((resolve, reject) => {
       console.log('Sınav sonuçları yükleniyor...');
       
-      this.http.get<any>(`server/api/ogrenci_tum_sinav_sonuclari.php?ogrenci_id=${this.ogrenciId}`)
+      const token = localStorage.getItem('token');
+      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+      
+      this.http.get<any>(`server/api/ogrenci_tum_sinav_sonuclari.php?ogrenci_id=${this.ogrenciId}`, { headers })
         .subscribe({
           next: (response) => {
             console.log('Sınav sonuçları response:', response);
@@ -196,7 +202,10 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
     return new Promise((resolve, reject) => {
       console.log('Konu analizleri yükleniyor...');
       
-      this.http.get<any>(`server/api/ogrenci_konu_analizi.php?ogrenci_id=${this.ogrenciId}`)
+      const token = localStorage.getItem('token');
+      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+      
+      this.http.get<any>(`server/api/ogrenci_konu_analizi.php?ogrenci_id=${this.ogrenciId}`, { headers })
         .subscribe({
           next: (response) => {
             console.log('Konu analizleri response:', response);
@@ -222,7 +231,10 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
     return new Promise((resolve, reject) => {
       console.log('Ödeme bilgileri yükleniyor...');
       
-      this.http.get<any>(`server/api/ogrenci_ucret_bilgileri.php?ogrenci_id=${this.ogrenciId}`)
+      const token = localStorage.getItem('token');
+      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+      
+      this.http.get<any>(`server/api/ogrenci_ucret_bilgileri.php?ogrenci_id=${this.ogrenciId}`, { headers })
         .subscribe({
           next: (response) => {
             console.log('Ödeme bilgileri response:', response);
@@ -248,7 +260,10 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
     return new Promise((resolve, reject) => {
       console.log('Devamsızlık kayıtları yükleniyor...');
       
-      this.http.get<any>(`server/api/devamsizlik_kayitlari.php?ogrenci_id=${this.ogrenciId}`)
+      const token = localStorage.getItem('token');
+      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+      
+      this.http.get<any>(`server/api/devamsizlik_kayitlari.php?ogrenci_id=${this.ogrenciId}`, { headers })
         .subscribe({
           next: (response) => {
             console.log('Devamsızlık kayıtları response:', response);
