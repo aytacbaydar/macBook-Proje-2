@@ -234,7 +234,17 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
           next: (response) => {
             console.log('Sınav sonuçları response:', response);
             if (response && response.success) {
-              this.sinavSonuclari = response.data || [];
+              // API'den gelen veri formatını kontrol et
+              if (Array.isArray(response.data)) {
+                this.sinavSonuclari = response.data;
+              } else if (response.data && typeof response.data === 'object') {
+                // Object ise array'e çevir
+                this.sinavSonuclari = Object.values(response.data).filter((item: any) => 
+                  item && typeof item === 'object' && item.id
+                ) as SinavSonucu[];
+              } else {
+                this.sinavSonuclari = [];
+              }
               resolve();
             } else {
               console.warn('Sınav sonuçları bulunamadı:', response?.message);
@@ -290,7 +300,17 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
           next: (response) => {
             console.log('Ödeme bilgileri response:', response);
             if (response && response.success) {
-              this.odemeBilgileri = response.data || [];
+              // API'den gelen veri formatını kontrol et
+              if (Array.isArray(response.data)) {
+                this.odemeBilgileri = response.data;
+              } else if (response.data && typeof response.data === 'object') {
+                // Object ise array'e çevir
+                this.odemeBilgileri = Object.values(response.data).filter((item: any) => 
+                  item && typeof item === 'object' && item.id
+                ) as OdemeBilgisi[];
+              } else {
+                this.odemeBilgileri = [];
+              }
               resolve();
             } else {
               console.warn('Ödeme bilgileri bulunamadı:', response?.message);
@@ -385,8 +405,13 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
   }
 
   prepareChartData(): void {
-    this.chartLabels = this.sinavSonuclari.map(sinav => sinav.sinav_adi);
-    this.chartData = this.sinavSonuclari.map(sinav => sinav.puan);
+    if (Array.isArray(this.sinavSonuclari) && this.sinavSonuclari.length > 0) {
+      this.chartLabels = this.sinavSonuclari.map(sinav => sinav.sinav_adi);
+      this.chartData = this.sinavSonuclari.map(sinav => sinav.puan);
+    } else {
+      this.chartLabels = [];
+      this.chartData = [];
+    }
   }
 
   setActiveTab(tab: string): void {
