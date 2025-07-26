@@ -326,10 +326,11 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
               if (response.data && Array.isArray(response.data)) {
                 this.devamsizlikKayitlari = response.data;
               } else if (response.data && typeof response.data === 'object') {
-                // Eğer object ise, values'larını al veya boş array yap
-                this.devamsizlikKayitlari = Object.values(response.data).filter(item => 
+                // Eğer object ise, values'larını al ve DevamsizlikKaydi tipine cast et
+                const objectValues = Object.values(response.data);
+                this.devamsizlikKayitlari = objectValues.filter((item: any) => 
                   item && typeof item === 'object' && item.id
-                );
+                ) as DevamsizlikKaydi[];
               } else {
                 this.devamsizlikKayitlari = [];
               }
