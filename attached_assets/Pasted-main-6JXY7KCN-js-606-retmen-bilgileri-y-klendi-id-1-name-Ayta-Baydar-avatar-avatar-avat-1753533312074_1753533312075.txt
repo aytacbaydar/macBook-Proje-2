@@ -1,0 +1,547 @@
+main-6JXY7KCN.js:606 Öğretmen bilgileri yüklendi: {id: 1, name: 'Aytaç Baydar', avatar: 'avatar/avatar_1_1747233844.jpg', userRole: 'ogretmen'}
+main-6JXY7KCN.js:606 Route parametresi: 46
+main-6JXY7KCN.js:606 Dönüştürülen öğrenci ID: 46
+main-6JXY7KCN.js:606 Öğrenci bilgileri yükleniyor, ID: 46
+main-6JXY7KCN.js:606 localStorage user: null
+main-6JXY7KCN.js:606 sessionStorage user: {"id":1,"adi_soyadi":"Aytaç Baydar","email":"ogretmen@gmail.com","rutbe":"ogretmen","avatar":"avatar/avatar_1_1747233844.jpg","ogretmeni":"","sinifi":"12.Sınıf","ders_adi":"","grubu":"","token":"cc872e78267fa379c049fac091673601","loginTime":"2025-07-26T12:09:47.239Z"}
+main-6JXY7KCN.js:606 localStorage token: null
+main-6JXY7KCN.js:606 sessionStorage token: null
+main-6JXY7KCN.js:606 User objesi: {id: 1, adi_soyadi: 'Aytaç Baydar', email: 'ogretmen@gmail.com', rutbe: 'ogretmen', avatar: 'avatar/avatar_1_1747233844.jpg', …}
+main-6JXY7KCN.js:606 Authorization header eklendi (user), tam token: cc872e78267fa379c049fac091673601
+main-6JXY7KCN.js:606 Final headers: (2) ['Content-Type', 'Authorization']
+main-6JXY7KCN.js:606 Headers: (2) ['Content-Type', 'Authorization']
+main-6JXY7KCN.js:606 Request headers (before sending): (2) ['Content-Type', 'Authorization']
+main-6JXY7KCN.js:606 Authorization header value: Bearer cc872e78267fa379c049fac091673601
+main-6JXY7KCN.js:606 Sınav sonuçları yükleniyor...
+main-6JXY7KCN.js:606 localStorage user: null
+main-6JXY7KCN.js:606 sessionStorage user: {"id":1,"adi_soyadi":"Aytaç Baydar","email":"ogretmen@gmail.com","rutbe":"ogretmen","avatar":"avatar/avatar_1_1747233844.jpg","ogretmeni":"","sinifi":"12.Sınıf","ders_adi":"","grubu":"","token":"cc872e78267fa379c049fac091673601","loginTime":"2025-07-26T12:09:47.239Z"}
+main-6JXY7KCN.js:606 localStorage token: null
+main-6JXY7KCN.js:606 sessionStorage token: null
+main-6JXY7KCN.js:606 User objesi: {id: 1, adi_soyadi: 'Aytaç Baydar', email: 'ogretmen@gmail.com', rutbe: 'ogretmen', avatar: 'avatar/avatar_1_1747233844.jpg', …}
+main-6JXY7KCN.js:606 Authorization header eklendi (user), tam token: cc872e78267fa379c049fac091673601
+main-6JXY7KCN.js:606 Final headers: (2) ['Content-Type', 'Authorization']
+main-6JXY7KCN.js:606 Konu analizleri yükleniyor...
+main-6JXY7KCN.js:606 localStorage user: null
+main-6JXY7KCN.js:606 sessionStorage user: {"id":1,"adi_soyadi":"Aytaç Baydar","email":"ogretmen@gmail.com","rutbe":"ogretmen","avatar":"avatar/avatar_1_1747233844.jpg","ogretmeni":"","sinifi":"12.Sınıf","ders_adi":"","grubu":"","token":"cc872e78267fa379c049fac091673601","loginTime":"2025-07-26T12:09:47.239Z"}
+main-6JXY7KCN.js:606 localStorage token: null
+main-6JXY7KCN.js:606 sessionStorage token: null
+main-6JXY7KCN.js:606 User objesi: {id: 1, adi_soyadi: 'Aytaç Baydar', email: 'ogretmen@gmail.com', rutbe: 'ogretmen', avatar: 'avatar/avatar_1_1747233844.jpg', …}
+main-6JXY7KCN.js:606 Authorization header eklendi (user), tam token: cc872e78267fa379c049fac091673601
+main-6JXY7KCN.js:606 Final headers: (2) ['Content-Type', 'Authorization']
+main-6JXY7KCN.js:606 Ödeme bilgileri yükleniyor...
+main-6JXY7KCN.js:606 localStorage user: null
+main-6JXY7KCN.js:606 sessionStorage user: {"id":1,"adi_soyadi":"Aytaç Baydar","email":"ogretmen@gmail.com","rutbe":"ogretmen","avatar":"avatar/avatar_1_1747233844.jpg","ogretmeni":"","sinifi":"12.Sınıf","ders_adi":"","grubu":"","token":"cc872e78267fa379c049fac091673601","loginTime":"2025-07-26T12:09:47.239Z"}
+main-6JXY7KCN.js:606 localStorage token: null
+main-6JXY7KCN.js:606 sessionStorage token: null
+main-6JXY7KCN.js:606 User objesi: {id: 1, adi_soyadi: 'Aytaç Baydar', email: 'ogretmen@gmail.com', rutbe: 'ogretmen', avatar: 'avatar/avatar_1_1747233844.jpg', …}
+main-6JXY7KCN.js:606 Authorization header eklendi (user), tam token: cc872e78267fa379c049fac091673601
+main-6JXY7KCN.js:606 Final headers: (2) ['Content-Type', 'Authorization']
+main-6JXY7KCN.js:606 Devamsızlık kayıtları yükleniyor...
+main-6JXY7KCN.js:606 localStorage user: null
+main-6JXY7KCN.js:606 sessionStorage user: {"id":1,"adi_soyadi":"Aytaç Baydar","email":"ogretmen@gmail.com","rutbe":"ogretmen","avatar":"avatar/avatar_1_1747233844.jpg","ogretmeni":"","sinifi":"12.Sınıf","ders_adi":"","grubu":"","token":"cc872e78267fa379c049fac091673601","loginTime":"2025-07-26T12:09:47.239Z"}
+main-6JXY7KCN.js:606 localStorage token: null
+main-6JXY7KCN.js:606 sessionStorage token: null
+main-6JXY7KCN.js:606 User objesi: {id: 1, adi_soyadi: 'Aytaç Baydar', email: 'ogretmen@gmail.com', rutbe: 'ogretmen', avatar: 'avatar/avatar_1_1747233844.jpg', …}
+main-6JXY7KCN.js:606 Authorization header eklendi (user), tam token: cc872e78267fa379c049fac091673601
+main-6JXY7KCN.js:606 Final headers: (2) ['Content-Type', 'Authorization']
+main-6JXY7KCN.js:606 Öğrenci bilgileri response: {success: true, message: 'İşlem başarıyla tamamlandı', data: {…}}
+main-6JXY7KCN.js:606 Öğrenci bilgileri yüklendi: {id: 24, adi_soyadi: 'Duru Ecren Kotan', email: 'durukotan25@gmail.com', cep_telefonu: '1234567', rutbe: 'ogrenci', …}
+main-6JXY7KCN.js:606 Konu analizleri response: {success: true, data: {…}}
+polyfills-FFHMD2TL.js:1  GET https://www.kimyaogreniyorum.com/server/api/ogrenci_ucret_bilgileri.php?ogrenci_id=46 403 (Forbidden)
+k @ polyfills-FFHMD2TL.js:1
+scheduleTask @ polyfills-FFHMD2TL.js:1
+onScheduleTask @ polyfills-FFHMD2TL.js:1
+scheduleTask @ polyfills-FFHMD2TL.js:1
+scheduleTask @ polyfills-FFHMD2TL.js:1
+scheduleMacroTask @ polyfills-FFHMD2TL.js:1
+Ge @ polyfills-FFHMD2TL.js:1
+(anonymous) @ polyfills-FFHMD2TL.js:1
+t.<computed> @ polyfills-FFHMD2TL.js:1
+(anonymous) @ main-6JXY7KCN.js:15
+_trySubscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+e.subscribe.s @ main-6JXY7KCN.js:10
+WO._next @ main-6JXY7KCN.js:10
+next @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+_trySubscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+_ @ main-6JXY7KCN.js:10
+p @ main-6JXY7KCN.js:10
+WO._next @ main-6JXY7KCN.js:10
+next @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+_trySubscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+TA @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:606
+Z @ polyfills-FFHMD2TL.js:2
+loadOdemeBilgileri @ main-6JXY7KCN.js:606
+(anonymous) @ main-6JXY7KCN.js:606
+(anonymous) @ chunk-R5ORV7EK.js:1
+Z @ polyfills-FFHMD2TL.js:2
+E @ chunk-R5ORV7EK.js:1
+loadAllData @ main-6JXY7KCN.js:606
+(anonymous) @ main-6JXY7KCN.js:606
+(anonymous) @ chunk-R5ORV7EK.js:1
+Z @ polyfills-FFHMD2TL.js:2
+E @ chunk-R5ORV7EK.js:1
+(anonymous) @ main-6JXY7KCN.js:606
+next @ main-6JXY7KCN.js:10
+_next @ main-6JXY7KCN.js:10
+next @ main-6JXY7KCN.js:10
+_subscribe @ main-6JXY7KCN.js:10
+_trySubscribe @ main-6JXY7KCN.js:10
+_trySubscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+ngOnInit @ main-6JXY7KCN.js:606
+qA @ main-6JXY7KCN.js:14
+T$ @ main-6JXY7KCN.js:14
+_7 @ main-6JXY7KCN.js:14
+Y_ @ main-6JXY7KCN.js:14
+XK @ main-6JXY7KCN.js:14
+G5 @ main-6JXY7KCN.js:14
+ET @ main-6JXY7KCN.js:14
+ST @ main-6JXY7KCN.js:14
+XK @ main-6JXY7KCN.js:14
+G5 @ main-6JXY7KCN.js:14
+ET @ main-6JXY7KCN.js:14
+ZK @ main-6JXY7KCN.js:14
+kT @ main-6JXY7KCN.js:14
+XK @ main-6JXY7KCN.js:14
+G5 @ main-6JXY7KCN.js:14
+ET @ main-6JXY7KCN.js:14
+ST @ main-6JXY7KCN.js:14
+XK @ main-6JXY7KCN.js:14
+G5 @ main-6JXY7KCN.js:14
+ET @ main-6JXY7KCN.js:14
+ZK @ main-6JXY7KCN.js:14
+kT @ main-6JXY7KCN.js:14
+XK @ main-6JXY7KCN.js:14
+G5 @ main-6JXY7KCN.js:14
+YK @ main-6JXY7KCN.js:14
+wT @ main-6JXY7KCN.js:14
+MX @ main-6JXY7KCN.js:14
+synchronizeOnce @ main-6JXY7KCN.js:14
+synchronize @ main-6JXY7KCN.js:14
+tickImpl @ main-6JXY7KCN.js:14
+_tick @ main-6JXY7KCN.js:14
+tick @ main-6JXY7KCN.js:14
+(anonymous) @ main-6JXY7KCN.js:14
+invoke @ polyfills-FFHMD2TL.js:1
+onInvoke @ main-6JXY7KCN.js:14
+invoke @ polyfills-FFHMD2TL.js:1
+run @ polyfills-FFHMD2TL.js:1
+run @ main-6JXY7KCN.js:14
+next @ main-6JXY7KCN.js:14
+next @ main-6JXY7KCN.js:10
+_next @ main-6JXY7KCN.js:10
+next @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+next @ main-6JXY7KCN.js:10
+emit @ main-6JXY7KCN.js:14
+Bw @ main-6JXY7KCN.js:14
+onHasTask @ main-6JXY7KCN.js:14
+hasTask @ polyfills-FFHMD2TL.js:1
+_updateTaskCount @ polyfills-FFHMD2TL.js:1
+_updateTaskCount @ polyfills-FFHMD2TL.js:1
+runTask @ polyfills-FFHMD2TL.js:1
+$ @ polyfills-FFHMD2TL.js:1
+Promise.then
+H @ polyfills-FFHMD2TL.js:1
+U @ polyfills-FFHMD2TL.js:1
+scheduleTask @ polyfills-FFHMD2TL.js:1
+scheduleTask @ polyfills-FFHMD2TL.js:1
+scheduleMicroTask @ polyfills-FFHMD2TL.js:1
+o @ polyfills-FFHMD2TL.js:2
+then @ polyfills-FFHMD2TL.js:2
+bootstrapModule @ main-6JXY7KCN.js:14
+(anonymous) @ main-6JXY7KCN.js:606
+main-6JXY7KCN.js:606 HTTP Error - Ödeme bilgileri: lm {headers: i, status: 403, statusText: 'OK', url: 'https://www.kimyaogreniyorum.com/server/api/ogrenci_ucret_bilgileri.php?ogrenci_id=46', ok: false, …}error: error: "Bu işlem sadece öğrenciler için geçerlidir."success: false[[Prototype]]: Objectheaders: i {headers: undefined, normalizedNames: Map(0), lazyUpdate: null, lazyInit: ƒ}message: "Http failure response for https://www.kimyaogreniyorum.com/server/api/ogrenci_ucret_bilgileri.php?ogrenci_id=46: 403 OK"name: "HttpErrorResponse"ok: falsestatus: 403statusText: "OK"type: undefinedurl: "https://www.kimyaogreniyorum.com/server/api/ogrenci_ucret_bilgileri.php?ogrenci_id=46"[[Prototype]]: hh
+error @ main-6JXY7KCN.js:606
+error @ main-6JXY7KCN.js:10
+_error @ main-6JXY7KCN.js:10
+error @ main-6JXY7KCN.js:10
+_error @ main-6JXY7KCN.js:10
+error @ main-6JXY7KCN.js:10
+_error @ main-6JXY7KCN.js:10
+error @ main-6JXY7KCN.js:10
+_error @ main-6JXY7KCN.js:10
+error @ main-6JXY7KCN.js:10
+_error @ main-6JXY7KCN.js:10
+error @ main-6JXY7KCN.js:10
+u @ main-6JXY7KCN.js:15
+invokeTask @ polyfills-FFHMD2TL.js:1
+onInvokeTask @ main-6JXY7KCN.js:14
+invokeTask @ polyfills-FFHMD2TL.js:1
+runTask @ polyfills-FFHMD2TL.js:1
+invokeTask @ polyfills-FFHMD2TL.js:1
+I @ polyfills-FFHMD2TL.js:1
+H @ polyfills-FFHMD2TL.js:1
+U @ polyfills-FFHMD2TL.js:1
+XMLHttpRequest.send
+k @ polyfills-FFHMD2TL.js:1
+scheduleTask @ polyfills-FFHMD2TL.js:1
+onScheduleTask @ polyfills-FFHMD2TL.js:1
+scheduleTask @ polyfills-FFHMD2TL.js:1
+scheduleTask @ polyfills-FFHMD2TL.js:1
+scheduleMacroTask @ polyfills-FFHMD2TL.js:1
+Ge @ polyfills-FFHMD2TL.js:1
+(anonymous) @ polyfills-FFHMD2TL.js:1
+t.<computed> @ polyfills-FFHMD2TL.js:1
+(anonymous) @ main-6JXY7KCN.js:15
+_trySubscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+e.subscribe.s @ main-6JXY7KCN.js:10
+WO._next @ main-6JXY7KCN.js:10
+next @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+_trySubscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+_ @ main-6JXY7KCN.js:10
+p @ main-6JXY7KCN.js:10
+WO._next @ main-6JXY7KCN.js:10
+next @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+_trySubscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+TA @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:606
+Z @ polyfills-FFHMD2TL.js:2
+loadOdemeBilgileri @ main-6JXY7KCN.js:606
+(anonymous) @ main-6JXY7KCN.js:606
+(anonymous) @ chunk-R5ORV7EK.js:1
+Z @ polyfills-FFHMD2TL.js:2
+E @ chunk-R5ORV7EK.js:1
+loadAllData @ main-6JXY7KCN.js:606
+(anonymous) @ main-6JXY7KCN.js:606
+(anonymous) @ chunk-R5ORV7EK.js:1
+Z @ polyfills-FFHMD2TL.js:2
+E @ chunk-R5ORV7EK.js:1
+(anonymous) @ main-6JXY7KCN.js:606
+next @ main-6JXY7KCN.js:10
+_next @ main-6JXY7KCN.js:10
+next @ main-6JXY7KCN.js:10
+_subscribe @ main-6JXY7KCN.js:10
+_trySubscribe @ main-6JXY7KCN.js:10
+_trySubscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+ngOnInit @ main-6JXY7KCN.js:606
+qA @ main-6JXY7KCN.js:14
+T$ @ main-6JXY7KCN.js:14
+_7 @ main-6JXY7KCN.js:14
+Y_ @ main-6JXY7KCN.js:14
+XK @ main-6JXY7KCN.js:14
+G5 @ main-6JXY7KCN.js:14
+ET @ main-6JXY7KCN.js:14
+ST @ main-6JXY7KCN.js:14
+XK @ main-6JXY7KCN.js:14
+G5 @ main-6JXY7KCN.js:14
+ET @ main-6JXY7KCN.js:14
+ZK @ main-6JXY7KCN.js:14
+kT @ main-6JXY7KCN.js:14
+XK @ main-6JXY7KCN.js:14
+G5 @ main-6JXY7KCN.js:14
+ET @ main-6JXY7KCN.js:14
+ST @ main-6JXY7KCN.js:14
+XK @ main-6JXY7KCN.js:14
+G5 @ main-6JXY7KCN.js:14
+ET @ main-6JXY7KCN.js:14
+ZK @ main-6JXY7KCN.js:14
+kT @ main-6JXY7KCN.js:14
+XK @ main-6JXY7KCN.js:14
+G5 @ main-6JXY7KCN.js:14
+YK @ main-6JXY7KCN.js:14
+wT @ main-6JXY7KCN.js:14
+MX @ main-6JXY7KCN.js:14
+synchronizeOnce @ main-6JXY7KCN.js:14
+synchronize @ main-6JXY7KCN.js:14
+tickImpl @ main-6JXY7KCN.js:14
+_tick @ main-6JXY7KCN.js:14
+tick @ main-6JXY7KCN.js:14
+(anonymous) @ main-6JXY7KCN.js:14
+invoke @ polyfills-FFHMD2TL.js:1
+onInvoke @ main-6JXY7KCN.js:14
+invoke @ polyfills-FFHMD2TL.js:1
+run @ polyfills-FFHMD2TL.js:1
+run @ main-6JXY7KCN.js:14
+next @ main-6JXY7KCN.js:14
+next @ main-6JXY7KCN.js:10
+_next @ main-6JXY7KCN.js:10
+next @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+next @ main-6JXY7KCN.js:10
+emit @ main-6JXY7KCN.js:14
+Bw @ main-6JXY7KCN.js:14
+onHasTask @ main-6JXY7KCN.js:14
+hasTask @ polyfills-FFHMD2TL.js:1
+_updateTaskCount @ polyfills-FFHMD2TL.js:1
+_updateTaskCount @ polyfills-FFHMD2TL.js:1
+runTask @ polyfills-FFHMD2TL.js:1
+$ @ polyfills-FFHMD2TL.js:1
+Promise.then
+H @ polyfills-FFHMD2TL.js:1
+U @ polyfills-FFHMD2TL.js:1
+scheduleTask @ polyfills-FFHMD2TL.js:1
+scheduleTask @ polyfills-FFHMD2TL.js:1
+scheduleMicroTask @ polyfills-FFHMD2TL.js:1
+o @ polyfills-FFHMD2TL.js:2
+then @ polyfills-FFHMD2TL.js:2
+bootstrapModule @ main-6JXY7KCN.js:14
+(anonymous) @ main-6JXY7KCN.js:606
+main-6JXY7KCN.js:606 Sınav sonuçları response: {success: true, data: {…}}
+main-6JXY7KCN.js:606 Devamsızlık kayıtları response: {success: true, message: 'Devamsızlık kayıtları başarıyla getirildi', data: {…}}
+main-6JXY7KCN.js:606 Veri yükleme hatası: TypeError: this.devamsizlikKayitlari.filter is not a function
+    at i.calculateStatistics (main-6JXY7KCN.js:606:847684)
+    at i.<anonymous> (main-6JXY7KCN.js:606:842604)
+    at Generator.next (<anonymous>)
+    at g (chunk-R5ORV7EK.js:1:1171)
+    at f.invoke (polyfills-FFHMD2TL.js:1:6443)
+    at Object.onInvoke (main-6JXY7KCN.js:14:24661)
+    at f.invoke (polyfills-FFHMD2TL.js:1:6383)
+    at t.run (polyfills-FFHMD2TL.js:1:1735)
+    at polyfills-FFHMD2TL.js:2:553
+    at f.invokeTask (polyfills-FFHMD2TL.js:1:7068)
+(anonymous) @ main-6JXY7KCN.js:606
+g @ chunk-R5ORV7EK.js:1
+invoke @ polyfills-FFHMD2TL.js:1
+onInvoke @ main-6JXY7KCN.js:14
+invoke @ polyfills-FFHMD2TL.js:1
+run @ polyfills-FFHMD2TL.js:1
+(anonymous) @ polyfills-FFHMD2TL.js:2
+invokeTask @ polyfills-FFHMD2TL.js:1
+onInvokeTask @ main-6JXY7KCN.js:14
+invokeTask @ polyfills-FFHMD2TL.js:1
+runTask @ polyfills-FFHMD2TL.js:1
+$ @ polyfills-FFHMD2TL.js:1
+invokeTask @ polyfills-FFHMD2TL.js:1
+I @ polyfills-FFHMD2TL.js:1
+H @ polyfills-FFHMD2TL.js:1
+U @ polyfills-FFHMD2TL.js:1
+XMLHttpRequest.send
+k @ polyfills-FFHMD2TL.js:1
+scheduleTask @ polyfills-FFHMD2TL.js:1
+onScheduleTask @ polyfills-FFHMD2TL.js:1
+scheduleTask @ polyfills-FFHMD2TL.js:1
+scheduleTask @ polyfills-FFHMD2TL.js:1
+scheduleMacroTask @ polyfills-FFHMD2TL.js:1
+Ge @ polyfills-FFHMD2TL.js:1
+(anonymous) @ polyfills-FFHMD2TL.js:1
+t.<computed> @ polyfills-FFHMD2TL.js:1
+(anonymous) @ main-6JXY7KCN.js:15
+_trySubscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+e.subscribe.s @ main-6JXY7KCN.js:10
+WO._next @ main-6JXY7KCN.js:10
+next @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+_trySubscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+_ @ main-6JXY7KCN.js:10
+p @ main-6JXY7KCN.js:10
+WO._next @ main-6JXY7KCN.js:10
+next @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+_trySubscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+TA @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:606
+Z @ polyfills-FFHMD2TL.js:2
+loadDevamsizlikKayitlari @ main-6JXY7KCN.js:606
+(anonymous) @ main-6JXY7KCN.js:606
+(anonymous) @ chunk-R5ORV7EK.js:1
+Z @ polyfills-FFHMD2TL.js:2
+E @ chunk-R5ORV7EK.js:1
+loadAllData @ main-6JXY7KCN.js:606
+(anonymous) @ main-6JXY7KCN.js:606
+(anonymous) @ chunk-R5ORV7EK.js:1
+Z @ polyfills-FFHMD2TL.js:2
+E @ chunk-R5ORV7EK.js:1
+(anonymous) @ main-6JXY7KCN.js:606
+next @ main-6JXY7KCN.js:10
+_next @ main-6JXY7KCN.js:10
+next @ main-6JXY7KCN.js:10
+_subscribe @ main-6JXY7KCN.js:10
+_trySubscribe @ main-6JXY7KCN.js:10
+_trySubscribe @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+subscribe @ main-6JXY7KCN.js:10
+ngOnInit @ main-6JXY7KCN.js:606
+qA @ main-6JXY7KCN.js:14
+T$ @ main-6JXY7KCN.js:14
+_7 @ main-6JXY7KCN.js:14
+Y_ @ main-6JXY7KCN.js:14
+XK @ main-6JXY7KCN.js:14
+G5 @ main-6JXY7KCN.js:14
+ET @ main-6JXY7KCN.js:14
+ST @ main-6JXY7KCN.js:14
+XK @ main-6JXY7KCN.js:14
+G5 @ main-6JXY7KCN.js:14
+ET @ main-6JXY7KCN.js:14
+ZK @ main-6JXY7KCN.js:14
+kT @ main-6JXY7KCN.js:14
+XK @ main-6JXY7KCN.js:14
+G5 @ main-6JXY7KCN.js:14
+ET @ main-6JXY7KCN.js:14
+ST @ main-6JXY7KCN.js:14
+XK @ main-6JXY7KCN.js:14
+G5 @ main-6JXY7KCN.js:14
+ET @ main-6JXY7KCN.js:14
+ZK @ main-6JXY7KCN.js:14
+kT @ main-6JXY7KCN.js:14
+XK @ main-6JXY7KCN.js:14
+G5 @ main-6JXY7KCN.js:14
+YK @ main-6JXY7KCN.js:14
+wT @ main-6JXY7KCN.js:14
+MX @ main-6JXY7KCN.js:14
+synchronizeOnce @ main-6JXY7KCN.js:14
+synchronize @ main-6JXY7KCN.js:14
+tickImpl @ main-6JXY7KCN.js:14
+_tick @ main-6JXY7KCN.js:14
+tick @ main-6JXY7KCN.js:14
+(anonymous) @ main-6JXY7KCN.js:14
+invoke @ polyfills-FFHMD2TL.js:1
+onInvoke @ main-6JXY7KCN.js:14
+invoke @ polyfills-FFHMD2TL.js:1
+run @ polyfills-FFHMD2TL.js:1
+run @ main-6JXY7KCN.js:14
+next @ main-6JXY7KCN.js:14
+next @ main-6JXY7KCN.js:10
+_next @ main-6JXY7KCN.js:10
+next @ main-6JXY7KCN.js:10
+(anonymous) @ main-6JXY7KCN.js:10
+Ag @ main-6JXY7KCN.js:10
+next @ main-6JXY7KCN.js:10
+emit @ main-6JXY7KCN.js:14
+Bw @ main-6JXY7KCN.js:14
+onHasTask @ main-6JXY7KCN.js:14
+hasTask @ polyfills-FFHMD2TL.js:1
+_updateTaskCount @ polyfills-FFHMD2TL.js:1
+_updateTaskCount @ polyfills-FFHMD2TL.js:1
+runTask @ polyfills-FFHMD2TL.js:1
+$ @ polyfills-FFHMD2TL.js:1
+Promise.then
+H @ polyfills-FFHMD2TL.js:1
+U @ polyfills-FFHMD2TL.js:1
+scheduleTask @ polyfills-FFHMD2TL.js:1
+scheduleTask @ polyfills-FFHMD2TL.js:1
+scheduleMicroTask @ polyfills-FFHMD2TL.js:1
+o @ polyfills-FFHMD2TL.js:2
+then @ polyfills-FFHMD2TL.js:2
+bootstrapModule @ main-6JXY7KCN.js:14
+(anonymous) @ main-6JXY7KCN.js:606
