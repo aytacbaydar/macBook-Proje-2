@@ -52,8 +52,8 @@ export class OgretmenSidebarSayfasiComponent implements OnInit, OnDestroy {
     { icon: 'bi-diagram-3', label: 'Yol Haritası', link: 'ogretmen-sayfasi/' },
     {
       icon: 'bi-graph-up-arrow',
-      label: 'Konu Analizi',
-      link: 'ogretmen-sayfasi/',
+      label: 'Öğrenci Bilgileri',
+      link: 'ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi',
     },
     {
       icon: 'bi-filetype-pdf',
