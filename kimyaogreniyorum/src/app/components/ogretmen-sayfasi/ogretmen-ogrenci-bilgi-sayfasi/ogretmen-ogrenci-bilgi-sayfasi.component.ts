@@ -96,16 +96,21 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(async params => {
-      this.ogrenciId = +params['id'];
-      console.log('Öğrenci ID alındı:', this.ogrenciId);
+      const idParam = params['id'];
+      this.ogrenciId = parseInt(idParam, 10);
       
-      if (this.ogrenciId && this.ogrenciId > 0) {
-        await this.loadAllData();
-      } else {
-        this.error = 'Geçersiz öğrenci ID';
+      console.log('Route parametresi:', idParam);
+      console.log('Dönüştürülen öğrenci ID:', this.ogrenciId);
+      
+      if (!idParam || isNaN(this.ogrenciId) || this.ogrenciId <= 0) {
+        this.error = `Geçersiz öğrenci ID: ${idParam}`;
         this.isLoading = false;
-        this.toastr.error('Geçersiz öğrenci ID', 'Hata');
+        this.toastr.error(`Geçersiz öğrenci ID: ${idParam}`, 'Hata');
+        console.error('Geçersiz ID parametresi:', idParam);
+        return;
       }
+      
+      await this.loadAllData();
     });
   }
 

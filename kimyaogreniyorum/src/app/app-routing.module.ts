@@ -166,7 +166,7 @@ const routes: Routes = [
         component: OgretmenOgrenciDetaySayfasiComponent,
       },
       {
-        path: 'ogretmen-ogrenci-bilgi-sayfasi',
+        path: 'ogretmen-ogrenci-bilgi-sayfasi/:id',
         component: OgretmenOgrenciBilgiSayfasiComponent,
       },
       {
