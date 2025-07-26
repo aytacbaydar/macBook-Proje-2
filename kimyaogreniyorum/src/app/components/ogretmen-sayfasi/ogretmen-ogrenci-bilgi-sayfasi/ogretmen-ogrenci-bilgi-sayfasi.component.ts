@@ -141,28 +141,35 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
   }
 
   private getAuthHeaders(): HttpHeaders {
-    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
     let headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
     
+    // Önce user objesinden token'ı al
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
     if (userStr) {
       try {
         const user = JSON.parse(userStr);
+        console.log('User objesi:', user);
         if (user.token) {
           headers = headers.set('Authorization', `Bearer ${user.token}`);
+          console.log('Authorization header eklendi (user):', user.token.substring(0, 20) + '...');
+          return headers;
         }
       } catch (error) {
         console.error('User data parse hatası:', error);
       }
     }
     
-    // Fallback olarak localStorage'dan token'ı kontrol et
-    const token = localStorage.getItem('token');
-    if (token && !headers.has('Authorization')) {
+    // Fallback olarak doğrudan token'ı al
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    if (token) {
       headers = headers.set('Authorization', `Bearer ${token}`);
+      console.log('Authorization header eklendi (token):', token.substring(0, 20) + '...');
+      return headers;
     }
     
+    console.warn('Token bulunamadı! Giriş yapmanız gerekebilir.');
     return headers;
   }
 
@@ -190,6 +197,11 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
           error: (error) => {
             console.error('HTTP Error - Öğrenci bilgileri:', error);
             if (error.status === 401) {
+              this.toastr.error('Oturumunuz sonlanmış. Lütfen tekrar giriş yapın.', 'Yetkilendirme Hatası');
+              // Kullanıcıyı giriş sayfasına yönlendir
+              localStorage.clear();
+              sessionStorage.clear();
+              window.location.href = '/';
               reject('Yetkilendirme hatası. Lütfen tekrar giriş yapın.');
             } else {
               reject('Öğrenci bilgileri yüklenirken ağ hatası: ' + error.message);
