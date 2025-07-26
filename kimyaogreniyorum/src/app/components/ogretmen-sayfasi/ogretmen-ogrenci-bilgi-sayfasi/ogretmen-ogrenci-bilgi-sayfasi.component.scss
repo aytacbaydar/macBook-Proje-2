@@ -1,0 +1,139 @@
+
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+}
+
+.card {
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+  }
+}
+
+.nav-pills {
+  .nav-link {
+    color: #6c757d;
+    background: white;
+    border: 1px solid #dee2e6;
+    margin: 0 2px;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background: #f8f9fa;
+      border-color: #007bff;
+      color: #007bff;
+    }
+    
+    &.active {
+      background: #007bff;
+      border-color: #007bff;
+      color: white;
+    }
+  }
+}
+
+.tab-content {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+.table {
+  th {
+    font-weight: 600;
+    color: #495057;
+    border-top: none;
+  }
+  
+  td {
+    vertical-align: middle;
+  }
+}
+
+.progress {
+  border-radius: 10px;
+  overflow: hidden;
+  
+  .progress-bar {
+    transition: width 0.6s ease;
+  }
+}
+
+.badge {
+  font-size: 0.75em;
+  padding: 0.5em 0.75em;
+}
+
+.card-header {
+  border-bottom: 2px solid #f8f9fa !important;
+}
+
+.border-start {
+  border-left-width: 4px !important;
+}
+
+.text-gradient {
+  background: linear-gradient(45deg, #007bff, #6610f2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .nav-pills .nav-link {
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+  }
+  
+  .card-body {
+    padding: 1.5rem !important;
+  }
+  
+  .table-responsive {
+    font-size: 0.9rem;
+  }
+}
+
+// Loading animation
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+// Chart container
+#sinavChart {
+  max-height: 300px;
+}
+
+// Custom scrollbar for tables
+.table-responsive {
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #007bff;
+    border-radius: 10px;
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background: #0056b3;
+  }
+}

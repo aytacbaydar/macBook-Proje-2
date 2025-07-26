@@ -1,1 +1,463 @@
-<p>ogretmen-ogrenci-bilgi-sayfasi works!</p>
+
+<div class="container-fluid p-4">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Yükleniyor...</span>
+    </div>
+    <p class="mt-2 text-muted">Öğrenci bilgileri yükleniyor...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="alert alert-danger" role="alert">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    {{ error }}
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!isLoading && !error && ogrenciBilgileri">
+    <!-- Header Section -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card border-0 shadow-sm bg-gradient-primary text-white">
+          <div class="card-body p-4">
+            <div class="row align-items-center">
+              <div class="col-md-8">
+                <h2 class="mb-1 fw-bold">
+                  <i class="bi bi-person-circle me-2"></i>
+                  {{ ogrenciBilgileri.adi_soyadi }}
+                </h2>
+                <p class="mb-0 opacity-75">
+                  {{ ogrenciBilgileri.okulu }} - {{ ogrenciBilgileri.sinifi }} | 
+                  {{ ogrenciBilgileri.grubu }} Grubu
+                </p>
+              </div>
+              <div class="col-md-4 text-end">
+                <span class="badge bg-light text-dark fs-6 px-3 py-2">
+                  {{ ogrenciBilgileri.ders_adi }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row mb-4">
+      <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body text-center">
+            <div class="text-success mb-2">
+              <i class="bi bi-graph-up-arrow fs-1"></i>
+            </div>
+            <h5 class="fw-bold text-dark">{{ ortalamaPuan.toFixed(1) }}</h5>
+            <p class="text-muted small mb-0">Ortalama Puan</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body text-center">
+            <div class="text-primary mb-2">
+              <i class="bi bi-currency-exchange fs-1"></i>
+            </div>
+            <h5 class="fw-bold text-dark">₺{{ toplamOdenen }}</h5>
+            <p class="text-muted small mb-0">Toplam Ödenen</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body text-center">
+            <div class="text-warning mb-2">
+              <i class="bi bi-exclamation-triangle fs-1"></i>
+            </div>
+            <h5 class="fw-bold text-dark">₺{{ kalanBorc }}</h5>
+            <p class="text-muted small mb-0">Kalan Borç</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body text-center">
+            <div class="text-danger mb-2">
+              <i class="bi bi-person-x fs-1"></i>
+            </div>
+            <h5 class="fw-bold text-dark">{{ devamsizlikSayisi }}</h5>
+            <p class="text-muted small mb-0">Devamsızlık</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <ul class="nav nav-pills nav-fill">
+          <li class="nav-item">
+            <button 
+              class="nav-link" 
+              [class.active]="activeTab === 'bilgiler'"
+              (click)="setActiveTab('bilgiler')">
+              <i class="bi bi-person-lines-fill me-2"></i>
+              Öğrenci Bilgileri
+            </button>
+          </li>
+          <li class="nav-item">
+            <button 
+              class="nav-link" 
+              [class.active]="activeTab === 'sinavlar'"
+              (click)="setActiveTab('sinavlar')">
+              <i class="bi bi-graph-up me-2"></i>
+              Sınav Sonuçları
+            </button>
+          </li>
+          <li class="nav-item">
+            <button 
+              class="nav-link" 
+              [class.active]="activeTab === 'konular'"
+              (click)="setActiveTab('konular')">
+              <i class="bi bi-pie-chart me-2"></i>
+              Konu Analizleri
+            </button>
+          </li>
+          <li class="nav-item">
+            <button 
+              class="nav-link" 
+              [class.active]="activeTab === 'ucret'"
+              (click)="setActiveTab('ucret')">
+              <i class="bi bi-cash-coin me-2"></i>
+              Ücret Bilgileri
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Tab Contents -->
+    <div class="row">
+      <div class="col-12">
+        
+        <!-- Öğrenci Bilgileri Tab -->
+        <div *ngIf="activeTab === 'bilgiler'" class="tab-content">
+          <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom">
+              <h5 class="mb-0 fw-bold">
+                <i class="bi bi-person-lines-fill me-2 text-primary"></i>
+                Öğrenci Detay Bilgileri
+              </h5>
+            </div>
+            <div class="card-body p-4">
+              <div class="row">
+                <div class="col-md-6">
+                  <h6 class="text-muted mb-3">Kişisel Bilgiler</h6>
+                  <div class="mb-3">
+                    <strong>Ad Soyad:</strong> {{ ogrenciBilgileri.adi_soyadi }}
+                  </div>
+                  <div class="mb-3">
+                    <strong>E-posta:</strong> {{ ogrenciBilgileri.email }}
+                  </div>
+                  <div class="mb-3">
+                    <strong>Telefon:</strong> {{ ogrenciBilgileri.cep_telefonu }}
+                  </div>
+                  <div class="mb-3">
+                    <strong>Okul:</strong> {{ ogrenciBilgileri.okulu }}
+                  </div>
+                  <div class="mb-3">
+                    <strong>Sınıf:</strong> {{ ogrenciBilgileri.sinifi }}
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <h6 class="text-muted mb-3">Ders Bilgileri</h6>
+                  <div class="mb-3">
+                    <strong>Grup:</strong> {{ ogrenciBilgileri.grubu }}
+                  </div>
+                  <div class="mb-3">
+                    <strong>Ders Adı:</strong> {{ ogrenciBilgileri.ders_adi }}
+                  </div>
+                  <div class="mb-3">
+                    <strong>Ders Günü:</strong> {{ ogrenciBilgileri.ders_gunu }}
+                  </div>
+                  <div class="mb-3">
+                    <strong>Ders Saati:</strong> {{ ogrenciBilgileri.ders_saati }}
+                  </div>
+                  <div class="mb-3">
+                    <strong>Aylık Ücret:</strong> ₺{{ ogrenciBilgileri.ucret }}
+                  </div>
+                </div>
+              </div>
+              
+              <hr class="my-4">
+              
+              <div class="row">
+                <div class="col-md-6">
+                  <h6 class="text-muted mb-3">Veli Bilgileri</h6>
+                  <div class="mb-3">
+                    <strong>Veli Adı:</strong> {{ ogrenciBilgileri.veli_adi || 'Belirtilmemiş' }}
+                  </div>
+                  <div class="mb-3">
+                    <strong>Veli Telefonu:</strong> {{ ogrenciBilgileri.veli_cep || 'Belirtilmemiş' }}
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <h6 class="text-muted mb-3">Durum</h6>
+                  <div class="mb-3">
+                    <span class="badge" [class]="ogrenciBilgileri.aktif ? 'bg-success' : 'bg-danger'">
+                      {{ ogrenciBilgileri.aktif ? 'Aktif' : 'Pasif' }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sınav Sonuçları Tab -->
+        <div *ngIf="activeTab === 'sinavlar'" class="tab-content">
+          <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom">
+              <h5 class="mb-0 fw-bold">
+                <i class="bi bi-graph-up me-2 text-primary"></i>
+                Sınav Sonuçları ve Grafik
+              </h5>
+            </div>
+            <div class="card-body p-4">
+              <!-- Grafik Alanı -->
+              <div class="row mb-4" *ngIf="sinavSonuclari.length > 0">
+                <div class="col-12">
+                  <div class="bg-light p-4 rounded">
+                    <h6 class="text-center mb-3">Sınav Puanları Grafiği</h6>
+                    <canvas 
+                      id="sinavChart" 
+                      style="height: 300px; width: 100%;">
+                    </canvas>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sınav Listesi -->
+              <div class="row">
+                <div class="col-12">
+                  <h6 class="mb-3">Sınav Detayları</h6>
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Sınav Adı</th>
+                          <th>Tarih</th>
+                          <th>Doğru</th>
+                          <th>Yanlış</th>
+                          <th>Boş</th>
+                          <th>Puan</th>
+                          <th>Başarı %</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let sinav of sinavSonuclari">
+                          <td class="fw-medium">{{ sinav.sinav_adi }}</td>
+                          <td>{{ formatTarih(sinav.tarih) }}</td>
+                          <td>
+                            <span class="badge bg-success">{{ sinav.net_dogru }}</span>
+                          </td>
+                          <td>
+                            <span class="badge bg-danger">{{ sinav.net_yanlis }}</span>
+                          </td>
+                          <td>
+                            <span class="badge bg-secondary">{{ sinav.net_bos }}</span>
+                          </td>
+                          <td class="fw-bold">{{ sinav.puan }}</td>
+                          <td>
+                            <div class="progress" style="width: 80px;">
+                              <div 
+                                class="progress-bar" 
+                                [class]="getProgressBarClass(sinav.basari_yuzdesi)"
+                                [style.width.%]="sinav.basari_yuzdesi">
+                              </div>
+                            </div>
+                            <small class="text-muted">{{ sinav.basari_yuzdesi }}%</small>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="sinavSonuclari.length === 0" class="text-center py-4">
+                <i class="bi bi-graph-down fs-1 text-muted"></i>
+                <p class="text-muted mt-2">Henüz sınav sonucu bulunmuyor.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Konu Analizleri Tab -->
+        <div *ngIf="activeTab === 'konular'" class="tab-content">
+          <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom">
+              <h5 class="mb-0 fw-bold">
+                <i class="bi bi-pie-chart me-2 text-primary"></i>
+                Konu Bazında Analiz
+              </h5>
+            </div>
+            <div class="card-body p-4">
+              <div class="row">
+                <div class="col-12">
+                  <div *ngFor="let konu of konuAnalizleri" class="mb-4">
+                    <div class="card border-start border-4 border-primary">
+                      <div class="card-body">
+                        <h6 class="fw-bold mb-3">{{ konu.konu_adi }}</h6>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="d-flex justify-content-between mb-2">
+                              <span>Doğru:</span>
+                              <span class="badge bg-success">{{ konu.dogru_sayisi }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                              <span>Yanlış:</span>
+                              <span class="badge bg-danger">{{ konu.yanlis_sayisi }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                              <span>Boş:</span>
+                              <span class="badge bg-secondary">{{ konu.bos_sayisi }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                              <span>Toplam:</span>
+                              <span class="badge bg-info">{{ konu.toplam_soru }}</span>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="text-center">
+                              <div class="progress mb-2" style="height: 25px;">
+                                <div 
+                                  class="progress-bar" 
+                                  [class]="getProgressBarClass(konu.basari_orani)"
+                                  [style.width.%]="konu.basari_orani">
+                                  {{ konu.basari_orani.toFixed(1) }}%
+                                </div>
+                              </div>
+                              <small class="text-muted">Başarı Oranı</small>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="konuAnalizleri.length === 0" class="text-center py-4">
+                <i class="bi bi-pie-chart fs-1 text-muted"></i>
+                <p class="text-muted mt-2">Henüz konu analizi bulunmuyor.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ücret Bilgileri Tab -->
+        <div *ngIf="activeTab === 'ucret'" class="tab-content">
+          <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom">
+              <h5 class="mb-0 fw-bold">
+                <i class="bi bi-cash-coin me-2 text-primary"></i>
+                Ücret ve Ödeme Bilgileri
+              </h5>
+            </div>
+            <div class="card-body p-4">
+              <!-- Ödeme Özeti -->
+              <div class="row mb-4">
+                <div class="col-md-4">
+                  <div class="card bg-primary text-white">
+                    <div class="card-body text-center">
+                      <h4 class="fw-bold">₺{{ toplamOdenen }}</h4>
+                      <p class="mb-0">Toplam Ödenen</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="card bg-warning text-white">
+                    <div class="card-body text-center">
+                      <h4 class="fw-bold">₺{{ kalanBorc }}</h4>
+                      <p class="mb-0">Kalan Borç</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="card bg-info text-white">
+                    <div class="card-body text-center">
+                      <h4 class="fw-bold">₺{{ ogrenciBilgileri?.ucret }}</h4>
+                      <p class="mb-0">Aylık Ücret</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Ödeme Geçmişi -->
+              <div class="row">
+                <div class="col-12">
+                  <h6 class="mb-3">Ödeme Geçmişi</h6>
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Tarih</th>
+                          <th>Tutar</th>
+                          <th>Açıklama</th>
+                          <th>Ay/Yıl</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let odeme of odemeBilgileri">
+                          <td>{{ formatTarih(odeme.odeme_tarihi) }}</td>
+                          <td class="fw-bold text-success">₺{{ odeme.tutar }}</td>
+                          <td>{{ odeme.aciklama || 'Aylık ödeme' }}</td>
+                          <td>{{ odeme.ay }}/{{ odeme.yil }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Devamsızlık Bilgileri -->
+              <div class="row mt-4">
+                <div class="col-12">
+                  <h6 class="mb-3">Devamsızlık Kayıtları</h6>
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Tarih</th>
+                          <th>Durum</th>
+                          <th>Açıklama</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let kayit of devamsizlikKayitlari">
+                          <td>{{ formatTarih(kayit.tarih) }}</td>
+                          <td>
+                            <span class="badge" [class]="kayit.durum === 'present' ? 'bg-success' : 'bg-danger'">
+                              {{ kayit.durum === 'present' ? 'Var' : 'Yok' }}
+                            </span>
+                          </td>
+                          <td>{{ kayit.aciklama || '-' }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="odemeBilgileri.length === 0 && devamsizlikKayitlari.length === 0" class="text-center py-4">
+                <i class="bi bi-cash-coin fs-1 text-muted"></i>
+                <p class="text-muted mt-2">Henüz ödeme veya devamsızlık kaydı bulunmuyor.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
