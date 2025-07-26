@@ -145,6 +145,12 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
       'Content-Type': 'application/json'
     });
     
+    // localStorage ve sessionStorage'ı debug et
+    console.log('localStorage user:', localStorage.getItem('user'));
+    console.log('sessionStorage user:', sessionStorage.getItem('user'));
+    console.log('localStorage token:', localStorage.getItem('token'));
+    console.log('sessionStorage token:', sessionStorage.getItem('token'));
+    
     // Önce user objesinden token'ı al
     const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
     if (userStr) {
@@ -153,7 +159,8 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
         console.log('User objesi:', user);
         if (user.token) {
           headers = headers.set('Authorization', `Bearer ${user.token}`);
-          console.log('Authorization header eklendi (user):', user.token.substring(0, 20) + '...');
+          console.log('Authorization header eklendi (user), tam token:', user.token);
+          console.log('Final headers:', headers.keys());
           return headers;
         }
       } catch (error) {
@@ -165,11 +172,13 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
     const token = localStorage.getItem('token') || sessionStorage.getItem('token');
     if (token) {
       headers = headers.set('Authorization', `Bearer ${token}`);
-      console.log('Authorization header eklendi (token):', token.substring(0, 20) + '...');
+      console.log('Authorization header eklendi (token), tam token:', token);
+      console.log('Final headers:', headers.keys());
       return headers;
     }
     
     console.warn('Token bulunamadı! Giriş yapmanız gerekebilir.');
+    console.log('Final headers (no token):', headers.keys());
     return headers;
   }
 
@@ -179,6 +188,9 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
       
       const headers = this.getAuthHeaders();
       console.log('Headers:', headers.keys());
+      
+      console.log('Request headers (before sending):', headers.keys());
+      console.log('Authorization header value:', headers.get('Authorization'));
       
       this.http.get<any>(`server/api/ogrenci_bilgileri.php?id=${this.ogrenciId}`, { headers })
         .subscribe({
