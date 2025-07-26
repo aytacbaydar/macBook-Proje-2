@@ -1,7 +1,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 
 interface OgrenciBilgileri {
@@ -145,7 +145,10 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
       console.log('Öğrenci bilgileri yükleniyor, ID:', this.ogrenciId);
       
       const token = localStorage.getItem('token');
-      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+      let headers = new HttpHeaders();
+      if (token) {
+        headers = headers.set('Authorization', `Bearer ${token}`);
+      }
       
       this.http.get<any>(`server/api/ogrenci_bilgileri.php?id=${this.ogrenciId}`, { headers })
         .subscribe({
@@ -174,7 +177,10 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
       console.log('Sınav sonuçları yükleniyor...');
       
       const token = localStorage.getItem('token');
-      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+      let headers = new HttpHeaders();
+      if (token) {
+        headers = headers.set('Authorization', `Bearer ${token}`);
+      }
       
       this.http.get<any>(`server/api/ogrenci_tum_sinav_sonuclari.php?ogrenci_id=${this.ogrenciId}`, { headers })
         .subscribe({
@@ -203,7 +209,10 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
       console.log('Konu analizleri yükleniyor...');
       
       const token = localStorage.getItem('token');
-      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+      let headers = new HttpHeaders();
+      if (token) {
+        headers = headers.set('Authorization', `Bearer ${token}`);
+      }
       
       this.http.get<any>(`server/api/ogrenci_konu_analizi.php?ogrenci_id=${this.ogrenciId}`, { headers })
         .subscribe({
@@ -232,7 +241,10 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
       console.log('Ödeme bilgileri yükleniyor...');
       
       const token = localStorage.getItem('token');
-      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+      let headers = new HttpHeaders();
+      if (token) {
+        headers = headers.set('Authorization', `Bearer ${token}`);
+      }
       
       this.http.get<any>(`server/api/ogrenci_ucret_bilgileri.php?ogrenci_id=${this.ogrenciId}`, { headers })
         .subscribe({
@@ -261,7 +273,10 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
       console.log('Devamsızlık kayıtları yükleniyor...');
       
       const token = localStorage.getItem('token');
-      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+      let headers = new HttpHeaders();
+      if (token) {
+        headers = headers.set('Authorization', `Bearer ${token}`);
+      }
       
       this.http.get<any>(`server/api/devamsizlik_kayitlari.php?ogrenci_id=${this.ogrenciId}`, { headers })
         .subscribe({
