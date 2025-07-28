@@ -1,5 +1,4 @@
-
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
@@ -71,17 +70,17 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
   konuAnalizleri: KonuAnalizi[] = [];
   odemeBilgileri: OdemeBilgisi[] = [];
   devamsizlikKayitlari: DevamsizlikKaydi[] = [];
-  
+
   isLoading: boolean = true;
   error: string | null = null;
-  
+
   // Grafik verileri
   chartData: any[] = [];
   chartLabels: string[] = [];
-  
+
   // Sekmeler
   activeTab: string = 'bilgiler';
-  
+
   // İstatistikler
   toplamOdenen: number = 0;
   kalanBorc: number = 0;
@@ -91,17 +90,18 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(async params => {
       const idParam = params['id'];
       this.ogrenciId = parseInt(idParam, 10);
-      
+
       console.log('Route parametresi:', idParam);
       console.log('Dönüştürülen öğrenci ID:', this.ogrenciId);
-      
+
       if (!idParam || isNaN(this.ogrenciId) || this.ogrenciId <= 0) {
         this.error = `Geçersiz öğrenci ID: ${idParam}`;
         this.isLoading = false;
@@ -109,7 +109,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
         console.error('Geçersiz ID parametresi:', idParam);
         return;
       }
-      
+
       await this.loadAllData();
     });
   }
@@ -127,7 +127,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
         this.loadOdemeBilgileri(),
         this.loadDevamsizlikKayitlari()
       ]);
-      
+
       this.calculateStatistics();
       this.prepareChartData();
       this.toastr.success('Öğrenci bilgileri başarıyla yüklendi', 'Başarılı');
@@ -144,13 +144,13 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
     let headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-    
+
     // localStorage ve sessionStorage'ı debug et
     console.log('localStorage user:', localStorage.getItem('user'));
     console.log('sessionStorage user:', sessionStorage.getItem('user'));
     console.log('localStorage token:', localStorage.getItem('token'));
     console.log('sessionStorage token:', sessionStorage.getItem('token'));
-    
+
     // Önce user objesinden token'ı al
     const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
     if (userStr) {
@@ -167,7 +167,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
         console.error('User data parse hatası:', error);
       }
     }
-    
+
     // Fallback olarak doğrudan token'ı al
     const token = localStorage.getItem('token') || sessionStorage.getItem('token');
     if (token) {
@@ -176,7 +176,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
       console.log('Final headers:', headers.keys());
       return headers;
     }
-    
+
     console.warn('Token bulunamadı! Giriş yapmanız gerekebilir.');
     console.log('Final headers (no token):', headers.keys());
     return headers;
@@ -185,13 +185,13 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
   loadOgrenciBilgileri(): Promise<void> {
     return new Promise((resolve, reject) => {
       console.log('Öğrenci bilgileri yükleniyor, ID:', this.ogrenciId);
-      
+
       const headers = this.getAuthHeaders();
       console.log('Headers:', headers.keys());
-      
+
       console.log('Request headers (before sending):', headers.keys());
       console.log('Authorization header value:', headers.get('Authorization'));
-      
+
       this.http.get<any>(`server/api/ogrenci_bilgileri.php?id=${this.ogrenciId}`, { headers })
         .subscribe({
           next: (response) => {
@@ -226,9 +226,9 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
   loadSinavSonuclari(): Promise<void> {
     return new Promise((resolve, reject) => {
       console.log('Sınav sonuçları yükleniyor...');
-      
+
       const headers = this.getAuthHeaders();
-      
+
       this.http.get<any>(`server/api/ogrenci_tum_sinav_sonuclari.php?ogrenci_id=${this.ogrenciId}`, { headers })
         .subscribe({
           next: (response) => {
@@ -264,21 +264,32 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
   loadKonuAnalizleri(): Promise<void> {
     return new Promise((resolve, reject) => {
       console.log('Konu analizleri yükleniyor...');
-      
+
       const headers = this.getAuthHeaders();
-      
+
       this.http.get<any>(`server/api/ogrenci_konu_analizi.php?ogrenci_id=${this.ogrenciId}`, { headers })
         .subscribe({
           next: (response) => {
             console.log('Konu analizleri response:', response);
-            if (response && response.success) {
-              this.konuAnalizleri = response.data || [];
-              resolve();
+            if (response && response.success && response.data) {
+              // API'den gelen veri formatını kontrol et
+              if (Array.isArray(response.data.konu_istatistikleri)) {
+                this.konuAnalizleri = response.data.konu_istatistikleri;
+              } else if (response.data.konu_istatistikleri && typeof response.data.konu_istatistikleri === 'object') {
+                // Object ise array'e çevir
+                this.konuAnalizleri = Object.values(response.data.konu_istatistikleri).filter((item: any) => 
+                  item && typeof item === 'object' && item.konu_adi
+                ) as any[];
+              } else {
+                this.konuAnalizleri = [];
+              }
             } else {
-              console.warn('Konu analizleri bulunamadı:', response?.message);
               this.konuAnalizleri = [];
-              resolve(); // Boş array ile devam et
             }
+            console.log('İşlenen konu analizleri:', this.konuAnalizleri);
+            // Change detection'ı manuel olarak tetikle
+            this.cdr.detectChanges();
+            resolve();
           },
           error: (error) => {
             console.error('HTTP Error - Konu analizleri:', error);
@@ -292,9 +303,9 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
   loadOdemeBilgileri(): Promise<void> {
     return new Promise((resolve, reject) => {
       console.log('Ödeme bilgileri yükleniyor...');
-      
+
       const headers = this.getAuthHeaders();
-      
+
       this.http.get<any>(`server/api/ogrenci_ucret_bilgileri.php?ogrenci_id=${this.ogrenciId}`, { headers })
         .subscribe({
           next: (response) => {
@@ -334,9 +345,9 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
   loadDevamsizlikKayitlari(): Promise<void> {
     return new Promise((resolve, reject) => {
       console.log('Devamsızlık kayıtları yükleniyor...');
-      
+
       const headers = this.getAuthHeaders();
-      
+
       this.http.get<any>(`server/api/devamsizlik_kayitlari.php?ogrenci_id=${this.ogrenciId}`, { headers })
         .subscribe({
           next: (response) => {
@@ -376,26 +387,26 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
     this.toplamOdenen = Array.isArray(this.odemeBilgileri) 
       ? this.odemeBilgileri.reduce((total, odeme) => total + (odeme.tutar || 0), 0)
       : 0;
-    
+
     // Kalan borç hesapla (örnek hesaplama)
     const aylikUcret = this.ogrenciBilgileri?.ucret || 0;
     const bugunTarihi = new Date();
     const baslangicAyi = 9; // Eylül ayından başladığını varsayalım
     const gecenAy = bugunTarihi.getMonth() + 1 - baslangicAyi + 1;
     this.kalanBorc = Math.max(0, (gecenAy * aylikUcret) - this.toplamOdenen);
-    
+
     // Devamsızlık sayısı - array kontrolü ile
     this.devamsizlikSayisi = Array.isArray(this.devamsizlikKayitlari) 
       ? this.devamsizlikKayitlari.filter(kayit => kayit && kayit.durum === 'absent').length
       : 0;
-    
+
     // Ortalama puan - array kontrolü ile
     if (Array.isArray(this.sinavSonuclari) && this.sinavSonuclari.length > 0) {
       this.ortalamaPuan = this.sinavSonuclari.reduce((total, sinav) => total + (sinav.puan || 0), 0) / this.sinavSonuclari.length;
     } else {
       this.ortalamaPuan = 0;
     }
-    
+
     console.log('İstatistikler hesaplandı:', {
       toplamOdenen: this.toplamOdenen,
       kalanBorc: this.kalanBorc,
