@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
@@ -63,7 +63,9 @@ interface DevamsizlikKaydi {
   templateUrl: './ogretmen-ogrenci-bilgi-sayfasi.component.html',
   styleUrl: './ogretmen-ogrenci-bilgi-sayfasi.component.scss'
 })
-export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
+export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewInit {
+  @ViewChild('sinavChart', { static: false }) sinavChart!: ElementRef<HTMLCanvasElement>;
+  
   ogrenciId: number = 0;
   ogrenciBilgileri: OgrenciBilgileri | null = null;
   sinavSonuclari: SinavSonucu[] = [];
@@ -112,6 +114,10 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
 
       await this.loadAllData();
     });
+  }
+
+  ngAfterViewInit(): void {
+    // Chart render edilecek
   }
 
   async loadAllData(): Promise<void> {
@@ -233,23 +239,30 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
         .subscribe({
           next: (response) => {
             console.log('Sınav sonuçları response:', response);
-            if (response && response.success) {
-              // API'den gelen veri formatını kontrol et
-              if (response.data && response.data.sinav_sonuclari && Array.isArray(response.data.sinav_sonuclari)) {
-                // Eğer response.data.sinav_sonuclari array ise
-                this.sinavSonuclari = response.data.sinav_sonuclari;
-              } else if (Array.isArray(response.data)) {
-                // Eğer response.data direkt array ise
-                this.sinavSonuclari = response.data;
-              } else if (response.data && typeof response.data === 'object') {
-                // Object ise array'e çevir
-                this.sinavSonuclari = Object.values(response.data).filter((item: any) => 
-                  item && typeof item === 'object' && item.id
-                ) as SinavSonucu[];
+            if (response && response.success && response.data) {
+              // API'den gelen veri formatını kontrol et ve öğrenci ID'ye göre filtrele
+              if (response.data.sinav_sonuclari && Array.isArray(response.data.sinav_sonuclari)) {
+                // Öğrenci ID'ye göre filtrele
+                const filteredResults = response.data.sinav_sonuclari.filter((sinav: any) => 
+                  sinav && sinav.ogrenci_id && sinav.ogrenci_id == this.ogrenciId
+                );
+                
+                // SinavSonucu interface'ine uygun formata çevir
+                this.sinavSonuclari = filteredResults.map((sinav: any) => ({
+                  id: sinav.id || 0,
+                  sinav_adi: sinav.sinav_adi || '',
+                  tarih: sinav.gonderim_tarihi || sinav.tarih || new Date().toISOString(),
+                  net_dogru: sinav.dogru_sayisi || 0,
+                  net_yanlis: sinav.yanlis_sayisi || 0,
+                  net_bos: sinav.bos_sayisi || 0,
+                  puan: sinav.puan || 0,
+                  basari_yuzdesi: sinav.yuzde || 0,
+                  toplam_soru: (sinav.dogru_sayisi || 0) + (sinav.yanlis_sayisi || 0) + (sinav.bos_sayisi || 0)
+                }));
               } else {
                 this.sinavSonuclari = [];
               }
-              console.log('İşlenen sınav sonuçları:', this.sinavSonuclari);
+              console.log('İşlenen ve filtrelenmiş sınav sonuçları:', this.sinavSonuclari);
               resolve();
             } else {
               console.warn('Sınav sonuçları bulunamadı:', response?.message);
@@ -422,11 +435,104 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
 
   prepareChartData(): void {
     if (Array.isArray(this.sinavSonuclari) && this.sinavSonuclari.length > 0) {
-      this.chartLabels = this.sinavSonuclari.map(sinav => sinav.sinav_adi);
-      this.chartData = this.sinavSonuclari.map(sinav => sinav.puan);
+      // Tarihe göre sırala (en eski başta)
+      const sortedResults = [...this.sinavSonuclari].sort((a, b) => 
+        new Date(a.tarih).getTime() - new Date(b.tarih).getTime()
+      );
+      
+      this.chartLabels = sortedResults.map(sinav => {
+        // Sınav adını kısalt
+        return sinav.sinav_adi.length > 20 ? 
+          sinav.sinav_adi.substring(0, 20) + '...' : 
+          sinav.sinav_adi;
+      });
+      
+      this.chartData = [{
+        label: 'Puan',
+        data: sortedResults.map(sinav => sinav.puan),
+        borderColor: '#007bff',
+        backgroundColor: 'rgba(0, 123, 255, 0.1)',
+        fill: true,
+        tension: 0.4
+      }];
+      
+      console.log('Grafik verileri hazırlandı:', this.chartData);
+      
+      // Grafik çizimini tetikle
+      setTimeout(() => this.renderChart(), 100);
     } else {
       this.chartLabels = [];
       this.chartData = [];
+    }
+  }
+
+  renderChart(): void {
+    if (!this.sinavChart || !this.chartData.length) return;
+
+    try {
+      const ctx = this.sinavChart.nativeElement.getContext('2d');
+      if (!ctx) return;
+
+      // Basit canvas çizimi
+      const canvas = this.sinavChart.nativeElement;
+      const width = canvas.width = canvas.offsetWidth;
+      const height = canvas.height = canvas.offsetHeight;
+      
+      ctx.clearRect(0, 0, width, height);
+      
+      const data = this.chartData[0].data;
+      const labels = this.chartLabels;
+      
+      if (data.length === 0) return;
+      
+      const maxValue = Math.max(...data) || 100;
+      const minValue = Math.min(...data) || 0;
+      const range = maxValue - minValue || 1;
+      
+      const margin = 40;
+      const chartWidth = width - 2 * margin;
+      const chartHeight = height - 2 * margin;
+      
+      // Grid çizgileri
+      ctx.strokeStyle = '#e0e0e0';
+      ctx.lineWidth = 1;
+      
+      // Yatay çizgiler
+      for (let i = 0; i <= 5; i++) {
+        const y = margin + (chartHeight / 5) * i;
+        ctx.beginPath();
+        ctx.moveTo(margin, y);
+        ctx.lineTo(width - margin, y);
+        ctx.stroke();
+      }
+      
+      // Veri çizgisi
+      ctx.strokeStyle = '#007bff';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      
+      data.forEach((value, index) => {
+        const x = margin + (chartWidth / (data.length - 1)) * index;
+        const y = margin + chartHeight - ((value - minValue) / range) * chartHeight;
+        
+        if (index === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+        
+        // Noktalar
+        ctx.fillStyle = '#007bff';
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, 2 * Math.PI);
+        ctx.fill();
+      });
+      
+      ctx.stroke();
+      
+      console.log('Grafik başarıyla çizildi');
+    } catch (error) {
+      console.error('Grafik çizim hatası:', error);
     }
   }
 
