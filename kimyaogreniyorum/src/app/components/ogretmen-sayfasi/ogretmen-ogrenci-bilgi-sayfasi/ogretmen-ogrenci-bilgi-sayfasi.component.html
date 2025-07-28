@@ -459,165 +459,144 @@
           </div>
         </div>
 
-      </div>
-    </div>
-  </div>
-
-  <!-- Katılım ve Ödeme Bilgileri -->
-  <div class="card mt-4" *ngIf="ogrenciBilgileri && getStudentAttendanceStats()">
-    <div class="card-header">
-      <h5 class="mb-0">
-        <i class="bi bi-graph-up-arrow me-2"></i>
-        Katılım ve Ödeme İstatistikleri
-      </h5>
-    </div>
-    <div class="card-body">
-      <div class="row" *ngFor="let stats of [getStudentAttendanceStats()]">
-        <!-- Katılım İstatistikleri -->
-        <div class="col-lg-6 mb-4">
-          <div class="stats-section">
-            <h6 class="section-title">
-              <i class="bi bi-calendar-check me-2"></i>
-              Ders Katılım Durumu
-            </h6>
-            <div class="stats-grid">
-              <div class="stat-card present">
-                <div class="stat-icon">
-                  <i class="bi bi-check-circle-fill"></i>
-                </div>
-                <div class="stat-content">
-                  <div class="stat-value">{{ stats.presentCount }}</div>
-                  <div class="stat-label">Katıldığı Ders</div>
-                </div>
-              </div>
-              
-              <div class="stat-card absent">
-                <div class="stat-icon">
-                  <i class="bi bi-x-circle-fill"></i>
-                </div>
-                <div class="stat-content">
-                  <div class="stat-value">{{ stats.absentCount }}</div>
-                  <div class="stat-label">Katılmadığı Ders</div>
-                </div>
-              </div>
-              
-              <div class="stat-card total">
-                <div class="stat-icon">
-                  <i class="bi bi-bar-chart-fill"></i>
-                </div>
-                <div class="stat-content">
-                  <div class="stat-value">{{ stats.totalLessons }}</div>
-                  <div class="stat-label">Toplam Ders</div>
-                </div>
-              </div>
-              
-              <div class="stat-card percentage" [class.excellent]="stats.attendancePercentage >= 90"
-                   [class.good]="stats.attendancePercentage >= 75 && stats.attendancePercentage < 90"
-                   [class.average]="stats.attendancePercentage >= 60 && stats.attendancePercentage < 75"
-                   [class.poor]="stats.attendancePercentage < 60">
-                <div class="stat-icon">
-                  <i class="bi bi-percent"></i>
-                </div>
-                <div class="stat-content">
-                  <div class="stat-value">%{{ stats.attendancePercentage }}</div>
-                  <div class="stat-label">Katılım Oranı</div>
-                </div>
-              </div>
+        <!-- Devamsızlık/Katılım Bilgileri Sekmesi -->
+        <div *ngIf="activeTab === 'ucret-analizi'" class="tab-content">
+          <div class="payment-analysis-section">
+            <div class="section-header">
+              <h3><i class="bi bi-graph-up"></i> Öğrenci Ücret Analizi</h3>
+              <p class="section-description">Ders tiplerine göre ücret durumu ve ödeme analizi</p>
             </div>
-          </div>
-        </div>
 
-        <!-- Ödeme İstatistikleri -->
-        <div class="col-lg-6 mb-4">
-          <div class="stats-section">
-            <h6 class="section-title">
-              <i class="bi bi-credit-card me-2"></i>
-              Ödeme Durumu
-            </h6>
-            <div class="stats-grid">
-              <div class="stat-card payment-cycle">
-                <div class="stat-icon">
-                  <i class="bi bi-arrow-repeat"></i>
-                </div>
-                <div class="stat-content">
-                  <div class="stat-value">{{ stats.expectedPaymentCycles }}</div>
-                  <div class="stat-label">Tamamlanan Dönem</div>
-                </div>
-              </div>
-              
-              <div class="stat-card expected-amount">
-                <div class="stat-icon">
-                  <i class="bi bi-calculator"></i>
-                </div>
-                <div class="stat-content">
-                  <div class="stat-value">{{ formatCurrency(stats.expectedTotalAmount) }}</div>
-                  <div class="stat-label">Beklenen Tutar</div>
-                </div>
-              </div>
-              
-              <div class="stat-card monthly-fee">
-                <div class="stat-icon">
-                  <i class="bi bi-cash-coin"></i>
-                </div>
-                <div class="stat-content">
-                  <div class="stat-value">{{ formatCurrency(stats.ucret) }}</div>
-                  <div class="stat-label">Aylık Ücret</div>
-                </div>
-              </div>
-              
-              <div class="stat-card next-payment" [class.payment-due]="stats.lessonsUntilNextPayment === 0">
-                <div class="stat-icon">
-                  <i class="bi bi-hourglass-split"></i>
-                </div>
-                <div class="stat-content">
-                  <div class="stat-value">
-                    {{ stats.lessonsUntilNextPayment === 0 ? 'Ödeme Zamanı!' : stats.lessonsUntilNextPayment + ' ders kaldı' }}
+            <div class="analysis-table-container">
+              <table class="analysis-table">
+                <thead>
+                  <tr>
+                    <th>Öğrenci</th>
+                    <th>Ders Ücreti</th>
+                    <th colspan="4">Katıldığı Dersler</th>
+                    <th>Beklenen Ödeme</th>
+                    <th>Yapılan Ödeme</th>
+                    <th>Kalan Borç</th>
+                    <th>Ödeme Oranı</th>
+                  </tr>
+                  <tr class="sub-header">
+                    <th></th>
+                    <th></th>
+                    <th>Toplam</th>
+                    <th>Normal Ders</th>
+                    <th>Ek Ders</th>
+                    <th>Dönem Sayısı</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let analysis of getPaymentAnalysisData()" class="student-row">
+                    <td class="student-info">
+                      <img [src]="ogrenciBilgileri?.avatar || getDefaultAvatar(ogrenciBilgileri?.adi_soyadi)" 
+                           class="student-avatar-small" 
+                           alt="Avatar">
+                      <div class="student-details">
+                        <span class="student-name">{{ analysis.studentName }}</span>
+                        <span class="student-email">{{ analysis.studentEmail }}</span>
+                      </div>
+                    </td>
+                    <td class="lesson-fee">
+                      <span class="fee-badge">{{ formatCurrency(analysis.lessonFee) }}</span>
+                    </td>
+                    <td class="total-lessons">{{ analysis.lessons.total }}</td>
+                    <td class="normal-lessons">{{ analysis.lessons.normal }}</td>
+                    <td class="ek-lessons">{{ analysis.lessons.ek_ders }}</td>
+                    <td class="payment-cycles">{{ analysis.paymentCycles }}</td>
+                    <td class="expected-payment">
+                      <span class="amount-badge expected">{{ formatCurrency(analysis.expectedAmount) }}</span>
+                    </td>
+                    <td class="paid-amount">
+                      <span class="amount-badge paid">{{ formatCurrency(analysis.paidAmount) }}</span>
+                    </td>
+                    <td class="debt-amount">
+                      <span class="amount-badge debt" [class.positive]="analysis.debt > 0" [class.zero]="analysis.debt === 0">
+                        {{ formatCurrency(Math.abs(analysis.debt)) }}
+                      </span>
+                    </td>
+                    <td class="payment-percentage">
+                      <div class="percentage-badge" 
+                           [class.excellent]="analysis.paymentPercentage >= 100"
+                           [class.good]="analysis.paymentPercentage >= 80 && analysis.paymentPercentage < 100"
+                           [class.average]="analysis.paymentPercentage >= 60 && analysis.paymentPercentage < 80"
+                           [class.poor]="analysis.paymentPercentage < 60">
+                        {{ analysis.paymentPercentage }}%
+                      </div>
+                      <div class="progress-bar-container">
+                        <div class="progress-bar" 
+                             [style.width.%]="Math.min(analysis.paymentPercentage, 100)"
+                             [class.excellent]="analysis.paymentPercentage >= 100"
+                             [class.good]="analysis.paymentPercentage >= 80 && analysis.paymentPercentage < 100"
+                             [class.average]="analysis.paymentPercentage >= 60 && analysis.paymentPercentage < 80"
+                             [class.poor]="analysis.paymentPercentage < 60">
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Ödeme Özeti -->
+            <div class="payment-summary mt-4">
+              <div class="row">
+                <div class="col-md-3">
+                  <div class="summary-card">
+                    <div class="summary-icon">
+                      <i class="bi bi-calendar-check text-success"></i>
+                    </div>
+                    <div class="summary-content">
+                      <h4>{{ getPaymentSummary().totalAttendedLessons }}</h4>
+                      <p>Toplam Katıldığı Ders</p>
+                    </div>
                   </div>
-                  <div class="stat-label">Sonraki Ödemeye</div>
                 </div>
-              </div>
-            </div>
-
-            <!-- Ödeme Progress Bar -->
-            <div class="payment-progress mt-3">
-              <div class="progress-info mb-2">
-                <span class="text-muted">4 derste bir ödeme ({{ 4 - stats.lessonsUntilNextPayment }}/4 ders tamamlandı)</span>
-              </div>
-              <div class="progress">
-                <div class="progress-bar" role="progressbar" 
-                     [style.width.%]="stats.lessonsUntilNextPayment === 0 ? 100 : ((4 - stats.lessonsUntilNextPayment) / 4) * 100"
-                     [class.bg-success]="stats.lessonsUntilNextPayment > 1"
-                     [class.bg-warning]="stats.lessonsUntilNextPayment === 1"
-                     [class.bg-danger]="stats.lessonsUntilNextPayment === 0">
+                <div class="col-md-3">
+                  <div class="summary-card">
+                    <div class="summary-icon">
+                      <i class="bi bi-cash-stack text-info"></i>
+                    </div>
+                    <div class="summary-content">
+                      <h4>{{ formatCurrency(getPaymentSummary().totalExpectedAmount) }}</h4>
+                      <p>Beklenen Toplam Ödeme</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="summary-card">
+                    <div class="summary-icon">
+                      <i class="bi bi-check-circle text-success"></i>
+                    </div>
+                    <div class="summary-content">
+                      <h4>{{ formatCurrency(getPaymentSummary().totalPaidAmount) }}</h4>
+                      <p>Yapılan Toplam Ödeme</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="summary-card">
+                    <div class="summary-icon">
+                      <i class="bi bi-exclamation-triangle" [class.text-danger]="getPaymentSummary().totalDebt > 0" [class.text-success]="getPaymentSummary().totalDebt === 0"></i>
+                    </div>
+                    <div class="summary-content">
+                      <h4 [class.text-danger]="getPaymentSummary().totalDebt > 0" [class.text-success]="getPaymentSummary().totalDebt === 0">
+                        {{ formatCurrency(Math.abs(getPaymentSummary().totalDebt)) }}
+                      </h4>
+                      <p>{{ getPaymentSummary().totalDebt > 0 ? 'Kalan Borç' : 'Fazla Ödeme' }}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Son Katılım Kayıtları -->
-      <div class="recent-attendance mt-4" *ngIf="getRecentAttendanceRecords().length > 0">
-        <h6 class="section-title">
-          <i class="bi bi-clock-history me-2"></i>
-          Son Katılım Kayıtları
-        </h6>
-        <div class="attendance-timeline">
-          <div class="timeline-item" *ngFor="let record of getRecentAttendanceRecords(); let i = index" 
-               [class.present]="record.durum === 'present'"
-               [class.absent]="record.durum === 'absent'">
-            <div class="timeline-marker">
-              <i class="bi" [class.bi-check-circle-fill]="record.durum === 'present'"
-                 [class.bi-x-circle-fill]="record.durum === 'absent'"></i>
-            </div>
-            <div class="timeline-content">
-              <div class="timeline-date">{{ record.formatted_date }}</div>
-              <div class="timeline-status">{{ record.status_text }}</div>
-              <div class="timeline-type">{{ record.lesson_type_text }}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+        <!-- Devamsızlık/Katılım Bilgileri Sekmesi -->
+        <div *ngIf="activeTab === 'devamsizlik'" class="tab-content">

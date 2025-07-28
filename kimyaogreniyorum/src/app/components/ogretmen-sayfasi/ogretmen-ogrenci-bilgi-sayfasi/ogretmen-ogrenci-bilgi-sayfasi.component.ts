@@ -902,4 +902,92 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
       default: return 'Normal Ders';
     }
   }
+
+  // Math nesnesini template'te kullanabilmek için
+  Math = Math;
+
+  // Ücret analizi verilerini getir
+  getPaymentAnalysisData(): any[] {
+    if (!this.ogrenciBilgileri || !this.historicalAttendance.length) {
+      return [];
+    }
+
+    // Bu öğrencinin katılım kayıtlarını filtrele
+    const studentRecords = this.historicalAttendance.filter(
+      record => record.ogrenci_id === this.ogrenciBilgileri!.id
+    );
+
+    // Ders tiplerini say
+    const normalLessons = studentRecords.filter(
+      record => record.durum === 'present' && 
+      (!record.ders_tipi || record.ders_tipi === 'normal')
+    ).length;
+
+    const ekDersLessons = studentRecords.filter(
+      record => record.durum === 'present' && record.ders_tipi === 'ek_ders'
+    ).length;
+
+    const totalAttendedLessons = normalLessons + ekDersLessons;
+
+    // Ücret hesaplamaları
+    const lessonFee = parseFloat(String(this.ogrenciBilgileri.ucret || 0));
+    const paymentCycles = Math.floor(totalAttendedLessons / 4);
+    const expectedAmount = paymentCycles * lessonFee;
+
+    // Yapılan ödemeler
+    const paidAmount = Array.isArray(this.odemeBilgileri) 
+      ? this.odemeBilgileri.reduce((total, payment) => total + (payment.tutar || 0), 0)
+      : 0;
+
+    // Borç hesaplama
+    const debt = expectedAmount - paidAmount;
+
+    // Ödeme yüzdesi
+    const paymentPercentage = expectedAmount > 0 
+      ? Math.round((paidAmount / expectedAmount) * 100) 
+      : 0;
+
+    return [{
+      studentName: this.ogrenciBilgileri.adi_soyadi,
+      studentEmail: this.ogrenciBilgileri.email,
+      lessonFee: lessonFee,
+      lessons: {
+        total: totalAttendedLessons,
+        normal: normalLessons,
+        ek_ders: ekDersLessons
+      },
+      paymentCycles: paymentCycles,
+      expectedAmount: expectedAmount,
+      paidAmount: paidAmount,
+      debt: debt,
+      paymentPercentage: paymentPercentage
+    }];
+  }
+
+  // Ödeme özeti
+  getPaymentSummary(): any {
+    const analysisData = this.getPaymentAnalysisData();
+    
+    if (analysisData.length === 0) {
+      return {
+        totalAttendedLessons: 0,
+        totalExpectedAmount: 0,
+        totalPaidAmount: 0,
+        totalDebt: 0
+      };
+    }
+
+    const data = analysisData[0];
+    return {
+      totalAttendedLessons: data.lessons.total,
+      totalExpectedAmount: data.expectedAmount,
+      totalPaidAmount: data.paidAmount,
+      totalDebt: data.debt
+    };
+  }
+
+  // Varsayılan avatar
+  getDefaultAvatar(name: string): string {
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Student')}&background=007bff&color=fff&size=40`;
+  }
 }
