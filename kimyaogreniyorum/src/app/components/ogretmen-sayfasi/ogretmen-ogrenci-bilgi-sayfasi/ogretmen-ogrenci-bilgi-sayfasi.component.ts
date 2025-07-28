@@ -836,5 +836,70 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
         status_text: record.durum === 'present' ? 'Katıldı' : 'Katılmadı',
         lesson_type_text: this.getLessonTypeText(record.ders_tipi)
       }));
-  }The code has been updated with methods for student attendance statistics, recent attendance records, lesson type text, currency formatting, date formatting, and loading student attendance data.
-``````text
+  }
+
+  // Eksik metodları ekle
+  loadTeacherInfo(): void {
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        this.teacherName = user.name || user.adi_soyadi || 'Öğretmen';
+        this.teacherAvatar = user.avatar || '';
+      } catch (error) {
+        console.error('User data parse hatası:', error);
+        this.teacherName = 'Öğretmen';
+        this.teacherAvatar = '';
+      }
+    }
+  }
+
+  loadStudentAttendanceData(): void {
+    if (!this.ogrenciBilgileri) return;
+
+    const headers = this.getAuthHeaders();
+
+    this.http.get<any>(`server/api/grup_ders_kayitlari.php?grup=${this.ogrenciBilgileri.grubu}`, { headers })
+      .subscribe({
+        next: (response) => {
+          if (response && response.success && response.data) {
+            this.historicalAttendance = response.data;
+          }
+        },
+        error: (error) => {
+          console.error('Katılım verileri yüklenemedi:', error);
+          this.historicalAttendance = [];
+        }
+      });
+  }
+
+  getProgressBarClass(percentage: number): string {
+    if (percentage >= 80) return 'progress-bar bg-success';
+    if (percentage >= 60) return 'progress-bar bg-warning';
+    return 'progress-bar bg-danger';
+  }
+
+  trackByKonuAdi(index: number, konu: KonuAnalizi): string {
+    return konu.konu_adi;
+  }
+
+  formatCurrency(amount: number): string {
+    return new Intl.NumberFormat('tr-TR', {
+      style: 'currency',
+      currency: 'TRY'
+    }).format(amount);
+  }
+
+  formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleDateString('tr-TR');
+  }
+
+  getLessonTypeText(type: string): string {
+    switch (type) {
+      case 'normal': return 'Normal Ders';
+      case 'ek_ders': return 'Ek Ders';
+      case 'telafi': return 'Telafi Dersi';
+      default: return 'Normal Ders';
+    }
+  }
+}
