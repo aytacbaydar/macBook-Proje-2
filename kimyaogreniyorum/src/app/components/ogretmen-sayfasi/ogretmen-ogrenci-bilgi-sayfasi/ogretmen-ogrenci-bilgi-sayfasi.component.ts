@@ -442,7 +442,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
 
     // Devamsızlık sayısı - historicalAttendance'dan al
     this.devamsizlikSayisi = Array.isArray(this.historicalAttendance) 
-      ? this.historicalAttendance.filter(kayit => kayit && kayit.durum === 'absent' && kayit.ogrenci_id === this.ogrenciBilgileri?.id).length
+      ? this.historicalAttendance.filter((kayit: any) => kayit && kayit.durum === 'absent' && kayit.ogrenci_id === this.ogrenciBilgileri?.id).length
       : 0;
 
     // Ortalama puan - array kontrolü ile
@@ -783,18 +783,18 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
 
     // Bu öğrencinin katılım kayıtlarını filtrele
     const studentRecords = this.historicalAttendance.filter(
-      record => record.ogrenci_id === this.ogrenciBilgileri!.id
+      (record: any) => record.ogrenci_id === this.ogrenciBilgileri!.id
     );
 
     // Katıldığı dersleri say (sadece normal ders ve ek ders)
     const presentCount = studentRecords.filter(
-      record => record.durum === 'present' && 
+      (record: any) => record.durum === 'present' && 
       (!record.ders_tipi || record.ders_tipi === 'normal' || record.ders_tipi === 'ek_ders')
     ).length;
 
     // Katılmadığı dersleri say
     const absentCount = studentRecords.filter(
-      record => record.durum === 'absent'
+      (record: any) => record.durum === 'absent'
     ).length;
 
     // Toplam ders sayısı
@@ -830,10 +830,10 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
     }
 
     return this.historicalAttendance
-      .filter(record => record.ogrenci_id === this.ogrenciBilgileri!.id)
-      .sort((a, b) => new Date(b.tarih).getTime() - new Date(a.tarih).getTime())
+      .filter((record: any) => record.ogrenci_id === this.ogrenciBilgileri!.id)
+      .sort((a: any, b: any) => new Date(b.tarih).getTime() - new Date(a.tarih).getTime())
       .slice(0, 10)
-      .map(record => ({
+      .map((record: any) => ({
         ...record,
         formatted_date: this.formatDate(record.tarih),
         status_text: record.durum === 'present' ? 'Katıldı' : 'Katılmadı',
@@ -871,7 +871,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
           if (response && response.success && response.data) {
             // Grup verilerinden bu öğrenciye ait kayıtları filtrele
             if (Array.isArray(response.data)) {
-              this.historicalAttendance = response.data.filter(record => 
+              this.historicalAttendance = response.data.filter((record: any) => 
                 record.ogrenci_id == this.ogrenciBilgileri!.id
               );
             } else {
@@ -976,17 +976,17 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
 
     // Bu öğrencinin katılım kayıtlarını filtrele
     const studentRecords = this.historicalAttendance.filter(
-      record => record.ogrenci_id === this.ogrenciBilgileri!.id
+      (record: any) => record.ogrenci_id === this.ogrenciBilgileri!.id
     );
 
     // Ders tiplerini say
     const normalLessons = studentRecords.filter(
-      record => record.durum === 'present' && 
+      (record: any) => record.durum === 'present' && 
       (!record.ders_tipi || record.ders_tipi === 'normal')
     ).length;
 
     const ekDersLessons = studentRecords.filter(
-      record => record.durum === 'present' && record.ders_tipi === 'ek_ders'
+      (record: any) => record.durum === 'present' && record.ders_tipi === 'ek_ders'
     ).length;
 
     const totalAttendedLessons = normalLessons + ekDersLessons;
