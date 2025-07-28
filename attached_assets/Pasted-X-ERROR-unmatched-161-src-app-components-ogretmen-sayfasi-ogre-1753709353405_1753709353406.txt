@@ -1,0 +1,420 @@
+X [ERROR] unmatched "}".
+    ╷
+161 │ }
+    │ ^
+    ╵
+  src\app\components\ogretmen-sayfasi\ogretmen-ogrenci-bilgi-sayfasi\ogretmen-ogrenci-bilgi-sayfasi.component.scss 161:1  root stylesheet [plugin angular-sass]
+
+
+X [ERROR] NG9: Property 'getProgressBarClass' does not exist on type 'OgretmenOgrenciBilgiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.html:278:43:
+      278 │ ...             [class]="getProgressBarClass(getSuccessPercentage...
+          ╵                          ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciBilgiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:66:15:
+      66 │   templateUrl: './ogretmen-ogrenci-bilgi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'trackByKonuAdi' does not exist on type 'OgretmenOgrenciBilgiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.html:326:75:
+      326 │ ...<tr *ngFor="let konu of konuAnalizleri; trackBy: trackByKonuAdi">
+          ╵                                                     ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciBilgiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:66:15:
+      66 │   templateUrl: './ogretmen-ogrenci-bilgi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'getProgressBarClass' does not exist on type 'OgretmenOgrenciBilgiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.html:337:45:
+      337 │ ...                 [class]="getProgressBarClass(konu.basari_orani)"
+          ╵                              ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciBilgiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:66:15:
+      66 │   templateUrl: './ogretmen-ogrenci-bilgi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'formatCurrency' does not exist on type 'OgretmenOgrenciBilgiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.html:553:45:
+      553 │ ...v class="stat-value">{{ formatCurrency(stats.expectedTotalAmou...
+          ╵                            ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciBilgiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:66:15:
+      66 │   templateUrl: './ogretmen-ogrenci-bilgi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'formatCurrency' does not exist on type 'OgretmenOgrenciBilgiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.html:563:45:
+      563 │ ...  <div class="stat-value">{{ formatCurrency(stats.ucret) }}</div>
+          ╵                                 ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciBilgiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:66:15:
+      66 │   templateUrl: './ogretmen-ogrenci-bilgi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2339: Property 'loadTeacherInfo' does not exist on type 'OgretmenOgrenciBilgiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:112:9:
+      112 │     this.loadTeacherInfo();
+          ╵          ~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2339: Property 'loadStudentAttendanceData' does not exist on type 'OgretmenOgrenciBilgiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:230:19:
+      230 │               this.loadStudentAttendanceData();
+          ╵                    ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2345: Argument of type 'number | "0"' is not assignable to parameter of type 'string'.
+  Type 'number' is not assignable to type 'string'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:806:29:
+      806 │     const ucret = parseFloat(this.ogrenciBilgileri?.ucret || '0');
+          ╵                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2339: Property 'formatDate' does not exist on type 'OgretmenOgrenciBilgiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:835:29:
+      835 │         formatted_date: this.formatDate(record.tarih),
+          ╵                              ~~~~~~~~~~
+
+
+X [ERROR] TS2339: Property 'getLessonTypeText' does not exist on type 'OgretmenOgrenciBilgiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:837:31:
+      837 │         lesson_type_text: this.getLessonTypeText(record.ders_tipi)
+          ╵                                ~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS1434: Unexpected keyword or identifier. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:3:
+      839 │   }The code has been updated with methods for student attendance ...
+          ╵    ~~~
+
+
+X [ERROR] TS7008: Member 'The' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:3:
+      839 │   }The code has been updated with methods for student attendance ...
+          ╵    ~~~
+
+
+X [ERROR] TS1434: Unexpected keyword or identifier. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:7:
+      839 │   }The code has been updated with methods for student attendance ...
+          ╵        ~~~~
+
+
+X [ERROR] TS7008: Member 'code' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:7:
+      839 │   }The code has been updated with methods for student attendance ...
+          ╵        ~~~~
+
+
+X [ERROR] TS1434: Unexpected keyword or identifier. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:12:
+      839 │   }The code has been updated with methods for student attendance ...
+          ╵             ~~~
+
+
+X [ERROR] TS7008: Member 'has' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:12:
+      839 │   }The code has been updated with methods for student attendance ...
+          ╵             ~~~
+
+
+X [ERROR] TS1434: Unexpected keyword or identifier. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:16:
+      839 │   }The code has been updated with methods for student attendance ...
+          ╵                 ~~~~
+
+
+X [ERROR] TS7008: Member 'been' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:16:
+      839 │   }The code has been updated with methods for student attendance ...
+          ╵                 ~~~~
+
+
+X [ERROR] TS1434: Unexpected keyword or identifier. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:21:
+      839 │   }The code has been updated with methods for student attendance ...
+          ╵                      ~~~~~~~
+
+
+X [ERROR] TS7008: Member 'updated' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:21:
+      839 │   }The code has been updated with methods for student attendance ...
+          ╵                      ~~~~~~~
+
+
+X [ERROR] TS1068: Unexpected token. A constructor, method, accessor, or property was expected. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:29:
+      839 │   }The code has been updated with methods for student attendance ...
+          ╵                              ~~~~
+
+
+X [ERROR] TS1101: 'with' statements are not allowed in strict mode. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:29:
+      839 │   }The code has been updated with methods for student attendance ...
+          ╵                              ~~~~
+
+
+X [ERROR] TS1005: '(' expected. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:34:
+      839 │ ... code has been updated with methods for student attendance sta...
+          ╵                                ~~~~~~~
+
+
+X [ERROR] TS2304: Cannot find name 'methods'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:34:
+      839 │ ... code has been updated with methods for student attendance sta...
+          ╵                                ~~~~~~~
+
+
+X [ERROR] TS1005: ')' expected. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:42:
+      839 │ ...has been updated with methods for student attendance statistic...
+          ╵                                  ~~~
+
+
+X [ERROR] TS1005: '(' expected. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:46:
+      839 │ ...en updated with methods for student attendance statistics, rec...
+          ╵                                ~~~~~~~
+
+
+X [ERROR] TS1005: ';' expected. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:54:
+      839 │ ... with methods for student attendance statistics, recent attend...
+          ╵                              ~~~~~~~~~~
+
+
+X [ERROR] TS1005: ';' expected. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:65:
+      839 │ ...ds for student attendance statistics, recent attendance record...
+          ╵                              ~~~~~~~~~~
+
+
+X [ERROR] TS1005: ')' expected. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:84:
+      839 │ ...ndance statistics, recent attendance records, lesson type text...
+          ╵                              ~~~~~~~~~~
+
+
+X [ERROR] TS2304: Cannot find name 'records'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:95:
+      839 │ ...atistics, recent attendance records, lesson type text, currenc...
+          ╵                                ~~~~~~~
+
+
+X [ERROR] TS2695: Left side of comma operator is unused and has no side effects. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:95:
+      839 │ ...atistics, recent attendance records, lesson type text, currenc...
+          ╵                                ~~~~~~~
+
+
+X [ERROR] TS2304: Cannot find name 'lesson'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:104:
+      839 │ ... recent attendance records, lesson type text, currency formatt...
+          ╵                                ~~~~~~
+
+
+X [ERROR] TS1005: ';' expected. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:111:
+      839 │ ...t attendance records, lesson type text, currency formatting, d...
+          ╵                                 ~~~~
+
+
+X [ERROR] TS1005: '=' expected. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:120:
+      839 │ ...dance records, lesson type text, currency formatting, date for...
+          ╵                                   ^
+
+
+X [ERROR] TS1434: Unexpected keyword or identifier. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:122:
+      839 │ ...records, lesson type text, currency formatting, date formattin...
+          ╵                               ~~~~~~~~
+
+
+X [ERROR] TS2304: Cannot find name 'currency'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:122:
+      839 │ ...records, lesson type text, currency formatting, date formattin...
+          ╵                               ~~~~~~~~
+
+
+X [ERROR] TS2304: Cannot find name 'formatting'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:131:
+      839 │ ...esson type text, currency formatting, date formatting, and loa...
+          ╵                              ~~~~~~~~~~
+
+
+X [ERROR] TS2695: Left side of comma operator is unused and has no side effects. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:131:
+      839 │ ...esson type text, currency formatting, date formatting, and loa...
+          ╵                              ~~~~~~~~~~
+
+
+X [ERROR] TS2552: Cannot find name 'date'. Did you mean 'Date'? [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:143:
+      839 │ ...e text, currency formatting, date formatting, and loading stud...
+          ╵                                 ~~~~
+
+  'Date' is declared here.
+
+    node_modules/typescript/lib/lib.es5.d.ts:961:12:
+      961 │ declare var Date: DateConstructor;
+          ╵             ~~~~
+
+
+X [ERROR] TS1005: ';' expected. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:148:
+      839 │ ...currency formatting, date formatting, and loading student atte...
+          ╵                              ~~~~~~~~~~
+
+
+X [ERROR] TS2304: Cannot find name 'formatting'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:148:
+      839 │ ...currency formatting, date formatting, and loading student atte...
+          ╵                              ~~~~~~~~~~
+
+
+X [ERROR] TS2695: Left side of comma operator is unused and has no side effects. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:148:
+      839 │ ...currency formatting, date formatting, and loading student atte...
+          ╵                              ~~~~~~~~~~
+
+
+X [ERROR] TS2304: Cannot find name 'and'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:160:
+      839 │ ... formatting, date formatting, and loading student attendance d...
+          ╵                                  ~~~
+
+
+X [ERROR] TS1005: ';' expected. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:164:
+      839 │ ...formatting, date formatting, and loading student attendance data.
+          ╵                                     ~~~~~~~
+
+
+X [ERROR] TS2304: Cannot find name 'loading'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:164:
+      839 │ ...formatting, date formatting, and loading student attendance data.
+          ╵                                     ~~~~~~~
+
+
+X [ERROR] TS1434: Unexpected keyword or identifier. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:172:
+      839 │ ...formatting, date formatting, and loading student attendance data.
+          ╵                                             ~~~~~~~
+
+
+X [ERROR] TS2304: Cannot find name 'student'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:172:
+      839 │ ...formatting, date formatting, and loading student attendance data.
+          ╵                                             ~~~~~~~
+
+
+X [ERROR] TS1434: Unexpected keyword or identifier. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:180:
+      839 │ ...formatting, date formatting, and loading student attendance data.
+          ╵                                                     ~~~~~~~~~~
+
+
+X [ERROR] TS2304: Cannot find name 'attendance'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:180:
+      839 │ ...formatting, date formatting, and loading student attendance data.
+          ╵                                                     ~~~~~~~~~~
+
+
+X [ERROR] TS2304: Cannot find name 'data'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:839:191:
+      839 │ ...formatting, date formatting, and loading student attendance data.
+          ╵                                                                ~~~~
+
+
+X [ERROR] TS1003: Identifier expected. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:840:0:
+      840 │ ``````text
+          ╵ ~~
+
+
+X [ERROR] TS1443: Module declaration names may only use ' or " quoted strings. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:840:4:
+      840 │ ``````text
+          ╵     ~~
+
+
+X [ERROR] TS2693: 'text' only refers to a type, but is being used as a value here. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:840:6:
+      840 │ ``````text
+          ╵       ~~~~
+
+
+X [ERROR] Unexpected ";"
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:1525:12:
+      1525 │ type text = ;
