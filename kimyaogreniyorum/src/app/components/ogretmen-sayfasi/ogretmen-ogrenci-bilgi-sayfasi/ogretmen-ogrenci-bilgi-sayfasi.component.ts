@@ -117,7 +117,13 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
   }
 
   ngAfterViewInit(): void {
-    // Chart render edilecek
+    // View init olduktan sonra grafiği render et
+    setTimeout(() => {
+      if (this.chartData.length > 0) {
+        console.log('AfterViewInit - Grafik render ediliyor');
+        this.renderChart();
+      }
+    }, 100);
   }
 
   async loadAllData(): Promise<void> {
@@ -324,22 +330,26 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
 
       const headers = this.getAuthHeaders();
 
-      this.http.get<any>(`server/api/ogrenci_ucret_bilgileri.php?ogrenci_id=${this.ogrenciId}`, { headers })
+      // Öğretmen için özel API endpoint'ini kullan
+      this.http.get<any>(`server/api/ogretmen_ucret_yonetimi.php?ogrenci_id=${this.ogrenciId}`, { headers })
         .subscribe({
           next: (response) => {
             console.log('Ödeme bilgileri response:', response);
             if (response && response.success) {
               // API'den gelen veri formatını kontrol et
-              if (Array.isArray(response.data)) {
-                this.odemeBilgileri = response.data;
-              } else if (response.data && typeof response.data === 'object') {
-                // Object ise array'e çevir
-                this.odemeBilgileri = Object.values(response.data).filter((item: any) => 
-                  item && typeof item === 'object' && item.id
-                ) as OdemeBilgisi[];
+              if (response.data && response.data.payments && Array.isArray(response.data.payments)) {
+                // Sadece bu öğrencinin ödemelerini filtrele
+                this.odemeBilgileri = response.data.payments.filter((payment: any) => 
+                  payment.ogrenci_id == this.ogrenciId
+                );
+              } else if (Array.isArray(response.data)) {
+                this.odemeBilgileri = response.data.filter((payment: any) => 
+                  payment.ogrenci_id == this.ogrenciId
+                );
               } else {
                 this.odemeBilgileri = [];
               }
+              console.log('Filtrelenen ödeme bilgileri:', this.odemeBilgileri);
               resolve();
             } else {
               console.warn('Ödeme bilgileri bulunamadı:', response?.message);
@@ -349,10 +359,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
           },
           error: (error) => {
             console.error('HTTP Error - Ödeme bilgileri:', error);
-            if (error.status === 403) {
-              console.warn('Ödeme bilgileri erişim reddedildi - öğretmen yetkilendirme sorunu');
-              this.toastr.warning('Ödeme bilgilerine erişim için özel yetki gerekli', 'Uyarı');
-            }
+            console.warn('Ödeme bilgileri yüklenemedi, boş array ile devam ediliyor');
             this.odemeBilgileri = [];
             resolve(); // Hata olsa da devam et
           }
@@ -458,8 +465,9 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
       
       console.log('Grafik verileri hazırlandı:', this.chartData);
       
-      // Grafik çizimini tetikle
-      setTimeout(() => this.renderChart(), 100);
+      // Grafik çizimini tetikle - cdr ile birlikte
+      this.cdr.detectChanges();
+      setTimeout(() => this.renderChart(), 500);
     } else {
       this.chartLabels = [];
       this.chartData = [];
@@ -467,43 +475,80 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
   }
 
   renderChart(): void {
-    if (!this.sinavChart || !this.chartData.length) return;
+    console.log('renderChart çağrıldı');
+    console.log('sinavChart var mı?', !!this.sinavChart);
+    console.log('chartData var mı?', this.chartData.length);
+    
+    if (!this.sinavChart || !this.chartData.length) {
+      console.log('Canvas element veya chart data yok, grafik çizilemiyor');
+      return;
+    }
 
     try {
-      const ctx = this.sinavChart.nativeElement.getContext('2d');
-      if (!ctx) return;
-
-      // Basit canvas çizimi
       const canvas = this.sinavChart.nativeElement;
-      const width = canvas.width = canvas.offsetWidth;
-      const height = canvas.height = canvas.offsetHeight;
+      console.log('Canvas element:', canvas);
       
-      ctx.clearRect(0, 0, width, height);
+      if (!canvas) {
+        console.log('Canvas element bulunamadı');
+        return;
+      }
+      
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        console.log('Canvas context alınamadı');
+        return;
+      }
+
+      // Canvas boyutlarını ayarla
+      const containerWidth = canvas.offsetWidth || 800;
+      const containerHeight = 400;
+      
+      canvas.width = containerWidth;
+      canvas.height = containerHeight;
+      
+      ctx.clearRect(0, 0, containerWidth, containerHeight);
       
       const data = this.chartData[0].data;
-      const labels = this.chartLabels;
+      console.log('Grafik datası:', data);
       
-      if (data.length === 0) return;
+      if (data.length === 0) {
+        console.log('Data boş, grafik çizilemiyor');
+        return;
+      }
       
       const maxValue = Math.max(...data) || 100;
       const minValue = Math.min(...data) || 0;
       const range = maxValue - minValue || 1;
       
-      const margin = 40;
-      const chartWidth = width - 2 * margin;
-      const chartHeight = height - 2 * margin;
+      const margin = 60;
+      const chartWidth = containerWidth - 2 * margin;
+      const chartHeight = containerHeight - 2 * margin;
+      
+      // Arka plan
+      ctx.fillStyle = '#f8f9fa';
+      ctx.fillRect(0, 0, containerWidth, containerHeight);
       
       // Grid çizgileri
       ctx.strokeStyle = '#e0e0e0';
       ctx.lineWidth = 1;
       
-      // Yatay çizgiler
+      // Yatay çizgiler ve y-axis etiketleri
+      ctx.fillStyle = '#666';
+      ctx.font = '12px Arial';
+      ctx.textAlign = 'right';
+      
       for (let i = 0; i <= 5; i++) {
         const y = margin + (chartHeight / 5) * i;
+        const value = maxValue - (i * range / 5);
+        
+        // Grid çizgisi
         ctx.beginPath();
         ctx.moveTo(margin, y);
-        ctx.lineTo(width - margin, y);
+        ctx.lineTo(containerWidth - margin, y);
         ctx.stroke();
+        
+        // Y-axis etiketi
+        ctx.fillText(Math.round(value).toString(), margin - 10, y + 4);
       }
       
       // Veri çizgisi
@@ -512,7 +557,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
       ctx.beginPath();
       
       data.forEach((value: number, index: number) => {
-        const x = margin + (chartWidth / (data.length - 1)) * index;
+        const x = margin + (chartWidth / Math.max(data.length - 1, 1)) * index;
         const y = margin + chartHeight - ((value - minValue) / range) * chartHeight;
         
         if (index === 0) {
@@ -520,15 +565,47 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
         } else {
           ctx.lineTo(x, y);
         }
-        
-        // Noktalar
-        ctx.fillStyle = '#007bff';
-        ctx.beginPath();
-        ctx.arc(x, y, 4, 0, 2 * Math.PI);
-        ctx.fill();
       });
       
       ctx.stroke();
+      
+      // Noktalar ve değer etiketleri
+      ctx.fillStyle = '#007bff';
+      ctx.textAlign = 'center';
+      ctx.font = '11px Arial';
+      
+      data.forEach((value: number, index: number) => {
+        const x = margin + (chartWidth / Math.max(data.length - 1, 1)) * index;
+        const y = margin + chartHeight - ((value - minValue) / range) * chartHeight;
+        
+        // Nokta
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // Değer etiketi
+        ctx.fillStyle = '#333';
+        ctx.fillText(value.toString(), x, y - 10);
+        ctx.fillStyle = '#007bff';
+        
+        // X-axis etiketi (sınav adı)
+        if (this.chartLabels[index]) {
+          ctx.save();
+          ctx.translate(x, containerHeight - 10);
+          ctx.rotate(-Math.PI / 4);
+          ctx.fillStyle = '#666';
+          ctx.font = '10px Arial';
+          ctx.textAlign = 'right';
+          ctx.fillText(this.chartLabels[index], 0, 0);
+          ctx.restore();
+        }
+      });
+      
+      // Başlık
+      ctx.fillStyle = '#333';
+      ctx.font = 'bold 16px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('Sınav Puanları Gelişimi', containerWidth / 2, 25);
       
       console.log('Grafik başarıyla çizildi');
     } catch (error) {
