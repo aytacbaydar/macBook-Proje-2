@@ -68,7 +68,7 @@ interface DevamsizlikKaydi {
 })
 export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('sinavChart', { static: false }) sinavChartRef?: ElementRef<HTMLCanvasElement>;
-  
+
   // Chart instance
   sinavChart: Chart | null = null;
 
@@ -78,6 +78,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
   konuAnalizleri: KonuAnalizi[] = [];
   odemeBilgileri: OdemeBilgisi[] = [];
   devamsizlikKayitlari: DevamsizlikKaydi[] = [];
+  historicalAttendance: any[] = [];
 
   isLoading: boolean = true;
   error: string | null = null;
@@ -224,6 +225,9 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
             if (response && response.success) {
               this.ogrenciBilgileri = response.data;
               console.log('Öğrenci bilgileri yüklendi:', this.ogrenciBilgileri);
+
+              // Katılım verilerini yükle
+              this.loadStudentAttendanceData();
               resolve();
             } else {
               const errorMsg = response?.message || 'Öğrenci bilgileri alınamadı';
@@ -768,54 +772,69 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
     }
   }
 
-  getProgressBarClass(oran: number): string {
-    if (oran >= 80) return 'bg-success';
-    if (oran >= 60) return 'bg-warning';
-    return 'bg-danger';
-  }
-
-  trackByKonuAdi(index: number, item: KonuAnalizi): string {
-    return item.konu_adi;
-  }
-
-  private loadTeacherInfo(): void {
-    // localStorage veya sessionStorage'dan giriş yapan kullanıcı bilgilerini al
-    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
-
-    if (userStr) {
-      try {
-        const user = JSON.parse(userStr);
-
-        // Kullanıcı bilgilerini al (API'den gelen response.data formatına uygun)
-        this.teacherName = user.adi_soyadi || 'Öğretmen';
-
-        // Avatar kontrolü - API'den gelen avatar alanını kullan
-        if (user.avatar && user.avatar.trim() !== '') {
-          this.teacherAvatar = user.avatar;
-        } else {
-          // Avatar yoksa UI Avatars ile dinamik oluştur
-          this.teacherAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(this.teacherName)}&background=4f46e5&color=fff&size=40&font-size=0.6&rounded=true`;
-        }
-
-        console.log('Öğretmen bilgileri yüklendi:', {
-          id: user.id,
-          name: this.teacherName,
-          avatar: this.teacherAvatar,
-          userRole: user.rutbe
-        });
-
-      } catch (error) {
-        console.error('Kullanıcı bilgileri ayrıştırılırken hata:', error);
-        this.setDefaultTeacherInfo();
-      }
-    } else {
-      console.warn('Kullanıcı giriş bilgisi bulunamadı');
-      this.setDefaultTeacherInfo();
+  // Öğrenci katılım istatistikleri
+  getStudentAttendanceStats(): any {
+    if (!this.ogrenciBilgileri || !this.historicalAttendance.length) {
+      return null;
     }
+
+    // Bu öğrencinin katılım kayıtlarını filtrele
+    const studentRecords = this.historicalAttendance.filter(
+      record => record.ogrenci_id === this.ogrenciBilgileri!.id
+    );
+
+    // Katıldığı dersleri say (sadece normal ders ve ek ders)
+    const presentCount = studentRecords.filter(
+      record => record.durum === 'present' && 
+      (!record.ders_tipi || record.ders_tipi === 'normal' || record.ders_tipi === 'ek_ders')
+    ).length;
+
+    // Katılmadığı dersleri say
+    const absentCount = studentRecords.filter(
+      record => record.durum === 'absent'
+    ).length;
+
+    // Toplam ders sayısı
+    const totalLessons = presentCount + absentCount;
+
+    // Katılım yüzdesi
+    const attendancePercentage = totalLessons > 0 
+      ? Math.round((presentCount / totalLessons) * 100) 
+      : 0;
+
+    // Ödeme hesaplamaları
+    const ucret = parseFloat(this.ogrenciBilgileri?.ucret || '0');
+    const expectedPaymentCycles = Math.floor(presentCount / 4);
+    const expectedTotalAmount = expectedPaymentCycles * ucret;
+    const lessonsUntilNextPayment = presentCount > 0 ? 4 - (presentCount % 4) : 4;
+
+    return {
+      presentCount,
+      absentCount,
+      totalLessons,
+      attendancePercentage,
+      ucret,
+      expectedPaymentCycles,
+      expectedTotalAmount,
+      lessonsUntilNextPayment: lessonsUntilNextPayment === 4 ? 0 : lessonsUntilNextPayment
+    };
   }
 
-  private setDefaultTeacherInfo(): void {
-    this.teacherName = 'Öğretmen';
-    this.teacherAvatar = 'https://ui-avatars.com/api/?name=Öğretmen&background=6c757d&color=fff&size=40&font-size=0.6&rounded=true';
-  }
-}
+  // Son 10 katılım kaydını getir
+  getRecentAttendanceRecords(): any[] {
+    if (!this.ogrenciBilgileri || !this.historicalAttendance.length) {
+      return [];
+    }
+
+    return this.historicalAttendance
+      .filter(record => record.ogrenci_id === this.ogrenciBilgileri!.id)
+      .sort((a, b) => new Date(b.tarih).getTime() - new Date(a.tarih).getTime())
+      .slice(0, 10)
+      .map(record => ({
+        ...record,
+        formatted_date: this.formatDate(record.tarih),
+        status_text: record.durum === 'present' ? 'Katıldı' : 'Katılmadı',
+        lesson_type_text: this.getLessonTypeText(record.ders_tipi)
+      }));
+  }The code has been updated with methods for student attendance statistics, recent attendance records, lesson type text, currency formatting, date formatting, and loading student attendance data.
+``````text
