@@ -64,7 +64,7 @@ interface DevamsizlikKaydi {
   styleUrl: './ogretmen-ogrenci-bilgi-sayfasi.component.scss'
 })
 export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewInit {
-  @ViewChild('sinavChart', { static: false }) sinavChart!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('sinavChart', { static: false }) sinavChart?: ElementRef<HTMLCanvasElement>;
   
   ogrenciId: number = 0;
   ogrenciBilgileri: OgrenciBilgileri | null = null;
@@ -126,11 +126,11 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
   ngAfterViewInit(): void {
     // View init olduktan sonra grafiği render et
     setTimeout(() => {
-      if (this.chartData.length > 0) {
+      if (this.chartData.length > 0 && this.activeTab === 'sinavlar') {
         console.log('AfterViewInit - Grafik render ediliyor');
         this.renderChart();
       }
-    }, 100);
+    }, 500);
   }
 
   async loadAllData(): Promise<void> {
@@ -474,7 +474,11 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
       
       // Grafik çizimini tetikle - cdr ile birlikte
       this.cdr.detectChanges();
-      setTimeout(() => this.renderChart(), 500);
+      
+      // Eğer sınav sekmesi aktifse grafiği render et
+      if (this.activeTab === 'sinavlar') {
+        setTimeout(() => this.renderChart(), 500);
+      }
     } else {
       this.chartLabels = [];
       this.chartData = [];
@@ -485,9 +489,10 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
     console.log('renderChart çağrıldı');
     console.log('sinavChart var mı?', !!this.sinavChart);
     console.log('chartData var mı?', this.chartData.length);
+    console.log('activeTab:', this.activeTab);
     
-    if (!this.sinavChart || !this.chartData.length) {
-      console.log('Canvas element veya chart data yok, grafik çizilemiyor');
+    if (!this.sinavChart || !this.chartData.length || this.activeTab !== 'sinavlar') {
+      console.log('Canvas element, chart data yok veya sınav sekmesi aktif değil, grafik çizilemiyor');
       return;
     }
 
@@ -622,6 +627,13 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
 
   setActiveTab(tab: string): void {
     this.activeTab = tab;
+    
+    // Sınav sekmesi seçildiğinde ve chart data varsa grafiği render et
+    if (tab === 'sinavlar' && this.chartData.length > 0) {
+      setTimeout(() => {
+        this.renderChart();
+      }, 100);
+    }
   }
 
   formatTarih(tarih: string): string {
