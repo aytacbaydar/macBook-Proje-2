@@ -21,6 +21,7 @@ interface OgrenciBilgileri {
   veli_adi: string;
   veli_cep: string;
   aktif: number;
+  avatar?: string;
 }
 
 interface SinavSonucu {

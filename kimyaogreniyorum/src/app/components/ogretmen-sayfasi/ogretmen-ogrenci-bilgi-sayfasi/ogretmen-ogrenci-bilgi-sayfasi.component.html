@@ -495,7 +495,7 @@
                 <tbody>
                   <tr *ngFor="let analysis of getPaymentAnalysisData()" class="student-row">
                     <td class="student-info">
-                      <img [src]="ogrenciBilgileri?.avatar || getDefaultAvatar(ogrenciBilgileri?.adi_soyadi)" 
+                      <img [src]="ogrenciBilgileri.avatar || getDefaultAvatar(ogrenciBilgileri.adi_soyadi || 'Student')" 
                            class="student-avatar-small" 
                            alt="Avatar">
                       <div class="student-details">
