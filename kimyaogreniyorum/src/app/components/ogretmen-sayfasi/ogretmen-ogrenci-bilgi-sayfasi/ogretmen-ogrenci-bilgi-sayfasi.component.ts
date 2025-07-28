@@ -824,58 +824,11 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
     const headers = this.getAuthHeaders();
     console.log('Katılım verileri yükleniyor, öğrenci ID:', this.ogrenciBilgileri.id);
 
-    // Önce grup devamsızlık kayıtlarından öğrenciye özel olanları dene
-    this.http.get<any>(`server/api/grup_ders_kayitlari.php?grup=${this.ogrenciBilgileri.grubu}`, { headers })
+    // Direkt devamsizlik_kayitlari tablosundan veri çek
+    this.http.get<any>(`server/api/devamsizlik_kayitlari.php?ogrenci_id=${this.ogrenciBilgileri.id}`, { headers })
       .subscribe({
         next: (response) => {
-          console.log('Grup ders kayıtları response:', response);
-          if (response && response.success && response.data) {
-            // Grup verilerinden bu öğrenciye ait kayıtları filtrele
-            if (Array.isArray(response.data)) {
-              this.historicalAttendance = response.data.filter((record: any) => 
-                record.ogrenci_id == this.ogrenciBilgileri!.id
-              );
-              
-              // devamsizlikKayitlari'nı da güncelle
-              this.devamsizlikKayitlari = this.historicalAttendance.map((record: any) => ({
-                id: record.id || 0,
-                tarih: record.tarih || '',
-                durum: record.durum || '',
-                aciklama: record.aciklama || ''
-              }));
-            } else {
-              this.historicalAttendance = [];
-              this.devamsizlikKayitlari = [];
-            }
-            
-            console.log('Yüklenen katılım kayıtları (grup):', this.historicalAttendance);
-            console.log('Güncellenen devamsızlık kayıtları:', this.devamsizlikKayitlari);
-            
-            // Eğer grup verilerinde bulunamadıysa, öğrenci özel endpoint'ini dene
-            if (this.historicalAttendance.length === 0) {
-              this.tryStudentSpecificEndpoint();
-            } else {
-              this.cdr.detectChanges();
-            }
-          } else {
-            console.warn('Grup verileri bulunamadı, öğrenci özel endpoint deneniyor');
-            this.tryStudentSpecificEndpoint();
-          }
-        },
-        error: (error) => {
-          console.error('Grup verileri yüklenemedi, öğrenci özel endpoint deneniyor:', error);
-          this.tryStudentSpecificEndpoint();
-        }
-      });
-  }
-
-  private tryStudentSpecificEndpoint(): void {
-    const headers = this.getAuthHeaders();
-    
-    this.http.get<any>(`server/api/devamsizlik_kayitlari.php?ogrenci_id=${this.ogrenciBilgileri!.id}&butun_kayitlar=true`, { headers })
-      .subscribe({
-        next: (response) => {
-          console.log('Öğrenci özel devamsızlık kayıtları response:', response);
+          console.log('Devamsızlık kayıtları response:', response);
           if (response && response.success) {
             // API response yapısını kontrol et
             if (response.data && response.data.kayitlar && Array.isArray(response.data.kayitlar)) {
@@ -896,24 +849,26 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
               aciklama: record.aciklama || ''
             }));
             
-            console.log('Yüklenen katılım kayıtları (öğrenci özel):', this.historicalAttendance);
+            console.log('Yüklenen katılım kayıtları:', this.historicalAttendance);
             console.log('Güncellenen devamsızlık kayıtları:', this.devamsizlikKayitlari);
             this.cdr.detectChanges();
           } else {
-            console.warn('Öğrenci özel katılım verileri bulunamadı:', response?.message);
+            console.warn('Katılım verileri bulunamadı:', response?.message);
             this.historicalAttendance = [];
             this.devamsizlikKayitlari = [];
             this.cdr.detectChanges();
           }
         },
         error: (error) => {
-          console.error('Öğrenci özel katılım verileri yüklenemedi:', error);
+          console.error('Katılım verileri yüklenemedi:', error);
           this.historicalAttendance = [];
           this.devamsizlikKayitlari = [];
           this.cdr.detectChanges();
         }
       });
   }
+
+  
 
   getProgressBarClass(percentage: number): string {
     if (percentage >= 80) return 'progress-bar bg-success';
