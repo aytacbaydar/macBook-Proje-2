@@ -926,12 +926,12 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
   }
 
   formatCurrency(amount: number): string {
+    if (amount === 0) return '₺0';
+    
     return new Intl.NumberFormat('tr-TR', {
-      style: 'currency',
-      currency: 'TRY',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0
-    }).format(amount);
+    }).format(amount) + ' TL';
   }
 
   formatDate(dateString: string): string {
