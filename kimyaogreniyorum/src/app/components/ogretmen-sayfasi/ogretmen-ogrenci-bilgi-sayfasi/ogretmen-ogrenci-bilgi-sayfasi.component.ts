@@ -824,22 +824,14 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
     const headers = this.getAuthHeaders();
     console.log('Katılım verileri yükleniyor, öğrenci ID:', this.ogrenciBilgileri.id);
 
-    // Direkt devamsizlik_kayitlari tablosundan veri çek
-    this.http.get<any>(`server/api/devamsizlik_kayitlari.php?ogrenci_id=${this.ogrenciBilgileri.id}`, { headers })
+    // Yeni API endpoint'ini kullan
+    this.http.get<any>(`server/api/ogrenci_devamsizlik_listesi.php?ogrenci_id=${this.ogrenciBilgileri.id}`, { headers })
       .subscribe({
         next: (response) => {
-          console.log('Devamsızlık kayıtları response:', response);
-          if (response && response.success) {
-            // API response yapısını kontrol et
-            if (response.data && response.data.kayitlar && Array.isArray(response.data.kayitlar)) {
-              this.historicalAttendance = response.data.kayitlar;
-            } else if (response.data && Array.isArray(response.data)) {
-              this.historicalAttendance = response.data;
-            } else if (Array.isArray(response.kayitlar)) {
-              this.historicalAttendance = response.kayitlar;
-            } else {
-              this.historicalAttendance = [];
-            }
+          console.log('Yeni API response:', response);
+          if (response && response.success && response.data) {
+            // Kayıtları al
+            this.historicalAttendance = response.data.kayitlar || [];
             
             // devamsizlikKayitlari'nı da güncelle
             this.devamsizlikKayitlari = this.historicalAttendance.map((record: any) => ({
@@ -851,6 +843,8 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
             
             console.log('Yüklenen katılım kayıtları:', this.historicalAttendance);
             console.log('Güncellenen devamsızlık kayıtları:', this.devamsizlikKayitlari);
+            console.log('İstatistikler:', response.data.istatistik);
+            
             this.cdr.detectChanges();
           } else {
             console.warn('Katılım verileri bulunamadı:', response?.message);
