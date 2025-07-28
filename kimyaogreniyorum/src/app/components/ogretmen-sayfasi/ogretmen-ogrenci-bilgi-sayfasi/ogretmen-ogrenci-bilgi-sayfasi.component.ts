@@ -148,13 +148,20 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
     this.error = null;
 
     try {
-      // Tüm verileri paralel olarak yükle (devamsizlik kayitlari loadStudentAttendanceData'da yüklenecek)
+      // Önce öğrenci bilgilerini yükle
+      await this.loadOgrenciBilgileri();
+      
+      // Diğer verileri paralel olarak yükle
       await Promise.all([
-        this.loadOgrenciBilgileri(),
         this.loadSinavSonuclari(),
         this.loadKonuAnalizleri(),
         this.loadOdemeBilgileri()
       ]);
+
+      // Katılım verilerini ayrıca yükle
+      if (this.ogrenciBilgileri) {
+        await this.loadStudentAttendanceData();
+      }
 
       this.calculateStatistics();
       this.prepareChartData();
@@ -820,47 +827,55 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
     }
   }
 
-  loadStudentAttendanceData(): void {
-    if (!this.ogrenciBilgileri) return;
+  loadStudentAttendanceData(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (!this.ogrenciBilgileri) {
+        resolve();
+        return;
+      }
 
-    const headers = this.getAuthHeaders();
-    console.log('Katılım verileri yükleniyor, öğrenci ID:', this.ogrenciBilgileri.id);
+      const headers = this.getAuthHeaders();
+      console.log('Katılım verileri yükleniyor, öğrenci ID:', this.ogrenciBilgileri.id);
 
-    this.http.get<any>(`server/api/ogrenci_devamsizlik_kayitlari.php?ogrenci_id=${this.ogrenciBilgileri.id}`, { headers })
-      .subscribe({
-        next: (response) => {
-          console.log('Yeni API response:', response);
-          if (response && response.success && response.data) {
-            // Kayıtları al
-            this.historicalAttendance = response.data.kayitlar || [];
+      this.http.get<any>(`server/api/ogrenci_devamsizlik_kayitlari.php?ogrenci_id=${this.ogrenciBilgileri.id}`, { headers })
+        .subscribe({
+          next: (response) => {
+            console.log('Katılım API response:', response);
+            if (response && response.success && response.data) {
+              // Kayıtları al
+              this.historicalAttendance = response.data.kayitlar || [];
 
-            // devamsizlikKayitlari'nı da güncelle
-            this.devamsizlikKayitlari = this.historicalAttendance.map((record: any) => ({
-              id: record.id || 0,
-              tarih: record.tarih || '',
-              durum: record.durum || '',
-              grup: record.grup || '',
-              ders_tipi: record.ders_tipi || 'normal'
-            }));
+              // devamsizlikKayitlari'nı da güncelle
+              this.devamsizlikKayitlari = this.historicalAttendance.map((record: any) => ({
+                id: record.id || 0,
+                tarih: record.tarih || '',
+                durum: record.durum || '',
+                grup: record.grup || '',
+                ders_tipi: record.ders_tipi || 'normal'
+              }));
 
-            console.log('Yüklenen katılım kayıtları:', this.historicalAttendance);            console.log('Güncellenen devamsızlık kayıtları:', this.devamsizlikKayitlari);
-            console.log('İstatistikler:', response.data.istatistik);
+              console.log('Yüklenen katılım kayıtları:', this.historicalAttendance);
+              console.log('Güncellenen devamsızlık kayıtları:', this.devamsizlikKayitlari);
 
-            this.cdr.detectChanges();
-          } else {
-            console.warn('Katılım verileri bulunamadı:', response?.message);
+              this.cdr.detectChanges();
+              resolve();
+            } else {
+              console.warn('Katılım verileri bulunamadı:', response?.message);
+              this.historicalAttendance = [];
+              this.devamsizlikKayitlari = [];
+              this.cdr.detectChanges();
+              resolve();
+            }
+          },
+          error: (error) => {
+            console.error('Katılım verileri yüklenemedi:', error);
             this.historicalAttendance = [];
             this.devamsizlikKayitlari = [];
             this.cdr.detectChanges();
+            resolve(); // Hata olsa da devam et
           }
-        },
-        error: (error) => {
-          console.error('Katılım verileri yüklenemedi:', error);
-          this.historicalAttendance = [];
-          this.devamsizlikKayitlari = [];
-          this.cdr.detectChanges();
-        }
-      });
+        });
+    });
   }
 
 
