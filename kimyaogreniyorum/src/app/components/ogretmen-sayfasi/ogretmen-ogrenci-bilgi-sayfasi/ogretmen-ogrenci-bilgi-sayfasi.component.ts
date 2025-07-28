@@ -483,7 +483,10 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
 
       // Eğer sınav sekmesi aktifse grafiği render et
       if (this.activeTab === 'sinavlar') {
-        setTimeout(() => this.renderChart(), 500);
+        setTimeout(() => {
+          this.renderChart();
+          this.createMiniCharts();
+        }, 500);
       }
     } else {
       this.chartLabels = [];
@@ -502,7 +505,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
       return;
     }
 
-    if (!this.chartData || this.chartData.length === 0) {
+    if (!this.chartData || this.chartData.length === 0 || !this.sinavSonuclari.length) {
       console.log('Canvas element veya chart data yok, grafik çizilemiyor');
       return;
     }
@@ -519,30 +522,50 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
     }
 
     try {
+      // Sınav adları ve başarı oranları
+      const sinavAdlari = this.sinavSonuclari.map(sinav => {
+        // Sınav adını kısalt (çok uzunsa)
+        const ad = sinav.sinav_adi;
+        return ad.length > 20 ? ad.substring(0, 15) + '...' : ad;
+      });
+
+      const basariOranlari = this.sinavSonuclari.map(sinav => {
+        const totalQuestions = sinav.net_dogru + sinav.net_yanlis + sinav.net_bos;
+        if (totalQuestions === 0) return 0;
+        return Math.round((sinav.net_dogru / totalQuestions) * 100);
+      });
+
+      // Sınav türlerine göre renkler
+      const sinavTuruColors: { [key: string]: string } = {
+        'TYT': '#f59e0b',
+        'AYT': '#8b5cf6', 
+        'TAR': '#10b981',
+        'TEST': '#3b82f6'
+      };
+
+      const renkler = this.sinavSonuclari.map(sinav => {
+        // Sınav adından türü çıkar veya varsayılan renk kullan
+        const sinavAdi = sinav.sinav_adi.toUpperCase();
+        if (sinavAdi.includes('TYT')) return sinavTuruColors['TYT'];
+        if (sinavAdi.includes('AYT')) return sinavTuruColors['AYT'];
+        if (sinavAdi.includes('TAR')) return sinavTuruColors['TAR'];
+        return sinavTuruColors['TEST'];
+      });
+
       // Chart.js ile modern grafik oluştur
       this.sinavChart = new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: this.chartLabels,
+          labels: sinavAdlari,
           datasets: [{
-            label: 'Sınav Puanları',
-            data: this.chartData[0].data,
-            backgroundColor: this.chartLabels.map((_, index) => {
-              // Her sınav için farklı renk
-              const colors = ['#667eea80', '#4facfe80', '#43e97b80', '#fa709a80', '#38d9a980'];
-              return colors[index % colors.length];
-            }),
-            borderColor: this.chartLabels.map((_, index) => {
-              const colors = ['#667eea', '#4facfe', '#43e97b', '#fa709a', '#38d9a9'];
-              return colors[index % colors.length];
-            }),
+            label: 'Başarı Oranı (%)',
+            data: basariOranlari,
+            backgroundColor: renkler.map(color => color + '80'), // %50 şeffaflık
+            borderColor: renkler,
             borderWidth: 2,
             borderRadius: 8,
             borderSkipped: false,
-            hoverBackgroundColor: this.chartLabels.map((_, index) => {
-              const colors = ['#667eeacc', '#4facfecc', '#43e97bcc', '#fa709acc', '#38d9a9cc'];
-              return colors[index % colors.length];
-            })
+            hoverBackgroundColor: renkler.map(color => color + 'cc')
           }]
         },
         options: {
@@ -567,10 +590,21 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
               borderWidth: 1,
               callbacks: {
                 title: (context: any) => {
-                  return this.chartLabels[context[0].dataIndex];
+                  // Tam sınav adını tooltip'te göster
+                  const index = context[0].dataIndex;
+                  return this.sinavSonuclari[index].sinav_adi;
                 },
                 label: (context: any) => {
-                  return `Puan: ${context.parsed.y}`;
+                  const index = context.dataIndex;
+                  const sinav = this.sinavSonuclari[index];
+                  return [
+                    `Başarı Oranı: ${context.parsed.y}%`,
+                    `Doğru: ${sinav.net_dogru}`,
+                    `Yanlış: ${sinav.net_yanlis}`,
+                    `Boş: ${sinav.net_bos}`,
+                    `Puan: ${sinav.puan}`,
+                    `Tarih: ${this.formatTarih(sinav.tarih)}`
+                  ];
                 }
               }
             }
@@ -578,16 +612,20 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
           scales: {
             y: {
               beginAtZero: true,
+              max: 100,
               ticks: {
                 color: '#2d3748',
                 font: {
                   size: 12,
                   weight: 'bold'
+                },
+                callback: function(value: any) {
+                  return value + '%';
                 }
               },
               title: {
                 display: true,
-                text: 'Puan',
+                text: 'Başarı Oranı (%)',
                 font: {
                   size: 14,
                   weight: 'bold'
@@ -606,7 +644,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
                   size: 12,
                   weight: 'bold'
                 },
-                maxRotation: 45,
+                maxRotation: 15,
                 minRotation: 0
               },
               title: {
@@ -624,7 +662,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
             }
           },
           animation: {
-            duration: 1200,
+            duration: 1000,
             easing: 'easeInOutQuart'
           },
           interaction: {
@@ -644,15 +682,61 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
     this.activeTab = tab;
 
     // Sınav sekmesi seçildiğinde ve chart data varsa grafiği render et
-    if (tab === 'sinavlar' && this.chartData.length > 0) {
+    if (tab === 'sinavlar' && this.sinavSonuclari.length > 0) {
       setTimeout(() => {
         this.renderChart();
+        this.createMiniCharts();
       }, 100);
     }
   }
 
   formatTarih(tarih: string): string {
     return new Date(tarih).toLocaleDateString('tr-TR');
+  }
+
+  createMiniCharts(): void {
+    // AfterViewInit'ten sonra çağır
+    setTimeout(() => {
+      this.sinavSonuclari.forEach((sinav, index) => {
+        const canvasId = `miniChart-${index}`;
+        const ctx = document.getElementById(canvasId) as HTMLCanvasElement;
+
+        if (!ctx) return;
+
+        const dogru = sinav.net_dogru;
+        const yanlis = sinav.net_yanlis;
+        const bos = sinav.net_bos;
+
+        new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Doğru', 'Yanlış', 'Boş'],
+            datasets: [{
+              data: [dogru, yanlis, bos],
+              backgroundColor: ['#28a745', '#dc3545', '#ffc107'],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false
+              },
+              tooltip: {
+                enabled: false
+              }
+            },
+            elements: {
+              arc: {
+                borderWidth: 0
+              }
+            }
+          }
+        });
+      });
+    }, 500);
   }
 
   getProgressBarClass(oran: number): string {
