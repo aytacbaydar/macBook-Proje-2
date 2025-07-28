@@ -384,7 +384,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
     });
   }
 
-  
+
 
   calculateStatistics(): void {
     // Toplam ödenen hesapla - array kontrolü ile
@@ -832,7 +832,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
           if (response && response.success && response.data) {
             // Kayıtları al
             this.historicalAttendance = response.data.kayitlar || [];
-            
+
             // devamsizlikKayitlari'nı da güncelle
             this.devamsizlikKayitlari = this.historicalAttendance.map((record: any) => ({
               id: record.id || 0,
@@ -840,11 +840,10 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
               durum: record.durum || '',
               aciklama: record.aciklama || ''
             }));
-            
-            console.log('Yüklenen katılım kayıtları:', this.historicalAttendance);
-            console.log('Güncellenen devamsızlık kayıtları:', this.devamsizlikKayitlari);
+
+            console.log('Yüklenen katılım kayıtları:', this.historicalAttendance);            console.log('Güncellenen devamsızlık kayıtları:', this.devamsizlikKayitlari);
             console.log('İstatistikler:', response.data.istatistik);
-            
+
             this.cdr.detectChanges();
           } else {
             console.warn('Katılım verileri bulunamadı:', response?.message);
@@ -862,7 +861,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
       });
   }
 
-  
+
 
   getProgressBarClass(percentage: number): string {
     if (percentage >= 80) return 'progress-bar bg-success';
@@ -876,7 +875,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
 
   formatCurrency(amount: number): string {
     if (amount === 0) return '₺0';
-    
+
     return new Intl.NumberFormat('tr-TR', {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0
@@ -960,7 +959,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
   // Ödeme özeti
   getPaymentSummary(): any {
     const analysisData = this.getPaymentAnalysisData();
-    
+
     if (analysisData.length === 0) {
       return {
         totalAttendedLessons: 0,

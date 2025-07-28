@@ -57,6 +57,14 @@ if (strpos($requestUri, $basePath) === 0) {
             require_once 'api/devamsizlik_kaydet.php';
             break;
 
+        case 'ogrenci_devamsizlik_listesi':
+            require_once 'api/ogrenci_devamsizlik_listesi.php';
+            break;
+
+        case 'ogrenci_devamsizlik_kayitlari':
+            require_once 'api/ogrenci_devamsizlik_kayitlari.php';
+            break;
+
         case 'yaklasan_odemeler':
             require_once 'api/yaklasan_odemeler.php';
             break;
