@@ -71,7 +71,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
         // Eğer kayıt yoksa test kayıtları oluştur
         if (empty($records)) {
-            error_log("Kayıt bulunamadı, test kayıtları oluşturuluyor...");
+            error_log("Kayıt bulunamadı, öğrenci varlığı kontrol ediliyor...");
+            
+            // Önce öğrencinin var olup olmadığını kontrol et
+            $studentCheckSql = "SELECT id FROM ogrenciler WHERE id = :ogrenci_id";
+            $studentCheckStmt = $conn->prepare($studentCheckSql);
+            $studentCheckStmt->bindParam(':ogrenci_id', $ogrenci_id, PDO::PARAM_INT);
+            $studentCheckStmt->execute();
+            
+            if ($studentCheckStmt->rowCount() === 0) {
+                error_log("Öğrenci ID $ogrenci_id bulunamadı");
+                errorResponse("Belirtilen öğrenci bulunamadı", 404);
+            }
+            
+            error_log("Öğrenci mevcut, test kayıtları oluşturuluyor...");
             
             // Test kayıtları oluştur
             $testRecords = [

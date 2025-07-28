@@ -718,7 +718,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
               }
             },
             elements: {
-              arc: {
+               arc: {
                 borderWidth: 1,
                 borderColor: '#fff'
               }
@@ -824,8 +824,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
     const headers = this.getAuthHeaders();
     console.log('Katılım verileri yükleniyor, öğrenci ID:', this.ogrenciBilgileri.id);
 
-    // Yeni API endpoint'ini kullan
-    this.http.get<any>(`server/api/ogrenci_devamsizlik_listesi.php?ogrenci_id=${this.ogrenciBilgileri.id}`, { headers })
+    this.http.get<any>(`server/api/ogrenci_devamsizlik_kayitlari.php?ogrenci_id=${this.ogrenciBilgileri.id}`, { headers })
       .subscribe({
         next: (response) => {
           console.log('Yeni API response:', response);
