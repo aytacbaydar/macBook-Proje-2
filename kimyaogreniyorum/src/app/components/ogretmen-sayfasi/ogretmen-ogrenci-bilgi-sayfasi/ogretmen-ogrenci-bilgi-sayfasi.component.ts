@@ -511,7 +511,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
       ctx.lineWidth = 3;
       ctx.beginPath();
       
-      data.forEach((value, index) => {
+      data.forEach((value: number, index: number) => {
         const x = margin + (chartWidth / (data.length - 1)) * index;
         const y = margin + chartHeight - ((value - minValue) / range) * chartHeight;
         
