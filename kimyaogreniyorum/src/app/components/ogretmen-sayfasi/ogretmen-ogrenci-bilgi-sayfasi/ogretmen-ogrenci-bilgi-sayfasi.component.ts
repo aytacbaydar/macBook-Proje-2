@@ -65,7 +65,7 @@ interface DevamsizlikKaydi {
 })
 export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewInit {
   @ViewChild('sinavChart', { static: false }) sinavChart?: ElementRef<HTMLCanvasElement>;
-  
+
   ogrenciId: number = 0;
   ogrenciBilgileri: OgrenciBilgileri | null = null;
   sinavSonuclari: SinavSonucu[] = [];
@@ -103,7 +103,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
   ngOnInit(): void {
     // Öğretmen bilgilerini yükle
     this.loadTeacherInfo();
-    
+
     this.route.params.subscribe(async params => {
       const idParam = params['id'];
       this.ogrenciId = parseInt(idParam, 10);
@@ -259,7 +259,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
                 const filteredResults = response.data.sinav_sonuclari.filter((sinav: any) => 
                   sinav && sinav.ogrenci_id && sinav.ogrenci_id == this.ogrenciId
                 );
-                
+
                 // SinavSonucu interface'ine uygun formata çevir
                 this.sinavSonuclari = filteredResults.map((sinav: any) => ({
                   id: sinav.id || 0,
@@ -453,14 +453,14 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
       const sortedResults = [...this.sinavSonuclari].sort((a, b) => 
         new Date(a.tarih).getTime() - new Date(b.tarih).getTime()
       );
-      
+
       this.chartLabels = sortedResults.map(sinav => {
         // Sınav adını kısalt
         return sinav.sinav_adi.length > 20 ? 
           sinav.sinav_adi.substring(0, 20) + '...' : 
           sinav.sinav_adi;
       });
-      
+
       this.chartData = [{
         label: 'Puan',
         data: sortedResults.map(sinav => sinav.puan),
@@ -469,12 +469,12 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
         fill: true,
         tension: 0.4
       }];
-      
+
       console.log('Grafik verileri hazırlandı:', this.chartData);
-      
+
       // Grafik çizimini tetikle - cdr ile birlikte
       this.cdr.detectChanges();
-      
+
       // Eğer sınav sekmesi aktifse grafiği render et
       if (this.activeTab === 'sinavlar') {
         setTimeout(() => this.renderChart(), 500);
@@ -489,137 +489,154 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
     console.log('renderChart çağrıldı');
     console.log('sinavChart var mı?', !!this.sinavChart);
     console.log('chartData var mı?', this.chartData.length);
-    console.log('activeTab:', this.activeTab);
-    
-    if (!this.sinavChart || !this.chartData.length || this.activeTab !== 'sinavlar') {
-      console.log('Canvas element, chart data yok veya sınav sekmesi aktif değil, grafik çizilemiyor');
+
+    const canvas = document.getElementById('sinavChart') as HTMLCanvasElement;
+    if (!canvas) {
+      console.log('Canvas element veya chart data yok, grafik çizilemiyor');
       return;
     }
 
-    try {
-      const canvas = this.sinavChart.nativeElement;
-      console.log('Canvas element:', canvas);
-      
-      if (!canvas) {
-        console.log('Canvas element bulunamadı');
-        return;
-      }
-      
-      const ctx = canvas.getContext('2d');
-      if (!ctx) {
-        console.log('Canvas context alınamadı');
-        return;
-      }
+    if (!this.chartData || this.chartData.length === 0) {
+      console.log('Canvas element veya chart data yok, grafik çizilemiyor');
+      return;
+    }
 
-      // Canvas boyutlarını ayarla
-      const containerWidth = canvas.offsetWidth || 800;
-      const containerHeight = 400;
-      
-      canvas.width = containerWidth;
-      canvas.height = containerHeight;
-      
-      ctx.clearRect(0, 0, containerWidth, containerHeight);
-      
-      const data = this.chartData[0].data;
-      console.log('Grafik datası:', data);
-      
-      if (data.length === 0) {
-        console.log('Data boş, grafik çizilemiyor');
-        return;
-      }
-      
-      const maxValue = Math.max(...data) || 100;
-      const minValue = Math.min(...data) || 0;
-      const range = maxValue - minValue || 1;
-      
-      const margin = 60;
-      const chartWidth = containerWidth - 2 * margin;
-      const chartHeight = containerHeight - 2 * margin;
-      
-      // Arka plan
-      ctx.fillStyle = '#f8f9fa';
-      ctx.fillRect(0, 0, containerWidth, containerHeight);
-      
-      // Grid çizgileri
-      ctx.strokeStyle = '#e0e0e0';
-      ctx.lineWidth = 1;
-      
-      // Yatay çizgiler ve y-axis etiketleri
-      ctx.fillStyle = '#666';
-      ctx.font = '12px Arial';
-      ctx.textAlign = 'right';
-      
-      for (let i = 0; i <= 5; i++) {
-        const y = margin + (chartHeight / 5) * i;
-        const value = maxValue - (i * range / 5);
-        
-        // Grid çizgisi
-        ctx.beginPath();
-        ctx.moveTo(margin, y);
-        ctx.lineTo(containerWidth - margin, y);
-        ctx.stroke();
-        
-        // Y-axis etiketi
-        ctx.fillText(Math.round(value).toString(), margin - 10, y + 4);
-      }
-      
-      // Veri çizgisi
-      ctx.strokeStyle = '#007bff';
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      
-      data.forEach((value: number, index: number) => {
-        const x = margin + (chartWidth / Math.max(data.length - 1, 1)) * index;
-        const y = margin + chartHeight - ((value - minValue) / range) * chartHeight;
-        
-        if (index === 0) {
-          ctx.moveTo(x, y);
-        } else {
-          ctx.lineTo(x, y);
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      console.error('Canvas context alınamadı');
+      return;
+    }
+
+    // Eğer zaten bir chart varsa yok et
+    if (this.sinavChart) {
+      this.sinavChart.destroy();
+    }
+
+    try {
+      // Sınav türlerine göre dinamik renkler
+      const sinavTuruColors: { [key: string]: string } = {
+        'TYT': '#667eea',
+        'AYT': '#4facfe', 
+        'TAR': '#43e97b',
+        'TEST': '#fa709a'
+      };
+
+      // Chart.js ile modern grafik oluştur
+      this.sinavChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: this.chartLabels,
+          datasets: [{
+            label: 'Sınav Puanları',
+            data: this.chartData[0].data,
+            backgroundColor: this.chartLabels.map((_, index) => {
+              // Her sınav için farklı renk
+              const colors = ['#667eea80', '#4facfe80', '#43e97b80', '#fa709a80', '#38d9a980'];
+              return colors[index % colors.length];
+            }),
+            borderColor: this.chartLabels.map((_, index) => {
+              const colors = ['#667eea', '#4facfe', '#43e97b', '#fa709a', '#38d9a9'];
+              return colors[index % colors.length];
+            }),
+            borderWidth: 2,
+            borderRadius: 8,
+            borderSkipped: false,
+            hoverBackgroundColor: this.chartLabels.map((_, index) => {
+              const colors = ['#667eeacc', '#4facfecc', '#43e97bcc', '#fa709acc', '#38d9a9cc'];
+              return colors[index % colors.length];
+            })
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              titleFont: {
+                size: 14,
+                weight: 'bold'
+              },
+              bodyFont: {
+                size: 13
+              },
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              titleColor: '#fff',
+              bodyColor: '#fff',
+              borderColor: '#ddd',
+              borderWidth: 1,
+              callbacks: {
+                title: (context) => {
+                  return this.chartLabels[context[0].dataIndex];
+                },
+                label: (context) => {
+                  return `Puan: ${context.parsed.y}`;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                color: '#2d3748',
+                font: {
+                  size: 12,
+                  weight: 'bold'
+                }
+              },
+              title: {
+                display: true,
+                text: 'Puan',
+                font: {
+                  size: 14,
+                  weight: 'bold'
+                },
+                color: '#2d3748'
+              },
+              grid: {
+                color: '#e2e8f0',
+                lineWidth: 1
+              }
+            },
+            x: {
+              ticks: {
+                color: '#2d3748',
+                font: {
+                  size: 12,
+                  weight: 'bold'
+                },
+                maxRotation: 45,
+                minRotation: 0
+              },
+              title: {
+                display: true,
+                text: 'Sınavlar',
+                font: {
+                  size: 14,
+                  weight: 'bold'
+                },
+                color: '#2d3748'
+              },
+              grid: {
+                display: false
+              }
+            }
+          },
+          animation: {
+            duration: 1200,
+            easing: 'easeInOutQuart'
+          },
+          interaction: {
+            intersect: false,
+            mode: 'index'
+          }
         }
       });
-      
-      ctx.stroke();
-      
-      // Noktalar ve değer etiketleri
-      ctx.fillStyle = '#007bff';
-      ctx.textAlign = 'center';
-      ctx.font = '11px Arial';
-      
-      data.forEach((value: number, index: number) => {
-        const x = margin + (chartWidth / Math.max(data.length - 1, 1)) * index;
-        const y = margin + chartHeight - ((value - minValue) / range) * chartHeight;
-        
-        // Nokta
-        ctx.beginPath();
-        ctx.arc(x, y, 5, 0, 2 * Math.PI);
-        ctx.fill();
-        
-        // Değer etiketi
-        ctx.fillStyle = '#333';
-        ctx.fillText(value.toString(), x, y - 10);
-        ctx.fillStyle = '#007bff';
-        
-        // X-axis etiketi (sınav adı)
-        if (this.chartLabels[index]) {
-          ctx.save();
-          ctx.translate(x, containerHeight - 10);
-          ctx.rotate(-Math.PI / 4);
-          ctx.fillStyle = '#666';
-          ctx.font = '10px Arial';
-          ctx.textAlign = 'right';
-          ctx.fillText(this.chartLabels[index], 0, 0);
-          ctx.restore();
-        }
-      });
-      
-      // Başlık
-      ctx.fillStyle = '#333';
-      ctx.font = 'bold 16px Arial';
-      ctx.textAlign = 'center';
-      ctx.fillText('Sınav Puanları Gelişimi', containerWidth / 2, 25);
-      
-      console.log('Grafik başarıyla çizildi');
+
+      console.log('Modern grafik başarıyla çizildi');
     } catch (error) {
       console.error('Grafik çizim hatası:', error);
     }
@@ -627,7 +644,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
 
   setActiveTab(tab: string): void {
     this.activeTab = tab;
-    
+
     // Sınav sekmesi seçildiğinde ve chart data varsa grafiği render et
     if (tab === 'sinavlar' && this.chartData.length > 0) {
       setTimeout(() => {
@@ -653,14 +670,14 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
   private loadTeacherInfo(): void {
     // localStorage veya sessionStorage'dan giriş yapan kullanıcı bilgilerini al
     const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
-    
+
     if (userStr) {
       try {
         const user = JSON.parse(userStr);
-        
+
         // Kullanıcı bilgilerini al (API'den gelen response.data formatına uygun)
         this.teacherName = user.adi_soyadi || 'Öğretmen';
-        
+
         // Avatar kontrolü - API'den gelen avatar alanını kullan
         if (user.avatar && user.avatar.trim() !== '') {
           this.teacherAvatar = user.avatar;
@@ -668,14 +685,14 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
           // Avatar yoksa UI Avatars ile dinamik oluştur
           this.teacherAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(this.teacherName)}&background=4f46e5&color=fff&size=40&font-size=0.6&rounded=true`;
         }
-        
+
         console.log('Öğretmen bilgileri yüklendi:', {
           id: user.id,
           name: this.teacherName,
           avatar: this.teacherAvatar,
           userRole: user.rutbe
         });
-        
+
       } catch (error) {
         console.error('Kullanıcı bilgileri ayrıştırılırken hata:', error);
         this.setDefaultTeacherInfo();
