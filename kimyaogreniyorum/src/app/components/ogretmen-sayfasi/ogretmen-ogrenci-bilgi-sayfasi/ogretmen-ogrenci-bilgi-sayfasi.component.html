@@ -61,7 +61,7 @@
             <div class="text-primary mb-2">
               <i class="bi bi-currency-exchange fs-1"></i>
             </div>
-            <h5 class="fw-bold text-dark">₺{{ toplamOdenen }}</h5>
+            <h5 class="fw-bold text-dark">{{ formatCurrency(toplamOdenen) }}</h5>
             <p class="text-muted small mb-0">Toplam Ödenen</p>
           </div>
         </div>
@@ -72,7 +72,7 @@
             <div class="text-warning mb-2">
               <i class="bi bi-exclamation-triangle fs-1"></i>
             </div>
-            <h5 class="fw-bold text-dark">₺{{ kalanBorc }}</h5>
+            <h5 class="fw-bold text-dark">{{ formatCurrency(kalanBorc) }}</h5>
             <p class="text-muted small mb-0">Kalan Borç</p>
           </div>
         </div>
@@ -191,7 +191,7 @@
                     <strong>Ders Saati:</strong> {{ ogrenciBilgileri.ders_saati }}
                   </div>
                   <div class="mb-3">
-                    <strong>Aylık Ücret:</strong> ₺{{ ogrenciBilgileri.ucret }}
+                    <strong>Aylık Ücret:</strong> {{ formatCurrency(ogrenciBilgileri.ucret) }}
                   </div>
                 </div>
               </div>
@@ -397,7 +397,7 @@
                 <div class="col-md-4">
                   <div class="card bg-info text-white">
                     <div class="card-body text-center">
-                      <h4 class="fw-bold">₺{{ ogrenciBilgileri.ucret }}</h4>
+                      <h4 class="fw-bold">{{ formatCurrency(ogrenciBilgileri.ucret) }}</h4>
                       <p class="mb-0">Aylık Ücret</p>
                     </div>
                   </div>
@@ -421,7 +421,7 @@
                       <tbody>
                         <tr *ngFor="let odeme of odemeBilgileri">
                           <td>{{ formatTarih(odeme.odeme_tarihi) }}</td>
-                          <td class="fw-bold text-success">₺{{ odeme.tutar }}</td>
+                          <td class="fw-bold text-success">{{ formatCurrency(odeme.tutar) }}</td>
                           <td>{{ odeme.aciklama || 'Aylık ödeme' }}</td>
                           <td>{{ odeme.ay }}/{{ odeme.yil }}</td>
                         </tr>

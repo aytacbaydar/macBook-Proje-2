@@ -431,16 +431,18 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
       ? this.odemeBilgileri.reduce((total, odeme) => total + (odeme.tutar || 0), 0)
       : 0;
 
-    // Kalan borç hesapla (örnek hesaplama)
-    const aylikUcret = this.ogrenciBilgileri?.ucret || 0;
-    const bugunTarihi = new Date();
-    const baslangicAyi = 9; // Eylül ayından başladığını varsayalım
-    const gecenAy = bugunTarihi.getMonth() + 1 - baslangicAyi + 1;
-    this.kalanBorc = Math.max(0, (gecenAy * aylikUcret) - this.toplamOdenen);
+    // Kalan borç hesapla (katılım kayıtlarına göre)
+    const stats = this.getStudentAttendanceStats();
+    if (stats) {
+      const expectedAmount = stats.expectedTotalAmount || 0;
+      this.kalanBorc = Math.max(0, expectedAmount - this.toplamOdenen);
+    } else {
+      this.kalanBorc = 0;
+    }
 
-    // Devamsızlık sayısı - array kontrolü ile
-    this.devamsizlikSayisi = Array.isArray(this.devamsizlikKayitlari) 
-      ? this.devamsizlikKayitlari.filter(kayit => kayit && kayit.durum === 'absent').length
+    // Devamsızlık sayısı - historicalAttendance'dan al
+    this.devamsizlikSayisi = Array.isArray(this.historicalAttendance) 
+      ? this.historicalAttendance.filter(kayit => kayit && kayit.durum === 'absent' && kayit.ogrenci_id === this.ogrenciBilgileri?.id).length
       : 0;
 
     // Ortalama puan - array kontrolü ile
@@ -859,12 +861,50 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
     if (!this.ogrenciBilgileri) return;
 
     const headers = this.getAuthHeaders();
+    console.log('Katılım verileri yükleniyor, öğrenci ID:', this.ogrenciBilgileri.id);
 
-    // Önce öğrenciye özel devamsızlık kayıtlarını yükle
-    this.http.get<any>(`server/api/devamsizlik_kayitlari.php?ogrenci_id=${this.ogrenciBilgileri.id}&butun_kayitlar=true`, { headers })
+    // Önce grup devamsızlık kayıtlarından öğrenciye özel olanları dene
+    this.http.get<any>(`server/api/grup_ders_kayitlari.php?grup=${this.ogrenciBilgileri.grubu}`, { headers })
       .subscribe({
         next: (response) => {
-          console.log('Devamsızlık kayıtları response:', response);
+          console.log('Grup ders kayıtları response:', response);
+          if (response && response.success && response.data) {
+            // Grup verilerinden bu öğrenciye ait kayıtları filtrele
+            if (Array.isArray(response.data)) {
+              this.historicalAttendance = response.data.filter(record => 
+                record.ogrenci_id == this.ogrenciBilgileri!.id
+              );
+            } else {
+              this.historicalAttendance = [];
+            }
+            
+            console.log('Yüklenen katılım kayıtları (grup):', this.historicalAttendance);
+            
+            // Eğer grup verilerinde bulunamadıysa, öğrenci özel endpoint'ini dene
+            if (this.historicalAttendance.length === 0) {
+              this.tryStudentSpecificEndpoint();
+            } else {
+              this.cdr.detectChanges();
+            }
+          } else {
+            console.warn('Grup verileri bulunamadı, öğrenci özel endpoint deneniyor');
+            this.tryStudentSpecificEndpoint();
+          }
+        },
+        error: (error) => {
+          console.error('Grup verileri yüklenemedi, öğrenci özel endpoint deneniyor:', error);
+          this.tryStudentSpecificEndpoint();
+        }
+      });
+  }
+
+  private tryStudentSpecificEndpoint(): void {
+    const headers = this.getAuthHeaders();
+    
+    this.http.get<any>(`server/api/devamsizlik_kayitlari.php?ogrenci_id=${this.ogrenciBilgileri!.id}&butun_kayitlar=true`, { headers })
+      .subscribe({
+        next: (response) => {
+          console.log('Öğrenci özel devamsızlık kayıtları response:', response);
           if (response && response.success) {
             // API response yapısını kontrol et
             if (response.data && response.data.kayitlar && Array.isArray(response.data.kayitlar)) {
@@ -877,16 +917,18 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
               this.historicalAttendance = [];
             }
             
-            console.log('Yüklenen katılım kayıtları:', this.historicalAttendance);
-            this.cdr.detectChanges(); // UI güncelleme tetikle
+            console.log('Yüklenen katılım kayıtları (öğrenci özel):', this.historicalAttendance);
+            this.cdr.detectChanges();
           } else {
-            console.warn('Katılım verileri bulunamadı:', response?.message);
+            console.warn('Öğrenci özel katılım verileri bulunamadı:', response?.message);
             this.historicalAttendance = [];
+            this.cdr.detectChanges();
           }
         },
         error: (error) => {
-          console.error('Katılım verileri yüklenemedi:', error);
+          console.error('Öğrenci özel katılım verileri yüklenemedi:', error);
           this.historicalAttendance = [];
+          this.cdr.detectChanges();
         }
       });
   }
@@ -904,7 +946,9 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
   formatCurrency(amount: number): string {
     return new Intl.NumberFormat('tr-TR', {
       style: 'currency',
-      currency: 'TRY'
+      currency: 'TRY',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
     }).format(amount);
   }
 
