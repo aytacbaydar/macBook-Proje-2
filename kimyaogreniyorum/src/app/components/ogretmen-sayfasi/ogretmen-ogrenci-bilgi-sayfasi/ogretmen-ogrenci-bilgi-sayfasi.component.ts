@@ -146,13 +146,12 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
     this.error = null;
 
     try {
-      // Tüm verileri paralel olarak yükle
+      // Tüm verileri paralel olarak yükle (devamsizlik kayitlari loadStudentAttendanceData'da yüklenecek)
       await Promise.all([
         this.loadOgrenciBilgileri(),
         this.loadSinavSonuclari(),
         this.loadKonuAnalizleri(),
-        this.loadOdemeBilgileri(),
-        this.loadDevamsizlikKayitlari()
+        this.loadOdemeBilgileri()
       ]);
 
       this.calculateStatistics();
@@ -385,45 +384,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
     });
   }
 
-  loadDevamsizlikKayitlari(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      console.log('Devamsızlık kayıtları yükleniyor...');
-
-      const headers = this.getAuthHeaders();
-
-      this.http.get<any>(`server/api/devamsizlik_kayitlari.php?ogrenci_id=${this.ogrenciId}`, { headers })
-        .subscribe({
-          next: (response) => {
-            console.log('Devamsızlık kayıtları response:', response);
-            if (response && response.success) {
-              // API'den gelen veri object ise array'e çevir
-              if (response.data && Array.isArray(response.data)) {
-                this.devamsizlikKayitlari = response.data;
-              } else if (response.data && typeof response.data === 'object') {
-                // Eğer object ise, values'larını al ve DevamsizlikKaydi tipine cast et
-                const objectValues = Object.values(response.data);
-                this.devamsizlikKayitlari = objectValues.filter((item: any) => 
-                  item && typeof item === 'object' && item.id
-                ) as DevamsizlikKaydi[];
-              } else {
-                this.devamsizlikKayitlari = [];
-              }
-              console.log('İşlenmiş devamsızlık kayıtları:', this.devamsizlikKayitlari);
-              resolve();
-            } else {
-              console.warn('Devamsızlık kayıtları bulunamadı:', response?.message);
-              this.devamsizlikKayitlari = [];
-              resolve(); // Boş array ile devam et
-            }
-          },
-          error: (error) => {
-            console.error('HTTP Error - Devamsızlık kayıtları:', error);
-            this.devamsizlikKayitlari = [];
-            resolve(); // Hata olsa da devam et
-          }
-        });
-    });
-  }
+  
 
   calculateStatistics(): void {
     // Toplam ödenen hesapla - array kontrolü ile
@@ -874,11 +835,21 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
               this.historicalAttendance = response.data.filter((record: any) => 
                 record.ogrenci_id == this.ogrenciBilgileri!.id
               );
+              
+              // devamsizlikKayitlari'nı da güncelle
+              this.devamsizlikKayitlari = this.historicalAttendance.map((record: any) => ({
+                id: record.id || 0,
+                tarih: record.tarih || '',
+                durum: record.durum || '',
+                aciklama: record.aciklama || ''
+              }));
             } else {
               this.historicalAttendance = [];
+              this.devamsizlikKayitlari = [];
             }
             
             console.log('Yüklenen katılım kayıtları (grup):', this.historicalAttendance);
+            console.log('Güncellenen devamsızlık kayıtları:', this.devamsizlikKayitlari);
             
             // Eğer grup verilerinde bulunamadıysa, öğrenci özel endpoint'ini dene
             if (this.historicalAttendance.length === 0) {
@@ -917,17 +888,28 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
               this.historicalAttendance = [];
             }
             
+            // devamsizlikKayitlari'nı da güncelle
+            this.devamsizlikKayitlari = this.historicalAttendance.map((record: any) => ({
+              id: record.id || 0,
+              tarih: record.tarih || '',
+              durum: record.durum || '',
+              aciklama: record.aciklama || ''
+            }));
+            
             console.log('Yüklenen katılım kayıtları (öğrenci özel):', this.historicalAttendance);
+            console.log('Güncellenen devamsızlık kayıtları:', this.devamsizlikKayitlari);
             this.cdr.detectChanges();
           } else {
             console.warn('Öğrenci özel katılım verileri bulunamadı:', response?.message);
             this.historicalAttendance = [];
+            this.devamsizlikKayitlari = [];
             this.cdr.detectChanges();
           }
         },
         error: (error) => {
           console.error('Öğrenci özel katılım verileri yüklenemedi:', error);
           this.historicalAttendance = [];
+          this.devamsizlikKayitlari = [];
           this.cdr.detectChanges();
         }
       });
