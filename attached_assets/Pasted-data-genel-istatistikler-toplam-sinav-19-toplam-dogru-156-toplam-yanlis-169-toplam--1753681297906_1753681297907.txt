@@ -1,0 +1,74 @@
+data
+: 
+genel_istatistikler
+: 
+{toplam_sinav: 19, toplam_dogru: 156, toplam_yanlis: 169, toplam_bos: 94, toplam_net: 120.25, …}
+sinav_sonuclari
+: 
+Array(19)
+0
+: 
+{id: 36, sinav_id: 16, ogrenci_id: 45, sinav_adi: 'TARAMA-4 ( Atom-Periyodik-Etkileşimler-Redoks )', sinav_turu: 'TAR', …}
+1
+: 
+{id: 35, sinav_id: 16, ogrenci_id: 41, sinav_adi: 'TARAMA-4 ( Atom-Periyodik-Etkileşimler-Redoks )', sinav_turu: 'TAR', …}
+2
+: 
+{id: 34, sinav_id: 16, ogrenci_id: 46, sinav_adi: 'TARAMA-4 ( Atom-Periyodik-Etkileşimler-Redoks )', sinav_turu: 'TAR', …}
+3
+: 
+{id: 33, sinav_id: 16, ogrenci_id: 42, sinav_adi: 'TARAMA-4 ( Atom-Periyodik-Etkileşimler-Redoks )', sinav_turu: 'TAR', …}
+4
+: 
+{id: 32, sinav_id: 16, ogrenci_id: 40, sinav_adi: 'TARAMA-4 ( Atom-Periyodik-Etkileşimler-Redoks )', sinav_turu: 'TAR', …}
+5
+: 
+{id: 30, sinav_id: 15, ogrenci_id: 42, sinav_adi: 'TARAMA-3 ( Kimyasal Türler Arası Etkileşimler)', sinav_turu: 'TAR', …}
+6
+: 
+{id: 29, sinav_id: 15, ogrenci_id: 46, sinav_adi: 'TARAMA-3 ( Kimyasal Türler Arası Etkileşimler)', sinav_turu: 'TAR', …}
+7
+: 
+{id: 28, sinav_id: 15, ogrenci_id: 40, sinav_adi: 'TARAMA-3 ( Kimyasal Türler Arası Etkileşimler)', sinav_turu: 'TAR', …}
+8
+: 
+{id: 27, sinav_id: 15, ogrenci_id: 41, sinav_adi: 'TARAMA-3 ( Kimyasal Türler Arası Etkileşimler)', sinav_turu: 'TAR', …}
+9
+: 
+{id: 26, sinav_id: 13, ogrenci_id: 41, sinav_adi: 'TARAMA-1 ( Atomun Yapısı ve Kuantumu )', sinav_turu: 'TAR', …}
+10
+: 
+{id: 25, sinav_id: 13, ogrenci_id: 40, sinav_adi: 'TARAMA-1 ( Atomun Yapısı ve Kuantumu )', sinav_turu: 'TAR', …}
+11
+: 
+{id: 17, sinav_id: 12, ogrenci_id: 43, sinav_adi: 'AYT-1-STS', sinav_turu: 'AYT', …}
+12
+: 
+{id: 16, sinav_id: 11, ogrenci_id: 43, sinav_adi: 'TYT-1-STS', sinav_turu: 'TYT', …}
+13
+: 
+{id: 14, sinav_id: 12, ogrenci_id: 41, sinav_adi: 'AYT-1-STS', sinav_turu: 'AYT', …}
+14
+: 
+{id: 15, sinav_id: 12, ogrenci_id: 42, sinav_adi: 'AYT-1-STS', sinav_turu: 'AYT', …}
+15
+: 
+{id: 13, sinav_id: 11, ogrenci_id: 41, sinav_adi: 'TYT-1-STS', sinav_turu: 'TYT', …}
+16
+: 
+{id: 12, sinav_id: 11, ogrenci_id: 42, sinav_adi: 'TYT-1-STS', sinav_turu: 'TYT', …}
+17
+: 
+{id: 10, sinav_id: 12, ogrenci_id: 40, sinav_adi: 'AYT-1-STS', sinav_turu: 'AYT', …}
+18
+: 
+{id: 10, sinav_id: 12, ogrenci_id: 40, sinav_adi: 'AYT-1-STS', sinav_turu: 'AYT', …}
+length
+: 
+19
+[[Prototype]]
+: 
+Array(0)
+sinav_turleri
+: 
+{TAR: {…}, AYT: {…}, TYT: {…}}
