@@ -1,0 +1,50 @@
+▲ [WARNING] NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.html:498:52:
+      498 │ ...mg [src]="ogrenciBilgileri?.avatar || getDefaultAvatar(ogrenci...
+          ╵                                ~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciBilgiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:66:15:
+      66 │   templateUrl: './ogretmen-ogrenci-bilgi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+▲ [WARNING] NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. [plugin angular-compiler]      
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.html:498:97:
+      498 │ ...gileri?.avatar || getDefaultAvatar(ogrenciBilgileri?.adi_soyadi)"
+          ╵                                                         ~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciBilgiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:66:15:
+      66 │   templateUrl: './ogretmen-ogrenci-bilgi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'avatar' does not exist on type 'OgrenciBilgileri'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.html:498:52:
+      498 │ ...mg [src]="ogrenciBilgileri?.avatar || getDefaultAvatar(ogrenci...
+          ╵                                ~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciBilgiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:66:15:
+      66 │   templateUrl: './ogretmen-ogrenci-bilgi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.html:498:79:
+      498 │ ...gileri?.avatar || getDefaultAvatar(ogrenciBilgileri?.adi_soyadi)"
+          ╵                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciBilgiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:66:15:
+      66 │   templateUrl: './ogretmen-ogrenci-bilgi-sayfasi.component.html',
