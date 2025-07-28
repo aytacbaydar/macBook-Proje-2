@@ -8,10 +8,45 @@ try {
     $method = $_SERVER['REQUEST_METHOD'];
 
     if ($method === 'GET') {
-        // Öğretmen adı parametresi olarak alınmalı veya sabit verilebilir
-        // Örnek: GET isteğinde ?ogretmen=Ali Veli olarak gönderilebilir
+        // Öğrenci ID parametresi kontrolü
+        if (isset($_GET['ogrenci_id']) && !empty($_GET['ogrenci_id'])) {
+            $ogrenciId = (int)$_GET['ogrenci_id'];
+            
+            // Tek öğrenci için ödemeler
+            $paymentsQuery = "
+                SELECT op.*, o.adi_soyadi as ogrenci_adi
+                FROM ogrenci_odemeler op
+                INNER JOIN ogrenciler o ON op.ogrenci_id = o.id
+                WHERE op.ogrenci_id = ?
+                ORDER BY op.odeme_tarihi DESC
+            ";
+            $stmt = $conn->prepare($paymentsQuery);
+            $stmt->execute([$ogrenciId]);
+            $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            // Öğrenci bilgisi
+            $studentQuery = "
+                SELECT o.id, o.adi_soyadi, o.email, o.cep_telefonu, o.aktif,
+                       ob.okulu, ob.sinifi, ob.grubu, ob.ders_gunu, ob.ders_saati, 
+                       ob.ucret, ob.veli_adi, ob.veli_cep
+                FROM ogrenciler o
+                LEFT JOIN ogrenci_bilgileri ob ON o.id = ob.ogrenci_id
+                WHERE o.id = ?
+            ";
+            $stmt = $conn->prepare($studentQuery);
+            $stmt->execute([$ogrenciId]);
+            $student = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            successResponse([
+                'student' => $student,
+                'payments' => $payments
+            ]);
+            exit;
+        }
+        
+        // Öğretmen adı parametresi kontrolü (tüm öğrenciler için)
         if (!isset($_GET['ogretmen']) || empty(trim($_GET['ogretmen']))) {
-            errorResponse('Öğretmen adı gerekli.', 400);
+            errorResponse('Öğretmen adı veya öğrenci ID gerekli.', 400);
             exit;
         }
         $teacherName = trim($_GET['ogretmen']);
