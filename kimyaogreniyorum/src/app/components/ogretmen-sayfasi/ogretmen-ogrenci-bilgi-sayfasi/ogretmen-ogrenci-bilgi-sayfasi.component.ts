@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
@@ -66,7 +66,7 @@ interface DevamsizlikKaydi {
   templateUrl: './ogretmen-ogrenci-bilgi-sayfasi.component.html',
   styleUrl: './ogretmen-ogrenci-bilgi-sayfasi.component.scss'
 })
-export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewInit {
+export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('sinavChart', { static: false }) sinavChartRef?: ElementRef<HTMLCanvasElement>;
   
   // Chart instance
@@ -499,17 +499,18 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
     console.log('sinavChart var mı?', !!this.sinavChart);
     console.log('chartData var mı?', this.chartData.length);
 
-    const canvas = document.getElementById('sinavChart') as HTMLCanvasElement;
-    if (!canvas) {
-      console.log('Canvas element veya chart data yok, grafik çizilemiyor');
+    // ViewChild ile canvas'ı al
+    if (!this.sinavChartRef?.nativeElement) {
+      console.log('Canvas element bulunamadı');
       return;
     }
 
-    if (!this.chartData || this.chartData.length === 0 || !this.sinavSonuclari.length) {
-      console.log('Canvas element veya chart data yok, grafik çizilemiyor');
+    if (!this.sinavSonuclari || this.sinavSonuclari.length === 0) {
+      console.log('Sınav sonuçları yok, grafik çizilemiyor');
       return;
     }
 
+    const canvas = this.sinavChartRef.nativeElement;
     const ctx = canvas.getContext('2d');
     if (!ctx) {
       console.error('Canvas context alınamadı');
@@ -519,6 +520,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
     // Eğer zaten bir chart varsa yok et
     if (this.sinavChart) {
       this.sinavChart.destroy();
+      this.sinavChart = null;
     }
 
     try {
@@ -529,11 +531,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
         return ad.length > 20 ? ad.substring(0, 15) + '...' : ad;
       });
 
-      const basariOranlari = this.sinavSonuclari.map(sinav => {
-        const totalQuestions = sinav.net_dogru + sinav.net_yanlis + sinav.net_bos;
-        if (totalQuestions === 0) return 0;
-        return Math.round((sinav.net_dogru / totalQuestions) * 100);
-      });
+      const basariOranlari = this.sinavSonuclari.map(sinav => this.getSuccessPercentage(sinav));
 
       // Sınav türlerine göre renkler
       const sinavTuruColors: { [key: string]: string } = {
@@ -678,6 +676,12 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
     }
   }
 
+  getSuccessPercentage(sinav: SinavSonucu): number {
+    const totalQuestions = sinav.net_dogru + sinav.net_yanlis + sinav.net_bos;
+    if (totalQuestions === 0) return 0;
+    return Math.round((sinav.net_dogru / totalQuestions) * 100);
+  }
+
   setActiveTab(tab: string): void {
     this.activeTab = tab;
 
@@ -699,13 +703,22 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
     setTimeout(() => {
       this.sinavSonuclari.forEach((sinav, index) => {
         const canvasId = `miniChart-${index}`;
-        const ctx = document.getElementById(canvasId) as HTMLCanvasElement;
+        const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
 
-        if (!ctx) return;
+        if (!canvas) {
+          console.log(`Mini chart canvas bulunamadı: ${canvasId}`);
+          return;
+        }
 
-        const dogru = sinav.net_dogru;
-        const yanlis = sinav.net_yanlis;
-        const bos = sinav.net_bos;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          console.error(`Canvas context alınamadı: ${canvasId}`);
+          return;
+        }
+
+        const dogru = sinav.net_dogru || 0;
+        const yanlis = sinav.net_yanlis || 0;
+        const bos = sinav.net_bos || 0;
 
         new Chart(ctx, {
           type: 'doughnut',
@@ -714,29 +727,45 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
             datasets: [{
               data: [dogru, yanlis, bos],
               backgroundColor: ['#28a745', '#dc3545', '#ffc107'],
-              borderWidth: 0
+              borderWidth: 0,
+              hoverBackgroundColor: ['#218838', '#c82333', '#e0a800']
             }]
           },
           options: {
             responsive: true,
-            maintainAspectRatio: false,
+            maintainAspectRatio: true,
             plugins: {
               legend: {
                 display: false
               },
               tooltip: {
-                enabled: false
+                enabled: true,
+                callbacks: {
+                  label: (context: any) => {
+                    const label = context.label || '';
+                    const value = context.parsed || 0;
+                    return `${label}: ${value}`;
+                  }
+                }
               }
             },
             elements: {
               arc: {
-                borderWidth: 0
+                borderWidth: 1,
+                borderColor: '#fff'
               }
             }
           }
         });
       });
     }, 500);
+  }
+
+  ngOnDestroy(): void {
+    // Chart instance'ını temizle
+    if (this.sinavChart) {
+      this.sinavChart.destroy();
+    }
   }
 
   getProgressBarClass(oran: number): string {

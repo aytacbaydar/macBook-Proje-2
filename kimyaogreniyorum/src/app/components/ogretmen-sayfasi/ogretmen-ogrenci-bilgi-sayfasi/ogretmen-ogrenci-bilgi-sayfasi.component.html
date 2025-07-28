@@ -256,6 +256,7 @@
                         <tr>
                           <th>Sınav Adı</th>
                           <th>Tarih</th>
+                          <th>Mini Grafik</th>
                           <th>Doğru</th>
                           <th>Yanlış</th>
                           <th>Boş</th>
@@ -264,9 +265,15 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr *ngFor="let sinav of sinavSonuclari">
+                        <tr *ngFor="let sinav of sinavSonuclari; let i = index">
                           <td class="fw-medium">{{ sinav.sinav_adi }}</td>
                           <td>{{ formatTarih(sinav.tarih) }}</td>
+                          <td>
+                            <!-- Mini Chart -->
+                            <div class="mini-chart-container" style="width: 60px; height: 60px;">
+                              <canvas [id]="'miniChart-' + i" width="60" height="60"></canvas>
+                            </div>
+                          </td>
                           <td>
                             <span class="badge bg-success">{{ sinav.net_dogru }}</span>
                           </td>
@@ -278,14 +285,16 @@
                           </td>
                           <td class="fw-bold">{{ sinav.puan }}</td>
                           <td>
-                            <div class="progress" style="width: 80px;">
-                              <div 
-                                class="progress-bar" 
-                                [class]="getProgressBarClass(sinav.basari_yuzdesi)"
-                                [style.width.%]="sinav.basari_yuzdesi">
+                            <div class="exam-success-rate">
+                              <div class="success-percentage">{{ getSuccessPercentage(sinav) }}%</div>
+                              <div class="progress" style="width: 80px; height: 8px;">
+                                <div 
+                                  class="progress-bar" 
+                                  [class]="getProgressBarClass(getSuccessPercentage(sinav))"
+                                  [style.width.%]="getSuccessPercentage(sinav)">
+                                </div>
                               </div>
                             </div>
-                            <small class="text-muted">{{ sinav.basari_yuzdesi }}%</small>
                           </td>
                         </tr>
                       </tbody>
