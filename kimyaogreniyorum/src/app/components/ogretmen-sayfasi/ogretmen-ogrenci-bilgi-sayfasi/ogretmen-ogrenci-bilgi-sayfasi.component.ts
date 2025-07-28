@@ -860,11 +860,28 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
 
     const headers = this.getAuthHeaders();
 
-    this.http.get<any>(`server/api/grup_ders_kayitlari.php?grup=${this.ogrenciBilgileri.grubu}`, { headers })
+    // Önce öğrenciye özel devamsızlık kayıtlarını yükle
+    this.http.get<any>(`server/api/devamsizlik_kayitlari.php?ogrenci_id=${this.ogrenciBilgileri.id}&butun_kayitlar=true`, { headers })
       .subscribe({
         next: (response) => {
-          if (response && response.success && response.data) {
-            this.historicalAttendance = response.data;
+          console.log('Devamsızlık kayıtları response:', response);
+          if (response && response.success) {
+            // API response yapısını kontrol et
+            if (response.data && response.data.kayitlar && Array.isArray(response.data.kayitlar)) {
+              this.historicalAttendance = response.data.kayitlar;
+            } else if (response.data && Array.isArray(response.data)) {
+              this.historicalAttendance = response.data;
+            } else if (Array.isArray(response.kayitlar)) {
+              this.historicalAttendance = response.kayitlar;
+            } else {
+              this.historicalAttendance = [];
+            }
+            
+            console.log('Yüklenen katılım kayıtları:', this.historicalAttendance);
+            this.cdr.detectChanges(); // UI güncelleme tetikle
+          } else {
+            console.warn('Katılım verileri bulunamadı:', response?.message);
+            this.historicalAttendance = [];
           }
         },
         error: (error) => {

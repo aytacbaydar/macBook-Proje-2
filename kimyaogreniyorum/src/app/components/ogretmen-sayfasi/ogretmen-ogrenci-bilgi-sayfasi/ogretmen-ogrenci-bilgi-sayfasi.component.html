@@ -130,6 +130,15 @@
               Ücret Bilgileri
             </button>
           </li>
+          <li class="nav-item">
+            <button 
+              class="nav-link" 
+              [class.active]="activeTab === 'devamsizlik'"
+              (click)="setActiveTab('devamsizlik')">
+              <i class="bi bi-calendar-check me-2"></i>
+              Devamsızlık
+            </button>
+          </li>
         </ul>
       </div>
     </div>
@@ -460,6 +469,91 @@
         </div>
 
         <!-- Devamsızlık/Katılım Bilgileri Sekmesi -->
+        <div *ngIf="activeTab === 'devamsizlik'" class="tab-content">
+          <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom">
+              <h5 class="mb-0 fw-bold">
+                <i class="bi bi-calendar-check me-2 text-primary"></i>
+                Devamsızlık ve Katılım Analizi
+              </h5>
+            </div>
+            <div class="card-body p-4">
+              <!-- Katılım İstatistikleri -->
+              <div class="row mb-4" *ngIf="getStudentAttendanceStats() as stats">
+                <div class="col-md-3">
+                  <div class="card bg-success text-white">
+                    <div class="card-body text-center">
+                      <h4 class="fw-bold">{{ stats.presentCount }}</h4>
+                      <p class="mb-0">Katıldığı Ders</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="card bg-danger text-white">
+                    <div class="card-body text-center">
+                      <h4 class="fw-bold">{{ stats.absentCount }}</h4>
+                      <p class="mb-0">Devamsızlık</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="card bg-info text-white">
+                    <div class="card-body text-center">
+                      <h4 class="fw-bold">{{ stats.attendancePercentage }}%</h4>
+                      <p class="mb-0">Katılım Oranı</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="card bg-warning text-white">
+                    <div class="card-body text-center">
+                      <h4 class="fw-bold">{{ stats.expectedPaymentCycles }}</h4>
+                      <p class="mb-0">Ödeme Dönemleri</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Son Katılım Kayıtları -->
+              <div class="row">
+                <div class="col-12">
+                  <h6 class="mb-3">Son Katılım Kayıtları</h6>
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Tarih</th>
+                          <th>Durum</th>
+                          <th>Ders Tipi</th>
+                          <th>Açıklama</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let record of getRecentAttendanceRecords()">
+                          <td>{{ record.formatted_date }}</td>
+                          <td>
+                            <span class="badge" [class]="record.durum === 'present' ? 'bg-success' : 'bg-danger'">
+                              {{ record.status_text }}
+                            </span>
+                          </td>
+                          <td>{{ record.lesson_type_text }}</td>
+                          <td>{{ record.aciklama || '-' }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="getRecentAttendanceRecords().length === 0" class="text-center py-4">
+                <i class="bi bi-calendar-x fs-1 text-muted"></i>
+                <p class="text-muted mt-2">Henüz katılım kaydı bulunmuyor.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ücret Analizi Sekmesi -->
         <div *ngIf="activeTab === 'ucret-analizi'" class="tab-content">
           <div class="payment-analysis-section">
             <div class="section-header">
