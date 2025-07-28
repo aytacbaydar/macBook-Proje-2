@@ -89,6 +89,10 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
   devamsizlikSayisi: number = 0;
   ortalamaPuan: number = 0;
 
+  // Öğretmen bilgileri
+  teacherName: string = '';
+  teacherAvatar: string = '';
+
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
@@ -97,6 +101,9 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
   ) {}
 
   ngOnInit(): void {
+    // Öğretmen bilgilerini yükle
+    this.loadTeacherInfo();
+    
     this.route.params.subscribe(async params => {
       const idParam = params['id'];
       this.ogrenciId = parseInt(idParam, 10);
@@ -629,5 +636,46 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
 
   trackByKonuAdi(index: number, item: KonuAnalizi): string {
     return item.konu_adi;
+  }
+
+  private loadTeacherInfo(): void {
+    // localStorage veya sessionStorage'dan giriş yapan kullanıcı bilgilerini al
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        
+        // Kullanıcı bilgilerini al (API'den gelen response.data formatına uygun)
+        this.teacherName = user.adi_soyadi || 'Öğretmen';
+        
+        // Avatar kontrolü - API'den gelen avatar alanını kullan
+        if (user.avatar && user.avatar.trim() !== '') {
+          this.teacherAvatar = user.avatar;
+        } else {
+          // Avatar yoksa UI Avatars ile dinamik oluştur
+          this.teacherAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(this.teacherName)}&background=4f46e5&color=fff&size=40&font-size=0.6&rounded=true`;
+        }
+        
+        console.log('Öğretmen bilgileri yüklendi:', {
+          id: user.id,
+          name: this.teacherName,
+          avatar: this.teacherAvatar,
+          userRole: user.rutbe
+        });
+        
+      } catch (error) {
+        console.error('Kullanıcı bilgileri ayrıştırılırken hata:', error);
+        this.setDefaultTeacherInfo();
+      }
+    } else {
+      console.warn('Kullanıcı giriş bilgisi bulunamadı');
+      this.setDefaultTeacherInfo();
+    }
+  }
+
+  private setDefaultTeacherInfo(): void {
+    this.teacherName = 'Öğretmen';
+    this.teacherAvatar = 'https://ui-avatars.com/api/?name=Öğretmen&background=6c757d&color=fff&size=40&font-size=0.6&rounded=true';
   }
 }
