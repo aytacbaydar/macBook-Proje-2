@@ -837,7 +837,8 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
               id: record.id || 0,
               tarih: record.tarih || '',
               durum: record.durum || '',
-              aciklama: record.aciklama || ''
+              grup: record.grup || '',
+              ders_tipi: record.ders_tipi || 'normal'
             }));
 
             console.log('Yüklenen katılım kayıtları:', this.historicalAttendance);            console.log('Güncellenen devamsızlık kayıtları:', this.devamsizlikKayitlari);

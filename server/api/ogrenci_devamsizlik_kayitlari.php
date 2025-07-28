@@ -25,13 +25,19 @@ try {
     $stmt = $conn->prepare("
         SELECT 
             id,
+            ogrenci_id,
+            ogretmen_id,
+            grup,
             tarih,
             durum,
-            aciklama,
-            created_at
+            zaman,
+            yontem,
+            ders_tipi,
+            olusturma_zamani,
+            guncelleme_zamani
         FROM devamsizlik_kayitlari 
         WHERE ogrenci_id = :ogrenci_id 
-        ORDER BY tarih DESC
+        ORDER BY tarih DESC, zaman DESC
     ");
     
     $stmt->bindParam(':ogrenci_id', $ogrenci_id, PDO::PARAM_INT);
