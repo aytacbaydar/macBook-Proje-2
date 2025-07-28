@@ -803,7 +803,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
       : 0;
 
     // Ödeme hesaplamaları
-    const ucret = parseFloat(this.ogrenciBilgileri?.ucret || '0');
+    const ucret = parseFloat(String(this.ogrenciBilgileri?.ucret || 0));
     const expectedPaymentCycles = Math.floor(presentCount / 4);
     const expectedTotalAmount = expectedPaymentCycles * ucret;
     const lessonsUntilNextPayment = presentCount > 0 ? 4 - (presentCount % 4) : 4;
