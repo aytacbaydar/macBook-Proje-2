@@ -235,7 +235,11 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
             console.log('Sınav sonuçları response:', response);
             if (response && response.success) {
               // API'den gelen veri formatını kontrol et
-              if (Array.isArray(response.data)) {
+              if (response.data && response.data.sinav_sonuclari && Array.isArray(response.data.sinav_sonuclari)) {
+                // Eğer response.data.sinav_sonuclari array ise
+                this.sinavSonuclari = response.data.sinav_sonuclari;
+              } else if (Array.isArray(response.data)) {
+                // Eğer response.data direkt array ise
                 this.sinavSonuclari = response.data;
               } else if (response.data && typeof response.data === 'object') {
                 // Object ise array'e çevir
@@ -245,6 +249,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
               } else {
                 this.sinavSonuclari = [];
               }
+              console.log('İşlenen sınav sonuçları:', this.sinavSonuclari);
               resolve();
             } else {
               console.warn('Sınav sonuçları bulunamadı:', response?.message);
@@ -437,5 +442,9 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit {
     if (oran >= 80) return 'bg-success';
     if (oran >= 60) return 'bg-warning';
     return 'bg-danger';
+  }
+
+  trackByKonuAdi(index: number, item: KonuAnalizi): string {
+    return item.konu_adi;
   }
 }

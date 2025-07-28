@@ -1,4 +1,3 @@
-
 <div class="container-fluid p-4">
   <!-- Loading State -->
   <div *ngIf="isLoading" class="text-center py-5">
@@ -138,7 +137,7 @@
     <!-- Tab Contents -->
     <div class="row">
       <div class="col-12">
-        
+
         <!-- Öğrenci Bilgileri Tab -->
         <div *ngIf="activeTab === 'bilgiler'" class="tab-content">
           <div class="card border-0 shadow-sm">
@@ -187,9 +186,9 @@
                   </div>
                 </div>
               </div>
-              
+
               <hr class="my-4">
-              
+
               <div class="row">
                 <div class="col-md-6">
                   <h6 class="text-muted mb-3">Veli Bilgileri</h6>
@@ -304,53 +303,50 @@
             <div class="card-body p-4">
               <div class="row">
                 <div class="col-12">
-                  <div *ngFor="let konu of konuAnalizleri" class="mb-4">
-                    <div class="card border-start border-4 border-primary">
-                      <div class="card-body">
-                        <h6 class="fw-bold mb-3">{{ konu.konu_adi }}</h6>
-                        <div class="row">
-                          <div class="col-md-6">
-                            <div class="d-flex justify-content-between mb-2">
-                              <span>Doğru:</span>
-                              <span class="badge bg-success">{{ konu.dogru_sayisi }}</span>
-                            </div>
-                            <div class="d-flex justify-content-between mb-2">
-                              <span>Yanlış:</span>
-                              <span class="badge bg-danger">{{ konu.yanlis_sayisi }}</span>
-                            </div>
-                            <div class="d-flex justify-content-between mb-2">
-                              <span>Boş:</span>
-                              <span class="badge bg-secondary">{{ konu.bos_sayisi }}</span>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                              <span>Toplam:</span>
-                              <span class="badge bg-info">{{ konu.toplam_soru }}</span>
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="text-center">
-                              <div class="progress mb-2" style="height: 25px;">
-                                <div 
-                                  class="progress-bar" 
-                                  [class]="getProgressBarClass(konu.basari_orani)"
-                                  [style.width.%]="konu.basari_orani">
-                                  {{ konu.basari_orani.toFixed(1) }}%
+                  <!-- Konu Analizleri Tablosu -->
+                  <div *ngIf="activeTab === 'konular'" class="table-responsive">
+                    <div *ngIf="konuAnalizleri && konuAnalizleri.length > 0; else noKonuData">
+                      <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th>Konu Adı</th>
+                            <th class="text-center">Toplam Soru</th>
+                            <th class="text-center">Doğru</th>
+                            <th class="text-center">Yanlış</th>
+                            <th class="text-center">Boş</th>
+                            <th class="text-center">Başarı Oranı</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let konu of konuAnalizleri; trackBy: trackByKonuAdi">
+                            <td>{{ konu.konu_adi }}</td>
+                            <td class="text-center">{{ konu.toplam_soru }}</td>
+                            <td class="text-center text-success">{{ konu.dogru_sayisi }}</td>
+                            <td class="text-center text-danger">{{ konu.yanlis_sayisi }}</td>
+                            <td class="text-center text-warning">{{ konu.bos_sayisi }}</td>
+                            <td class="text-center">
+                              <div class="d-flex align-items-center">
+                                <div class="progress flex-grow-1 me-2" style="height: 20px;">
+                                  <div 
+                                    class="progress-bar" 
+                                    [class]="getProgressBarClass(konu.basari_orani)"
+                                    [style.width.%]="konu.basari_orani">
+                                    {{ konu.basari_orani | number:'1.1-1' }}%
+                                  </div>
                                 </div>
                               </div>
-                              <small class="text-muted">Başarı Oranı</small>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </div>
+                    <ng-template #noKonuData>
+                      <div class="text-center py-4">
+                        <p class="text-muted">Henüz konu analizi verisi bulunmuyor.</p>
+                      </div>
+                    </ng-template>
                   </div>
                 </div>
-              </div>
-
-              <div *ngIf="konuAnalizleri.length === 0" class="text-center py-4">
-                <i class="bi bi-pie-chart fs-1 text-muted"></i>
-                <p class="text-muted mt-2">Henüz konu analizi bulunmuyor.</p>
-                <small class="text-muted">Debug: konuAnalizleri.length = {{ konuAnalizleri.length }}</small>
               </div>
             </div>
           </div>
