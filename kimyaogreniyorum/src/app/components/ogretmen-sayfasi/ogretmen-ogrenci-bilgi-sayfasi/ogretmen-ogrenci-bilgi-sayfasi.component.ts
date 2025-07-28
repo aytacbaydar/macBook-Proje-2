@@ -2,6 +2,9 @@ import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, AfterViewI
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
+import { Chart, registerables } from 'chart.js';
+
+Chart.register(...registerables);
 
 interface OgrenciBilgileri {
   id: number;
@@ -64,7 +67,10 @@ interface DevamsizlikKaydi {
   styleUrl: './ogretmen-ogrenci-bilgi-sayfasi.component.scss'
 })
 export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewInit {
-  @ViewChild('sinavChart', { static: false }) sinavChart?: ElementRef<HTMLCanvasElement>;
+  @ViewChild('sinavChart', { static: false }) sinavChartRef?: ElementRef<HTMLCanvasElement>;
+  
+  // Chart instance
+  sinavChart: Chart | null = null;
 
   ogrenciId: number = 0;
   ogrenciBilgileri: OgrenciBilgileri | null = null;
@@ -513,14 +519,6 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
     }
 
     try {
-      // Sınav türlerine göre dinamik renkler
-      const sinavTuruColors: { [key: string]: string } = {
-        'TYT': '#667eea',
-        'AYT': '#4facfe', 
-        'TAR': '#43e97b',
-        'TEST': '#fa709a'
-      };
-
       // Chart.js ile modern grafik oluştur
       this.sinavChart = new Chart(ctx, {
         type: 'bar',
@@ -568,10 +566,10 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
               borderColor: '#ddd',
               borderWidth: 1,
               callbacks: {
-                title: (context) => {
+                title: (context: any) => {
                   return this.chartLabels[context[0].dataIndex];
                 },
-                label: (context) => {
+                label: (context: any) => {
                   return `Puan: ${context.parsed.y}`;
                 }
               }
