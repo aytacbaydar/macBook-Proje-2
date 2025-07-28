@@ -58,7 +58,9 @@ interface DevamsizlikKaydi {
   id: number;
   tarih: string;
   durum: string;
-  aciklama: string;
+  aciklama?: string;
+  grup?: string;
+  ders_tipi?: string;
 }
 
 @Component({
