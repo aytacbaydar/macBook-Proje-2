@@ -1114,4 +1114,23 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
   getStudentId(): number {
     return this.ogrenciBilgileri?.id || 0;
   }
+
+  // Katılım yüzdesini manuel hesapla
+  getAttendancePercentage(): number {
+    const totalPresent = this.getAttendanceByType('normal', 'present') + 
+                        this.getAttendanceByType('ek_ders', 'present') + 
+                        this.getAttendanceByType('etut_dersi', 'present');
+    
+    const totalAbsent = this.getAttendanceByType('normal', 'absent') + 
+                       this.getAttendanceByType('ek_ders', 'absent') + 
+                       this.getAttendanceByType('etut_dersi', 'absent');
+    
+    const totalLessons = totalPresent + totalAbsent;
+    
+    if (totalLessons === 0) {
+      return 0;
+    }
+    
+    return Math.round((totalPresent / totalLessons) * 100);
+  }
 }

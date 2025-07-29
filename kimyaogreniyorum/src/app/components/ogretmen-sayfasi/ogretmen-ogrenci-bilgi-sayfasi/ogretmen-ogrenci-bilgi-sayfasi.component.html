@@ -536,10 +536,10 @@
                     <i class="bi bi-graph-up"></i>
                   </div>
                   <div class="card-content">
-                    <h3 class="main-number">{{ stats.attendancePercentage }}%</h3>
+                    <h3 class="main-number">{{ getAttendancePercentage() }}%</h3>
                     <p class="card-title">Katılım Oranı</p>
                     <div class="progress-bar">
-                      <div class="progress-fill" [style.width.%]="stats.attendancePercentage"></div>
+                      <div class="progress-fill" [style.width.%]="getAttendancePercentage()"></div>
                     </div>
                     <div class="lesson-breakdown">
                       <div class="breakdown-item">
