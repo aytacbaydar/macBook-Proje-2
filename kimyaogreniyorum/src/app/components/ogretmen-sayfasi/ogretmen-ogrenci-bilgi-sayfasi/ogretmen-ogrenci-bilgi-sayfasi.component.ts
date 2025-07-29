@@ -113,11 +113,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent
     private cdr: ChangeDetectorRef
   ) {}
 
-
-
   ngOnInit(): void {
-
-
     // Öğretmen bilgilerini yükle
     this.loadTeacherInfo();
 
@@ -449,6 +445,12 @@ export class OgretmenOgrenciBilgiSayfasiComponent
           },
         });
     });
+  }
+
+  getOdenecekTutar(): number {
+    const normal = this.getAttendanceByType('normal', 'present'); // örn: 8
+    const ekDers = this.getAttendanceByType('ek_ders', 'present'); // örn: 0
+    return ((normal + ekDers) / 4) * 2500;
   }
 
   calculateStatistics(): void {

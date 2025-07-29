@@ -389,7 +389,7 @@
                 <div class="col-md-3">
                   <div class="card bg-warning text-white">
                     <div class="card-body text-center">
-                      <h4 class="fw-bold">((({{ getAttendanceByType('normal', 'present') }} + {{ getAttendanceByType('ek_ders', 'present') }})/4)*2500)</h4>
+                      <h4 class="fw-bold">{{ getOdenecekTutar() | number:'1.0-0':'tr' }} TL</h4>
                       <p class="mb-0">Ödenecek Tutar</p>
                     </div>
                   </div>
@@ -397,7 +397,7 @@
                 <div class="col-md-3">
                   <div class="card bg-warning text-white">
                     <div class="card-body text-center">
-                      <h4 class="fw-bold">{{ kalanBorc }}</h4>
+                      <h4 class="fw-bold">{{ formatCurrency(toplamOdenen) }} - {{ getOdenecekTutar() | number:'1.0-0':'tr' }} TL</h4>
                       <p class="mb-0">Kalan Borç</p>
                     </div>
                   </div>
