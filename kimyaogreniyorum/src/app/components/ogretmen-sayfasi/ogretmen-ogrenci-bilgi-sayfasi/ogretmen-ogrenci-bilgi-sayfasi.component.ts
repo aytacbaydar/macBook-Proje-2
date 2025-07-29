@@ -118,8 +118,6 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
       const idParam = params['id'];
       this.ogrenciId = parseInt(idParam, 10);
 
-      console.log('Route parametresi:', idParam);
-      console.log('Dönüştürülen öğrenci ID:', this.ogrenciId);
 
       if (!idParam || isNaN(this.ogrenciId) || this.ogrenciId <= 0) {
         this.error = `Geçersiz öğrenci ID: ${idParam}`;
@@ -137,7 +135,6 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
     // View init olduktan sonra grafiği render et
     setTimeout(() => {
       if (this.chartData.length > 0 && this.activeTab === 'sinavlar') {
-        console.log('AfterViewInit - Grafik render ediliyor');
         this.renderChart();
       }
     }, 500);
@@ -181,21 +178,14 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
     });
 
     // localStorage ve sessionStorage'ı debug et
-    console.log('localStorage user:', localStorage.getItem('user'));
-    console.log('sessionStorage user:', sessionStorage.getItem('user'));
-    console.log('localStorage token:', localStorage.getItem('token'));
-    console.log('sessionStorage token:', sessionStorage.getItem('token'));
 
     // Önce user objesinden token'ı al
     const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
     if (userStr) {
       try {
         const user = JSON.parse(userStr);
-        console.log('User objesi:', user);
         if (user.token) {
           headers = headers.set('Authorization', `Bearer ${user.token}`);
-          console.log('Authorization header eklendi (user), tam token:', user.token);
-          console.log('Final headers:', headers.keys());
           return headers;
         }
       } catch (error) {
@@ -207,33 +197,23 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
     const token = localStorage.getItem('token') || sessionStorage.getItem('token');
     if (token) {
       headers = headers.set('Authorization', `Bearer ${token}`);
-      console.log('Authorization header eklendi (token), tam token:', token);
-      console.log('Final headers:', headers.keys());
       return headers;
     }
 
     console.warn('Token bulunamadı! Giriş yapmanız gerekebilir.');
-    console.log('Final headers (no token):', headers.keys());
     return headers;
   }
 
   loadOgrenciBilgileri(): Promise<void> {
     return new Promise((resolve, reject) => {
-      console.log('Öğrenci bilgileri yükleniyor, ID:', this.ogrenciId);
 
       const headers = this.getAuthHeaders();
-      console.log('Headers:', headers.keys());
-
-      console.log('Request headers (before sending):', headers.keys());
-      console.log('Authorization header value:', headers.get('Authorization'));
 
       this.http.get<any>(`server/api/ogrenci_bilgileri.php?id=${this.ogrenciId}`, { headers })
         .subscribe({
           next: (response) => {
-            console.log('Öğrenci bilgileri response:', response);
             if (response && response.success) {
               this.ogrenciBilgileri = response.data;
-              console.log('Öğrenci bilgileri yüklendi:', this.ogrenciBilgileri);
 
               // Katılım verilerini yükle
               this.loadStudentAttendanceData();
@@ -263,14 +243,12 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
 
   loadSinavSonuclari(): Promise<void> {
     return new Promise((resolve, reject) => {
-      console.log('Sınav sonuçları yükleniyor...');
 
       const headers = this.getAuthHeaders();
 
       this.http.get<any>(`server/api/ogrenci_tum_sinav_sonuclari.php?ogrenci_id=${this.ogrenciId}`, { headers })
         .subscribe({
           next: (response) => {
-            console.log('Sınav sonuçları response:', response);
             if (response && response.success && response.data) {
               // API'den gelen veri formatını kontrol et ve öğrenci ID'ye göre filtrele
               if (response.data.sinav_sonuclari && Array.isArray(response.data.sinav_sonuclari)) {
@@ -294,7 +272,6 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
               } else {
                 this.sinavSonuclari = [];
               }
-              console.log('İşlenen ve filtrelenmiş sınav sonuçları:', this.sinavSonuclari);
               resolve();
             } else {
               console.warn('Sınav sonuçları bulunamadı:', response?.message);
@@ -313,14 +290,12 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
 
   loadKonuAnalizleri(): Promise<void> {
     return new Promise((resolve, reject) => {
-      console.log('Konu analizleri yükleniyor...');
 
       const headers = this.getAuthHeaders();
 
       this.http.get<any>(`server/api/ogrenci_konu_analizi.php?ogrenci_id=${this.ogrenciId}`, { headers })
         .subscribe({
           next: (response) => {
-            console.log('Konu analizleri response:', response);
             if (response && response.success && response.data) {
               // API'den gelen veri formatını kontrol et
               if (Array.isArray(response.data.konu_istatistikleri)) {
@@ -336,7 +311,6 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
             } else {
               this.konuAnalizleri = [];
             }
-            console.log('İşlenen konu analizleri:', this.konuAnalizleri);
             // Change detection'ı manuel olarak tetikle
             this.cdr.detectChanges();
             resolve();
@@ -352,7 +326,6 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
 
   loadOdemeBilgileri(): Promise<void> {
     return new Promise((resolve, reject) => {
-      console.log('Ödeme bilgileri yükleniyor...');
 
       const headers = this.getAuthHeaders();
 
@@ -360,7 +333,6 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
       this.http.get<any>(`server/api/ogretmen_ucret_yonetimi.php?ogrenci_id=${this.ogrenciId}`, { headers })
         .subscribe({
           next: (response) => {
-            console.log('Ödeme bilgileri response:', response);
             if (response && response.success) {
               // API'den gelen veri formatını kontrol et
               if (response.data && response.data.payments && Array.isArray(response.data.payments)) {
@@ -375,7 +347,6 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
               } else {
                 this.odemeBilgileri = [];
               }
-              console.log('Filtrelenen ödeme bilgileri:', this.odemeBilgileri);
               resolve();
             } else {
               console.warn('Ödeme bilgileri bulunamadı:', response?.message);
@@ -453,7 +424,6 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
         tension: 0.4
       }];
 
-      console.log('Grafik verileri hazırlandı:', this.chartData);
 
       // Grafik çizimini tetikle - cdr ile birlikte
       this.cdr.detectChanges();
@@ -472,18 +442,13 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
   }
 
   renderChart(): void {
-    console.log('renderChart çağrıldı');
-    console.log('sinavChart var mı?', !!this.sinavChart);
-    console.log('chartData var mı?', this.chartData.length);
 
     // ViewChild ile canvas'ı al
     if (!this.sinavChartRef?.nativeElement) {
-      console.log('Canvas element bulunamadı');
       return;
     }
 
     if (!this.sinavSonuclari || this.sinavSonuclari.length === 0) {
-      console.log('Sınav sonuçları yok, grafik çizilemiyor');
       return;
     }
 
@@ -647,7 +612,6 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
         }
       });
 
-      console.log('Modern grafik başarıyla çizildi');
     } catch (error) {
       console.error('Grafik çizim hatası:', error);
     }
@@ -683,7 +647,6 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
         const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
 
         if (!canvas) {
-          console.log(`Mini chart canvas bulunamadı: ${canvasId}`);
           return;
         }
 
@@ -835,7 +798,6 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
       }
 
       const headers = this.getAuthHeaders();
-      console.log('Katılım verileri yükleniyor, öğrenci ID:', this.ogrenciBilgileri.id);
 
       // devamsizlik_kayitlari.php API'sini kullan - ogretmen-devamsizlik-sayfasi gibi
       this.http.get<any>(`server/api/devamsizlik_kayitlari.php`, { 
@@ -847,7 +809,6 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
       })
         .subscribe({
           next: (response) => {
-            console.log('Katılım API response:', response);
             if (response && response.success && response.data) {
               // Kayıtları al - ogretmen-devamsizlik-sayfasi formatında
               this.historicalAttendance = response.data.kayitlar || [];
@@ -861,8 +822,6 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
                 ders_tipi: record.ders_tipi || 'normal'
               }));
 
-              console.log('Yüklenen katılım kayıtları:', this.historicalAttendance);
-              console.log('Güncellenen devamsızlık kayıtları:', this.devamsizlikKayitlari);
 
               this.cdr.detectChanges();
               resolve();
