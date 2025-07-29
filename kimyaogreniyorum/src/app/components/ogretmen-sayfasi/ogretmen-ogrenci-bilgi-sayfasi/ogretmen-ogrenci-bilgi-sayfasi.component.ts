@@ -837,12 +837,19 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
       const headers = this.getAuthHeaders();
       console.log('Katılım verileri yükleniyor, öğrenci ID:', this.ogrenciBilgileri.id);
 
-      this.http.get<any>(`server/api/ogrenci_devamsizlik_kayitlari.php?ogrenci_id=${this.ogrenciBilgileri.id}`, { headers })
+      // devamsizlik_kayitlari.php API'sini kullan - ogretmen-devamsizlik-sayfasi gibi
+      this.http.get<any>(`server/api/devamsizlik_kayitlari.php`, { 
+        headers,
+        params: {
+          ogrenci_id: this.ogrenciBilgileri.id.toString(),
+          butun_kayitlar: 'true'
+        }
+      })
         .subscribe({
           next: (response) => {
             console.log('Katılım API response:', response);
             if (response && response.success && response.data) {
-              // Kayıtları al
+              // Kayıtları al - ogretmen-devamsizlik-sayfasi formatında
               this.historicalAttendance = response.data.kayitlar || [];
 
               // devamsizlikKayitlari'nı da güncelle
