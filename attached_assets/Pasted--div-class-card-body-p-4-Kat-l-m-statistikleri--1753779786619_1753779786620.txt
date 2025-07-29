@@ -1,0 +1,143 @@
+
+            <div class="card-body p-4">
+              <!-- Katılım İstatistikleri -->
+              <div class="attendance-stats-grid mb-4" *ngIf="getStudentAttendanceStats() as stats">
+                <!-- Katıldığı Dersler -->
+                <div class="stats-card present-lessons">
+                  <div class="card-icon">
+                    <i class="bi bi-check-circle-fill"></i>
+                  </div>
+                  <div class="card-content">
+                    <h3 class="main-number">{{ stats.presentCount }}</h3>
+                    <p class="card-title">Katıldığı Ders</p>
+                    <div class="lesson-breakdown">
+                      <div class="breakdown-item">
+                        <span class="label">Normal:</span>
+                        <span class="value">{{ getAttendanceByType('normal', 'present') }}</span>
+                      </div>
+                      <div class="breakdown-item">
+                        <span class="label">Ek Ders:</span>
+                        <span class="value">{{ getAttendanceByType('ek_ders', 'present') }}</span>
+                      </div>
+                      <div class="breakdown-item">
+                        <span class="label">Etüt:</span>
+                        <span class="value">{{ getAttendanceByType('etut_dersi', 'present') }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Devamsızlık -->
+                <div class="stats-card absent-lessons">
+                  <div class="card-icon">
+                    <i class="bi bi-x-circle-fill"></i>
+                  </div>
+                  <div class="card-content">
+                    <h3 class="main-number">{{ stats.absentCount }}</h3>
+                    <p class="card-title">Devamsızlık</p>
+                    <div class="lesson-breakdown">
+                      <div class="breakdown-item">
+                        <span class="label">Normal:</span>
+                        <span class="value">{{ getAttendanceByType('normal', 'absent') }}</span>
+                      </div>
+                      <div class="breakdown-item">
+                        <span class="label">Ek Ders:</span>
+                        <span class="value">{{ getAttendanceByType('ek_ders', 'absent') }}</span>
+                      </div>
+                      <div class="breakdown-item">
+                        <span class="label">Etüt:</span>
+                        <span class="value">{{ getAttendanceByType('etut_dersi', 'absent') }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Katılım Oranı -->
+                <div class="stats-card attendance-rate">
+                  <div class="card-icon">
+                    <i class="bi bi-graph-up"></i>
+                  </div>
+                  <div class="card-content">
+                    <h3 class="main-number">{{ stats.attendancePercentage }}%</h3>
+                    <p class="card-title">Katılım Oranı</p>
+                    <div class="progress-bar">
+                      <div class="progress-fill" [style.width.%]="stats.attendancePercentage"></div>
+                    </div>
+                    <div class="lesson-breakdown">
+                      <div class="breakdown-item">
+                        <span class="label">Toplam Kayıt:</span>
+                        <span class="value">{{ stats.totalRecords }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Ders Tipi Dağılımı
+                <div class="stats-card lesson-types">
+                  <div class="card-icon">
+                    <i class="bi bi-pie-chart-fill"></i>
+                  </div>
+                  <div class="card-content">
+                    <h3 class="main-number">{{ stats.totalRecords }}</h3>
+                    <p class="card-title">Toplam Ders</p>
+                    <div class="lesson-breakdown">
+                      <div class="breakdown-item">
+                        <span class="label">Normal:</span>
+                        <span class="value">{{ getTotalByType('normal') }}</span>
+                      </div>
+                      <div class="breakdown-item">
+                        <span class="label">Ek Ders:</span>
+                        <span class="value">{{ getTotalByType('ek_ders') }}</span>
+                      </div>
+                      <div class="breakdown-item">
+                        <span class="label">Etüt:</span>
+                        <span class="value">{{ getTotalByType('etut_dersi') }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>-->
+
+              <!-- Son Katılım Kayıtları -->
+              <div class="mt-4">
+                <h6 class="fw-bold mb-3">Son Katılım Kayıtları ({{ historicalAttendance.length }} toplam kayıt)</h6>
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Tarih</th>
+                        <th>Durum</th>
+                        <th>Ders Tipi</th>
+                        <th>Grup</th>
+                        <th>Saat</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let kayit of historicalAttendance | slice:0:15">
+                        <td>{{ formatTarih(kayit.tarih) }}</td>
+                        <td>
+                          <span class="badge" 
+                                [class.bg-success]="kayit.durum === 'present'"
+                                [class.bg-danger]="kayit.durum === 'absent'">
+                            {{ kayit.durum === 'present' ? 'Katıldı' : 'Katılmadı' }}
+                          </span>
+                        </td>
+                        <td>
+                          <span class="badge bg-info">{{ getLessonTypeText(kayit.ders_tipi) }}</span>
+                        </td>
+                        <td>{{ kayit.grup || '-' }}</td>
+                        <td>{{ kayit.zaman ? formatTime(kayit.zaman) : '-' }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <ng-template #noDataTemplate>
+                <div class="alert alert-info text-center">
+                  <i class="bi bi-info-circle me-2"></i>
+                  Bu öğrenci için henüz devamsızlık kaydı bulunmuyor.
+                </div>
+              </ng-template>
+                </div>
+              </div>
