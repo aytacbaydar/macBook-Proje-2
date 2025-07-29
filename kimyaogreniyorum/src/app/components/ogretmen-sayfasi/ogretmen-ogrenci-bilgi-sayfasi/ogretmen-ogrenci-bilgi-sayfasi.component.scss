@@ -182,6 +182,54 @@
           background: linear-gradient(135deg, #667eea, #764ba2);
           border-radius: 2px;
         }
+
+        // Kişisel Bilgiler - Mavi Tonları
+        &.personal-info {
+          color: #2563eb;
+          &::before {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+          }
+        }
+
+        // Okul Bilgileri - Yeşil Tonları  
+        &.school-info {
+          color: #059669;
+          &::before {
+            background: linear-gradient(135deg, #10b981, #047857);
+          }
+        }
+
+        // Ders Bilgileri - Turuncu Tonları
+        &.lesson-info {
+          color: #ea580c;
+          &::before {
+            background: linear-gradient(135deg, #f97316, #c2410c);
+          }
+        }
+
+        // Veli Bilgileri - Mor Tonları
+        &.parent-info {
+          color: #7c3aed;
+          &::before {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+          }
+        }
+
+        // İletişim Bilgileri - Pembe Tonları
+        &.contact-info {
+          color: #be185d;
+          &::before {
+            background: linear-gradient(135deg, #ec4899, #be185d);
+          }
+        }
+
+        // Öğretmen/Ders Bilgileri - Kırmızı Tonları
+        &.teacher-info {
+          color: #dc2626;
+          &::before {
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+          }
+        }
       }
 
       .mb-3 {
