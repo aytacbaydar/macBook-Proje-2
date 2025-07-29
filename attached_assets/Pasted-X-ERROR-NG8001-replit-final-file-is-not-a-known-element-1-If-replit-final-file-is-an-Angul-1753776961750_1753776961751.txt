@@ -1,0 +1,120 @@
+X [ERROR] NG8001: 'replit_final_file' is not a known element:
+1. If 'replit_final_file' is an Angular component, then verify that it is part of this module.
+2. To allow any element add 'NO_ERRORS_SCHEMA' to the '@NgModule.schemas' of this component. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.html:717:0:
+      717 │ <replit_final_file>
+          ╵ ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciBilgiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:69:15:
+      69 │   templateUrl: './ogretmen-ogrenci-bilgi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 33 in [Debug - Bu Öğrencinin Kayıtları: {{ historicalAttendance.filter(r => r.ogrenci_id == ogrenciBilgileri.id).length }}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-ogrenci-bilgi-sayfasi\ogretmen-ogrenci-bilgi-sayfasi.component.html@1444:17 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.html:1445:17:
+      1445 │ ...       <p>Debug - Bu Öğrencinin Kayıtları: {{ historicalA...
+           ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciBilgiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:69:15:
+      69 │   templateUrl: './ogretmen-ogrenci-bilgi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: No overload matches this call.
+  Overload 1 of 2, '(predicate: (value: any, index: number, array: any[]) => value is any, thisArg?: any): any[]', gave the following error.
+    Argument of type 'undefined' is not assignable to parameter of type '(value: any, index: number, array: any[]) => value is any'.
+  Overload 2 of 2, '(predicate: (value: any, index: number, array: any[]) => unknown, thisArg?: any): any[]', gave the following error.
+    Argument of type 'undefined' is not assignable to parameter of type '(value: any, index: number, array: any[]) => unknown'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.html:1445:81:
+      1445 │ ...endance.filter(r => r.ogrenci_id == ogrenciBilgileri.id).leng...
+           ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciBilgiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:69:15:
+      69 │   templateUrl: './ogretmen-ogrenci-bilgi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 33 in [Debug - Bu Öğrencinin Kayıtları: {{ historicalAttendance.filter(r => r.ogrenci_id == ogrenciBilgileri.id).length }}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-ogrenci-bilgi-sayfasi\ogretmen-ogrenci-bilgi-sayfasi.component.html@1444:17 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.html:1449:17:
+      1449 │                  *ngIf="getStudentAttendanceStats() as stats"
+           ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciBilgiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:69:15:
+      69 │   templateUrl: './ogretmen-ogrenci-bilgi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 33 in [Debug - Bu Öğrencinin Kayıtları: {{ historicalAttendance.filter(r => r.ogrenci_id == ogrenciBilgileri.id).length }}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-ogrenci-bilgi-sayfasi\ogretmen-ogrenci-bilgi-sayfasi.component.html@1444:17 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.html:1450:36:
+      1450 │ ...            [class.excellent]="stats.attendancePercentage >= 90"
+           ╵                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciBilgiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:69:15:
+      69 │   templateUrl: './ogretmen-ogrenci-bilgi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 33 in [Debug - Bu Öğrencinin Kayıtları: {{ historicalAttendance.filter(r => r.ogrenci_id == ogrenciBilgileri.id).length }}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-ogrenci-bilgi-sayfasi\ogretmen-ogrenci-bilgi-sayfasi.component.html@1444:17 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.html:1451:31:
+      1451 │ ...ss.good]="stats.attendancePercentage >= 75 && stats.attendanc...
+           ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciBilgiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:69:15:
+      69 │   templateUrl: './ogretmen-ogrenci-bilgi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 33 in [Debug - Bu Öğrencinin Kayıtları: {{ historicalAttendance.filter(r => r.ogrenci_id == ogrenciBilgileri.id).length }}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-ogrenci-bilgi-sayfasi\ogretmen-ogrenci-bilgi-sayfasi.component.html@1444:17 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.html:1452:34:
+      1452 │ ...average]="stats.attendancePercentage >= 60 && stats.attendanc...
+           ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciBilgiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:69:15:
+      69 │   templateUrl: './ogretmen-ogrenci-bilgi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 33 in [Debug - Bu Öğrencinin Kayıtları: {{ historicalAttendance.filter(r => r.ogrenci_id == ogrenciBilgileri.id).length }}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-ogrenci-bilgi-sayfasi\ogretmen-ogrenci-bilgi-sayfasi.component.html@1444:17 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.html:1453:31:
+      1453 │                  [class.poor]="stats.attendancePercentage < 60">
+           ╵                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciBilgiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:69:15:
+      69 │   templateUrl: './ogretmen-ogrenci-bilgi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 33 in [Debug - Bu Öğrencinin Kayıtları: {{ historicalAttendance.filter(r => r.ogrenci_id == ogrenciBilgileri.id).length }}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-ogrenci-bilgi-sayfasi\ogretmen-ogrenci-bilgi-sayfasi.component.html@1444:17 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.html:1455:14:
+      1455 │               %{{ stats.attendancePercentage }} Katılım
+           ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciBilgiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:69:15:
+      69 │   templateUrl: './ogretmen-ogrenci-bilgi-sayfasi.component.html',
