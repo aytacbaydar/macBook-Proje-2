@@ -378,7 +378,7 @@
             <div class="card-body p-4">
               <!-- Ödeme Özeti -->
               <div class="row mb-4">
-                <div class="col-md-4">
+                <div class="col-md-3">
                   <div class="card bg-primary text-white">
                     <div class="card-body text-center">
                       <h4 class="fw-bold">{{ formatCurrency(toplamOdenen) }}</h4>
@@ -386,15 +386,23 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                   <div class="card bg-warning text-white">
                     <div class="card-body text-center">
-                      <h4 class="fw-bold">₺{{ kalanBorc }}</h4>
+                      <h4 class="fw-bold">((({{ getAttendanceByType('normal', 'present') }} + {{ getAttendanceByType('ek_ders', 'present') }})/4)*2500)</h4>
+                      <p class="mb-0">Ödenecek Tutar</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="card bg-warning text-white">
+                    <div class="card-body text-center">
+                      <h4 class="fw-bold">{{ kalanBorc }}</h4>
                       <p class="mb-0">Kalan Borç</p>
                     </div>
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                   <div class="card bg-info text-white">
                     <div class="card-body text-center">
                       <h4 class="fw-bold">{{ formatCurrency(ogrenciBilgileri.ucret) }}</h4>
