@@ -1,0 +1,213 @@
+X [ERROR] NG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.html:808:18:
+      808 │                   </div>
+          ╵                   ~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciBilgiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:69:15:
+      69 │   templateUrl: './ogretmen-ogrenci-bilgi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2693: 'string' only refers to a type, but is being used as a value here. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:104:26:
+      104 │   teacherAvatar: string = string = '';
+          ╵                           ~~~~~~
+
+
+X [ERROR] TS2339: Property 'formatDate' does not exist on type 'OgretmenOgrenciBilgiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:805:29:
+      805 │         formatted_date: this.formatDate(record.tarih),
+          ╵                              ~~~~~~~~~~
+
+
+X [ERROR] TS2339: Property 'getLessonTypeText' does not exist on type 'OgretmenOgrenciBilgiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:807:31:
+      807 │         lesson_type_text: this.getLessonTypeText(record.ders_tipi)
+          ╵                                ~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2349: This expression is not callable.
+  Type '{ id: any; tarih: any; durum: any; }' has no call signatures. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:856:90:
+      856 │ ...zlikKayitlari = this.historicalAttendance.map((record: any) => ({
+          ╵                                                                    ^
+
+
+X [ERROR] Expected identifier but found "``"
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:860:0:
+      860 │ ```
+          ╵ ~~
+
+
+X [ERROR] TS1136: Property assignment expected. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:860:0:
+      860 │ ```
+          ╵ ~~
+
+
+X [ERROR] TS1005: ')' expected. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:1023:12:
+      1023 │     return `https://ui-avatars.com/api/?name=${encodeURIComponen...
+           ╵             ~~~~~
+
+
+X [ERROR] TS2304: Cannot find name 'https'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:1023:12:
+      1023 │     return `https://ui-avatars.com/api/?name=${encodeURIComponen...
+           ╵             ~~~~~
+
+
+X [ERROR] TS1005: ',' expected. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:1023:17:
+      1023 │     return `https://ui-avatars.com/api/?name=${encodeURIComponen...
+           ╵                  ^
+
+
+X [ERROR] TS1135: Argument expression expected. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:1024:2:
+      1024 │   }
+           ╵   ^
+
+
+X [ERROR] TS2304: Cannot find name 'getStudentAttendanceAnalysis'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:1027:2:
+      1027 │   getStudentAttendanceAnalysis(): any[] {
+           ╵   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS1005: ';' expected. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:1027:32:
+      1027 │   getStudentAttendanceAnalysis(): any[] {
+           ╵                                 ^
+
+
+X [ERROR] TS2693: 'any' only refers to a type, but is being used as a value here. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:1027:34:
+      1027 │   getStudentAttendanceAnalysis(): any[] {
+           ╵                                   ~~~
+
+
+X [ERROR] TS1011: An element access expression should take an argument. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:1027:38:
+      1027 │   getStudentAttendanceAnalysis(): any[] {
+           ╵                                       ^
+
+
+X [ERROR] TS1005: ';' expected. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:1027:40:
+      1027 │   getStudentAttendanceAnalysis(): any[] {
+           ╵                                         ^
+
+
+X [ERROR] TS2304: Cannot find name 'getStudentRecordsCount'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:1077:2:
+      1077 │   getStudentRecordsCount(): number {
+           ╵   ~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS1005: ';' expected. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:1077:26:
+      1077 │   getStudentRecordsCount(): number {
+           ╵                           ^
+
+
+X [ERROR] TS1434: Unexpected keyword or identifier. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:1077:28:
+      1077 │   getStudentRecordsCount(): number {
+           ╵                             ~~~~~~
+
+
+X [ERROR] TS2693: 'number' only refers to a type, but is being used as a value here. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:1077:28:
+      1077 │   getStudentRecordsCount(): number {
+           ╵                             ~~~~~~
+
+
+X [ERROR] TS2304: Cannot find name 'getTotalRecordsCount'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:1087:2:
+      1087 │   getTotalRecordsCount(): number {
+           ╵   ~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS1005: ';' expected. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:1087:24:
+      1087 │   getTotalRecordsCount(): number {
+           ╵                         ^
+
+
+X [ERROR] TS1434: Unexpected keyword or identifier. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:1087:26:
+      1087 │   getTotalRecordsCount(): number {
+           ╵                           ~~~~~~
+
+
+X [ERROR] TS2693: 'number' only refers to a type, but is being used as a value here. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:1087:26:
+      1087 │   getTotalRecordsCount(): number {
+           ╵                           ~~~~~~
+
+
+X [ERROR] TS2304: Cannot find name 'getStudentId'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:1091:2:
+      1091 │   getStudentId(): number {
+           ╵   ~~~~~~~~~~~~
+
+
+X [ERROR] TS1005: ';' expected. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:1091:16:
+      1091 │   getStudentId(): number {
+           ╵                 ^
+
+
+X [ERROR] TS1434: Unexpected keyword or identifier. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:1091:18:
+      1091 │   getStudentId(): number {
+           ╵                   ~~~~~~
+
+
+X [ERROR] TS2693: 'number' only refers to a type, but is being used as a value here. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:1091:18:
+      1091 │   getStudentId(): number {
+           ╵                   ~~~~~~
+
+
+X [ERROR] TS1005: '}' expected. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:1094:1:
+      1094 │ }
+           ╵  ^
+
+  The parser expected to find a '}' to match the '{' token here.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component.ts:848:19:
+      848 │         .subscribe({
