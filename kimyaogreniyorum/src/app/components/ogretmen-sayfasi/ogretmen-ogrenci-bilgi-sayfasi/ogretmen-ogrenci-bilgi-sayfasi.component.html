@@ -139,15 +139,6 @@
               Devamsızlık
             </button>
           </li>
-          <li class="nav-item">
-             <button 
-                    class="nav-link" 
-                    [class.active]="activeTab === 'odeme'"
-                    (click)="setActiveTab('odeme')">
-              <i class="bi bi-graph-up"></i>
-              Katılım Analizi
-            </button>
-          </li>
         </ul>
       </div>
     </div>
@@ -637,103 +628,6 @@
           </div>
         </div>
 
-        <!-- Katılım Analizi Sekmesi -->
-        <div *ngIf="activeTab === 'odeme'" class="tab-content">
-          <!-- Detaylı Katılım Analizi Tablosu -->
-          <div class="student-analysis-section">
-            <div class="section-header">
-              <h3><i class="bi bi-graph-up"></i> Detaylı Katılım Analizi</h3>
-              <p class="section-description">Ders tiplerine göre katılım durumu ve devamsızlık analizi</p>
-            </div>
-
-            <div class="analysis-table-container">
-              <table class="analysis-table">
-                <thead>
-                  <tr>
-                    <th>Öğrenci</th>
-                    <th>Toplam Kayıt</th>
-                    <th colspan="4">Katıldığı Dersler</th>
-                    <th colspan="4">Devamsızlık</th>
-                    <th>Katılım %</th>
-                  </tr>
-                  <tr class="sub-header">
-                    <th></th>
-                    <th></th>
-                    <th>Toplam</th>
-                    <th>Normal Ders</th>
-                    <th>Ek Ders</th>
-                    <th>Etüt Dersi</th>
-                    <th>Toplam</th>
-                    <th>Normal Ders</th>
-                    <th>Ek Ders</th>
-                    <th>Etüt Dersi</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let analysis of getStudentAttendanceAnalysis()" class="student-row">
-                    <td class="student-info">
-                      <img [src]="ogrenciBilgileri.avatar || getDefaultAvatar(ogrenciBilgileri.adi_soyadi || 'Student')" 
-                           class="student-avatar-small" 
-                           alt="Avatar">
-                      <div class="student-details">
-                        <span class="student-name">{{ analysis.name }}</span>
-                        <span class="student-email">{{ analysis.email }}</span>
-                      </div>
-                    </td>
-                    <td class="total-records">{{ analysis.totalRecords }}</td>
-                    <td class="present-total">{{ analysis.present.total }}</td>
-                    <td class="present-normal">{{ analysis.present.normal }}</td>
-                    <td class="present-ek">{{ analysis.present.ek_ders }}</td>
-                    <td class="present-etut">{{ analysis.present.etut_dersi }}</td>
-                    <td class="absent-total">{{ analysis.absent.total }}</td>  
-                    <td class="absent-normal">{{ analysis.absent.normal }}</td>
-                    <td class="absent-ek">{{ analysis.absent.ek_ders }}</td>
-                    <td class="absent-etut">{{ analysis.absent.etut_dersi }}</td>
-                    <td class="attendance-percentage">
-                      <div class="percentage-badge" 
-                           [class.high]="analysis.attendancePercentage >= 80" 
-                           [class.medium]="analysis.attendancePercentage >= 60 && analysis.attendancePercentage < 80"
-                           [class.low]="analysis.attendancePercentage < 60">
-                        {{ analysis.attendancePercentage }}%
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <!-- Katılım Özeti -->
-            <div class="attendance-summary mt-4" *ngIf="getStudentAttendanceStats() as stats">
-              <div class="row">
-                <div class="col-md-3">
-                  <div class="summary-card success">
-                    <h6>Toplam Katılım</h6>
-                    <h4>{{ stats.presentCount }}</h4>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="summary-card danger">
-                    <h6>Toplam Devamsızlık</h6>
-                    <h4>{{ stats.absentCount }}</h4>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="summary-card info">
-                    <h6>Toplam Kayıt</h6>
-                    <h4>{{ stats.totalRecords }}</h4>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="summary-card primary">
-                    <h6>Katılım Oranı</h6>
-                    <h4>{{ stats.attendancePercentage }}%</h4>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
         <!-- Ücret Analizi Sekmesi -->
         <div *ngIf="activeTab === 'ucret-analizi'" class="tab-content">
