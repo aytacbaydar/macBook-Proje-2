@@ -515,41 +515,38 @@
               </div>
 
               <!-- Son Katılım Kayıtları -->
-              <div class="row">
-                <div class="col-12">
-                  <h6 class="mb-3">Son Katılım Kayıtları</h6>
-                  <!-- Katılım Tablosu -->
-              <div class="table-responsive" *ngIf="historicalAttendance.length > 0; else noDataTemplate">
-                <table class="table table-striped table-hover">
-                  <thead class="table-dark">
-                    <tr>
-                      <th>Tarih</th>
-                      <th>Durum</th>
-                      <th>Grup</th>
-                      <th>Ders Tipi</th>
-                      <th>Zaman</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let kayit of historicalAttendance">
-                      <td>{{ formatTarih(kayit.tarih) }}</td>
-                      <td>
-                        <span class="badge" 
-                              [class.bg-success]="kayit.durum === 'present'"
-                              [class.bg-danger]="kayit.durum === 'absent'">
-                          {{ kayit.durum === 'present' ? 'Katıldı' : 'Katılmadı' }}
-                        </span>
-                      </td>
-                      <td>{{ kayit.grup || '-' }}</td>
-                      <td>
-                        <span class="badge bg-info">
-                          {{ getLessonTypeText(kayit.ders_tipi) }}
-                        </span>
-                      </td>
-                      <td>{{ kayit.zaman ? formatTarih(kayit.zaman) : '-' }}</td>
-                    </tr>
-                  </tbody>
-                </table>
+              <div class="mt-4">
+                <h6 class="fw-bold mb-3">Son Katılım Kayıtları ({{ historicalAttendance.length }} toplam kayıt)</h6>
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Tarih</th>
+                        <th>Durum</th>
+                        <th>Ders Tipi</th>
+                        <th>Grup</th>
+                        <th>Saat</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let kayit of historicalAttendance | slice:0:15">
+                        <td>{{ formatTarih(kayit.tarih) }}</td>
+                        <td>
+                          <span class="badge" 
+                                [class.bg-success]="kayit.durum === 'present'"
+                                [class.bg-danger]="kayit.durum === 'absent'">
+                            {{ kayit.durum === 'present' ? 'Katıldı' : 'Katılmadı' }}
+                          </span>
+                        </td>
+                        <td>
+                          <span class="badge bg-info">{{ getLessonTypeText(kayit.ders_tipi) }}</span>
+                        </td>
+                        <td>{{ kayit.grup || '-' }}</td>
+                        <td>{{ kayit.zaman ? formatTime(kayit.zaman) : '-' }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
 
               <ng-template #noDataTemplate>

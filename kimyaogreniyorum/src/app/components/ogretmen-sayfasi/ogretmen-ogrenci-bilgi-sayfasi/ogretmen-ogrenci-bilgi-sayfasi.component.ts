@@ -823,6 +823,14 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
               }));
 
 
+              console.log('Başarıyla yüklenen katılım verileri:', {
+                toplamKayit: this.historicalAttendance.length,
+                devamsizlikKayitlari: this.devamsizlikKayitlari.length,
+                ornekKayit: this.historicalAttendance[0],
+                presentCount: this.historicalAttendance.filter(r => r.durum === 'present').length,
+                absentCount: this.historicalAttendance.filter(r => r.durum === 'absent').length
+              });
+              
               this.cdr.detectChanges();
               resolve();
             } else {
@@ -873,9 +881,17 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
     switch (type) {
       case 'normal': return 'Normal Ders';
       case 'ek_ders': return 'Ek Ders';
+      case 'etut_dersi': return 'Etüt Dersi';
       case 'telafi': return 'Telafi Dersi';
       default: return 'Normal Ders';
     }
+  }
+
+  formatTime(dateTime: string): string {
+    return new Date(dateTime).toLocaleTimeString('tr-TR', { 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    });
   }
 
   // Math nesnesini template'te kullanabilmek için
