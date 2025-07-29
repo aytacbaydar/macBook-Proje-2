@@ -159,6 +159,158 @@
     }
   }
 
+// Katılım İstatistikleri Grid
+.attendance-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-bottom: 2rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+}
+
+.stats-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #007bff, #0056b3);
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  }
+
+  &.present-lessons {
+    &:before {
+      background: linear-gradient(90deg, #28a745, #20c997);
+    }
+    .card-icon {
+      background: linear-gradient(135deg, #28a745, #20c997);
+    }
+  }
+
+  &.absent-lessons {
+    &:before {
+      background: linear-gradient(90deg, #dc3545, #fd7e14);
+    }
+    .card-icon {
+      background: linear-gradient(135deg, #dc3545, #fd7e14);
+    }
+  }
+
+  &.attendance-rate {
+    &:before {
+      background: linear-gradient(90deg, #17a2b8, #6f42c1);
+    }
+    .card-icon {
+      background: linear-gradient(135deg, #17a2b8, #6f42c1);
+    }
+  }
+
+  &.lesson-types {
+    &:before {
+      background: linear-gradient(90deg, #ffc107, #fd7e14);
+    }
+    .card-icon {
+      background: linear-gradient(135deg, #ffc107, #fd7e14);
+    }
+  }
+
+  .card-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    color: white;
+    font-size: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .card-content {
+    .main-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #2c3e50;
+      margin: 0 0 8px 0;
+      line-height: 1;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #6c757d;
+      margin: 0 0 16px 0;
+    }
+
+    .lesson-breakdown {
+      .breakdown-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0;
+        border-bottom: 1px solid #f1f3f4;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .label {
+          font-size: 0.9rem;
+          color: #6c757d;
+          font-weight: 500;
+        }
+
+        .value {
+          font-size: 0.9rem;
+          font-weight: 600;
+          color: #495057;
+          background: #f8f9fa;
+          padding: 2px 8px;
+          border-radius: 12px;
+          min-width: 30px;
+          text-align: center;
+        }
+      }
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background-color: #e9ecef;
+      border-radius: 4px;
+      margin: 12px 0;
+      overflow: hidden;
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #17a2b8, #6f42c1);
+        border-radius: 4px;
+        transition: width 0.6s ease;
+      }
+    }
+  }
+}
+
 // Component specific styles
 .student-info-container {
 }

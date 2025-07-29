@@ -1024,6 +1024,27 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Student')}&background=007bff&color=fff&size=40`;
   }
 
+  // Ders tipine göre katılım sayısını getir
+  getAttendanceByType(type: string, status: 'present' | 'absent'): number {
+    if (!this.historicalAttendance) return 0;
+    
+    return this.historicalAttendance.filter(record => 
+      record.ogrenci_id == this.ogrenciId &&
+      record.durum === status &&
+      (record.ders_tipi === type || (!record.ders_tipi && type === 'normal'))
+    ).length;
+  }
+
+  // Ders tipine göre toplam sayıyı getir
+  getTotalByType(type: string): number {
+    if (!this.historicalAttendance) return 0;
+    
+    return this.historicalAttendance.filter(record => 
+      record.ogrenci_id == this.ogrenciId &&
+      (record.ders_tipi === type || (!record.ders_tipi && type === 'normal'))
+    ).length;
+  }
+
   // Öğrenci katılım analizi
   getStudentAttendanceAnalysis(): any[] {
     if (!this.ogrenciBilgileri || !this.historicalAttendance || this.historicalAttendance.length === 0) {

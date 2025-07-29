@@ -488,36 +488,98 @@
             </div>
             <div class="card-body p-4">
               <!-- Katılım İstatistikleri -->
-              <div class="row mb-4" *ngIf="getStudentAttendanceStats() as stats">
-                <div class="col-md-3">
-                  <div class="card bg-success text-white">
-                    <div class="card-body text-center">
-                      <h4 class="fw-bold">{{ stats.presentCount }}</h4>
-                      <p class="mb-0">Katıldığı Ders</p>
+              <div class="attendance-stats-grid mb-4" *ngIf="getStudentAttendanceStats() as stats">
+                <!-- Katıldığı Dersler -->
+                <div class="stats-card present-lessons">
+                  <div class="card-icon">
+                    <i class="bi bi-check-circle-fill"></i>
+                  </div>
+                  <div class="card-content">
+                    <h3 class="main-number">{{ stats.presentCount }}</h3>
+                    <p class="card-title">Katıldığı Ders</p>
+                    <div class="lesson-breakdown">
+                      <div class="breakdown-item">
+                        <span class="label">Normal:</span>
+                        <span class="value">{{ getAttendanceByType('normal', 'present') }}</span>
+                      </div>
+                      <div class="breakdown-item">
+                        <span class="label">Ek Ders:</span>
+                        <span class="value">{{ getAttendanceByType('ek_ders', 'present') }}</span>
+                      </div>
+                      <div class="breakdown-item">
+                        <span class="label">Etüt:</span>
+                        <span class="value">{{ getAttendanceByType('etut_dersi', 'present') }}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div class="col-md-3">
-                  <div class="card bg-danger text-white">
-                    <div class="card-body text-center">
-                      <h4 class="fw-bold">{{ stats.absentCount }}</h4>
-                      <p class="mb-0">Devamsızlık</p>
+
+                <!-- Devamsızlık -->
+                <div class="stats-card absent-lessons">
+                  <div class="card-icon">
+                    <i class="bi bi-x-circle-fill"></i>
+                  </div>
+                  <div class="card-content">
+                    <h3 class="main-number">{{ stats.absentCount }}</h3>
+                    <p class="card-title">Devamsızlık</p>
+                    <div class="lesson-breakdown">
+                      <div class="breakdown-item">
+                        <span class="label">Normal:</span>
+                        <span class="value">{{ getAttendanceByType('normal', 'absent') }}</span>
+                      </div>
+                      <div class="breakdown-item">
+                        <span class="label">Ek Ders:</span>
+                        <span class="value">{{ getAttendanceByType('ek_ders', 'absent') }}</span>
+                      </div>
+                      <div class="breakdown-item">
+                        <span class="label">Etüt:</span>
+                        <span class="value">{{ getAttendanceByType('etut_dersi', 'absent') }}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div class="col-md-3">
-                  <div class="card bg-info text-white">
-                    <div class="card-body text-center">
-                      <h4 class="fw-bold">{{ stats.attendancePercentage }}%</h4>
-                      <p class="mb-0">Katılım Oranı</p>
+
+                <!-- Katılım Oranı -->
+                <div class="stats-card attendance-rate">
+                  <div class="card-icon">
+                    <i class="bi bi-graph-up"></i>
+                  </div>
+                  <div class="card-content">
+                    <h3 class="main-number">{{ stats.attendancePercentage }}%</h3>
+                    <p class="card-title">Katılım Oranı</p>
+                    <div class="progress-bar">
+                      <div class="progress-fill" [style.width.%]="stats.attendancePercentage"></div>
+                    </div>
+                    <div class="lesson-breakdown">
+                      <div class="breakdown-item">
+                        <span class="label">Toplam Kayıt:</span>
+                        <span class="value">{{ stats.totalRecords }}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div class="col-md-3">
-                  <div class="card bg-warning text-white">
-                    <div class="card-body text-center">
-                      <h4 class="fw-bold">{{ stats.expectedPaymentCycles }}</h4>
-                      <p class="mb-0">Ödeme Dönemleri</p>
+
+                <!-- Ders Tipi Dağılımı -->
+                <div class="stats-card lesson-types">
+                  <div class="card-icon">
+                    <i class="bi bi-pie-chart-fill"></i>
+                  </div>
+                  <div class="card-content">
+                    <h3 class="main-number">{{ stats.totalRecords }}</h3>
+                    <p class="card-title">Toplam Ders</p>
+                    <div class="lesson-breakdown">
+                      <div class="breakdown-item">
+                        <span class="label">Normal:</span>
+                        <span class="value">{{ getTotalByType('normal') }}</span>
+                      </div>
+                      <div class="breakdown-item">
+                        <span class="label">Ek Ders:</span>
+                        <span class="value">{{ getTotalByType('ek_ders') }}</span>
+                      </div>
+                      <div class="breakdown-item">
+                        <span class="label">Etüt:</span>
+                        <span class="value">{{ getTotalByType('etut_dersi') }}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
