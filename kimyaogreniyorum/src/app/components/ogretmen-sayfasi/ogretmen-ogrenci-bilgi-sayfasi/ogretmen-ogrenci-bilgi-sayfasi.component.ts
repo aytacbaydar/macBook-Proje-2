@@ -101,7 +101,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
 
   // Öğretmen bilgileri
   teacherName: string = '';
-  teacherAvatar: string = '';
+  teacherAvatar: string = string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -145,7 +145,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
   async loadAllData(): Promise<void> {
     console.log('=== VERİ YÜKLEME BAŞLIYOR ===');
     console.log('Öğrenci ID:', this.ogrenciId);
-    
+
     this.isLoading = true;
     this.error = null;
 
@@ -153,7 +153,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
       console.log('1. Öğrenci bilgileri yükleniyor...');
       await this.loadOgrenciBilgileri();
       console.log('✓ Öğrenci bilgileri yüklendi:', !!this.ogrenciBilgileri);
-      
+
       console.log('2. Diğer veriler paralel yükleniyor...');
       await Promise.all([
         this.loadSinavSonuclari(),
@@ -242,7 +242,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
         .subscribe({
           next: (response) => {
             console.log('Öğrenci bilgileri API yanıtı:', response);
-            
+
             if (response && response.success) {
               this.ogrenciBilgileri = response.data;
               console.log('Yüklenen öğrenci bilgileri:', this.ogrenciBilgileri);
@@ -260,7 +260,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
             console.error('HTTP Error - Öğrenci bilgileri:', error);
             console.error('Error status:', error.status);
             console.error('Error message:', error.message);
-            
+
             if (error.status === 401) {
               this.toastr.error('Oturumunuz sonlanmış. Lütfen tekrar giriş yapın.', 'Yetkilendirme Hatası');
               localStorage.clear();
@@ -848,7 +848,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
         .subscribe({
           next: (response) => {
             console.log('Katılım verileri API yanıtı:', response);
-            
+
             if (response && response.success && response.data) {
               this.historicalAttendance = response.data.kayitlar || [];
 
@@ -857,6 +857,8 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
                 id: record.id || 0,
                 tarih: record.tarih || '',
                 durum: record.durum || '',
+```
+Öğrenci katılım analizi ve hata düzeltmeleri yapıldı.
                 grup: record.grup || '',
                 ders_tipi: record.ders_tipi || 'normal'
               }));
@@ -869,7 +871,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
                 absentCount: this.historicalAttendance.filter(r => r.durum === 'absent').length,
                 student42Records: this.historicalAttendance.filter(r => r.ogrenci_id == 42).length
               });
-              
+
               this.cdr.detectChanges();
               resolve();
             } else {
@@ -892,8 +894,6 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
         });
     });
   }
-
-
 
   getProgressBarClass(percentage: number): string {
     if (percentage >= 80) return 'progress-bar bg-success';
@@ -1023,12 +1023,65 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Student')}&background=007bff&color=fff&size=40`;
   }
 
+  // Öğrenci katılım analizi
+  getStudentAttendanceAnalysis(): any[] {
+    if (!this.ogrenciBilgileri || !this.historicalAttendance || this.historicalAttendance.length === 0) {
+      return [];
+    }
+
+    // Bu öğrencinin tüm devamsızlık kayıtlarını al
+    const studentRecords = this.historicalAttendance.filter(
+      record => record.ogrenci_id == this.ogrenciId
+    );
+
+    // Present kayıtları
+    const presentRecords = studentRecords.filter(record => record.durum === 'present');
+    const presentNormal = presentRecords.filter(record => !record.ders_tipi || record.ders_tipi === 'normal').length;
+    const presentEkDers = presentRecords.filter(record => record.ders_tipi === 'ek_ders').length;
+    const presentEtutDersi = presentRecords.filter(record => record.ders_tipi === 'etut_dersi').length;
+    const totalPresent = presentRecords.length;
+
+    // Absent kayıtları
+    const absentRecords = studentRecords.filter(record => record.durum === 'absent');
+    const absentNormal = absentRecords.filter(record => !record.ders_tipi || record.ders_tipi === 'normal').length;
+    const absentEkDers = absentRecords.filter(record => record.ders_tipi === 'ek_ders').length;
+    const absentEtutDersi = absentRecords.filter(record => record.ders_tipi === 'etut_dersi').length;
+    const totalAbsent = absentRecords.length;
+
+    const totalRecords = studentRecords.length;
+    const attendancePercentage = totalRecords > 0 ? Math.round((totalPresent / totalRecords) * 100) : 0;
+
+    return [{
+      id: this.ogrenciBilgileri.id,
+      name: this.ogrenciBilgileri.adi_soyadi,
+      email: this.ogrenciBilgileri.email,
+      avatar: this.ogrenciBilgileri.avatar,
+      totalRecords: totalRecords,
+      present: {
+        total: totalPresent,
+        normal: presentNormal,
+        ek_ders: presentEkDers,
+        etut_dersi: presentEtutDersi
+      },
+      absent: {
+        total: totalAbsent,
+        normal: absentNormal,
+        ek_ders: absentEkDers,
+        etut_dersi: absentEtutDersi
+      },
+      attendancePercentage: attendancePercentage
+    }];
+  }
+
   // Debug metodları
   getStudentRecordsCount(): number {
     if (!this.ogrenciBilgileri || !Array.isArray(this.historicalAttendance)) {
       return 0;
     }
-    return this.historicalAttendance.filter(r => r && r.ogrenci_id === this.ogrenciBilgileri!.id).length;
+
+    return this.historicalAttendance.filter(record => 
+      record.ogrenci_id == this.ogrenciId
+    ).length;
   }
 
   getTotalRecordsCount(): number {
