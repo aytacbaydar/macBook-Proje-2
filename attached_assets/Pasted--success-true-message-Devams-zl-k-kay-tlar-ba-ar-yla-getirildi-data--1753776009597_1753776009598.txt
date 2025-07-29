@@ -1,0 +1,451 @@
+{
+  "success": true,
+  "message": "Devamsızlık kayıtları başarıyla getirildi",
+  "data": {
+    "kayitlar": [
+      {
+        "id": 191,
+        "ogrenci_id": 42,
+        "ogretmen_id": 1,
+        "grup": "ESA",
+        "tarih": "2025-07-21",
+        "durum": "present",
+        "zaman": "2025-07-21 19:00:00",
+        "yontem": "manual",
+        "ders_tipi": "etut_dersi",
+        "olusturma_zamani": "2025-07-21 10:51:06",
+        "guncelleme_zamani": "2025-07-21 10:51:06",
+        "adi_soyadi": "Ayça Nur Turhan",
+        "email": "aycanurturhan473@gmail.com",
+        "avatar": "avatar/Ay__a_Nur_Turhan_IMG_6269.jpeg"
+      },
+      {
+        "id": 185,
+        "ogrenci_id": 42,
+        "ogretmen_id": 1,
+        "grup": "ESA",
+        "tarih": "2025-07-19",
+        "durum": "present",
+        "zaman": "2025-07-19 10:13:51",
+        "yontem": "manual",
+        "ders_tipi": "normal",
+        "olusturma_zamani": "2025-07-19 10:13:54",
+        "guncelleme_zamani": "2025-07-19 10:13:54",
+        "adi_soyadi": "Ayça Nur Turhan",
+        "email": "aycanurturhan473@gmail.com",
+        "avatar": "avatar/Ay__a_Nur_Turhan_IMG_6269.jpeg"
+      },
+      {
+        "id": 181,
+        "ogrenci_id": 42,
+        "ogretmen_id": 1,
+        "grup": "ESA",
+        "tarih": "2025-07-17",
+        "durum": "present",
+        "zaman": "2025-07-17 10:06:42",
+        "yontem": "manual",
+        "ders_tipi": "normal",
+        "olusturma_zamani": "2025-07-17 10:06:52",
+        "guncelleme_zamani": "2025-07-17 10:06:52",
+        "adi_soyadi": "Ayça Nur Turhan",
+        "email": "aycanurturhan473@gmail.com",
+        "avatar": "avatar/Ay__a_Nur_Turhan_IMG_6269.jpeg"
+      },
+      {
+        "id": 170,
+        "ogrenci_id": 42,
+        "ogretmen_id": 1,
+        "grup": "ESA",
+        "tarih": "2025-07-15",
+        "durum": "present",
+        "zaman": "2025-07-15 19:07:39",
+        "yontem": "manual",
+        "ders_tipi": "normal",
+        "olusturma_zamani": "2025-07-15 19:07:40",
+        "guncelleme_zamani": "2025-07-15 19:07:40",
+        "adi_soyadi": "Ayça Nur Turhan",
+        "email": "aycanurturhan473@gmail.com",
+        "avatar": "avatar/Ay__a_Nur_Turhan_IMG_6269.jpeg"
+      },
+      {
+        "id": 132,
+        "ogrenci_id": 42,
+        "ogretmen_id": 1,
+        "grup": "ESA",
+        "tarih": "2025-07-12",
+        "durum": "present",
+        "zaman": "2025-07-13 21:19:14",
+        "yontem": "manual",
+        "ders_tipi": "normal",
+        "olusturma_zamani": "2025-07-13 21:19:18",
+        "guncelleme_zamani": "2025-07-13 21:19:18",
+        "adi_soyadi": "Ayça Nur Turhan",
+        "email": "aycanurturhan473@gmail.com",
+        "avatar": "avatar/Ay__a_Nur_Turhan_IMG_6269.jpeg"
+      },
+      {
+        "id": 135,
+        "ogrenci_id": 42,
+        "ogretmen_id": 1,
+        "grup": "ESA",
+        "tarih": "2025-07-11",
+        "durum": "present",
+        "zaman": "2025-07-14 00:24:57",
+        "yontem": "manual",
+        "ders_tipi": "ek_ders",
+        "olusturma_zamani": "2025-07-11 10:24:12",
+        "guncelleme_zamani": "2025-07-15 09:41:01",
+        "adi_soyadi": "Ayça Nur Turhan",
+        "email": "aycanurturhan473@gmail.com",
+        "avatar": "avatar/Ay__a_Nur_Turhan_IMG_6269.jpeg"
+      },
+      {
+        "id": 128,
+        "ogrenci_id": 42,
+        "ogretmen_id": 1,
+        "grup": "ESA",
+        "tarih": "2025-07-10",
+        "durum": "present",
+        "zaman": "2025-07-15 00:24:57",
+        "yontem": "manual",
+        "ders_tipi": "normal",
+        "olusturma_zamani": "2025-07-10 10:24:12",
+        "guncelleme_zamani": "2025-07-15 00:26:54",
+        "adi_soyadi": "Ayça Nur Turhan",
+        "email": "aycanurturhan473@gmail.com",
+        "avatar": "avatar/Ay__a_Nur_Turhan_IMG_6269.jpeg"
+      },
+      {
+        "id": 123,
+        "ogrenci_id": 42,
+        "ogretmen_id": 1,
+        "grup": "ESA",
+        "tarih": "2025-07-08",
+        "durum": "present",
+        "zaman": "2025-07-08 10:05:46",
+        "yontem": "manual",
+        "ders_tipi": "normal",
+        "olusturma_zamani": "2025-07-08 10:05:46",
+        "guncelleme_zamani": "2025-07-08 10:05:46",
+        "adi_soyadi": "Ayça Nur Turhan",
+        "email": "aycanurturhan473@gmail.com",
+        "avatar": "avatar/Ay__a_Nur_Turhan_IMG_6269.jpeg"
+      },
+      {
+        "id": 119,
+        "ogrenci_id": 42,
+        "ogretmen_id": 1,
+        "grup": "ESA",
+        "tarih": "2025-07-05",
+        "durum": "absent",
+        "zaman": "2025-07-05 10:17:59",
+        "yontem": "manual",
+        "ders_tipi": "normal",
+        "olusturma_zamani": "2025-07-05 10:18:09",
+        "guncelleme_zamani": "2025-07-05 10:18:09",
+        "adi_soyadi": "Ayça Nur Turhan",
+        "email": "aycanurturhan473@gmail.com",
+        "avatar": "avatar/Ay__a_Nur_Turhan_IMG_6269.jpeg"
+      },
+      {
+        "id": 116,
+        "ogrenci_id": 42,
+        "ogretmen_id": 1,
+        "grup": "ESA",
+        "tarih": "2025-07-03",
+        "durum": "absent",
+        "zaman": "2025-07-03 16:30:40",
+        "yontem": "manual",
+        "ders_tipi": "normal",
+        "olusturma_zamani": "2025-07-03 16:30:40",
+        "guncelleme_zamani": "2025-07-03 16:30:40",
+        "adi_soyadi": "Ayça Nur Turhan",
+        "email": "aycanurturhan473@gmail.com",
+        "avatar": "avatar/Ay__a_Nur_Turhan_IMG_6269.jpeg"
+      },
+      {
+        "id": 113,
+        "ogrenci_id": 42,
+        "ogretmen_id": 1,
+        "grup": "ESA",
+        "tarih": "2025-07-01",
+        "durum": "present",
+        "zaman": "2025-07-01 10:13:22",
+        "yontem": "manual",
+        "ders_tipi": "normal",
+        "olusturma_zamani": "2025-07-01 10:13:26",
+        "guncelleme_zamani": "2025-07-01 10:13:26",
+        "adi_soyadi": "Ayça Nur Turhan",
+        "email": "aycanurturhan473@gmail.com",
+        "avatar": "avatar/Ay__a_Nur_Turhan_IMG_6269.jpeg"
+      }
+    ],
+    "tarihlere_gore": [
+      {
+        "tarih": "2025-07-21",
+        "gun_adi": "Monday",
+        "katilan_sayisi": 1,
+        "katilmayan_sayisi": 0,
+        "ogrenciler": [
+          {
+            "id": 191,
+            "ogrenci_id": 42,
+            "ogretmen_id": 1,
+            "grup": "ESA",
+            "tarih": "2025-07-21",
+            "durum": "present",
+            "zaman": "2025-07-21 19:00:00",
+            "yontem": "manual",
+            "ders_tipi": "etut_dersi",
+            "olusturma_zamani": "2025-07-21 10:51:06",
+            "guncelleme_zamani": "2025-07-21 10:51:06",
+            "adi_soyadi": "Ayça Nur Turhan",
+            "email": "aycanurturhan473@gmail.com",
+            "avatar": "avatar/Ay__a_Nur_Turhan_IMG_6269.jpeg"
+          }
+        ]
+      },
+      {
+        "tarih": "2025-07-19",
+        "gun_adi": "Saturday",
+        "katilan_sayisi": 1,
+        "katilmayan_sayisi": 0,
+        "ogrenciler": [
+          {
+            "id": 185,
+            "ogrenci_id": 42,
+            "ogretmen_id": 1,
+            "grup": "ESA",
+            "tarih": "2025-07-19",
+            "durum": "present",
+            "zaman": "2025-07-19 10:13:51",
+            "yontem": "manual",
+            "ders_tipi": "normal",
+            "olusturma_zamani": "2025-07-19 10:13:54",
+            "guncelleme_zamani": "2025-07-19 10:13:54",
+            "adi_soyadi": "Ayça Nur Turhan",
+            "email": "aycanurturhan473@gmail.com",
+            "avatar": "avatar/Ay__a_Nur_Turhan_IMG_6269.jpeg"
+          }
+        ]
+      },
+      {
+        "tarih": "2025-07-17",
+        "gun_adi": "Thursday",
+        "katilan_sayisi": 1,
+        "katilmayan_sayisi": 0,
+        "ogrenciler": [
+          {
+            "id": 181,
+            "ogrenci_id": 42,
+            "ogretmen_id": 1,
+            "grup": "ESA",
+            "tarih": "2025-07-17",
+            "durum": "present",
+            "zaman": "2025-07-17 10:06:42",
+            "yontem": "manual",
+            "ders_tipi": "normal",
+            "olusturma_zamani": "2025-07-17 10:06:52",
+            "guncelleme_zamani": "2025-07-17 10:06:52",
+            "adi_soyadi": "Ayça Nur Turhan",
+            "email": "aycanurturhan473@gmail.com",
+            "avatar": "avatar/Ay__a_Nur_Turhan_IMG_6269.jpeg"
+          }
+        ]
+      },
+      {
+        "tarih": "2025-07-15",
+        "gun_adi": "Tuesday",
+        "katilan_sayisi": 1,
+        "katilmayan_sayisi": 0,
+        "ogrenciler": [
+          {
+            "id": 170,
+            "ogrenci_id": 42,
+            "ogretmen_id": 1,
+            "grup": "ESA",
+            "tarih": "2025-07-15",
+            "durum": "present",
+            "zaman": "2025-07-15 19:07:39",
+            "yontem": "manual",
+            "ders_tipi": "normal",
+            "olusturma_zamani": "2025-07-15 19:07:40",
+            "guncelleme_zamani": "2025-07-15 19:07:40",
+            "adi_soyadi": "Ayça Nur Turhan",
+            "email": "aycanurturhan473@gmail.com",
+            "avatar": "avatar/Ay__a_Nur_Turhan_IMG_6269.jpeg"
+          }
+        ]
+      },
+      {
+        "tarih": "2025-07-12",
+        "gun_adi": "Saturday",
+        "katilan_sayisi": 1,
+        "katilmayan_sayisi": 0,
+        "ogrenciler": [
+          {
+            "id": 132,
+            "ogrenci_id": 42,
+            "ogretmen_id": 1,
+            "grup": "ESA",
+            "tarih": "2025-07-12",
+            "durum": "present",
+            "zaman": "2025-07-13 21:19:14",
+            "yontem": "manual",
+            "ders_tipi": "normal",
+            "olusturma_zamani": "2025-07-13 21:19:18",
+            "guncelleme_zamani": "2025-07-13 21:19:18",
+            "adi_soyadi": "Ayça Nur Turhan",
+            "email": "aycanurturhan473@gmail.com",
+            "avatar": "avatar/Ay__a_Nur_Turhan_IMG_6269.jpeg"
+          }
+        ]
+      },
+      {
+        "tarih": "2025-07-11",
+        "gun_adi": "Friday",
+        "katilan_sayisi": 1,
+        "katilmayan_sayisi": 0,
+        "ogrenciler": [
+          {
+            "id": 135,
+            "ogrenci_id": 42,
+            "ogretmen_id": 1,
+            "grup": "ESA",
+            "tarih": "2025-07-11",
+            "durum": "present",
+            "zaman": "2025-07-14 00:24:57",
+            "yontem": "manual",
+            "ders_tipi": "ek_ders",
+            "olusturma_zamani": "2025-07-11 10:24:12",
+            "guncelleme_zamani": "2025-07-15 09:41:01",
+            "adi_soyadi": "Ayça Nur Turhan",
+            "email": "aycanurturhan473@gmail.com",
+            "avatar": "avatar/Ay__a_Nur_Turhan_IMG_6269.jpeg"
+          }
+        ]
+      },
+      {
+        "tarih": "2025-07-10",
+        "gun_adi": "Thursday",
+        "katilan_sayisi": 1,
+        "katilmayan_sayisi": 0,
+        "ogrenciler": [
+          {
+            "id": 128,
+            "ogrenci_id": 42,
+            "ogretmen_id": 1,
+            "grup": "ESA",
+            "tarih": "2025-07-10",
+            "durum": "present",
+            "zaman": "2025-07-15 00:24:57",
+            "yontem": "manual",
+            "ders_tipi": "normal",
+            "olusturma_zamani": "2025-07-10 10:24:12",
+            "guncelleme_zamani": "2025-07-15 00:26:54",
+            "adi_soyadi": "Ayça Nur Turhan",
+            "email": "aycanurturhan473@gmail.com",
+            "avatar": "avatar/Ay__a_Nur_Turhan_IMG_6269.jpeg"
+          }
+        ]
+      },
+      {
+        "tarih": "2025-07-08",
+        "gun_adi": "Tuesday",
+        "katilan_sayisi": 1,
+        "katilmayan_sayisi": 0,
+        "ogrenciler": [
+          {
+            "id": 123,
+            "ogrenci_id": 42,
+            "ogretmen_id": 1,
+            "grup": "ESA",
+            "tarih": "2025-07-08",
+            "durum": "present",
+            "zaman": "2025-07-08 10:05:46",
+            "yontem": "manual",
+            "ders_tipi": "normal",
+            "olusturma_zamani": "2025-07-08 10:05:46",
+            "guncelleme_zamani": "2025-07-08 10:05:46",
+            "adi_soyadi": "Ayça Nur Turhan",
+            "email": "aycanurturhan473@gmail.com",
+            "avatar": "avatar/Ay__a_Nur_Turhan_IMG_6269.jpeg"
+          }
+        ]
+      },
+      {
+        "tarih": "2025-07-05",
+        "gun_adi": "Saturday",
+        "katilan_sayisi": 0,
+        "katilmayan_sayisi": 1,
+        "ogrenciler": [
+          {
+            "id": 119,
+            "ogrenci_id": 42,
+            "ogretmen_id": 1,
+            "grup": "ESA",
+            "tarih": "2025-07-05",
+            "durum": "absent",
+            "zaman": "2025-07-05 10:17:59",
+            "yontem": "manual",
+            "ders_tipi": "normal",
+            "olusturma_zamani": "2025-07-05 10:18:09",
+            "guncelleme_zamani": "2025-07-05 10:18:09",
+            "adi_soyadi": "Ayça Nur Turhan",
+            "email": "aycanurturhan473@gmail.com",
+            "avatar": "avatar/Ay__a_Nur_Turhan_IMG_6269.jpeg"
+          }
+        ]
+      },
+      {
+        "tarih": "2025-07-03",
+        "gun_adi": "Thursday",
+        "katilan_sayisi": 0,
+        "katilmayan_sayisi": 1,
+        "ogrenciler": [
+          {
+            "id": 116,
+            "ogrenci_id": 42,
+            "ogretmen_id": 1,
+            "grup": "ESA",
+            "tarih": "2025-07-03",
+            "durum": "absent",
+            "zaman": "2025-07-03 16:30:40",
+            "yontem": "manual",
+            "ders_tipi": "normal",
+            "olusturma_zamani": "2025-07-03 16:30:40",
+            "guncelleme_zamani": "2025-07-03 16:30:40",
+            "adi_soyadi": "Ayça Nur Turhan",
+            "email": "aycanurturhan473@gmail.com",
+            "avatar": "avatar/Ay__a_Nur_Turhan_IMG_6269.jpeg"
+          }
+        ]
+      },
+      {
+        "tarih": "2025-07-01",
+        "gun_adi": "Tuesday",
+        "katilan_sayisi": 1,
+        "katilmayan_sayisi": 0,
+        "ogrenciler": [
+          {
+            "id": 113,
+            "ogrenci_id": 42,
+            "ogretmen_id": 1,
+            "grup": "ESA",
+            "tarih": "2025-07-01",
+            "durum": "present",
+            "zaman": "2025-07-01 10:13:22",
+            "yontem": "manual",
+            "ders_tipi": "normal",
+            "olusturma_zamani": "2025-07-01 10:13:26",
+            "guncelleme_zamani": "2025-07-01 10:13:26",
+            "adi_soyadi": "Ayça Nur Turhan",
+            "email": "aycanurturhan473@gmail.com",
+            "avatar": "avatar/Ay__a_Nur_Turhan_IMG_6269.jpeg"
+          }
+        ]
+      }
+    ],
+    "toplam_kayit": 11
+  }
+}
