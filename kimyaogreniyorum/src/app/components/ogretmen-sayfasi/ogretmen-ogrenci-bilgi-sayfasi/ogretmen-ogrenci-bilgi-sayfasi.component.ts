@@ -403,7 +403,10 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
   calculateStatistics(): void {
     // Toplam ödenen hesapla - array kontrolü ile
     this.toplamOdenen = Array.isArray(this.odemeBilgileri) 
-      ? this.odemeBilgileri.reduce((total, odeme) => total + (odeme.tutar || 0), 0)
+      ? this.odemeBilgileri.reduce((total, odeme) => {
+          const tutar = parseFloat(String(odeme.tutar || 0));
+          return total + (isNaN(tutar) ? 0 : tutar);
+        }, 0)
       : 0;
 
     // Kalan borç hesapla (katılım kayıtlarına göre)
@@ -908,6 +911,8 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
   }
 
   formatCurrency(amount: number): string {
+    // NaN kontrolü ekle
+    if (isNaN(amount) || amount === null || amount === undefined) return '₺0';
     if (amount === 0) return '₺0';
 
     return new Intl.NumberFormat('tr-TR', {
