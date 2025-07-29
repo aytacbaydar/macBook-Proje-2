@@ -781,6 +781,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
     return {
       presentCount,
       absentCount,
+      totalRecords: studentRecords.length,
       totalLessons,
       attendancePercentage,
       ucret,
