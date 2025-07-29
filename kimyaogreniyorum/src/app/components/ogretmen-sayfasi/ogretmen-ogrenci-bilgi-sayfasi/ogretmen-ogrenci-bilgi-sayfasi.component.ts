@@ -118,6 +118,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
       const idParam = params['id'];
       this.ogrenciId = parseInt(idParam, 10);
 
+      console.log('URL\'den alınan öğrenci ID:', idParam, 'Parsed ID:', this.ogrenciId);
 
       if (!idParam || isNaN(this.ogrenciId) || this.ogrenciId <= 0) {
         this.error = `Geçersiz öğrenci ID: ${idParam}`;
@@ -127,6 +128,7 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
         return;
       }
 
+      console.log('Öğrenci ID 42 için veri yükleme başlatılıyor...');
       await this.loadAllData();
     });
   }
@@ -141,34 +143,56 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
   }
 
   async loadAllData(): Promise<void> {
+    console.log('=== VERİ YÜKLEME BAŞLIYOR ===');
+    console.log('Öğrenci ID:', this.ogrenciId);
+    
     this.isLoading = true;
     this.error = null;
 
     try {
-      // Önce öğrenci bilgilerini yükle
+      console.log('1. Öğrenci bilgileri yükleniyor...');
       await this.loadOgrenciBilgileri();
+      console.log('✓ Öğrenci bilgileri yüklendi:', !!this.ogrenciBilgileri);
       
-      // Diğer verileri paralel olarak yükle
+      console.log('2. Diğer veriler paralel yükleniyor...');
       await Promise.all([
         this.loadSinavSonuclari(),
         this.loadKonuAnalizleri(),
         this.loadOdemeBilgileri()
       ]);
+      console.log('✓ Paralel veriler yüklendi');
 
       // Katılım verilerini ayrıca yükle
       if (this.ogrenciBilgileri) {
+        console.log('3. Katılım verileri yükleniyor...');
         await this.loadStudentAttendanceData();
+        console.log('✓ Katılım verileri yüklendi:', this.historicalAttendance.length, 'kayıt');
       }
 
+      console.log('4. İstatistikler hesaplanıyor...');
       this.calculateStatistics();
+      console.log('✓ İstatistikler hesaplandı');
+
+      console.log('5. Grafik verileri hazırlanıyor...');
       this.prepareChartData();
+      console.log('✓ Grafik verileri hazırlandı');
+
+      console.log('=== FINAL DURUM ===');
+      console.log('Öğrenci Bilgileri:', !!this.ogrenciBilgileri);
+      console.log('Katılım Kayıtları:', this.historicalAttendance.length);
+      console.log('Sınav Sonuçları:', this.sinavSonuclari.length);
+      console.log('Konu Analizleri:', this.konuAnalizleri.length);
+      console.log('Ödeme Bilgileri:', this.odemeBilgileri.length);
+
       this.toastr.success('Öğrenci bilgileri başarıyla yüklendi', 'Başarılı');
     } catch (error) {
-      console.error('Veri yükleme hatası:', error);
+      console.error('=== VERİ YÜKLEME HATASI ===');
+      console.error('Hata:', error);
       this.error = 'Veriler yüklenirken bir hata oluştu: ' + error;
       this.toastr.error('Veriler yüklenirken bir hata oluştu', 'Hata');
     } finally {
       this.isLoading = false;
+      console.log('=== VERİ YÜKLEME BİTTİ ===');
     }
   }
 
@@ -206,29 +230,39 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
 
   loadOgrenciBilgileri(): Promise<void> {
     return new Promise((resolve, reject) => {
+      console.log(`Öğrenci bilgileri yükleniyor - ID: ${this.ogrenciId}`);
 
       const headers = this.getAuthHeaders();
+      console.log('Auth headers:', headers.keys());
 
-      this.http.get<any>(`server/api/ogrenci_bilgileri.php?id=${this.ogrenciId}`, { headers })
+      const apiUrl = `server/api/ogrenci_bilgileri.php?id=${this.ogrenciId}`;
+      console.log('API URL:', apiUrl);
+
+      this.http.get<any>(apiUrl, { headers })
         .subscribe({
           next: (response) => {
+            console.log('Öğrenci bilgileri API yanıtı:', response);
+            
             if (response && response.success) {
               this.ogrenciBilgileri = response.data;
+              console.log('Yüklenen öğrenci bilgileri:', this.ogrenciBilgileri);
 
               // Katılım verilerini yükle
               this.loadStudentAttendanceData();
               resolve();
             } else {
               const errorMsg = response?.message || 'Öğrenci bilgileri alınamadı';
-              console.error('Öğrenci bilgileri hatası:', errorMsg);
+              console.error('Öğrenci bilgileri hatası:', errorMsg, response);
               reject(errorMsg);
             }
           },
           error: (error) => {
             console.error('HTTP Error - Öğrenci bilgileri:', error);
+            console.error('Error status:', error.status);
+            console.error('Error message:', error.message);
+            
             if (error.status === 401) {
               this.toastr.error('Oturumunuz sonlanmış. Lütfen tekrar giriş yapın.', 'Yetkilendirme Hatası');
-              // Kullanıcıyı giriş sayfasına yönlendir
               localStorage.clear();
               sessionStorage.clear();
               window.location.href = '/';
@@ -793,24 +827,29 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
   loadStudentAttendanceData(): Promise<void> {
     return new Promise((resolve, reject) => {
       if (!this.ogrenciBilgileri) {
+        console.log('Öğrenci bilgileri yok, katılım verileri yüklenmiyor');
         resolve();
         return;
       }
 
-      const headers = this.getAuthHeaders();
+      console.log(`Katılım verileri yükleniyor - Öğrenci ID: ${this.ogrenciBilgileri.id}`);
 
-      // devamsizlik_kayitlari.php API'sini kullan - ogretmen-devamsizlik-sayfasi gibi
-      this.http.get<any>(`server/api/devamsizlik_kayitlari.php`, { 
-        headers,
-        params: {
-          ogrenci_id: this.ogrenciBilgileri.id.toString(),
-          butun_kayitlar: 'true'
-        }
-      })
+      const headers = this.getAuthHeaders();
+      const apiUrl = `server/api/devamsizlik_kayitlari.php`;
+      const params = {
+        ogrenci_id: this.ogrenciBilgileri.id.toString(),
+        butun_kayitlar: 'true'
+      };
+
+      console.log('Katılım API URL:', apiUrl);
+      console.log('Katılım API params:', params);
+
+      this.http.get<any>(apiUrl, { headers, params })
         .subscribe({
           next: (response) => {
+            console.log('Katılım verileri API yanıtı:', response);
+            
             if (response && response.success && response.data) {
-              // Kayıtları al - ogretmen-devamsizlik-sayfasi formatında
               this.historicalAttendance = response.data.kayitlar || [];
 
               // devamsizlikKayitlari'nı da güncelle
@@ -822,19 +861,19 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
                 ders_tipi: record.ders_tipi || 'normal'
               }));
 
-
               console.log('Başarıyla yüklenen katılım verileri:', {
                 toplamKayit: this.historicalAttendance.length,
                 devamsizlikKayitlari: this.devamsizlikKayitlari.length,
                 ornekKayit: this.historicalAttendance[0],
                 presentCount: this.historicalAttendance.filter(r => r.durum === 'present').length,
-                absentCount: this.historicalAttendance.filter(r => r.durum === 'absent').length
+                absentCount: this.historicalAttendance.filter(r => r.durum === 'absent').length,
+                student42Records: this.historicalAttendance.filter(r => r.ogrenci_id == 42).length
               });
               
               this.cdr.detectChanges();
               resolve();
             } else {
-              console.warn('Katılım verileri bulunamadı:', response?.message);
+              console.warn('Katılım verileri bulunamadı:', response?.message, response);
               this.historicalAttendance = [];
               this.devamsizlikKayitlari = [];
               this.cdr.detectChanges();
@@ -843,6 +882,8 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
           },
           error: (error) => {
             console.error('Katılım verileri yüklenemedi:', error);
+            console.error('Error status:', error.status);
+            console.error('Error message:', error.message);
             this.historicalAttendance = [];
             this.devamsizlikKayitlari = [];
             this.cdr.detectChanges();
