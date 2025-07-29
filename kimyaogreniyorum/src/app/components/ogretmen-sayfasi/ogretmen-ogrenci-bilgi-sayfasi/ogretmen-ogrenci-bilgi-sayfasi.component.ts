@@ -1022,4 +1022,20 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
   getDefaultAvatar(name: string): string {
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Student')}&background=007bff&color=fff&size=40`;
   }
+
+  // Debug metodları
+  getStudentRecordsCount(): number {
+    if (!this.ogrenciBilgileri || !Array.isArray(this.historicalAttendance)) {
+      return 0;
+    }
+    return this.historicalAttendance.filter(r => r && r.ogrenci_id === this.ogrenciBilgileri!.id).length;
+  }
+
+  getTotalRecordsCount(): number {
+    return Array.isArray(this.historicalAttendance) ? this.historicalAttendance.length : 0;
+  }
+
+  getStudentId(): number {
+    return this.ogrenciBilgileri?.id || 0;
+  }
 }
