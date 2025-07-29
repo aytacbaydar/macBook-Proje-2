@@ -857,8 +857,8 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
                 id: record.id || 0,
                 tarih: record.tarih || '',
                 durum: record.durum || '',
-```
-Öğrenci katılım analizi ve hata düzeltmeleri yapıldı.
+
+              //Öğrenci katılım analizi ve hata düzeltmeleri yapıldı.
                 aciklama: record.aciklama,
                 grup: record.grup || '',
                 ders_tipi: record.ders_tipi || 'normal'
