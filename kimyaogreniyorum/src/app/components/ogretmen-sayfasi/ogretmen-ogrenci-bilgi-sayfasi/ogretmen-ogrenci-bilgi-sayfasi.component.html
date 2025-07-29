@@ -799,7 +799,7 @@
                     <div class="summary-icon">
                       <i class="bi bi-exclamation-triangle" [class.text-danger]="getPaymentSummary().totalDebt > 0" [class.text-success]="getPaymentSummary().totalDebt === 0"></i>
                     </div>
-                    <replit_final_file><div class="summary-content">
+                    <div class="summary-content">
                       <h4 [class.text-danger]="getPaymentSummary().totalDebt > 0" [class.text-success]="getPaymentSummary().totalDebt === 0">
                         {{ formatCurrency(Math.abs(getPaymentSummary().totalDebt)) }}
                       </h4>
@@ -812,8 +812,6 @@
           </div>
         </div>
 
-        <!-- Devamsızlık/Katılım Bilgileri Sekmesi -->
-        <div *ngIf="activeTab === 'devamsizlik'" class="tab-content">
-</div>
+        
       </div>
     </div>
