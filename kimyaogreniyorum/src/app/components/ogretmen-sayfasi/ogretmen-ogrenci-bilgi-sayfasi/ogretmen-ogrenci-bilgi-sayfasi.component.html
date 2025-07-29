@@ -50,7 +50,7 @@
             <div class="text-success mb-2">
               <i class="bi bi-graph-up-arrow fs-1"></i>
             </div>
-            <h5 class="fw-bold text-dark">{{ ortalamaPuan.toFixed(1) }}</h5>
+            <h5 class="fw-bold text-dark">{{ getToplamYuzde() }} %</h5>
             <p class="text-muted small mb-0">Ortalama Puan</p>
           </div>
         </div>
@@ -72,7 +72,7 @@
             <div class="text-warning mb-2">
               <i class="bi bi-exclamation-triangle fs-1"></i>
             </div>
-            <h5 class="fw-bold text-dark">{{ formatCurrency(kalanBorc) }}</h5>
+            <h5 class="fw-bold text-dark">{{ getKalanBorc() }}</h5>
             <p class="text-muted small mb-0">Kalan Borç</p>
           </div>
         </div>
@@ -81,9 +81,10 @@
         <div class="card border-0 shadow-sm h-100">
           <div class="card-body text-center">
             <div class="text-danger mb-2">
-              <i class="bi bi-person-x fs-1"></i>
+              <i class="bi bi-person-fill-check fs-1"></i>
             </div>
-            <h5 class="fw-bold text-dark">{{ devamsizlikSayisi }}</h5>
+            <h5 class="fw-bold text-dark">{{ getAttendanceByType('normal', 'present') + getAttendanceByType('ek_ders', 'present') +
+            getAttendanceByType('etut_dersi', 'present') }}</h5>
             <p class="text-muted small mb-0">Devamsızlık</p>
           </div>
         </div>
@@ -306,64 +307,105 @@
         </div>
 
         <!-- Konu Analizleri Tab -->
-        <div *ngIf="activeTab === 'konular'" class="tab-content">
-          <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white border-bottom">
-              <h5 class="mb-0 fw-bold">
-                <i class="bi bi-pie-chart me-2 text-primary"></i>
-                Konu Bazında Analiz
-              </h5>
-            </div>
-            <div class="card-body p-4">
-              <div class="row">
-                <div class="col-12">
-                  <!-- Konu Analizleri Tablosu -->
-                  <div *ngIf="activeTab === 'konular'" class="table-responsive">
-                    <div *ngIf="konuAnalizleri && konuAnalizleri.length > 0; else noKonuData">
-                      <table class="table table-striped">
-                        <thead>
-                          <tr>
-                            <th>Konu Adı</th>
-                            <th class="text-center">Toplam Soru</th>
-                            <th class="text-center">Doğru</th>
-                            <th class="text-center">Yanlış</th>
-                            <th class="text-center">Boş</th>
-                            <th class="text-center">Başarı Oranı</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr *ngFor="let konu of konuAnalizleri; trackBy: trackByKonuAdi">
-                            <td>{{ konu.konu_adi }}</td>
-                            <td class="text-center">{{ konu.toplam_soru }}</td>
-                            <td class="text-center text-success">{{ konu.dogru_sayisi }}</td>
-                            <td class="text-center text-danger">{{ konu.yanlis_sayisi }}</td>
-                            <td class="text-center text-warning">{{ konu.bos_sayisi }}</td>
-                            <td class="text-center">
-                              <div class="d-flex align-items-center">
-                                <div class="progress flex-grow-1 me-2" style="height: 20px;">
-                                  <div 
-                                    class="progress-bar" 
-                                    [class]="getProgressBarClass(konu.basari_orani)"
-                                    [style.width.%]="konu.basari_orani">
-                                    {{ konu.basari_orani | number:'1.1-1' }}%
-                                  </div>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                    <ng-template #noKonuData>
-                      <div class="text-center py-4">
-                        <p class="text-muted">Henüz konu analizi verisi bulunmuyor.</p>
+        <div *ngIf="activeTab === 'konular'" class="tab-content">    
+            <div class="card border-0 shadow-sm">
+              <div class="card-header bg-white border-bottom">
+                <h5 class="mb-0 fw-bold">
+                  <i class="bi bi-cash-coin me-2 text-primary"></i>
+                  Konu Bazında Analiz
+                </h5>
+              </div>
+              <div class="card-body p-4">
+                <!-- Ödeme Özeti -->
+                <div class="row mb-4">
+                  <div class="col-md-3">
+                    <div class="card bg-primary text-white">
+                      <div class="card-body text-center">
+                        <h4 class="fw-bold">{{ getToplamSoru() }}</h4>
+                        <p class="mb-0">Toplam Soru Sayısı</p>
                       </div>
-                    </ng-template>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="card bg-success text-white">
+                      <div class="card-body text-center">
+                        <h4 class="fw-bold">{{ getToplamDogru() }}</h4>
+                        <p class="mb-0">Toplam Doğru Sayısı</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="card bg-warning text-white">
+                      <div class="card-body text-center">
+                        <h4 class="fw-bold">{{ getToplamYanlis() }}</h4>
+                        <p class="mb-0">Toplam Yanlış Sayısı</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="card bg-info text-white">
+                      <div class="card-body text-center">
+                        <h4 class="fw-bold">{{ getToplamBos() }}</h4>
+                        <p class="mb-0">Toplam Boş Sayısı</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+            <div class="col-12">
+              <!-- Konu Analizleri Tablosu -->
+              <div *ngIf="activeTab === 'konular'" class="table-responsive">
+                <div *ngIf="konuAnalizleri && konuAnalizleri.length > 0; else noKonuData">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Konu Adı</th>
+                        <th class="text-center">Toplam Soru</th>
+                        <th class="text-center">Doğru</th>
+                        <th class="text-center">Yanlış</th>
+                        <th class="text-center">Boş</th>
+                        <th class="text-center">Başarı Oranı</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let konu of konuAnalizleri; trackBy: trackByKonuAdi">
+                        <td>{{ konu.konu_adi }}</td>
+                        <td class="text-center">{{ konu.toplam_soru }}</td>
+                        <td class="text-center text-success">{{ konu.dogru_sayisi }}</td>
+                        <td class="text-center text-danger">{{ konu.yanlis_sayisi }}</td>
+                        <td class="text-center text-warning">{{ konu.bos_sayisi }}</td>
+                        <td class="text-center">
+                          <div class="d-flex align-items-center">
+                            <div class="progress flex-grow-1 me-2" style="height: 20px;">
+                              <div 
+                                class="progress-bar" 
+                                [class]="getProgressBarClass(konu.basari_orani)"
+                                [style.width.%]="konu.basari_orani">
+                                {{ konu.basari_orani | number:'1.1-1' }}%
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr class="fw-bold table-secondary">
+                        <td>TOPLAM</td>
+                        <td class="text-center">{{ getToplamSoru() }}</td>
+                        <td class="text-center text-success">{{ getToplamDogru() }}</td>
+                        <td class="text-center text-danger">{{ getToplamYanlis() }}</td>
+                        <td class="text-center text-warning">{{ getToplamBos() }}</td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <ng-template #noKonuData>
+                  <div class="text-center py-4">
+                    <p class="text-muted">Henüz konu analizi verisi bulunmuyor.</p>
+                  </div>
+                </ng-template>
+              </div>
+            </div>
         </div>
 
         <!-- Ücret Bilgileri Tab -->
@@ -387,9 +429,9 @@
                   </div>
                 </div>
                 <div class="col-md-3">
-                  <div class="card bg-warning text-white">
+                  <div class="card bg-success text-white">
                     <div class="card-body text-center">
-                      <h4 class="fw-bold">{{ getOdenecekTutar() | number:'1.0-0':'tr' }} TL</h4>
+                      <h4 class="fw-bold">{{ formatCurrency(getOdenecekTutar()) }}</h4>
                       <p class="mb-0">Ödenecek Tutar</p>
                     </div>
                   </div>
@@ -397,7 +439,7 @@
                 <div class="col-md-3">
                   <div class="card bg-warning text-white">
                     <div class="card-body text-center">
-                      <h4 class="fw-bold">{{ formatCurrency(toplamOdenen) }} - {{ getOdenecekTutar() | number:'1.0-0':'tr' }} TL</h4>
+                      <h4 class="fw-bold">{{ getKalanBorc() }}</h4>
                       <p class="mb-0">Kalan Borç</p>
                     </div>
                   </div>
@@ -610,8 +652,6 @@
             </div>
           </div>
         </div>
-
-
         <!-- Ücret Analizi Sekmesi -->
         <div *ngIf="activeTab === 'ucret-analizi'" class="tab-content">
           <div class="payment-analysis-section">
@@ -750,7 +790,5 @@
             </div>
           </div>
         </div>
-
-        
       </div>
     </div>

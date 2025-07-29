@@ -113,6 +113,8 @@ export class OgretmenOgrenciBilgiSayfasiComponent
     private cdr: ChangeDetectorRef
   ) {}
 
+  toplamSoru: number = 0;
+
   ngOnInit(): void {
     // Öğretmen bilgilerini yükle
     this.loadTeacherInfo();
@@ -139,6 +141,35 @@ export class OgretmenOgrenciBilgiSayfasiComponent
       console.log('Öğrenci ID 42 için veri yükleme başlatılıyor...');
       await this.loadAllData();
     });
+  }
+
+  // toplam soru sayısını hesapla
+  getToplamSoru(): number {
+    return this.konuAnalizleri.reduce((sum, konu) => sum + konu.toplam_soru, 0);
+  }
+
+  getToplamDogru(): number {
+    return this.konuAnalizleri.reduce(
+      (sum, konu) => sum + konu.dogru_sayisi,
+      0
+    );
+  }
+
+  getToplamYanlis(): number {
+    return this.konuAnalizleri.reduce(
+      (sum, konu) => sum + konu.yanlis_sayisi,
+      0
+    );
+  }
+
+  getToplamBos(): number {
+    return this.konuAnalizleri.reduce((sum, konu) => sum + konu.bos_sayisi, 0);
+  }
+
+  getToplamYuzde(): number { 
+    const toplamDogru = this.getToplamDogru();
+    const toplamSoru = this.getToplamSoru();
+    return toplamSoru > 0 ? Math.round((toplamDogru / toplamSoru) * 100) : 0;
   }
 
   ngAfterViewInit(): void {
@@ -446,11 +477,18 @@ export class OgretmenOgrenciBilgiSayfasiComponent
         });
     });
   }
-
+  // ödenecek tutar
   getOdenecekTutar(): number {
-    const normal = this.getAttendanceByType('normal', 'present'); // örn: 8
-    const ekDers = this.getAttendanceByType('ek_ders', 'present'); // örn: 0
+    const normal = this.getAttendanceByType('normal', 'present');
+    const ekDers = this.getAttendanceByType('ek_ders', 'present');
     return ((normal + ekDers) / 4) * 2500;
+  }
+
+  // Removed duplicate formatCurrency function to fix the error.
+
+  getKalanBorc(): string {
+    const kalan = this.getOdenecekTutar() - this.toplamOdenen;
+    return this.formatCurrency(kalan);
   }
 
   calculateStatistics(): void {
