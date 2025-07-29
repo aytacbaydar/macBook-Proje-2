@@ -826,18 +826,18 @@ export class OgretmenOgrenciBilgiSayfasiComponent implements OnInit, AfterViewIn
 
   loadStudentAttendanceData(): Promise<void> {
     return new Promise((resolve, reject) => {
-      if (!this.ogrenciBilgileri) {
-        console.log('Öğrenci bilgileri yok, katılım verileri yüklenmiyor');
+      if (!this.ogrenciId) {
+        console.log('Öğrenci ID yok, katılım verileri yüklenmiyor');
         resolve();
         return;
       }
 
-      console.log(`Katılım verileri yükleniyor - Öğrenci ID: ${this.ogrenciBilgileri.id}`);
+      console.log(`Katılım verileri yükleniyor - Öğrenci ID: ${this.ogrenciId}`);
 
       const headers = this.getAuthHeaders();
       const apiUrl = `server/api/devamsizlik_kayitlari.php`;
       const params = {
-        ogrenci_id: this.ogrenciBilgileri.id.toString(),
+        ogrenci_id: this.ogrenciId.toString(),
         butun_kayitlar: 'true'
       };
 
