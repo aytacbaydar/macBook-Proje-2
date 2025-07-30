@@ -9,6 +9,10 @@ interface DersProgram {
   ders_gunu: string;
   ders_saati: string;
   ucret: number;
+  // Gruplandırılmış dersler için ek özellikler
+  dersler?: DersProgram[];
+  toplamUcret?: number;
+  dersAdedi?: number;
 }
 
 interface GunlukDersler {
