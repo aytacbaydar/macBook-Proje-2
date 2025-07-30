@@ -1,4 +1,3 @@
-
 <div class="weekly-schedule-container">
   <!-- Header -->
   <div class="page-header">
@@ -60,7 +59,7 @@
             {{ formatTime(dersGrubu.ders_saati) }}
             <span class="lesson-count-badge" *ngIf="dersGrubu.dersAdedi > 1">{{ dersGrubu.dersAdedi }} Ders</span>
           </div>
-          
+
           <div class="lesson-info">
             <!-- Tek ders varsa -->
             <div *ngIf="dersGrubu.dersAdedi === 1" class="single-lesson">
@@ -70,13 +69,13 @@
               >
                 {{ getGroupDisplayName(dersGrubu.grubu, dersGrubu.sinifi) }}
               </div>
-              
+
               <div class="lesson-details">
                 <div class="student-count">
                   <i class="bi bi-people"></i>
                   <span>{{ dersGrubu.adi_soyadi || 'Grup Dersi' }}</span>
                 </div>
-                
+
                 <div class="lesson-fee">
                   <i class="bi bi-currency-exchange"></i>
                   <span>{{ dersGrubu.ucret }}₺</span>
@@ -85,14 +84,14 @@
             </div>
 
             <!-- Birden fazla ders varsa -->
-            <div *ngIf="dersGrubu.dersAdedi > 1" class="multiple-lessons">
+            <div *ngIf="dersGrubu.dersAdedi && dersGrubu.dersAdedi > 1" class="multiple-lessons">
               <div class="lessons-summary">
                 <div class="total-fee">
                   <i class="bi bi-currency-exchange"></i>
                   <strong>Toplam: {{ dersGrubu.toplamUcret }}₺</strong>
                 </div>
               </div>
-              
+
               <div class="lessons-list">
                 <div 
                   *ngFor="let ders of dersGrubu.dersler" 
@@ -104,7 +103,7 @@
                   >
                     {{ getGroupDisplayName(ders.grubu, ders.sinifi) }}
                   </div>
-                  
+
                   <div class="lesson-mini-details">
                     <span class="student-name">{{ ders.adi_soyadi || 'Grup' }}</span>
                     <span class="lesson-fee-small">{{ ders.ucret }}₺</span>
@@ -132,7 +131,7 @@
       <i class="bi bi-bar-chart"></i>
       Haftalık Özet
     </h4>
-    
+
     <div class="summary-grid">
       <div class="summary-item" *ngFor="let gun of gunler">
         <span class="summary-day">{{ gun.substring(0, 3) }}</span>
