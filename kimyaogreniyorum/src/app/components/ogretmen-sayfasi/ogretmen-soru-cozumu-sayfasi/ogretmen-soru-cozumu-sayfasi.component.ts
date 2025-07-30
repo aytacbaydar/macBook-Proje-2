@@ -67,6 +67,10 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
   showImageModal: boolean = false;
   selectedImageUrl: string = '';
 
+  // Search functionality
+  studentSearchQuery: string = '';
+  filteredStudentIds: number[] = [];
+
   private apiBaseUrl = './server/api';
 
   constructor(private http: HttpClient) {
@@ -93,6 +97,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     this.loadStudents();
     this.loadAllMessages();
     this.startMessageCheckInterval();
+    this.filteredStudentIds = this.getGroupedStudentIds();
   }
 
   ngOnDestroy(): void {
@@ -473,6 +478,9 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
         new Date(b.gonderim_tarihi).getTime() - new Date(a.gonderim_tarihi).getTime()
       );
     });
+
+    // Update filtered list when messages are regrouped
+    this.filterStudents();
   }
 
   getGroupedStudentIds(): number[] {
@@ -682,5 +690,31 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     unreadMessages.forEach(message => {
       this.markMessageAsRead(message.id!);
     });
+  }
+
+  // Search functionality methods
+  filterStudents(): void {
+    if (!this.studentSearchQuery.trim()) {
+      this.filteredStudentIds = this.getGroupedStudentIds();
+      return;
+    }
+
+    const query = this.studentSearchQuery.toLowerCase().trim();
+    this.filteredStudentIds = this.getGroupedStudentIds().filter(studentId => {
+      const studentName = this.getStudentName(studentId).toLowerCase();
+      return studentName.includes(query);
+    });
+  }
+
+  getFilteredStudentIds(): number[] {
+    if (!this.studentSearchQuery.trim()) {
+      return this.getGroupedStudentIds();
+    }
+    return this.filteredStudentIds;
+  }
+
+  clearSearch(): void {
+    this.studentSearchQuery = '';
+    this.filteredStudentIds = [];
   }
 }
