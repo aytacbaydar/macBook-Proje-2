@@ -433,6 +433,35 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     return this.allMessages.filter(m => m.ogrenci_id === studentId && !m.okundu && m.gonderen_tip === 'ogrenci').length;
   }
 
+  getStudentById(studentId: number): any {
+    return this.students.find(s => s.id === studentId);
+  }
+
+  getDefaultAvatar(name: string): string {
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Student')}&background=007bff&color=fff&size=40`;
+  }
+
+  getFilteredStudents(): any[] {
+    if (!this.studentSearchQuery) {
+      return this.students;
+    }
+    
+    const query = this.studentSearchQuery.toLowerCase();
+    return this.students.filter(student => 
+      student.adi_soyadi.toLowerCase().includes(query) ||
+      student.email.toLowerCase().includes(query) ||
+      (student.grubu && student.grubu.toLowerCase().includes(query))
+    );
+  }
+
+  hasMessages(studentId: number): boolean {
+    return this.allMessages.some(m => m.ogrenci_id === studentId);
+  }
+
+  trackByStudentId(index: number, student: any): number {
+    return student.id;
+  }
+
   private requestNotificationPermission(): void {
     if ('Notification' in window) {
       if (Notification.permission === 'default') {

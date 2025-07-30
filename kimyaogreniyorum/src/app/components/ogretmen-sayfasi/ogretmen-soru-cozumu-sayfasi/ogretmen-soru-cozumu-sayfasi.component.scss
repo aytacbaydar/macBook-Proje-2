@@ -182,89 +182,22 @@
   .student-item {
     display: flex;
     align-items: center;
-    padding: 1rem;
-    background: white;
-    margin-bottom: 0.5rem;
-    border-radius: 12px;
+    padding: 12px;
+    border-bottom: 1px solid #eee;
     cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: background-color 0.2s;
 
     &:hover {
-      background: #f8f9fa;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      background-color: #f8f9fa;
     }
 
-    .student-avatar {
-      width: 50px;
-      height: 50px;
-      background: linear-gradient(135deg, #25D366, #128C7E);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 1rem;
-
-      i {
-        font-size: 1.5rem;
-        color: white;
-      }
+    &.selected {
+      background-color: #e3f2fd;
+      border-left: 4px solid #2196f3;
     }
 
-    .student-info {
-      flex: 1;
-
-      .student-name {
-        font-weight: 600;
-        font-size: 1rem;
-        color: #333;
-        margin-bottom: 0.25rem;
-      }
-
-      .last-message {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-
-        .message-preview {
-          color: #666;
-          font-size: 0.9rem;
-          flex: 1;
-        }
-
-        .message-time {
-          color: #999;
-          font-size: 0.8rem;
-        }
-      }
-    }
-
-    .student-badges {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-
-      .message-count {
-        background: #e9ecef;
-        color: #666;
-        padding: 0.25rem 0.5rem;
-        border-radius: 12px;
-        font-size: 0.8rem;
-        text-align: center;
-        min-width: 24px;
-      }
-
-      .unread-count {
-        background: #25D366;
-        color: white;
-        padding: 0.25rem 0.5rem;
-        border-radius: 12px;
-        font-size: 0.8rem;
-        text-align: center;
-        min-width: 24px;
-        font-weight: 600;
-      }
+    &.has-messages {
+      border-left: 3px solid #28a745;
     }
   }
 }
@@ -684,5 +617,67 @@
     &.show {
       transform: translateY(0);
     }
+  }
+}
+
+.students-section {
+  margin-top: 20px;
+  border-top: 1px solid #eee;
+  padding-top: 15px;
+
+  .section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    i {
+      color: #007bff;
+    }
+  }
+}
+
+.all-students-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.student-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+  color: #666;
+
+  .student-email {
+    color: #888;
+  }
+
+  .student-group {
+    background: #007bff;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 10px;
+    width: fit-content;
+  }
+}
+
+.avatar-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd;
+}
+
+.no-messages {
+  color: #ccc;
+
+  i {
+    font-size: 14px;
   }
 }
