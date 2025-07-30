@@ -1,4 +1,3 @@
-
 .weekly-schedule-container {
   padding: 2rem;
   background: #f8f9fa;
@@ -172,14 +171,23 @@
   .lesson-time {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    justify-content: space-between;
+    font-size: 0.9rem;
     font-weight: 600;
     color: #495057;
     margin-bottom: 0.75rem;
-    font-size: 0.9rem;
 
     i {
       color: #6c757d;
+    }
+
+    .lesson-count-badge {
+      background: #e74c3c;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 500;
     }
   }
 
@@ -214,8 +222,74 @@
       }
 
       .lesson-fee {
-        font-weight: 600;
+        display: flex;
+        align-items: center;
+        font-size: 0.875rem;
         color: #28a745;
+        font-weight: 600;
+
+        i {
+          margin-right: 4px;
+        }
+      }
+    }
+
+    .multiple-lessons {
+      .lessons-summary {
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #eee;
+
+        .total-fee {
+          display: flex;
+          align-items: center;
+          color: #27ae60;
+          font-size: 14px;
+
+          i {
+            margin-right: 6px;
+          }
+        }
+      }
+
+      .lessons-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .individual-lesson {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 6px 8px;
+          background: #f8f9fa;
+          border-radius: 6px;
+          border-left: 3px solid transparent;
+
+          .group-badge.small {
+            font-size: 10px;
+            padding: 3px 6px;
+            min-width: auto;
+          }
+
+          .lesson-mini-details {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+
+            .student-name {
+              font-size: 11px;
+              color: #666;
+            }
+
+            .lesson-fee-small {
+              font-size: 11px;
+              color: #27ae60;
+              font-weight: 600;
+            }
+          }
+        }
       }
     }
   }

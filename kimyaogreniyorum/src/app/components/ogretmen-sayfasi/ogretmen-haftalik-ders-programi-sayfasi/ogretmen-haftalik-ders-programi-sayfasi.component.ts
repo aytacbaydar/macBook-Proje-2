@@ -116,17 +116,33 @@ export class OgretmenHaftalikDersProgramiSayfasiComponent implements OnInit {
       this.gunlukDersler[gun] = [];
     });
 
-    // Dersleri günlere göre organize et
-    this.dersProgram.forEach(ders => {
-      if (ders.ders_gunu && this.gunlukDersler[ders.ders_gunu]) {
-        this.gunlukDersler[ders.ders_gunu].push(ders);
-      }
-    });
+    // Dersleri günlere göre organize et ve saate göre grupla
+    this.gunler.forEach(gun => {
+      const gunDersleri = this.dersProgram.filter(ders => ders.ders_gunu === gun);
+      
+      // Saate göre grupla
+      const saatGruplari: { [saat: string]: DersProgram[] } = {};
+      
+      gunDersleri.forEach(ders => {
+        if (!saatGruplari[ders.ders_saati]) {
+          saatGruplari[ders.ders_saati] = [];
+        }
+        saatGruplari[ders.ders_saati].push(ders);
+      });
 
-    // Her günün derslerini saate göre sırala
-    Object.keys(this.gunlukDersler).forEach(gun => {
-      this.gunlukDersler[gun].sort((a, b) => {
-        return a.ders_saati.localeCompare(b.ders_saati);
+      // Saatleri sırala ve gruplanan dersleri ekle
+      const siraliSaatler = Object.keys(saatGruplari).sort();
+      
+      siraliSaatler.forEach(saat => {
+        // Aynı saatteki dersleri tek bir grup objesi olarak ekle
+        const dersGrubu = {
+          ...saatGruplari[saat][0], // İlk dersin temel bilgilerini al
+          dersler: saatGruplari[saat], // Tüm dersleri ekle
+          toplamUcret: saatGruplari[saat].reduce((total, ders) => total + ders.ucret, 0),
+          dersAdedi: saatGruplari[saat].length
+        };
+        
+        this.gunlukDersler[gun].push(dersGrubu);
       });
     });
   }

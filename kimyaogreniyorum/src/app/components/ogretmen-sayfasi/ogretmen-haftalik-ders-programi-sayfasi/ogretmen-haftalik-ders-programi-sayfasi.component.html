@@ -53,31 +53,63 @@
       <div class="day-lessons">
         <div 
           class="lesson-card" 
-          *ngFor="let ders of gunlukDersler[gun]"
-          [style.border-left-color]="getGroupColor(ders.grubu, ders.sinifi)"
+          *ngFor="let dersGrubu of gunlukDersler[gun]"
         >
           <div class="lesson-time">
             <i class="bi bi-clock"></i>
-            {{ formatTime(ders.ders_saati) }}
+            {{ formatTime(dersGrubu.ders_saati) }}
+            <span class="lesson-count-badge" *ngIf="dersGrubu.dersAdedi > 1">{{ dersGrubu.dersAdedi }} Ders</span>
           </div>
           
           <div class="lesson-info">
-            <div 
-              class="group-badge"
-              [style.background-color]="getGroupColor(ders.grubu, ders.sinifi)"
-            >
-              {{ getGroupDisplayName(ders.grubu, ders.sinifi) }}
-            </div>
-            
-            <div class="lesson-details">
-              <div class="student-count">
-                <i class="bi bi-people"></i>
-                <span>{{ ders.adi_soyadi || 'Grup Dersi' }}</span>
+            <!-- Tek ders varsa -->
+            <div *ngIf="dersGrubu.dersAdedi === 1" class="single-lesson">
+              <div 
+                class="group-badge"
+                [style.background-color]="getGroupColor(dersGrubu.grubu, dersGrubu.sinifi)"
+              >
+                {{ getGroupDisplayName(dersGrubu.grubu, dersGrubu.sinifi) }}
               </div>
               
-              <div class="lesson-fee">
-                <i class="bi bi-currency-exchange"></i>
-                <span>{{ ders.ucret }}₺</span>
+              <div class="lesson-details">
+                <div class="student-count">
+                  <i class="bi bi-people"></i>
+                  <span>{{ dersGrubu.adi_soyadi || 'Grup Dersi' }}</span>
+                </div>
+                
+                <div class="lesson-fee">
+                  <i class="bi bi-currency-exchange"></i>
+                  <span>{{ dersGrubu.ucret }}₺</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Birden fazla ders varsa -->
+            <div *ngIf="dersGrubu.dersAdedi > 1" class="multiple-lessons">
+              <div class="lessons-summary">
+                <div class="total-fee">
+                  <i class="bi bi-currency-exchange"></i>
+                  <strong>Toplam: {{ dersGrubu.toplamUcret }}₺</strong>
+                </div>
+              </div>
+              
+              <div class="lessons-list">
+                <div 
+                  *ngFor="let ders of dersGrubu.dersler" 
+                  class="individual-lesson"
+                >
+                  <div 
+                    class="group-badge small"
+                    [style.background-color]="getGroupColor(ders.grubu, ders.sinifi)"
+                  >
+                    {{ getGroupDisplayName(ders.grubu, ders.sinifi) }}
+                  </div>
+                  
+                  <div class="lesson-mini-details">
+                    <span class="student-name">{{ ders.adi_soyadi || 'Grup' }}</span>
+                    <span class="lesson-fee-small">{{ ders.ucret }}₺</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
