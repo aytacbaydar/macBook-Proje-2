@@ -57,12 +57,12 @@
           <div class="lesson-time">
             <i class="bi bi-clock"></i>
             {{ formatTime(dersGrubu.ders_saati) }}
-            <span class="lesson-count-badge" *ngIf="dersGrubu.dersAdedi > 1">{{ dersGrubu.dersAdedi }} Ders</span>
+            <span class="lesson-count-badge" *ngIf="dersGrubu.dersAdedi && dersGrubu.dersAdedi > 1">{{ dersGrubu.dersAdedi }} Ders</span>
           </div>
 
           <div class="lesson-info">
             <!-- Tek ders varsa -->
-            <div *ngIf="dersGrubu.dersAdedi === 1" class="single-lesson">
+            <div *ngIf="dersGrubu.dersAdedi && dersGrubu.dersAdedi === 1" class="single-lesson">
               <div 
                 class="group-badge"
                 [style.background-color]="getGroupColor(dersGrubu.grubu, dersGrubu.sinifi)"
