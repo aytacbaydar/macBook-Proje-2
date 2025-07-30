@@ -1,0 +1,380 @@
+
+.weekly-schedule-container {
+  padding: 2rem;
+  background: #f8f9fa;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+// Header Styles
+.page-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  color: white;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    i {
+      font-size: 1.8rem;
+    }
+  }
+
+  .header-stats {
+    display: flex;
+    gap: 1rem;
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+
+      .stat-number {
+        display: block;
+        font-size: 1.5rem;
+        font-weight: 700;
+      }
+
+      .stat-label {
+        font-size: 0.875rem;
+        opacity: 0.9;
+      }
+    }
+  }
+}
+
+// Loading & Error States
+.loading-container {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #6c757d;
+
+  .loading-spinner {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #667eea;
+
+    .spin {
+      animation: spin 1s linear infinite;
+    }
+  }
+}
+
+.error-container {
+  text-align: center;
+  padding: 4rem 2rem;
+
+  .error-message {
+    background: #fff;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    border-left: 4px solid #dc3545;
+
+    i {
+      font-size: 3rem;
+      color: #dc3545;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      margin: 1rem 0;
+      color: #6c757d;
+    }
+  }
+}
+
+// Schedule Grid
+.schedule-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.day-column {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  }
+}
+
+.day-header {
+  background: linear-gradient(135deg, #495057 0%, #6c757d 100%);
+  color: white;
+  padding: 1.5rem;
+  text-align: center;
+
+  .day-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .lesson-count {
+    font-size: 0.875rem;
+    opacity: 0.9;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+  }
+}
+
+.day-lessons {
+  padding: 1rem;
+  min-height: 200px;
+}
+
+.lesson-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  border-left: 4px solid;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .lesson-time {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+
+    i {
+      color: #6c757d;
+    }
+  }
+
+  .lesson-info {
+    .group-badge {
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      display: inline-block;
+      margin-bottom: 0.75rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .lesson-details {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.875rem;
+      color: #6c757d;
+
+      .student-count,
+      .lesson-fee {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+
+        i {
+          font-size: 0.75rem;
+        }
+      }
+
+      .lesson-fee {
+        font-weight: 600;
+        color: #28a745;
+      }
+    }
+  }
+}
+
+.empty-day {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #adb5bd;
+
+  .empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+
+  p {
+    margin: 0;
+    font-style: italic;
+  }
+}
+
+// Schedule Summary
+.schedule-summary {
+  background: #fff;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+
+  h4 {
+    color: #495057;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    i {
+      color: #667eea;
+    }
+  }
+
+  h5 {
+    color: #495057;
+    margin: 2rem 0 1rem 0;
+    font-size: 1.1rem;
+  }
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+
+  .summary-item {
+    text-align: center;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: #667eea;
+      background: #e3f2fd;
+    }
+
+    .summary-day {
+      display: block;
+      font-weight: 600;
+      color: #495057;
+      margin-bottom: 0.5rem;
+    }
+
+    .summary-count {
+      display: block;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #667eea;
+    }
+  }
+}
+
+.group-legend {
+  border-top: 1px solid #e9ecef;
+  padding-top: 1.5rem;
+
+  .legend-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: #f8f9fa;
+      border-radius: 20px;
+      font-size: 0.875rem;
+
+      .legend-color {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.8);
+      }
+    }
+  }
+}
+
+// Animations
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .weekly-schedule-container {
+    padding: 1rem;
+  }
+
+  .page-header {
+    padding: 1.5rem;
+
+    .header-content {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .page-title {
+      font-size: 1.5rem;
+    }
+  }
+
+  .schedule-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .summary-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+
+  .legend-items {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .lesson-details {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 0.5rem;
+  }
+}

@@ -1,1 +1,129 @@
-<p>ogretmen-haftalik-ders-programi-sayfasi works!</p>
+
+<div class="weekly-schedule-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <i class="bi bi-calendar-week"></i>
+        Haftalık Ders Programı
+      </h1>
+      <div class="header-stats">
+        <div class="stat-card">
+          <span class="stat-number">{{ getTotalWeeklyLessons() }}</span>
+          <span class="stat-label">Toplam Ders</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">{{ gunler.length }}</span>
+          <span class="stat-label">Gün</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner">
+      <i class="bi bi-arrow-clockwise spin"></i>
+    </div>
+    <p>Ders programı yükleniyor...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="error-container">
+    <div class="error-message">
+      <i class="bi bi-exclamation-triangle"></i>
+      <p>{{ error }}</p>
+      <button class="btn btn-primary" (click)="loadDersProgram()">
+        <i class="bi bi-arrow-clockwise"></i>
+        Tekrar Dene
+      </button>
+    </div>
+  </div>
+
+  <!-- Weekly Schedule Grid -->
+  <div *ngIf="!isLoading && !error" class="schedule-grid">
+    <div class="day-column" *ngFor="let gun of gunler">
+      <!-- Day Header -->
+      <div class="day-header">
+        <h3 class="day-name">{{ gun }}</h3>
+        <span class="lesson-count">{{ getTotalLessonsForDay(gun) }} Ders</span>
+      </div>
+
+      <!-- Day Lessons -->
+      <div class="day-lessons">
+        <div 
+          class="lesson-card" 
+          *ngFor="let ders of gunlukDersler[gun]"
+          [style.border-left-color]="getGroupColor(ders.grubu, ders.sinifi)"
+        >
+          <div class="lesson-time">
+            <i class="bi bi-clock"></i>
+            {{ formatTime(ders.ders_saati) }}
+          </div>
+          
+          <div class="lesson-info">
+            <div 
+              class="group-badge"
+              [style.background-color]="getGroupColor(ders.grubu, ders.sinifi)"
+            >
+              {{ getGroupDisplayName(ders.grubu, ders.sinifi) }}
+            </div>
+            
+            <div class="lesson-details">
+              <div class="student-count">
+                <i class="bi bi-people"></i>
+                <span>{{ ders.adi_soyadi || 'Grup Dersi' }}</span>
+              </div>
+              
+              <div class="lesson-fee">
+                <i class="bi bi-currency-exchange"></i>
+                <span>{{ ders.ucret }}₺</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty Day Message -->
+        <div *ngIf="getTotalLessonsForDay(gun) === 0" class="empty-day">
+          <div class="empty-icon">
+            <i class="bi bi-calendar-x"></i>
+          </div>
+          <p>Bu gün ders bulunmuyor</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Schedule Summary -->
+  <div *ngIf="!isLoading && !error && getTotalWeeklyLessons() > 0" class="schedule-summary">
+    <h4>
+      <i class="bi bi-bar-chart"></i>
+      Haftalık Özet
+    </h4>
+    
+    <div class="summary-grid">
+      <div class="summary-item" *ngFor="let gun of gunler">
+        <span class="summary-day">{{ gun.substring(0, 3) }}</span>
+        <span class="summary-count">{{ getTotalLessonsForDay(gun) }}</span>
+      </div>
+    </div>
+
+    <!-- Group Legend -->
+    <div class="group-legend">
+      <h5>Grup Renkleri</h5>
+      <div class="legend-items">
+        <div 
+          class="legend-item" 
+          *ngFor="let group of dersProgram | slice:0:10"
+          [style.display]="grupRenkleri[group.grubu + '-' + group.sinifi] ? 'flex' : 'none'"
+        >
+          <div 
+            class="legend-color"
+            [style.background-color]="getGroupColor(group.grubu, group.sinifi)"
+          ></div>
+          <span>{{ getGroupDisplayName(group.grubu, group.sinifi) }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
