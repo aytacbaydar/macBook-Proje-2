@@ -48,12 +48,20 @@ export class OgretmenSidebarSayfasiComponent implements OnInit, OnDestroy {
       label: 'Sınavlar',
       link: 'ogretmen-sayfasi/ogretmen-sinavlar-sayfasi',
     },
-    { icon: 'bi-file-earmark-text-fill', label: 'Testler', link: 'ogretmen-sayfasi/ogretmen-yapay-zekali-testler-sayfasi' },
-    { icon: 'bi-map-fill', label: 'Yol Haritası', link: 'ogretmen-sayfasi/ogretmen-islenen-konular-sayfasi' },
+    {
+      icon: 'bi-file-earmark-text-fill',
+      label: 'Testler',
+      link: 'ogretmen-sayfasi/ogretmen-yapay-zekali-testler-sayfasi',
+    },
+    {
+      icon: 'bi-map-fill',
+      label: 'Yol Haritası',
+      link: 'ogretmen-sayfasi/ogretmen-islenen-konular-sayfasi',
+    },
     {
       icon: 'bi-person-badge-fill',
-      label: 'Öğrenci Bilgileri',
-      link: 'ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi',
+      label: 'Haftalık Program',
+      link: 'ogretmen-sayfasi/ogretmen-haftalik-program-sayfasi',
     },
     {
       icon: 'bi-journal-bookmark-fill',
