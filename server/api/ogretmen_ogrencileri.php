@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         error_log("Token: " . substr($token, 0, 20) . "...");
 
         // Token'dan öğretmen bilgilerini al
-        $stmt = $conn->prepare("SELECT id, adi_soyadi, rutbe FROM ogrenciler WHERE token = ? AND rutbe = 'ogretmen'");
+        $stmt = $conn->prepare("SELECT id, adi_soyadi, rutbe FROM ogrenciler WHERE MD5(CONCAT(id, email, sifre)) = ? AND rutbe = 'ogretmen'");
         $stmt->execute([$token]);
         $teacher = $stmt->fetch(PDO::FETCH_ASSOC);
 
