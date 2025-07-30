@@ -114,5 +114,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     errorResponse('Geçersiz istek metodu', 405);
 }
 ?>
-```The database connection variable `$conn` is replaced with `$pdo` for consistency in the code.
-`
