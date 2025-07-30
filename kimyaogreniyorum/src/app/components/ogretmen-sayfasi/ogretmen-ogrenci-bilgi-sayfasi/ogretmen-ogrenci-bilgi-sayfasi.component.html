@@ -352,58 +352,56 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="col-12">
-              <!-- Konu Analizleri Tablosu -->
-              <div *ngIf="activeTab === 'konular'" class="table-responsive">
-                <div *ngIf="konuAnalizleri && konuAnalizleri.length > 0; else noKonuData">
-                  <table class="table table-striped">
-                    <thead>
-                      <tr>
-                        <th>Konu Adı</th>
-                        <th class="text-center">Toplam Soru</th>
-                        <th class="text-center">Doğru</th>
-                        <th class="text-center">Yanlış</th>
-                        <th class="text-center">Boş</th>
-                        <th class="text-center">Başarı Oranı</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let konu of konuAnalizleri; trackBy: trackByKonuAdi">
-                        <td>{{ konu.konu_adi }}</td>
-                        <td class="text-center">{{ konu.toplam_soru }}</td>
-                        <td class="text-center text-success">{{ konu.dogru_sayisi }}</td>
-                        <td class="text-center text-danger">{{ konu.yanlis_sayisi }}</td>
-                        <td class="text-center text-warning">{{ konu.bos_sayisi }}</td>
-                        <td class="text-center">
-                          <div class="d-flex align-items-center">
-                            <div class="progress flex-grow-1 me-2" style="height: 20px;">
-                              <div 
-                                class="progress-bar" 
-                                [class]="getProgressBarClass(konu.basari_orani)"
-                                [style.width.%]="konu.basari_orani">
-                                {{ konu.basari_orani | number:'1.1-1' }}%
+              <div class="col-12">
+                <!-- Konu Analizleri Tablosu -->
+                <div *ngIf="activeTab === 'konular'" class="table-responsive">
+                  <div *ngIf="konuAnalizleri && konuAnalizleri.length > 0; else noKonuData">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th>Konu Adı</th>
+                          <th class="text-center">Toplam Soru</th>
+                          <th class="text-center">Doğru</th>
+                          <th class="text-center">Yanlış</th>
+                          <th class="text-center">Boş</th>
+                          <th class="text-center">Başarı Oranı</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let konu of konuAnalizleri; trackBy: trackByKonuAdi">
+                          <td>{{ konu.konu_adi }}</td>
+                          <td class="text-center">{{ konu.toplam_soru }}</td>
+                          <td class="text-center text-success">{{ konu.dogru_sayisi }}</td>
+                          <td class="text-center text-danger">{{ konu.yanlis_sayisi }}</td>
+                          <td class="text-center text-warning">{{ konu.bos_sayisi }}</td>
+                          <td class="text-center">
+                            <div class="d-flex align-items-center">
+                              <div class="progress flex-grow-1 me-2" style="height: 20px;">
+                                <div class="progress-bar" [class]="getProgressBarClass(konu.basari_orani)"
+                                  [style.width.%]="konu.basari_orani">
+                                  {{ konu.basari_orani | number:'1.1-1' }}%
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr class="fw-bold table-secondary">
-                        <td>TOPLAM</td>
-                        <td class="text-center">{{ getToplamSoru() }}</td>
-                        <td class="text-center text-success">{{ getToplamDogru() }}</td>
-                        <td class="text-center text-danger">{{ getToplamYanlis() }}</td>
-                        <td class="text-center text-warning">{{ getToplamBos() }}</td>
-                        <td></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <ng-template #noKonuData>
-                  <div class="text-center py-4">
-                    <p class="text-muted">Henüz konu analizi verisi bulunmuyor.</p>
+                          </td>
+                        </tr>
+                        <tr class="fw-bold table-secondary">
+                          <td>TOPLAM</td>
+                          <td class="text-center">{{ getToplamSoru() }}</td>
+                          <td class="text-center text-success">{{ getToplamDogru() }}</td>
+                          <td class="text-center text-danger">{{ getToplamYanlis() }}</td>
+                          <td class="text-center text-warning">{{ getToplamBos() }}</td>
+                          <td></td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
-                </ng-template>
+                  <ng-template #noKonuData>
+                    <div class="text-center py-4">
+                      <p class="text-muted">Henüz konu analizi verisi bulunmuyor.</p>
+                    </div>
+                  </ng-template>
+                </div>
               </div>
             </div>
         </div>
@@ -457,7 +455,7 @@
               <!-- Ödeme Geçmişi -->
               <div class="row">
                 <div class="col-12">
-                  <h6 class="mb-3">Ödeme Geçmişi</h6>
+                  <h6 class="lesson-info">Ödeme Geçmişi</h6>
                   <div class="table-responsive">
                     <table class="table table-hover">
                       <thead class="table-light">
@@ -484,7 +482,7 @@
               <!-- Devamsızlık Bilgileri -->
               <div class="row mt-4">
                 <div class="col-12">
-                  <h6 class="mb-3">Devamsızlık Kayıtları</h6>
+                  <h6 class="parent-info">Devamsızlık Kayıtları</h6>
                   <div class="table-responsive">
                     <table class="table table-hover">
                       <thead class="table-light">
@@ -603,7 +601,7 @@
 
               <!-- Son Katılım Kayıtları -->
               <div class="mt-4">
-                <h6 class="fw-bold mb-3">Son Katılım Kayıtları ({{ historicalAttendance.length }} toplam kayıt)</h6>
+                <h6 class="lesson-info">Son Katılım Kayıtları ({{ historicalAttendance.length }} toplam kayıt)</h6>
                 <div class="table-responsive">
                   <table class="table table-striped">
                     <thead>
