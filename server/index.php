@@ -148,6 +148,10 @@ if (strpos($requestUri, $basePath) === 0) {
             require_once 'api/yapay_zeka_test_pdf.php';
             break;
 
+        case 'ogretmen_haftalik_program':
+            require_once 'api/ogretmen_haftalik_program.php';
+            break;
+
         default:
             http_response_code(404);
             echo json_encode(['error' => 'API endpoint bulunamadı']);
