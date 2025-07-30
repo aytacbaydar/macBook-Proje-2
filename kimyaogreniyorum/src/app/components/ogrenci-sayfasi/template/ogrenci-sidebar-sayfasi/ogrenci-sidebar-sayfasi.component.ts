@@ -31,51 +31,40 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
     link: string;
     badgeCount?: number;
   }> = [
+    { icon: 'bi-house-fill', label: 'AnaSayfa', link: 'ogrenci-sayfasi' },
     {
-      icon: 'bi-house',
-      label: 'AnaSayfa',
-      link: 'ogrenci-sayfasi',
-    },
-
-    {
-      icon: 'bi-filetype-pdf',
-      label: 'İşlenen Konular',
-      link: 'ogrenci-sayfasi/ogrenci-islene-konularin-pdf-sayfasi',
-    },
-
-    {
-      icon: 'bi-diagram-3',
+      icon: 'bi-map-fill',
       label: 'Yol Haritası',
       link: 'ogrenci-sayfasi/ogrenci-islene-konular-sayfasi',
     },
     {
-      icon: 'bi-book',
+      icon: 'bi-play-circle-fill',
       label: 'Konu Anlatımı Video',
       link: 'ogrenci-sayfasi',
     },
     {
-      icon: 'bi-pencil-square',
+      icon: 'bi-clipboard2-check-fill',
       label: 'Sınavlar',
       link: 'ogrenci-sayfasi/sinav-sonuclari-sayfasi',
     },
     {
-      icon: 'bi-clipboard2-check',
+      icon: 'bi-file-earmark-text-fill',
       label: 'Testler',
       link: 'ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi',
     },
     {
-      icon: 'bi-graph-up-arrow',
+      icon: 'bi-bar-chart-fill',
       label: 'Konu Analizi',
       link: 'ogrenci-sayfasi/ogrenci-konu-analiz-sayfasi',
     },
     {
-      icon: 'bi-pencil',
+      icon: 'bi-chat-dots-fill',
       label: 'Soru Çözümü',
       link: 'ogrenci-sayfasi/ogrenci-soru-cozumu-sayfasi',
       badgeCount: 0,
     },
     {
-      icon: 'bi-credit-card-2-back',
+      icon: 'bi-currency-dollar',
       label: 'Ücretler',
       link: 'ogrenci-sayfasi/ogrenci-ucret-sayfasi',
     },
@@ -85,7 +74,7 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
       link: 'ogrenci-sayfasi/ogrenci-qr-kod-sayfasi',
     },
     {
-      icon: 'bi-person-fill-gear',
+      icon: 'bi-gear-fill',
       label: 'Ayarlar',
       link: 'ogrenci-sayfasi/ogrenci-profil-sayfasi',
     },
@@ -115,7 +104,7 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
   }
 
   private loadUnreadMessageCount(): void {
-    
+
 
     // Önce badge'i 0 olarak ayarla
     const soruCozumuMenuItem = this.menuItems.find(
@@ -127,7 +116,7 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
     }
 
     if (!this.studentId) {
-      
+
       return;
     }
 
