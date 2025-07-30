@@ -307,6 +307,83 @@
   }
 }
 
+// Payment Summary Cards - Force background colors
+.tab-content {
+  // Ödeme özeti kartları için özel renkler
+  .card {
+    &.bg-primary {
+      background: linear-gradient(135deg, #007bff, #0056b3) !important;
+      color: white !important;
+      
+      .card-body {
+        background: transparent !important;
+        h4, p {
+          color: white !important;
+        }
+      }
+    }
+
+    &.bg-success {
+      background: linear-gradient(135deg, #28a745, #1e7e34) !important;
+      color: white !important;
+      
+      .card-body {
+        background: transparent !important;
+        h4, p {
+          color: white !important;
+        }
+      }
+    }
+
+    &.bg-warning {
+      background: linear-gradient(135deg, #ffc107, #e0a800) !important;
+      color: white !important;
+      
+      .card-body {
+        background: transparent !important;
+        h4, p {
+          color: white !important;
+        }
+      }
+    }
+
+    &.bg-info {
+      background: linear-gradient(135deg, #17a2b8, #138496) !important;
+      color: white !important;
+      
+      .card-body {
+        background: transparent !important;
+        h4, p {
+          color: white !important;
+        }
+      }
+    }
+
+    &.bg-danger {
+      background: linear-gradient(135deg, #dc3545, #c82333) !important;
+      color: white !important;
+      
+      .card-body {
+        background: transparent !important;
+        h4, p {
+          color: white !important;
+        }
+      }
+    }
+
+    // Ödeme kartları için özel hover efekti
+    &.bg-primary, &.bg-success, &.bg-warning, &.bg-info, &.bg-danger {
+      transition: all 0.3s ease;
+      border: none;
+      
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+}
+
 // Responsive design
 @media (max-width: 768px) {
   .nav-pills .nav-link {
