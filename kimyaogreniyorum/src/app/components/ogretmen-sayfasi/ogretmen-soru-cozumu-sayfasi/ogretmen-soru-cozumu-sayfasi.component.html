@@ -34,6 +34,26 @@
     <button class="retry-btn" (click)="loadAllMessages()">Tekrar Dene</button>
   </div>
 
+  <!-- Student Avatars Row -->
+  <div class="student-avatars-container" *ngIf="viewMode === 'all' && !isLoading && !error && students.length > 0">
+    <div class="avatars-scroll">
+      <div class="student-avatar-item" 
+           *ngFor="let student of students; trackBy: trackByStudentId"
+           (click)="selectStudent(student)"
+           [title]="student.adi_soyadi">
+        <div class="avatar-wrapper" [class.has-unread]="getUnreadMessageCount(student.id) > 0">
+          <img [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)" 
+               [alt]="student.adi_soyadi" 
+               class="student-avatar-img">
+          <div class="unread-badge" *ngIf="getUnreadMessageCount(student.id) > 0">
+            {{ getUnreadMessageCount(student.id) }}
+          </div>
+        </div>
+        <span class="student-name-label">{{ student.adi_soyadi.split(' ')[0] }}</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Search Bar -->
   <div class="search-container" *ngIf="viewMode === 'all' && !isLoading && !error">
     <div class="search-input-group">

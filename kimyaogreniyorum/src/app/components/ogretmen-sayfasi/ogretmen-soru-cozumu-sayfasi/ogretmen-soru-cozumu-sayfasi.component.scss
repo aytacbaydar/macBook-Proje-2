@@ -437,6 +437,132 @@
   }
 }
 
+/* Student Avatars Container */
+.student-avatars-container {
+  background: white;
+  border-bottom: 1px solid #eee;
+  padding: 15px 20px;
+
+  .avatars-scroll {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    
+    /* Custom scrollbar */
+    &::-webkit-scrollbar {
+      height: 6px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 3px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 3px;
+      
+      &:hover {
+        background: #a8a8a8;
+      }
+    }
+  }
+
+  .student-avatar-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 60px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid transparent;
+      transition: border-color 0.2s ease;
+
+      &:hover {
+        border-color: #25D366;
+      }
+
+      &.has-unread {
+        border-color: #ff4757;
+        animation: pulse 2s infinite;
+      }
+
+      .student-avatar-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+      }
+
+      .unread-badge {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: #ff4757;
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: bold;
+        border: 2px solid white;
+        animation: bounce 1s infinite;
+      }
+    }
+
+    .student-name-label {
+      font-size: 11px;
+      color: #666;
+      text-align: center;
+      margin-top: 5px;
+      max-width: 60px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+  }
+}
+
+@keyframes pulse {
+  0% {
+    border-color: #ff4757;
+  }
+  50% {
+    border-color: #ff6b7a;
+  }
+  100% {
+    border-color: #ff4757;
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-3px);
+  }
+  60% {
+    transform: translateY(-1px);
+  }
+}
+
 /* Search Container Styles */
 .search-container {
   padding: 20px;
@@ -565,6 +691,28 @@
 
 // Responsive Design
 @media (max-width: 768px) {
+  .student-avatars-container {
+    padding: 10px 15px;
+
+    .avatars-scroll {
+      gap: 10px;
+    }
+
+    .student-avatar-item {
+      min-width: 50px;
+
+      .avatar-wrapper {
+        width: 45px;
+        height: 45px;
+      }
+
+      .student-name-label {
+        font-size: 10px;
+        max-width: 50px;
+      }
+    }
+  }
+
   .chat-header {
     .header-content {
       .notification-toggle {
