@@ -84,6 +84,8 @@ export class OgretmenHaftalikDersProgramiSayfasiComponent implements OnInit {
           console.log('API Response:', response);
           if (response.success) {
             this.dersProgram = response.data || [];
+            this.organizeDersByDays();
+            this.generateGroupColors();
             this.error = '';
           } else {
             this.error = response.message || 'Ders programı yüklenirken hata oluştu';
