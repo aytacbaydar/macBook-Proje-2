@@ -20,6 +20,7 @@ interface Student {
   adi_soyadi: string;
   email: string;
   grubu?: string;
+  avatar?: string;
 }
 
 @Component({
@@ -410,12 +411,17 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     return message.id || index;
   }
 
-  trackByStudentId(index: number, student: Student): number {
+  trackByStudentIdStudent(index: number, student: Student): number {
     return student.id || index;
   }
 
   trackByStudentIdNumber(index: number, studentId: number): number {
     return studentId;
+  }
+
+  // Renamed to avoid duplicate implementation error
+  trackByStudentObjectId(index: number, student: any): number {
+    return student.id;
   }
 
   selectStudentFromMessage(message: SoruMesaj) {
