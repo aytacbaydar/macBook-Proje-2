@@ -137,6 +137,21 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     this.isLoadingStudents = true;
     this.error = null;
 
+    // Get teacher name for debugging
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    let teacherName = 'Unknown';
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        teacherName = user.adi_soyadi || 'Unknown';
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+      }
+    }
+
+    console.log('Loading students for teacher:', teacherName);
+    console.log('Token:', this.getTokenFromStorage().substring(0, 20) + '...');
+
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.getTokenFromStorage()}`,
       'Content-Type': 'application/json'
@@ -145,16 +160,21 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     this.http.get<any>(`${this.apiBaseUrl}/ogretmen_ogrencileri.php`, { headers })
       .subscribe({
         next: (response) => {
+          console.log('Students API response:', response);
           if (response.success) {
-            this.students = response.data;
+            this.students = response.data || [];
+            console.log('Loaded students count:', this.students.length);
+            console.log('Students data:', this.students);
           } else {
             this.error = response.message || 'Öğrenciler yüklenemedi';
+            console.error('API Error:', response);
           }
           this.isLoadingStudents = false;
         },
         error: (error) => {
           console.error('Students loading error:', error);
-          this.error = 'Öğrenciler yüklenirken hata oluştu';
+          console.error('Error details:', error.error);
+          this.error = 'Öğrenciler yüklenirken hata oluştu: ' + (error.error?.message || error.message);
           this.isLoadingStudents = false;
         }
       });

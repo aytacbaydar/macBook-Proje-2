@@ -1,78 +1,105 @@
+php
 <?php
-// Hataları dosyaya logla
-ini_set('display_errors', 0);
-ini_set('display_startup_errors', 0);
-error_reporting(E_ALL);
-ini_set('log_errors', 0);
-ini_set('error_log', '../../php_errors.log');
+require_once '../config.php';
 
-// CORS başlıkları
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
-header("Content-Type: application/json; charset=UTF-8");
-
-// OPTIONS isteğini yönet (preflight)
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
-
-require '../config.php';
+// Debug logging
+error_log("ogretmen_ogrencileri.php called");
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
-        // Kullanıcıyı doğrula
-        $user = authorize();
+        // Token doğrulama
+        $headers = getallheaders();
+        $authHeader = $headers['Authorization'] ?? '';
 
-        // Sadece öğretmenler kendi öğrencilerini görebilir
-        if ($user['rutbe'] !== 'ogretmen') {
-            errorResponse('Bu işlem için yetkiniz yok. Sadece öğretmenler öğrenci listesini görebilir.', 403);
+        error_log("Auth header: " . $authHeader);
+
+        if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
+            error_log("Missing or invalid auth header");
+            errorResponse('Yetkilendirme token\'ı gerekli', 401);
+            return;
         }
 
+        $token = substr($authHeader, 7);
         $conn = getConnection();
 
-        // Öğretmene ait öğrencileri getir
-        error_log("Öğretmen ID ile öğrenci arama: " . $user['id']);
-        error_log("Öğretmen adi_soyadi: " . $user['adi_soyadi']);
+        error_log("Token: " . substr($token, 0, 20) . "...");
 
-        // Önce öğretmen adıyla arama yapalım
+        // Token'dan öğretmen bilgilerini al
+        $stmt = $conn->prepare("SELECT id, adi_soyadi, rutbe FROM ogrenciler WHERE token = ? AND rutbe = 'ogretmen'");
+        $stmt->execute([$token]);
+        $teacher = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        error_log("Teacher query result: " . json_encode($teacher));
+
+        if (!$teacher) {
+            error_log("Teacher not found or invalid role");
+            errorResponse('Geçersiz token veya yetki', 401);
+            return;
+        }
+
+        $teacherName = $teacher['adi_soyadi'];
+        $teacherId = $teacher['id'];
+
+        error_log("Teacher name: " . $teacherName);
+        error_log("Teacher ID: " . $teacherId);
+
+        // Öğretmene ait öğrencileri bul - önce ogretmeni alanına göre
         $stmt = $conn->prepare("
-            SELECT o.id, o.adi_soyadi, o.email, o.cep_telefonu, o.rutbe, o.aktif, o.avatar, o.brans, o.ogretmeni, o.created_at,
+            SELECT o.id, o.adi_soyadi, o.email, o.cep_telefonu, o.rutbe, o.aktif, o.avatar, o.created_at, o.ogretmeni,
                    ob.okulu, ob.sinifi, ob.grubu, ob.ders_gunu, ob.ders_saati, ob.ucret,
                    ob.veli_adi, ob.veli_cep
             FROM ogrenciler o
             LEFT JOIN ogrenci_bilgileri ob ON o.id = ob.ogrenci_id
-            WHERE o.ogretmeni = :ogretmen_adi AND o.rutbe = 'ogrenci'
-            ORDER BY o.created_at DESC
+            WHERE o.rutbe = 'ogrenci' AND o.ogretmeni = ?
+            ORDER BY o.id DESC
         ");
-        $stmt->bindParam(':ogretmen_adi', $user['adi_soyadi'], PDO::PARAM_STR);
-        $stmt->execute();
+        $stmt->execute([$teacherName]);
 
-        $ogrenciler = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        error_log("Bulunan öğrenci sayısı: " . count($ogrenciler));
+        $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if (count($ogrenciler) > 0) {
-            error_log("İlk öğrenci: " . json_encode($ogrenciler[0]));
-        } else {
-            // Eğer öğrenci bulunamazsa, tüm öğrencileri kontrol edelim
-            error_log("Öğrenci bulunamadı, tüm öğrencileri kontrol ediliyor...");
-            $debugStmt = $conn->prepare("SELECT id, adi_soyadi, ogretmeni, rutbe FROM ogrenciler WHERE rutbe = 'ogrenci' LIMIT 5");
-            $debugStmt->execute();
-            $allStudents = $debugStmt->fetchAll(PDO::FETCH_ASSOC);
-            error_log("Tüm öğrenciler sample: " . json_encode($allStudents));
+        error_log("Students found by teacher name (" . $teacherName . "): " . count($students));
+
+        // Eğer öğretmen adına göre bulamazsa, tüm öğrencileri kontrol et
+        if (empty($students)) {
+            error_log("No students found by teacher name, trying all students");
+
+            $stmt = $conn->prepare("
+                SELECT o.id, o.adi_soyadi, o.email, o.cep_telefonu, o.rutbe, o.aktif, o.avatar, o.created_at, o.ogretmeni,
+                       ob.okulu, ob.sinifi, ob.grubu, ob.ders_gunu, ob.ders_saati, ob.ucret,
+                       ob.veli_adi, ob.veli_cep
+                FROM ogrenciler o
+                LEFT JOIN ogrenci_bilgileri ob ON o.id = ob.ogrenci_id
+                WHERE o.rutbe = 'ogrenci'
+                ORDER BY o.id DESC
+                LIMIT 50
+            ");
+            $stmt->execute();
+
+            $allStudents = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            error_log("Total students in database: " . count($allStudents));
+
+            // Debug: show first few students
+            foreach (array_slice($allStudents, 0, 5) as $student) {
+                error_log("Student: " . $student['adi_soyadi'] . ", Teacher: " . ($student['ogretmeni'] ?? 'NULL'));
+            }
         }
 
-        successResponse($ogrenciler, 'Öğrenciler başarıyla getirildi');
+        // Debug: log the students we're returning
+        error_log("Returning " . count($students) . " students");
+        foreach (array_slice($students, 0, 3) as $student) {
+            error_log("Returning student: " . $student['adi_soyadi'] . " (ID: " . $student['id'] . ")");
+        }
+
+        successResponse($students);
 
     } catch (PDOException $e) {
-        error_log("Veritabanı hatası: " . $e->getMessage());
-        errorResponse('Öğrenciler getirilemedi: ' . $e->getMessage(), 500);
+        error_log("Database error: " . $e->getMessage());
+        errorResponse('Veritabanı hatası: ' . $e->getMessage(), 500);
     } catch (Exception $e) {
-        error_log("Genel hata: " . $e->getMessage());
-        errorResponse('İşlem sırasında hata: ' . $e->getMessage(), 500);
+        error_log("General error: " . $e->getMessage());
+        errorResponse('Beklenmeyen bir hata oluştu: ' . $e->getMessage(), 500);
     }
 } else {
-    errorResponse('Sadece GET istekleri kabul edilir', 405);
+    errorResponse('Bu endpoint sadece GET metodunu desteklemektedir', 405);
 }
 ?>
