@@ -1,7 +1,3 @@
-The database connection variable `$conn` is replaced with `$pdo` for consistency in the code.
-```
-
-```php
 <?php
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
