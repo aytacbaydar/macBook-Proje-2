@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
@@ -37,11 +36,41 @@ export class OgretmenHaftalikDersProgramiSayfasiComponent implements OnInit {
   }
 
   private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    const token = this.getTokenFromStorage();
+    console.log('Auth Headers - Token:', token);
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
+  }
+
+  private getTokenFromStorage(): string {
+    // İlk olarak localStorage'dan token'ı dene
+    let token = localStorage.getItem('token');
+
+    if (!token) {
+      // Eğer token yoksa, user objesinden token'ı al
+      const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          // Token'ı farklı yerlerde arıyoruz
+          token = user.token || user.accessToken || user.authToken;
+
+          // Eğer hala token yoksa, manuel olarak oluştur
+          if (!token && user.id && user.email && user.sifre) {
+            // Backend'de kullanılan MD5 hash'ini oluştur
+            const crypto = require('crypto-js');
+            token = crypto.MD5(user.id + user.email + user.sifre).toString();
+          }
+        } catch (error) {
+          console.error('User data parse hatası:', error);
+        }
+      }
+    }
+
+    console.log('Token found:', token ? 'Yes' : 'No');
+    return token || '';
   }
 
   loadDersProgram(): void {
@@ -51,27 +80,35 @@ export class OgretmenHaftalikDersProgramiSayfasiComponent implements OnInit {
     const headers = this.getAuthHeaders();
 
     this.http.get<any>('./server/api/ogretmen_haftalik_program.php', { headers }).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.dersProgram = response.data;
-          this.organizeDersByDays();
-          this.generateGroupColors();
-        } else {
-          this.error = response.message || 'Ders programı yüklenemedi';
+        next: (response) => {
+          console.log('API Response:', response);
+          if (response.success) {
+            this.dersProgram = response.data || [];
+            this.error = null;
+          } else {
+            this.error = response.message || 'Ders programı yüklenirken hata oluştu';
+          }
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Ders programı yüklenirken hata:', error);
+
+          // Token sorunu varsa yeniden login yapmayı öner
+          if (error.status === 401) {
+            this.error = 'Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.';
+            // İsteğe bağlı: kullanıcıyı login sayfasına yönlendir
+            // this.router.navigate(['/']);
+          } else {
+            this.error = `Ders programı yüklenirken hata: ${error.error?.error || error.message}`;
+          }
+          this.isLoading = false;
         }
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Ders programı yüklenirken hata:', error);
-        this.error = 'Ders programı yüklenirken hata oluştu';
-        this.isLoading = false;
-      }
-    });
+      });
   }
 
   organizeDersByDays(): void {
     this.gunlukDersler = {};
-    
+
     // Her gün için boş array oluştur
     this.gunler.forEach(gun => {
       this.gunlukDersler[gun] = [];
@@ -107,7 +144,7 @@ export class OgretmenHaftalikDersProgramiSayfasiComponent implements OnInit {
     ];
 
     const uniqueGroups = [...new Set(this.dersProgram.map(ders => `${ders.grubu}-${ders.sinifi}`))];
-    
+
     uniqueGroups.forEach((group, index) => {
       this.grupRenkleri[group] = colors[index % colors.length];
     });
