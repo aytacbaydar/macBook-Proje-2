@@ -34,10 +34,27 @@
     <button class="retry-btn" (click)="loadAllMessages()">Tekrar Dene</button>
   </div>
 
+  <!-- Search Bar -->
+  <div class="search-container" *ngIf="viewMode === 'all' && !isLoading && !error">
+    <div class="search-input-group">
+      <i class="bi bi-search search-icon"></i>
+      <input type="text" 
+             class="search-input" 
+             [(ngModel)]="studentSearchQuery"
+             (input)="filterStudents()"
+             placeholder="Öğrenci ara...">
+      <button class="clear-search-btn" 
+              *ngIf="studentSearchQuery" 
+              (click)="clearSearch()">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+  </div>
+
   <!-- All Messages View -->
   <div class="student-list" *ngIf="viewMode === 'all' && !isLoading && !error">
     <div class="student-item" 
-         *ngFor="let studentId of getGroupedStudentIds(); trackBy: trackByStudentIdNumber"
+         *ngFor="let studentId of getFilteredStudentIds(); trackBy: trackByStudentIdNumber"
          (click)="selectStudentFromGroupedMessage(studentId)">
       <div class="student-avatar">
         <i class="bi bi-person-circle"></i>
@@ -133,10 +150,13 @@
   </div>
 
   <!-- Empty State -->
-  <div class="empty-state" *ngIf="viewMode === 'all' && getGroupedStudentIds().length === 0 && !isLoading && !error">
-    <i class="bi bi-chat-dots"></i>
-    <h3>Henüz mesaj yok</h3>
-    <p>Öğrencilerinizden mesaj geldiğinde burada görünecek.</p>
+  <div class="empty-state" *ngIf="viewMode === 'all' && getFilteredStudentIds().length === 0 && !isLoading && !error">
+    <i class="bi bi-chat-dots" *ngIf="!studentSearchQuery"></i>
+    <i class="bi bi-search" *ngIf="studentSearchQuery"></i>
+    <h3 *ngIf="!studentSearchQuery">Henüz mesaj yok</h3>
+    <h3 *ngIf="studentSearchQuery">Arama sonucu bulunamadı</h3>
+    <p *ngIf="!studentSearchQuery">Öğrencilerinizden mesaj geldiğinde burada görünecek.</p>
+    <p *ngIf="studentSearchQuery">Farklı bir arama terimi deneyin.</p>
   </div>
 
   <!-- Toast Notification -->

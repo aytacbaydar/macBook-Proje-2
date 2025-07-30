@@ -715,6 +715,6 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
 
   clearSearch(): void {
     this.studentSearchQuery = '';
-    this.filteredStudentIds = [];
+    this.filterStudents();
   }
 }
