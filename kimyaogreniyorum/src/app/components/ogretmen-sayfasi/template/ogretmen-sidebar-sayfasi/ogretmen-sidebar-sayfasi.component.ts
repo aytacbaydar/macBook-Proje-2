@@ -27,9 +27,9 @@ export class OgretmenSidebarSayfasiComponent implements OnInit, OnDestroy {
   teacherId: number | null = null;
 
   menuItems = [
-    { icon: 'bi-house', label: 'AnaSayfa', link: 'ogretmen-sayfasi' },
+    { icon: 'bi-house-fill', label: 'AnaSayfa', link: 'ogretmen-sayfasi' },
     {
-      icon: 'bi-journal-plus',
+      icon: 'bi-easel-fill',
       label: 'Ders Anlatımı',
       link: 'ogretmen-sayfasi/ogretmen-ders-anlatma-tahtasi-sayfasi',
     },
@@ -39,47 +39,41 @@ export class OgretmenSidebarSayfasiComponent implements OnInit, OnDestroy {
       link: 'ogretmen-sayfasi/ogretmen-gruplar-sayfasi',
     },
     {
-      icon: 'bi-camera-reels',
-      label: 'Konu Anlatımı',
+      icon: 'bi-person-lines-fill',
+      label: 'Öğrenci Listesi',
       link: 'ogretmen-sayfasi/ogretmen-ogrenci-listesi-sayfasi',
     },
     {
-      icon: 'bi-pencil-square',
+      icon: 'bi-clipboard2-check-fill',
       label: 'Sınavlar',
       link: 'ogretmen-sayfasi/ogretmen-sinavlar-sayfasi',
     },
-    { icon: 'bi-archive', label: 'Testler', link: 'ogretmen-sayfasi/' },
-    { icon: 'bi-diagram-3', label: 'Yol Haritası', link: 'ogretmen-sayfasi/' },
+    { icon: 'bi-file-earmark-text-fill', label: 'Testler', link: 'ogretmen-sayfasi/ogretmen-yapay-zekali-testler-sayfasi' },
+    { icon: 'bi-map-fill', label: 'Yol Haritası', link: 'ogretmen-sayfasi/ogretmen-islenen-konular-sayfasi' },
     {
-      icon: 'bi-graph-up-arrow',
+      icon: 'bi-person-badge-fill',
       label: 'Öğrenci Bilgileri',
       link: 'ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi',
     },
     {
-      icon: 'bi-filetype-pdf',
+      icon: 'bi-journal-bookmark-fill',
       label: 'İşlenen Konular',
       link: 'ogretmen-sayfasi/ogretmen-islenen-konular-sayfasi',
     },
     {
-      icon: 'bi-credit-card-2-back',
+      icon: 'bi-currency-dollar',
       label: 'Ücretler',
       link: 'ogretmen-sayfasi/ogretmen-ucret-sayfasi',
     },
     {
-      icon: 'bi-clipboard-check',
+      icon: 'bi-person-check-fill',
       label: 'Sınıfta Kimler Var',
       link: 'ogretmen-sayfasi/ogretmen-sinifta-kimler-var-sayfasi',
     },
     {
-      icon: 'bi-pencil-square',
+      icon: 'bi-chat-dots-fill',
       label: 'Soru Çözümü',
       link: 'ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi',
-      badgeCount: 0,
-    },
-    {
-      icon: 'bi-pencil-square',
-      label: 'Soru Çözümü',
-      link: 'ogretmen-sayfasi/ogretmen-yapay-zekali-testler-sayfasi',
       badgeCount: 0,
     },
   ];
