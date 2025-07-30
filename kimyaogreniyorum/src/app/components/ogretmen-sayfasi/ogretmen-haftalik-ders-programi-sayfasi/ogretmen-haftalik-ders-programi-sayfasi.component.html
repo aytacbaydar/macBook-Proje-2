@@ -57,7 +57,7 @@
           <div class="lesson-time">
             <i class="bi bi-clock"></i>
             {{ formatTime(dersGrubu.ders_saati) }}
-            <span class="lesson-count-badge" *ngIf="dersGrubu.dersAdedi && dersGrubu.dersAdedi > 1">{{ dersGrubu.dersAdedi }} Ders</span>
+            <span class="lesson-count-badge" *ngIf="dersGrubu.dersAdedi && dersGrubu.dersAdedi > 1">{{ dersGrubu.dersAdedi }} Kişi</span>
           </div>
 
           <div class="lesson-info">
@@ -76,20 +76,20 @@
                   <span>{{ dersGrubu.adi_soyadi || 'Grup Dersi' }}</span>
                 </div>
 
-                <div class="lesson-fee">
+                <!--<div class="lesson-fee">
                   <i class="bi bi-currency-exchange"></i>
                   <span>{{ dersGrubu.ucret }}₺</span>
-                </div>
+                </div>-->
               </div>
             </div>
 
             <!-- Birden fazla ders varsa -->
             <div *ngIf="dersGrubu.dersAdedi && dersGrubu.dersAdedi > 1" class="multiple-lessons">
               <div class="lessons-summary">
-                <div class="total-fee">
+                <!--<div class="total-fee">
                   <i class="bi bi-currency-exchange"></i>
                   <strong>Toplam: {{ dersGrubu.toplamUcret }}₺</strong>
-                </div>
+                </div>-->
               </div>
 
               <div class="lessons-list">
@@ -106,7 +106,7 @@
 
                   <div class="lesson-mini-details">
                     <span class="student-name">{{ ders.adi_soyadi || 'Grup' }}</span>
-                    <span class="lesson-fee-small">{{ ders.ucret }}₺</span>
+                    <!--<span class="lesson-fee-small">{{ ders.ucret }}₺</span>-->
                   </div>
                 </div>
               </div>
