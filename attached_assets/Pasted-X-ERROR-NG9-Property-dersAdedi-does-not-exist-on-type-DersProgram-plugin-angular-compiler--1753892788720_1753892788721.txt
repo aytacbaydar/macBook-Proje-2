@@ -1,0 +1,75 @@
+X [ERROR] NG9: Property 'dersAdedi' does not exist on type 'DersProgram'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-haftalik-ders-programi-sayfasi/ogretmen-haftalik-ders-programi-sayfasi.component.html:61:62:
+      61 │ ...nt-badge" *ngIf="dersGrubu.dersAdedi > 1">{{ dersGrubu.dersAded...
+         ╵                               ~~~~~~~~~
+
+  Error occurs in the template of component OgretmenHaftalikDersProgramiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-haftalik-ders-programi-sayfasi/ogretmen-haftalik-ders-programi-sayfasi.component.ts:21:15:
+      21 │ ...plateUrl: './ogretmen-haftalik-ders-programi-sayfasi.component....
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'dersAdedi' does not exist on type 'DersProgram'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-haftalik-ders-programi-sayfasi/ogretmen-haftalik-ders-programi-sayfasi.component.html:61:90:
+      61 │ ...If="dersGrubu.dersAdedi > 1">{{ dersGrubu.dersAdedi }} Ders</span>
+         ╵                                              ~~~~~~~~~
+
+  Error occurs in the template of component OgretmenHaftalikDersProgramiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-haftalik-ders-programi-sayfasi/ogretmen-haftalik-ders-programi-sayfasi.component.ts:21:15:
+      21 │ ...plateUrl: './ogretmen-haftalik-ders-programi-sayfasi.component....
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'dersAdedi' does not exist on type 'DersProgram'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-haftalik-ders-programi-sayfasi/ogretmen-haftalik-ders-programi-sayfasi.component.html:66:34:
+      66 │ ...     <div *ngIf="dersGrubu.dersAdedi === 1" class="single-lesson">
+         ╵                               ~~~~~~~~~
+
+  Error occurs in the template of component OgretmenHaftalikDersProgramiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-haftalik-ders-programi-sayfasi/ogretmen-haftalik-ders-programi-sayfasi.component.ts:21:15:
+      21 │ ...plateUrl: './ogretmen-haftalik-ders-programi-sayfasi.component....
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'dersAdedi' does not exist on type 'DersProgram'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-haftalik-ders-programi-sayfasi/ogretmen-haftalik-ders-programi-sayfasi.component.html:88:34:
+      88 │ ...     <div *ngIf="dersGrubu.dersAdedi > 1" class="multiple-lesso...
+         ╵                               ~~~~~~~~~
+
+  Error occurs in the template of component OgretmenHaftalikDersProgramiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-haftalik-ders-programi-sayfasi/ogretmen-haftalik-ders-programi-sayfasi.component.ts:21:15:
+      21 │ ...plateUrl: './ogretmen-haftalik-ders-programi-sayfasi.component....
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'toplamUcret' does not exist on type 'DersProgram'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-haftalik-ders-programi-sayfasi/ogretmen-haftalik-ders-programi-sayfasi.component.html:92:47:
+      92 │ ...           <strong>Toplam: {{ dersGrubu.toplamUcret }}₺</strong>
+         ╵                                            ~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenHaftalikDersProgramiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-haftalik-ders-programi-sayfasi/ogretmen-haftalik-ders-programi-sayfasi.component.ts:21:15:
+      21 │ ...plateUrl: './ogretmen-haftalik-ders-programi-sayfasi.component....
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'dersler' does not exist on type 'DersProgram'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-haftalik-ders-programi-sayfasi/ogretmen-haftalik-ders-programi-sayfasi.component.html:98:48:
+      98 │                   *ngFor="let ders of dersGrubu.dersler"
+         ╵                                                 ~~~~~~~
+
+  Error occurs in the template of component OgretmenHaftalikDersProgramiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-haftalik-ders-programi-sayfasi/ogretmen-haftalik-ders-programi-sayfasi.component.ts:21:15:
+      21 │ ...plateUrl: './ogretmen-haftalik-ders-programi-sayfasi.component....
