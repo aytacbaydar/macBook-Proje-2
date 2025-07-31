@@ -329,21 +329,53 @@
   </div>
 
   <!-- Avatar Modal -->
-  <div class="modal fade" id="avatarModal" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="avatarModalLabel">{{ selectedStudent?.adi_soyadi }}</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body text-center">
+  <div class="avatar-modal-overlay" *ngIf="showAvatarModal" (click)="closeAvatarModal()">
+    <div class="avatar-modal-content" (click)="$event.stopPropagation()">
+      <div class="avatar-modal-header">
+        <h4 class="mb-0">{{ selectedStudent?.adi_soyadi }}</h4>
+        <button type="button" class="close-btn" (click)="closeAvatarModal()">
+          <i class="bi bi-x"></i>
+        </button>
+      </div>
+
+      <div class="avatar-modal-body">
+        <div class="large-avatar-container">
           <img 
-            *ngIf="selectedStudent"
-            [src]="selectedStudent.avatar || getDefaultAvatar(selectedStudent.adi_soyadi)" 
-            [alt]="selectedStudent.adi_soyadi"
-            class="modal-avatar"
+            [src]="selectedStudent?.avatar || getDefaultAvatar(selectedStudent?.adi_soyadi || 'Student')" 
+            [alt]="selectedStudent?.adi_soyadi"
+            class="large-avatar"
             onerror="this.src='https://ui-avatars.com/api/?name=' + encodeURIComponent(this.alt) + '&background=007bff&color=fff&size=300'">
         </div>
+
+        <div class="student-quick-info">
+          <div class="info-item">
+            <i class="bi bi-envelope"></i>
+            <span>{{ selectedStudent?.email }}</span>
+          </div>
+          <div class="info-item" *ngIf="selectedStudent?.cep_telefonu">
+            <i class="bi bi-phone"></i>
+            <span>{{ selectedStudent?.cep_telefonu }}</span>
+          </div>
+          <div class="info-item">
+            <i class="bi bi-building"></i>
+            <span>{{ selectedStudent?.okulu }} - {{ selectedStudent?.sinifi }}</span>
+          </div>
+          <div class="info-item">
+            <i class="bi bi-people"></i>
+            <span>{{ selectedStudent?.grubu }} Grubu</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="avatar-modal-footer">
+        <button type="button" class="btn btn-primary" (click)="viewStudentDetails(selectedStudent?.id)">
+          <i class="bi bi-info-circle me-2"></i>
+          Detay Görüntüle
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="closeAvatarModal()">
+          <i class="bi bi-x-circle me-2"></i>
+          Kapat
+        </button>
       </div>
     </div>
   </div>
