@@ -53,6 +53,76 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
   showAvatarModal = false;
   selectedStudent: User | null = null;
 
+  // Filtreleme ve görünüm properties
+  searchTerm = '';
+  selectedGroup = '';
+  selectedSchool = '';
+  selectedStatus = '';
+  viewMode: 'grid' | 'list' = 'grid';
+
+  // Statistics properties
+  get totalStudents(): number {
+    return this.students.length;
+  }
+
+  get activeStudentsCount(): number {
+    return this.students.filter(student => student.aktif).length;
+  }
+
+  get inactiveStudentsCount(): number {
+    return this.students.filter(student => !student.aktif).length;
+  }
+
+  // Unique values for filters
+  get uniqueGroups(): string[] {
+    const groups = this.students.map(student => student.grubu).filter(Boolean);
+    return [...new Set(groups)];
+  }
+
+  get uniqueSchools(): string[] {
+    const schools = this.students.map(student => student.okulu).filter(Boolean);
+    return [...new Set(schools)];
+  }
+
+  // Advanced filtering
+  get filteredStudents(): User[] {
+    let filtered = this.students;
+
+    // Text search
+    if (this.searchTerm) {
+      const term = this.searchTerm.toLowerCase();
+      filtered = filtered.filter(student =>
+        student.adi_soyadi.toLowerCase().includes(term) ||
+        student.email.toLowerCase().includes(term) ||
+        (student.cep_telefonu && student.cep_telefonu.toLowerCase().includes(term)) ||
+        (student.okulu && student.okulu.toLowerCase().includes(term)) ||
+        (student.sinifi && student.sinifi.toLowerCase().includes(term)) ||
+        (student.grubu && student.grubu.toLowerCase().includes(term))
+      );
+    }
+
+    // Group filter
+    if (this.selectedGroup) {
+      filtered = filtered.filter(student => student.grubu === this.selectedGroup);
+    }
+
+    // School filter
+    if (this.selectedSchool) {
+      filtered = filtered.filter(student => student.okulu === this.selectedSchool);
+    }
+
+    // Status filter
+    if (this.selectedStatus) {
+      if (this.selectedStatus === 'active') {
+        filtered = filtered.filter(student => student.aktif);
+      } else if (this.selectedStatus === 'inactive') {
+        filtered = filtered.filter(student => !student.aktif);
+      }
+    }
+
+    return filtered;
+  }
+
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
@@ -543,5 +613,92 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
       ]);
       this.closeAvatarModal();
     }
+  }
+
+  // Filter methods
+  filterStudents(): void {
+    // Filtreleme otomatik olarak get filteredStudents() ile yapılıyor
+    this.currentStudentPage = 1; // Filtreleme sonrası ilk sayfaya dön
+  }
+
+  clearAllFilters(): void {
+    this.searchTerm = '';
+    this.selectedGroup = '';
+    this.selectedSchool = '';
+    this.selectedStatus = '';
+    this.currentStudentPage = 1;
+  }
+
+  // Tracking function for ngFor performance
+  trackByStudentId(index: number, student: User): number {
+    return student.id;
+  }
+
+  // Default avatar generator
+  getDefaultAvatar(name: string): string {
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(
+      name || 'Student'
+    )}&background=007bff&color=fff&size=128`;
+  }
+
+  // Currency formatter
+  formatCurrency(amount: number | string | undefined | null): string {
+    if (!amount || isNaN(Number(amount))) return '₺0';
+    const numAmount = Number(amount);
+    return new Intl.NumberFormat('tr-TR', {
+      style: 'currency',
+      currency: 'TRY',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(numAmount);
+  }
+
+  // Message modal (placeholder for future implementation)
+  openMessageModal(student: User): void {
+    console.log('Opening message modal for:', student.adi_soyadi);
+    // TODO: Implement message modal functionality
+    alert(`Mesaj gönderme özelliği yakında eklenecek: ${student.adi_soyadi}`);
+  }
+
+  // Toggle student status
+  toggleStudentStatus(student: User): void {
+    const newStatus = !student.aktif;
+    const actionText = newStatus ? 'aktif' : 'pasif';
+    
+    if (!confirm(`${student.adi_soyadi} adlı öğrenciyi ${actionText} yapmak istediğinizden emin misiniz?`)) {
+      return;
+    }
+
+    let token = '';
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      token = user.token || '';
+    }
+
+    const updateData = {
+      id: student.id,
+      aktif: newStatus ? 1 : 0
+    };
+
+    this.http.post<any>('./server/api/kullanici_guncelle.php', updateData, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    }).subscribe({
+      next: (response) => {
+        if (response.success) {
+          student.aktif = newStatus;
+          alert(`Öğrenci durumu başarıyla ${actionText} yapıldı.`);
+        } else {
+          alert('Durum değiştirilemedi: ' + (response.error || response.message));
+        }
+      },
+      error: (error) => {
+        console.error('Durum değiştirme hatası:', error);
+        alert('Durum değiştirme sırasında bir hata oluştu: ' + (error.error?.message || error.message));
+      }
+    });
   }
 }
