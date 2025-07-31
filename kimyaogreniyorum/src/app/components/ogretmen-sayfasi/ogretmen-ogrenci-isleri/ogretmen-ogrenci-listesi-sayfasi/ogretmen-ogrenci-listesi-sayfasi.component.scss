@@ -248,12 +248,12 @@
     margin-bottom: 25px;
 
     .large-avatar {
-      width: 200px;
-      height: 200px;
+      width: 250px;
+      height: 250px;
       border-radius: 50%;
       object-fit: cover;
-      border: 6px solid #007bff;
-      box-shadow: 0 10px 30px rgba(0, 123, 255, 0.3);
+      border: 2px solid #999a9b;
+      box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
       transition: all 0.3s ease;
 
       &:hover {

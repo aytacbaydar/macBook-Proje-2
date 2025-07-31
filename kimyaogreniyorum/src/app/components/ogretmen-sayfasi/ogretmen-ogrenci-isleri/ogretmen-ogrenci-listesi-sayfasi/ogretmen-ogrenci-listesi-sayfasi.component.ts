@@ -536,7 +536,10 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
 
   viewStudentDetails(studentId?: number): void {
     if (studentId) {
-      this.router.navigate(['/ogretmen/ogrenci-bilgi', studentId]);
+      this.router.navigate([
+        '/ogretmen-sayfasi/ogretmen-ogrenci-bilgi-sayfasi',
+        studentId,
+      ]);
       this.closeAvatarModal();
     }
   }
