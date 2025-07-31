@@ -101,22 +101,68 @@
          [class.bi-chevron-down]="!showAllStudents" 
          [class.bi-chevron-up]="showAllStudents"></i>
     </button>
-  </div>
 
-  <!-- Enhanced Search Bar -->
-  <div class="search-container" *ngIf="viewMode === 'all' && !isLoading && !error && showAllStudents">
-    <div class="search-input-group">
-      <i class="bi bi-search search-icon"></i>
-      <input type="text" 
-             class="search-input" 
-             [(ngModel)]="studentSearchQuery"
-             (input)="filterStudents()"
-             placeholder="Öğrenci ara...">
-      <button class="clear-search-btn" 
-              *ngIf="studentSearchQuery" 
-              (click)="clearSearch()">
-        <i class="bi bi-x"></i>
-      </button>
+    <!-- Enhanced Search Bar -->
+    <div class="search-container" *ngIf="showAllStudents">
+      <div class="search-input-group">
+        <i class="bi bi-search search-icon"></i>
+        <input type="text" 
+               class="search-input" 
+               [(ngModel)]="studentSearchQuery"
+               (input)="filterStudents()"
+               placeholder="Öğrenci ara...">
+        <button class="clear-search-btn" 
+                *ngIf="studentSearchQuery" 
+                (click)="clearSearch()">
+          <i class="bi bi-x"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- All students section -->
+    <div class="all-students-section" *ngIf="showAllStudents">
+      <div class="section-header">
+        <h6>
+          <i class="bi bi-people me-2"></i>
+          Tüm Öğrenciler
+        </h6>
+      </div>
+      <div class="all-students-list">
+        <div class="student-item" 
+             *ngFor="let student of getFilteredStudents(); trackBy: trackByStudentId"
+             (click)="selectStudent(student)"
+             [class.has-messages]="hasMessages(student.id)">
+          <div class="student-avatar">
+            <img [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)" 
+                 alt="Avatar" class="avatar-img">
+          </div>
+          <div class="student-info">
+            <div class="student-name">{{ student.adi_soyadi }}</div>
+            <div class="student-details">
+              <div class="detail-item">
+                <i class="bi bi-envelope me-1"></i>
+                <span class="student-email">{{ student.email }}</span>
+              </div>
+              <div class="detail-item" *ngIf="student.grubu">
+                <i class="bi bi-collection me-1"></i>
+                <span class="student-group">{{ student.grubu }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="student-badges">
+            <div class="message-count" *ngIf="getStudentMessageCount(student.id) > 0">
+              <i class="bi bi-chat-dots me-1"></i>
+              {{ getStudentMessageCount(student.id) }}
+            </div>
+            <div class="unread-count" *ngIf="getUnreadMessageCount(student.id) > 0">
+              {{ getUnreadMessageCount(student.id) }}
+            </div>
+            <div class="no-messages" *ngIf="getStudentMessageCount(student.id) === 0">
+              <i class="bi bi-chat" title="Henüz mesaj yok"></i>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -157,52 +203,6 @@
           </div>
           <div class="unread-count" *ngIf="getUnreadMessageCount(studentId) > 0">
             {{ getUnreadMessageCount(studentId) }}
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- All students (including those without messages) -->
-    <div class="students-section" *ngIf="showAllStudents">
-      <div class="section-header">
-        <h6>
-          <i class="bi bi-people me-2"></i>
-          Tüm Öğrenciler
-        </h6>
-      </div>
-      <div class="all-students-list">
-        <div class="student-item" 
-             *ngFor="let student of getFilteredStudents(); trackBy: trackByStudentId"
-             (click)="selectStudent(student)"
-             [class.has-messages]="hasMessages(student.id)">
-          <div class="student-avatar">
-            <img [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)" 
-                 alt="Avatar" class="avatar-img">
-          </div>
-          <div class="student-info">
-            <div class="student-name">{{ student.adi_soyadi }}</div>
-            <div class="student-details">
-              <div class="detail-item">
-                <i class="bi bi-envelope me-1"></i>
-                <span class="student-email">{{ student.email }}</span>
-              </div>
-              <div class="detail-item" *ngIf="student.grubu">
-                <i class="bi bi-collection me-1"></i>
-                <span class="student-group">{{ student.grubu }}</span>
-              </div>
-            </div>
-          </div>
-          <div class="student-badges">
-            <div class="message-count" *ngIf="getStudentMessageCount(student.id) > 0">
-              <i class="bi bi-chat-dots me-1"></i>
-              {{ getStudentMessageCount(student.id) }}
-            </div>
-            <div class="unread-count" *ngIf="getUnreadMessageCount(student.id) > 0">
-              {{ getUnreadMessageCount(student.id) }}
-            </div>
-            <div class="no-messages" *ngIf="getStudentMessageCount(student.id) === 0">
-              <i class="bi bi-chat" title="Henüz mesaj yok"></i>
-            </div>
           </div>
         </div>
       </div>

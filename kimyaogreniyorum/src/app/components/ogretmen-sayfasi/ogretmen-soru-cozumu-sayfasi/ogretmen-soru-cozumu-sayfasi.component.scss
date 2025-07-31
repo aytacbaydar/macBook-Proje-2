@@ -455,70 +455,208 @@
       font-size: 1.2rem;
     }
   }
-}
 
-// Enhanced Search Container
-.search-container {
-  padding: 1.5rem 2rem;
-  background: white;
-  border-bottom: 1px solid #e9ecef;
+  // Enhanced Search Container inside toggle
+  .search-container {
+    padding: 1rem 0 0 0;
+    background: transparent;
+    border-bottom: none;
 
-  .search-input-group {
-    position: relative;
-    display: flex;
-    align-items: center;
-    background: var(--light-color);
-    border: 2px solid #e9ecef;
+    .search-input-group {
+      position: relative;
+      display: flex;
+      align-items: center;
+      background: var(--light-color);
+      border: 2px solid #e9ecef;
+      border-radius: var(--border-radius);
+      padding: 0 1rem;
+      transition: var(--transition);
+
+      &:focus-within {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.1);
+        background: white;
+      }
+
+      .search-icon {
+        color: #6c757d;
+        margin-right: 0.75rem;
+        font-size: 1.1rem;
+      }
+
+      .search-input {
+        flex: 1;
+        border: none;
+        background: transparent;
+        padding: 0.875rem 0;
+        font-size: 1rem;
+        color: var(--dark-color);
+        outline: none;
+
+        &::placeholder {
+          color: #adb5bd;
+        }
+      }
+
+      .clear-search-btn {
+        background: none;
+        border: none;
+        color: #6c757d;
+        padding: 0.5rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: var(--transition);
+        margin-left: 0.5rem;
+
+        &:hover {
+          background: #e9ecef;
+          color: var(--dark-color);
+        }
+      }
+    }
+  }
+
+  // All students section styles
+  .all-students-section {
+    background: #f0f8ff;
     border-radius: var(--border-radius);
-    padding: 0 1rem;
-    transition: var(--transition);
+    margin-top: 1rem;
+    border: 1px solid #e0f0ff;
+    overflow: hidden;
 
-    &:focus-within {
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.1);
-      background: white;
-    }
-
-    .search-icon {
-      color: #6c757d;
-      margin-right: 0.75rem;
-      font-size: 1.1rem;
-    }
-
-    .search-input {
-      flex: 1;
-      border: none;
-      background: transparent;
-      padding: 0.875rem 0;
-      font-size: 1rem;
-      color: var(--dark-color);
-      outline: none;
-
-      &::placeholder {
-        color: #adb5bd;
+    .section-header {
+      padding: 1rem 1.5rem;
+      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+      border-bottom: 1px solid #e0f0ff;
+      
+      h6 {
+        margin: 0;
+        color: #1565c0;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
       }
     }
 
-    .clear-search-btn {
-      background: none;
-      border: none;
-      color: #6c757d;
-      padding: 0.5rem;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: var(--transition);
-      margin-left: 0.5rem;
+    .all-students-list {
+      max-height: 400px;
+      overflow-y: auto;
 
-      &:hover {
-        background: #e9ecef;
-        color: var(--dark-color);
+      .student-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #e8f4f8;
+        cursor: pointer;
+        transition: var(--transition);
+        background: white;
+
+        &:hover {
+          background: #f8fcff;
+          transform: translateX(5px);
+        }
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &.has-messages {
+          border-left: 3px solid var(--success-color);
+        }
+
+        .student-avatar {
+          position: relative;
+          margin-right: 1rem;
+
+          .avatar-img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #e3f2fd;
+            transition: var(--transition);
+          }
+        }
+
+        .student-info {
+          flex: 1;
+          min-width: 0;
+
+          .student-name {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.25rem;
+            font-size: 1rem;
+          }
+
+          .student-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+
+            .detail-item {
+              display: flex;
+              align-items: center;
+              font-size: 0.85rem;
+              color: #666;
+
+              .student-email {
+                color: #666;
+              }
+
+              .student-group {
+                background: var(--info-color);
+                color: white;
+                padding: 0.125rem 0.5rem;
+                border-radius: var(--border-radius-sm);
+                font-size: 0.75rem;
+                font-weight: 500;
+              }
+            }
+          }
+        }
+
+        .student-badges {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+
+          .message-count {
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--border-radius-sm);
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+          }
+
+          .unread-count {
+            background: var(--danger-color);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--border-radius-sm);
+            font-size: 0.8rem;
+            font-weight: bold;
+            min-width: 20px;
+            text-align: center;
+          }
+
+          .no-messages {
+            color: #ccc;
+            font-size: 1.2rem;
+          }
+        }
       }
     }
   }
 }
+
+
 
 // Enhanced Student List
 .student-list {
