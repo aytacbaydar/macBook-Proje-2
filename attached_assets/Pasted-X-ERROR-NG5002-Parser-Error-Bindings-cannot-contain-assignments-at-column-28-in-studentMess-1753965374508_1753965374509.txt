@@ -1,0 +1,716 @@
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:223:10:
+      223 │           {{ studentMessages.filter(m => m.okundu).length }} okundu
+          ╵           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: No overload matches this call.
+  Overload 1 of 2, '(predicate: (value: SoruMesaj, index: number, array: SoruMesaj[]) => value is SoruMesaj, thisArg?: any): SoruMesaj[]', gave the following error.
+    Argument of type 'undefined' is not assignable to parameter of type '(value: SoruMesaj, index: number, array: SoruMesaj[]) => value is SoruMesaj'.
+  Overload 2 of 2, '(predicate: (value: SoruMesaj, index: number, array: SoruMesaj[]) => unknown, thisArg?: any): SoruMesaj[]', gave the following error.
+    Argument of type 'undefined' is not assignable to parameter of type '(value: SoruMesaj, index: number, array: SoruMesaj[]) => unknown'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:223:36:
+      223 │           {{ studentMessages.filter(m => m.okundu).length }} okundu
+          ╵                                     ~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:231:11:
+      231 │            *ngFor="let message of studentMessages; trackBy: track...
+          ╵            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:232:25:
+      232 │            [class.sent]="message.gonderen_tip === 'ogretmen'"
+          ╵                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:233:29:
+      233 │            [class.received]="message.gonderen_tip === 'ogrenci'">
+          ╵                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:237:36:
+      237 │           <div class="message-text" *ngIf="message.mesaj_metni">
+          ╵                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:238:12:
+      238 │             {{ message.mesaj_metni }}
+          ╵             ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:242:37:
+      242 │           <div class="message-image" *ngIf="message.resim_url">
+          ╵                                      ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:244:26:
+      244 │               <img [src]="message.resim_url"
+          ╵                           ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:245:26:
+      245 │                    [alt]="getImageFileName(message.resim_url)"
+          ╵                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:246:28:
+      246 │                    (click)="openImageModal(message.resim_url)">
+          ╵                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:255:39:
+      255 │ ...s="message-time">{{ formatDate(message.gonderim_tarihi) }}</span>
+          ╵                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:256:41:
+      256 │ ...lass="message-sender" *ngIf="message.gonderen_tip === 'ogrenci'">
+          ╵                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:258:14:
+      258 │               {{ message.gonderen_adi }}
+          ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:260:40:
+      260 │ ...ass="message-status" *ngIf="message.gonderen_tip === 'ogretmen'">
+          ╵                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:261:55:
+      261 │ ...    <i class="bi bi-check-all" [class.read]="message.okundu"></i>
+          ╵                                                 ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:262:40:
+      262 │ ...atus-text">{{ message.okundu ? 'Okundu' : 'Gönderildi' }}</span>
+          ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:272:32:
+      272 │       <div class="file-preview" *ngIf="previewUrl">
+          ╵                                 ~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:274:22:
+      274 │           <img [src]="previewUrl" alt="Seçilen resim">
+          ╵                       ~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:275:47:
+      275 │           <button class="remove-file" (click)="removeFile()">
+          ╵                                                ~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:283:44:
+      283 │ ...lass="attach-btn" (click)="fileInput.click()" title="Dosya ekle">
+          ╵                               ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:289:25:
+      289 │                (change)="onFileSelected($event)"
+          ╵                          ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:295:33:
+      295 │                     [(ngModel)]="yeniMesaj"
+          ╵                                  ~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:295:33:
+      295 │                     [(ngModel)]="yeniMesaj"
+          ╵                                  ~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:296:37:
+      296 │                     (keydown.enter)="handleEnterKeyPress($event)"
+          ╵                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:299:34:
+      299 │ ...iv class="input-hint" *ngIf="!yeniMesaj.trim() && !selectedFile">
+          ╵                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:305:25:
+      305 │                 (click)="sendMessage()"
+          ╵                          ~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:306:28:
+      306 │ ...   [disabled]="isSending || (!yeniMesaj.trim() && !selectedFile)"
+          ╵                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:307:25:
+      307 │ ...    [title]="isSending ? 'Gönderiliyor...' : 'Mesajı gönder'">
+          ╵                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:308:32:
+      308 │           <i class="bi bi-send" *ngIf="!isSending"></i>
+          ╵                                 ~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:309:37:
+      309 │           <div class="spinner-small" *ngIf="isSending"></div>
+          ╵                                      ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:316:27:
+      316 │ ...ty-state" *ngIf="viewMode === 'all' && getFilteredStudentIds()...
+          ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:319:35:
+      319 │         <i class="bi bi-chat-dots" *ngIf="!studentSearchQuery"></i>
+          ╵                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:320:32:
+      320 │         <i class="bi bi-search" *ngIf="studentSearchQuery"></i>
+          ╵                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:322:10:
+      322 │       <h3 *ngIf="!studentSearchQuery">Henüz mesaj yok</h3>
+          ╵           ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:323:10:
+      323 │       <h3 *ngIf="studentSearchQuery">Arama sonucu bulunamadı</h3>
+          ╵           ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:324:9:
+      324 │       <p *ngIf="!studentSearchQuery">Öğrencilerinizden mesaj ge...
+          ╵          ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:325:9:
+      325 │       <p *ngIf="studentSearchQuery">Farklı bir arama terimi dene...
+          ╵          ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:326:43:
+      326 │ ..."refresh-btn" (click)="loadAllMessages()" *ngIf="!studentSearc...
+          ╵                           ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:326:62:
+      326 │ ...esh-btn" (click)="loadAllMessages()" *ngIf="!studentSearchQuery">
+          ╵                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:334:27:
+      334 │ ...class="image-modal" *ngIf="showImageModal" (click)="closeImage...
+          ╵                        ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:334:59:
+      334 │ ..."image-modal" *ngIf="showImageModal" (click)="closeImageModal()">
+          ╵                                                  ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:336:40:
+      336 │     <div class="modal-content" (click)="$event.stopPropagation()">
+          ╵                                         ~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:338:12:
+      338 │         <h5>{{ getImageFileName(selectedImageUrl) }}</h5>
+          ╵             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:339:45:
+      339 │         <button class="close-modal" (click)="closeImageModal()">
+          ╵                                              ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:344:20:
+      344 │         <img [src]="selectedImageUrl" [alt]="getImageFileName(sel...
+          ╵                     ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:344:45:
+      344 │ ...c]="selectedImageUrl" [alt]="getImageFileName(selectedImageUrl)">
+          ╵                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:350:34:
+      350 │ ...s="toast-notification" *ngIf="showToast" [class]="'toast-' + t...
+          ╵                           ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:350:61:
+      350 │ ...t-notification" *ngIf="showToast" [class]="'toast-' + toastType">
+          ╵                                               ~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:352:35:
+      352 │       <i class="bi bi-info-circle" *ngIf="toastType === 'info'"></i>
+          ╵                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:353:36:
+      353 │ ...i class="bi bi-check-circle" *ngIf="toastType === 'success'"></i>
+          ╵                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:354:44:
+      354 │ ..."bi bi-exclamation-triangle" *ngIf="toastType === 'warning'"></i>
+          ╵                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:355:32:
+      355 │       <i class="bi bi-x-circle" *ngIf="toastType === 'error'"></i>
+          ╵                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:356:12:
+      356 │       <span>{{ toastMessage }}</span>
+          ╵             ~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 28 in [ {{ studentMessages.filter(m => m.okundu).length }} okundu ] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-soru-cozumu-sayfasi\ogretmen-soru-cozumu-sayfasi.component.html@222:10 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.html:358:41:
+      358 │     <button class="toast-close" (click)="hideToast()">
+          ╵                                          ~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenSoruCozumuSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
