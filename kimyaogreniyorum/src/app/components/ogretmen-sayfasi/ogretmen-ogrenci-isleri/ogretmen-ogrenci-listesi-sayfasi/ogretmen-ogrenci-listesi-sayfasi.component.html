@@ -8,7 +8,7 @@
           Öğrenci Listesi
         </h1>
         <p class="page-subtitle">
-          Toplam <span class="highlight">{{ totalStudentPages }}</span> öğrenci kayıtlı
+          Toplam <span class="highlight">{{ filteredStudents.length }}</span> öğrenci kayıtlı
         </p>
       </div>
       <div class="header-actions">
@@ -133,7 +133,7 @@
 
     <!-- Grid View -->
     <div *ngIf="viewMode === 'grid'" class="students-grid">
-      <div *ngFor="let student of filteredStudents; trackBy: trackByStudentId" class="student-card">
+      <div *ngFor="let student of paginatedStudents; trackBy: trackByStudentId" class="student-card">
         <div class="card-header">
           <div class="avatar-section">
             <div class="avatar-wrapper" (click)="openAvatarModal(student)">
@@ -242,7 +242,7 @@
         <div class="list-col actions-col">İşlemler</div>
       </div>
 
-      <div *ngFor="let student of filteredStudents; trackBy: trackByStudentId" class="list-item">
+      <div *ngFor="let student of paginatedStudents; trackBy: trackByStudentId" class="list-item">
         <div class="list-col avatar-col">
           <div class="list-avatar" (click)="openAvatarModal(student)">
             <img 
