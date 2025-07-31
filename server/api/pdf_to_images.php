@@ -1,4 +1,3 @@
-
 <?php
 require_once '../config.php';
 
@@ -100,8 +99,11 @@ foreach ([$uploadDir, $imageDir] as $dir) {
 cleanOldFiles($uploadDir, 3600);
 cleanOldFiles($imageDir, 3600);
 
+// Benzersiz işlem kimliği oluştur
+$processId = isset($_POST['process_id']) ? $_POST['process_id'] : uniqid('pdf_', true);
+error_log("PDF işleme başlatıldı - Process ID: " . $processId);
+
 // Benzersiz dosya adı oluştur
-$processId = isset($_POST['process_id']) ? $_POST['process_id'] : time();
 $fileId = 'pdf_' . $processId . '_' . uniqid();
 $pdfPath = $uploadDir . $fileId . '.pdf';
 
@@ -117,7 +119,7 @@ if (!move_uploaded_file($uploadedFile['tmp_name'], $pdfPath)) {
 
 try {
     error_log("PDF işleme başlıyor: " . $fileId);
-    
+
     // PDF'i resimlere çevir
     $pages = convertPdfWithGhostscript($pdfPath, $fileId, $imageDir);
 
@@ -205,13 +207,13 @@ function convertPdfWithGhostscript($pdfPath, $fileId, $imageDir) {
         error_log("Sayfa $page işleniyor: $command");
 
         exec($command, $output, $returnCode);
-        
+
         if ($returnCode === 0 && file_exists($outputFile) && filesize($outputFile) > 0) {
             // URL'yi doğru şekilde oluştur
             $imageUrl = 'https://www.kimyaogreniyorum.com/uploads/pdf_images/' . $fileId . '_page_' . $page . '.jpg';
             $pages[] = $imageUrl;
             error_log("Sayfa $page başarıyla oluşturuldu: " . filesize($outputFile) . " bytes");
-            
+
             // Dosya izinlerini ayarla
             chmod($outputFile, 0644);
         } else {

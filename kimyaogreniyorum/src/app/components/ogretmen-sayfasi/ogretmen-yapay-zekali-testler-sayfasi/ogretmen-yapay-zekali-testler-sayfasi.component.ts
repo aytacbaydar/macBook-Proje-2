@@ -640,20 +640,39 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
     document.removeEventListener('mousemove', this.handleMouseMove.bind(this));
     document.removeEventListener('mouseup', this.handleMouseUp.bind(this));
 
-    // Minimum boyut kontrolü (ölçeklenmiş koordinatlar için)
-    if (this.currentSelection.width > 30 && this.currentSelection.height > 30) {
-      this.currentPageSelections.push({
-        x: Math.round(this.currentSelection.x),
-        y: Math.round(this.currentSelection.y),
+    // Minimum boyut kontrolü (daha büyük minimum boyut)
+    const minWidth = 80;
+    const minHeight = 80;
+    
+    if (this.currentSelection.width > minWidth && this.currentSelection.height > minHeight) {
+      // Koordinatları yuvarla ve düzelt
+      const selection = {
+        x: Math.max(0, Math.round(this.currentSelection.x)),
+        y: Math.max(0, Math.round(this.currentSelection.y)),
         width: Math.round(this.currentSelection.width),
         height: Math.round(this.currentSelection.height),
         pageIndex: this.currentPdfPage,
-        dogru_cevap: this.pdfUploadData.dogru_cevap // Varsayılan cevap
-      });
+        dogru_cevap: this.pdfUploadData.dogru_cevap,
+        timestamp: Date.now() // Benzersizlik için timestamp ekle
+      };
       
-      console.log('Yeni soru seçimi eklendi:', this.currentSelection);
+      this.currentPageSelections.push(selection);
+      
+      console.log('Yeni soru seçimi eklendi:', selection);
+      this.success = `Soru seçimi eklendi (${selection.width}x${selection.height})`;
+      
+      // Success mesajını 2 saniye sonra temizle
+      setTimeout(() => {
+        this.success = null;
+      }, 2000);
     } else {
-      console.log('Seçim alanı çok küçük, atlandı.');
+      console.log(`Seçim alanı çok küçük (${Math.round(this.currentSelection.width)}x${Math.round(this.currentSelection.height)}), minimum ${minWidth}x${minHeight} olmalı.`);
+      this.error = `Seçim alanı çok küçük! Minimum ${minWidth}x${minHeight} piksel olmalı.`;
+      
+      // Error mesajını 3 saniye sonra temizle
+      setTimeout(() => {
+        this.error = null;
+      }, 3000);
     }
 
     this.currentSelection = null;
@@ -702,6 +721,32 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
     this.currentPageSelections = this.allSelections[this.currentPdfPage] || [];
   }
 
+  validateSelection(selection: any): boolean {
+    // Gerekli alanları kontrol et
+    if (!selection || typeof selection !== 'object') {
+      return false;
+    }
+
+    const requiredFields = ['x', 'y', 'width', 'height'];
+    for (const field of requiredFields) {
+      if (!(field in selection) || typeof selection[field] !== 'number' || isNaN(selection[field])) {
+        return false;
+      }
+    }
+
+    // Minimum boyut kontrolü
+    if (selection.width < 50 || selection.height < 50) {
+      return false;
+    }
+
+    // Negatif değer kontrolü
+    if (selection.x < 0 || selection.y < 0) {
+      return false;
+    }
+
+    return true;
+  }
+
   getSelectionDisplayCoordinates(selection: any): any {
     // Görüntülenen image elementini bul
     const imgElement = document.querySelector('.pdf-page-container img') as HTMLImageElement;
@@ -736,21 +781,44 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    // Her seçimin gerekli bilgilere sahip olduğundan emin ol
+    // Her seçimin gerekli bilgilere sahip olduğundan emin ol ve validate et
     const validatedSelections: { [pageIndex: number]: any[] } = {};
+    let validSelectionCount = 0;
     
     Object.keys(this.allSelections).forEach(pageIndex => {
       const pageNum = parseInt(pageIndex);
-      validatedSelections[pageNum] = this.allSelections[pageNum].map((selection, index) => ({
-        ...selection,
-        dogru_cevap: selection.dogru_cevap || this.pdfUploadData.dogru_cevap,
-        pageIndex: pageNum,
-        selectionIndex: index
-      }));
+      const pageSelections = this.allSelections[pageNum];
+      
+      if (Array.isArray(pageSelections)) {
+        const validSelections = pageSelections
+          .filter(selection => this.validateSelection(selection))
+          .map((selection, index) => ({
+            ...selection,
+            dogru_cevap: selection.dogru_cevap || this.pdfUploadData.dogru_cevap,
+            pageIndex: pageNum,
+            selectionIndex: index,
+            // Koordinatları tekrar validate et
+            x: Math.max(0, Math.round(selection.x)),
+            y: Math.max(0, Math.round(selection.y)),
+            width: Math.round(selection.width),
+            height: Math.round(selection.height)
+          }));
+        
+        if (validSelections.length > 0) {
+          validatedSelections[pageNum] = validSelections;
+          validSelectionCount += validSelections.length;
+        }
+      }
     });
 
+    if (validSelectionCount === 0) {
+      this.loading = false;
+      this.error = 'Geçerli soru seçimi bulunamadı. Lütfen daha büyük alanlar seçin.';
+      return;
+    }
+
     console.log('Kaydedilecek validasyon edilmiş seçimler:', validatedSelections);
-    console.log('Toplam soru sayısı:', totalSelections);
+    console.log('Geçerli soru sayısı:', validSelectionCount);
 
     const requestData = {
       selections: validatedSelections,

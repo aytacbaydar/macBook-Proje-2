@@ -54,8 +54,19 @@ try {
     }
 
     foreach ($selections as $pageIndex => $pageSelections) {
+        if (!is_array($pageSelections)) {
+            error_log("Sayfa $pageIndex için geçersiz seçim verisi");
+            continue;
+        }
+
         foreach ($pageSelections as $selectionIndex => $selection) {
             try {
+                // Seçim verilerini validate et
+                if (!validateSelection($selection)) {
+                    error_log("Geçersiz seçim verisi - Sayfa: $pageIndex, Seçim: $selectionIndex");
+                    continue;
+                }
+
                 // Seçim alanından soru resmini kes ve kaydet
                 $questionImage = cropQuestionFromPdf($selection, $pageIndex);
 
@@ -65,14 +76,19 @@ try {
                         ? $selection['dogru_cevap'] 
                         : $dogruCevap;
                     
-                    error_log("Soru kaydediliyor - Doğru cevap: " . $selectionDogruCevap);
+                    // Doğru cevap validation
+                    if (!in_array($selectionDogruCevap, ['A', 'B', 'C', 'D', 'E'])) {
+                        $selectionDogruCevap = $dogruCevap;
+                    }
+                    
+                    error_log("Soru kaydediliyor - Sayfa: $pageIndex, Doğru cevap: $selectionDogruCevap");
 
                     // Veritabanına kaydet
                     $sql = "INSERT INTO yapay_zeka_sorular (konu_adi, sinif_seviyesi, zorluk_derecesi, soru_resmi, dogru_cevap, ogretmen_id, olusturma_tarihi) 
                             VALUES (?, ?, ?, ?, ?, ?, NOW())";
 
                     $stmt = $pdo->prepare($sql);
-                    $stmt->execute([
+                    $result = $stmt->execute([
                         $konuAdi,
                         $sinifSeviyesi,
                         $zorlukDerecesi,
@@ -81,10 +97,15 @@ try {
                         $ogretmenId
                     ]);
 
-                    $savedCount++;
+                    if ($result) {
+                        $savedCount++;
+                        error_log("Soru başarıyla kaydedildi - ID: " . $pdo->lastInsertId());
+                    } else {
+                        error_log("Veritabanı kaydetme hatası");
+                    }
                 }
             } catch (Exception $e) {
-                error_log('Soru kaydetme hatası: ' . $e->getMessage());
+                error_log('Soru kaydetme hatası - Sayfa: ' . $pageIndex . ', Hata: ' . $e->getMessage());
                 continue; // Bu soruyu atla, diğerlerine devam et
             }
         }
@@ -103,6 +124,28 @@ try {
     ]);
 }
 
+function validateSelection($selection) {
+    // Gerekli alanları kontrol et
+    $requiredFields = ['x', 'y', 'width', 'height'];
+    foreach ($requiredFields as $field) {
+        if (!isset($selection[$field]) || !is_numeric($selection[$field])) {
+            return false;
+        }
+    }
+
+    // Minimum boyut kontrolü
+    if ($selection['width'] < 50 || $selection['height'] < 50) {
+        return false;
+    }
+
+    // Negatif değer kontrolü
+    if ($selection['x'] < 0 || $selection['y'] < 0) {
+        return false;
+    }
+
+    return true;
+}
+
 function cropQuestionFromPdf($selection, $pageIndex) {
     $imageDir = '../../uploads/pdf_images/';
     $uploadDir = '../../uploads/soru_resimleri/';
@@ -111,10 +154,17 @@ function cropQuestionFromPdf($selection, $pageIndex) {
     $pageFiles = glob($imageDir . '*_page_' . ($pageIndex + 1) . '.jpg');
 
     if (empty($pageFiles)) {
+        error_log("Sayfa resmi bulunamadı - Sayfa: " . ($pageIndex + 1));
         throw new Exception('Sayfa resmi bulunamadı');
     }
 
+    // En yeni dosyayı bul (dosya değişiklik tarihine göre)
+    usort($pageFiles, function($a, $b) {
+        return filemtime($b) - filemtime($a);
+    });
+
     $sourceImage = $pageFiles[0];
+    error_log("Kullanılan kaynak resim: " . basename($sourceImage));
 
     if (!file_exists($sourceImage)) {
         throw new Exception('Kaynak resim bulunamadı');
@@ -126,25 +176,29 @@ function cropQuestionFromPdf($selection, $pageIndex) {
         throw new Exception('Kaynak resim açılamadı');
     }
 
-    // Seçim koordinatları - güvenlik kontrolü
-    $x = max(0, (int)$selection['x']);
-    $y = max(0, (int)$selection['y']);
-    $width = max(1, (int)$selection['width']);
-    $height = max(1, (int)$selection['height']);
-
     // Kaynak resim boyutlarını al
     $sourceWidth = imagesx($source);
     $sourceHeight = imagesy($source);
+    
+    error_log("Kaynak resim boyutları: {$sourceWidth}x{$sourceHeight}");
 
-    // Koordinatları sınırlar içinde tut
-    $x = min($x, $sourceWidth - 1);
-    $y = min($y, $sourceHeight - 1);
+    // Seçim koordinatları - güvenlik kontrolü ve düzeltme
+    $x = max(0, round((float)$selection['x']));
+    $y = max(0, round((float)$selection['y']));
+    $width = max(50, round((float)$selection['width']));
+    $height = max(50, round((float)$selection['height']));
+
+    // Koordinatları kaynak resim sınırları içinde tut
+    $x = min($x, $sourceWidth - 50);
+    $y = min($y, $sourceHeight - 50);
     $width = min($width, $sourceWidth - $x);
     $height = min($height, $sourceHeight - $y);
 
+    error_log("Düzeltilmiş koordinatlar: x=$x, y=$y, width=$width, height=$height");
+
     // Minimum boyut kontrolü
-    if ($width < 10 || $height < 10) {
-        throw new Exception('Seçim alanı çok küçük');
+    if ($width < 50 || $height < 50) {
+        throw new Exception('Seçim alanı çok küçük (minimum 50x50 piksel)');
     }
 
     // Yeni resim oluştur
@@ -154,15 +208,21 @@ function cropQuestionFromPdf($selection, $pageIndex) {
     $white = imagecolorallocate($cropped, 255, 255, 255);
     imagefill($cropped, 0, 0, $white);
 
-    // Resmi kes
-    imagecopy($cropped, $source, 0, 0, $x, $y, $width, $height);
+    // Resmi kes ve kopyala
+    $copyResult = imagecopy($cropped, $source, 0, 0, $x, $y, $width, $height);
+    
+    if (!$copyResult) {
+        imagedestroy($source);
+        imagedestroy($cropped);
+        throw new Exception('Resim kopyalama işlemi başarısız');
+    }
 
-    // Dosya adı oluştur
-    $filename = 'pdf_question_' . uniqid() . '.jpg';
+    // Dosya adı oluştur (timestamp ve random ile)
+    $filename = 'pdf_question_' . date('Ymd_His') . '_' . uniqid() . '.jpg';
     $savePath = $uploadDir . $filename;
 
-    // Kaydet
-    $success = imagejpeg($cropped, $savePath, 85);
+    // Yüksek kalitede kaydet
+    $success = imagejpeg($cropped, $savePath, 90);
 
     // Belleği temizle
     imagedestroy($source);
@@ -171,6 +231,11 @@ function cropQuestionFromPdf($selection, $pageIndex) {
     if (!$success) {
         throw new Exception('Resim kaydedilemedi');
     }
+
+    // Dosya izinlerini ayarla
+    chmod($savePath, 0644);
+    
+    error_log("Soru resmi başarıyla kaydedildi: $filename");
 
     return $filename;
 }
