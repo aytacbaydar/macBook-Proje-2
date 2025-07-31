@@ -60,9 +60,10 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
   selectedStatus = '';
   viewMode: 'grid' | 'list' = 'grid';
 
-  // Pagination properties
+  // Pagination özelliklerini ekle
   currentPage = 1;
   itemsPerPage = 15;
+  visiblePages: (number | string)[] = [];
 
   // Statistics properties
   get totalStudents(): number {
@@ -127,11 +128,16 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
     return filtered;
   }
 
-  // Pagination getters
-  get totalPages(): number {
-    return Math.ceil(this.filteredStudents.length / this.itemsPerPage);
+  // Pagination için gerekli hesaplamalar
+  get totalStudents(): number {
+    return this.filteredStudents.length;
   }
 
+  get totalPages(): number {
+    return Math.ceil(this.totalStudents / this.itemsPerPage);
+  }
+
+  // Sayfalanmış öğrenci listesi
   get paginatedStudents(): User[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
@@ -249,26 +255,6 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
 
   get totalStudentPages(): number {
     return Math.ceil(this.totalStudentCount / this.itemsPerPage);
-  }
-
-  get paginatedStudents(): User[] {
-    const startIndex = (this.currentStudentPage - 1) * this.itemsPerPage;
-    return this.filteredStudentsForPagination.slice(
-      startIndex,
-      startIndex + this.itemsPerPage
-    );
-  }
-
-  setStudentPage(page: number): void {
-    if (page < 1 || page > this.totalStudentPages) return;
-    this.currentStudentPage = page;
-  }
-
-  getStudentPageArray(): number[] {
-    return this.generatePageArray(
-      this.currentStudentPage,
-      this.totalStudentPages
-    );
   }
 
   // Yeni Kullanıcı Pagination metotları
@@ -644,11 +630,82 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
     this.currentPage = 1;
   }
 
-  // Pagination methods
-  goToPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages) {
+  // Pagination functions
+  goToPage(page: number | string): void {
+    if (typeof page === 'number' && page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
+      this.updateVisiblePages();
     }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updateVisiblePages();
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updateVisiblePages();
+    }
+  }
+
+  updateVisiblePages(): void {
+    const totalPages = this.totalPages;
+    const currentPage = this.currentPage;
+    const visiblePages: (number | string)[] = [];
+
+    if (totalPages <= 7) {
+      // Eğer toplam sayfa sayısı 7 veya daha azsa, hepsini göster
+      for (let i = 1; i <= totalPages; i++) {
+        visiblePages.push(i);
+      }
+    } else {
+      // İlk sayfa her zaman gösterilir
+      visiblePages.push(1);
+
+      if (currentPage > 4) {
+        // Eğer mevcut sayfa 4'ten büyükse "..." ekle
+        visiblePages.push('...');
+      }
+
+      // Mevcut sayfanın etrafındaki sayfalar
+      const start = Math.max(2, currentPage - 1);
+      const end = Math.min(totalPages - 1, currentPage + 1);
+
+      for (let i = start; i <= end; i++) {
+        if (!visiblePages.includes(i)) {
+          visiblePages.push(i);
+        }
+      }
+
+      if (currentPage < totalPages - 3) {
+        // Eğer mevcut sayfa sondan 3 sayfa öncesinden küçükse "..." ekle
+        visiblePages.push('...');
+      }
+
+      // Son sayfa her zaman gösterilir
+      if (!visiblePages.includes(totalPages)) {
+        visiblePages.push(totalPages);
+      }
+    }
+
+    this.visiblePages = visiblePages;
+  }
+
+  // Items per page değiştirme
+  changeItemsPerPage(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    this.itemsPerPage = parseInt(target.value, 10);
+    this.currentPage = 1; // İlk sayfaya geri dön
+    this.updateVisiblePages();
+  }
+
+  updatePagination(): void {
+    this.currentPage = 1;
+    this.updateVisiblePages();
   }
 
   onItemsPerPageChange(): void {
