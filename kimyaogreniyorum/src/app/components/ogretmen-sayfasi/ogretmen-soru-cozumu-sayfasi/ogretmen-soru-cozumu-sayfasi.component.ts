@@ -409,10 +409,6 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     }
   }
 
-  trackByMessageId(index: number, message: SoruMesaj): number {
-    return message.id || index;
-  }
-
   trackByStudentIdStudent(index: number, student: Student): number {
     return student.id || index;
   }
@@ -777,10 +773,6 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
 
   toggleAllStudentsView(): void {
     this.showAllStudents = !this.showAllStudents;
-  }
-
-  trackByMessageId(index: number, message: SoruMesaj): number {
-    return message.id || index;
   }
 
   getReadMessageCount(): number {
