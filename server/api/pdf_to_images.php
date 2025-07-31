@@ -68,12 +68,12 @@ if ($mimeType !== 'application/pdf') {
     exit;
 }
 
-// Dosya boyutu kontrolü (3MB) - Daha küçük dosyalar için optimize ettik
-if ($uploadedFile['size'] > 3 * 1024 * 1024) {
+// Dosya boyutu kontrolü (6MB) - Daha küçük dosyalar için optimize ettik
+if ($uploadedFile['size'] > 6 * 1024 * 1024) {
     http_response_code(400);
     echo json_encode([
         'success' => false,
-        'message' => 'Dosya boyutu 3MB\'dan büyük olamaz'
+        'message' => 'Dosya boyutu 6MB\'dan büyük olamaz'
     ]);
     exit;
 }

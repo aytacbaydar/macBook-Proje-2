@@ -861,10 +861,11 @@
 
 .messages-container {
   flex: 1;
-  overflow-y: auto;
+  height: calc(100% - 500px);
   padding: 2rem;
   display: flex;
   flex-direction: column;
+  background-color: #25D366;
   gap: 1rem;
 
   .message-wrapper {
