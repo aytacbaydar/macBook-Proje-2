@@ -1,0 +1,699 @@
+X [ERROR] NG1: Property 'totalStudents' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. Did you mean 'totalStudentPages'? [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:11:44:
+      11 │ ...pan class="highlight">{{ totalStudents }}</span> öğrenci kay�...
+         ╵                             ~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'activeStudentsCount' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:21:43:
+      21 │ ...        <span class="stat-number">{{ activeStudentsCount }}</span>
+         ╵                                         ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG1: Property 'inactiveStudentsCount' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. Did you mean 'getInactiveStudents'? [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:30:43:
+      30 │ ...      <span class="stat-number">{{ inactiveStudentsCount }}</span>
+         ╵                                       ~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'searchTerm' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:46:23:
+      46 │           [(ngModel)]="searchTerm"
+         ╵                        ~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'searchTerm' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:46:23:
+      46 │           [(ngModel)]="searchTerm"
+         ╵                        ~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG1: Property 'filterStudents' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. Did you mean 'filteredStudents'? [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:47:19:
+      47 │           (input)="filterStudents()"
+         ╵                    ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'searchTerm' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:50:23:
+      50 │         <button *ngIf="searchTerm" (click)="clearSearch()" class="...
+         ╵                        ~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'selectedGroup' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:59:29:
+      59 │ ...    <select [(ngModel)]="selectedGroup" (change)="filterStudent...
+         ╵                             ~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'selectedGroup' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:59:29:
+      59 │ ...    <select [(ngModel)]="selectedGroup" (change)="filterStudent...
+         ╵                             ~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG1: Property 'filterStudents' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. Did you mean 'filteredStudents'? [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:59:54:
+      59 │ ..."selectedGroup" (change)="filterStudents()" class="filter-select">
+         ╵                              ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'uniqueGroups' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:61:39:
+      61 │ ...tion *ngFor="let group of uniqueGroups" [value]="group">{{ grou...
+         ╵                              ~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'selectedSchool' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:67:29:
+      67 │ ...    <select [(ngModel)]="selectedSchool" (change)="filterStuden...
+         ╵                             ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'selectedSchool' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:67:29:
+      67 │ ...    <select [(ngModel)]="selectedSchool" (change)="filterStuden...
+         ╵                             ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG1: Property 'filterStudents' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. Did you mean 'filteredStudents'? [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:67:55:
+      67 │ ...selectedSchool" (change)="filterStudents()" class="filter-select">
+         ╵                              ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'uniqueSchools' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:69:40:
+      69 │ ...on *ngFor="let school of uniqueSchools" [value]="school">{{ sch...
+         ╵                             ~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'selectedStatus' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:75:29:
+      75 │ ...    <select [(ngModel)]="selectedStatus" (change)="filterStuden...
+         ╵                             ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'selectedStatus' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:75:29:
+      75 │ ...    <select [(ngModel)]="selectedStatus" (change)="filterStuden...
+         ╵                             ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG1: Property 'filterStudents' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. Did you mean 'filteredStudents'? [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:75:55:
+      75 │ ...selectedStatus" (change)="filterStudents()" class="filter-select">
+         ╵                              ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'clearAllFilters' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:82:23:
+      82 │       <button (click)="clearAllFilters()" class="clear-filters-btn">
+         ╵                        ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'viewMode' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:117:28:
+      117 │             [class.active]="viewMode === 'grid'"
+          ╵                             ~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'viewMode' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:118:21:
+      118 │             (click)="viewMode = 'grid'"
+          ╵                      ~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'viewMode' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:124:28:
+      124 │             [class.active]="viewMode === 'list'"
+          ╵                             ~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'viewMode' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:125:21:
+      125 │             (click)="viewMode = 'list'"
+          ╵                      ~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'viewMode' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:135:16:
+      135 │     <div *ngIf="viewMode === 'grid'" class="students-grid">
+          ╵                 ~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'trackByStudentId' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:136:61:
+      136 │ ...ilteredStudents; trackBy: trackByStudentId" class="student-card">
+          ╵                              ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'getDefaultAvatar' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:141:41:
+      141 │ ...   [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)"
+          ╵                                ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:149:58:
+      149 │ ...ator" [class.active]="student.aktif === 1" [class.inactive]="s...
+          ╵                          ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:149:97:
+      149 │ ...ve]="student.aktif === 1" [class.inactive]="student.aktif === 0">
+          ╵                                                ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:150:58:
+      150 │ ...i-check-circle-fill]="student.aktif === 1" [class.bi-x-circle-...
+          ╵                          ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:150:105:
+      150 │ ....aktif === 1" [class.bi-x-circle-fill]="student.aktif === 0"></i>
+          ╵                                            ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'openMessageModal' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:162:63:
+      162 │ ...ass="dropdown-item" href="#" (click)="openMessageModal(student)">
+          ╵                                          ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'toggleStudentStatus' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:166:76:
+      166 │ ...em text-warning" href="#" (click)="toggleStudentStatus(student)">
+          ╵                                       ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:167:57:
+      167 │ ...ass.bi-person-check]="student.aktif === 0" [class.bi-person-x]...
+          ╵                          ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:167:99:
+      167 │ ...udent.aktif === 0" [class.bi-person-x]="student.aktif === 1"></i>
+          ╵                                            ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:168:21:
+      168 │                   {{ student.aktif === 1 ? 'Pasif Yap' : 'Aktif Y...
+          ╵                      ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'ders_adi' does not exist on type 'User'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:194:31:
+      194 │               <span>{{ student.ders_adi }}</span>
+          ╵                                ~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'formatCurrency' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:220:40:
+      220 │ ...pan class="fee-amount">{{ formatCurrency(student.ucret) }}</span>
+          ╵                              ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'viewMode' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:233:16:
+      233 │     <div *ngIf="viewMode === 'list'" class="students-list">
+          ╵                 ~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'trackByStudentId' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:245:61:
+      245 │ ...f filteredStudents; trackBy: trackByStudentId" class="list-item">
+          ╵                                 ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'getDefaultAvatar' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:249:39:
+      249 │ ...   [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)"
+          ╵                                ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'ders_adi' does not exist on type 'User'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:276:45:
+      276 │             <span class="subject">{{ student.ders_adi }}</span>
+          ╵                                              ~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'formatCurrency' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:282:31:
+      282 │ ...     <span class="fee">{{ formatCurrency(student.ucret) }}</span>
+          ╵                              ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:285:53:
+      285 │ ...adge" [class.active]="student.aktif === 1" [class.inactive]="s...
+          ╵                          ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:285:92:
+      285 │ ...ve]="student.aktif === 1" [class.inactive]="student.aktif === 0">
+          ╵                                                ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:286:56:
+      286 │ ...i-check-circle-fill]="student.aktif === 1" [class.bi-x-circle-...
+          ╵                          ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:286:103:
+      286 │ ....aktif === 1" [class.bi-x-circle-fill]="student.aktif === 0"></i>
+          ╵                                            ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:287:15:
+      287 │             {{ student.aktif === 1 ? 'Aktif' : 'Pasif' }}
+          ╵                ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'openMessageModal' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:299:23:
+      299 │               (click)="openMessageModal(student)"
+          ╵                        ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'toggleStudentStatus' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:305:23:
+      305 │               (click)="toggleStudentStatus(student)"
+          ╵                        ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:307:23:
+      307 │               [title]="student.aktif === 1 ? 'Pasif Yap' : 'Aktif...
+          ╵                        ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:308:53:
+      308 │ ...ass.bi-person-check]="student.aktif === 0" [class.bi-person-x]...
+          ╵                          ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:308:95:
+      308 │ ...udent.aktif === 0" [class.bi-person-x]="student.aktif === 1"></i>
+          ╵                                            ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'clearAllFilters' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:324:25:
+      324 │         <button (click)="clearAllFilters()" class="empty-action-b...
+          ╵                          ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'getDefaultAvatar' does not exist on type 'OgretmenOgrenciListesiSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:343:45:
+      343 │ ...ectedStudent.avatar || getDefaultAvatar(selectedStudent.adi_so...
+          ╵                           ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
