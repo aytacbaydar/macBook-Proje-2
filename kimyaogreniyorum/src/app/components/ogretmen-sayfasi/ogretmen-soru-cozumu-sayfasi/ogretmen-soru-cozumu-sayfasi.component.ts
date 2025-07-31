@@ -26,7 +26,7 @@ interface Student {
   selector: 'app-ogretmen-soru-cozumu-sayfasi',
   standalone: false,
   templateUrl: './ogretmen-soru-cozumu-sayfasi.component.html',
-  styleUrl: './ogretmen-soru-cozumu-sayfasi.component.scss'
+  styleUrl: './ogretmen-soru-cozumu-sayfasi.component.scss',
 })
 export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
@@ -83,7 +83,8 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
   private getTokenFromStorage(): string {
     let token = localStorage.getItem('token');
     if (!token) {
-      const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+      const userStr =
+        localStorage.getItem('user') || sessionStorage.getItem('user');
       if (userStr) {
         try {
           const user = JSON.parse(userStr);
@@ -116,14 +117,15 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     const token = localStorage.getItem('token');
     if (!token) {
       // Try to get token from user object
-      const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+      const userStr =
+        localStorage.getItem('user') || sessionStorage.getItem('user');
       if (userStr) {
         try {
           const user = JSON.parse(userStr);
           const userToken = user.token;
           if (userToken) {
             return new HttpHeaders({
-              'Authorization': `Bearer ${userToken}`
+              Authorization: `Bearer ${userToken}`,
             });
           }
         } catch (error) {
@@ -132,7 +134,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
       }
     }
     return new HttpHeaders({
-      'Authorization': `Bearer ${token || ''}`
+      Authorization: `Bearer ${token || ''}`,
     });
   }
 
@@ -141,7 +143,8 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     this.error = null;
 
     // Get teacher name for debugging
-    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    const userStr =
+      localStorage.getItem('user') || sessionStorage.getItem('user');
     let teacherName = 'Unknown';
     if (userStr) {
       try {
@@ -156,11 +159,12 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     console.log('Token:', this.getTokenFromStorage().substring(0, 20) + '...');
 
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.getTokenFromStorage()}`,
-      'Content-Type': 'application/json'
+      Authorization: `Bearer ${this.getTokenFromStorage()}`,
+      'Content-Type': 'application/json',
     });
 
-    this.http.get<any>(`${this.apiBaseUrl}/ogretmen_ogrencileri.php`, { headers })
+    this.http
+      .get<any>(`${this.apiBaseUrl}/ogretmen_ogrencileri.php`, { headers })
       .subscribe({
         next: (response) => {
           console.log('Students API response:', response);
@@ -177,9 +181,11 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
         error: (error) => {
           console.error('Students loading error:', error);
           console.error('Error details:', error.error);
-          this.error = 'Öğrenciler yüklenirken hata oluştu: ' + (error.error?.message || error.message);
+          this.error =
+            'Öğrenciler yüklenirken hata oluştu: ' +
+            (error.error?.message || error.message);
           this.isLoadingStudents = false;
-        }
+        },
       });
   }
 
@@ -188,13 +194,17 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     this.error = null;
 
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.getTokenFromStorage()}`,
-      'Content-Type': 'application/json'
+      Authorization: `Bearer ${this.getTokenFromStorage()}`,
+      'Content-Type': 'application/json',
     });
 
-    console.log('Loading all messages with token:', this.getTokenFromStorage().substring(0, 20) + '...');
+    console.log(
+      'Loading all messages with token:',
+      this.getTokenFromStorage().substring(0, 20) + '...'
+    );
 
-    this.http.get<any>(`${this.apiBaseUrl}/soru_mesajlari.php`, { headers })
+    this.http
+      .get<any>(`${this.apiBaseUrl}/soru_mesajlari.php`, { headers })
       .subscribe({
         next: (response) => {
           console.log('All messages response:', response);
@@ -203,7 +213,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
             console.log('Loaded messages count:', this.allMessages.length);
 
             // Fix image URLs
-            this.allMessages.forEach(message => {
+            this.allMessages.forEach((message) => {
               if (message.resim_url && !message.resim_url.startsWith('http')) {
                 if (!message.resim_url.startsWith('./')) {
                   message.resim_url = './' + message.resim_url;
@@ -214,7 +224,8 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
             // Group messages by student
             this.groupMessagesByStudent();
           } else {
-            this.error = response.message || response.error || 'Mesajlar yüklenemedi';
+            this.error =
+              response.message || response.error || 'Mesajlar yüklenemedi';
             console.error('API Error:', response);
           }
           this.isLoadingMessages = false;
@@ -222,9 +233,11 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
         error: (error) => {
           console.error('Messages loading error:', error);
           console.error('Error details:', error.error);
-          this.error = 'Mesajlar yüklenirken hata oluştu: ' + (error.error?.error || error.message);
+          this.error =
+            'Mesajlar yüklenirken hata oluştu: ' +
+            (error.error?.error || error.message);
           this.isLoadingMessages = false;
-        }
+        },
       });
   }
 
@@ -244,13 +257,17 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     this.error = null;
 
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.getTokenFromStorage()}`,
-      'Content-Type': 'application/json'
+      Authorization: `Bearer ${this.getTokenFromStorage()}`,
+      'Content-Type': 'application/json',
     });
 
     console.log('Loading messages for student ID:', studentId);
 
-    this.http.get<any>(`${this.apiBaseUrl}/soru_mesajlari.php?ogrenci_id=${studentId}`, { headers })
+    this.http
+      .get<any>(
+        `${this.apiBaseUrl}/soru_mesajlari.php?ogrenci_id=${studentId}`,
+        { headers }
+      )
       .subscribe({
         next: (response) => {
           console.log('Student messages response:', response);
@@ -258,7 +275,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
             this.studentMessages = response.data || [];
 
             // Fix image URLs
-            this.studentMessages.forEach(message => {
+            this.studentMessages.forEach((message) => {
               if (message.resim_url && !message.resim_url.startsWith('http')) {
                 if (!message.resim_url.startsWith('./')) {
                   message.resim_url = './' + message.resim_url;
@@ -268,7 +285,8 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
 
             setTimeout(() => this.scrollToBottom(), 100);
           } else {
-            this.error = response.message || response.error || 'Mesajlar yüklenemedi';
+            this.error =
+              response.message || response.error || 'Mesajlar yüklenemedi';
             console.error('API Error:', response);
           }
           this.isLoadingMessages = false;
@@ -276,14 +294,19 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
         error: (error) => {
           console.error('Student messages loading error:', error);
           console.error('Error details:', error.error);
-          this.error = 'Mesajlar yüklenirken hata oluştu: ' + (error.error?.error || error.message);
+          this.error =
+            'Mesajlar yüklenirken hata oluştu: ' +
+            (error.error?.error || error.message);
           this.isLoadingMessages = false;
-        }
+        },
       });
   }
 
   sendMessage() {
-    if (!this.selectedStudent || (!this.yeniMesaj.trim() && !this.selectedFile)) {
+    if (
+      !this.selectedStudent ||
+      (!this.yeniMesaj.trim() && !this.selectedFile)
+    ) {
       return;
     }
 
@@ -294,7 +317,8 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     formData.append('gonderen_tip', 'ogretmen');
 
     // Öğretmen adını al
-    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    const userStr =
+      localStorage.getItem('user') || sessionStorage.getItem('user');
     let ogretmenAdi = 'Öğretmen';
     if (userStr) {
       try {
@@ -315,7 +339,8 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     let authToken = token;
 
     if (!authToken) {
-      const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+      const userStr =
+        localStorage.getItem('user') || sessionStorage.getItem('user');
       if (userStr) {
         try {
           const user = JSON.parse(userStr);
@@ -327,10 +352,11 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     }
 
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${authToken || ''}`
+      Authorization: `Bearer ${authToken || ''}`,
     });
 
-    this.http.post<any>(`${this.apiBaseUrl}/soru_mesajlari.php`, formData, { headers })
+    this.http
+      .post<any>(`${this.apiBaseUrl}/soru_mesajlari.php`, formData, { headers })
       .subscribe({
         next: (response) => {
           if (response.success) {
@@ -348,7 +374,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
           console.error('Message sending error:', error);
           this.error = 'Mesaj gönderilirken hata oluştu';
           this.isSending = false;
-        }
+        },
       });
   }
 
@@ -356,7 +382,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     const file = event.target.files[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        this.error = 'Dosya boyutu 5MB\'dan büyük olamaz';
+        this.error = "Dosya boyutu 5MB'dan büyük olamaz";
         return;
       }
 
@@ -393,20 +419,36 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
     if (diffDays === 0) {
-      return 'Bugün ' + date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+      return (
+        'Bugün ' +
+        date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })
+      );
     } else if (diffDays === 1) {
-      return 'Dün ' + date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+      return (
+        'Dün ' +
+        date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })
+      );
     } else {
-      return date.toLocaleDateString('tr-TR') + ' ' + date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+      return (
+        date.toLocaleDateString('tr-TR') +
+        ' ' +
+        date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })
+      );
     }
   }
 
   private scrollToBottom() {
     if (this.messageContainer) {
       setTimeout(() => {
-        this.messageContainer.nativeElement.scrollTop = this.messageContainer.nativeElement.scrollHeight;
+        this.messageContainer.nativeElement.scrollTop =
+          this.messageContainer.nativeElement.scrollHeight;
       }, 100);
     }
+  }
+
+  // Add trackByMessageId method for ngFor
+  trackByMessageId(index: number, message: any): any {
+    return message && message.id ? message.id : index;
   }
 
   trackByStudentIdStudent(index: number, student: Student): number {
@@ -423,26 +465,31 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
   }
 
   selectStudentFromMessage(message: SoruMesaj) {
-    const student = this.students.find(s => s.id === message.ogrenci_id);
+    const student = this.students.find((s) => s.id === message.ogrenci_id);
     if (student) {
       this.selectStudent(student);
     }
   }
 
   getStudentMessageCount(studentId: number): number {
-    return this.allMessages.filter(m => m.ogrenci_id === studentId).length;
+    return this.allMessages.filter((m) => m.ogrenci_id === studentId).length;
   }
 
   getUnreadMessageCount(studentId: number): number {
-    return this.allMessages.filter(m => m.ogrenci_id === studentId && !m.okundu && m.gonderen_tip === 'ogrenci').length;
+    return this.allMessages.filter(
+      (m) =>
+        m.ogrenci_id === studentId && !m.okundu && m.gonderen_tip === 'ogrenci'
+    ).length;
   }
 
   getStudentById(studentId: number): any {
-    return this.students.find(s => s.id === studentId);
+    return this.students.find((s) => s.id === studentId);
   }
 
   getDefaultAvatar(name: string): string {
-    return `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Student')}&background=007bff&color=fff&size=40`;
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(
+      name || 'Student'
+    )}&background=007bff&color=fff&size=40`;
   }
 
   getFilteredStudents(): any[] {
@@ -451,15 +498,16 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     }
 
     const query = this.studentSearchQuery.toLowerCase();
-    return this.students.filter(student => 
-      student.adi_soyadi.toLowerCase().includes(query) ||
-      student.email.toLowerCase().includes(query) ||
-      (student.grubu && student.grubu.toLowerCase().includes(query))
+    return this.students.filter(
+      (student) =>
+        student.adi_soyadi.toLowerCase().includes(query) ||
+        student.email.toLowerCase().includes(query) ||
+        (student.grubu && student.grubu.toLowerCase().includes(query))
     );
   }
 
   hasMessages(studentId: number): boolean {
-    return this.allMessages.some(m => m.ogrenci_id === studentId);
+    return this.allMessages.some((m) => m.ogrenci_id === studentId);
   }
 
   trackByStudentId(index: number, student: any): number {
@@ -469,7 +517,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
   private requestNotificationPermission(): void {
     if ('Notification' in window) {
       if (Notification.permission === 'default') {
-        Notification.requestPermission().then(permission => {
+        Notification.requestPermission().then((permission) => {
           this.notificationsEnabled = permission === 'granted';
         });
       } else if (Notification.permission === 'granted') {
@@ -478,14 +526,22 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     }
   }
 
-  private showNotification(title: string, body: string, studentName?: string): void {
-    if (this.notificationsEnabled && 'Notification' in window && Notification.permission === 'granted') {
+  private showNotification(
+    title: string,
+    body: string,
+    studentName?: string
+  ): void {
+    if (
+      this.notificationsEnabled &&
+      'Notification' in window &&
+      Notification.permission === 'granted'
+    ) {
       const notification = new Notification(title, {
         body: body,
         icon: './assets/siyah-turuncu.png',
         badge: './assets/siyah-turuncu.png',
         tag: 'new-message',
-        requireInteraction: true
+        requireInteraction: true,
       });
 
       notification.onclick = () => {
@@ -494,7 +550,9 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
 
         // If student name is provided, select that student
         if (studentName) {
-          const student = this.students.find(s => s.adi_soyadi === studentName);
+          const student = this.students.find(
+            (s) => s.adi_soyadi === studentName
+          );
           if (student) {
             this.selectStudent(student);
           }
@@ -518,7 +576,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
   private groupMessagesByStudent(): void {
     this.groupedMessages = {};
 
-    this.allMessages.forEach(message => {
+    this.allMessages.forEach((message) => {
       if (!this.groupedMessages[message.ogrenci_id]) {
         this.groupedMessages[message.ogrenci_id] = [];
       }
@@ -526,9 +584,11 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     });
 
     // Sort messages within each group by date (newest first)
-    Object.keys(this.groupedMessages).forEach(studentId => {
-      this.groupedMessages[+studentId].sort((a, b) => 
-        new Date(b.gonderim_tarihi).getTime() - new Date(a.gonderim_tarihi).getTime()
+    Object.keys(this.groupedMessages).forEach((studentId) => {
+      this.groupedMessages[+studentId].sort(
+        (a, b) =>
+          new Date(b.gonderim_tarihi).getTime() -
+          new Date(a.gonderim_tarihi).getTime()
       );
     });
 
@@ -537,7 +597,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
   }
 
   getGroupedStudentIds(): number[] {
-    return Object.keys(this.groupedMessages).map(id => +id);
+    return Object.keys(this.groupedMessages).map((id) => +id);
   }
 
   getLatestMessageForStudent(studentId: number): SoruMesaj | null {
@@ -551,7 +611,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
   }
 
   getStudentName(studentId: number): string {
-    const student = this.students.find(s => s.id === studentId);
+    const student = this.students.find((s) => s.id === studentId);
     if (student) return student.adi_soyadi;
 
     const messages = this.groupedMessages[studentId];
@@ -563,7 +623,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
   }
 
   selectStudentFromGroupedMessage(studentId: number): void {
-    let student = this.students.find(s => s.id === studentId);
+    let student = this.students.find((s) => s.id === studentId);
 
     if (!student) {
       // If student not found in students list, create a temporary student object
@@ -572,14 +632,17 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
         id: studentId,
         adi_soyadi: studentName,
         email: '',
-        grubu: ''
+        grubu: '',
       };
     }
 
     this.selectStudent(student);
   }
 
-  private showToastNotification(message: string, type: 'success' | 'info' | 'warning' | 'error' = 'info'): void {
+  private showToastNotification(
+    message: string,
+    type: 'success' | 'info' | 'warning' | 'error' = 'info'
+  ): void {
     this.toastMessage = message;
     this.toastType = type;
     this.showToast = true;
@@ -596,18 +659,22 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
 
   private checkForNewMessages(): void {
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.getTokenFromStorage()}`,
-      'Content-Type': 'application/json'
+      Authorization: `Bearer ${this.getTokenFromStorage()}`,
+      'Content-Type': 'application/json',
     });
 
-    this.http.get<any>(`${this.apiBaseUrl}/soru_mesajlari.php`, { headers })
+    this.http
+      .get<any>(`${this.apiBaseUrl}/soru_mesajlari.php`, { headers })
       .subscribe({
         next: (response) => {
           if (response.success) {
             const newMessages = response.data || [];
 
             // Check if there are new messages
-            if (this.lastMessageCount > 0 && newMessages.length > this.lastMessageCount) {
+            if (
+              this.lastMessageCount > 0 &&
+              newMessages.length > this.lastMessageCount
+            ) {
               const latestMessage = newMessages[0]; // Assuming newest first
               const studentName = latestMessage.ogrenci_adi || 'Bir öğrenci';
 
@@ -619,7 +686,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
 
               // Also show browser notification if enabled
               this.showNotification(
-                'Yeni Mesaj!', 
+                'Yeni Mesaj!',
                 `${studentName} size yeni bir mesaj gönderdi.`,
                 studentName
               );
@@ -632,8 +699,11 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
               this.allMessages = newMessages;
 
               // Fix image URLs
-              this.allMessages.forEach(message => {
-                if (message.resim_url && !message.resim_url.startsWith('http')) {
+              this.allMessages.forEach((message) => {
+                if (
+                  message.resim_url &&
+                  !message.resim_url.startsWith('http')
+                ) {
                   if (!message.resim_url.startsWith('./')) {
                     message.resim_url = './' + message.resim_url;
                   }
@@ -647,7 +717,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
         },
         error: (error) => {
           console.error('Background message check error:', error);
-        }
+        },
       });
   }
 
@@ -656,7 +726,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
 
     if (enabled && 'Notification' in window) {
       if (Notification.permission === 'default') {
-        Notification.requestPermission().then(permission => {
+        Notification.requestPermission().then((permission) => {
           this.notificationsEnabled = permission === 'granted';
           if (!this.notificationsEnabled) {
             event.target.checked = false;
@@ -702,27 +772,32 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
   // Mesajı okundu olarak işaretle
   markMessageAsRead(messageId: number): void {
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.getTokenFromStorage()}`,
-      'Content-Type': 'application/json'
+      Authorization: `Bearer ${this.getTokenFromStorage()}`,
+      'Content-Type': 'application/json',
     });
 
     const payload = {
       mesaj_id: messageId,
-      okundu: true
+      okundu: true,
     };
 
-    this.http.post<any>(`${this.apiBaseUrl}/mesaj_okundu_isaretle.php`, payload, { headers })
+    this.http
+      .post<any>(`${this.apiBaseUrl}/mesaj_okundu_isaretle.php`, payload, {
+        headers,
+      })
       .subscribe({
         next: (response) => {
           if (response.success) {
             // Mesajı yerel olarak da okundu olarak işaretle
-            const message = this.studentMessages.find(m => m.id === messageId);
+            const message = this.studentMessages.find(
+              (m) => m.id === messageId
+            );
             if (message) {
               message.okundu = true;
             }
 
             // Tüm mesajlar listesinde de güncelle
-            const allMessage = this.allMessages.find(m => m.id === messageId);
+            const allMessage = this.allMessages.find((m) => m.id === messageId);
             if (allMessage) {
               allMessage.okundu = true;
             }
@@ -730,17 +805,18 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
         },
         error: (error) => {
           console.error('Mesaj okundu işaretlenirken hata:', error);
-        }
+        },
       });
   }
 
   // Öğrenci seçildiğinde o öğrencinin okunmamış mesajlarını okundu olarak işaretle
   markStudentMessagesAsRead(studentId: number): void {
     const unreadMessages = this.studentMessages.filter(
-      m => m.ogrenci_id === studentId && m.gonderen_tip === 'ogrenci' && !m.okundu
+      (m) =>
+        m.ogrenci_id === studentId && m.gonderen_tip === 'ogrenci' && !m.okundu
     );
 
-    unreadMessages.forEach(message => {
+    unreadMessages.forEach((message) => {
       this.markMessageAsRead(message.id!);
     });
   }
@@ -753,10 +829,12 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     }
 
     const query = this.studentSearchQuery.toLowerCase().trim();
-    this.filteredStudentIds = this.getGroupedStudentIds().filter(studentId => {
-      const studentName = this.getStudentName(studentId).toLowerCase();
-      return studentName.includes(query);
-    });
+    this.filteredStudentIds = this.getGroupedStudentIds().filter(
+      (studentId) => {
+        const studentName = this.getStudentName(studentId).toLowerCase();
+        return studentName.includes(query);
+      }
+    );
   }
 
   getFilteredStudentIds(): number[] {
@@ -776,6 +854,6 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
   }
 
   getReadMessageCount(): number {
-    return this.studentMessages.filter(m => m.okundu).length;
+    return this.studentMessages.filter((m) => m.okundu).length;
   }
 }

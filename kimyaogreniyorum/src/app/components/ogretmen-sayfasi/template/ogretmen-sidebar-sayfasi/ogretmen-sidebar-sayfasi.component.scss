@@ -67,7 +67,7 @@ a{
     &.closed {
         width: 50px;
     .toggle-button{
-        z-index: 12;
+        z-index: 999999;
         margin-left: 35px;
     }
     p {
@@ -136,7 +136,7 @@ a{
 
 
 .toggle-button{
-    z-index: 12;
+    z-index: 9999999;
     position: fixed;
     background-color: #ffffff;
     margin-left: 215px;
@@ -167,7 +167,7 @@ a{
 
     }
     .toggle-button{
-        z-index: 12;
+        z-index: 999999;
         margin-left: 215px;
         margin-top: 25px;
         display: block;
