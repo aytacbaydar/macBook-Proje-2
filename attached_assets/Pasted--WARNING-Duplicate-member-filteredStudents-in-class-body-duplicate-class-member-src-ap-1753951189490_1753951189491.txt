@@ -1,0 +1,226 @@
+▲ [WARNING] Duplicate member "filteredStudents" in class body [duplicate-class-member]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:559:8:
+      559 │     get filteredStudents(): User[] {
+          ╵         ~~~~~~~~~~~~~~~~
+
+  The original member "filteredStudents" is here:
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:443:8:
+      443 │     get filteredStudents(): User[] {
+          ╵         ~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:149:58:
+      149 │ ...ator" [class.active]="student.aktif === 1" [class.inactive]="s...
+          ╵                          ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:149:97:
+      149 │ ...ve]="student.aktif === 1" [class.inactive]="student.aktif === 0">
+          ╵                                                ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:150:58:
+      150 │ ...i-check-circle-fill]="student.aktif === 1" [class.bi-x-circle-...
+          ╵                          ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:150:105:
+      150 │ ....aktif === 1" [class.bi-x-circle-fill]="student.aktif === 0"></i>
+          ╵                                            ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:167:57:
+      167 │ ...ass.bi-person-check]="student.aktif === 0" [class.bi-person-x]...
+          ╵                          ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:167:99:
+      167 │ ...udent.aktif === 0" [class.bi-person-x]="student.aktif === 1"></i>
+          ╵                                            ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:168:21:
+      168 │                   {{ student.aktif === 1 ? 'Pasif Yap' : 'Aktif Y...
+          ╵                      ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:285:53:
+      285 │ ...adge" [class.active]="student.aktif === 1" [class.inactive]="s...
+          ╵                          ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:285:92:
+      285 │ ...ve]="student.aktif === 1" [class.inactive]="student.aktif === 0">
+          ╵                                                ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:286:56:
+      286 │ ...i-check-circle-fill]="student.aktif === 1" [class.bi-x-circle-...
+          ╵                          ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:286:103:
+      286 │ ....aktif === 1" [class.bi-x-circle-fill]="student.aktif === 0"></i>
+          ╵                                            ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:287:15:
+      287 │             {{ student.aktif === 1 ? 'Aktif' : 'Pasif' }}
+          ╵                ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:307:23:
+      307 │               [title]="student.aktif === 1 ? 'Pasif Yap' : 'Aktif...
+          ╵                        ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:308:53:
+      308 │ ...ass.bi-person-check]="student.aktif === 0" [class.bi-person-x]...
+          ╵                          ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG7: This comparison appears to be unintentional because the types 'boolean' and 'number' have no overlap. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:308:95:
+      308 │ ...udent.aktif === 0" [class.bi-person-x]="student.aktif === 1"></i>
+          ╵                                            ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2300: Duplicate identifier 'filteredStudents'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:88:6:
+      88 │   get filteredStudents(): User[] {
+         ╵       ~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2300: Duplicate identifier 'filteredStudents'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:227:6:
+      227 │   get filteredStudents(): User[] {
+          ╵       ~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2300: Duplicate identifier 'filteredStudents'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:227:6:
+      227 │   get filteredStudents(): User[] {
