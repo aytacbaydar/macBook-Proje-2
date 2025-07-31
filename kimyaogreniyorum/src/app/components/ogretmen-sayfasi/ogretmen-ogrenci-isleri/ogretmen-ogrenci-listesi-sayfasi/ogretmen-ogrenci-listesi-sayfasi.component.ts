@@ -62,13 +62,7 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
 
   // Pagination özelliklerini ekle
   currentPage = 1;
-  itemsPerPage = 15;
   visiblePages: (number | string)[] = [];
-
-  // Statistics properties
-  get totalStudents(): number {
-    return this.students.length;
-  }
 
   get activeStudentsCount(): number {
     return this.students.filter(student => !!student.aktif).length;
@@ -128,13 +122,8 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
     return filtered;
   }
 
-  // Pagination için gerekli hesaplamalar
-  get totalStudents(): number {
-    return this.filteredStudents.length;
-  }
-
   get totalPages(): number {
-    return Math.ceil(this.totalStudents / this.itemsPerPage);
+    return Math.ceil(this.filteredStudents.length / this.itemsPerPage);
   }
 
   // Sayfalanmış öğrenci listesi
