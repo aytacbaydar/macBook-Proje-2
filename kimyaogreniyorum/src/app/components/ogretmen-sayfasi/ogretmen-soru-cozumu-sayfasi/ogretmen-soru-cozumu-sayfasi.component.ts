@@ -1,4 +1,3 @@
-
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
@@ -39,12 +38,12 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
   allMessages: SoruMesaj[] = [];
   studentMessages: SoruMesaj[] = [];
   groupedMessages: { [studentId: number]: SoruMesaj[] } = {};
-  
+
   // Message sending
   yeniMesaj: string = '';
   selectedFile: File | null = null;
   previewUrl: string | null = null;
-  
+
   // Loading states
   isLoading: boolean = false;
   isLoadingMessages: boolean = false;
@@ -202,7 +201,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
           if (response.success) {
             this.allMessages = response.data || [];
             console.log('Loaded messages count:', this.allMessages.length);
-            
+
             // Fix image URLs
             this.allMessages.forEach(message => {
               if (message.resim_url && !message.resim_url.startsWith('http')) {
@@ -233,7 +232,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     this.selectedStudent = student;
     this.viewMode = 'student';
     this.loadStudentMessages(student.id);
-    
+
     // Öğrenci seçildiğinde okunmamış mesajları okundu olarak işaretle
     setTimeout(() => {
       this.markStudentMessagesAsRead(student.id);
@@ -257,7 +256,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
           console.log('Student messages response:', response);
           if (response.success) {
             this.studentMessages = response.data || [];
-            
+
             // Fix image URLs
             this.studentMessages.forEach(message => {
               if (message.resim_url && !message.resim_url.startsWith('http')) {
@@ -266,7 +265,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
                 }
               }
             });
-            
+
             setTimeout(() => this.scrollToBottom(), 100);
           } else {
             this.error = response.message || response.error || 'Mesajlar yüklenemedi';
@@ -293,7 +292,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     formData.append('ogrenci_id', this.selectedStudent.id.toString());
     formData.append('mesaj_metni', this.yeniMesaj);
     formData.append('gonderen_tip', 'ogretmen');
-    
+
     // Öğretmen adını al
     const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
     let ogretmenAdi = 'Öğretmen';
@@ -314,7 +313,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     // For FormData, don't set Content-Type header - let browser set it
     const token = localStorage.getItem('token');
     let authToken = token;
-    
+
     if (!authToken) {
       const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
       if (userStr) {
@@ -454,7 +453,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     if (!this.studentSearchQuery) {
       return this.students;
     }
-    
+
     const query = this.studentSearchQuery.toLowerCase();
     return this.students.filter(student => 
       student.adi_soyadi.toLowerCase().includes(query) ||
@@ -496,7 +495,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
       notification.onclick = () => {
         window.focus();
         notification.close();
-        
+
         // If student name is provided, select that student
         if (studentName) {
           const student = this.students.find(s => s.adi_soyadi === studentName);
@@ -522,7 +521,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
 
   private groupMessagesByStudent(): void {
     this.groupedMessages = {};
-    
+
     this.allMessages.forEach(message => {
       if (!this.groupedMessages[message.ogrenci_id]) {
         this.groupedMessages[message.ogrenci_id] = [];
@@ -558,18 +557,18 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
   getStudentName(studentId: number): string {
     const student = this.students.find(s => s.id === studentId);
     if (student) return student.adi_soyadi;
-    
+
     const messages = this.groupedMessages[studentId];
     if (messages && messages.length > 0) {
       return messages[0].ogrenci_adi || 'Bilinmeyen Öğrenci';
     }
-    
+
     return 'Bilinmeyen Öğrenci';
   }
 
   selectStudentFromGroupedMessage(studentId: number): void {
     let student = this.students.find(s => s.id === studentId);
-    
+
     if (!student) {
       // If student not found in students list, create a temporary student object
       const studentName = this.getStudentName(studentId);
@@ -580,7 +579,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
         grubu: ''
       };
     }
-    
+
     this.selectStudent(student);
   }
 
@@ -588,7 +587,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
     this.toastMessage = message;
     this.toastType = type;
     this.showToast = true;
-    
+
     // Auto hide after 5 seconds
     setTimeout(() => {
       this.showToast = false;
@@ -610,18 +609,18 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
         next: (response) => {
           if (response.success) {
             const newMessages = response.data || [];
-            
+
             // Check if there are new messages
             if (this.lastMessageCount > 0 && newMessages.length > this.lastMessageCount) {
               const latestMessage = newMessages[0]; // Assuming newest first
               const studentName = latestMessage.ogrenci_adi || 'Bir öğrenci';
-              
+
               // Show toast notification
               this.showToastNotification(
                 `${studentName} size yeni bir mesaj gönderdi!`,
                 'info'
               );
-              
+
               // Also show browser notification if enabled
               this.showNotification(
                 'Yeni Mesaj!', 
@@ -629,13 +628,13 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
                 studentName
               );
             }
-            
+
             this.lastMessageCount = newMessages.length;
-            
+
             // Update messages only if there are new ones
             if (newMessages.length !== this.allMessages.length) {
               this.allMessages = newMessages;
-              
+
               // Fix image URLs
               this.allMessages.forEach(message => {
                 if (message.resim_url && !message.resim_url.startsWith('http')) {
@@ -658,7 +657,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
 
   toggleNotifications(event: any): void {
     const enabled = event.target.checked;
-    
+
     if (enabled && 'Notification' in window) {
       if (Notification.permission === 'default') {
         Notification.requestPermission().then(permission => {
@@ -725,7 +724,7 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
             if (message) {
               message.okundu = true;
             }
-            
+
             // Tüm mesajlar listesinde de güncelle
             const allMessage = this.allMessages.find(m => m.id === messageId);
             if (allMessage) {
@@ -778,5 +777,13 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
 
   toggleAllStudentsView(): void {
     this.showAllStudents = !this.showAllStudents;
+  }
+
+  trackByMessageId(index: number, message: SoruMesaj): number {
+    return message.id || index;
+  }
+
+  getReadMessageCount(): number {
+    return this.studentMessages.filter(m => m.okundu).length;
   }
 }
