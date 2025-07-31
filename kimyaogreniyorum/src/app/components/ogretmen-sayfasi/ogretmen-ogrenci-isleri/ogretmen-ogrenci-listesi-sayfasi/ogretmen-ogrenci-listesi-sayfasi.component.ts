@@ -60,6 +60,10 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
   selectedStatus = '';
   viewMode: 'grid' | 'list' = 'grid';
 
+  // Pagination properties
+  currentPage = 1;
+  itemsPerPage = 15;
+
   // Statistics properties
   get totalStudents(): number {
     return this.students.length;
@@ -121,6 +125,17 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
     }
 
     return filtered;
+  }
+
+  // Pagination getters
+  get totalPages(): number {
+    return Math.ceil(this.filteredStudents.length / this.itemsPerPage);
+  }
+
+  get paginatedStudents(): User[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    return this.filteredStudents.slice(startIndex, endIndex);
   }
 
   constructor(private http: HttpClient, private router: Router) {}
@@ -618,7 +633,7 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
   // Filter methods
   filterStudents(): void {
     // Filtreleme otomatik olarak get filteredStudents() ile yapılıyor
-    this.currentStudentPage = 1; // Filtreleme sonrası ilk sayfaya dön
+    this.currentPage = 1; // Filtreleme sonrası ilk sayfaya dön
   }
 
   clearAllFilters(): void {
@@ -626,7 +641,59 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
     this.selectedGroup = '';
     this.selectedSchool = '';
     this.selectedStatus = '';
-    this.currentStudentPage = 1;
+    this.currentPage = 1;
+  }
+
+  // Pagination methods
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+
+  onItemsPerPageChange(): void {
+    this.currentPage = 1; // Sayfa başına öğe sayısı değiştiğinde ilk sayfaya dön
+  }
+
+  getPageNumbers(): (number | string)[] {
+    const pages: (number | string)[] = [];
+    const totalPages = this.totalPages;
+    const currentPage = this.currentPage;
+
+    if (totalPages <= 7) {
+      // Toplam sayfa sayısı 7 veya daha azsa tüm sayfaları göster
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      // İlk sayfa her zaman gösterilir
+      pages.push(1);
+
+      if (currentPage > 4) {
+        pages.push('...');
+      }
+
+      // Geçerli sayfa etrafındaki sayfalar
+      const start = Math.max(2, currentPage - 1);
+      const end = Math.min(totalPages - 1, currentPage + 1);
+
+      for (let i = start; i <= end; i++) {
+        if (!pages.includes(i)) {
+          pages.push(i);
+        }
+      }
+
+      if (currentPage < totalPages - 3) {
+        pages.push('...');
+      }
+
+      // Son sayfa her zaman gösterilir
+      if (!pages.includes(totalPages)) {
+        pages.push(totalPages);
+      }
+    }
+
+    return pages;
   }
 
   // Tracking function for ngFor performance
