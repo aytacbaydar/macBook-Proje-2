@@ -1,13 +1,26 @@
+
 <div class="chat-container">
-  <!-- Header -->
+  <!-- Enhanced Header -->
   <div class="chat-header">
     <div class="header-content">
-      <div class="back-button" *ngIf="viewMode === 'student'" (click)="backToAllMessages()">
-        <i class="bi bi-arrow-left"></i>
-      </div>
-      <div class="header-info">
-        <h3 *ngIf="viewMode === 'all'">Öğrenci Mesajları</h3>
-        <h3 *ngIf="viewMode === 'student' && selectedStudent">{{ selectedStudent.adi_soyadi }}</h3>
+      <div class="header-left">
+        <div class="back-button" *ngIf="viewMode === 'student'" (click)="backToAllMessages()">
+          <i class="bi bi-arrow-left"></i>
+        </div>
+        <div class="header-info">
+          <h3 *ngIf="viewMode === 'all'">
+            <i class="bi bi-chat-dots me-2"></i>
+            Öğrenci Mesajları
+          </h3>
+          <h3 *ngIf="viewMode === 'student' && selectedStudent">
+            <div class="student-header">
+              <img [src]="selectedStudent.avatar || getDefaultAvatar(selectedStudent.adi_soyadi)" 
+                   class="student-avatar-small" 
+                   [alt]="selectedStudent.adi_soyadi">
+              <span>{{ selectedStudent.adi_soyadi }}</span>
+            </div>
+          </h3>
+        </div>
       </div>
       <div class="header-actions">
         <div class="notification-toggle">
@@ -15,57 +28,82 @@
             <input type="checkbox" [checked]="notificationsEnabled" (change)="toggleNotifications($event)">
             <span class="slider"></span>
           </label>
-          <span class="notification-text">Bildirim</span>
+          <span class="notification-text">
+            <i class="bi bi-bell me-1"></i>
+            Bildirim
+          </span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Loading States -->
+  <!-- Enhanced Loading States -->
   <div class="loading-overlay" *ngIf="isLoading || isLoadingMessages || isLoadingStudents">
-    <div class="spinner"></div>
-    <p>Yükleniyor...</p>
+    <div class="loading-content">
+      <div class="spinner"></div>
+      <p>Yükleniyor...</p>
+    </div>
   </div>
 
-  <!-- Error Message -->
+  <!-- Enhanced Error Message -->
   <div class="error-message" *ngIf="error && !isLoading">
-    <i class="bi bi-exclamation-triangle"></i>
-    <p>{{ error }}</p>
-    <button class="retry-btn" (click)="loadAllMessages()">Tekrar Dene</button>
+    <div class="error-content">
+      <i class="bi bi-exclamation-triangle"></i>
+      <h4>Bir Hata Oluştu</h4>
+      <p>{{ error }}</p>
+      <button class="retry-btn" (click)="loadAllMessages()">
+        <i class="bi bi-arrow-clockwise me-2"></i>
+        Tekrar Dene
+      </button>
+    </div>
   </div>
 
-  <!-- Student Avatars Row -->
+  <!-- Enhanced Student Avatars Row -->
   <div class="student-avatars-container" *ngIf="viewMode === 'all' && !isLoading && !error && students.length > 0">
+    <div class="avatars-header">
+      <h6>
+        <i class="bi bi-people me-2"></i>
+        Hızlı Erişim
+      </h6>
+      <span class="student-count">{{ students.length }} öğrenci</span>
+    </div>
     <div class="avatars-scroll">
       <div class="student-avatar-item" 
            *ngFor="let student of students; trackBy: trackByStudentId"
            (click)="selectStudent(student)"
-           [title]="student.adi_soyadi">
-        <div class="avatar-wrapper" [class.has-unread]="getUnreadMessageCount(student.id) > 0">
+           [title]="student.adi_soyadi"
+           [class.has-unread]="getUnreadMessageCount(student.id) > 0">
+        <div class="avatar-wrapper">
           <img [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)" 
                [alt]="student.adi_soyadi" 
                class="student-avatar-img">
           <div class="unread-badge" *ngIf="getUnreadMessageCount(student.id) > 0">
             {{ getUnreadMessageCount(student.id) }}
           </div>
+          <div class="online-indicator"></div>
         </div>
         <span class="student-name-label">{{ student.adi_soyadi.split(' ')[0] }}</span>
       </div>
     </div>
   </div>
 
-  <!-- All Students Toggle Button -->
+  <!-- Enhanced All Students Toggle Button -->
   <div class="all-students-toggle" *ngIf="viewMode === 'all' && !isLoading && !error">
     <button class="toggle-all-students-btn" 
             (click)="toggleAllStudentsView()"
             [class.active]="showAllStudents">
-      <i class="bi bi-people-fill me-2"></i>
-      Tüm Öğrenciler ({{ students.length }})
-      <i class="bi" [class.bi-chevron-down]="!showAllStudents" [class.bi-chevron-up]="showAllStudents"></i>
+      <div class="btn-content">
+        <i class="bi bi-people-fill"></i>
+        <span>Tüm Öğrenciler</span>
+        <span class="count-badge">({{ students.length }})</span>
+      </div>
+      <i class="bi chevron-icon" 
+         [class.bi-chevron-down]="!showAllStudents" 
+         [class.bi-chevron-up]="showAllStudents"></i>
     </button>
   </div>
 
-  <!-- Search Bar -->
+  <!-- Enhanced Search Bar -->
   <div class="search-container" *ngIf="viewMode === 'all' && !isLoading && !error && showAllStudents">
     <div class="search-input-group">
       <i class="bi bi-search search-icon"></i>
@@ -82,35 +120,56 @@
     </div>
   </div>
 
-  <!-- All Students List -->
+  <!-- Enhanced Student List -->
   <div class="student-list" *ngIf="viewMode === 'all' && !isLoading && !error">
     <!-- Students with messages -->
-    <div class="student-item" 
-         *ngFor="let studentId of getFilteredStudentIds(); trackBy: trackByStudentIdNumber"
-         (click)="selectStudentFromGroupedMessage(studentId)">
-      <div class="student-avatar">
-        <img [src]="getStudentById(studentId)?.avatar || getDefaultAvatar(getStudentName(studentId))" 
-             alt="Avatar" class="avatar-img">
+    <div class="message-section" *ngIf="getFilteredStudentIds().length > 0">
+      <div class="section-header">
+        <h6>
+          <i class="bi bi-chat-text me-2"></i>
+          Mesajlaşmalar
+        </h6>
       </div>
-      <div class="student-info">
-        <div class="student-name">{{ getStudentName(studentId) }}</div>
-        <div class="last-message" *ngIf="getLatestMessageForStudent(studentId) as lastMessage">
-          <span class="message-preview">{{ lastMessage.mesaj_metni | slice:0:50 }}{{ lastMessage.mesaj_metni.length > 50 ? '...' : '' }}</span>
-          <span class="message-time">{{ formatDate(lastMessage.gonderim_tarihi) }}</span>
+      <div class="student-item" 
+           *ngFor="let studentId of getFilteredStudentIds(); trackBy: trackByStudentIdNumber"
+           (click)="selectStudentFromGroupedMessage(studentId)"
+           [class.has-unread]="getUnreadMessageCount(studentId) > 0">
+        <div class="student-avatar">
+          <img [src]="getStudentById(studentId)?.avatar || getDefaultAvatar(getStudentName(studentId))" 
+               alt="Avatar" class="avatar-img">
+          <div class="online-status" *ngIf="getUnreadMessageCount(studentId) > 0"></div>
         </div>
-      </div>
-      <div class="student-badges">
-        <div class="message-count" *ngIf="getMessageCountForStudent(studentId) > 0">
-          {{ getMessageCountForStudent(studentId) }}
+        <div class="student-info">
+          <div class="student-name">{{ getStudentName(studentId) }}</div>
+          <div class="last-message" *ngIf="getLatestMessageForStudent(studentId) as lastMessage">
+            <div class="message-preview">
+              <i class="bi bi-chat-right-text me-1" *ngIf="lastMessage.gonderen_tip === 'ogrenci'"></i>
+              <i class="bi bi-chat-left-text me-1" *ngIf="lastMessage.gonderen_tip === 'ogretmen'"></i>
+              <span>{{ lastMessage.mesaj_metni | slice:0:50 }}{{ lastMessage.mesaj_metni.length > 50 ? '...' : '' }}</span>
+            </div>
+            <span class="message-time">{{ formatDate(lastMessage.gonderim_tarihi) }}</span>
+          </div>
         </div>
-        <div class="unread-count" *ngIf="getUnreadMessageCount(studentId) > 0">
-          {{ getUnreadMessageCount(studentId) }}
+        <div class="student-badges">
+          <div class="message-count">
+            <i class="bi bi-chat-dots me-1"></i>
+            {{ getMessageCountForStudent(studentId) }}
+          </div>
+          <div class="unread-count" *ngIf="getUnreadMessageCount(studentId) > 0">
+            {{ getUnreadMessageCount(studentId) }}
+          </div>
         </div>
       </div>
     </div>
 
     <!-- All students (including those without messages) -->
     <div class="students-section" *ngIf="showAllStudents">
+      <div class="section-header">
+        <h6>
+          <i class="bi bi-people me-2"></i>
+          Tüm Öğrenciler
+        </h6>
+      </div>
       <div class="all-students-list">
         <div class="student-item" 
              *ngFor="let student of getFilteredStudents(); trackBy: trackByStudentId"
@@ -123,12 +182,19 @@
           <div class="student-info">
             <div class="student-name">{{ student.adi_soyadi }}</div>
             <div class="student-details">
-              <span class="student-email">{{ student.email }}</span>
-              <span class="student-group" *ngIf="student.grubu">{{ student.grubu }}</span>
+              <div class="detail-item">
+                <i class="bi bi-envelope me-1"></i>
+                <span class="student-email">{{ student.email }}</span>
+              </div>
+              <div class="detail-item" *ngIf="student.grubu">
+                <i class="bi bi-collection me-1"></i>
+                <span class="student-group">{{ student.grubu }}</span>
+              </div>
             </div>
           </div>
           <div class="student-badges">
             <div class="message-count" *ngIf="getStudentMessageCount(student.id) > 0">
+              <i class="bi bi-chat-dots me-1"></i>
               {{ getStudentMessageCount(student.id) }}
             </div>
             <div class="unread-count" *ngIf="getUnreadMessageCount(student.id) > 0">
@@ -143,9 +209,23 @@
     </div>
   </div>
 
-  <!-- Student Chat View -->
+  <!-- Enhanced Student Chat View -->
   <div class="chat-view" *ngIf="viewMode === 'student' && selectedStudent && !isLoading && !error">
-    <!-- Messages Container -->
+    <!-- Chat Info Bar -->
+    <div class="chat-info-bar">
+      <div class="chat-stats">
+        <span class="stat-item">
+          <i class="bi bi-chat-text me-1"></i>
+          {{ studentMessages.length }} mesaj
+        </span>
+        <span class="stat-item">
+          <i class="bi bi-eye me-1"></i>
+          {{ studentMessages.filter(m => m.okundu).length }} okundu
+        </span>
+      </div>
+    </div>
+
+    <!-- Enhanced Messages Container -->
     <div class="messages-container" #messageContainer>
       <div class="message-wrapper" 
            *ngFor="let message of studentMessages; trackBy: trackByMessageId"
@@ -160,36 +240,47 @@
 
           <!-- Image Message -->
           <div class="message-image" *ngIf="message.resim_url">
-            <img [src]="message.resim_url" 
-                 [alt]="getImageFileName(message.resim_url)"
-                 (click)="openImageModal(message.resim_url)">
+            <div class="image-container">
+              <img [src]="message.resim_url" 
+                   [alt]="getImageFileName(message.resim_url)"
+                   (click)="openImageModal(message.resim_url)">
+              <div class="image-overlay">
+                <i class="bi bi-zoom-in"></i>
+              </div>
+            </div>
           </div>
 
           <!-- Message Info -->
           <div class="message-info">
             <span class="message-time">{{ formatDate(message.gonderim_tarihi) }}</span>
-            <span class="message-sender" *ngIf="message.gonderen_tip === 'ogrenci'">{{ message.gonderen_adi }}</span>
-            <i class="bi bi-check-all message-status" 
-               *ngIf="message.gonderen_tip === 'ogretmen'"
-               [class.read]="message.okundu"></i>
+            <span class="message-sender" *ngIf="message.gonderen_tip === 'ogrenci'">
+              <i class="bi bi-person me-1"></i>
+              {{ message.gonderen_adi }}
+            </span>
+            <div class="message-status" *ngIf="message.gonderen_tip === 'ogretmen'">
+              <i class="bi bi-check-all" [class.read]="message.okundu"></i>
+              <span class="status-text">{{ message.okundu ? 'Okundu' : 'Gönderildi' }}</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Message Input -->
+    <!-- Enhanced Message Input -->
     <div class="message-input-container">
       <!-- File Preview -->
       <div class="file-preview" *ngIf="previewUrl">
-        <img [src]="previewUrl" alt="Seçilen resim">
-        <button class="remove-file" (click)="removeFile()">
-          <i class="bi bi-x"></i>
-        </button>
+        <div class="preview-content">
+          <img [src]="previewUrl" alt="Seçilen resim">
+          <button class="remove-file" (click)="removeFile()">
+            <i class="bi bi-x"></i>
+          </button>
+        </div>
       </div>
 
       <!-- Input Area -->
       <div class="input-area">
-        <button class="attach-btn" (click)="fileInput.click()">
+        <button class="attach-btn" (click)="fileInput.click()" title="Dosya ekle">
           <i class="bi bi-paperclip"></i>
         </button>
 
@@ -199,15 +290,21 @@
                accept="image/*" 
                style="display: none">
 
-        <textarea class="message-input" 
-                  [(ngModel)]="yeniMesaj"
-                  (keydown.enter)="handleEnterKeyPress($event)"
-                  placeholder="Mesaj yazın... (Ctrl+Enter ile gönder)"
-                  rows="1"></textarea>
+        <div class="message-input-wrapper">
+          <textarea class="message-input" 
+                    [(ngModel)]="yeniMesaj"
+                    (keydown.enter)="handleEnterKeyPress($event)"
+                    placeholder="Mesaj yazın... (Ctrl+Enter ile gönder)"
+                    rows="1"></textarea>
+          <div class="input-hint" *ngIf="!yeniMesaj.trim() && !selectedFile">
+            Ctrl+Enter ile hızlı gönderim
+          </div>
+        </div>
 
         <button class="send-btn" 
                 (click)="sendMessage()"
-                [disabled]="isSending || (!yeniMesaj.trim() && !selectedFile)">
+                [disabled]="isSending || (!yeniMesaj.trim() && !selectedFile)"
+                [title]="isSending ? 'Gönderiliyor...' : 'Mesajı gönder'">
           <i class="bi bi-send" *ngIf="!isSending"></i>
           <div class="spinner-small" *ngIf="isSending"></div>
         </button>
@@ -215,23 +312,51 @@
     </div>
   </div>
 
-  <!-- Empty State -->
+  <!-- Enhanced Empty State -->
   <div class="empty-state" *ngIf="viewMode === 'all' && getFilteredStudentIds().length === 0 && !isLoading && !error">
-    <i class="bi bi-chat-dots" *ngIf="!studentSearchQuery"></i>
-    <i class="bi bi-search" *ngIf="studentSearchQuery"></i>
-    <h3 *ngIf="!studentSearchQuery">Henüz mesaj yok</h3>
-    <h3 *ngIf="studentSearchQuery">Arama sonucu bulunamadı</h3>
-    <p *ngIf="!studentSearchQuery">Öğrencilerinizden mesaj geldiğinde burada görünecek.</p>
-    <p *ngIf="studentSearchQuery">Farklı bir arama terimi deneyin.</p>
-  </div>
-
-  <!-- Image Modal -->
-  <div class="image-modal" *ngIf="showImageModal" (click)="closeImageModal()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <img [src]="selectedImageUrl" [alt]="getImageFileName(selectedImageUrl)">
-      <button class="close-modal" (click)="closeImageModal()">
-        <i class="bi bi-x"></i>
+    <div class="empty-content">
+      <div class="empty-icon">
+        <i class="bi bi-chat-dots" *ngIf="!studentSearchQuery"></i>
+        <i class="bi bi-search" *ngIf="studentSearchQuery"></i>
+      </div>
+      <h3 *ngIf="!studentSearchQuery">Henüz mesaj yok</h3>
+      <h3 *ngIf="studentSearchQuery">Arama sonucu bulunamadı</h3>
+      <p *ngIf="!studentSearchQuery">Öğrencilerinizden mesaj geldiğinde burada görünecek.</p>
+      <p *ngIf="studentSearchQuery">Farklı bir arama terimi deneyin.</p>
+      <button class="refresh-btn" (click)="loadAllMessages()" *ngIf="!studentSearchQuery">
+        <i class="bi bi-arrow-clockwise me-2"></i>
+        Yenile
       </button>
     </div>
+  </div>
+
+  <!-- Enhanced Image Modal -->
+  <div class="image-modal" *ngIf="showImageModal" (click)="closeImageModal()">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h5>{{ getImageFileName(selectedImageUrl) }}</h5>
+        <button class="close-modal" (click)="closeImageModal()">
+          <i class="bi bi-x"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <img [src]="selectedImageUrl" [alt]="getImageFileName(selectedImageUrl)">
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-notification" *ngIf="showToast" [class]="'toast-' + toastType">
+    <div class="toast-content">
+      <i class="bi bi-info-circle" *ngIf="toastType === 'info'"></i>
+      <i class="bi bi-check-circle" *ngIf="toastType === 'success'"></i>
+      <i class="bi bi-exclamation-triangle" *ngIf="toastType === 'warning'"></i>
+      <i class="bi bi-x-circle" *ngIf="toastType === 'error'"></i>
+      <span>{{ toastMessage }}</span>
+    </div>
+    <button class="toast-close" (click)="hideToast()">
+      <i class="bi bi-x"></i>
+    </button>
   </div>
 </div>
