@@ -146,8 +146,8 @@
                 <i class="bi bi-zoom-in"></i>
               </div>
             </div>
-            <div class="status-indicator" [class.active]="student.aktif === 1" [class.inactive]="student.aktif === 0">
-              <i class="bi" [class.bi-check-circle-fill]="student.aktif === 1" [class.bi-x-circle-fill]="student.aktif === 0"></i>
+            <div class="status-indicator" [class.active]="student.aktif" [class.inactive]="!student.aktif">
+              <i class="bi" [class.bi-check-circle-fill]="student.aktif" [class.bi-x-circle-fill]="!student.aktif"></i>
             </div>
           </div>
           <div class="card-actions">
@@ -164,8 +164,8 @@
                 </a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item text-warning" href="#" (click)="toggleStudentStatus(student)">
-                  <i class="bi" [class.bi-person-check]="student.aktif === 0" [class.bi-person-x]="student.aktif === 1"></i> 
-                  {{ student.aktif === 1 ? 'Pasif Yap' : 'Aktif Yap' }}
+                  <i class="bi" [class.bi-person-check]="!student.aktif" [class.bi-person-x]="student.aktif"></i> 
+                  {{ student.aktif ? 'Pasif Yap' : 'Aktif Yap' }}
                 </a></li>
               </ul>
             </div>
@@ -282,10 +282,9 @@
           <span class="fee">{{ formatCurrency(student.ucret) }}</span>
         </div>
         <div class="list-col status-col">
-          <span class="status-badge" [class.active]="student.aktif === 1" [class.inactive]="student.aktif === 0">
-            <i class="bi" [class.bi-check-circle-fill]="student.aktif === 1" [class.bi-x-circle-fill]="student.aktif === 0"></i>
-            {{ student.aktif === 1 ? 'Aktif' : 'Pasif' }}
-          </span>
+          <span class="status-badge" [class.active]="student.aktif" [class.inactive]="!student.aktif">
+            <i class="bi" [class.bi-check-circle-fill]="student.aktif" [class.bi-x-circle-fill]="!student.aktif"></i>
+            {{ student.aktif ? 'Aktif' : 'Pasif' }}</span>
         </div>
         <div class="list-col actions-col">
           <div class="action-buttons">
@@ -304,8 +303,8 @@
             <button 
               (click)="toggleStudentStatus(student)"
               class="action-btn toggle"
-              [title]="student.aktif === 1 ? 'Pasif Yap' : 'Aktif Yap'">
-              <i class="bi" [class.bi-person-check]="student.aktif === 0" [class.bi-person-x]="student.aktif === 1"></i>
+              [title]="student.aktif ? 'Pasif Yap' : 'Aktif Yap'">
+              <i class="bi" [class.bi-person-check]="!student.aktif" [class.bi-person-x]="student.aktif"></i>
             </button>
           </div>
         </div>

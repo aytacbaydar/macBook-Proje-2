@@ -66,11 +66,11 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
   }
 
   get activeStudentsCount(): number {
-    return this.students.filter(student => student.aktif === true || student.aktif === 1).length;
+    return this.students.filter(student => !!student.aktif).length;
   }
 
   get inactiveStudentsCount(): number {
-    return this.students.filter(student => student.aktif === false || student.aktif === 0).length;
+    return this.students.filter(student => !student.aktif).length;
   }
 
   // Unique values for filters
@@ -114,9 +114,9 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
     // Status filter
     if (this.selectedStatus) {
       if (this.selectedStatus === 'active') {
-        filtered = filtered.filter(student => student.aktif === true || student.aktif === 1);
+        filtered = filtered.filter(student => !!student.aktif);
       } else if (this.selectedStatus === 'inactive') {
-        filtered = filtered.filter(student => student.aktif === false || student.aktif === 0);
+        filtered = filtered.filter(student => !student.aktif);
       }
     }
 
@@ -473,11 +473,11 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
 
   // İstatistik fonksiyonları
   getActiveStudents(): number {
-    return this.students.filter((student) => student.aktif === true || student.aktif === 1).length;
+    return this.students.filter((student) => !!student.aktif).length;
   }
 
   getInactiveStudents(): number {
-    return this.students.filter((student) => student.aktif === false || student.aktif === 0).length;
+    return this.students.filter((student) => !student.aktif).length;
   }
 
   getStudentsWaiting(): number {
@@ -662,12 +662,12 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
 
   // Helper method to check if student is active
   isStudentActive(student: User): boolean {
-    return student.aktif === true || student.aktif === 1;
+    return !!student.aktif;
   }
 
   // Helper method to check if student is inactive
   isStudentInactive(student: User): boolean {
-    return student.aktif === false || student.aktif === 0;
+    return !student.aktif;
   }
 
   // Helper method to get status text
@@ -684,7 +684,7 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
   toggleStudentStatus(student: User): void {
     const newStatus = !this.isStudentActive(student);
     const actionText = newStatus ? 'aktif' : 'pasif';
-    
+
     if (!confirm(`${student.adi_soyadi} adlı öğrenciyi ${actionText} yapmak istediğinizden emin misiniz?`)) {
       return;
     }
