@@ -66,11 +66,11 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
   }
 
   get activeStudentsCount(): number {
-    return this.students.filter(student => student.aktif).length;
+    return this.students.filter(student => student.aktif === true || student.aktif === 1).length;
   }
 
   get inactiveStudentsCount(): number {
-    return this.students.filter(student => !student.aktif).length;
+    return this.students.filter(student => student.aktif === false || student.aktif === 0).length;
   }
 
   // Unique values for filters
@@ -114,9 +114,9 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
     // Status filter
     if (this.selectedStatus) {
       if (this.selectedStatus === 'active') {
-        filtered = filtered.filter(student => student.aktif);
+        filtered = filtered.filter(student => student.aktif === true || student.aktif === 1);
       } else if (this.selectedStatus === 'inactive') {
-        filtered = filtered.filter(student => !student.aktif);
+        filtered = filtered.filter(student => student.aktif === false || student.aktif === 0);
       }
     }
 
@@ -224,12 +224,12 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
   }
 
   // Öğrenci Pagination metotları
-  get filteredStudents(): User[] {
+  get filteredStudentsForPagination(): User[] {
     return this.filterItems(this.students, this.searchQuery);
   }
 
   get totalStudentCount(): number {
-    return this.filteredStudents.length;
+    return this.filteredStudentsForPagination.length;
   }
 
   get totalStudentPages(): number {
@@ -238,7 +238,7 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
 
   get paginatedStudents(): User[] {
     const startIndex = (this.currentStudentPage - 1) * this.itemsPerPage;
-    return this.filteredStudents.slice(
+    return this.filteredStudentsForPagination.slice(
       startIndex,
       startIndex + this.itemsPerPage
     );
@@ -473,11 +473,11 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
 
   // İstatistik fonksiyonları
   getActiveStudents(): number {
-    return this.students.filter((student) => student.aktif).length;
+    return this.students.filter((student) => student.aktif === true || student.aktif === 1).length;
   }
 
   getInactiveStudents(): number {
-    return this.students.filter((student) => !student.aktif).length;
+    return this.students.filter((student) => student.aktif === false || student.aktif === 0).length;
   }
 
   getStudentsWaiting(): number {
@@ -660,9 +660,29 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
     alert(`Mesaj gönderme özelliği yakında eklenecek: ${student.adi_soyadi}`);
   }
 
+  // Helper method to check if student is active
+  isStudentActive(student: User): boolean {
+    return student.aktif === true || student.aktif === 1;
+  }
+
+  // Helper method to check if student is inactive
+  isStudentInactive(student: User): boolean {
+    return student.aktif === false || student.aktif === 0;
+  }
+
+  // Helper method to get status text
+  getStatusText(student: User): string {
+    return this.isStudentActive(student) ? 'Aktif' : 'Pasif';
+  }
+
+  // Helper method to get toggle button text
+  getToggleButtonText(student: User): string {
+    return this.isStudentActive(student) ? 'Pasif Yap' : 'Aktif Yap';
+  }
+
   // Toggle student status
   toggleStudentStatus(student: User): void {
-    const newStatus = !student.aktif;
+    const newStatus = !this.isStudentActive(student);
     const actionText = newStatus ? 'aktif' : 'pasif';
     
     if (!confirm(`${student.adi_soyadi} adlı öğrenciyi ${actionText} yapmak istediğinizden emin misiniz?`)) {
