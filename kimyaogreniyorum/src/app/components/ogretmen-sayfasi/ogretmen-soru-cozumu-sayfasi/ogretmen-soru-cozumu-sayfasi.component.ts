@@ -72,6 +72,9 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
   studentSearchQuery: string = '';
   filteredStudentIds: number[] = [];
 
+  // All students view toggle
+  showAllStudents: boolean = false;
+
   private apiBaseUrl = './server/api';
 
   constructor(private http: HttpClient) {
@@ -771,5 +774,9 @@ export class OgretmenSoruCozumuSayfasiComponent implements OnInit {
   clearSearch(): void {
     this.studentSearchQuery = '';
     this.filterStudents();
+  }
+
+  toggleAllStudentsView(): void {
+    this.showAllStudents = !this.showAllStudents;
   }
 }

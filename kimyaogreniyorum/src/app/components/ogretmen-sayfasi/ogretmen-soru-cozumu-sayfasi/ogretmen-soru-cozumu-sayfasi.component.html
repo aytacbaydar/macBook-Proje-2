@@ -54,8 +54,19 @@
     </div>
   </div>
 
+  <!-- All Students Toggle Button -->
+  <div class="all-students-toggle" *ngIf="viewMode === 'all' && !isLoading && !error">
+    <button class="toggle-all-students-btn" 
+            (click)="toggleAllStudentsView()"
+            [class.active]="showAllStudents">
+      <i class="bi bi-people-fill me-2"></i>
+      Tüm Öğrenciler ({{ students.length }})
+      <i class="bi" [class.bi-chevron-down]="!showAllStudents" [class.bi-chevron-up]="showAllStudents"></i>
+    </button>
+  </div>
+
   <!-- Search Bar -->
-  <div class="search-container" *ngIf="viewMode === 'all' && !isLoading && !error">
+  <div class="search-container" *ngIf="viewMode === 'all' && !isLoading && !error && showAllStudents">
     <div class="search-input-group">
       <i class="bi bi-search search-icon"></i>
       <input type="text" 
@@ -99,11 +110,7 @@
     </div>
 
     <!-- All students (including those without messages) -->
-    <div class="students-section">
-      <h3 class="section-title">
-        <i class="bi bi-people"></i>
-        Tüm Öğrenciler ({{ students.length }})
-      </h3>
+    <div class="students-section" *ngIf="showAllStudents">
       <div class="all-students-list">
         <div class="student-item" 
              *ngFor="let student of getFilteredStudents(); trackBy: trackByStudentId"
