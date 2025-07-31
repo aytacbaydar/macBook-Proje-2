@@ -48,6 +48,10 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
   // Math property for template
   Math = Math;
 
+  // Avatar modal properties
+  showAvatarModal = false;
+  selectedStudent: User | null = null;
+
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
@@ -512,6 +516,28 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
             alert(errorMessage);
           },
         });
+    }
+  }
+
+  // Avatar modal methods
+  openAvatarModal(student: User): void {
+    this.selectedStudent = student;
+    this.showAvatarModal = true;
+    // Prevent body scroll when modal is open
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeAvatarModal(): void {
+    this.showAvatarModal = false;
+    this.selectedStudent = null;
+    // Restore body scroll
+    document.body.style.overflow = 'auto';
+  }
+
+  viewStudentDetails(studentId?: number): void {
+    if (studentId) {
+      this.router.navigate(['/ogretmen/ogrenci-bilgi', studentId]);
+      this.closeAvatarModal();
     }
   }
 }

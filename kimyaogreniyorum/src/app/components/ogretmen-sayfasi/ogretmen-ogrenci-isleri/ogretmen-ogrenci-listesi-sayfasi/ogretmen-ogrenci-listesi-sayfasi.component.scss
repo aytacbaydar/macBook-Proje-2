@@ -158,4 +158,270 @@
     .card-header,
     .card-body {
         padding: 1.5rem;
-    } }
+    }
+}
+
+// Avatar Modal Styles
+.clickable-avatar {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+
+  &:hover {
+    transform: scale(1.1);
+    border-color: #007bff;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+  }
+}
+
+.avatar-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.3s ease;
+}
+
+.avatar-modal-content {
+  background: white;
+  border-radius: 20px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+  position: relative;
+}
+
+.avatar-modal-header {
+  padding: 25px 30px 15px;
+  border-bottom: 2px solid #f8f9fa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  border-radius: 20px 20px 0 0;
+  color: white;
+
+  .modal-title {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .close-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.1);
+    }
+  }
+}
+
+.avatar-modal-body {
+  padding: 30px;
+  text-align: center;
+
+  .avatar-container {
+    margin-bottom: 25px;
+
+    .large-avatar {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 6px solid #007bff;
+      box-shadow: 0 10px 30px rgba(0, 123, 255, 0.3);
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 0 15px 40px rgba(0, 123, 255, 0.4);
+      }
+    }
+  }
+
+  .student-info {
+    text-align: left;
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid #e9ecef;
+      font-size: 1rem;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      i {
+        color: #007bff;
+        font-size: 1.1rem;
+        width: 20px;
+        text-align: center;
+
+        &.text-success {
+          color: #28a745 !important;
+        }
+
+        &.text-danger {
+          color: #dc3545 !important;
+        }
+      }
+
+      span {
+        color: #495057;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.avatar-modal-footer {
+  padding: 20px 30px 30px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+
+  .btn {
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &.btn-primary {
+      background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+      color: white;
+
+      &:hover {
+        background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
+      }
+    }
+
+    &.btn-secondary {
+      background: #6c757d;
+      color: white;
+
+      &:hover {
+        background: #5a6268;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(108, 117, 125, 0.3);
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .table-responsive {
+    font-size: 0.9rem;
+  }
+
+  // Avatar modal responsive styles
+  .avatar-modal-content {
+    width: 95%;
+    max-width: none;
+  }
+
+  .avatar-modal-header {
+    padding: 20px 20px 15px;
+
+    .modal-title {
+      font-size: 1.1rem;
+    }
+
+    .close-btn {
+      width: 35px;
+      height: 35px;
+      font-size: 1rem;
+    }
+  }
+
+  .avatar-modal-body {
+    padding: 20px;
+
+    .avatar-container {
+      .large-avatar {
+        width: 150px;
+        height: 150px;
+        border-width: 4px;
+      }
+    }
+
+    .student-info {
+      padding: 15px;
+
+      .info-item {
+        padding: 8px 0;
+        font-size: 0.9rem;
+
+        i {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+
+  .avatar-modal-footer {
+    padding: 15px 20px 20px;
+    flex-direction: column;
+
+    .btn {
+      padding: 10px 20px;
+      width: 100%;
+    }
+  }
+}
