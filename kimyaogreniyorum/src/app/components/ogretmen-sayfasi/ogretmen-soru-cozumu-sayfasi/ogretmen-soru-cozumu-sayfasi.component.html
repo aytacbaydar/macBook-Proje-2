@@ -218,23 +218,6 @@
     <p *ngIf="studentSearchQuery">Farklı bir arama terimi deneyin.</p>
   </div>
 
-  <!-- Toast Notification -->
-  <div class="toast-notification" 
-       [class.show]="showToast"
-       [class.success]="toastType === 'success'"
-       [class.error]="toastType === 'error'"
-       [class.warning]="toastType === 'warning'"
-       [class.info]="toastType === 'info'">
-    <i class="bi bi-check-circle" *ngIf="toastType === 'success'"></i>
-    <i class="bi bi-exclamation-triangle" *ngIf="toastType === 'warning'"></i>
-    <i class="bi bi-x-circle" *ngIf="toastType === 'error'"></i>
-    <i class="bi bi-info-circle" *ngIf="toastType === 'info'"></i>
-    <span>{{ toastMessage }}</span>
-    <button class="close-toast" (click)="hideToast()">
-      <i class="bi bi-x"></i>
-    </button>
-  </div>
-
   <!-- Image Modal -->
   <div class="image-modal" *ngIf="showImageModal" (click)="closeImageModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
