@@ -608,7 +608,7 @@
     <div class="avatar-modal-body">
       <div class="avatar-container">
         <img 
-          [src]="selectedStudent?.avatar ? selectedStudent.avatar : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(selectedStudent?.adi_soyadi || '') + '&background=007bff&color=fff&size=400'"
+          [src]="selectedStudent && selectedStudent.avatar + '&background=007bff&color=fff&size=400'"
           [alt]="selectedStudent?.adi_soyadi"
           class="large-avatar">
       </div>
