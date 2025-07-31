@@ -1,0 +1,66 @@
+▲ [WARNING] Duplicate member "itemsPerPage" in class body [duplicate-class-member]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:581:4:
+      581 │     itemsPerPage = 15;
+          ╵     ~~~~~~~~~~~~
+
+  The original member "itemsPerPage" is here:
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:567:4:
+      567 │     itemsPerPage = 5;
+          ╵     ~~~~~~~~~~~~
+
+
+▲ [WARNING] Duplicate member "paginatedStudents" in class body [duplicate-class-member]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:736:8:
+      736 │     get paginatedStudents(): User[] {
+          ╵         ~~~~~~~~~~~~~~~~~
+
+  The original member "paginatedStudents" is here:
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:637:8:
+      637 │     get paginatedStudents(): User[] {
+          ╵         ~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5: Argument of type 'string | number' is not assignable to parameter of type 'number'.
+  Type 'string' is not assignable to type 'number'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.html:360:56:
+      360 │ ..."page-link" (click)="goToPage(page)" [disabled]="page === '...'">
+          ╵                                  ~~~~
+
+  Error occurs in the template of component OgretmenOgrenciListesiSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-ogrenci-listesi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2300: Duplicate identifier 'itemsPerPage'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:65:2:
+      65 │   itemsPerPage = 15;
+         ╵   ~~~~~~~~~~~~
+
+
+X [ERROR] TS2300: Duplicate identifier 'paginatedStudents'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:135:6:
+      135 │   get paginatedStudents(): User[] {
+          ╵       ~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2300: Duplicate identifier 'paginatedStudents'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:254:6:
+      254 │   get paginatedStudents(): User[] {
+          ╵       ~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2300: Duplicate identifier 'paginatedStudents'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ogrenci-listesi-sayfasi/ogretmen-ogrenci-listesi-sayfasi.component.ts:254:6:
+      254 │   get paginatedStudents(): User[] {
+          ╵       ~~~~~~~~~~~~~~~~~
