@@ -6,21 +6,21 @@ interface User {
   id: number;
   adi_soyadi: string;
   email: string;
-  cep_telefonu?: string;
-  avatar?: string;
-  rutbe: string;
+  cep_telefonu: string;
+  okulu: string;
+  sinifi: string;
+  grubu: string;
   aktif: boolean;
+  avatar?: string;
+  ucret?: number;
+  ders_adi?: string;
+  rutbe: string;
   created_at?: string;
-  // Öğrenci alanları
-  okulu?: string;
-  sinifi?: string;
-  grubu?: string;
-  ders_gunu?: string;
-  ders_saati?: string;
-  ucret?: string;
   // Öğretmen alanları
   brans?: string;
   ogretmeni?: string;
+  ders_gunu?: string;
+  ders_saati?: string;
 }
 
 @Component({
@@ -30,6 +30,7 @@ interface User {
   styleUrl: './ogretmen-ogrenci-listesi-sayfasi.component.scss',
 })
 export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
+
   students: User[] = [];
   newUsers: User[] = [];
   isLoading = true;
