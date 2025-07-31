@@ -1,12 +1,13 @@
+
 <?php
 require_once '../config.php';
 
 // Temel ayarlar - optimize edildi
-ini_set('memory_limit', '128M'); // 256M'den 128M'ye düşürdük
-ini_set('max_execution_time', 90); // 3 dakikadan 1.5 dakikaya düşürdük
-ini_set('max_input_time', 90);
-ini_set('upload_max_filesize', '10M');
-ini_set('post_max_size', '10M');
+ini_set('memory_limit', '256M');
+ini_set('max_execution_time', 120);
+ini_set('max_input_time', 120);
+ini_set('upload_max_filesize', '6M');
+ini_set('post_max_size', '6M');
 
 // Hata raporlama
 error_reporting(E_ALL);
@@ -31,9 +32,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// Sunucu yükü kontrolü - daha esnek
+// Sunucu yükü kontrolü
 $currentLoad = sys_getloadavg()[0];
-if ($currentLoad > 8.0) { // Eşiği 3.0'dan 8.0'a çıkardık
+if ($currentLoad > 5.0) {
     http_response_code(503);
     echo json_encode([
         'success' => false,
@@ -68,7 +69,7 @@ if ($mimeType !== 'application/pdf') {
     exit;
 }
 
-// Dosya boyutu kontrolü (6MB) - Daha küçük dosyalar için optimize ettik
+// Dosya boyutu kontrolü (6MB)
 if ($uploadedFile['size'] > 6 * 1024 * 1024) {
     http_response_code(400);
     echo json_encode([
@@ -95,8 +96,13 @@ foreach ([$uploadDir, $imageDir] as $dir) {
     }
 }
 
+// Eski dosyaları temizle (1 saatten eski olanları)
+cleanOldFiles($uploadDir, 3600);
+cleanOldFiles($imageDir, 3600);
+
 // Benzersiz dosya adı oluştur
-$fileId = uniqid() . '_' . time();
+$processId = isset($_POST['process_id']) ? $_POST['process_id'] : time();
+$fileId = 'pdf_' . $processId . '_' . uniqid();
 $pdfPath = $uploadDir . $fileId . '.pdf';
 
 // Dosyayı kaydet
@@ -110,7 +116,9 @@ if (!move_uploaded_file($uploadedFile['tmp_name'], $pdfPath)) {
 }
 
 try {
-    // Basit yaklaşım: Sadece Ghostscript kullan
+    error_log("PDF işleme başlıyor: " . $fileId);
+    
+    // PDF'i resimlere çevir
     $pages = convertPdfWithGhostscript($pdfPath, $fileId, $imageDir);
 
     // Geçici PDF dosyasını sil
@@ -123,10 +131,13 @@ try {
         gc_collect_cycles();
     }
 
+    error_log("PDF işleme tamamlandı: " . count($pages) . " sayfa");
+
     echo json_encode([
         'success' => true,
         'pages' => $pages,
         'file_id' => $fileId,
+        'process_id' => $processId,
         'message' => count($pages) . ' sayfa başarıyla işlendi'
     ]);
 
@@ -154,7 +165,7 @@ try {
     http_response_code(500);
     echo json_encode([
         'success' => false,
-        'message' => 'PDF işlenemedi. Lütfen dosyanın bozuk olmadığından emin olun.',
+        'message' => 'PDF işlenemedi: ' . $e->getMessage(),
         'error_code' => 'PDF_PROCESSING_ERROR'
     ]);
 }
@@ -171,18 +182,20 @@ function convertPdfWithGhostscript($pdfPath, $fileId, $imageDir) {
         $pageCount = intval(trim($pageCountOutput[0]));
     }
 
-    // Maksimum 5 sayfa - daha az kaynak kullanımı için
-    if ($pageCount > 5) {
-        throw new Exception('PDF çok fazla sayfa içeriyor. Maksimum 5 sayfa desteklenir.');
+    // Maksimum 10 sayfa
+    if ($pageCount > 10) {
+        throw new Exception('PDF çok fazla sayfa içeriyor. Maksimum 10 sayfa desteklenir.');
     }
 
-    // Her sayfayı ayrı ayrı işle (bellek tasarrufu için)
+    error_log("PDF sayfa sayısı: " . $pageCount);
+
+    // Her sayfayı ayrı ayrı işle
     for ($page = 1; $page <= $pageCount; $page++) {
         $outputFile = $imageDir . $fileId . '_page_' . $page . '.jpg';
 
-        // Daha yüksek kalite ve daha iyi görünürlük için ayarları artırdık
+        // Yüksek kaliteli çıkış için optimize edilmiş ayarlar
         $command = sprintf(
-            'gs -dNOPAUSE -dBATCH -sDEVICE=jpeg -r200 -dFirstPage=%d -dLastPage=%d -dJPEGQ=85 -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -sOutputFile=%s %s 2>&1',
+            'gs -dNOPAUSE -dBATCH -sDEVICE=jpeg -r300 -dFirstPage=%d -dLastPage=%d -dJPEGQ=90 -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -dDownScaleFactor=1 -sOutputFile=%s %s 2>&1',
             $page,
             $page,
             escapeshellarg($outputFile),
@@ -190,49 +203,43 @@ function convertPdfWithGhostscript($pdfPath, $fileId, $imageDir) {
         );
 
         error_log("Sayfa $page işleniyor: $command");
-        error_log("Çıktı dosyası: $outputFile");
 
         exec($command, $output, $returnCode);
         
-        error_log("Ghostscript çıktısı: " . implode("\n", $output));
-        error_log("Return code: $returnCode");
-
         if ($returnCode === 0 && file_exists($outputFile) && filesize($outputFile) > 0) {
             // URL'yi doğru şekilde oluştur
             $imageUrl = 'https://www.kimyaogreniyorum.com/uploads/pdf_images/' . $fileId . '_page_' . $page . '.jpg';
             $pages[] = $imageUrl;
             error_log("Sayfa $page başarıyla oluşturuldu: " . filesize($outputFile) . " bytes");
-            error_log("URL: $imageUrl");
             
-            // Dosya izinlerini kontrol et
+            // Dosya izinlerini ayarla
             chmod($outputFile, 0644);
         } else {
-            error_log("Sayfa $page oluşturulamadı. Return code: $returnCode, Output: " . implode("\n", $output));
+            error_log("Ghostscript başarısız, ImageMagick deneniyor...");
 
-            // Alternatif komut dene - daha iyi kalite
+            // Alternatif komut - ImageMagick
             $altCommand = sprintf(
-                'convert -density 200 %s[%d] -quality 85 -colorspace RGB %s 2>&1',
+                'convert -density 300 -quality 90 %s[%d] -colorspace RGB -background white -alpha remove %s 2>&1',
                 escapeshellarg($pdfPath),
                 $page - 1, // ImageMagick 0'dan başlar
                 escapeshellarg($outputFile)
             );
 
-            error_log("Alternatif komut deneniyor: $altCommand");
+            error_log("ImageMagick komutu: $altCommand");
             exec($altCommand, $altOutput, $altReturn);
-            error_log("ImageMagick çıktısı: " . implode("\n", $altOutput));
 
             if ($altReturn === 0 && file_exists($outputFile) && filesize($outputFile) > 0) {
                 $imageUrl = 'https://www.kimyaogreniyorum.com/uploads/pdf_images/' . $fileId . '_page_' . $page . '.jpg';
                 $pages[] = $imageUrl;
-                error_log("Sayfa $page alternatif yöntemle oluşturuldu");
+                error_log("Sayfa $page ImageMagick ile oluşturuldu");
                 chmod($outputFile, 0644);
             } else {
-                error_log("Alternatif yöntem de başarısız: " . implode("\n", $altOutput));
+                error_log("Her iki yöntem de başarısız oldu: " . implode("\n", array_merge($output, $altOutput)));
                 throw new Exception("Sayfa $page işlenemedi");
             }
         }
 
-        // Her sayfadan sonra kısa bekle
+        // CPU yükünü azaltmak için kısa bekle
         usleep(100000); // 0.1 saniye
     }
 
@@ -241,5 +248,24 @@ function convertPdfWithGhostscript($pdfPath, $fileId, $imageDir) {
     }
 
     return $pages;
+}
+
+function cleanOldFiles($directory, $maxAge) {
+    if (!is_dir($directory)) {
+        return;
+    }
+
+    $currentTime = time();
+    $files = glob($directory . '*');
+
+    foreach ($files as $file) {
+        if (is_file($file)) {
+            $fileAge = $currentTime - filemtime($file);
+            if ($fileAge > $maxAge) {
+                unlink($file);
+                error_log("Eski dosya silindi: " . basename($file));
+            }
+        }
+    }
 }
 ?>

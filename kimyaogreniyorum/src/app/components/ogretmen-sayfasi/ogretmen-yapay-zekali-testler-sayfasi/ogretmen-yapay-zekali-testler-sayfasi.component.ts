@@ -453,6 +453,12 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
     this.isSelecting = false;
     this.error = null;
     this.success = null;
+    
+    // DOM'dan mevcut seçimleri temizle
+    const existingSelections = document.querySelectorAll('.existing-selection, .selection-overlay');
+    existingSelections.forEach(el => el.remove());
+    
+    console.log('PDF upload verileri sıfırlandı');
   }
 
   onPdfFileSelected(event: any): void {
@@ -464,14 +470,31 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
         return;
       }
 
-      // Dosya boyutu kontrolü (10MB)
+      // Dosya boyutu kontrolü (6MB)
       if (file.size > 6 * 1024 * 1024) {
         this.error = "Dosya boyutu 6MB'dan büyük olamaz";
         return;
       }
 
+      // Önceki PDF verilerini temizle
+      this.pdfPages = [];
+      this.currentPdfPage = 0;
+      this.allSelections = {};
+      this.currentPageSelections = [];
+      this.currentSelection = null;
+      this.isSelecting = false;
+
       this.selectedPdfFile = file;
       this.error = null;
+      this.success = null;
+      
+      console.log('Yeni PDF dosyası seçildi:', file.name, 'Boyut:', Math.round(file.size / 1024) + 'KB');
+    } else {
+      // Dosya seçimi iptal edildi
+      this.selectedPdfFile = null;
+      this.pdfPages = [];
+      this.allSelections = {};
+      this.currentPageSelections = [];
     }
   }
 
@@ -483,23 +506,41 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
 
     this.loading = true;
     this.error = null;
+    this.success = null;
+
+    // Önceki verileri temizle
+    this.pdfPages = [];
+    this.currentPdfPage = 0;
+    this.allSelections = {};
+    this.currentPageSelections = [];
+    this.currentSelection = null;
+    this.isSelecting = false;
 
     const formData = new FormData();
     formData.append('pdf_file', this.selectedPdfFile);
     formData.append('konu_adi', this.pdfUploadData.konu_adi);
     formData.append('sinif_seviyesi', this.pdfUploadData.sinif_seviyesi);
     formData.append('zorluk_derecesi', this.pdfUploadData.zorluk_derecesi);
-	formData.append('dogru_cevap', this.pdfUploadData.dogru_cevap);
+    formData.append('dogru_cevap', this.pdfUploadData.dogru_cevap);
+    
+    // Benzersiz işlem ID'si ekle
+    const processId = Date.now().toString();
+    formData.append('process_id', processId);
 
     this.http.post<any>('./server/api/pdf_to_images.php', formData).subscribe({
       next: (response) => {
         this.loading = false;
         if (response.success) {
-          this.pdfPages = response.pages;
+          this.pdfPages = response.pages || [];
           this.currentPdfPage = 0;
           this.allSelections = {};
           this.currentPageSelections = [];
           this.success = `PDF başarıyla işlendi. ${this.pdfPages.length} sayfa yüklendi.`;
+          
+          console.log('Yeni PDF işlendi:', {
+            pages: this.pdfPages.length,
+            processId: processId
+          });
         } else {
           this.error = response.message || 'PDF işlenemedi';
         }
@@ -686,7 +727,8 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
   saveSelectedQuestions(): void {
     this.saveCurrentPageSelections();
 
-    if (Object.keys(this.allSelections).length === 0) {
+    const totalSelections = this.getTotalSelections();
+    if (totalSelections === 0) {
       this.error = 'En az bir soru seçmelisiniz';
       return;
     }
@@ -694,21 +736,30 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    // Debug: Kaydedilecek verileri logla
-    console.log('Kaydedilecek seçimler:', this.allSelections);
+    // Her seçimin gerekli bilgilere sahip olduğundan emin ol
+    const validatedSelections: { [pageIndex: number]: any[] } = {};
+    
     Object.keys(this.allSelections).forEach(pageIndex => {
-      this.allSelections[parseInt(pageIndex)].forEach((selection, index) => {
-        console.log(`Sayfa ${pageIndex} - Soru ${index + 1}: Doğru cevap = ${selection.dogru_cevap}`);
-      });
+      const pageNum = parseInt(pageIndex);
+      validatedSelections[pageNum] = this.allSelections[pageNum].map((selection, index) => ({
+        ...selection,
+        dogru_cevap: selection.dogru_cevap || this.pdfUploadData.dogru_cevap,
+        pageIndex: pageNum,
+        selectionIndex: index
+      }));
     });
 
+    console.log('Kaydedilecek validasyon edilmiş seçimler:', validatedSelections);
+    console.log('Toplam soru sayısı:', totalSelections);
+
     const requestData = {
-      selections: this.allSelections,
+      selections: validatedSelections,
       konu_adi: this.pdfUploadData.konu_adi,
       sinif_seviyesi: this.pdfUploadData.sinif_seviyesi,
       zorluk_derecesi: this.pdfUploadData.zorluk_derecesi,
       ogretmen_id: this.teacherInfo?.id,
-      dogru_cevap: this.pdfUploadData.dogru_cevap
+      dogru_cevap: this.pdfUploadData.dogru_cevap,
+      total_questions: totalSelections
     };
 
     this.http.post<any>('./server/api/save_pdf_questions.php', requestData).subscribe({
@@ -719,13 +770,17 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
           this.showPdfUploadForm = false;
           this.resetPdfUploadData();
           this.loadSorular();
+          
+          console.log('Sorular başarıyla kaydedildi:', response.saved_count);
         } else {
           this.error = response.message || 'Sorular kaydedilemedi';
+          console.error('Kaydetme hatası:', response);
         }
       },
       error: (error) => {
         this.loading = false;
         this.error = 'Sorular kaydedilirken hata oluştu: ' + (error.error?.message || error.message);
+        console.error('HTTP hatası:', error);
       }
     });
   }
