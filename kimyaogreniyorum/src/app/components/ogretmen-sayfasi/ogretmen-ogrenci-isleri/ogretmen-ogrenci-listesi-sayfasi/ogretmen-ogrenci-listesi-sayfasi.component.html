@@ -161,7 +161,9 @@
                 </a></li>
                 <li><a class="dropdown-item" href="#" (click)="openMessageModal(student)">
                   <i class="bi bi-chat-dots"></i> Mesaj Gönder
-                </a></li>
+                </a></li><li><a class="dropdown-item" [routerLink]="['/ogretmen-sayfasi/ogretmen-ogrenci-detay-sayfasi', student.id]">
+                    <i class="bi bi-info-circle"></i> Düzenle
+                  </a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item text-warning" href="#" (click)="toggleStudentStatus(student)">
                   <i class="bi" [class.bi-person-check]="!student.aktif" [class.bi-person-x]="student.aktif"></i> 
