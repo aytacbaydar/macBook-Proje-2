@@ -467,9 +467,8 @@
         <div class="student-card" *ngFor="let student of newUsers; trackBy: trackByStudentId">
           <div class="student-info">
             <div class="student-avatar">
-              <img [src]="student.avatar_url || getDefaultAvatar(student.adi_soyadi)" 
-                   [alt]="student.adi_soyadi"
-                   (error)="$event.target.src = getDefaultAvatar(student.adi_soyadi)">
+              <img [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)" 
+                   [alt]="student.adi_soyadi">
             </div>
             <div class="student-details">
               <h4>{{ student.adi_soyadi }}</h4>
@@ -491,7 +490,7 @@
               </div>
               <div class="detail-row">
                 <i class="fas fa-calendar"></i>
-                <span>{{ formatDate(student.kayit_tarihi) }}</span>
+                <span>{{ formatDate(student.created_at || '') }}</span>
               </div>
             </div>
           </div>
