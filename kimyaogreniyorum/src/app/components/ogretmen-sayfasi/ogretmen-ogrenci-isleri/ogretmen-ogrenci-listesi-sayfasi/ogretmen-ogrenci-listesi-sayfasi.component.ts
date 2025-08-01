@@ -748,13 +748,19 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
   openNewStudentsModal(): void {
     console.log('Yeni öğrenciler modalı açılıyor...');
     this.showNewStudentsModal = true;
+    // Prevent body scroll when modal is open
     document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
   }
 
   closeNewStudentsModal(): void {
     console.log('Yeni öğrenciler modalı kapatılıyor...');
     this.showNewStudentsModal = false;
-    document.body.style.overflow = 'auto';
+    // Restore body scroll when modal is closed
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.width = '';
   }
 
   // Approve single new student

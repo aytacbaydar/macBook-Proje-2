@@ -437,7 +437,7 @@
 </div>
 
 <!-- New Students Modal -->
-<div class="modal-overlay" *ngIf="showNewStudentsModal" (click)="closeNewStudentsModal()">
+<div class="modal-overlay" *ngIf="showNewStudentsModal === true" (click)="closeNewStudentsModal()">
   <div class="modal-container new-students-modal" (click)="$event.stopPropagation()">
     <div class="modal-header">
       <h3>
