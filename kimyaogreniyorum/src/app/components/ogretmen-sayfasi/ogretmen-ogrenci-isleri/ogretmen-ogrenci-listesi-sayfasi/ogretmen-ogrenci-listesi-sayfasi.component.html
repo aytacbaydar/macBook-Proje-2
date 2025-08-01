@@ -51,6 +51,14 @@
           <i class="bi bi-x-lg"></i>
         </button>
       </div>
+      <button 
+        class="new-students-btn"
+        (click)="openNewStudentsModal()"
+        [disabled]="newUsers.length === 0">
+        <i class="fas fa-user-plus"></i>
+        Yeni Katılan Öğrenciler
+        <span class="badge" *ngIf="newUsers.length > 0">{{ newUsers.length }}</span>
+      </button>
     </div>
 
     <div class="filter-container">
@@ -423,6 +431,82 @@
           <i class="bi bi-x-circle me-2"></i>
           Kapat
         </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- New Students Modal -->
+<div class="modal-overlay" *ngIf="showNewStudentsModal" (click)="closeNewStudentsModal()">
+  <div class="modal-container new-students-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>
+        <i class="fas fa-user-plus"></i>
+        Yeni Katılan Öğrenciler
+        <span class="badge">{{ newUsers.length }}</span>
+      </h3>
+      <button class="close-btn" (click)="closeNewStudentsModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div *ngIf="newUsers.length === 0" class="empty-state">
+        <i class="fas fa-users"></i>
+        <p>Henüz onay bekleyen öğrenci bulunmuyor.</p>
+      </div>
+
+      <div *ngIf="newUsers.length > 0" class="new-students-list">
+        <div class="bulk-actions">
+          <button class="bulk-approve-btn" (click)="approveAllNewStudents()">
+            <i class="fas fa-check-circle"></i>
+            Tümünü Onayla
+          </button>
+        </div>
+
+        <div class="student-card" *ngFor="let student of newUsers; trackBy: trackByStudentId">
+          <div class="student-info">
+            <div class="student-avatar">
+              <img [src]="student.avatar_url || getDefaultAvatar(student.adi_soyadi)" 
+                   [alt]="student.adi_soyadi"
+                   (error)="$event.target.src = getDefaultAvatar(student.adi_soyadi)">
+            </div>
+            <div class="student-details">
+              <h4>{{ student.adi_soyadi }}</h4>
+              <div class="detail-row">
+                <i class="fas fa-envelope"></i>
+                <span>{{ student.email }}</span>
+              </div>
+              <div class="detail-row" *ngIf="student.cep_telefonu">
+                <i class="fas fa-phone"></i>
+                <span>{{ student.cep_telefonu }}</span>
+              </div>
+              <div class="detail-row" *ngIf="student.okulu">
+                <i class="fas fa-school"></i>
+                <span>{{ student.okulu }}</span>
+              </div>
+              <div class="detail-row" *ngIf="student.sinifi">
+                <i class="fas fa-graduation-cap"></i>
+                <span>{{ student.sinifi }}</span>
+              </div>
+              <div class="detail-row">
+                <i class="fas fa-calendar"></i>
+                <span>{{ formatDate(student.kayit_tarihi) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="student-actions">
+            <button class="approve-btn" (click)="approveNewStudent(student.id)">
+              <i class="fas fa-check"></i>
+              Onayla
+            </button>
+            <button class="reject-btn" (click)="rejectNewStudent(student.id)">
+              <i class="fas fa-times"></i>
+              Reddet
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>

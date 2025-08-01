@@ -742,6 +742,164 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
     return pages;
   }
 
+  // New Students Modal
+  showNewStudentsModal = false;
+
+  openNewStudentsModal(): void {
+    this.showNewStudentsModal = true;
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeNewStudentsModal(): void {
+    this.showNewStudentsModal = false;
+    document.body.style.overflow = 'auto';
+  }
+
+  // Approve single new student
+  approveNewStudent(studentId: number): void {
+    if (!confirm('Bu öğrenciyi onaylamak istediğinizden emin misiniz?')) {
+      return;
+    }
+
+    let token = '';
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      token = user.token || '';
+    }
+
+    const updateData = {
+      id: studentId,
+      rutbe: 'ogrenci',
+      aktif: 1
+    };
+
+    this.http.post<any>('./server/api/kullanici_guncelle.php', updateData, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    }).subscribe({
+      next: (response) => {
+        if (response.success) {
+          alert('Öğrenci başarıyla onaylandı!');
+          this.loadUsers(); // Reload users to update lists
+        } else {
+          alert('Onaylama işlemi başarısız: ' + (response.error || response.message));
+        }
+      },
+      error: (error) => {
+        console.error('Onaylama hatası:', error);
+        alert('Onaylama sırasında bir hata oluştu: ' + (error.error?.message || error.message));
+      }
+    });
+  }
+
+  // Reject single new student
+  rejectNewStudent(studentId: number): void {
+    if (!confirm('Bu öğrenciyi reddetmek istediğinizden emin misiniz? Bu işlem öğrenciyi silecektir.')) {
+      return;
+    }
+
+    let token = '';
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      token = user.token || '';
+    }
+
+    this.http.post<any>('./server/api/ogrenci_sil.php', { id: studentId }, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    }).subscribe({
+      next: (response) => {
+        if (response.success) {
+          alert('Öğrenci başarıyla reddedildi ve silindi!');
+          this.loadUsers(); // Reload users to update lists
+        } else {
+          alert('Reddetme işlemi başarısız: ' + (response.error || response.message));
+        }
+      },
+      error: (error) => {
+        console.error('Reddetme hatası:', error);
+        alert('Reddetme sırasında bir hata oluştu: ' + (error.error?.message || error.message));
+      }
+    });
+  }
+
+  // Approve all new students
+  approveAllNewStudents(): void {
+    if (this.newUsers.length === 0) {
+      alert('Onaylanacak öğrenci bulunmuyor.');
+      return;
+    }
+
+    if (!confirm(`${this.newUsers.length} öğrenciyi onaylamak istediğinizden emin misiniz?`)) {
+      return;
+    }
+
+    let token = '';
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      token = user.token || '';
+    }
+
+    // Process each student individually
+    let successCount = 0;
+    let errorCount = 0;
+    const totalStudents = this.newUsers.length;
+
+    this.newUsers.forEach((student, index) => {
+      const updateData = {
+        id: student.id,
+        rutbe: 'ogrenci',
+        aktif: 1
+      };
+
+      this.http.post<any>('./server/api/kullanici_guncelle.php', updateData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      }).subscribe({
+        next: (response) => {
+          if (response.success) {
+            successCount++;
+          } else {
+            errorCount++;
+          }
+
+          // Check if this is the last request
+          if (successCount + errorCount === totalStudents) {
+            if (successCount > 0) {
+              alert(`${successCount} öğrenci başarıyla onaylandı!${errorCount > 0 ? ` ${errorCount} öğrenci onaylanamadı.` : ''}`);
+              this.loadUsers();
+            } else {
+              alert('Hiçbir öğrenci onaylanamadı.');
+            }
+          }
+        },
+        error: (error) => {
+          errorCount++;
+          console.error('Onaylama hatası:', error);
+
+          // Check if this is the last request
+          if (successCount + errorCount === totalStudents) {
+            if (successCount > 0) {
+              alert(`${successCount} öğrenci başarıyla onaylandı! ${errorCount} öğrenci onaylanamadı.`);
+              this.loadUsers();
+            } else {
+              alert('Hiçbir öğrenci onaylanamadı.');
+            }
+          }
+        }
+      });
+    });
+  }
+
   // Tracking function for ngFor performance
   trackByStudentId(index: number, student: User): number {
     return student.id;
