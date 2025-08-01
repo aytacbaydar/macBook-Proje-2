@@ -746,11 +746,13 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
   showNewStudentsModal = false;
 
   openNewStudentsModal(): void {
+    console.log('Yeni öğrenciler modalı açılıyor...');
     this.showNewStudentsModal = true;
     document.body.style.overflow = 'hidden';
   }
 
   closeNewStudentsModal(): void {
+    console.log('Yeni öğrenciler modalı kapatılıyor...');
     this.showNewStudentsModal = false;
     document.body.style.overflow = 'auto';
   }
