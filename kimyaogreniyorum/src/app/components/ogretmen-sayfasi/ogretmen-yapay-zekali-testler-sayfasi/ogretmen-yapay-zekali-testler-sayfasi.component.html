@@ -438,11 +438,36 @@
           </select>
         </div>
       </div>
-      <div class="col-md-5">
+      <div class="col-md-2">
+        <div class="form-group">
+          <label class="form-label">Görünüm</label>
+          <div class="btn-group w-100" role="group">
+            <button type="button" 
+                    class="btn btn-sm" 
+                    [class.btn-primary]="viewMode === 'list'"
+                    [class.btn-outline-primary]="viewMode !== 'list'"
+                    (click)="setViewMode('list')">
+              <i class="bi bi-list"></i> Liste
+            </button>
+            <button type="button" 
+                    class="btn btn-sm" 
+                    [class.btn-primary]="viewMode === 'topics'"
+                    [class.btn-outline-primary]="viewMode !== 'topics'"
+                    (click)="setViewMode('topics')">
+              <i class="bi bi-collection"></i> Konular
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
         <div class="statistics">
           <div class="stat-item">
             <span class="stat-number">{{ sorular.length }}</span>
             <span class="stat-label">Toplam Soru</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">{{ getUniqueTopicsCount() }}</span>
+            <span class="stat-label">Farklı Konu</span>
           </div>
         </div>
       </div>
@@ -470,8 +495,105 @@
       </button>
     </div>
 
-    <!-- Questions Table -->
-    <div *ngIf="!loading && sorular.length > 0" class="table-container">
+    <!-- Topics View -->
+    <div *ngIf="!loading && sorular.length > 0 && viewMode === 'topics'" class="topics-view">
+      <div class="topics-grid">
+        <div class="topic-card" 
+             *ngFor="let topic of getTopicsWithCount()" 
+             (click)="selectTopic(topic.konu_adi)"
+             [class.selected]="selectedTopic === topic.konu_adi">
+          <div class="topic-header">
+            <h5 class="topic-title">{{ topic.konu_adi }}</h5>
+            <span class="topic-count badge bg-primary">{{ topic.count }} soru</span>
+          </div>
+          <div class="topic-stats">
+            <div class="difficulty-stats">
+              <span class="difficulty-stat kolay" *ngIf="topic.kolay > 0">
+                <i class="bi bi-circle-fill"></i> {{ topic.kolay }} Kolay
+              </span>
+              <span class="difficulty-stat orta" *ngIf="topic.orta > 0">
+                <i class="bi bi-circle-fill"></i> {{ topic.orta }} Orta
+              </span>
+              <span class="difficulty-stat zor" *ngIf="topic.zor > 0">
+                <i class="bi bi-circle-fill"></i> {{ topic.zor }} Zor
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Selected Topic Questions -->
+      <div *ngIf="selectedTopic" class="selected-topic-questions mt-4">
+        <div class="topic-header-detail">
+          <h4>
+            <i class="bi bi-bookmark-fill me-2"></i>
+            {{ selectedTopic }} Soruları
+          </h4>
+          <button class="btn btn-outline-secondary btn-sm" (click)="clearTopicSelection()">
+            <i class="bi bi-x-circle me-1"></i>
+            Tümünü Göster
+          </button>
+        </div>
+        
+        <div class="table-container">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Soru</th>
+                <th>Sınıf</th>
+                <th>Zorluk</th>
+                <th>Doğru Cevap</th>
+                <th>Tarih</th>
+                <th>İşlemler</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let soru of getFilteredQuestionsByTopic(); let i = index">
+                <td>
+                  <div class="soru-detay">
+                    <div *ngIf="soru.soru_aciklamasi" class="mb-2">
+                      <strong>{{ soru.soru_aciklamasi }}</strong>
+                    </div>
+                    <div *ngIf="soru.soru_resmi" class="mt-2">
+                      <img [src]="getSoruResmiUrl(soru)" alt="Soru resmi" class="soru-resmi">
+                    </div>
+                    <div class="mt-2">
+                      <span class="badge bg-success">
+                        Doğru Cevap: {{ soru.dogru_cevap }}
+                      </span>
+                    </div>
+                  </div>
+                </td>
+                <td>{{ soru.sinif_seviyesi }}. Sınıf</td>
+                <td>
+                  <span class="badge" [ngClass]="getZorlukBadgeClass(soru.zorluk_derecesi)">
+                    {{ getZorlukText(soru.zorluk_derecesi) }}
+                  </span>
+                </td>
+                <td>
+                  <strong>{{ soru.dogru_cevap }}</strong>
+                </td>
+                <td>
+                  {{ soru.olusturma_tarihi | date:'dd.MM.yyyy' }}
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn btn-sm btn-outline-danger" 
+                            (click)="deleteSoru(soru)"
+                            [disabled]="loading">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Questions Table (List View) -->
+    <div *ngIf="!loading && sorular.length > 0 && viewMode === 'list'" class="table-container">
       <table class="table table-hover">
         <thead>
           <tr>

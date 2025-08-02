@@ -65,6 +65,10 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
   filterKonu = '';
   filterZorluk = '';
 
+  // Görünüm modu
+  viewMode: 'list' | 'topics' = 'topics';
+  selectedTopic: string | null = null;
+
   // Sayfalama
   currentPage = 1;
   itemsPerPage = 10;
@@ -337,6 +341,78 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
   clearMessages(): void {
     this.error = null;
     this.success = null;
+  }
+
+  // Görünüm modu değiştirme
+  setViewMode(mode: 'list' | 'topics'): void {
+    this.viewMode = mode;
+    if (mode === 'list') {
+      this.selectedTopic = null;
+    }
+  }
+
+  // Konu seçimi
+  selectTopic(konuAdi: string): void {
+    this.selectedTopic = this.selectedTopic === konuAdi ? null : konuAdi;
+  }
+
+  // Konu seçimini temizle
+  clearTopicSelection(): void {
+    this.selectedTopic = null;
+  }
+
+  // Benzersiz konu sayısı
+  getUniqueTopicsCount(): number {
+    const uniqueTopics = [...new Set(this.sorular.map(soru => soru.konu_adi))];
+    return uniqueTopics.length;
+  }
+
+  // Konuları sayılarıyla birlikte getir
+  getTopicsWithCount(): any[] {
+    const topicCounts: { [key: string]: { count: number, kolay: number, orta: number, zor: number } } = {};
+    
+    this.sorular.forEach(soru => {
+      if (!topicCounts[soru.konu_adi]) {
+        topicCounts[soru.konu_adi] = { count: 0, kolay: 0, orta: 0, zor: 0 };
+      }
+      topicCounts[soru.konu_adi].count++;
+      
+      // Zorluk derecesine göre sayıları artır
+      if (soru.zorluk_derecesi === 'kolay') {
+        topicCounts[soru.konu_adi].kolay++;
+      } else if (soru.zorluk_derecesi === 'orta') {
+        topicCounts[soru.konu_adi].orta++;
+      } else if (soru.zorluk_derecesi === 'zor') {
+        topicCounts[soru.konu_adi].zor++;
+      }
+    });
+
+    return Object.keys(topicCounts)
+      .map(konu_adi => ({
+        konu_adi,
+        count: topicCounts[konu_adi].count,
+        kolay: topicCounts[konu_adi].kolay,
+        orta: topicCounts[konu_adi].orta,
+        zor: topicCounts[konu_adi].zor
+      }))
+      .sort((a, b) => b.count - a.count); // Soru sayısına göre sırala
+  }
+
+  // Seçili konuya göre filtrelenmiş sorular
+  getFilteredQuestionsByTopic(): Soru[] {
+    if (!this.selectedTopic) return [];
+    
+    return this.sorular
+      .filter(soru => soru.konu_adi === this.selectedTopic)
+      .sort((a, b) => {
+        // Önce zorluk derecesine göre sırala
+        const zorlukSirasi = { 'kolay': 1, 'orta': 2, 'zor': 3 };
+        const zorlukFarki = zorlukSirasi[a.zorluk_derecesi] - zorlukSirasi[b.zorluk_derecesi];
+        if (zorlukFarki !== 0) return zorlukFarki;
+        
+        // Sonra tarihe göre sırala (yeniden eskiye)
+        return new Date(b.olusturma_tarihi || '').getTime() - new Date(a.olusturma_tarihi || '').getTime();
+      });
   }
 
   onFileSelected(event: any): void {
