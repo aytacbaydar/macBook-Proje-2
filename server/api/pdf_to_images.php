@@ -2,11 +2,11 @@
 require_once '../config.php';
 
 // Temel ayarlar - optimize edildi
-ini_set('memory_limit', '256M');
+ini_set('memory_limit', '512M');
 ini_set('max_execution_time', 120);
 ini_set('max_input_time', 120);
-ini_set('upload_max_filesize', '6M');
-ini_set('post_max_size', '6M');
+ini_set('upload_max_filesize', '100M');
+ini_set('post_max_size', '100M');
 
 // Hata raporlama
 error_reporting(E_ALL);
@@ -68,12 +68,12 @@ if ($mimeType !== 'application/pdf') {
     exit;
 }
 
-// Dosya boyutu kontrolü (6MB)
-if ($uploadedFile['size'] > 6 * 1024 * 1024) {
+// Dosya boyutu kontrolü (100MB)
+if ($uploadedFile['size'] > 100 * 1024 * 1024) {
     http_response_code(400);
     echo json_encode([
         'success' => false,
-        'message' => 'Dosya boyutu 6MB\'dan büyük olamaz'
+        'message' => 'Dosya boyutu 100MB\'dan büyük olamaz'
     ]);
     exit;
 }
@@ -184,9 +184,9 @@ function convertPdfWithGhostscript($pdfPath, $fileId, $imageDir) {
         $pageCount = intval(trim($pageCountOutput[0]));
     }
 
-    // Maksimum 10 sayfa
-    if ($pageCount > 10) {
-        throw new Exception('PDF çok fazla sayfa içeriyor. Maksimum 10 sayfa desteklenir.');
+    // Maksimum 400 sayfa
+    if ($pageCount > 400) {
+        throw new Exception('PDF çok fazla sayfa içeriyor. Maksimum 400 sayfa desteklenir.');
     }
 
     error_log("PDF sayfa sayısı: " . $pageCount);

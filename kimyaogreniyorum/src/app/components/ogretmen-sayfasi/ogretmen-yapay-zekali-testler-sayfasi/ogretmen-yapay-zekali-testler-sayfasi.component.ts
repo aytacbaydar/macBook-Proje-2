@@ -349,8 +349,8 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
         return;
       }
 
-      // Dosya boyutu kontrolü (5MB)
-      if (file.size > 5 * 1024 * 1024) {
+      // Dosya boyutu kontrolü (10MB)
+      if (file.size > 100 * 1024 * 1024) {
         this.error = "Dosya boyutu 5MB'dan büyük olamaz";
         return;
       }
@@ -471,8 +471,8 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
       }
 
       // Dosya boyutu kontrolü (6MB)
-      if (file.size > 6 * 1024 * 1024) {
-        this.error = "Dosya boyutu 6MB'dan büyük olamaz";
+      if (file.size > 100 * 1024 * 1024) {
+        this.error = "Dosya boyutu 100MB'dan büyük olamaz";
         return;
       }
 
