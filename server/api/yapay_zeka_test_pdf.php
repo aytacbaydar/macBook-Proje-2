@@ -99,6 +99,10 @@ $html_content = '
         .header p { font-size: 9px; margin: 1px 0; }
 
         .container {
+            column-count: 2;
+            column-gap: 10mm;
+            column-rule: 1px solid #ddd;
+            column-fill: balance;
             width: 100%;
             max-width: 180mm;
             margin: 0 auto;
@@ -107,7 +111,7 @@ $html_content = '
         .soru { 
             width: 100%;
             height: auto;
-            margin-bottom: 15mm; 
+            margin-bottom: 8mm; 
             page-break-inside: avoid;
             break-inside: avoid;
             padding: 0;
