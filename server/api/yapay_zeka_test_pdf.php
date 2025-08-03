@@ -45,8 +45,7 @@ $html_content = '
 <head>
     <meta charset="UTF-8">
     <style>
-        @page { size: A4; margin: 15mm; }
-        @page {
+        @page { size: A4; margin: 15mm; 
             @bottom-center {
                 content: "kimyaogreniyorum.com";
                 font-size: 10px;
