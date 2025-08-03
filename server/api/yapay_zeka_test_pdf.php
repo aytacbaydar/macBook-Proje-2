@@ -44,7 +44,8 @@ $html_content = '
 <html>
 <head>
     <meta charset="UTF-8">
-    @page:first { 
+    <style>
+        @page:first { 
             size: A4; 
             margin: 15mm;
             @bottom-center {
@@ -98,27 +99,26 @@ $html_content = '
         .header p { font-size: 9px; margin: 1px 0; }
 
         .container {
-            column-count: 2;
-            column-gap: 15mm;
-            column-rule: 1px solid #ddd;
-            column-fill: balance;
+            width: 100%;
+            max-width: 180mm;
+            margin: 0 auto;
         }
 
         .soru { 
-            width: 300px;
+            width: 100%;
             height: auto;
-            margin-bottom: 10px; 
+            margin-bottom: 15mm; 
             page-break-inside: avoid;
             break-inside: avoid;
             padding: 0;
-            display: flex;
-            flex-direction: row;
+            display: block;
             box-sizing: border-box;
         }
 
         .soru-header {
             display: flex;
             align-items: flex-start;
+            margin-bottom: 3mm;
         }
 
         .soru-numara {
@@ -165,7 +165,7 @@ $html_content = '
         .zor { background: #f44336; }
 
         .secenekler { 
-            margin-left: 12mm; 
+            margin-left: 8mm; 
             font-size: 14px;
             margin-top: 4mm;
         }
@@ -193,7 +193,7 @@ $html_content = '
         }
 
         .soru-resim img {
-            width: 250px;
+            max-width: 100%;
             height: auto;
             border-radius: 1mm;
         }
