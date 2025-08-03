@@ -64,9 +64,9 @@ $ogrenci_id = $input['ogrenci_id'] ?? null;
 $gelistirilmesi_gereken_konular = $input['gelistirilmesi_gereken_konular'] ?? [];
 $en_iyi_konular = $input['en_iyi_konular'] ?? [];
 $diger_konular = $input['diger_konular'] ?? [];
-$kolay_soru_sayisi = max(1, min(15, $input['kolay_soru_sayisi'] ?? 5));
-$orta_soru_sayisi = max(1, min(15, $input['orta_soru_sayisi'] ?? 5));
-$zor_soru_sayisi = max(1, min(15, $input['zor_soru_sayisi'] ?? 5));
+$kolay_soru_sayisi = max(1, min(45, $input['kolay_soru_sayisi'] ?? 15));
+$orta_soru_sayisi = max(1, min(45, $input['orta_soru_sayisi'] ?? 15));
+$zor_soru_sayisi = max(1, min(45, $input['zor_soru_sayisi'] ?? 15));
 
 // Toplam soru sayısını kontrol et (5-45 arası)
 $toplam_soru = $kolay_soru_sayisi + $orta_soru_sayisi + $zor_soru_sayisi;

@@ -76,9 +76,9 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   loadingKonular = false;
   
   // Soru zorluk seviyeleri
-  kolayQuestionCount = 5;
-  ortaQuestionCount = 5;
-  zorQuestionCount = 5;
+  kolayQuestionCount = 15;
+  ortaQuestionCount = 15;
+  zorQuestionCount = 15;
   
   // Tek zorluk seviyesi seçim özellikleri
   singleDifficultyMode = false;
@@ -526,10 +526,10 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     // Zorluk seviyesi ayarlarını sıfırla
     this.singleDifficultyMode = false;
     this.selectedSingleDifficulty = 'kolay';
-    this.totalQuestionCount = 15;
-    this.kolayQuestionCount = 5;
-    this.ortaQuestionCount = 5;
-    this.zorQuestionCount = 5;
+    this.totalQuestionCount = 45;
+    this.kolayQuestionCount = 15;
+    this.ortaQuestionCount = 15;
+    this.zorQuestionCount = 15;
     
     this.error = null;
     this.success = null;
