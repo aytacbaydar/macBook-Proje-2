@@ -49,77 +49,82 @@ $html_content = '
         @page { size: A4; margin: 15mm; }
         body { 
             font-family: Arial, sans-serif; 
-            margin: 0; 
+            margin: 15mm; 
             padding: 0;
-            font-size: 11px;
-            line-height: 1.3;
+            font-size: 10px;
+            line-height: 1.2;
         }
         .header { 
             text-align: center; 
-            margin-bottom: 20px; 
-            padding-bottom: 10px;
+            margin-bottom: 15mm; 
+            padding-bottom: 8px;
             border-bottom: 2px solid #333;
         }
-        .header h1 { font-size: 16px; margin: 5px 0; }
-        .header p { font-size: 10px; margin: 2px 0; }
+        .header h1 { font-size: 14px; margin: 3px 0; }
+        .header p { font-size: 9px; margin: 1px 0; }
         
         .container {
             column-count: 2;
-            column-gap: 20px;
+            column-gap: 15mm;
             column-rule: 1px solid #ddd;
+            column-fill: balance;
         }
         
         .soru { 
-            margin-bottom: 15px; 
+            width: 80mm;
+            height: auto;
+            max-height: 65mm;
+            margin-bottom: 8mm; 
             page-break-inside: avoid;
             break-inside: avoid;
-            padding: 8px;
+            padding: 6mm;
             border: 1px solid #e0e0e0;
-            border-radius: 5px;
+            border-radius: 3mm;
             display: flex;
             flex-direction: column;
+            box-sizing: border-box;
         }
         
         .soru-header {
             display: flex;
             align-items: flex-start;
-            margin-bottom: 8px;
+            margin-bottom: 4mm;
         }
         
         .soru-numara {
             font-weight: bold;
-            font-size: 11px;
-            margin-right: 8px;
-            min-width: 25px;
+            font-size: 10px;
+            margin-right: 4mm;
+            min-width: 8mm;
             flex-shrink: 0;
             color: #333;
         }
         
         .soru-metin { 
             font-weight: bold; 
-            font-size: 11px;
-            line-height: 1.4;
+            font-size: 10px;
+            line-height: 1.3;
             flex: 1;
         }
         
         .badges {
-            margin-bottom: 8px;
+            margin-bottom: 4mm;
         }
         
         .konu-badge { 
             background: #e3f2fd; 
-            padding: 1px 6px; 
-            border-radius: 8px; 
-            font-size: 9px; 
+            padding: 1mm 3mm; 
+            border-radius: 2mm; 
+            font-size: 8px; 
             color: #1976d2;
             display: inline-block;
-            margin-right: 5px;
+            margin-right: 2mm;
         }
         
         .zorluk-badge { 
-            padding: 1px 6px; 
-            border-radius: 8px; 
-            font-size: 9px; 
+            padding: 1mm 3mm; 
+            border-radius: 2mm; 
+            font-size: 8px; 
             color: white;
             display: inline-block;
         }
@@ -129,22 +134,22 @@ $html_content = '
         .zor { background: #f44336; }
         
         .secenekler { 
-            margin-left: 33px; 
-            font-size: 10px;
-            margin-top: 5px;
+            margin-left: 12mm; 
+            font-size: 9px;
+            margin-top: 3mm;
         }
         
         .secenek { 
-            margin-bottom: 4px; 
-            line-height: 1.4;
+            margin-bottom: 2mm; 
+            line-height: 1.3;
             display: flex;
             align-items: flex-start;
         }
         
         .secenek-harf {
             font-weight: bold;
-            margin-right: 6px;
-            min-width: 15px;
+            margin-right: 3mm;
+            min-width: 6mm;
             flex-shrink: 0;
         }
         
@@ -154,13 +159,13 @@ $html_content = '
         
         .soru-resim {
             text-align: center;
-            margin: 8px 0;
+            margin: 3mm 0;
         }
         
         .soru-resim img {
-            max-width: 100%;
-            max-height: 80px;
-            border-radius: 3px;
+            max-width: 70mm;
+            max-height: 25mm;
+            border-radius: 1mm;
         }
     </style>
 </head>
