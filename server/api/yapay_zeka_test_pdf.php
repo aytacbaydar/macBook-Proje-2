@@ -71,7 +71,7 @@ $html_content = '
         }
         
         .soru { 
-            width: 80mm;
+            width: 120mm;
             height: auto;
             max-height: 70mm;
             margin-bottom: 10mm; 
@@ -162,7 +162,7 @@ $html_content = '
         }
         
         .soru-resim img {
-            max-width: 70mm;
+            max-width: 110mm;
             max-height: 25mm;
             border-radius: 1mm;
         }
