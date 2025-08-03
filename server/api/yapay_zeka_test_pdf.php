@@ -46,6 +46,14 @@ $html_content = '
     <meta charset="UTF-8">
     <style>
         @page { size: A4; margin: 15mm; }
+        @page {
+            @bottom-center {
+                content: "kimyaogreniyorum.com";
+                font-size: 10px;
+                color: #ff6600;
+                font-weight: bold;
+            }
+        }
         body { 
             font-family: Arial, sans-serif; 
             margin: 15mm; 
@@ -61,14 +69,14 @@ $html_content = '
         }
         .header h1 { font-size: 14px; margin: 3px 0; }
         .header p { font-size: 9px; margin: 1px 0; }
-        
+
         .container {
             column-count: 2;
             column-gap: 15mm;
             column-rule: 1px solid #ddd;
             column-fill: balance;
         }
-        
+
         .soru { 
             width: 300px;
             height: auto;
@@ -80,12 +88,12 @@ $html_content = '
             flex-direction: row;
             box-sizing: border-box;
         }
-        
+
         .soru-header {
             display: flex;
             align-items: flex-start;
         }
-        
+
         .soru-numara {
             font-weight: bold;
             font-size: 12px;
@@ -95,18 +103,18 @@ $html_content = '
             z-index: 10;
             margin-top: 2px;
         }
-        
+
         .soru-metin { 
             font-weight: bold; 
             font-size: 16px;
             line-height: 1.4;
             flex: 1;
         }
-        
+
         .badges {
             margin-bottom: 4mm;
         }
-        
+
         .konu-badge { 
             background: #e3f2fd; 
             padding: 1mm 3mm; 
@@ -116,7 +124,7 @@ $html_content = '
             display: inline-block;
             margin-right: 2mm;
         }
-        
+
         .zorluk-badge { 
             padding: 1mm 3mm; 
             border-radius: 2mm; 
@@ -124,39 +132,39 @@ $html_content = '
             color: white;
             display: inline-block;
         }
-        
+
         .kolay { background: #4caf50; }
         .orta { background: #ff9800; }
         .zor { background: #f44336; }
-        
+
         .secenekler { 
             margin-left: 12mm; 
             font-size: 14px;
             margin-top: 4mm;
         }
-        
+
         .secenek { 
             margin-bottom: 3mm; 
             line-height: 1.4;
             display: flex;
             align-items: flex-start;
         }
-        
+
         .secenek-harf {
             font-weight: bold;
             margin-right: 3mm;
             min-width: 6mm;
             flex-shrink: 0;
         }
-        
+
         .secenek-metin {
             flex: 1;
         }
-        
+
         .soru-resim {
             text-align: center;
         }
-        
+
         .soru-resim img {
             width: 250px;
             height: auto;
@@ -170,7 +178,7 @@ $html_content = '
         <p>Test Adı: ' . htmlspecialchars($test['test_adi']) . '</p>
         <p>Tarih: ' . date('d.m.Y H:i', strtotime($test['olusturma_tarihi'])) . ' | Toplam Soru: ' . count($sorular) . '</p>
     </div>
-    
+
     <div class="container">
 ';
 
@@ -181,7 +189,7 @@ foreach ($sorular as $index => $soru) {
         <div class="soru-header">
             <span class="soru-numara">' . $soru_no . '.</span>
         </div>';
-    
+
     // Soru resmi varsa ekle
     if (!empty($soru['soru_resmi'])) {
         $resim_yolu = '../../uploads/soru_resimleri/' . $soru['soru_resmi'];
@@ -192,7 +200,7 @@ foreach ($sorular as $index => $soru) {
             </div>';
         }
     }
-    
+
     $html_content .= '
         <div class="secenekler">';
 
@@ -205,7 +213,7 @@ foreach ($sorular as $index => $soru) {
             }
         }
     }
-    
+
     foreach ($secenekler_array as $secenek) {
         // A) formatından harfi ve metni ayır
         if (preg_match('/^([A-E])\)\s*(.*)$/', $secenek, $matches)) {
