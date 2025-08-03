@@ -73,13 +73,11 @@ $html_content = '
         .soru { 
             width: 80mm;
             height: auto;
-            max-height: 65mm;
-            margin-bottom: 8mm; 
+            max-height: 70mm;
+            margin-bottom: 10mm; 
             page-break-inside: avoid;
             break-inside: avoid;
-            padding: 6mm;
-            border: 1px solid #e0e0e0;
-            border-radius: 3mm;
+            padding: 0;
             display: flex;
             flex-direction: column;
             box-sizing: border-box;
@@ -88,22 +86,23 @@ $html_content = '
         .soru-header {
             display: flex;
             align-items: flex-start;
-            margin-bottom: 4mm;
+            margin-bottom: 5mm;
         }
         
         .soru-numara {
             font-weight: bold;
-            font-size: 10px;
+            font-size: 12px;
             margin-right: 4mm;
             min-width: 8mm;
             flex-shrink: 0;
             color: #333;
+            line-height: 1.4;
         }
         
         .soru-metin { 
             font-weight: bold; 
-            font-size: 10px;
-            line-height: 1.3;
+            font-size: 12px;
+            line-height: 1.4;
             flex: 1;
         }
         
@@ -135,13 +134,13 @@ $html_content = '
         
         .secenekler { 
             margin-left: 12mm; 
-            font-size: 9px;
-            margin-top: 3mm;
+            font-size: 11px;
+            margin-top: 4mm;
         }
         
         .secenek { 
-            margin-bottom: 2mm; 
-            line-height: 1.3;
+            margin-bottom: 3mm; 
+            line-height: 1.4;
             display: flex;
             align-items: flex-start;
         }
@@ -183,10 +182,6 @@ foreach ($sorular as $index => $soru) {
     $soru_no = $index + 1;
     $html_content .= '
     <div class="soru">
-        <div class="badges">
-            <span class="konu-badge">' . htmlspecialchars($soru['konu_adi']) . '</span>
-            <span class="zorluk-badge ' . $soru['zorluk_derecesi'] . '">' . ucfirst($soru['zorluk_derecesi']) . '</span>
-        </div>
         <div class="soru-header">
             <span class="soru-numara">' . $soru_no . '.</span>
             <span class="soru-metin">' . htmlspecialchars($soru['soru_metni']) . '</span>
