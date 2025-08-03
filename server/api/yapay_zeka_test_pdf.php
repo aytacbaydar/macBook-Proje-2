@@ -44,10 +44,31 @@ $html_content = '
 <html>
 <head>
     <meta charset="UTF-8">
-    <style>
+    @page:first { 
+            size: A4; 
+            margin: 15mm;
+            @bottom-center {
+                content: "kimyaogreniyorum.com";
+                font-size: 10px;
+                color: #ff6600;
+                font-weight: bold;
+            }
+            @bottom-right {
+                content: "Sayfa " counter(page) " / " counter(pages);
+                font-size: 9px;
+                color: #333;
+            }
+        }
+        
         @page { 
             size: A4; 
             margin: 15mm;
+            @top-left {
+                content: "' . htmlspecialchars($test['test_adi']) . '";
+                font-size: 12px;
+                color: #333;
+                font-weight: bold;
+            }
             @bottom-center {
                 content: "kimyaogreniyorum.com";
                 font-size: 10px;
