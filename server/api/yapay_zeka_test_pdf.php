@@ -91,7 +91,7 @@ $html_content = '
         
         .soru-numara {
             font-weight: bold;
-            font-size: 12px;
+            font-size: 16px;
             margin-right: 4mm;
             min-width: 8mm;
             flex-shrink: 0;
@@ -101,7 +101,7 @@ $html_content = '
         
         .soru-metin { 
             font-weight: bold; 
-            font-size: 12px;
+            font-size: 16px;
             line-height: 1.4;
             flex: 1;
         }
@@ -134,7 +134,7 @@ $html_content = '
         
         .secenekler { 
             margin-left: 12mm; 
-            font-size: 11px;
+            font-size: 14px;
             margin-top: 4mm;
         }
         
