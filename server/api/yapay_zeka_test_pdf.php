@@ -71,32 +71,30 @@ $html_content = '
         }
         
         .soru { 
-            width: 120mm;
+            width: 300px;
             height: auto;
-            max-height: 70mm;
-            margin-bottom: 10mm; 
+            margin-bottom: 10px; 
             page-break-inside: avoid;
             break-inside: avoid;
             padding: 0;
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             box-sizing: border-box;
         }
         
         .soru-header {
             display: flex;
             align-items: flex-start;
-            margin-bottom: 5mm;
         }
         
         .soru-numara {
             font-weight: bold;
-            font-size: 16px;
-            margin-right: 4mm;
-            min-width: 8mm;
+            font-size: 12px;
+            margin-right: 10px;
             flex-shrink: 0;
-            color: #333;
-            line-height: 1.4;
+            color: #ff6600;
+            z-index: 10;
+            margin-top: 5px;
         }
         
         .soru-metin { 
@@ -158,12 +156,11 @@ $html_content = '
         
         .soru-resim {
             text-align: center;
-            margin: 3mm 0;
         }
         
         .soru-resim img {
-            max-width: 110mm;
-            max-height: 25mm;
+            width: 250px;
+            height: auto;
             border-radius: 1mm;
         }
     </style>
@@ -184,7 +181,6 @@ foreach ($sorular as $index => $soru) {
     <div class="soru">
         <div class="soru-header">
             <span class="soru-numara">' . $soru_no . '.</span>
-            <span class="soru-metin">' . htmlspecialchars($soru['soru_metni']) . '</span>
         </div>';
     
     // Soru resmi varsa ekle
