@@ -44,7 +44,6 @@ $html_content = '
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Yapay Zeka Test - ' . $test_id . '</title>
     <style>
         @page { size: A4; margin: 15mm; }
         body { 
@@ -92,9 +91,9 @@ $html_content = '
             font-size: 12px;
             margin-right: 10px;
             flex-shrink: 0;
-            color: #ff6600;
+            color: #7a7a7aff;
             z-index: 10;
-            margin-top: 5px;
+            margin-top: 2px;
         }
         
         .soru-metin { 
@@ -169,7 +168,7 @@ $html_content = '
     <div class="header">
         <h1>Yapay Zeka Destekli Test</h1>
         <p>Test Adı: ' . htmlspecialchars($test['test_adi']) . '</p>
-        <p>Test ID: ' . $test_id . ' | Tarih: ' . date('d.m.Y H:i', strtotime($test['olusturma_tarihi'])) . ' | Toplam Soru: ' . count($sorular) . '</p>
+        <p>Tarih: ' . date('d.m.Y H:i', strtotime($test['olusturma_tarihi'])) . ' | Toplam Soru: ' . count($sorular) . '</p>
     </div>
     
     <div class="container">
