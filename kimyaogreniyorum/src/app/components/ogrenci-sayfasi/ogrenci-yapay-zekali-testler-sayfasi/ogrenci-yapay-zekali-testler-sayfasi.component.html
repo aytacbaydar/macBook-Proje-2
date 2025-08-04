@@ -390,13 +390,13 @@
                  *ngFor="let soru of currentTest.sorular; let i = index"
                  [class.current]="i === currentQuestionIndex"
                  [class.answered]="userAnswers[i]">
-              <div class="question-number">{{ i + 1 }}</div>
+              <div class="question-number" (click)="goToQuestion(i)">{{ i + 1 }}</div>
               <div class="options">
                 <button class="option-btn"
                         *ngFor="let option of ['A', 'B', 'C', 'D', 'E']; let j = index"
                         [class.selected]="userAnswers[i] === option"
-                        [class.unavailable]="!hasOption(currentTest.sorular[i], j)"
-                        [disabled]="!hasOption(currentTest.sorular[i], j)"
+                        [class.unavailable]="!hasOption(soru, j)"
+                        [disabled]="!hasOption(soru, j)"
                         (click)="selectAnswer(i, option)">
                   {{ option }}
                 </button>
