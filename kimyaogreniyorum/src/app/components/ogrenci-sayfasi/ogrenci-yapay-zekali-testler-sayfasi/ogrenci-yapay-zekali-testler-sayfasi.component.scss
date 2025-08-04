@@ -2089,6 +2089,23 @@
                   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
                 }
 
+                &.unavailable {
+                  opacity: 0.3;
+                  cursor: default;
+                  transform: none;
+                  background-color: #f8f9fa !important;
+                  color: #6c757d !important;
+                  border-color: #dee2e6 !important;
+                  pointer-events: none;
+
+                  &:hover {
+                    background-color: #f8f9fa !important;
+                    color: #6c757d !important;
+                    transform: none;
+                    cursor: default;
+                  }
+                }
+
                 &:disabled {
                   opacity: 0.3;
                   cursor: not-allowed;
