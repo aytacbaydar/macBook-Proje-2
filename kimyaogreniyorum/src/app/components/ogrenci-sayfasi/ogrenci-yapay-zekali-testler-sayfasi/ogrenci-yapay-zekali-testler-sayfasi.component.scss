@@ -1036,7 +1036,7 @@
             color: #383d41;
           }
 
-          &.info {<previous_generation>
+          &.info {
             background: linear-gradient(135deg, #d1ecf1 0%,#bee5eb 100%);
             color: #0c5460;
           }
@@ -2451,7 +2451,7 @@
   }
 }
 
-Fix disabled styles of optical form buttons.
+// Fix disabled styles of optical form buttons.
 .optical-form-section {
       .optical-form {
         .optical-grid {
@@ -2476,4 +2476,4 @@ Fix disabled styles of optical form buttons.
           }
         }
       }
-    }
+    }}
