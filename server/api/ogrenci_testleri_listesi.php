@@ -1,4 +1,3 @@
-
 <?php
 require_once '../config.php';
 
@@ -28,34 +27,40 @@ if (!$ogrenci_id) {
 
 try {
     // Öğrencinin testlerini getir
-    $sql = "SELECT id, test_adi, olusturma_tarihi, tamamlanma_tarihi, sonuc, 
-            JSON_LENGTH(sorular) as toplam_soru
-            FROM yapay_zeka_testler 
-            WHERE ogrenci_id = ? 
-            ORDER BY olusturma_tarihi DESC";
-    
+    $sql = "SELECT id, olusturma_tarihi, sorular, tamamlandi, tamamlanma_tarihi, test_sonuclari FROM yapay_zeka_testler WHERE ogrenci_id = ? ORDER BY olusturma_tarihi DESC";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$ogrenci_id]);
     $testler = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Test sonuçlarını parse et
-    foreach ($testler as &$test) {
-        if ($test['sonuc']) {
-            $sonuc = json_decode($test['sonuc'], true);
-            $test['dogru_sayisi'] = $sonuc['dogru_sayisi'] ?? 0;
-            $test['yanlis_sayisi'] = $sonuc['yanlis_sayisi'] ?? 0;
-            $test['bos_sayisi'] = $sonuc['bos_sayisi'] ?? 0;
-            $test['net'] = $sonuc['net'] ?? 0;
-            $test['yuzde'] = $sonuc['yuzde'] ?? 0;
-            $test['tamamlandi'] = true;
-        } else {
-            $test['tamamlandi'] = false;
+    $testListesi = [];
+    foreach ($testler as $test) {
+        $sorular = json_decode($test['sorular'], true);
+        $testSonuclari = null;
+
+        // Eğer test tamamlandıysa sonuçları da ekle
+        if ($test['tamamlandi'] && !empty($test['test_sonuclari'])) {
+            $testSonuclari = json_decode($test['test_sonuclari'], true);
         }
+
+        $testItem = [
+            'id' => $test['id'],
+            'olusturma_tarihi' => $test['olusturma_tarihi'],
+            'toplam_soru' => count($sorular ?: []),
+            'tamamlandi' => (bool)$test['tamamlandi'],
+            'tamamlanma_tarihi' => $test['tamamlanma_tarihi']
+        ];
+
+        // Test sonuçlarını ekle
+        if ($testSonuclari) {
+            $testItem['test_sonuclari'] = $testSonuclari;
+        }
+
+        $testListesi[] = $testItem;
     }
 
     echo json_encode([
         'success' => true,
-        'data' => $testler,
+        'data' => $testListesi,
         'message' => 'Testler başarıyla getirildi'
     ]);
 

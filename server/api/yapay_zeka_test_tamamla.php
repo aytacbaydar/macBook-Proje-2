@@ -1,3 +1,4 @@
+
 <?php
 require_once '../config.php';
 
@@ -48,6 +49,19 @@ if (!$test_id) {
 }
 
 try {
+    // Önce testin var olup olmadığını kontrol et
+    $checkSql = "SELECT id FROM yapay_zeka_testler WHERE id = ?";
+    $checkStmt = $pdo->prepare($checkSql);
+    $checkStmt->execute([$test_id]);
+    
+    if (!$checkStmt->fetch()) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Test bulunamadı'
+        ]);
+        exit;
+    }
+
     // Test sonuçlarını ve cevapları veritabanına kaydet
     $sql = "UPDATE yapay_zeka_testler SET 
             user_answers = ?, 
@@ -58,12 +72,12 @@ try {
 
     $stmt = $pdo->prepare($sql);
     $result = $stmt->execute([
-        json_encode($user_answers),
-        json_encode($test_results),
+        json_encode($user_answers, JSON_UNESCAPED_UNICODE),
+        json_encode($test_results, JSON_UNESCAPED_UNICODE),
         $test_id
     ]);
 
-    if ($result) {
+    if ($result && $stmt->rowCount() > 0) {
         echo json_encode([
             'success' => true,
             'message' => 'Test sonuçları başarıyla kaydedildi'
@@ -71,7 +85,7 @@ try {
     } else {
         echo json_encode([
             'success' => false,
-            'message' => 'Test sonuçları kaydedilemedi'
+            'message' => 'Test sonuçları kaydedilemedi - kayıt etkilenmedi'
         ]);
     }
 

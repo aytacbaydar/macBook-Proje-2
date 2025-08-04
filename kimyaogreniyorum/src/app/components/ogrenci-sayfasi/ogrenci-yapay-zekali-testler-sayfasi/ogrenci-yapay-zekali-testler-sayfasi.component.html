@@ -68,6 +68,23 @@
             <span class="badge" [class.bg-success]="test.tamamlandi" [class.bg-warning]="!test.tamamlandi">
               {{ test.tamamlandi ? 'Tamamlandı' : 'Devam Ediyor' }}
             </span>
+            <div *ngIf="test.tamamlandi && test.test_sonuclari" class="test-results-summary">
+              <span class="result-item success">
+                <i class="bi bi-check-circle"></i>
+                {{ test.test_sonuclari.dogru_sayisi }}
+              </span>
+              <span class="result-item danger">
+                <i class="bi bi-x-circle"></i>
+                {{ test.test_sonuclari.yanlis_sayisi }}
+              </span>
+              <span class="result-item secondary">
+                <i class="bi bi-circle"></i>
+                {{ test.test_sonuclari.bos_sayisi }}
+              </span>
+              <span class="result-item info">
+                <strong>%{{ test.test_sonuclari.yuzde }}</strong>
+              </span>
+            </div>
           </div>
         </div>
 

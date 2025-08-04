@@ -1037,7 +1037,7 @@
           }
 
           &.info {
-            background: linear-gradient(135deg, #d1ecf1 0%,#bee5eb 100%);
+            background: linear-gradient(135deg, #d1ecf1 0%,#bee5eb 100%);```text
             color: #0c5460;
           }
 
@@ -1676,3 +1676,61 @@
     }
   }
 }
+
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+
+    &.completed {
+      background-color: #d1edff;
+      color: #0969da;
+    }
+
+    &.in-progress {
+      background-color: #fff8c5;
+      color: #9a6700;
+    }
+  }
+
+  .test-results-summary {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+
+    .result-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.125rem 0.5rem;
+      border-radius: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+
+      i {
+        font-size: 0.75rem;
+      }
+
+      &.success {
+        background-color: #dcfce7;
+        color: #166534;
+      }
+
+      &.danger {
+        background-color: #fef2f2;
+        color: #dc2626;
+      }
+
+      &.secondary {
+        background-color: #f1f5f9;
+        color: #64748b;
+      }
+
+      &.info {
+        background-color: #eff6ff;
+        color: #2563eb;
+      }
+    }
+  }
