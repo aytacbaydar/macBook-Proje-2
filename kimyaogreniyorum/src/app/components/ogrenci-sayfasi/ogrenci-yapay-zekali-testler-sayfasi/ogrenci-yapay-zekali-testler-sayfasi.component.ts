@@ -750,17 +750,8 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   // Testi devam ettir veya sonuçlarını görüntüle
   continueTest(test: any): void {
     if (test.tamamlandi) {
-      // Test tamamlanmış, sonuçları göster
-      this.testResults = {
-        dogru_sayisi: test.dogru_sayisi,
-        yanlis_sayisi: test.yanlis_sayisi,
-        bos_sayisi: test.bos_sayisi,
-        toplam_soru: test.toplam_soru,
-        net: test.net,
-        yuzde: test.yuzde
-      };
-      this.currentStep = 5;
-      this.showResults = true;
+      // Test tamamlanmış, detaylı sonuçları yükle
+      this.loadCompletedTestResults(test.id);
     } else {
       // Test devam ettirilebilir, test detaylarını yükle
       this.loadTestDetails(test.id);
@@ -788,6 +779,55 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
       error: (error) => {
         this.loading = false;
         this.error = 'Test detayları yüklenirken hata oluştu: ' + (error.error?.message || error.message);
+      }
+    });
+  }
+
+  // Tamamlanmış test sonuçlarını detaylarıyla birlikte yükle
+  private loadCompletedTestResults(testId: string): void {
+    this.loading = true;
+    this.error = null;
+
+    this.http.get<any>(`./server/api/yapay_zeka_test_detay.php?test_id=${testId}&completed=true`).subscribe({
+      next: (response) => {
+        this.loading = false;
+        if (response.success) {
+          // Test sonuçlarını oluştur
+          this.testResults = {
+            dogru_sayisi: response.test_sonuclari?.dogru_sayisi || 0,
+            yanlis_sayisi: response.test_sonuclari?.yanlis_sayisi || 0,
+            bos_sayisi: response.test_sonuclari?.bos_sayisi || 0,
+            toplam_soru: response.test?.sorular?.length || 0,
+            net: response.test_sonuclari?.net || 0,
+            yuzde: response.test_sonuclari?.yuzde || 0,
+            details: []
+          };
+
+          // Soru bazında detayları oluştur
+          if (response.test && response.test.sorular && response.user_answers) {
+            this.testResults.details = response.test.sorular.map((soru: any, index: number) => {
+              const userAnswer = response.user_answers[index] || '';
+              const isCorrect = userAnswer === soru.dogru_cevap;
+              
+              return {
+                soru_index: index,
+                soru: soru,
+                user_answer: userAnswer,
+                correct_answer: soru.dogru_cevap,
+                is_correct: isCorrect
+              };
+            });
+          }
+
+          this.currentStep = 5;
+          this.showResults = true;
+        } else {
+          this.error = response.message || 'Test sonuçları yüklenemedi';
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+        this.error = 'Test sonuçları yüklenirken hata oluştu: ' + (error.error?.message || error.message);
       }
     });
   }
