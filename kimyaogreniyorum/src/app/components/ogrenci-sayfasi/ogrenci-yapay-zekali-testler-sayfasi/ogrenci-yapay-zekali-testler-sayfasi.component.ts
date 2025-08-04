@@ -1,10 +1,3 @@
-` tags.
-
-```text
-Merging changes to update interfaces and add missing properties and methods.
-```
-
-<replit_final_file>
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { HttpClient } from '@angular/common/http';
@@ -91,24 +84,6 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   selectedSingleDifficulty = 'kolay';
   totalQuestionCount = 15;
 
-  // Template'de kullanılan computed properties
-  get improvementTopics(): KonuAnalizi[] {
-    return this.getGelistirilmesiGerekenKonular();
-  }
-
-  get bestTopics(): KonuAnalizi[] {
-    return this.getEnIyiKonular();
-  }
-
-  get otherTopics(): Konu[] {
-    return this.tumKonular;
-  }
-
-  get currentQuestion(): TestSoru | null {
-    if (!this.currentTest || !this.currentTest.sorular) return null;
-    return this.currentTest.sorular[this.currentQuestionIndex] || null;
-  }
-
   // Mevcut test
   currentTest: Test | null = null;
   currentQuestionIndex = 0;
@@ -137,7 +112,6 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
 
   // Test listesi
   testListesi: any[] = [];
-  loadingTestList = false;
 
   // Confirm dialog
   showConfirmDialog = false;
@@ -149,6 +123,24 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     type: 'warning' as 'warning' | 'danger' | 'info' | 'success',
     action: null as (() => void) | null
   };
+
+  // Template'de kullanılan computed properties
+  get improvementTopics(): KonuAnalizi[] {
+    return this.getGelistirilmesiGerekenKonular();
+  }
+
+  get bestTopics(): KonuAnalizi[] {
+    return this.getEnIyiKonular();
+  }
+
+  get otherTopics(): Konu[] {
+    return this.tumKonular;
+  }
+
+  get currentQuestion(): TestSoru | null {
+    if (!this.currentTest || !this.currentTest.sorular) return null;
+    return this.currentTest.sorular[this.currentQuestionIndex] || null;
+  }
 
   constructor(
     private http: HttpClient, 
@@ -214,7 +206,60 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     });
   }
 
-  // Analiz metodları (mevcut konu analiz sayfasından alınmış)
+  // Test listesi yükleme
+  private loadTestListesi(): void {
+    if (!this.studentInfo) return;
+
+    this.loadingTestList = true;
+    this.error = null;
+
+    this.http.get<any>(`./server/api/ogrenci_testleri_listesi.php?ogrenci_id=${this.studentInfo.id}`).subscribe({
+      next: (response) => {
+        this.loadingTestList = false;
+        console.log('Test listesi response:', response);
+
+        if (response && response.success) {
+          this.testListesi = response.data || [];
+        } else if (response) {
+          this.error = response.message || 'Test listesi yüklenemedi';
+        } else {
+          this.error = 'Sunucudan geçersiz yanıt alındı';
+        }
+      },
+      error: (error) => {
+        this.loadingTestList = false;
+        console.error('Test listesi yükleme hatası:', error);
+        this.error = 'Test listesi yüklenirken hata oluştu: ' + (error.error?.message || error.message);
+      }
+    });
+  }
+
+  // Tüm konuları yükle
+  private loadTumKonular(): void {
+    this.loadingKonular = true;
+
+    this.http.get<any>('./server/api/konu_listesi.php').subscribe({
+      next: (response) => {
+        this.loadingKonular = false;
+        console.log('Konu listesi response:', response);
+
+        if (response && response.success && response.konular) {
+          this.tumKonular = response.konular;
+        } else if (response) {
+          this.error = response.message || 'Konular yüklenemedi';
+        } else {
+          this.error = 'Sunucudan geçersiz yanıt alındı';
+        }
+      },
+      error: (error) => {
+        this.loadingKonular = false;
+        console.error('Konu listesi yükleme hatası:', error);
+        this.error = 'Konular yüklenirken hata oluştu: ' + (error.error?.message || error.message);
+      }
+    });
+  }
+
+  // Analiz metodları
   getGelistirilmesiGerekenKonular(): KonuAnalizi[] {
     return this.konuAnalizi
       .filter(konu => konu.basari_orani < 60)
@@ -241,31 +286,6 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     if (basariOrani >= 60) return 'İyi';
     if (basariOrani >= 40) return 'Orta';
     return 'Geliştirilmeli';
-  }
-
-  // Tüm konuları yükle
-  private loadTumKonular(): void {
-    this.loadingKonular = true;
-
-    this.http.get<any>('./server/api/konu_listesi.php').subscribe({
-      next: (response) => {
-        this.loadingKonular = false;
-        console.log('Konu listesi response:', response);
-
-        if (response && response.success && response.konular) {
-          this.tumKonular = response.konular;
-        } else if (response) {
-          this.error = response.message || 'Konular yüklenemedi';
-        } else {
-          this.error = 'Sunucudan geçersiz yanıt alındı';
-        }
-      },
-      error: (error) => {
-        this.loadingKonular = false;
-        console.error('Konu listesi yükleme hatası:', error);
-        this.error = 'Konular yüklenirken hata oluştu: ' + (error.error?.message || error.message);
-      }
-    });
   }
 
   // Konu seçimi metodları
@@ -319,7 +339,6 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
       return;
     }
 
-    // Toplam soru sayısı kontrolü
     if (this.getTotalQuestionCount() < 1) {
       this.error = 'En az 1 soru seçmelisiniz';
       return;
@@ -328,7 +347,6 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    // Tek zorluk modu için soru sayılarını ayarla
     let kolayCount = this.kolayQuestionCount;
     let ortaCount = this.ortaQuestionCount;
     let zorCount = this.zorQuestionCount;
@@ -363,27 +381,16 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
       next: (response) => {
         this.loading = false;
 
-
-        // Daha esnek kontrol - response varsa ve success true ise
         if (response && (response.success === true || String(response.success) == "true")) {
-
-          // Test başarıyla oluşturuldu mesajını göster
           this.success = `Test başarıyla oluşturuldu! ${response.toplam_soru || 'Bilinmeyen sayıda'} soruluk test hazır.`;
 
-          // 2 saniye sonra mesajı temizle ve test listesine dön
           setTimeout(() => {
             this.clearMessages();
             this.backToTestList();
           }, 2000);
         } else {
-          // Test listesini güncelle
           this.loadTestListesi();
-
-          // Test listesi ekranına geri dön
           this.currentStep = 1;
-          //this.backToTestList();
-          //console.error('Test oluşturma başarısız - Response:', response);
-          //this.error = response?.message || 'Test oluşturulamadı - Sunucudan geçersiz yanıt alındı';
         }
       },
       error: (error) => {
@@ -418,7 +425,6 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   finishTest(): void {
     if (!this.currentTest) return;
 
-    // Sonuçları hesapla
     let correctAnswers = 0;
     let incorrectAnswers = 0;
     let emptyAnswers = 0;
@@ -446,7 +452,6 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
       });
     });
 
-    // Net hesaplama (doğru - yanlış/4)
     const net = correctAnswers - (incorrectAnswers * 0.25);
     const yuzde = Math.round((correctAnswers / this.currentTest.sorular.length) * 100);
 
@@ -460,14 +465,11 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
       details: results
     };
 
-    // Test sonuçlarını sunucuya kaydet
     this.saveTestResults();
-
     this.showResults = true;
     this.currentStep = 5;
   }
 
-  // Test sonuçlarını sunucuya kaydet
   private saveTestResults(): void {
     if (!this.currentTest || !this.testResults) return;
 
@@ -491,68 +493,15 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     });
   }
 
-  // PDF oluşturma
-  generatePDF(): void {
-    if (!this.currentTest) return;
-
-    this.loading = true;
-
-    this.http.get<any>(`./server/api/yapay_zeka_test_pdf.php?test_id=${this.currentTest.id}`).subscribe({
-      next: (response) => {
-        this.loading = false;
-        if (response.success) {
-          // HTML içeriğini yeni pencerede aç
-          const newWindow = window.open('', '_blank');
-          if (newWindow) {
-            newWindow.document.write(response.html_content);
-            newWindow.document.close();
-            // Print dialog'u aç
-            setTimeout(() => {
-              newWindow.print();
-            }, 500);
-          }
-        } else {
-          this.error = 'PDF oluşturulamadı';
-        }
-      },
-      error: (error) => {
-        this.loading = false;
-        this.error = 'PDF oluşturulurken hata oluştu: ' + (error.error?.message || error.message);
-      }
-    });
-  }
-
-  // Sayfa navigasyonu
-  goToStep(step: number): void {
-    this.currentStep = step;
-  }
-
-  resetTest(): void {
-    console.log('Test reset ediliyor...');
-    this.currentTest = null;
-    this.currentQuestionIndex = 0;
-    this.userAnswers = {};
-    this.showResults = false;
-    this.testResults = null;
-    this.selectedImprovementTopics = [];
-    this.selectedBestTopics = [];
-    this.selectedOtherTopics = [];
-
-    // Zorluk seviyesi ayarlarını sıfırla
-    this.singleDifficultyMode = false;
-    this.selectedSingleDifficulty = 'kolay';
-    this.totalQuestionCount = 45;
-    this.kolayQuestionCount = 15;
-    this.ortaQuestionCount = 15;
-    this.zorQuestionCount = 15;
-
-    this.error = null;
-    this.success = null;
-    // currentStep'i sıfırlama - bunu çağıran metod hallediyor
-    console.log('Test reset tamamlandı');
-  }
-
   // Yardımcı metodlar
+  getTotalQuestionCount(): number {
+    if (this.singleDifficultyMode) {
+      return this.totalQuestionCount;
+    } else {
+      return this.kolayQuestionCount + this.ortaQuestionCount + this.zorQuestionCount;
+    }
+  }
+
   getAnsweredQuestionsCount(): number {
     return Object.keys(this.userAnswers).length;
   }
@@ -566,102 +515,121 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     return Math.round((this.getAnsweredQuestionsCount() / this.currentTest.sorular.length) * 100);
   }
 
+  // Sayfa navigasyonu
+  goToStep(step: number): void {
+    this.currentStep = step;
+  }
+
+  startNewTest(): void {
+    this.currentTest = null;
+    this.currentQuestionIndex = 0;
+    this.userAnswers = {};
+    this.showResults = false;
+    this.testResults = null;
+    this.selectedImprovementTopics = [];
+    this.selectedBestTopics = [];
+    this.selectedOtherTopics = [];
+    this.currentStep = 2;
+    this.clearMessages();
+    this.cdr.detectChanges();
+  }
+
+  backToTestList(): void {
+    this.currentTest = null;
+    this.currentQuestionIndex = 0;
+    this.userAnswers = {};
+    this.showResults = false;
+    this.testResults = null;
+    this.selectedImprovementTopics = [];
+    this.selectedBestTopics = [];
+    this.selectedOtherTopics = [];
+    this.currentStep = 1;
+    this.clearMessages();
+    this.loadTestListesi();
+  }
+
   clearMessages(): void {
     this.error = null;
     this.success = null;
-    // Console log'u kaldır çünkü bu metod sık çağrılıyor
   }
 
-  // Template'de kullanılan PDF indirme metodu
-  downloadTestPDF(): void {
-    this.generatePDF();
-  }
-
-  // Template'de seçenekleri güvenli şekilde almak için helper method
-  getOptionText(option: string): string {
-    if (!this.currentQuestion || !this.currentQuestion.secenekler) return '';
-    const secenekler = this.currentQuestion.secenekler;
-
-    // Eğer secenekler bir nesne ise (string indeksli veya A,B,C,D,E formatında)
-    if (typeof secenekler === 'object' && !Array.isArray(secenekler)) {
-      const seceneklerObj = secenekler as any;
-      return seceneklerObj[option] || '';
+  // Test devam ettirme
+  continueTest(test: any): void {
+    if (test.tamamlandi) {
+      this.loadCompletedTestResults(test.id);
+    } else {
+      this.loadTestDetails(test.id);
     }
-
-    return '';
   }
 
-  // Seçenekleri formatlamak için yeni metod
-  getFormattedSecenekler(): { harf: string, metin: string }[] {
-    if (!this.currentQuestion || !this.currentQuestion.secenekler) return [];
+  private loadTestDetails(testId: string): void {
+    this.loading = true;
+    this.error = null;
 
-    const secenekler = this.currentQuestion.secenekler;
-    const formattedSecenekler: { harf: string, metin: string }[] = [];
-
-    // Eğer secenekler bir dizi ise (sunucudan gelen format)
-    if (Array.isArray(secenekler)) {
-      secenekler.forEach((secenek: string) => {
-        if (secenek && secenek.includes(')')) {
-          const parts = secenek.split(')');
-          const harf = parts[0].trim();
-          const metin = parts.slice(1).join(')').trim();
-          formattedSecenekler.push({ harf, metin });
+    this.http.get<any>(`./server/api/yapay_zeka_test_detay.php?test_id=${testId}`).subscribe({
+      next: (response) => {
+        this.loading = false;
+        if (response.success) {
+          this.currentTest = response.test;
+          this.currentQuestionIndex = 0;
+          this.userAnswers = response.user_answers || {};
+          this.currentStep = 4;
+          this.showResults = false;
+        } else {
+          this.error = response.message || 'Test detayları yüklenemedi';
         }
-      });
-    } 
-    // Eğer secenekler bir nesne ise
-    else if (typeof secenekler === 'object') {
-      const harfler = ['A', 'B', 'C', 'D', 'E'];
-      harfler.forEach(harf => {
-        const seceneklerObj = secenekler as any;
-        if (seceneklerObj[harf]) {
-          formattedSecenekler.push({ harf, metin: seceneklerObj[harf] });
-        }
-      });
-    }
-
-    return formattedSecenekler;
-  }
-
-  // Mevcut soru için kullanılabilir seçenekleri döndür
-  getAvailableOptions(): string[] {
-    if (!this.currentQuestion || !this.currentQuestion.secenekler) return [];
-
-    const secenekler = this.currentQuestion.secenekler;
-    const allOptions = ['A', 'B', 'C', 'D', 'E'];
-    const availableOptions: string[] = [];
-
-    // Eğer secenekler bir nesne ise (string indeksli veya A,B,C,D,E formatında)
-    if (typeof secenekler === 'object' && !Array.isArray(secenekler)) {
-      const seceneklerObj = secenekler as any;
-      for (const option of allOptions) {
-        const optionText = seceneklerObj[option];
-        if (optionText && typeof optionText === 'string' && optionText.trim() !== '') {
-          availableOptions.push(option);
-        }
+      },
+      error: (error) => {
+        this.loading = false;
+        this.error = 'Test detayları yüklenirken hata oluştu: ' + (error.error?.message || error.message);
       }
-    }
-    // Eğer secenekler bir dizi ise
-    else if (Array.isArray(secenekler)) {
-      secenekler.forEach((secenek: string) => {
-        if (secenek && secenek.includes(')')) {
-          const harf = secenek.split(')')[0].trim();
-          if (allOptions.includes(harf)) {
-            availableOptions.push(harf);
-          }
-        }
-      });
-    }
-
-    return availableOptions;
+    });
   }
 
-  // Soru resmi URL'ini oluştur
-  getSoruResmiUrl(soru: TestSoru): string {
-    if (soru.soru_resmi) {
-      return `./uploads/soru_resimleri/${soru.soru_resmi}`;
-    }
-    return '';
+  private loadCompletedTestResults(testId: string): void {
+    this.loading = true;
+    this.error = null;
+
+    this.http.get<any>(`./server/api/yapay_zeka_test_detay.php?test_id=${testId}&completed=true`).subscribe({
+      next: (response) => {
+        this.loading = false;
+        if (response.success) {
+          this.testResults = {
+            dogru_sayisi: response.test_sonuclari?.dogru_sayisi || 0,
+            yanlis_sayisi: response.test_sonuclari?.yanlis_sayisi || 0,
+            bos_sayisi: response.test_sonuclari?.bos_sayisi || 0,
+            toplam_soru: response.test?.sorular?.length || 0,
+            net: response.test_sonuclari?.net || 0,
+            yuzde: response.test_sonuclari?.yuzde || 0,
+            details: []
+          };
+
+          if (response.test && response.test.sorular && response.user_answers) {
+            this.testResults.details = response.test.sorular.map((soru: any, index: number) => {
+              const userAnswer = response.user_answers[index] || '';
+              const isCorrect = userAnswer === soru.dogru_cevap;
+
+              return {
+                soru_index: index,
+                soru: soru,
+                user_answer: userAnswer,
+                correct_answer: soru.dogru_cevap,
+                is_correct: isCorrect
+              };
+            });
+          }
+
+          this.currentStep = 5;
+          this.showResults = true;
+        } else {
+          this.error = response.message || 'Test sonuçları yüklenemedi';
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+        this.error = 'Test sonuçları yüklenirken hata oluştu: ' + (error.error?.message || error.message);
+      }
+    });
   }
 
   // Test silme
@@ -694,7 +662,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
         this.loading = false;
         if (response.success) {
           this.success = 'Test başarıyla silindi';
-          this.loadTestListesi(); // Listeyi yenile
+          this.loadTestListesi();
           setTimeout(() => this.clearMessages(), 2000);
         } else {
           this.error = response.message || 'Test silinemedi';
@@ -720,139 +688,86 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   onConfirmDialogCancelled(): void {
     this.showConfirmDialog = false;
 
-    // Eğer test oluşturma başarı dialog'uysa, test listesine dön
     if (this.confirmDialogData.title === 'Test Oluşturuldu') {
       this.backToTestList();
     }
   }
 
-  // Test listesi yükleme
-  private loadTestListesi(): void {
-    if (!this.studentInfo) return;
-
-    this.loadingTestList = true;
-    this.error = null;
-
-    this.http.get<any>(`./server/api/ogrenci_testleri_listesi.php?ogrenci_id=${this.studentInfo.id}`).subscribe({
-      next: (response) => {
-        this.loadingTestList = false;
-        console.log('Test listesi response:', response);
-
-        if (response && response.success) {
-          this.testListesi = response.data || [];
-        } else if (response) {
-          this.error = response.message || 'Test listesi yüklenemedi';
-        } else {
-          this.error = 'Sunucudan geçersiz yanıt alındı';
-        }
-      },
-      error: (error) => {
-        this.loadingTestList = false;
-        console.error('Test listesi yükleme hatası:', error);
-        this.error = 'Test listesi yüklenirken hata oluştu: ' + (error.error?.message || error.message);
-      }
+  // Tarih ve zaman formatlama
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('tr-TR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
     });
   }
 
-  // Testi devam ettir veya sonuçlarını görüntüle
-  continueTest(test: any): void {
-    if (test.tamamlandi) {
-      // Test tamamlanmış, detaylı sonuçları yükle
-      this.loadCompletedTestResults(test.id);
+  formatTime(seconds: number): string {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+
+    if (hours > 0) {
+      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
     } else {
-      // Test devam ettirilebilir, test detaylarını yükle
-      this.loadTestDetails(test.id);
+      return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
     }
   }
 
-  // Test detaylarını yükle
-  private loadTestDetails(testId: string): void {
-    this.loading = true;
-    this.error = null;
+  // Template helper metodları
+  getFormattedSecenekler(): { harf: string, metin: string }[] {
+    if (!this.currentQuestion || !this.currentQuestion.secenekler) return [];
 
-    this.http.get<any>(`./server/api/yapay_zeka_test_detay.php?test_id=${testId}`).subscribe({
-      next: (response) => {
-        this.loading = false;
-        if (response.success) {
-          this.currentTest = response.test;
-          this.currentQuestionIndex = 0;
-          this.userAnswers = response.user_answers || {};
-          this.currentStep = 4;
-          this.showResults = false;
-        } else {
-          this.error = response.message || 'Test detayları yüklenemedi';
+    const secenekler = this.currentQuestion.secenekler;
+    const formattedSecenekler: { harf: string, metin: string }[] = [];
+
+    if (Array.isArray(secenekler)) {
+      secenekler.forEach((secenek: string) => {
+        if (secenek && secenek.includes(')')) {
+          const parts = secenek.split(')');
+          const harf = parts[0].trim();
+          const metin = parts.slice(1).join(')').trim();
+          formattedSecenekler.push({ harf, metin });
         }
-      },
-      error: (error) => {
-        this.loading = false;
-        this.error = 'Test detayları yüklenirken hata oluştu: ' + (error.error?.message || error.message);
-      }
-    });
+      });
+    } 
+    else if (typeof secenekler === 'object') {
+      const harfler = ['A', 'B', 'C', 'D', 'E'];
+      harfler.forEach(harf => {
+        const seceneklerObj = secenekler as any;
+        if (seceneklerObj[harf]) {
+          formattedSecenekler.push({ harf, metin: seceneklerObj[harf] });
+        }
+      });
+    }
+
+    return formattedSecenekler;
   }
 
-  // Tamamlanmış test sonuçlarını detaylarıyla birlikte yükle
-  private loadCompletedTestResults(testId: string): void {
-    this.loading = true;
-    this.error = null;
-
-    this.http.get<any>(`./server/api/yapay_zeka_test_detay.php?test_id=${testId}&completed=true`).subscribe({
-      next: (response) => {
-        this.loading = false;
-        if (response.success) {
-          // Test sonuçlarını oluştur
-          this.testResults = {
-            dogru_sayisi: response.test_sonuclari?.dogru_sayisi || 0,
-            yanlis_sayisi: response.test_sonuclari?.yanlis_sayisi || 0,
-            bos_sayisi: response.test_sonuclari?.bos_sayisi || 0,
-            toplam_soru: response.test?.sorular?.length || 0,
-            net: response.test_sonuclari?.net || 0,
-            yuzde: response.test_sonuclari?.yuzde || 0,
-            details: []
-          };
-
-          // Soru bazında detayları oluştur
-          if (response.test && response.test.sorular && response.user_answers) {
-            this.testResults.details = response.test.sorular.map((soru: any, index: number) => {
-              const userAnswer = response.user_answers[index] || '';
-              const isCorrect = userAnswer === soru.dogru_cevap;
-
-              return {
-                soru_index: index,
-                soru: soru,
-                user_answer: userAnswer,
-                correct_answer: soru.dogru_cevap,
-                is_correct: isCorrect
-              };
-            });
-          }
-
-          this.currentStep = 5;
-          this.showResults = true;
-        } else {
-          this.error = response.message || 'Test sonuçları yüklenemedi';
-        }
-      },
-      error: (error) => {
-        this.loading = false;
-        this.error = 'Test sonuçları yüklenirken hata oluştu: ' + (error.error?.message || error.message);
-      }
-    });
+  getSoruResmiUrl(soru: TestSoru): string {
+    if (soru.soru_resmi) {
+      return `./uploads/soru_resimleri/${soru.soru_resmi}`;
+    }
+    return '';
   }
 
-  // Test PDF'ini indir
-  downloadTestPdfById(testId: string): void {
+  // PDF işlemleri
+  generatePDF(): void {
+    if (!this.currentTest) return;
+
     this.loading = true;
 
-    this.http.get<any>(`./server/api/yapay_zeka_test_pdf.php?test_id=${testId}`).subscribe({
+    this.http.get<any>(`./server/api/yapay_zeka_test_pdf.php?test_id=${this.currentTest.id}`).subscribe({
       next: (response) => {
         this.loading = false;
         if (response.success) {
-          // HTML içeriğini yeni pencerede aç
           const newWindow = window.open('', '_blank');
           if (newWindow) {
             newWindow.document.write(response.html_content);
             newWindow.document.close();
-            // Print dialog'u aç
             setTimeout(() => {
               newWindow.print();
             }, 500);
@@ -868,97 +783,74 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     });
   }
 
-  // Yeni test oluşturmaya başla
-  startNewTest(): void {
-    console.log('Yeni test oluşturma başlatılıyor...');
-    console.log('Mevcut step (başlangıç):', this.currentStep);
-
-    // resetTest() çağrısını kaldır - sadece gerekli temizlikleri yap
-    this.currentTest = null;
-    this.currentQuestionIndex = 0;
-    this.userAnswers = {};
-    this.showResults = false;
-    this.testResults = null;
-    this.selectedImprovementTopics = [];
-    this.selectedBestTopics = [];
-    this.selectedOtherTopics = [];
-
-    this.currentStep = 2;
-    this.clearMessages();
-
-    // UI'ın güncellenmesini zorla
-    this.cdr.detectChanges();
-
-    setTimeout(() => {
-      console.log('Timeout sonrası step:', this.currentStep);
-      console.log('Template elementleri kontrol ediliyor...');
-
-      // DOM'da step 2 elementlerinin varlığını kontrol et (doğru class adı)
-      const step2Element = document.querySelector('.test-creation-section');
-      console.log('Step 2 elementi (.test-creation-section) bulundu mu?', !!step2Element);
-    }, 100);
+  downloadTestPDF(): void {
+    this.generatePDF();
   }
 
-  // Test listesine geri dön
-  backToTestList(): void {
-    console.log('Test listesine geri dönülüyor...');
-    // resetTest() çağrısını kaldır - sadece gerekli temizlikleri yap
-    this.currentTest = null;
-    this.currentQuestionIndex = 0;
-    this.userAnswers = {};
-    this.showResults = false;
-    this.testResults = null;
-    this.selectedImprovementTopics = [];
-    this.selectedBestTopics = [];
-    this.selectedOtherTopics = [];
+  downloadTestPdfById(testId: string): void {
+    this.loading = true;
 
-    this.currentStep = 1;
-    this.clearMessages();
-    this.loadTestListesi();
-    console.log('Test listesi sayfasına dönüldü, currentStep:', this.currentStep);
-  }
-
-  // Tarih formatlama
-  formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('tr-TR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    this.http.get<any>(`./server/api/yapay_zeka_test_pdf.php?test_id=${testId}`).subscribe({
+      next: (response) => {
+        this.loading = false;
+        if (response.success) {
+          const newWindow = window.open('', '_blank');
+          if (newWindow) {
+            newWindow.document.write(response.html_content);
+            newWindow.document.close();
+            setTimeout(() => {
+              newWindow.print();
+            }, 500);
+          }
+        } else {
+          this.error = 'PDF oluşturulamadı';
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+        this.error = 'PDF oluşturulurken hata oluştu: ' + (error.error?.message || error.message);
+      }
     });
   }
 
-  // Zaman formatlama
-  formatTime(seconds: number): string {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const remainingSeconds = seconds % 60;
-
-    if (hours > 0) {
-      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-    } else {
-      return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+  downloadCurrentTestPDF(): void {
+    if (!this.currentTest) {
+      this.error = 'Test bilgileri bulunamadı';
+      return;
     }
+
+    this.loading = true;
+
+    this.http.get<any>(`./server/api/yapay_zeka_test_pdf.php?test_id=${this.currentTest.id}`).subscribe({
+      next: (response) => {
+        this.loading = false;
+        if (response.success) {
+          const newWindow = window.open('', '_blank');
+          if (newWindow) {
+            newWindow.document.write(response.html_content);
+            newWindow.document.close();
+            setTimeout(() => {
+              newWindow.print();
+            }, 500);
+          }
+        } else {
+          this.error = 'PDF oluşturulamadı: ' + (response.message || 'Bilinmeyen hata');
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+        this.error = 'PDF oluşturulurken hata oluştu: ' + (error.error?.message || error.message);
+      }
+    });
   }
 
-  // Toplam soru sayısını hesapla
-  getTotalQuestionCount(): number {
-    if (this.singleDifficultyMode) {
-      return this.totalQuestionCount;
-    } else {
-      return this.kolayQuestionCount + this.ortaQuestionCount + this.zorQuestionCount;
-    }
-  }
-
-  // Soru detayları görüntüleme metodları
+  // Test sonuçları helper metodları
   toggleQuestionDetails(): void {
     this.showQuestionDetails = !this.showQuestionDetails;
   }
 
   getQuestionResultClass(detail: any): string {
-    if (!detail.user_answer) return 'table-warning'; // Boş
+    if (!detail.user_answer) return 'table-warning';
     return detail.is_correct ? 'table-success' : 'table-danger';
   }
 
@@ -1011,11 +903,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     return this.testResults.details.filter((detail: any) => !detail.user_answer).length;
   }
 
-  // Test sonuçları sayfasından yeni test oluşturma
   createNewTestFromResults(): void {
-    console.log('Test sonuçlarından yeni test oluşturuluyor...');
-
-    // Mevcut test verilerini temizle
     this.currentTest = null;
     this.currentQuestionIndex = 0;
     this.userAnswers = {};
@@ -1024,46 +912,8 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     this.selectedImprovementTopics = [];
     this.selectedBestTopics = [];
     this.selectedOtherTopics = [];
-
-    // Analiz sayfasına git
     this.currentStep = 2;
     this.clearMessages();
-
-    // UI'ın güncellenmesini zorla
     this.cdr.detectChanges();
-  }
-
-  // Mevcut test için PDF indirme
-  downloadCurrentTestPDF(): void {
-    if (!this.currentTest) {
-      this.error = 'Test bilgileri bulunamadı';
-      return;
-    }
-
-    this.loading = true;
-
-    this.http.get<any>(`./server/api/yapay_zeka_test_pdf.php?test_id=${this.currentTest.id}`).subscribe({
-      next: (response) => {
-        this.loading = false;
-        if (response.success) {
-          // HTML içeriğini yeni pencerede aç
-          const newWindow = window.open('', '_blank');
-          if (newWindow) {
-            newWindow.document.write(response.html_content);
-            newWindow.document.close();
-            // Print dialog'u aç
-            setTimeout(() => {
-              newWindow.print();
-            }, 500);
-          }
-        } else {
-          this.error = 'PDF oluşturulamadı: ' + (response.message || 'Bilinmeyen hata');
-        }
-      },
-      error: (error) => {
-        this.loading = false;
-        this.error = 'PDF oluşturulurken hata oluştu: ' + (error.error?.message || error.message);
-      }
-    });
   }
 }
