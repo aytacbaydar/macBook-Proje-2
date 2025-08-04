@@ -1037,7 +1037,8 @@
           }
 
           &.info {
-            background: linear-gradient(135deg, #d1ecf1 0%,#bee5eb 100%);<previous_generation>color: #0c5460;
+            background: linear-gradient(135deg, #d1ecf1 0%,#bee5eb 100%);
+            color: #0c5460;
           }
 
           i {
@@ -1691,7 +1692,7 @@
       background-color: #fff8c5;
       color: #9a6700;
     }
-  }
+  // Remove the extra closing brace here
 
   .test-results-summary {
     display: flex;
