@@ -174,7 +174,7 @@
 
         <div class="question-counts mt-4">
           <h5>Soru Sayıları ve Zorluk Seviyeleri</h5>
-          
+
           <!-- Zorluk Seviyesi Seçim Yöntemi -->
           <div class="row mb-3">
             <div class="col-12">
@@ -508,11 +508,11 @@
       </div>
 
       <div class="results-actions">
-        <button class="btn btn-primary" (click)="resetTest()">
+        <button class="btn btn-primary" (click)="createNewTestFromResults()">
           <i class="bi bi-arrow-repeat me-2"></i>
           Yeni Test Oluştur
         </button>
-        <button class="btn btn-outline-secondary" (click)="downloadTestPDF()">
+        <button class="btn btn-outline-secondary" (click)="downloadCurrentTestPDF()">
           <i class="bi bi-file-pdf me-2"></i>
           Test PDF
         </button>

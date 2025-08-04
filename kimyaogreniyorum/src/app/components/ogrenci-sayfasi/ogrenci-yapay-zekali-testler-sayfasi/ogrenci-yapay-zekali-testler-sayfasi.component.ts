@@ -992,4 +992,60 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     if (!this.testResults || !this.testResults.details) return 0;
     return this.testResults.details.filter((detail: any) => !detail.user_answer).length;
   }
+
+  // Test sonuçları sayfasından yeni test oluşturma
+  createNewTestFromResults(): void {
+    console.log('Test sonuçlarından yeni test oluşturuluyor...');
+    
+    // Mevcut test verilerini temizle
+    this.currentTest = null;
+    this.currentQuestionIndex = 0;
+    this.userAnswers = {};
+    this.showResults = false;
+    this.testResults = null;
+    this.selectedImprovementTopics = [];
+    this.selectedBestTopics = [];
+    this.selectedOtherTopics = [];
+
+    // Analiz sayfasına git
+    this.currentStep = 2;
+    this.clearMessages();
+    
+    // UI'ın güncellenmesini zorla
+    this.cdr.detectChanges();
+  }
+
+  // Mevcut test için PDF indirme
+  downloadCurrentTestPDF(): void {
+    if (!this.currentTest) {
+      this.error = 'Test bilgileri bulunamadı';
+      return;
+    }
+    
+    this.loading = true;
+
+    this.http.get<any>(`./server/api/yapay_zeka_test_pdf.php?test_id=${this.currentTest.id}`).subscribe({
+      next: (response) => {
+        this.loading = false;
+        if (response.success) {
+          // HTML içeriğini yeni pencerede aç
+          const newWindow = window.open('', '_blank');
+          if (newWindow) {
+            newWindow.document.write(response.html_content);
+            newWindow.document.close();
+            // Print dialog'u aç
+            setTimeout(() => {
+              newWindow.print();
+            }, 500);
+          }
+        } else {
+          this.error = 'PDF oluşturulamadı: ' + (response.message || 'Bilinmeyen hata');
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+        this.error = 'PDF oluşturulurken hata oluştu: ' + (error.error?.message || error.message);
+      }
+    });
+  }
 }
