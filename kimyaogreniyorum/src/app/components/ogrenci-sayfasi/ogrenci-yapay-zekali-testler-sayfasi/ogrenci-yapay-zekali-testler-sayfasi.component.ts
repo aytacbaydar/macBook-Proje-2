@@ -403,7 +403,11 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
 
   // Test çözme metodları
   selectAnswer(questionIndex: number, answer: string): void {
+    if (!this.currentTest || questionIndex < 0 || questionIndex >= this.currentTest.sorular.length) {
+      return;
+    }
     this.userAnswers[questionIndex] = answer;
+    console.log(`Soru ${questionIndex + 1} için ${answer} seçeneği işaretlendi`);
   }
 
   nextQuestion(): void {
