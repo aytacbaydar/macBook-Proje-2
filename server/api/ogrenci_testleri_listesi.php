@@ -27,7 +27,7 @@ if (!$ogrenci_id) {
 
 try {
     // Öğrencinin testlerini getir
-    $sql = "SELECT id, olusturma_tarihi, sorular, tamamlandi, tamamlanma_tarihi, test_sonuclari FROM yapay_zeka_testler WHERE ogrenci_id = ? ORDER BY olusturma_tarihi DESC";
+    $sql = "SELECT id, test_adi, olusturma_tarihi, sorular, tamamlandi, tamamlanma_tarihi, test_sonuclari FROM yapay_zeka_testler WHERE ogrenci_id = ? ORDER BY olusturma_tarihi DESC";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$ogrenci_id]);
     $testler = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -42,8 +42,12 @@ try {
             $testSonuclari = json_decode($test['test_sonuclari'], true);
         }
 
+        // Test adı oluştur
+        $testAdi = !empty($test['test_adi']) ? $test['test_adi'] : 'Yapay Zeka Testi - ' . date('d.m.Y H:i', strtotime($test['olusturma_tarihi']));
+
         $testItem = [
             'id' => $test['id'],
+            'test_adi' => $testAdi,
             'olusturma_tarihi' => $test['olusturma_tarihi'],
             'toplam_soru' => count($sorular ?: []),
             'tamamlandi' => (bool)$test['tamamlandi'],

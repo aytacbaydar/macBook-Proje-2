@@ -67,6 +67,8 @@ $diger_konular = $input['diger_konular'] ?? [];
 $kolay_soru_sayisi = max(1, min(45, $input['kolay_soru_sayisi'] ?? 15));
 $orta_soru_sayisi = max(1, min(45, $input['orta_soru_sayisi'] ?? 15));
 $zor_soru_sayisi = max(1, min(45, $input['zor_soru_sayisi'] ?? 15));
+$single_difficulty_mode = $input['single_difficulty_mode'] ?? false;
+$selected_single_difficulty = $input['selected_single_difficulty'] ?? 'kolay';
 
 // Toplam soru sayısını kontrol et (5-45 arası)
 $toplam_soru = $kolay_soru_sayisi + $orta_soru_sayisi + $zor_soru_sayisi;
@@ -85,94 +87,6 @@ if (!$ogrenci_id) {
     echo json_encode(['success' => false, 'message' => 'Öğrenci ID gerekli']);
     exit;
 }
-
-// Yapay zeka sorular tablosunu oluştur
-$createSorularTableSQL = "
-CREATE TABLE IF NOT EXISTS yapay_zeka_sorular (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    konu_adi VARCHAR(255) NOT NULL,
-    soru_metni TEXT NOT NULL,
-    secenekler JSON NOT NULL,
-    dogru_cevap VARCHAR(255) NOT NULL,
-    zorluk_derecesi ENUM('kolay', 'orta', 'zor') DEFAULT 'orta',
-    olusturma_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)";
-
-try {
-    $pdo->exec($createSorularTableSQL);
-
-    // Tablo boşsa örnek sorular ekle
-    $checkSQL = "SELECT COUNT(*) as count FROM yapay_zeka_sorular";
-    $checkStmt = $pdo->prepare($checkSQL);
-    $checkStmt->execute();
-    $count = $checkStmt->fetch(PDO::FETCH_ASSOC)['count'];
-
-    if ($count == 0) {
-        // Örnek sorular ekle
-        $ornekSorular = [
-            [
-                'konu_adi' => 'Asitler ve Bazlar',
-                'soru_metni' => 'Aşağıdakilerden hangisi güçlü asit örneğidir?',
-                'secenekler' => json_encode(['A) CH3COOH', 'B) HCl', 'C) NH3', 'D) H2O']),
-                'dogru_cevap' => 'B',
-                'zorluk_derecesi' => 'kolay'
-            ],
-            [
-                'konu_adi' => 'Asitler ve Bazlar',
-                'soru_metni' => 'Zayıf asitlerin özellikleri hakkında aşağıdakilerden hangisi doğrudur?',
-                'secenekler' => json_encode(['A) Tamamen iyonlaşırlar', 'B) Kısmen iyonlaşırlar', 'C) Hiç iyonlaşmazlar', 'D) Sadece yüksek sıcaklıkta iyonlaşırlar']),
-                'dogru_cevap' => 'B',
-                'zorluk_derecesi' => 'orta'
-            ],
-            [
-                'konu_adi' => 'Asitler ve Bazlar',
-                'soru_metni' => 'pH = 2 olan bir çözeltinin [H+] konsantrasyonu nedir?',
-                'secenekler' => json_encode(['A) 10^-2 M', 'B) 10^-12 M', 'C) 2 M', 'D) 12 M']),
-                'dogru_cevap' => 'A',
-                'zorluk_derecesi' => 'zor'
-            ],
-            [
-                'konu_adi' => 'Periyodik Sistem',
-                'soru_metni' => 'Periyodik tabloda aynı grupta bulunan elementlerin ortak özelliği nedir?',
-                'secenekler' => json_encode(['A) Aynı atom numarası', 'B) Aynı kütle numarası', 'C) Aynı valans elektron sayısı', 'D) Aynı nötron sayısı']),
-                'dogru_cevap' => 'C',
-                'zorluk_derecesi' => 'kolay'
-            ],
-            [
-                'konu_adi' => 'Periyodik Sistem',
-                'soru_metni' => 'Periyodik cetvelde metalik özellik nasıl değişir?',
-                'secenekler' => json_encode(['A) Soldan sağa artar', 'B) Soldan sağa azalır', 'C) Yukarıdan aşağıya azalır', 'D) Değişmez']),
-                'dogru_cevap' => 'B',
-                'zorluk_derecesi' => 'orta'
-            ],
-            [
-                'konu_adi' => 'Periyodik Sistem',
-                'soru_metni' => 'Alkali metallerin iyonlaşma enerjileri periyodik tabloda aşağı doğru nasıl değişir?',
-                'secenekler' => json_encode(['A) Artar', 'B) Azalır', 'C) Sabit kalır', 'D) Önce artar sonra azalır']),
-                'dogru_cevap' => 'B',
-                'zorluk_derecesi' => 'zor'
-            ]
-        ];
-
-        $insertSQL = "INSERT INTO yapay_zeka_sorular (konu_adi, soru_metni, secenekler, dogru_cevap, zorluk_derecesi) VALUES (?, ?, ?, ?, ?)";
-        $insertStmt = $pdo->prepare($insertSQL);
-
-        foreach ($ornekSorular as $soru) {
-            $insertStmt->execute([
-                $soru['konu_adi'],
-                $soru['soru_metni'],
-                $soru['secenekler'],
-                $soru['dogru_cevap'],
-                $soru['zorluk_derecesi']
-            ]);
-        }
-    }
-} catch (PDOException $e) {
-    echo json_encode(['success' => false, 'message' => 'Tablo oluşturma hatası: ' . $e->getMessage()]);
-    exit;
-}
-
-$test_sorulari = [];
 
 // Tüm seçili konuları birleştir
 $tum_secili_konular = array_merge($gelistirilmesi_gereken_konular, $en_iyi_konular, $diger_konular);
@@ -326,3 +240,6 @@ if (!empty($output) && trim($output) !== '') {
 // Clean exit - sadece JSON döndür
 exit;
 ?>
+```
+
+Now, I replace the original code with the edited code to address the issues described in the intention.

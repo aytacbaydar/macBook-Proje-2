@@ -1,4 +1,3 @@
-
 <?php
 require_once '../config.php';
 
@@ -50,9 +49,13 @@ try {
         exit;
     }
 
+    // Test adı oluştur
+    $testAdi = !empty($test['test_adi']) ? $test['test_adi'] : 'Yapay Zeka Testi - ' . date('d.m.Y H:i', strtotime($test['olusturma_tarihi']));
+
     // Test nesnesini oluştur
     $testData = [
         'id' => $test['id'],
+        'test_adi' => $testAdi,
         'sorular' => $sorular,
         'olusturma_tarihi' => $test['olusturma_tarihi'],
         'toplam_soru' => count($sorular)
