@@ -1,0 +1,166 @@
+X [ERROR] NG9: Property 'getOptionsArray' does not exist on type 'OgrenciYapayZekaliTestlerSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:346:43:
+      346 │ ...  *ngFor="let option of getOptionsArray(currentQuestion.secene...
+          ╵                            ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:51:15:
+      51 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'getOptionLetter' does not exist on type 'OgrenciYapayZekaliTestlerSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:347:77:
+      347 │ ...ected]="userAnswers[currentQuestionIndex] === getOptionLetter(i)"
+          ╵                                                  ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:51:15:
+      51 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'getOptionLetter' does not exist on type 'OgrenciYapayZekaliTestlerSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:348:65:
+      348 │ ...(click)="selectAnswer(currentQuestionIndex, getOptionLetter(i))">
+          ╵                                                ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:51:15:
+      51 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'getOptionLetter' does not exist on type 'OgrenciYapayZekaliTestlerSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:349:48:
+      349 │ ...        <div class="option-letter">{{ getOptionLetter(i) }}</div>
+          ╵                                          ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:51:15:
+      51 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'hasOption' does not exist on type 'OgrenciYapayZekaliTestlerSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:397:43:
+      397 │ ...         [class.disabled]="!hasOption(currentTest.sorular[i], j)"
+          ╵                                ~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:51:15:
+      51 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'selectAnswerFromOptical' does not exist on type 'OgrenciYapayZekaliTestlerSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:398:33:
+      398 │                         (click)="selectAnswerFromOptical(i, option)"
+          ╵                                  ~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:51:15:
+      51 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'hasOption' does not exist on type 'OgrenciYapayZekaliTestlerSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:399:37:
+      399 │ ...              [disabled]="!hasOption(currentTest.sorular[i], j)">
+          ╵                               ~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:51:15:
+      51 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'clearAnswer' does not exist on type 'OgrenciYapayZekaliTestlerSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:405:31:
+      405 │                       (click)="clearAnswer(i)"
+          ╵                                ~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:51:15:
+      51 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'getCorrectAnswersCount' does not exist on type 'OgrenciYapayZekaliTestlerSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:456:45:
+      456 │ ... <div class="summary-number">{{ getCorrectAnswersCount() }}</div>
+          ╵                                    ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:51:15:
+      51 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'getIncorrectAnswersCount' does not exist on type 'OgrenciYapayZekaliTestlerSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:466:45:
+      466 │ ...div class="summary-number">{{ getIncorrectAnswersCount() }}</div>
+          ╵                                  ~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:51:15:
+      51 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'getEmptyAnswersCount' does not exist on type 'OgrenciYapayZekaliTestlerSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:476:45:
+      476 │ ...   <div class="summary-number">{{ getEmptyAnswersCount() }}</div>
+          ╵                                      ~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:51:15:
+      51 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'getSuccessPercentage' does not exist on type 'OgrenciYapayZekaliTestlerSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:486:45:
+      486 │ ...  <div class="summary-number">{{ getSuccessPercentage() }}%</div>
+          ╵                                     ~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:51:15:
+      51 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG1: Property 'getQuestionResultIcon' does not exist on type 'OgrenciYapayZekaliTestlerSayfasiComponent'. Did you mean 'getQuestionResultClass'? [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.html:518:39:
+      518 │ ...       <i class="bi" [class]="getQuestionResultIcon(detail)"></i>
+          ╵                                  ~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciYapayZekaliTestlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component.ts:51:15:
+      51 │ ...plateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
