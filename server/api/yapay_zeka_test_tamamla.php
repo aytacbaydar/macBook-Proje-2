@@ -41,6 +41,50 @@ if (!$test_id) {
 }
 
 try {
+    // Test sonuçlarını ve cevapları veritabanına kaydet
+    $sql = "UPDATE yapay_zeka_testler SET 
+            user_answers = ?, 
+            test_sonuclari = ?, 
+            tamamlandi = 1, 
+            tamamlanma_tarihi = NOW() 
+            WHERE id = ?";
+    
+    $stmt = $pdo->prepare($sql);
+    $result = $stmt->execute([
+        json_encode($user_answers),
+        json_encode($test_results),
+        $test_id
+    ]);
+
+    if ($result) {
+        echo json_encode([
+            'success' => true,
+            'message' => 'Test sonuçları başarıyla kaydedildi'
+        ]);
+    } else {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Test sonuçları kaydedilemedi'
+        ]);
+    }
+
+} catch (PDOException $e) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Veritabanı hatası: ' . $e->getMessage()
+    ]);
+}
+?>
+
+if (!$test_id) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Test ID gerekli'
+    ]);
+    exit;
+}
+
+try {
     $conn = getConnection();
 
     // Önce tabloyu kontrol et ve gerekirse sonuc sütununu ekle
