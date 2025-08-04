@@ -1,4 +1,3 @@
-
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { HttpClient } from '@angular/common/http';
@@ -70,7 +69,7 @@ interface Test {
 export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   studentInfo: StudentInfo | null = null;
   konuAnalizi: KonuAnalizi[] = [];
-  
+
   // Test oluşturma form verileri
   selectedImprovementTopics: string[] = [];
   selectedBestTopics: string[] = [];
@@ -78,57 +77,57 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   improvementQuestionCount = 8;
   advancedQuestionCount = 4;
   challengeQuestionCount = 4;
-  
+
   // Diğer konular
   tumKonular: Konu[] = [];
   loadingKonular = false;
-  
+
   // Soru zorluk seviyeleri
   kolayQuestionCount = 15;
   ortaQuestionCount = 15;
   zorQuestionCount = 15;
-  
+
   // Tek zorluk seviyesi seçim özellikleri
   singleDifficultyMode = false;
   selectedSingleDifficulty = 'kolay';
   totalQuestionCount = 15;
-  
+
   // Template'de kullanılan computed properties
   get improvementTopics(): KonuAnalizi[] {
     return this.getGelistirilmesiGerekenKonular();
   }
-  
+
   get bestTopics(): KonuAnalizi[] {
     return this.getEnIyiKonular();
   }
-  
+
   get otherTopics(): Konu[] {
     return this.tumKonular;
   }
-  
+
   get currentQuestion(): TestSoru | null {
     if (!this.currentTest || !this.currentTest.sorular) return null;
     return this.currentTest.sorular[this.currentQuestionIndex] || null;
   }
-  
+
   // Mevcut test
   currentTest: Test | null = null;
   currentQuestionIndex = 0;
   userAnswers: { [key: number]: string } = {};
   showResults = false;
   testResults: any = null;
-  
+
   // UI state
   loading = false;
   loadingAnalysis = false;
   error: string | null = null;
   success: string | null = null;
-  showQuestionDetails = false;
-  
+  showQuestionDetails: boolean = true;
+
   // Test oluşturma adımları
   currentStep = 1; // 1: Test listesi, 2: Analiz, 3: Konu seçimi, 4: Test çözme, 5: Sonuçlar
   totalSteps = 5;
-  
+
   // Test listesi
   testListesi: any[] = [];
   loadingTestList = false;
@@ -190,7 +189,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
       next: (response) => {
         this.loadingAnalysis = false;
         console.log('Konu analizi response:', response);
-        
+
         if (response && response.success && response.data) {
           this.konuAnalizi = response.data.konu_istatistikleri || [];
         } else {
@@ -240,12 +239,12 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   // Tüm konuları yükle
   private loadTumKonular(): void {
     this.loadingKonular = true;
-    
+
     this.http.get<any>('./server/api/konu_listesi.php').subscribe({
       next: (response) => {
         this.loadingKonular = false;
         console.log('Konu listesi response:', response);
-        
+
         if (response && response.success && response.konular) {
           this.tumKonular = response.konular;
         } else if (response) {
@@ -331,7 +330,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
       kolayCount = 0;
       ortaCount = 0;
       zorCount = 0;
-      
+
       if (this.selectedSingleDifficulty === 'kolay') {
         kolayCount = this.totalQuestionCount;
       } else if (this.selectedSingleDifficulty === 'orta') {
@@ -363,7 +362,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
 
           // Test başarıyla oluşturuldu mesajını göster
           this.success = `Test başarıyla oluşturuldu! ${response.toplam_soru || 'Bilinmeyen sayıda'} soruluk test hazır.`;
-          
+
           // 2 saniye sonra mesajı temizle ve test listesine dön
           setTimeout(() => {
             this.clearMessages();
@@ -421,7 +420,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     this.currentTest.sorular.forEach((soru, index) => {
       const userAnswer = this.userAnswers[index];
       let isCorrect = false;
-      
+
       if (!userAnswer) {
         emptyAnswers++;
       } else if (userAnswer === soru.dogru_cevap) {
@@ -490,7 +489,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     if (!this.currentTest) return;
 
     this.loading = true;
-    
+
     this.http.get<any>(`./server/api/yapay_zeka_test_pdf.php?test_id=${this.currentTest.id}`).subscribe({
       next: (response) => {
         this.loading = false;
@@ -531,7 +530,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     this.selectedImprovementTopics = [];
     this.selectedBestTopics = [];
     this.selectedOtherTopics = [];
-    
+
     // Zorluk seviyesi ayarlarını sıfırla
     this.singleDifficultyMode = false;
     this.selectedSingleDifficulty = 'kolay';
@@ -539,7 +538,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     this.kolayQuestionCount = 15;
     this.ortaQuestionCount = 15;
     this.zorQuestionCount = 15;
-    
+
     this.error = null;
     this.success = null;
     // currentStep'i sıfırlama - bunu çağıran metod hallediyor
@@ -575,23 +574,23 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   getOptionText(option: string): string {
     if (!this.currentQuestion || !this.currentQuestion.secenekler) return '';
     const secenekler = this.currentQuestion.secenekler;
-    
+
     // Eğer secenekler bir nesne ise (string indeksli veya A,B,C,D,E formatında)
     if (typeof secenekler === 'object' && !Array.isArray(secenekler)) {
       const seceneklerObj = secenekler as any;
       return seceneklerObj[option] || '';
     }
-    
+
     return '';
   }
 
   // Seçenekleri formatlamak için yeni metod
   getFormattedSecenekler(): { harf: string, metin: string }[] {
     if (!this.currentQuestion || !this.currentQuestion.secenekler) return [];
-    
+
     const secenekler = this.currentQuestion.secenekler;
     const formattedSecenekler: { harf: string, metin: string }[] = [];
-    
+
     // Eğer secenekler bir dizi ise (sunucudan gelen format)
     if (Array.isArray(secenekler)) {
       secenekler.forEach((secenek: string) => {
@@ -613,18 +612,18 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
         }
       });
     }
-    
+
     return formattedSecenekler;
   }
 
   // Mevcut soru için kullanılabilir seçenekleri döndür
   getAvailableOptions(): string[] {
     if (!this.currentQuestion || !this.currentQuestion.secenekler) return [];
-    
+
     const secenekler = this.currentQuestion.secenekler;
     const allOptions = ['A', 'B', 'C', 'D', 'E'];
     const availableOptions: string[] = [];
-    
+
     // Eğer secenekler bir nesne ise (string indeksli veya A,B,C,D,E formatında)
     if (typeof secenekler === 'object' && !Array.isArray(secenekler)) {
       const seceneklerObj = secenekler as any;
@@ -646,7 +645,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
         }
       });
     }
-    
+
     return availableOptions;
   }
 
@@ -713,7 +712,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
 
   onConfirmDialogCancelled(): void {
     this.showConfirmDialog = false;
-    
+
     // Eğer test oluşturma başarı dialog'uysa, test listesine dön
     if (this.confirmDialogData.title === 'Test Oluşturuldu') {
       this.backToTestList();
@@ -731,7 +730,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
       next: (response) => {
         this.loadingTestList = false;
         console.log('Test listesi response:', response);
-        
+
         if (response && response.success) {
           this.testListesi = response.data || [];
         } else if (response) {
@@ -796,7 +795,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   // Test PDF'ini indir
   downloadTestPdfById(testId: string): void {
     this.loading = true;
-    
+
     this.http.get<any>(`./server/api/yapay_zeka_test_pdf.php?test_id=${testId}`).subscribe({
       next: (response) => {
         this.loading = false;
@@ -826,7 +825,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   startNewTest(): void {
     console.log('Yeni test oluşturma başlatılıyor...');
     console.log('Mevcut step (başlangıç):', this.currentStep);
-    
+
     // resetTest() çağrısını kaldır - sadece gerekli temizlikleri yap
     this.currentTest = null;
     this.currentQuestionIndex = 0;
@@ -836,19 +835,19 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     this.selectedImprovementTopics = [];
     this.selectedBestTopics = [];
     this.selectedOtherTopics = [];
-    
+
     this.currentStep = 2;
     this.clearMessages();
-    
+
     console.log('Step değiştirildi:', this.currentStep);
-    
+
     // UI'ın güncellenmesini zorla
     this.cdr.detectChanges();
-    
+
     setTimeout(() => {
       console.log('Timeout sonrası step:', this.currentStep);
       console.log('Template elementleri kontrol ediliyor...');
-      
+
       // DOM'da step 2 elementlerinin varlığını kontrol et (doğru class adı)
       const step2Element = document.querySelector('.test-creation-section');
       console.log('Step 2 elementi (.test-creation-section) bulundu mu?', !!step2Element);
@@ -867,7 +866,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     this.selectedImprovementTopics = [];
     this.selectedBestTopics = [];
     this.selectedOtherTopics = [];
-    
+
     this.currentStep = 1;
     this.clearMessages();
     this.loadTestListesi();
