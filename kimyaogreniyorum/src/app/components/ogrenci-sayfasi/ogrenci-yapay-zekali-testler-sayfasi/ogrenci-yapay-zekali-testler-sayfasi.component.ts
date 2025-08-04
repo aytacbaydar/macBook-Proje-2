@@ -1,5 +1,6 @@
 
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 import { HttpClient } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 
@@ -57,7 +58,14 @@ interface Test {
   selector: 'app-ogrenci-yapay-zekali-testler-sayfasi',
   standalone: false,
   templateUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.html',
-  styleUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.scss'
+  styleUrl: './ogrenci-yapay-zekali-testler-sayfasi.component.scss',
+  animations: [
+    trigger('slideToggle', [
+      state('void', style({ height: '0px', overflow: 'hidden' })),
+      state('*', style({ height: '*', overflow: 'visible' })),
+      transition('void <=> *', animate('300ms ease-in-out'))
+    ])
+  ]
 })
 export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   studentInfo: StudentInfo | null = null;
@@ -115,6 +123,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   loadingAnalysis = false;
   error: string | null = null;
   success: string | null = null;
+  showQuestionDetails = false;
   
   // Test oluşturma adımları
   currentStep = 1; // 1: Test listesi, 2: Analiz, 3: Konu seçimi, 4: Test çözme, 5: Sonuçlar
@@ -884,5 +893,64 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     } else {
       return this.kolayQuestionCount + this.ortaQuestionCount + this.zorQuestionCount;
     }
+  }
+
+  // Soru detayları görüntüleme metodları
+  toggleQuestionDetails(): void {
+    this.showQuestionDetails = !this.showQuestionDetails;
+  }
+
+  getQuestionResultClass(detail: any): string {
+    if (!detail.user_answer) return 'table-warning'; // Boş
+    return detail.is_correct ? 'table-success' : 'table-danger';
+  }
+
+  getDifficultyBadgeClass(zorluk: string): string {
+    switch (zorluk) {
+      case 'kolay': return 'bg-success';
+      case 'orta': return 'bg-warning';
+      case 'zor': return 'bg-danger';
+      default: return 'bg-secondary';
+    }
+  }
+
+  getUserAnswerBadgeClass(detail: any): string {
+    if (!detail.user_answer) return 'bg-warning';
+    return detail.is_correct ? 'bg-success' : 'bg-danger';
+  }
+
+  getStatusBadgeClass(detail: any): string {
+    if (!detail.user_answer) return 'bg-warning';
+    return detail.is_correct ? 'bg-success' : 'bg-danger';
+  }
+
+  getStatusIcon(detail: any): string {
+    if (!detail.user_answer) return 'bi bi-circle';
+    return detail.is_correct ? 'bi bi-check-circle' : 'bi bi-x-circle';
+  }
+
+  getStatusText(detail: any): string {
+    if (!detail.user_answer) return 'BOŞ';
+    return detail.is_correct ? 'DOĞRU' : 'YANLIŞ';
+  }
+
+  getQuestionPreview(soruMetni: string): string {
+    if (!soruMetni) return 'Soru metni bulunamadı';
+    return soruMetni.length > 50 ? soruMetni.substring(0, 50) + '...' : soruMetni;
+  }
+
+  getCorrectQuestionsCount(): number {
+    if (!this.testResults || !this.testResults.details) return 0;
+    return this.testResults.details.filter((detail: any) => detail.is_correct).length;
+  }
+
+  getIncorrectQuestionsCount(): number {
+    if (!this.testResults || !this.testResults.details) return 0;
+    return this.testResults.details.filter((detail: any) => detail.user_answer && !detail.is_correct).length;
+  }
+
+  getEmptyQuestionsCount(): number {
+    if (!this.testResults || !this.testResults.details) return 0;
+    return this.testResults.details.filter((detail: any) => !detail.user_answer).length;
   }
 }
