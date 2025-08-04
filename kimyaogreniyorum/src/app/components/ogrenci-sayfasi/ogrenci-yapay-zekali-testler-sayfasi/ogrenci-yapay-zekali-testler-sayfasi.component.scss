@@ -2075,18 +2075,19 @@
                 transition: all 0.2s ease;
                 cursor: pointer;
 
-                &:hover:not(:disabled) {
-                  border-color: #3b82f6;
-                  color: #3b82f6;
+                &:hover:not(:disabled):not(.unavailable) {
+                  border-color: #ff8c00;
+                  color: #ff8c00;
                   transform: scale(1.05);
+                  background: #fff5e6;
                 }
 
                 &.selected {
-                  background: #3b82f6;
-                  border-color: #3b82f6;
-                  color: white;
+                  background: #ff8c00 !important;
+                  border-color: #ff6600 !important;
+                  color: white !important;
                   transform: scale(1.1);
-                  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+                  box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.3);
                 }
 
                 &.unavailable {
@@ -2110,9 +2111,18 @@
                   opacity: 0.3;
                   cursor: not-allowed;
                   transform: none;
+                  background-color: #f8f9fa !important;
+                  color: #6c757d !important;
+                  border-color: #dee2e6 !important;
+
+                  &:hover {
+                    background-color: #f8f9fa !important;
+                    color: #6c757d !important;
+                    transform: none;
+                  }
                 }
 
-                &:active:not(:disabled) {
+                &:active:not(:disabled):not(.unavailable) {
                   transform: scale(0.95);
                 }
               }
