@@ -1036,7 +1036,7 @@
             color: #383d41;
           }
 
-          &.info {
+          &.info {<previous_generation>
             background: linear-gradient(135deg, #d1ecf1 0%,#bee5eb 100%);
             color: #0c5460;
           }
@@ -2089,8 +2089,7 @@
                   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
                 }
 
-                &:disabled,
-                &.disabled {
+                &:disabled {
                   opacity: 0.3;
                   cursor: not-allowed;
                   transform: none;
@@ -2150,8 +2149,7 @@
               color: #6c757d;
               font-weight: 600;
             }
-          The code has been reviewed, and the changes have been applied to fix the missing closing tags in the SCSS file.
-```}
+          }
 
         .btn-finish {
           width: 100%;
@@ -2435,3 +2433,30 @@
     }
   }
 }
+
+Fix disabled styles of optical form buttons.
+.optical-form-section {
+      .optical-form {
+        .optical-grid {
+          .optical-row {
+            .options {
+              .option-btn {
+                &:disabled {
+                  background-color: #f8f9fa !important;
+                  color: #6c757d !important;
+                  cursor: not-allowed;
+                  opacity: 0.6;
+                  border-color: #dee2e6 !important;
+
+                  &:hover {
+                    background-color: #f8f9fa !important;
+                    color: #6c757d !important;
+                    transform: none;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
