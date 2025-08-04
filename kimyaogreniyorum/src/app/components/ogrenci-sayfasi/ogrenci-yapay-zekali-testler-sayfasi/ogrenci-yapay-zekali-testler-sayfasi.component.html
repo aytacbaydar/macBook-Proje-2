@@ -395,21 +395,19 @@
                 <button class="option-btn"
                         *ngFor="let option of ['A', 'B', 'C', 'D', 'E']; let j = index"
                         [class.selected]="userAnswers[i] === option"
-                        [class.disabled]="!hasOption(soru, j)"
+                        [class.disabled]="!hasOption(currentTest.sorular[i], j)"
                         (click)="selectAnswer(i, option)"
-                        [disabled]="!hasOption(soru, j)"
-                        type="button">
+                        [disabled]="!hasOption(currentTest.sorular[i], j)">
                   {{ option }}
                 </button>
               </div>
               <button class="clear-btn" 
                       *ngIf="userAnswers[i]"
                       (click)="clearAnswer(i)"
-                      title="Cevabı Temizle"
-                      type="button">
+                      title="Cevabı Temizle">
                 <i class="bi bi-x"></i>
               </button>
-            </div></div>
+            </div>
           </div>
 
           <!-- Test Bitir Butonu -->
@@ -456,7 +454,7 @@
               <i class="bi bi-check-circle-fill"></i>
             </div>
             <div class="summary-content">
-              <div class="summary-number">{{ getCorrectAnswersCount() }}</div>
+              <div class="summary-number">{{ testResults.dogru_sayisi }}</div>
               <div class="summary-label">Doğru</div>
             </div>
           </div>
@@ -466,7 +464,7 @@
               <i class="bi bi-x-circle-fill"></i>
             </div>
             <div class="summary-content">
-              <div class="summary-number">{{ getIncorrectAnswersCount() }}</div>
+              <div class="summary-number">{{ testResults.yanlis_sayisi }}</div>
               <div class="summary-label">Yanlış</div>
             </div>
           </div>
@@ -476,7 +474,7 @@
               <i class="bi bi-circle"></i>
             </div>
             <div class="summary-content">
-              <div class="summary-number">{{ getEmptyAnswersCount() }}</div>
+              <div class="summary-number">{{ testResults.bos_sayisi }}</div>
               <div class="summary-label">Boş</div>
             </div>
           </div>
@@ -486,7 +484,7 @@
               <i class="bi bi-trophy-fill"></i>
             </div>
             <div class="summary-content">
-              <div class="summary-number">{{ getSuccessPercentage() }}%</div>
+              <div class="summary-number">{{ testResults.yuzde }}%</div>
               <div class="summary-label">Başarı</div>
             </div>
           </div>
