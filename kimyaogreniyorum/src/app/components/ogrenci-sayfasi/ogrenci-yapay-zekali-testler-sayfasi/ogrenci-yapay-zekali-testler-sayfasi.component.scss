@@ -705,8 +705,8 @@
 
 /* Test Cards */
 .test-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 20px;
   margin-top: 20px;
 }
@@ -718,6 +718,7 @@
   padding: 20px;
   transition: all 0.3s ease;
   border: 1px solid #e9ecef;
+  width: 100%;
 
   &:hover {
     transform: translateY(-5px);
