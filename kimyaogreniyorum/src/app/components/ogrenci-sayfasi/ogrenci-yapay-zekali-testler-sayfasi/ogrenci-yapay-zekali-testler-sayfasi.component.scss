@@ -1037,8 +1037,7 @@
           }
 
           &.info {
-            background: linear-gradient(135deg, #d1ecf1 0%,#bee5eb 100%);
-            color: #0c5460;
+            background: linear-gradient(135deg, #d1ecf1 0%,#bee5eb 100%);<previous_generation>color: #0c5460;
           }
 
           i {
@@ -2171,7 +2170,7 @@
       .results-meta {
         display: flex;
         justify-content: center;
-        gap: 20px;
+       gap: 20px;
         font-size: 14px;
         color: #6c757d;
 

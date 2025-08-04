@@ -1,3 +1,10 @@
+` tags.
+
+```text
+Merging changes to update interfaces and add missing properties and methods.
+```
+
+<replit_final_file>
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { HttpClient } from '@angular/common/http';
@@ -28,21 +35,13 @@ interface Konu {
 
 interface TestSoru {
   id: number;
-  konu_adi: string;
-  sinif_seviyesi: string;
-  zorluk_derecesi: string;
   soru_metni: string;
+  soru_aciklamasi?: string;
   soru_resmi?: string;
-  aciklama?: string;
-  secenekler: {
-    A: string;
-    B: string;
-    C: string;
-    D: string;
-    E?: string;
-  } | { [key: string]: string } | string[];
+  secenekler: string;
   dogru_cevap: string;
-  test_tipi: string;
+  zorluk_derecesi: string;
+  konu_adi: string;
 }
 
 interface Test {
@@ -117,11 +116,18 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   showResults = false;
   testResults: any = null;
 
-  // UI state
+  // UI variables
   loading = false;
+  loadingTestList = false;
   loadingAnalysis = false;
   error: string | null = null;
   success: string | null = null;
+
+  // Test timing
+  remainingTime = 0;
+
+  // Math object for template
+  Math = Math;
   showQuestionDetails: boolean = true;
 
   // Test oluşturma adımları
@@ -808,7 +814,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
             this.testResults.details = response.test.sorular.map((soru: any, index: number) => {
               const userAnswer = response.user_answers[index] || '';
               const isCorrect = userAnswer === soru.dogru_cevap;
-              
+
               return {
                 soru_index: index,
                 soru: soru,
@@ -878,8 +884,6 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
 
     this.currentStep = 2;
     this.clearMessages();
-
-    console.log('Step değiştirildi:', this.currentStep);
 
     // UI'ın güncellenmesini zorla
     this.cdr.detectChanges();
@@ -996,7 +1000,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   // Test sonuçları sayfasından yeni test oluşturma
   createNewTestFromResults(): void {
     console.log('Test sonuçlarından yeni test oluşturuluyor...');
-    
+
     // Mevcut test verilerini temizle
     this.currentTest = null;
     this.currentQuestionIndex = 0;
@@ -1010,7 +1014,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     // Analiz sayfasına git
     this.currentStep = 2;
     this.clearMessages();
-    
+
     // UI'ın güncellenmesini zorla
     this.cdr.detectChanges();
   }
@@ -1021,7 +1025,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
       this.error = 'Test bilgileri bulunamadı';
       return;
     }
-    
+
     this.loading = true;
 
     this.http.get<any>(`./server/api/yapay_zeka_test_pdf.php?test_id=${this.currentTest.id}`).subscribe({
