@@ -396,8 +396,9 @@
                         *ngFor="let option of ['A', 'B', 'C', 'D', 'E']; let j = index"
                         [class.selected]="userAnswers[i] === option"
                         [class.disabled]="!hasOption(currentTest.sorular[i], j)"
-                        (click)="selectAnswer(i, option)"
-                        [disabled]="!hasOption(currentTest.sorular[i], j)">
+                        (click)="hasOption(currentTest.sorular[i], j) ? selectAnswer(i, option) : null"
+                        [style.cursor]="hasOption(currentTest.sorular[i], j) ? 'pointer' : 'not-allowed'"
+                        [style.opacity]="hasOption(currentTest.sorular[i], j) ? '1' : '0.3'">
                   {{ option }}
                 </button>
               </div>
