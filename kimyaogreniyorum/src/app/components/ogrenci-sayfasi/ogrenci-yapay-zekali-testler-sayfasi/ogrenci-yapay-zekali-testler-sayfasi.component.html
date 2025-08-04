@@ -286,69 +286,76 @@
     </div>
   </div>
 
-  <!-- Test Questions Section -->
-  <div *ngIf="currentStep === 4 && currentTest && !showResults" class="test-section">
+  <!-- Test Taking Section -->
+  <div *ngIf="currentTest && !showResults" class="test-taking-section">
     <div class="test-header">
       <div class="test-info">
-        <h3>{{ currentTest.test_adi ? currentTest.test_adi : 'Yapay Zeka Testi' }}</h3>
-        <div class="test-stats">
-          <span class="badge me-2">
-            Soru {{ currentQuestionIndex + 1 }}/{{ currentTest.sorular.length }}
-          </span>
-          <span class="badge">
-            {{ getAnsweredQuestionsCount() }} Cevaplandı
+        <h2>{{ currentTest.test_adi }}</h2>
+        <div class="test-meta">
+          <span class="test-date">{{ formatDate(currentTest.olusturulma_tarihi) }}</span>
+          <span class="question-count">{{ currentTest.sorular.length }} Soru</span>
+          <span class="time-remaining" *ngIf="remainingTime > 0">
+            <i class="bi bi-clock"></i>
+            {{ formatTime(remainingTime) }}
           </span>
         </div>
       </div>
       <div class="test-actions">
-        <button class="btn btn-outline-primary" (click)="downloadTestPDF()" [disabled]="loading">
+        <button class="btn btn-outline-secondary" (click)="downloadTestPDF()">
           <i class="bi bi-file-pdf me-2"></i>
           PDF İndir
         </button>
       </div>
     </div>
 
-    <div class="question-container" *ngIf="currentTest.sorular[currentQuestionIndex] as currentQuestion">
-      <div class="question-card-sinav">
-        <div class="question-header">
-          <div class="question-info">
-            <span class="badge bg-primary me-2">{{ currentQuestion.konu_adi }}</span>
-            <span class="badge" [class]="'bg-' + (currentQuestion.zorluk_derecesi === 'kolay' ? 'success' : 
-                     currentQuestion.zorluk_derecesi === 'orta' ? 'warning' : 'danger')">
-              {{ currentQuestion.zorluk_derecesi }}
-            </span>
-          </div>
-        </div>
+    <div class="test-content">
+      <!-- Sol Taraf - Sorular -->
+      <div class="questions-section">
+        <div class="question-container" *ngIf="currentTest.sorular[currentQuestionIndex] as currentQuestion">
+          <div class="question-card">
+            <div class="question-header">
+              <div class="question-number">
+                <span class="number">{{ currentQuestionIndex + 1 }}</span>
+                <span class="total">/ {{ currentTest.sorular.length }}</span>
+              </div>
+              <div class="question-tags">
+                <span class="badge bg-primary">{{ currentQuestion.konu_adi }}</span>
+                <span class="badge" [class]="'bg-' + (currentQuestion.zorluk_derecesi === 'kolay' ? 'success' : 
+                         currentQuestion.zorluk_derecesi === 'orta' ? 'warning' : 'danger')">
+                  {{ currentQuestion.zorluk_derecesi }}
+                </span>
+              </div>
+            </div>
 
-        <div class="question-content">
-          <!-- Soru resmi varsa göster -->
-          <div *ngIf="currentQuestion.soru_resmi" class="question-image mb-3">
-            <img [src]="getSoruResmiUrl(currentQuestion)" 
-                 alt="Soru Resmi" 
-                 class="img-fluid"
-                 style="width: 500px; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-          </div>
-          <!-- Seçenekler -->
-          <div class="answer-options">
-            <div class="option-item" 
-                 *ngFor="let option of ['A', 'B', 'C', 'D', 'E']; let i = index">
-              <div class="option-radio">
-                <input type="radio" 
-                       [id]="'option_' + currentQuestionIndex + '_' + option" 
-                       [name]="'question_' + currentQuestionIndex"
-                       [value]="option"
-                       [checked]="userAnswers[currentQuestionIndex] === option"
-                       (change)="selectAnswer(currentQuestionIndex, option)">
-                <label [for]="'option_' + currentQuestionIndex + '_' + option" class="option-label">
-                  <span class="option-circle">{{ option }}</span>
-                  <span class="option-text">{{ getOptionText(option) }}</span>
-                </label>
+            <div class="question-content">
+              <!-- Soru resmi varsa göster -->
+              <div *ngIf="currentQuestion.soru_resmi" class="question-image">
+                <img [src]="getSoruResmiUrl(currentQuestion)" 
+                     alt="Soru Resmi" 
+                     class="img-fluid">
+              </div>
+
+              <!-- Soru metni varsa göster -->
+              <div *ngIf="currentQuestion.soru_aciklamasi" class="question-text">
+                {{ currentQuestion.soru_aciklamasi }}
+              </div>
+
+              <!-- Seçenekler -->
+              <div class="answer-options" *ngIf="currentQuestion.secenekler">
+                <div class="option-item" 
+                     *ngFor="let option of getOptionsArray(currentQuestion.secenekler); let i = index"
+                     [class.selected]="userAnswers[currentQuestionIndex] === getOptionLetter(i)"
+                     (click)="selectAnswer(currentQuestionIndex, getOptionLetter(i))">
+                  <div class="option-letter">{{ getOptionLetter(i) }}</div>
+                  <div class="option-content">{{ option }}</div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="question-navigation mt-4">
+        <!-- Navigation Controls -->
+        <div class="question-navigation">
           <button class="btn btn-outline-secondary" 
                   (click)="previousQuestion()" 
                   [disabled]="currentQuestionIndex === 0">
@@ -356,30 +363,70 @@
             Önceki
           </button>
 
-          <div class="question-dots mx-3">
-            <span class="dot me-1" 
-                  *ngFor="let soru of currentTest.sorular; let i = index"
-                  [class.current]="i === currentQuestionIndex"
-                  [class.answered]="userAnswers[i]"
-                  (click)="goToQuestion(i)">
-              {{ i + 1 }}
-            </span>
-          </div>
-
           <button class="btn btn-outline-secondary" 
                   (click)="nextQuestion()" 
                   [disabled]="currentQuestionIndex === currentTest.sorular.length - 1">
             Sonraki
             <i class="bi bi-arrow-right ms-2"></i>
           </button>
+        </div>
+      </div>
 
-          <!-- Testi Bitir butonu - her zaman görünür -->
-          <button class="btn btn-success ms-3" 
-                  (click)="finishTest()"
-                  [disabled]="getAnsweredQuestionsCount() === 0">
-            <i class="bi bi-check-circle me-2"></i>
-            Testi Bitir ({{ getAnsweredQuestionsCount() }}/{{ currentTest.sorular.length }})
-          </button>
+      <!-- Sağ Taraf - Optik Form -->
+      <div class="optical-form-section">
+        <div class="optical-form">
+          <div class="optical-header">
+            <h4>Cevap Kağıdı</h4>
+            <div class="progress-info">
+              <span class="answered">{{ getAnsweredQuestionsCount() }}</span>
+              <span class="separator">/</span>
+              <span class="total">{{ currentTest.sorular.length }}</span>
+            </div>
+          </div>
+
+          <div class="optical-grid">
+            <div class="optical-row" 
+                 *ngFor="let soru of currentTest.sorular; let i = index"
+                 [class.current]="i === currentQuestionIndex"
+                 [class.answered]="userAnswers[i]">
+              <div class="question-number">{{ i + 1 }}</div>
+              <div class="options">
+                <button class="option-btn"
+                        *ngFor="let option of ['A', 'B', 'C', 'D', 'E']; let j = index"
+                        [class.selected]="userAnswers[i] === option"
+                        [class.disabled]="!hasOption(currentTest.sorular[i], j)"
+                        (click)="selectAnswerFromOptical(i, option)"
+                        [disabled]="!hasOption(currentTest.sorular[i], j)">
+                  {{ option }}
+                </button>
+              </div>
+              <button class="clear-btn" 
+                      *ngIf="userAnswers[i]"
+                      (click)="clearAnswer(i)"
+                      title="Cevabı Temizle">
+                <i class="bi bi-x"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Test Bitir Butonu -->
+          <div class="finish-test-section">
+            <div class="completion-status">
+              <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="(getAnsweredQuestionsCount() / currentTest.sorular.length) * 100"></div>
+              </div>
+              <span class="completion-text">
+                %{{ Math.round((getAnsweredQuestionsCount() / currentTest.sorular.length) * 100) }} Tamamlandı
+              </span>
+            </div>
+
+            <button class="btn btn-success btn-finish" 
+                    (click)="finishTest()"
+                    [disabled]="getAnsweredQuestionsCount() === 0">
+              <i class="bi bi-check-circle me-2"></i>
+              Testi Bitir
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -390,135 +437,54 @@
     <div class="results-card">
       <div class="results-header">
         <h3>
-          <i class="bi bi-trophy me-2"></i>
+          <i class="bi bi-clipboard-data me-2"></i>
           Test Sonuçları
         </h3>
-        <div class="score-badge">
-          <span class="score">{{ testResults.dogru_sayisi }}/{{ testResults.toplam_soru }}</span>
-          <span class="percentage">%{{ testResults.yuzde.toFixed(1) }}</span>
+        <div class="results-meta">
+          <span class="test-name">{{ currentTest?.test_adi }}</span>
+          <span class="completion-date">{{ formatDate(testResults.tamamlanma_tarihi) }}</span>
         </div>
       </div>
 
-      <div class="results-stats">
-        <div class="stat-item success">
-          <i class="bi bi-check-circle"></i>
-          <div>
-            <span class="count">{{ testResults.dogru_sayisi }}</span>
-            <span class="label">Doğru</span>
-          </div>
-        </div>
-        <div class="stat-item danger">
-          <i class="bi bi-x-circle"></i>
-          <div>
-            <span class="count">{{ testResults.yanlis_sayisi }}</span>
-            <span class="label">Yanlış</span>
-          </div>
-        </div>
-        <div class="stat-item secondary">
-          <i class="bi bi-circle"></i>
-          <div>
-            <span class="count">{{ testResults.bos_sayisi }}</span>
-            <span class="label">Boş</span>
-          </div>
-        </div>
-        <div class="stat-item info">
-          <i class="bi bi-calculator"></i>
-          <div>
-            <span class="count">{{ testResults.net.toFixed(2) }}</span>
-            <span class="label">Net</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Soru Bazında Detaylar -->
-      <div class="question-details-section mt-4" *ngIf="testResults && testResults.details">
-        <div class="details-header">
-          <h4>
-            <i class="bi bi-list-check me-2"></i>
-            Soru Bazında Sonuçlar
-          </h4>
-          <button class="btn btn-sm btn-outline-primary" (click)="toggleQuestionDetails()">
-            <i class="bi" [class.bi-chevron-down]="!showQuestionDetails" [class.bi-chevron-up]="showQuestionDetails"></i>
-            {{ showQuestionDetails ? 'Gizle' : 'Göster' }}
-          </button>
-        </div>
-
-        <div class="question-details-content" *ngIf="showQuestionDetails" [@slideToggle]>
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead class="table-dark">
-                <tr>
-                  <th style="width: 8%;">Soru</th>
-                  <th style="width: 15%;">Konu</th>
-                  <th style="width: 12%;">Zorluk</th>
-                  <th style="width: 15%;">Sizin Cevabınız</th>
-                  <th style="width: 15%;">Doğru Cevap</th>
-                  <th style="width: 15%;">Durum</th>
-                  <th style="width: 20%;">Soru Metni</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let detail of testResults.details; let i = index" [class]="getQuestionResultClass(detail)">
-                  <td class="fw-bold">{{ i + 1 }}</td>
-                  <td>
-                    <span class="badge bg-info">{{ detail.soru.konu_adi }}</span>
-                  </td>
-                  <td>
-                    <span class="badge" [class]="getDifficultyBadgeClass(detail.soru.zorluk_derecesi)">
-                      {{ detail.soru.zorluk_derecesi }}
-                    </span>
-                  </td>
-                  <td class="text-center">
-                    <span class="badge fs-6" [class]="getUserAnswerBadgeClass(detail)">
-                      {{ detail.user_answer || 'BOŞ' }}
-                    </span>
-                  </td>
-                  <td class="text-center">
-                    <span class="badge bg-success fs-6">{{ detail.correct_answer }}</span>
-                  </td>
-                  <td class="text-center">
-                    <span class="badge fs-6" [class]="getStatusBadgeClass(detail)">
-                      <i [class]="getStatusIcon(detail)" class="me-1"></i>
-                      {{ getStatusText(detail) }}
-                    </span>
-                  </td>
-                  <td>
-                    <div class="question-text-preview" [title]="detail.soru.soru_metni">
-                      {{ getQuestionPreview(detail.soru.soru_metni) }}
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+      <div class="results-summary">
+        <div class="summary-grid">
+          <div class="summary-item correct">
+            <div class="summary-icon">
+              <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <div class="summary-content">
+              <div class="summary-number">{{ getCorrectAnswersCount() }}</div>
+              <div class="summary-label">Doğru</div>
+            </div>
           </div>
 
-          <!-- İstatistik Özeti -->
-          <div class="question-stats mt-3">
-            <div class="row text-center">
-              <div class="col-md-3">
-                <div class="stat-summary bg-success text-white rounded p-3">
-                  <h5 class="mb-1">{{ getCorrectQuestionsCount() }}</h5>
-                  <small>Doğru Cevaplar</small>
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="stat-summary bg-danger text-white rounded p-3">
-                  <h5 class="mb-1">{{ getIncorrectQuestionsCount() }}</h5>
-                  <small>Yanlış Cevaplar</small>
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="stat-summary bg-warning text-white rounded p-3">
-                  <h5 class="mb-1">{{ getEmptyQuestionsCount() }}</h5>
-                  <small>Boş Bırakılan</small>
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="stat-summary bg-info text-white rounded p-3">
-                  <h5 class="mb-1">{{ testResults.net.toFixed(2) }}</h5>
-                  <small>Net Puanınız</small>
-                </div>
-              </div>
+          <div class="summary-item incorrect">
+            <div class="summary-icon">
+              <i class="bi bi-x-circle-fill"></i>
+            </div>
+            <div class="summary-content">
+              <div class="summary-number">{{ getIncorrectAnswersCount() }}</div>
+              <div class="summary-label">Yanlış</div>
+            </div>
+          </div>
+
+          <div class="summary-item empty">
+            <div class="summary-icon">
+              <i class="bi bi-circle"></i>
+            </div>
+            <div class="summary-content">
+              <div class="summary-number">{{ getEmptyAnswersCount() }}</div>
+              <div class="summary-label">Boş</div>
+            </div>
+          </div>
+
+          <div class="summary-item score">
+            <div class="summary-icon">
+              <i class="bi bi-trophy-fill"></i>
+            </div>
+            <div class="summary-content">
+              <div class="summary-number">{{ getSuccessPercentage() }}%</div>
+              <div class="summary-label">Başarı</div>
             </div>
           </div>
         </div>
@@ -533,6 +499,38 @@
           <i class="bi bi-file-pdf me-2"></i>
           Test PDF
         </button>
+        <button class="btn btn-info" (click)="showQuestionDetails = !showQuestionDetails">
+          <i class="bi bi-list-check me-2"></i>
+          {{ showQuestionDetails ? 'Detayları Gizle' : 'Soru Bazında Sonuçlar' }}
+        </button>
+      </div>
+
+      <!-- Soru Bazında Detaylar -->
+      <div *ngIf="showQuestionDetails" class="question-details">
+        <h4>Soru Bazında Sonuçlar</h4>
+        <div class="details-grid">
+          <div class="detail-item" 
+               *ngFor="let detail of testResults.details; let i = index"
+               [class]="getQuestionResultClass(detail)">
+            <div class="detail-header">
+              <span class="question-number">{{ i + 1 }}</span>
+              <span class="result-icon">
+                <i class="bi" [class]="getQuestionResultIcon(detail)"></i>
+              </span>
+            </div>
+            <div class="detail-content">
+              <div class="answer-info">
+                <span class="correct-answer">Doğru: {{ detail.dogru_cevap }}</span>
+                <span class="user-answer" *ngIf="detail.user_answer">
+                  Cevabınız: {{ detail.user_answer }}
+                </span>
+                <span class="no-answer" *ngIf="!detail.user_answer">
+                  Cevaplamadınız
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
