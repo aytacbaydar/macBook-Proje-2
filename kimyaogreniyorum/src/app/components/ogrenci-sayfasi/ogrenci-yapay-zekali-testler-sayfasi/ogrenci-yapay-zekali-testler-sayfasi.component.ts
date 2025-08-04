@@ -125,6 +125,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
 
   // Test timing
   remainingTime = 0;
+  testTimer: any = null;
 
   // Math object for template
   Math = Math;
@@ -927,6 +928,19 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
       hour: '2-digit',
       minute: '2-digit'
     });
+  }
+
+  // Zaman formatlama
+  formatTime(seconds: number): string {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+
+    if (hours > 0) {
+      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    } else {
+      return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    }
   }
 
   // Toplam soru sayısını hesapla
