@@ -43,6 +43,11 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
       link: 'ogrenci-sayfasi',
     },
     {
+      icon: 'bi-pencil-square',
+      label: 'İşlenen konular',
+      link: 'ogrenci-sayfasi/ogrenci-islene-konularin-pdf-sayfasi',
+    },
+    {
       icon: 'bi-clipboard2-check-fill',
       label: 'Sınavlar',
       link: 'ogrenci-sayfasi/sinav-sonuclari-sayfasi',
@@ -104,8 +109,6 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
   }
 
   private loadUnreadMessageCount(): void {
-
-
     // Önce badge'i 0 olarak ayarla
     const soruCozumuMenuItem = this.menuItems.find(
       (item) => item.label === 'Soru Çözümü'
@@ -116,15 +119,12 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
     }
 
     if (!this.studentId) {
-
       return;
     }
 
     const headers = {
       Authorization: `Bearer ${this.getTokenFromStorage()}`,
     };
-
-
 
     this.http
       .get<any>(
