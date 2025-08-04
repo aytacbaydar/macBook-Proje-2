@@ -916,4 +916,69 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     this.clearMessages();
     this.cdr.detectChanges();
   }
+
+  // Optik form için yeni metodlar
+  getOptionsArray(secenekler: any): string[] {
+    if (!secenekler) return [];
+    
+    if (Array.isArray(secenekler)) {
+      return secenekler;
+    } else if (typeof secenekler === 'object') {
+      return Object.values(secenekler);
+    }
+    return [];
+  }
+
+  getOptionLetter(index: number): string {
+    const letters = ['A', 'B', 'C', 'D', 'E'];
+    return letters[index] || '';
+  }
+
+  hasOption(soru: TestSoru, optionIndex: number): boolean {
+    if (!soru || !soru.secenekler) return false;
+    
+    const options = this.getOptionsArray(soru.secenekler);
+    return optionIndex < options.length;
+  }
+
+  selectAnswerFromOptical(questionIndex: number, optionLetter: string): void {
+    this.userAnswers[questionIndex] = optionLetter;
+  }
+
+  clearAnswer(questionIndex: number): void {
+    delete this.userAnswers[questionIndex];
+  }
+
+  getCorrectAnswersCount(): number {
+    if (!this.currentTest) return 0;
+    return Object.entries(this.userAnswers).filter(([index, answer]) => {
+      const questionIndex = parseInt(index);
+      const question = this.currentTest!.sorular[questionIndex];
+      return question && answer === question.dogru_cevap;
+    }).length;
+  }
+
+  getIncorrectAnswersCount(): number {
+    if (!this.currentTest) return 0;
+    return Object.entries(this.userAnswers).filter(([index, answer]) => {
+      const questionIndex = parseInt(index);
+      const question = this.currentTest!.sorular[questionIndex];
+      return question && answer && answer !== question.dogru_cevap;
+    }).length;
+  }
+
+  getEmptyAnswersCount(): number {
+    if (!this.currentTest) return 0;
+    return this.currentTest.sorular.length - Object.keys(this.userAnswers).length;
+  }
+
+  getSuccessPercentage(): number {
+    if (!this.currentTest || this.currentTest.sorular.length === 0) return 0;
+    return Math.round((this.getCorrectAnswersCount() / this.currentTest.sorular.length) * 100);
+  }
+
+  getQuestionResultIcon(detail: any): string {
+    if (!detail.user_answer) return 'bi-circle';
+    return detail.is_correct ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger';
+  }
 }
