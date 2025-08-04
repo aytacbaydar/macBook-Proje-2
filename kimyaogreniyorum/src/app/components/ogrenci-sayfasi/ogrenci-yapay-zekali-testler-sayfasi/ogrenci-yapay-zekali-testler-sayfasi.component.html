@@ -395,19 +395,21 @@
                 <button class="option-btn"
                         *ngFor="let option of ['A', 'B', 'C', 'D', 'E']; let j = index"
                         [class.selected]="userAnswers[i] === option"
-                        [class.disabled]="!hasOption(currentTest.sorular[i], j)"
+                        [class.disabled]="!hasOption(soru, j)"
                         (click)="selectAnswer(i, option)"
-                        [disabled]="!hasOption(currentTest.sorular[i], j)">
+                        [disabled]="!hasOption(soru, j)"
+                        type="button">
                   {{ option }}
                 </button>
               </div>
               <button class="clear-btn" 
                       *ngIf="userAnswers[i]"
                       (click)="clearAnswer(i)"
-                      title="Cevabı Temizle">
+                      title="Cevabı Temizle"
+                      type="button">
                 <i class="bi bi-x"></i>
               </button>
-            </div>
+            </div></div>
           </div>
 
           <!-- Test Bitir Butonu -->

@@ -942,7 +942,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     if (!soru || !soru.secenekler) return false;
     
     const options = this.getOptionsArray(soru.secenekler);
-    return optionIndex < options.length;
+    return options.length > optionIndex && options[optionIndex] && options[optionIndex].trim() !== '';
   }
 
   selectAnswerFromOptical(questionIndex: number, optionLetter: string): void {
