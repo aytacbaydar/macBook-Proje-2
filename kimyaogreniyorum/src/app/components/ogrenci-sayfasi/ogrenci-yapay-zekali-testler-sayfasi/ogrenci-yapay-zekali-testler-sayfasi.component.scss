@@ -1886,46 +1886,59 @@
               .option-item {
                 display: flex;
                 align-items: center;
-                padding: 15px;
-                border: 2px solid #e9ecef;
-                border-radius: 10px;
+                padding: 1rem;
+                border: 2px solid #e2e8f0;
+                border-radius: 0.75rem;
                 cursor: pointer;
                 transition: all 0.3s ease;
                 background: white;
+                user-select: none;
 
                 &:hover {
-                  border-color: #ff6600;
-                  background: #fff8f4;
+                  border-color: #3b82f6;
+                  background: #eff6ff;
+                  transform: translateY(-2px);
+                  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
                 }
 
                 &.selected {
-                  border-color: #ff6600;
-                  background: #ff6600;
-                  color: white;
+                  border-color: #3b82f6;
+                  background: #dbeafe;
+                  transform: translateY(-2px);
+                  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
 
                   .option-letter {
-                    background: white;
-                    color: #ff6600;
+                    background: #3b82f6;
+                    color: white;
+                    transform: scale(1.1);
                   }
                 }
 
+                &:active {
+                  transform: translateY(0);
+                  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                }
+
                 .option-letter {
-                  width: 35px;
-                  height: 35px;
-                  border-radius: 50%;
-                  background: #f8f9fa;
+                  min-width: 40px;
+                  height: 40px;
                   display: flex;
                   align-items: center;
                   justify-content: center;
-                  font-weight: 600;
-                  margin-right: 15px;
-                  flex-shrink: 0;
+                  background: #f1f5f9;
+                  color: #64748b;
+                  border-radius: 50%;
+                  font-weight: 700;
+                  font-size: 1rem;
+                  margin-right: 1rem;
+                  transition: all 0.3s ease;
                 }
 
                 .option-content {
                   flex: 1;
-                  font-size: 15px;
-                  line-height: 1.4;
+                  font-size: 1rem;
+                  line-height: 1.5;
+                  color: #1e293b;
                 }
               }
             }
@@ -2051,35 +2064,40 @@
               gap: 4px;
 
               .option-btn {
-                width: 28px;
-                height: 28px;
-                border: 2px solid #e9ecef;
+                width: 32px;
+                height: 32px;
+                border: 2px solid #e2e8f0;
                 background: white;
-                border-radius: 4px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 12px;
+                border-radius: 50%;
                 font-weight: 600;
-                cursor: pointer;
+                font-size: 0.9rem;
+                color: #64748b;
                 transition: all 0.2s ease;
+                cursor: pointer;
 
-                &:hover:not(.disabled) {
-                  border-color: #ff6600;
-                  background: #fff8f4;
+                &:hover:not(:disabled) {
+                  border-color: #3b82f6;
+                  color: #3b82f6;
+                  transform: scale(1.05);
                 }
 
                 &.selected {
-                  background: #ff6600;
-                  border-color: #ff6600;
+                  background: #3b82f6;
+                  border-color: #3b82f6;
                   color: white;
+                  transform: scale(1.1);
+                  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
                 }
 
+                &:disabled,
                 &.disabled {
-                  background: #f8f9fa;
-                  border-color: #f1f3f4;
-                  color: #ced4da;
+                  opacity: 0.3;
                   cursor: not-allowed;
+                  transform: none;
+                }
+
+                &:active:not(:disabled) {
+                  transform: scale(0.95);
                 }
               }
             }
@@ -2132,7 +2150,7 @@
               color: #6c757d;
               font-weight: 600;
             }
-          }
+}
 
           .btn-finish {
             width: 100%;

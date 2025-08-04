@@ -345,7 +345,8 @@
                 <div class="option-item" 
                      *ngFor="let option of getOptionsArray(currentQuestion.secenekler); let i = index"
                      [class.selected]="userAnswers[currentQuestionIndex] === getOptionLetter(i)"
-                     (click)="selectAnswer(currentQuestionIndex, getOptionLetter(i))">
+                     (click)="selectAnswer(currentQuestionIndex, getOptionLetter(i))"
+                     style="cursor: pointer;">
                   <div class="option-letter">{{ getOptionLetter(i) }}</div>
                   <div class="option-content">{{ option }}</div>
                 </div>
@@ -395,7 +396,7 @@
                         *ngFor="let option of ['A', 'B', 'C', 'D', 'E']; let j = index"
                         [class.selected]="userAnswers[i] === option"
                         [class.disabled]="!hasOption(currentTest.sorular[i], j)"
-                        (click)="selectAnswerFromOptical(i, option)"
+                        (click)="selectAnswer(i, option)"
                         [disabled]="!hasOption(currentTest.sorular[i], j)">
                   {{ option }}
                 </button>
