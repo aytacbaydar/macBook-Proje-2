@@ -452,6 +452,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
         soru: soru,
         user_answer: userAnswer || '',
         correct_answer: soru.dogru_cevap,
+        dogru_cevap: soru.dogru_cevap,
         is_correct: isCorrect
       });
     });
@@ -598,6 +599,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
       next: (response) => {
         this.loading = false;
         if (response.success) {
+          this.currentTest = response.test;
           this.testResults = {
             dogru_sayisi: response.test_sonuclari?.dogru_sayisi || 0,
             yanlis_sayisi: response.test_sonuclari?.yanlis_sayisi || 0,
@@ -605,19 +607,22 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
             toplam_soru: response.test?.sorular?.length || 0,
             net: response.test_sonuclari?.net || 0,
             yuzde: response.test_sonuclari?.yuzde || 0,
+            tamamlanma_tarihi: response.test_sonuclari?.tamamlanma_tarihi,
             details: []
           };
 
-          if (response.test && response.test.sorular && response.user_answers) {
+          if (response.test && response.test.sorular) {
             this.testResults.details = response.test.sorular.map((soru: any, index: number) => {
-              const userAnswer = response.user_answers[index] || '';
-              const isCorrect = userAnswer === soru.dogru_cevap;
+              const userAnswer = response.user_answers ? response.user_answers[index] || '' : '';
+              const correctAnswer = soru.dogru_cevap;
+              const isCorrect = userAnswer && userAnswer === correctAnswer;
 
               return {
                 soru_index: index,
                 soru: soru,
                 user_answer: userAnswer,
-                correct_answer: soru.dogru_cevap,
+                correct_answer: correctAnswer,
+                dogru_cevap: correctAnswer,
                 is_correct: isCorrect
               };
             });

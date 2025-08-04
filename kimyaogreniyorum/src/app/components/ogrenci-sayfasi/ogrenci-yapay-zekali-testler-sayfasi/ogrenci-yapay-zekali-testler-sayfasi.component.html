@@ -441,7 +441,8 @@
         </h3>
         <div class="results-meta">
           <span class="test-name">{{ currentTest?.test_adi }}</span>
-          <span class="completion-date">{{ formatDate(testResults.tamamlanma_tarihi) }}</span>
+          <span class="completion-date" *ngIf="testResults.tamamlanma_tarihi">{{ formatDate(testResults.tamamlanma_tarihi) }}</span>
+          <span class="completion-date" *ngIf="!testResults.tamamlanma_tarihi">{{ formatDate(new Date().toISOString()) }}</span>
         </div>
       </div>
 
@@ -507,27 +508,34 @@
       <!-- Soru Bazında Detaylar -->
       <div *ngIf="showQuestionDetails" class="question-details">
         <h4>Soru Bazında Sonuçlar</h4>
-        <div class="details-grid">
-          <div class="detail-item" 
-               *ngFor="let detail of testResults.details; let i = index"
-               [class]="getQuestionResultClass(detail)">
-            <div class="detail-header">
-              <span class="question-number">{{ i + 1 }}</span>
-              <span class="result-icon">
-                <i class="bi" [class]="getQuestionResultIcon(detail)"></i>
-              </span>
-            </div>
-            <div class="detail-content">
-              <div class="answer-info">
-                <span class="correct-answer">Doğru: {{ detail.dogru_cevap }}</span>
-                <span class="user-answer" *ngIf="detail.user_answer">
-                  Cevabınız: {{ detail.user_answer }}
-                </span>
-                <span class="no-answer" *ngIf="!detail.user_answer">
-                  Cevaplamadınız
-                </span>
-              </div>
-            </div>
+        <div class="question-results-table">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Soru</th>
+                  <th>Doğru Cevap</th>
+                  <th>Cevabınız</th>
+                  <th>Durum</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let detail of testResults.details; let i = index" 
+                    [class]="getQuestionResultClass(detail)">
+                  <td class="fw-bold">{{ i + 1 }}</td>
+                  <td class="fw-bold text-success">{{ detail.correct_answer || detail.dogru_cevap }}</td>
+                  <td class="fw-bold" [class]="detail.user_answer ? (detail.is_correct ? 'text-success' : 'text-danger') : 'text-warning'">
+                    {{ detail.user_answer || 'Boş' }}
+                  </td>
+                  <td>
+                    <span class="badge" [class]="getStatusBadgeClass(detail)">
+                      <i class="bi" [class]="getStatusIcon(detail)"></i>
+                      {{ getStatusText(detail) }}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
