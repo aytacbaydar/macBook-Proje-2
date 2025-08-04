@@ -92,6 +92,9 @@ if (!$ogrenci_id) {
 $tum_secili_konular = array_merge($gelistirilmesi_gereken_konular, $en_iyi_konular, $diger_konular);
 $tum_secili_konular = array_unique($tum_secili_konular); // Tekrar eden konuları kaldır
 
+// Test sorularını tutacak array'i başlangıçta tanımla
+$test_sorulari = [];
+
 if (!empty($tum_secili_konular)) {
     $konu_placeholders = implode(',', array_fill(0, count($tum_secili_konular), '?'));
     
