@@ -1,193 +1,234 @@
-
-// Genel container stili
-.yapay-zeka-test-container {
+// Ana container
+.student-ai-tests-page {
   padding: 20px;
   background-color: #f8f9fa;
   min-height: 100vh;
 }
 
-// Test adımları navbar
-.test-steps-navbar {
-  background: white;
-  border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+// Loading overlay
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
 
-  .steps-container {
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  p {
+    color: white;
+    margin-top: 15px;
+    font-size: 1.1rem;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Sayfa başlığı
+.page-header {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+  .page-title {
+    color: #007bff;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+
+    i {
+      color: #007bff;
+    }
+  }
+
+  .page-description {
+    color: #6c757d;
+    font-size: 1rem;
+    margin: 0;
+  }
+}
+
+// Test listesi bölümü
+.test-list-section {
+  .list-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
+    margin-bottom: 20px;
 
-    .step-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 15px;
+    .section-title {
+      color: #495057;
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin: 0;
+
+      i {
+        color: #007bff;
+      }
+    }
+
+    .btn {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
       border-radius: 8px;
+      font-weight: 500;
       transition: all 0.3s ease;
-      cursor: pointer;
 
-      &.active {
-        background: linear-gradient(135deg, #007bff, #0056b3);
-        color: white;
-        transform: scale(1.05);
+      &:hover {
+        background: #0056b3;
+        transform: translateY(-2px);
       }
 
-      &.completed {
-        background: linear-gradient(135deg, #28a745, #1e7e34);
-        color: white;
-      }
-
-      &.disabled {
-        opacity: 0.5;
+      &:disabled {
+        background: #6c757d;
         cursor: not-allowed;
+        transform: none;
       }
+    }
+  }
+}
 
-      .step-number {
-        background: rgba(255,255,255,0.2);
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
+// Test kartları
+.test-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .test-header {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    padding: 20px;
+
+    h4 {
+      margin: 0;
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+
+    .test-meta {
+      display: flex;
+      gap: 15px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+
+      .meta-item {
         display: flex;
         align-items: center;
-        justify-content: center;
-        font-weight: bold;
-      }
-
-      .step-title {
-        font-weight: 600;
+        gap: 5px;
         font-size: 0.9rem;
+        opacity: 0.9;
+
+        i {
+          font-size: 1rem;
+        }
       }
     }
   }
-}
 
-// Test listesi stilleri
-.test-list-container {
-  .test-card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
-    overflow: hidden;
-    transition: all 0.3s ease;
+  .test-body {
+    padding: 20px;
 
-    &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    }
+    .test-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
 
-    .test-header {
-      background: linear-gradient(135deg, #007bff, #0056b3);
-      color: white;
-      padding: 20px;
+      .btn {
+        flex: 1;
+        min-width: 120px;
+        padding: 10px 15px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
 
-      .test-info h4 {
-        margin: 0;
-        font-size: 1.2rem;
-        font-weight: 600;
-      }
+        &.btn-primary {
+          background: #007bff;
+          color: white;
+          border: 1px solid #007bff;
 
-      .test-meta {
-        display: flex;
-        gap: 15px;
-        margin-top: 10px;
-        flex-wrap: wrap;
-
-        .meta-item {
-          display: flex;
-          align-items: center;
-          gap: 5px;
-          font-size: 0.85rem;
-          opacity: 0.9;
-
-          i {
-            font-size: 0.9rem;
+          &:hover {
+            background: #0056b3;
+            border-color: #0056b3;
           }
         }
-      }
-    }
 
-    .test-body {
-      padding: 20px;
+        &.btn-success {
+          background: #28a745;
+          color: white;
+          border: 1px solid #28a745;
 
-      .test-stats {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-        gap: 15px;
-        margin-bottom: 15px;
-
-        .stat-item {
-          text-align: center;
-          padding: 10px;
-          border-radius: 8px;
-          background: #f8f9fa;
-
-          .stat-number {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 5px;
-          }
-
-          .stat-label {
-            font-size: 0.8rem;
-            color: #6c757d;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-          }
-
-          &.success {
-            background: #d4edda;
-            color: #155724;
-          }
-
-          &.danger {
-            background: #f8d7da;
-            color: #721c24;
-          }
-
-          &.warning {
-            background: #fff3cd;
-            color: #856404;
-          }
-
-          &.info {
-            background: #cce7ff;
-            color: #004085;
+          &:hover {
+            background: #1e7e34;
+            border-color: #1e7e34;
           }
         }
-      }
 
-      .test-actions {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
+        &.btn-danger {
+          background: #dc3545;
+          color: white;
+          border: 1px solid #dc3545;
 
-        .btn {
-          flex: 1;
-          min-width: 120px;
+          &:hover {
+            background: #c82333;
+            border-color: #c82333;
+          }
+        }
+
+        &.btn-outline-secondary {
+          background: transparent;
+          color: #6c757d;
+          border: 1px solid #6c757d;
+
+          &:hover {
+            background: #6c757d;
+            color: white;
+          }
         }
       }
     }
   }
 }
 
-// Test sonuçları summary grid - ANA STİL
+// Test sonuçları özeti - Ana sayfa grid
 .results-summary {
   margin-bottom: 30px;
   padding: 20px;
   background: white;
   border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 
   .summary-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 20px;
-    margin-bottom: 20px;
 
     .summary-item {
       background: white;
@@ -285,7 +326,7 @@
   }
 }
 
-// Test kartlarında küçük sonuç özeti - İKİNCİ STİL
+// Test kartlarında küçük sonuç özeti
 .test-results-summary {
   display: flex;
   gap: 8px;
@@ -332,225 +373,12 @@
   }
 }
 
-// Test çözme arayüzü
-.test-taking-container {
-  .question-card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    padding: 25px;
-    margin-bottom: 20px;
-
-    .question-header {
-      border-bottom: 2px solid #f1f3f4;
-      padding-bottom: 15px;
-      margin-bottom: 20px;
-
-      .question-number {
-        color: #007bff;
-        font-weight: 600;
-        font-size: 1.1rem;
-      }
-
-      .question-text {
-        font-size: 1.05rem;
-        line-height: 1.6;
-        margin-top: 10px;
-      }
-    }
-
-    .question-options {
-      .option-item {
-        background: #f8f9fa;
-        border: 2px solid transparent;
-        border-radius: 8px;
-        padding: 12px 15px;
-        margin-bottom: 10px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-
-        &:hover {
-          background: #e9ecef;
-          border-color: #007bff;
-        }
-
-        &.selected {
-          background: #cce7ff;
-          border-color: #007bff;
-          font-weight: 500;
-        }
-
-        .option-letter {
-          background: #6c757d;
-          color: white;
-          width: 25px;
-          height: 25px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: bold;
-          font-size: 0.8rem;
-        }
-
-        &.selected .option-letter {
-          background: #007bff;
-        }
-      }
-    }
-  }
-
-  .question-navigation {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    padding: 20px;
-
-    .nav-buttons {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 20px;
-
-      .btn {
-        flex: 1;
-        max-width: 120px;
-      }
-    }
-
-    .question-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
-      gap: 8px;
-
-      .question-number-btn {
-        aspect-ratio: 1;
-        border: 2px solid #dee2e6;
-        background: white;
-        border-radius: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s ease;
-
-        &:hover {
-          border-color: #007bff;
-          background: #f8f9fa;
-        }
-
-        &.current {
-          background: #007bff;
-          color: white;
-          border-color: #007bff;
-        }
-
-        &.answered {
-          background: #28a745;
-          color: white;
-          border-color: #28a745;
-        }
-
-        &.current.answered {
-          background: #17a2b8;
-          border-color: #17a2b8;
-        }
-      }
-    }
-  }
-}
-
-// Test sonuçları detay tablosu
-.results-details {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  overflow: hidden;
-
-  .table-responsive {
-    .table {
-      margin: 0;
-
-      th {
-        background: #f8f9fa;
-        border-bottom: 2px solid #dee2e6;
-        font-weight: 600;
-        color: #495057;
-        padding: 15px 12px;
-      }
-
-      td {
-        padding: 12px;
-        vertical-align: middle;
-        border-bottom: 1px solid #f1f3f4;
-      }
-
-      .table-success {
-        background-color: rgba(40, 167, 69, 0.1) !important;
-      }
-
-      .table-danger {
-        background-color: rgba(220, 53, 69, 0.1) !important;
-      }
-
-      .table-warning {
-        background-color: rgba(255, 193, 7, 0.1) !important;
-      }
-    }
-  }
-
-  .question-preview {
-    max-width: 200px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-}
-
-// Loading ve Empty states
-.loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 200px;
-
-  .spinner-border {
-    width: 3rem;
-    height: 3rem;
-  }
-}
-
-.empty-state {
-  text-align: center;
-  padding: 60px 20px;
-  color: #6c757d;
-
-  i {
-    font-size: 4rem;
-    margin-bottom: 20px;
-    opacity: 0.5;
-  }
-
-  h3 {
-    margin-bottom: 15px;
-    color: #495057;
-  }
-
-  p {
-    font-size: 1.1rem;
-    margin-bottom: 25px;
-  }
-}
-
-// Error ve Success mesajları
+// Alert mesajları
 .alert {
   border-radius: 8px;
   border: none;
   font-weight: 500;
+  margin-bottom: 20px;
 
   &.alert-success {
     background: linear-gradient(135deg, #d4edda, #c3e6cb);
@@ -562,31 +390,58 @@
     color: #721c24;
   }
 
-  &.alert-info {
-    background: linear-gradient(135deg, #d1ecf1, #b8daff);
-    color: #0c5460;
+  .btn-close {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    opacity: 0.7;
+
+    &:hover {
+      opacity: 1;
+    }
   }
+}
+
+// Loading durumu
+.text-center {
+  text-align: center;
+  padding: 40px;
+  color: #6c757d;
+
+  .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.3em;
+  }
+}
+
+// Empty state
+.text-muted {
+  color: #6c757d !important;
+  font-style: italic;
 }
 
 // Responsive tasarım
 @media (max-width: 768px) {
-  .yapay-zeka-test-container {
+  .student-ai-tests-page {
     padding: 10px;
   }
 
-  .test-steps-navbar {
-    .steps-container {
-      justify-content: center;
+  .page-header {
+    padding: 20px;
 
-      .step-item {
-        flex-direction: column;
-        text-align: center;
-        min-width: 80px;
+    .page-title {
+      font-size: 1.5rem;
+    }
+  }
 
-        .step-title {
-          font-size: 0.7rem;
-        }
-      }
+  .list-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch !important;
+
+    .btn {
+      width: 100%;
     }
   }
 
@@ -602,7 +457,7 @@
       }
 
       .summary-content .summary-number {
-        font-size: 1.5rem;
+        font-size: 1.8rem;
       }
     }
   }
@@ -621,18 +476,12 @@
     }
   }
 
-  .test-taking-container {
-    .question-card {
-      padding: 15px;
-    }
+  .test-card .test-body .test-actions {
+    flex-direction: column;
 
-    .question-navigation {
-      padding: 15px;
-
-      .question-grid {
-        grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));
-        gap: 6px;
-      }
+    .btn {
+      flex: none;
+      width: 100%;
     }
   }
 }
