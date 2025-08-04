@@ -442,7 +442,7 @@
         <div class="results-meta">
           <span class="test-name">{{ currentTest?.test_adi }}</span>
           <span class="completion-date" *ngIf="testResults.tamamlanma_tarihi">{{ formatDate(testResults.tamamlanma_tarihi) }}</span>
-          <span class="completion-date" *ngIf="!testResults.tamamlanma_tarihi">{{ formatDate(new Date().toISOString()) }}</span>
+          <span class="completion-date" *ngIf="!testResults.tamamlanma_tarihi">{{ formatDate(getCurrentDateString()) }}</span>
         </div>
       </div>
 

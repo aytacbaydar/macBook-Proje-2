@@ -990,4 +990,8 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
     if (!detail.user_answer) return 'bi-circle';
     return detail.is_correct ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger';
   }
+
+  getCurrentDateString(): string {
+    return new Date().toISOString();
+  }
 }
