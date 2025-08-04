@@ -2074,58 +2074,29 @@
                 border-radius: 50%;
                 font-weight: 700;
                 font-size: 0.9rem;
-                color: #2d3748;
                 transition: all 0.2s ease;
                 cursor: pointer;
 
-                &:hover:not(:disabled):not(.unavailable) {
-                  border-color: #ff6b35;
+                &:hover {
+                  border-color: #ff8c00;
                   background-color: #fff4f0;
-                  color: #ff6b35;
+                  color: #ff8c00;
                   transform: scale(1.05);
                   cursor: pointer;
                   box-shadow: 0 2px 8px rgba(255, 140, 0, 0.2);
                 }
 
                 &.selected {
-                  background-color: #ff6b35 !important;
-                  border-color: #ff6b35 !important;
+                  background-color: #ff8c00 !important;
+                  border-color: #ff8c00 !important;
                   color: white !important;
                   transform: scale(1.1);
                   box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.3);
                   cursor: pointer;
                 }
 
-                &.unavailable {
-                  opacity: 0.3;
-                  background-color: #f8f9fa;
-                  color: #6c757d;
-                  border-color: #dee2e6;
-                  cursor: default;
-
-                  &:hover {
-                    background-color: #f8f9fa;
-                    color: #6c757d;
-                    transform: none;
-                    cursor: default;
-                  }
-                }
-
-                &:disabled {
-                  opacity: 0.4;
-                  cursor: default;
-                  transform: none;
-                  background-color: #e2e8f0 !important;
-                  color: #a0aec0 !important;
-                  border-color: #cbd5e0 !important;
-                }
-
-                &:active:not(:disabled):not(.unavailable) {
+                &:active {
                   transform: scale(0.95);
-                  cursor: pointer;
-                }
-
-                &:not(:disabled):not(.unavailable) {
                   cursor: pointer;
                 }
               }

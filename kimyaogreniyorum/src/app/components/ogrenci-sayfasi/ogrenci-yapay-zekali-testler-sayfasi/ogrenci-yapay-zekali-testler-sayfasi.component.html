@@ -395,8 +395,7 @@
                 <button class="option-btn"
                         *ngFor="let option of ['A', 'B', 'C', 'D', 'E']; let j = index"
                         [class.selected]="userAnswers[i] === option"
-                        [class.unavailable]="!hasOption(soru, j)"
-                        (click)="hasOption(soru, j) ? selectAnswer(i, option) : null">
+                        (click)="selectAnswer(i, option)">
                   {{ option }}
                 </button>
               </div>
