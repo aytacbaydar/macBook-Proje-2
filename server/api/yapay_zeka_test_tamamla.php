@@ -18,6 +18,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+try {
+    $pdo = getConnection();
+} catch (Exception $e) {
+    echo json_encode(['success' => false, 'message' => 'Veritabanı bağlantısı başarısız: ' . $e->getMessage()]);
+    exit;
+}
+
 $input = json_decode(file_get_contents('php://input'), true);
 
 if (!$input) {
@@ -48,7 +55,7 @@ try {
             tamamlandi = 1, 
             tamamlanma_tarihi = NOW() 
             WHERE id = ?";
-    
+
     $stmt = $pdo->prepare($sql);
     $result = $stmt->execute([
         json_encode($user_answers),
@@ -73,67 +80,10 @@ try {
         'success' => false,
         'message' => 'Veritabanı hatası: ' . $e->getMessage()
     ]);
-}
-?>
-
-if (!$test_id) {
+} catch (Exception $e) {
     echo json_encode([
         'success' => false,
-        'message' => 'Test ID gerekli'
-    ]);
-    exit;
-}
-
-try {
-    $conn = getConnection();
-
-    // Önce tabloyu kontrol et ve gerekirse sonuc sütununu ekle
-    $checkColumnSQL = "
-        SELECT COLUMN_NAME 
-        FROM INFORMATION_SCHEMA.COLUMNS 
-        WHERE TABLE_SCHEMA = DATABASE() 
-        AND TABLE_NAME = 'yapay_zeka_testler' 
-        AND COLUMN_NAME = 'sonuc'
-    ";
-
-    $checkStmt = $conn->prepare($checkColumnSQL);
-    $checkStmt->execute();
-    $columnExists = $checkStmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$columnExists) {
-        // sonuc sütununu ekle
-        $addColumnSQL = "ALTER TABLE yapay_zeka_testler ADD COLUMN sonuc JSON NULL";
-        $conn->exec($addColumnSQL);
-    }
-
-    // Test sonuçlarını kaydet
-    $sql = "UPDATE yapay_zeka_testler 
-            SET tamamlanma_tarihi = NOW(), 
-                sonuc = ?
-            WHERE id = ?";
-
-    $stmt = $conn->prepare($sql);
-    $stmt->execute([
-        json_encode($test_results),
-        $test_id
-    ]);
-
-    if ($stmt->rowCount() > 0) {
-        echo json_encode([
-            'success' => true,
-            'message' => 'Test sonuçları başarıyla kaydedildi'
-        ]);
-    } else {
-        echo json_encode([
-            'success' => false,
-            'message' => 'Test bulunamadı veya güncellenemedi'
-        ]);
-    }
-
-} catch (PDOException $e) {
-    echo json_encode([
-        'success' => false,
-        'message' => 'Veritabanı hatası: ' . $e->getMessage()
+        'message' => 'Genel hata: ' . $e->getMessage()
     ]);
 }
 ?>

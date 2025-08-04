@@ -1,3 +1,4 @@
+
 <?php
 require_once '../config.php';
 
@@ -12,6 +13,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     echo json_encode(['success' => false, 'message' => 'Sadece GET istekleri kabul edilir']);
+    exit;
+}
+
+try {
+    $pdo = getConnection();
+} catch (Exception $e) {
+    echo json_encode(['success' => false, 'message' => 'Veritabanı bağlantısı başarısız: ' . $e->getMessage()]);
     exit;
 }
 
@@ -37,6 +45,10 @@ try {
 
     // Sorular JSON'unu parse et
     $sorular = json_decode($test['sorular'], true);
+    if (!$sorular) {
+        echo json_encode(['success' => false, 'message' => 'Test soruları geçersiz']);
+        exit;
+    }
 
     // Test nesnesini oluştur
     $testData = [
@@ -49,33 +61,19 @@ try {
     $userAnswers = [];
     $testSonuclari = null;
 
-    if ($completed) {
+    if ($completed === 'true' || $completed === true) {
         // Tamamlanmış test için test sonuçlarını ve cevapları getir
-        $sql = "SELECT user_answers, test_sonuclari FROM yapay_zeka_testler WHERE id = ?";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([$test_id]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!empty($test['user_answers'])) {
+            $userAnswers = json_decode($test['user_answers'], true) ?: [];
+        }
 
-        if ($result) {
-            // User answers JSON'unu parse et
-            if (!empty($result['user_answers'])) {
-                $userAnswers = json_decode($result['user_answers'], true) ?: [];
-            }
-
-            // Test sonuçlarını parse et
-            if (!empty($result['test_sonuclari'])) {
-                $testSonuclari = json_decode($result['test_sonuclari'], true);
-            }
+        if (!empty($test['test_sonuclari'])) {
+            $testSonuclari = json_decode($test['test_sonuclari'], true);
         }
     } else {
         // Devam ettirilebilir test için mevcut cevapları getir (varsa)
-        $sql = "SELECT user_answers FROM yapay_zeka_testler WHERE id = ?";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([$test_id]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($result && !empty($result['user_answers'])) {
-            $userAnswers = json_decode($result['user_answers'], true) ?: [];
+        if (!empty($test['user_answers'])) {
+            $userAnswers = json_decode($test['user_answers'], true) ?: [];
         }
     }
 
@@ -86,7 +84,7 @@ try {
         'message' => 'Test detayları başarıyla getirildi'
     ];
 
-    if ($completed && $testSonuclari) {
+    if (($completed === 'true' || $completed === true) && $testSonuclari) {
         $response['test_sonuclari'] = $testSonuclari;
     }
 
@@ -96,6 +94,11 @@ try {
     echo json_encode([
         'success' => false, 
         'message' => 'Test detayları getirilirken hata oluştu: ' . $e->getMessage()
+    ]);
+} catch (Exception $e) {
+    echo json_encode([
+        'success' => false, 
+        'message' => 'Genel hata: ' . $e->getMessage()
     ]);
 }
 ?>
