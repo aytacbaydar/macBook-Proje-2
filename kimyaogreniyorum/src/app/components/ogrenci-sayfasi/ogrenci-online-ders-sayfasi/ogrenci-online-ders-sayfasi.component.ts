@@ -216,11 +216,18 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
   }
 
   private startCanvasUpdates(): void {
+    console.log('🚀 Canvas güncelleme başlatılıyor...');
+    
+    // İlk güncellemeyi hemen yap
+    this.updateCanvas();
+    
     this.canvasUpdateInterval = setInterval(() => {
       if (this.isJoined && this.currentLesson) {
         this.updateCanvas();
+      } else {
+        console.log('❌ Canvas güncelleme durdu - isJoined:', this.isJoined, 'currentLesson:', !!this.currentLesson);
       }
-    }, 300); // Her 0.3 saniyede canvas güncelle - daha hızlı günceleme
+    }, 100); // Her 0.1 saniyede canvas güncelle - çok daha hızlı
   }
 
   private startChatUpdates(): void {
@@ -232,52 +239,71 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
   }
 
   private updateCanvas(): void {
-    if (!this.canvas || !this.currentLesson) return;
+    if (!this.canvas || !this.currentLesson) {
+      console.log('❌ updateCanvas: Canvas veya currentLesson yok');
+      return;
+    }
 
     const token = this.getAuthToken();
+    const url = `/server/api/online_lesson_session.php?action=get_canvas&group=${this.currentLesson.group_name}&t=${Date.now()}`;
+    
+    console.log('🔄 Canvas güncelleme isteği gönderiliyor:', url);
 
-    this.http.get(`/server/api/online_lesson_session.php?action=get_canvas&group=${this.currentLesson.group_name}&t=${Date.now()}`, {
+    this.http.get(url, {
       headers: { Authorization: `Bearer ${token}` }
     }).subscribe({
       next: (response: any) => {
-        if (response.success && response.canvas_data && response.canvas_data !== 'null' && response.canvas_data.trim() !== '') {
-          try {
-            const canvasData = JSON.parse(response.canvas_data);
+        console.log('📥 Sunucudan gelen canvas yanıtı:', response);
+        
+        if (response.success) {
+          if (response.canvas_data && response.canvas_data !== 'null' && response.canvas_data.trim() !== '') {
+            console.log('✅ Canvas verisi mevcut, uzunluk:', response.canvas_data.length);
+            
+            try {
+              const canvasData = JSON.parse(response.canvas_data);
+              console.log('📊 Parse edilen canvas verisi:', canvasData);
+              console.log('🎨 Canvas objelerinde toplam item sayısı:', canvasData.objects ? canvasData.objects.length : 0);
 
-            // Canvas'ı tamamen temizle ve yeniden yükle
-            this.canvas.clear();
-            this.canvas.loadFromJSON(canvasData, () => {
-              // Canvas objelerini sadece görüntüleme modunda tut
-              this.canvas.forEachObject((obj) => {
-                obj.selectable = false;
-                obj.evented = false;
-                obj.hoverCursor = 'default';
-                obj.moveCursor = 'default';
+              // Canvas'ı tamamen temizle ve yeniden yükle
+              this.canvas.clear();
+              this.canvas.loadFromJSON(canvasData, () => {
+                // Canvas objelerini sadece görüntüleme modunda tut
+                this.canvas.forEachObject((obj) => {
+                  obj.selectable = false;
+                  obj.evented = false;
+                  obj.hoverCursor = 'default';
+                  obj.moveCursor = 'default';
+                });
+
+                // Background image da varsa onu da görüntüleme modunda tut
+                if (this.canvas.backgroundImage) {
+                  this.canvas.backgroundImage.selectable = false;
+                  this.canvas.backgroundImage.evented = false;
+                }
+
+                // Force render
+                this.canvas.renderAll();
+                
+                console.log('✅ CANVAS GÜNCELLENDİ - Yüklenen obje sayısı:', this.canvas.getObjects().length);
+                console.log('🖼️ Background image var mı?', !!this.canvas.backgroundImage);
               });
-
-              // Background image da varsa onu da görüntüleme modunda tut
-              if (this.canvas.backgroundImage) {
-                this.canvas.backgroundImage.selectable = false;
-                this.canvas.backgroundImage.evented = false;
-              }
-
-              // Force render
-              this.canvas.renderAll();
-              
-              console.log('Canvas güncellendi - obje sayısı:', this.canvas.getObjects().length);
-            });
-          } catch (error) {
-            console.error('Canvas verisi parse edilemedi:', error);
-          }
-        } else if (response.success && (response.canvas_data === 'null' || response.canvas_data.trim() === '')) {
+            } catch (error) {
+              console.error('❌ Canvas verisi parse edilemedi:', error);
+              console.error('❌ Hatalı veri:', response.canvas_data);
+            }
+          } else {
+            console.log('🧹 Canvas verisi boş veya null - Canvas temizleniyor');
             // Eğer sunucu boş veya null canvas verisi gönderirse, canvas'ı temizle.
             this.canvas.clear();
             this.canvas.backgroundColor = '#ffffff';
             this.canvas.renderAll();
+          }
+        } else {
+          console.error('❌ Sunucu success: false döndü:', response);
         }
       },
       error: (error) => {
-        console.error('Canvas güncelleme hatası:', error);
+        console.error('❌ Canvas güncelleme HTTP hatası:', error);
       }
     });
   }
