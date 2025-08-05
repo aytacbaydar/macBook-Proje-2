@@ -1,4 +1,3 @@
-
 import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import * as fabric from 'fabric';
 import { HttpClient } from '@angular/common/http';
@@ -32,19 +31,19 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
 
   // Canvas özellikleri
   canvas!: fabric.Canvas;
-  
+
   // Ders bilgileri
   availableLessons: OnlineLesson[] = [];
   currentLesson: OnlineLesson | null = null;
   isJoined: boolean = false;
-  
+
   // Chat
   chatMessages: ChatMessage[] = [];
   newChatMessage: string = '';
-  
+
   // Öğrenci bilgileri
   studentInfo: any = null;
-  
+
   // Interval referansları
   private lessonUpdateInterval: any;
   private canvasUpdateInterval: any;
@@ -132,7 +131,7 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
 
   private loadAvailableLessons(): void {
     const token = this.getAuthToken();
-    
+
     this.http.get<any>('/server/api/online_lesson_session.php?action=get_available_lessons', {
       headers: { Authorization: `Bearer ${token}` }
     }).subscribe({
@@ -221,7 +220,7 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
       if (this.isJoined && this.currentLesson) {
         this.updateCanvas();
       }
-    }, 1000); // Her 1 saniyede canvas güncelle
+    }, 500); // Her 0.5 saniyede canvas güncelle (öğretmenle aynı)
   }
 
   private startChatUpdates(): void {
@@ -236,7 +235,7 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
     if (!this.canvas || !this.currentLesson) return;
 
     const token = this.getAuthToken();
-    
+
     this.http.get(`/server/api/online_lesson_session.php?action=get_canvas&group=${this.currentLesson.group_name}`, {
       headers: { Authorization: `Bearer ${token}` }
     }).subscribe({
@@ -244,18 +243,18 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
         if (response.success && response.canvas_data && response.canvas_data !== 'null' && response.canvas_data.trim() !== '') {
           try {
             const canvasData = JSON.parse(response.canvas_data);
-            
+
             // Mevcut canvas verisiyle karşılaştır (gereksiz güncellemeleri önle)
             const currentCanvasData = JSON.stringify(this.canvas.toJSON());
             if (currentCanvasData === response.canvas_data) {
               return; // Değişiklik yoksa güncelleme yapma
             }
-            
+
             // Canvas'ı temizle ve yeni veriyi yükle
             this.canvas.clear();
             this.canvas.loadFromJSON(canvasData, () => {
               this.canvas.renderAll();
-              
+
               // Canvas objelerini sadece görüntüleme modunda tut
               this.canvas.forEachObject((obj) => {
                 obj.selectable = false;
@@ -267,6 +266,11 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
           } catch (error) {
             console.error('Canvas verisi parse edilemedi:', error);
           }
+        } else if (response.success && (response.canvas_data === 'null' || response.canvas_data.trim() === '')) {
+            // Eğer sunucu boş veya null canvas verisi gönderirse, canvas'ı temizle.
+            this.canvas.clear();
+            this.canvas.backgroundColor = '#ffffff';
+            this.canvas.renderAll();
         }
       },
       error: (error) => {
@@ -329,7 +333,7 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
             message: m.message,
             timestamp: new Date(m.timestamp)
           }));
-          
+
           // Chat container'ı en alta kaydır
           setTimeout(() => {
             const chatContainer = document.querySelector('.chat-messages');
