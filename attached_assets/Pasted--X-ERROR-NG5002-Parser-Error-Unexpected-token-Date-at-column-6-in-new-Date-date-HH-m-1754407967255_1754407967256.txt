@@ -1,0 +1,128 @@
+
+X [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [{{ new Date() | date:'HH:mm:ss' }}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-online-ders-sayfasi\ogretmen-online-ders-sayfasi.component.html@261:12 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-online-ders-sayfasi/ogretmen-online-ders-sayfasi.component.html:262:12:
+      262 │       <span>{{ new Date() | date:'HH:mm:ss' }}</span>
+          ╵             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOnlineDersSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-online-ders-sayfasi/ogretmen-online-ders-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-online-ders-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token | at column 13 in [{{ new Date() | date:'HH:mm:ss' }}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-online-ders-sayfasi\ogretmen-online-ders-sayfasi.component.html@261:12 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-online-ders-sayfasi/ogretmen-online-ders-sayfasi.component.html:262:12:
+      262 │       <span>{{ new Date() | date:'HH:mm:ss' }}</span>
+          ╵             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOnlineDersSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-online-ders-sayfasi/ogretmen-online-ders-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-online-ders-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'new' does not exist on type 'OgretmenOnlineDersSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-online-ders-sayfasi/ogretmen-online-ders-sayfasi.component.html:262:15:
+      262 │       <span>{{ new Date() | date:'HH:mm:ss' }}</span>
+          ╵                ~~~
+
+  Error occurs in the template of component OgretmenOnlineDersSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-online-ders-sayfasi/ogretmen-online-ders-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-online-ders-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [{{ new Date() | date:'HH:mm:ss' }}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-online-ders-sayfasi\ogretmen-online-ders-sayfasi.component.html@261:12 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-online-ders-sayfasi/ogretmen-online-ders-sayfasi.component.html:266:12:
+      266 │       <span>{{ onlineStudents.length }} öğrenci online</span>
+          ╵             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOnlineDersSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-online-ders-sayfasi/ogretmen-online-ders-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-online-ders-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token | at column 13 in [{{ new Date() | date:'HH:mm:ss' }}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-online-ders-sayfasi\ogretmen-online-ders-sayfasi.component.html@261:12 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-online-ders-sayfasi/ogretmen-online-ders-sayfasi.component.html:266:12:
+      266 │       <span>{{ onlineStudents.length }} öğrenci online</span>
+          ╵             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOnlineDersSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-online-ders-sayfasi/ogretmen-online-ders-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-online-ders-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [{{ new Date() | date:'HH:mm:ss' }}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-online-ders-sayfasi\ogretmen-online-ders-sayfasi.component.html@261:12 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-online-ders-sayfasi/ogretmen-online-ders-sayfasi.component.html:270:12:
+      270 │       <span>{{ lessonTitle }}</span>
+          ╵             ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOnlineDersSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-online-ders-sayfasi/ogretmen-online-ders-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-online-ders-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token | at column 13 in [{{ new Date() | date:'HH:mm:ss' }}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-online-ders-sayfasi\ogretmen-online-ders-sayfasi.component.html@261:12 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-online-ders-sayfasi/ogretmen-online-ders-sayfasi.component.html:270:12:
+      270 │       <span>{{ lessonTitle }}</span>
+          ╵             ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOnlineDersSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-online-ders-sayfasi/ogretmen-online-ders-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-online-ders-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [{{ new Date() | date:'HH:mm:ss' }}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-online-ders-sayfasi\ogretmen-online-ders-sayfasi.component.html@261:12 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-online-ders-sayfasi/ogretmen-online-ders-sayfasi.component.html:274:12:
+      274 │       <span>{{ selectedGroup }}</span>
+          ╵             ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOnlineDersSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-online-ders-sayfasi/ogretmen-online-ders-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-online-ders-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Parser Error: Unexpected token | at column 13 in [{{ new Date() | date:'HH:mm:ss' }}] in D:\Web Sayfalarım\Template\macBook-Proje-2\kimyaogreniyorum\src\app\components\ogretmen-sayfasi\ogretmen-online-ders-sayfasi\ogretmen-online-ders-sayfasi.component.html@261:12 [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-online-ders-sayfasi/ogretmen-online-ders-sayfasi.component.html:274:12:
+      274 │       <span>{{ selectedGroup }}</span>
+          ╵             ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenOnlineDersSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-online-ders-sayfasi/ogretmen-online-ders-sayfasi.component.ts:29:15:
+      29 │   templateUrl: './ogretmen-online-ders-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2551: Property 'setBackgroundImage' does not exist on type 'Canvas'. Did you mean 'backgroundImage'? [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-online-ders-sayfasi/ogretmen-online-ders-sayfasi.component.ts:261:20:
+      261 │         this.canvas.setBackgroundImage(img, this.canvas.renderAll...
+          ╵                     ~~~~~~~~~~~~~~~~~~
+
+  'backgroundImage' is declared here.
+
+    node_modules/fabric/dist/src/canvas/StaticCanvas.d.ts:79:4:
+      79 │     backgroundImage?: FabricObject;
