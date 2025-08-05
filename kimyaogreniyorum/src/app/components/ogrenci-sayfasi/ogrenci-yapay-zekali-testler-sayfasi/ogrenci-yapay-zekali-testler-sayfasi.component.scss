@@ -1,8 +1,7 @@
 // Ana container
 .student-ai-tests-page {
   padding: 20px;
-  background-color: #f8f9fa;
-  min-height: 100vh;
+  height: 100%;
 }
 
 // Loading overlay
@@ -43,16 +42,16 @@
 // Sayfa başlığı
 .page-header {
   background: white;
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 30px;
   margin-bottom: 25px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 
   .page-title {
     color: #007bff;
     font-size: 1.8rem;
     font-weight: 600;
-    margin-bottom: 10px;
+    margin-bottom: 1px;
 
     i {
       color: #007bff;
@@ -68,34 +67,41 @@
 
 // Test listesi bölümü
 .test-list-section {
+  margin: 0px !important;
+  padding: 0px !important;
+
   .list-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    background-color: #007bff;
+    border-radius: 8px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    padding: 10px !important;
 
     .section-title {
-      color: #495057;
+      color: #ffffff;
       font-size: 1.4rem;
       font-weight: 600;
       margin: 0;
 
       i {
-        color: #007bff;
+        color: #ffffff;
       }
     }
 
     .btn {
-      background: #007bff;
+      background: #ffffff30;
       color: white;
       border: none;
-      padding: 10px 20px;
+      padding: 6px 16px;
       border-radius: 8px;
       font-weight: 500;
       transition: all 0.3s ease;
 
       &:hover {
-        background: #0056b3;
+        background: #ffffff40;
         transform: translateY(-2px);
       }
 
@@ -111,8 +117,8 @@
 // Test kartları
 .test-card {
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
   margin-bottom: 20px;
   overflow: hidden;
   transition: all 0.3s ease;
@@ -218,113 +224,193 @@
 }
 
 // Test sonuçları özeti - Ana sayfa grid
-.results-summary {
-  margin-bottom: 30px;
+.results-card{
+  
+  
+  .results-header{
+  border-radius: 8px;
+  background: linear-gradient(135deg, #007bff, #0056b3);
   padding: 20px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  margin-bottom: 20px;
+  h3{
+    color: white;
+    font-size: 1.5rem;
+    margin: 0;
+    font-weight: 600;
+  }
+  .results-meta{
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+    flex-direction: row;
+    justify-content: space-between;
 
-  .summary-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px;
+    span{
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 600;
+      font-style: italic;
+    }
+  }
+  }
 
-    .summary-item {
-      background: white;
-      border-radius: 12px;
-      padding: 25px;
-      text-align: center;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  .results-actions{
+    border-radius: 8px;
+    background: white;
+    padding: 20px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    margin-bottom: 20px;
+
+    .btn {
+      margin-right: 10px;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-weight: 500;
       transition: all 0.3s ease;
-      border: 2px solid transparent;
 
-      &:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-      }
+      &.btn-primary {
+        background: #007bff;
+        color: white;
+        border: none;
 
-      &.correct {
-        border-color: #28a745;
-        background: linear-gradient(135deg, #d4edda, #c3e6cb);
-
-        .summary-icon i {
-          color: #28a745;
-        }
-
-        .summary-number {
-          color: #155724;
+        &:hover {
+          background: #0056b3;
         }
       }
 
-      &.incorrect {
-        border-color: #dc3545;
-        background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+      &.btn-secondary {
+        background: #6c757d;
+        color: white;
+        border: none;
 
-        .summary-icon i {
-          color: #dc3545;
-        }
-
-        .summary-number {
-          color: #721c24;
-        }
-      }
-
-      &.empty {
-        border-color: #ffc107;
-        background: linear-gradient(135deg, #fff3cd, #ffeaa7);
-
-        .summary-icon i {
-          color: #ffc107;
-        }
-
-        .summary-number {
-          color: #856404;
-        }
-      }
-
-      &.score {
-        border-color: #007bff;
-        background: linear-gradient(135deg, #cce7ff, #b3d9ff);
-
-        .summary-icon i {
-          color: #007bff;
-        }
-
-        .summary-number {
-          color: #004085;
-        }
-      }
-
-      .summary-icon {
-        margin-bottom: 15px;
-
-        i {
-          font-size: 2.5rem;
-          transition: all 0.3s ease;
-        }
-      }
-
-      .summary-content {
-        .summary-number {
-          font-size: 2.2rem;
-          font-weight: 700;
-          margin-bottom: 8px;
-          display: block;
-          line-height: 1;
-        }
-
-        .summary-label {
-          font-size: 0.9rem;
-          font-weight: 600;
-          text-transform: uppercase;
-          letter-spacing: 1px;
-          opacity: 0.8;
+        &:hover {
+          background: #545b62;
         }
       }
     }
   }
+
+  .question-details{
+    border-radius: 8px;
+    background: white;
+    padding: 20px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    margin-bottom: 20px;
+  }
+
+
+  .results-summary {
+      border-radius: 8px;
+      background: white;
+      padding: 20px;
+      box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+      margin-bottom: 20px;
+  
+      .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+  
+        .summary-item {
+          background: white;
+          border-radius: 12px;
+          padding: 25px;
+          text-align: center;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+          transition: all 0.3s ease;
+          border: 2px solid transparent;
+  
+          &:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+          }
+  
+          &.correct {
+            border-color: #28a745;
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+  
+            .summary-icon i {
+              color: #28a745;
+            }
+  
+            .summary-number {
+              color: #155724;
+            }
+          }
+  
+          &.incorrect {
+            border-color: #dc3545;
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+  
+            .summary-icon i {
+              color: #dc3545;
+            }
+  
+            .summary-number {
+              color: #721c24;
+            }
+          }
+  
+          &.empty {
+            border-color: #ffc107;
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+  
+            .summary-icon i {
+              color: #ffc107;
+            }
+  
+            .summary-number {
+              color: #856404;
+            }
+          }
+  
+          &.score {
+            border-color: #007bff;
+            background: linear-gradient(135deg, #cce7ff, #b3d9ff);
+  
+            .summary-icon i {
+              color: #007bff;
+            }
+  
+            .summary-number {
+              color: #004085;
+            }
+          }
+  
+          .summary-icon {
+            margin-bottom: 15px;
+  
+            i {
+              font-size: 2.5rem;
+              transition: all 0.3s ease;
+            }
+          }
+  
+          .summary-content {
+            .summary-number {
+              font-size: 2.2rem;
+              font-weight: 700;
+              margin-bottom: 8px;
+              display: block;
+              line-height: 1;
+            }
+  
+            .summary-label {
+              font-size: 0.9rem;
+              font-weight: 600;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+              opacity: 0.8;
+            }
+          }
+        }
+      }
+    }
+
 }
+
+
 
 // Test kartlarında küçük sonuç özeti
 .test-results-summary {
@@ -551,6 +637,10 @@
     margin-right: 8px;
     font-size: 1.1rem;
   }
+  span{
+    font-size: 13px;
+    color: #4c4d4c;
+  }
 
   &:hover {
     border-color: #007bff;
@@ -657,7 +747,6 @@
   align-items: center;
   margin-bottom: 25px;
   padding-bottom: 15px;
-  border-bottom: 2px solid #f0f0f0;
 
   .section-title {
     color: #333;
@@ -755,9 +844,11 @@
   .test-date {
     color: #6c757d;
     font-size: 0.9rem;
+    font-style: italic;
     margin: 0;
     display: flex;
     align-items: center;
+    padding-left: 5px;
 
     i {
       margin-right: 5px;
@@ -785,10 +876,7 @@
 }
 
 .test-results-summary {
-  background: #f8f9fa;
-  border-radius: 8px;
-  padding: 15px;
-  margin: 15px 0;
+  padding: 5px;
 
   h6 {
     color: #495057;

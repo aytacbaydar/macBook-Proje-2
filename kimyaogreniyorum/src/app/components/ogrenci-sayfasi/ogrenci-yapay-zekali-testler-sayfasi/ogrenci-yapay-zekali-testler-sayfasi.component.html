@@ -87,24 +87,6 @@
             </div>
           </div>
         </div>
-
-        <div class="test-card-body">
-          <div class="test-stats">
-            <div class="stat-item">
-              <i class="bi bi-question-circle"></i>
-              <span>{{ test.toplam_soru }} Soru</span>
-            </div>
-            <div *ngIf="test.tamamlandi" class="stat-item">
-              <i class="bi bi-check-circle text-success"></i>
-              <span>{{ test.dogru_sayisi }} Doğru</span>
-            </div>
-            <div *ngIf="test.tamamlandi" class="stat-item">
-              <i class="bi bi-percent"></i>
-              <span>%{{ test.yuzde?.toFixed(1) }}</span>
-            </div>
-          </div>
-        </div>
-
         <div class="test-card-actions">
           <button class="btn btn-outline-primary btn-sm me-2" (click)="continueTest(test)" [disabled]="loading">
             <i class="bi" [class.bi-play]="!test.tamamlandi" [class.bi-eye]="test.tamamlandi"></i>
@@ -440,9 +422,11 @@
           Test Sonuçları
         </h3>
         <div class="results-meta">
-          <span class="test-name">{{ currentTest?.test_adi }}</span>
-          <span class="completion-date" *ngIf="testResults.tamamlanma_tarihi">{{ formatDate(testResults.tamamlanma_tarihi) }}</span>
-          <span class="completion-date" *ngIf="!testResults.tamamlanma_tarihi">{{ formatDate(getCurrentDateString()) }}</span>
+          <div class=""><span class="test-name">{{ currentTest?.test_adi }}</span></div>
+          <div class="">
+            <span class="completion-date" *ngIf="testResults.tamamlanma_tarihi">{{ formatDate(testResults.tamamlanma_tarihi) }}</span>
+            <span class="completion-date" *ngIf="!testResults.tamamlanma_tarihi">{{ formatDate(getCurrentDateString()) }}</span>
+          </div>
         </div>
       </div>
 
@@ -513,21 +497,21 @@
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th>Soru</th>
-                  <th>Doğru Cevap</th>
-                  <th>Cevabınız</th>
-                  <th>Durum</th>
+                  <th class="text-center">Soru</th>
+                  <th class="text-center">Doğru Cevap</th>
+                  <th class="text-center">Cevabınız</th>
+                  <th class="text-center">Durum</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let detail of testResults.details; let i = index" 
                     [class]="getQuestionResultClass(detail)">
-                  <td class="fw-bold">{{ i + 1 }}</td>
-                  <td class="fw-bold text-success">{{ detail.correct_answer || detail.dogru_cevap }}</td>
-                  <td class="fw-bold" [class]="detail.user_answer ? (detail.is_correct ? 'text-success' : 'text-danger') : 'text-warning'">
+                  <td class="fw-bold text-center">{{ i + 1 }}</td>
+                  <td class="fw-bold text-success text-center">{{ detail.correct_answer || detail.dogru_cevap }}</td>
+                  <td class="fw-bold text-center" [class]="detail.user_answer ? (detail.is_correct ? 'text-success' : 'text-danger') : 'text-warning'">
                     {{ detail.user_answer || 'Boş' }}
                   </td>
-                  <td>
+                  <td class="text-center">
                     <span class="badge" [class]="getStatusBadgeClass(detail)">
                       <i class="bi" [class]="getStatusIcon(detail)"></i>
                       {{ getStatusText(detail) }}
