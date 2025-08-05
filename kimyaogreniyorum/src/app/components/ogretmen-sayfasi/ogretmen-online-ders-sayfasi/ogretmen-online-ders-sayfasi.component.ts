@@ -51,6 +51,7 @@ export class OgretmenOnlineDersSayfasiComponent implements OnInit, AfterViewInit
   lessonTitle: string = '';
   lessonSubject: string = '';
   isLessonActive: boolean = false;
+  studentGroups: string[] = [];
 
   get getCurrentTime(): string {
     return new Date().toLocaleTimeString('tr-TR');
