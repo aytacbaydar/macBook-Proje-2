@@ -220,7 +220,7 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
       if (this.isJoined && this.currentLesson) {
         this.updateCanvas();
       }
-    }, 500); // Her 0.5 saniyede canvas güncelle - daha hızlı günceleme
+    }, 300); // Her 0.3 saniyede canvas güncelle - daha hızlı günceleme
   }
 
   private startChatUpdates(): void {
@@ -236,7 +236,7 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
 
     const token = this.getAuthToken();
 
-    this.http.get(`/server/api/online_lesson_session.php?action=get_canvas&group=${this.currentLesson.group_name}`, {
+    this.http.get(`/server/api/online_lesson_session.php?action=get_canvas&group=${this.currentLesson.group_name}&t=${Date.now()}`, {
       headers: { Authorization: `Bearer ${token}` }
     }).subscribe({
       next: (response: any) => {
@@ -244,10 +244,9 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
           try {
             const canvasData = JSON.parse(response.canvas_data);
 
-            // Canvas'ı güncelle - karşılaştırma yapmadan direkt güncelle
+            // Canvas'ı tamamen temizle ve yeniden yükle
+            this.canvas.clear();
             this.canvas.loadFromJSON(canvasData, () => {
-              this.canvas.renderAll();
-
               // Canvas objelerini sadece görüntüleme modunda tut
               this.canvas.forEachObject((obj) => {
                 obj.selectable = false;
@@ -261,6 +260,11 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
                 this.canvas.backgroundImage.selectable = false;
                 this.canvas.backgroundImage.evented = false;
               }
+
+              // Force render
+              this.canvas.renderAll();
+              
+              console.log('Canvas güncellendi - obje sayısı:', this.canvas.getObjects().length);
             });
           } catch (error) {
             console.error('Canvas verisi parse edilemedi:', error);
