@@ -340,25 +340,26 @@ if ($method === 'POST') {
             break;
 
         case 'get_messages':
-            // Mesajları getir
+            // Grup mesajlarını getir
             if (!isset($_GET['group'])) {
-                errorResponse('Grup belirtilmedi');
+                errorResponse('Grup bilgisi gerekli');
             }
 
             try {
-                $stmt = $pdo->prepare("SELECT m.id, m.sender_id as student_id, m.sender_name as student_name, m.message, m.created_at as timestamp, m.is_read
-                    FROM online_lesson_messages m 
-                    JOIN online_lesson_sessions ls ON m.session_id = ls.id 
-                    WHERE ls.group_name = ? AND ls.is_active = TRUE 
-                    ORDER BY m.created_at ASC 
-                    LIMIT 50");
+                $stmt = $pdo->prepare("
+                    SELECT m.id, m.sender_id, m.sender_name, m.sender_type, m.message, m.timestamp 
+                    FROM online_lesson_messages m
+                    JOIN online_lesson_sessions ls ON m.session_id = ls.id
+                    WHERE ls.group_name = ? AND ls.is_active = TRUE
+                    ORDER BY m.timestamp ASC
+                ");
                 $stmt->execute([$_GET['group']]);
                 $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 successResponse(['messages' => $messages]);
 
             } catch(PDOException $e) {
-                errorResponse("Mesaj listesi hatası: " . $e->getMessage(), 500);
+                errorResponse("Mesaj yükleme hatası: " . $e->getMessage(), 500);
             }
             break;
 
@@ -383,7 +384,7 @@ if ($method === 'POST') {
                 errorResponse("Oturum bilgisi hatası: " . $e->getMessage(), 500);
             }
             break;
-            
+
         case 'get_available_lessons':
             // Mevcut aktif dersleri getir
             try {

@@ -105,10 +105,19 @@
                [class.teacher-message]="message.sender_type === 'teacher'"
                [class.student-message]="message.sender_type === 'student'">
             <div class="message-header">
-              <span class="sender-name">{{ message.sender_name }}</span>
+              <span class="sender-name">
+                <i class="bi" [class.bi-person-badge]="message.sender_type === 'teacher'" 
+                   [class.bi-person]="message.sender_type === 'student'"></i>
+                {{ message.sender_name || (message.sender_type === 'teacher' ? 'Öğretmen' : 'Öğrenci') }}
+              </span>
               <span class="message-time">{{ formatTime(message.timestamp) }}</span>
             </div>
             <div class="message-content">{{ message.message }}</div>
+          </div>
+          
+          <div class="no-messages" *ngIf="chatMessages.length === 0">
+            <i class="bi bi-chat text-muted"></i>
+            <p class="text-muted mt-2">Henüz mesaj yok</p>
           </div>
         </div>
         

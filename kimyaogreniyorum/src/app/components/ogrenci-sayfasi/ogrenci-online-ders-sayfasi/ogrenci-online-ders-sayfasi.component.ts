@@ -245,11 +245,16 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
       headers: { Authorization: `Bearer ${token}` }
     }).subscribe({
       next: (response: any) => {
+        console.log('Canvas response:', response);
         if (response.success && response.canvas_data) {
           try {
             const canvasData = JSON.parse(response.canvas_data);
+            console.log('Canvas data parsed:', canvasData);
+            
             this.canvas.loadFromJSON(canvasData, () => {
               this.canvas.renderAll();
+              console.log('Canvas rendered, objects count:', this.canvas.getObjects().length);
+              
               // Canvas objelerini sadece görüntüleme modunda tut
               this.canvas.forEachObject((obj) => {
                 obj.selectable = false;
@@ -258,7 +263,10 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
             });
           } catch (error) {
             console.error('Canvas verisi parse edilemedi:', error);
+            console.error('Raw canvas data:', response.canvas_data);
           }
+        } else {
+          console.log('No canvas data received or failed response');
         }
       },
       error: (error) => {
@@ -313,6 +321,7 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
       headers: { Authorization: `Bearer ${token}` }
     }).subscribe({
       next: (response: any) => {
+        console.log('Chat messages response:', response);
         if (response.success && response.messages) {
           this.chatMessages = response.messages.map((m: any) => ({
             id: m.id,
@@ -321,6 +330,7 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
             message: m.message,
             timestamp: new Date(m.timestamp)
           }));
+          console.log('Chat messages loaded:', this.chatMessages);
         }
       },
       error: (error) => {
