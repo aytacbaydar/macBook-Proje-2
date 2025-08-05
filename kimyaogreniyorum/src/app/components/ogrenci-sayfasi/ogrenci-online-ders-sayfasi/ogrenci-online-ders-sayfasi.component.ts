@@ -107,8 +107,8 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
     const container = canvasEl.parentElement;
 
     if (container) {
-      const width = container.clientWidth - 20;
-      const height = Math.min(width * 0.7, 600);
+      const width = container.clientWidth - 40;
+      const height = Math.min(width * 0.75, 700);
 
       canvasEl.width = width;
       canvasEl.height = height;
@@ -126,6 +126,8 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
         obj.selectable = false;
         obj.evented = false;
       });
+
+      console.log('✅ Canvas başlatıldı - Boyut:', width, 'x', height);
     }
   }
 
