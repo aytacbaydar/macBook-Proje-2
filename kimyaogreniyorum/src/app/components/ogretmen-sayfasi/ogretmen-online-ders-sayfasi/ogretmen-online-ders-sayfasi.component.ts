@@ -510,7 +510,7 @@ export class OgretmenOnlineDersSayfasiComponent implements OnInit, AfterViewInit
 
   private broadcastCanvasUpdate(): void {
     if (!this.canvas || !this.isLessonActive) {
-      console.log('❌ broadcastCanvasUpdate: Canvas yok veya ders aktif değil');
+      console.log('❌ ÖĞRETMEN: broadcastCanvasUpdate: Canvas yok veya ders aktif değil');
       return;
     }
 
@@ -519,11 +519,11 @@ export class OgretmenOnlineDersSayfasiComponent implements OnInit, AfterViewInit
     const canvasData = JSON.stringify(canvasJSON);
     
     console.log('📤 ÖĞRETMEN: Canvas güncelleme gönderiliyor...');
-    console.log('🎨 Canvas obje sayısı:', this.canvas.getObjects().length);
-    console.log('📏 Canvas veri uzunluğu:', canvasData.length);
-    console.log('🔍 Canvas JSON içeriği:', canvasJSON);
-    console.log('👥 Hedef grup:', this.selectedGroup);
-    console.log('👨‍🏫 Öğretmen ID:', this.teacherInfo?.id);
+    console.log('🎨 ÖĞRETMEN: Canvas obje sayısı:', this.canvas.getObjects().length);
+    console.log('📏 ÖĞRETMEN: Canvas veri uzunluğu:', canvasData.length);
+    console.log('🖼️ ÖĞRETMEN: Background image var mı?', !!this.canvas.backgroundImage);
+    console.log('👥 ÖĞRETMEN: Hedef grup:', this.selectedGroup);
+    console.log('👨‍🏫 ÖĞRETMEN: Öğretmen ID:', this.teacherInfo?.id);
 
     const updateData = {
       action: 'update_canvas',
@@ -533,17 +533,33 @@ export class OgretmenOnlineDersSayfasiComponent implements OnInit, AfterViewInit
       timestamp: Date.now()
     };
 
-    console.log('📦 Gönderilen veri paketi:', updateData);
-
     this.http.post('/server/api/online_lesson_session.php', updateData, {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { 
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
     }).subscribe({
       next: (response: any) => {
         console.log('✅ ÖĞRETMEN: Canvas güncelleme başarılı:', response);
+        
+        // Test amaçlı - canvas verisinin gerçekten kaydedildiğini kontrol et
+        setTimeout(() => {
+          this.http.get(`/server/api/online_lesson_session.php?action=get_canvas&group=${encodeURIComponent(this.selectedGroup)}`, {
+            headers: { Authorization: `Bearer ${token}` }
+          }).subscribe({
+            next: (testResponse: any) => {
+              console.log('🔍 ÖĞRETMEN: Kaydedilen canvas verisi kontrolü:', {
+                success: testResponse.success,
+                hasData: !!testResponse.canvas_data,
+                dataLength: testResponse.canvas_data ? testResponse.canvas_data.length : 0
+              });
+            }
+          });
+        }, 100);
       },
       error: (error) => {
         console.error('❌ ÖĞRETMEN: Canvas güncelleme hatası:', error);
-        console.error('❌ Hata detayı:', error.error);
+        console.error('❌ ÖĞRETMEN: Hata detayı:', error.error);
       }
     });
   }

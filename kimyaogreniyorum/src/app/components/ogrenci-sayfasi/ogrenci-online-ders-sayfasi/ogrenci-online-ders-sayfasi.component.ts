@@ -218,18 +218,26 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
   }
 
   private startCanvasUpdates(): void {
-    console.log('🚀 Canvas güncelleme başlatılıyor...');
+    console.log('🚀 ÖĞRENCİ: Canvas güncelleme başlatılıyor...');
+    console.log('📋 ÖĞRENCİ: Mevcut ders:', this.currentLesson?.lesson_title);
+    console.log('👥 ÖĞRENCİ: Grup:', this.currentLesson?.group_name);
     
     // İlk güncellemeyi hemen yap
-    this.updateCanvas();
+    setTimeout(() => {
+      this.updateCanvas();
+    }, 500); // 0.5 saniye bekle
     
     this.canvasUpdateInterval = setInterval(() => {
       if (this.isJoined && this.currentLesson) {
         this.updateCanvas();
       } else {
-        console.log('❌ Canvas güncelleme durdu - isJoined:', this.isJoined, 'currentLesson:', !!this.currentLesson);
+        console.log('❌ ÖĞRENCİ: Canvas güncelleme durdu - isJoined:', this.isJoined, 'currentLesson:', !!this.currentLesson);
+        if (this.canvasUpdateInterval) {
+          clearInterval(this.canvasUpdateInterval);
+          this.canvasUpdateInterval = null;
+        }
       }
-    }, 100); // Her 0.1 saniyede canvas güncelle - çok daha hızlı
+    }, 500); // Her 0.5 saniyede canvas güncelle - daha stabil
   }
 
   private startChatUpdates(): void {
@@ -247,27 +255,40 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
     }
 
     const token = this.getAuthToken();
-    const url = `/server/api/online_lesson_session.php?action=get_canvas&group=${this.currentLesson.group_name}&t=${Date.now()}`;
+    const url = `/server/api/online_lesson_session.php?action=get_canvas&group=${encodeURIComponent(this.currentLesson.group_name)}&t=${Date.now()}`;
     
-    console.log('🔄 Canvas güncelleme isteği gönderiliyor:', url);
+    console.log('🔄 ÖĞRENCİ: Canvas güncelleme isteği gönderiliyor:', url);
+    console.log('👥 Grup adı:', this.currentLesson.group_name);
 
     this.http.get(url, {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { 
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
     }).subscribe({
       next: (response: any) => {
-        console.log('📥 Sunucudan gelen canvas yanıtı:', response);
+        console.log('📥 ÖĞRENCİ: Sunucudan gelen canvas yanıtı:', response);
         
         if (response.success) {
-          if (response.canvas_data && response.canvas_data !== 'null' && response.canvas_data.trim() !== '') {
-            console.log('✅ Canvas verisi mevcut, uzunluk:', response.canvas_data.length);
+          if (response.canvas_data && response.canvas_data !== 'null' && response.canvas_data !== null && response.canvas_data.trim() !== '') {
+            console.log('✅ ÖĞRENCİ: Canvas verisi mevcut');
+            console.log('📏 Canvas veri uzunluğu:', response.canvas_data.length);
+            console.log('👨‍🏫 Öğretmen:', response.teacher_name);
+            console.log('⏰ Son güncelleme:', response.last_updated);
             
             try {
               const canvasData = JSON.parse(response.canvas_data);
-              console.log('📊 Parse edilen canvas verisi:', canvasData);
+              console.log('📊 ÖĞRENCİ: Parse edilen canvas verisi:', canvasData);
               console.log('🎨 Canvas objelerinde toplam item sayısı:', canvasData.objects ? canvasData.objects.length : 0);
 
               // Canvas'ı tamamen temizle ve yeniden yükle
               this.canvas.clear();
+              
+              // Background color'ı ayarla
+              if (canvasData.background) {
+                this.canvas.backgroundColor = canvasData.background;
+              }
+
               this.canvas.loadFromJSON(canvasData, () => {
                 // Canvas objelerini sadece görüntüleme modunda tut
                 this.canvas.forEachObject((obj) => {
@@ -286,26 +307,26 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
                 // Force render
                 this.canvas.renderAll();
                 
-                console.log('✅ CANVAS GÜNCELLENDİ - Yüklenen obje sayısı:', this.canvas.getObjects().length);
-                console.log('🖼️ Background image var mı?', !!this.canvas.backgroundImage);
+                console.log('✅ ÖĞRENCİ: CANVAS GÜNCELLENDİ - Yüklenen obje sayısı:', this.canvas.getObjects().length);
+                console.log('🖼️ ÖĞRENCİ: Background image var mı?', !!this.canvas.backgroundImage);
               });
             } catch (error) {
-              console.error('❌ Canvas verisi parse edilemedi:', error);
-              console.error('❌ Hatalı veri:', response.canvas_data);
+              console.error('❌ ÖĞRENCİ: Canvas verisi parse edilemedi:', error);
+              console.error('❌ ÖĞRENCİ: Hatalı veri:', response.canvas_data.substring(0, 200), '...');
             }
           } else {
-            console.log('🧹 Canvas verisi boş veya null - Canvas temizleniyor');
-            // Eğer sunucu boş veya null canvas verisi gönderirse, canvas'ı temizle.
+            console.log('🧹 ÖĞRENCİ: Canvas verisi boş veya null - Canvas temizleniyor');
             this.canvas.clear();
             this.canvas.backgroundColor = '#ffffff';
             this.canvas.renderAll();
           }
         } else {
-          console.error('❌ Sunucu success: false döndü:', response);
+          console.error('❌ ÖĞRENCİ: Sunucu success: false döndü:', response);
         }
       },
       error: (error) => {
-        console.error('❌ Canvas güncelleme HTTP hatası:', error);
+        console.error('❌ ÖĞRENCİ: Canvas güncelleme HTTP hatası:', error);
+        console.error('❌ ÖĞRENCİ: Hata detayları:', error.error);
       }
     });
   }

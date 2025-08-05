@@ -406,12 +406,29 @@ if ($method === 'POST') {
             }
 
             try {
-                $stmt = $pdo->prepare("SELECT canvas_data FROM online_lesson_sessions WHERE group_name = ? AND is_active = TRUE ORDER BY updated_at DESC LIMIT 1");
+                $stmt = $pdo->prepare("SELECT canvas_data, teacher_name, updated_at FROM online_lesson_sessions WHERE group_name = ? AND is_active = TRUE ORDER BY updated_at DESC LIMIT 1");
                 $stmt->execute([$_GET['group']]);
                 $session = $stmt->fetch();
 
                 if (!$session) {
-                    successResponse(['canvas_data' => null]);
+                    // Aktif ders yok, boş canvas döndür
+                    successResponse([
+                        'canvas_data' => null,
+                        'message' => 'Aktif ders bulunamadı'
+                    ]);
+                } else {
+                    // Canvas verisini döndür
+                    successResponse([
+                        'canvas_data' => $session['canvas_data'],
+                        'teacher_name' => $session['teacher_name'],
+                        'last_updated' => $session['updated_at']
+                    ]);
+                }
+
+            } catch(PDOException $e) {
+                errorResponse("Canvas getirme hatası: " . $e->getMessage(), 500);
+            }
+            break; => null]);
                 }
 
                 successResponse(['canvas_data' => $session['canvas_data']]);
