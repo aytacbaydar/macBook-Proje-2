@@ -1,1 +1,277 @@
-<p>ogretmen-online-ders-sayfasi works!</p>
+
+<div class="online-lesson-container">
+  <!-- Header -->
+  <div class="lesson-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <i class="bi bi-camera-video me-2"></i>
+        Online Ders Anlatım Platformu
+      </h1>
+      <div class="lesson-status" [class.active]="isLessonActive">
+        <i class="bi" [class.bi-record-circle]="isLessonActive" [class.bi-stop-circle]="!isLessonActive"></i>
+        {{ isLessonActive ? 'CANLI DERS' : 'DERS BAŞLAMADI' }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Lesson Setup -->
+  <div class="lesson-setup" [class.collapsed]="isLessonActive">
+    <div class="setup-card">
+      <h3>Ders Ayarları</h3>
+      <div class="setup-form">
+        <div class="form-group">
+          <label for="lessonTitle">Ders Başlığı</label>
+          <input 
+            type="text" 
+            id="lessonTitle" 
+            class="form-control" 
+            [(ngModel)]="lessonTitle"
+            placeholder="Örn: Kimyasal Bağlar - Kovalent Bağ"
+            [disabled]="isLessonActive">
+        </div>
+        
+        <div class="form-group">
+          <label for="lessonSubject">Konu</label>
+          <input 
+            type="text" 
+            id="lessonSubject" 
+            class="form-control" 
+            [(ngModel)]="lessonSubject"
+            placeholder="Örn: 11. Sınıf - Kimyasal Bağlar"
+            [disabled]="isLessonActive">
+        </div>
+        
+        <div class="form-group">
+          <label for="studentGroup">Öğrenci Grubu</label>
+          <select 
+            id="studentGroup" 
+            class="form-control" 
+            [(ngModel)]="selectedGroup"
+            [disabled]="isLessonActive">
+            <option value="">Grup Seçin</option>
+            <option *ngFor="let group of studentGroups" [value]="group">{{ group }}</option>
+          </select>
+        </div>
+        
+        <div class="setup-actions">
+          <button 
+            class="btn btn-success" 
+            (click)="startLesson()"
+            [disabled]="isLessonActive || !selectedGroup || !lessonTitle">
+            <i class="bi bi-play-circle me-2"></i>
+            Dersi Başlat
+          </button>
+          
+          <button 
+            class="btn btn-danger ms-2" 
+            (click)="stopLesson()"
+            [disabled]="!isLessonActive">
+            <i class="bi bi-stop-circle me-2"></i>
+            Dersi Bitir
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Teaching Area -->
+  <div class="teaching-area" [class.active]="isLessonActive">
+    
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="tool-group">
+        <label for="pdfUpload" class="btn btn-outline-primary">
+          <i class="bi bi-file-earmark-pdf me-2"></i>
+          PDF Yükle
+        </label>
+        <input 
+          type="file" 
+          id="pdfUpload" 
+          accept=".pdf" 
+          style="display: none;" 
+          (change)="loadPdf($event)">
+        
+        <button 
+          class="btn btn-outline-secondary" 
+          (click)="previousPdfPage()"
+          [disabled]="!loadedPdf || currentPdfPage <= 1">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+        
+        <span class="page-info" *ngIf="loadedPdf">
+          {{ currentPdfPage }} / {{ pdfPages }}
+        </span>
+        
+        <button 
+          class="btn btn-outline-secondary" 
+          (click)="nextPdfPage()"
+          [disabled]="!loadedPdf || currentPdfPage >= pdfPages">
+          <i class="bi bi-chevron-right"></i>
+        </button>
+      </div>
+
+      <div class="tool-group">
+        <button 
+          class="btn" 
+          [class.btn-primary]="isDrawingMode && !eraserMode && !highlighterMode"
+          [class.btn-outline-primary]="!isDrawingMode || eraserMode || highlighterMode"
+          (click)="setPenMode()">
+          <i class="bi bi-pencil"></i>
+        </button>
+        
+        <button 
+          class="btn" 
+          [class.btn-warning]="eraserMode"
+          [class.btn-outline-warning]="!eraserMode"
+          (click)="setEraserMode()">
+          <i class="bi bi-eraser"></i>
+        </button>
+        
+        <button 
+          class="btn" 
+          [class.btn-info]="highlighterMode"
+          [class.btn-outline-info]="!highlighterMode"
+          (click)="setHighlighterMode()">
+          <i class="bi bi-brush"></i>
+        </button>
+        
+        <input 
+          type="color" 
+          class="color-picker" 
+          [(ngModel)]="penColor" 
+          (change)="setPenMode()">
+        
+        <input 
+          type="range" 
+          class="width-slider" 
+          min="1" 
+          max="20" 
+          [(ngModel)]="penWidth" 
+          (change)="setPenMode()">
+        
+        <button 
+          class="btn btn-outline-danger" 
+          (click)="clearCanvas()">
+          <i class="bi bi-trash"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Canvas and Sidebar -->
+    <div class="canvas-container">
+      <div class="main-canvas">
+        <div class="canvas-wrapper" *ngIf="!pdfLoading; else loadingTemplate">
+          <canvas #onlineCanvas></canvas>
+        </div>
+        
+        <ng-template #loadingTemplate>
+          <div class="loading-overlay">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Yükleniyor...</span>
+            </div>
+            <p class="mt-2">PDF yükleniyor...</p>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+        
+        <!-- Online Students -->
+        <div class="sidebar-section">
+          <h4>
+            <i class="bi bi-people me-2"></i>
+            Online Öğrenciler ({{ onlineStudents.length }})
+          </h4>
+          <div class="student-list">
+            <div 
+              class="student-item" 
+              *ngFor="let student of onlineStudents"
+              [class.online]="student.isOnline">
+              <div class="student-avatar">
+                <i class="bi bi-person-circle"></i>
+              </div>
+              <div class="student-info">
+                <div class="student-name">{{ student.name }}</div>
+                <div class="student-status">
+                  <span class="status-indicator" [class.online]="student.isOnline"></span>
+                  {{ student.isOnline ? 'Çevrimiçi' : 'Çevrimdışı' }}
+                </div>
+              </div>
+            </div>
+            
+            <div class="no-students" *ngIf="onlineStudents.length === 0">
+              <i class="bi bi-person-x text-muted"></i>
+              <p class="text-muted mt-2">Henüz öğrenci bağlanmadı</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat -->
+        <div class="sidebar-section">
+          <h4>
+            <i class="bi bi-chat-dots me-2"></i>
+            Sohbet
+          </h4>
+          <div class="chat-container">
+            <div class="chat-messages">
+              <div 
+                class="chat-message" 
+                *ngFor="let message of chatMessages"
+                [class.teacher-message]="message.studentId === 0">
+                <div class="message-header">
+                  <strong>{{ message.studentName || 'Öğretmen' }}</strong>
+                  <span class="message-time">{{ message.timestamp | date:'HH:mm' }}</span>
+                </div>
+                <div class="message-content">{{ message.message }}</div>
+              </div>
+              
+              <div class="no-messages" *ngIf="chatMessages.length === 0">
+                <i class="bi bi-chat text-muted"></i>
+                <p class="text-muted mt-2">Henüz mesaj yok</p>
+              </div>
+            </div>
+            
+            <div class="chat-input" *ngIf="isLessonActive">
+              <div class="input-group">
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  [(ngModel)]="newChatMessage"
+                  placeholder="Mesajınızı yazın..."
+                  (keyup.enter)="sendChatMessage()">
+                <button 
+                  class="btn btn-primary" 
+                  (click)="sendChatMessage()"
+                  [disabled]="!newChatMessage.trim()">
+                  <i class="bi bi-send"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- Lesson Info Bar -->
+  <div class="lesson-info-bar" *ngIf="isLessonActive">
+    <div class="info-item">
+      <i class="bi bi-clock"></i>
+      <span>{{ new Date() | date:'HH:mm:ss' }}</span>
+    </div>
+    <div class="info-item">
+      <i class="bi bi-people"></i>
+      <span>{{ onlineStudents.length }} öğrenci online</span>
+    </div>
+    <div class="info-item">
+      <i class="bi bi-book"></i>
+      <span>{{ lessonTitle }}</span>
+    </div>
+    <div class="info-item">
+      <i class="bi bi-collection"></i>
+      <span>{{ selectedGroup }}</span>
+    </div>
+  </div>
+</div>
