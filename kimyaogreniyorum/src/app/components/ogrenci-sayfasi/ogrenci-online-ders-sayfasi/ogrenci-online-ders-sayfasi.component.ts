@@ -229,7 +229,7 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
       if (this.isJoined && this.currentLesson) {
         this.loadChatMessages();
       }
-    }, 1500); // Her 1.5 saniyede chat güncelle
+    }, 1000); // Her 1 saniyede chat güncelle
   }
 
   private updateCanvas(): void {
@@ -244,6 +244,12 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
         if (response.success && response.canvas_data && response.canvas_data !== 'null' && response.canvas_data.trim() !== '') {
           try {
             const canvasData = JSON.parse(response.canvas_data);
+            
+            // Mevcut canvas verisiyle karşılaştır (gereksiz güncellemeleri önle)
+            const currentCanvasData = JSON.stringify(this.canvas.toJSON());
+            if (currentCanvasData === response.canvas_data) {
+              return; // Değişiklik yoksa güncelleme yapma
+            }
             
             // Canvas'ı temizle ve yeni veriyi yükle
             this.canvas.clear();
@@ -315,16 +321,22 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
       headers: { Authorization: `Bearer ${token}` }
     }).subscribe({
       next: (response: any) => {
-        console.log('Chat messages response:', response);
         if (response.success && response.messages) {
           this.chatMessages = response.messages.map((m: any) => ({
             id: m.id,
-            sender_name: m.sender_name,
-            sender_type: m.sender_type,
+            sender_name: m.sender_name || 'Anonim',
+            sender_type: m.sender_type || 'student',
             message: m.message,
             timestamp: new Date(m.timestamp)
           }));
-          console.log('Chat messages loaded:', this.chatMessages);
+          
+          // Chat container'ı en alta kaydır
+          setTimeout(() => {
+            const chatContainer = document.querySelector('.chat-messages');
+            if (chatContainer) {
+              chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+          }, 100);
         }
       },
       error: (error) => {

@@ -103,7 +103,7 @@
           <div class="message" 
                *ngFor="let message of chatMessages"
                [class.teacher-message]="message.sender_type === 'teacher'"
-               [class.student-message]="message.sender_type === 'student'">
+               [class.student-message]="message.sender_type === 'student'" === 'student'">
             <div class="message-header">
               <span class="sender-name">
                 <i class="bi" [class.bi-person-badge]="message.sender_type === 'teacher'" 
