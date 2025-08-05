@@ -26,6 +26,7 @@ import { OgrenciSinavSonuclariSayfasiComponent } from './ogrenci-sinav-islemleri
 import { OgrenciSoruCozumuSayfasiComponent } from './ogrenci-soru-cozumu-sayfasi/ogrenci-soru-cozumu-sayfasi.component';
 import { OgrenciUcretSayfasiComponent } from './ogrenci-ucret-sayfasi/ogrenci-ucret-sayfasi.component';
 import { OgrenciYapayZekaliTestlerSayfasiComponent } from './ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component';
+import { OgrenciOnlineDersSayfasiComponent } from './ogrenci-online-ders-sayfasi/ogrenci-online-ders-sayfasi.component';
 
 
 
@@ -46,6 +47,7 @@ import { OgrenciYapayZekaliTestlerSayfasiComponent } from './ogrenci-yapay-zekal
     OgrenciSoruCozumuSayfasiComponent,
     OgrenciUcretSayfasiComponent,
     OgrenciYapayZekaliTestlerSayfasiComponent,
+    OgrenciOnlineDersSayfasiComponent,
   ],
   imports: [
     CommonModule,
