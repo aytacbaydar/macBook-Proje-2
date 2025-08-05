@@ -43,6 +43,11 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
       link: 'ogrenci-sayfasi',
     },
     {
+      icon: 'bi-play-circle-fill',
+      label: 'Online Canlı Ders',
+      link: 'ogrenci-sayfasi/ogrenci-online-ders-sayfasi',
+    },
+    {
       icon: 'bi-pencil-square',
       label: 'İşlenen konular',
       link: 'ogrenci-sayfasi/ogrenci-islene-konularin-pdf-sayfasi',
