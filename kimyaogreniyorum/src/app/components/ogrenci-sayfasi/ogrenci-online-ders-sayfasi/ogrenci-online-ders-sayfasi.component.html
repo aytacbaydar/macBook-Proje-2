@@ -22,6 +22,14 @@
         Mevcut Dersler ({{ studentInfo?.grubu }} Grubu)
       </h3>
       
+      <!-- Debug Bilgileri -->
+      <div class="debug-info" style="background: #f8f9fa; padding: 10px; margin-bottom: 15px; border-radius: 5px; font-size: 12px;">
+        <strong>Debug Bilgileri:</strong><br>
+        Öğrenci Grubu: {{ studentInfo?.grubu || 'tanımsız' }}<br>
+        Toplam Aktif Ders: {{ availableLessons.length }}<br>
+        Son Güncelleme: {{ getCurrentTime }}
+      </div>
+
       <div class="lessons-list" *ngIf="availableLessons.length > 0; else noLessons">
         <div class="lesson-item" *ngFor="let lesson of availableLessons">
           <div class="lesson-info">

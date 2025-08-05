@@ -390,7 +390,13 @@ if ($method === 'POST') {
             try {
                 $stmt = $pdo->prepare("SELECT id, teacher_name, group_name, lesson_title, lesson_subject, created_at FROM online_lesson_sessions WHERE is_active = TRUE ORDER BY created_at DESC");
                 $stmt->execute();
-                $lessons = $stmt->fetchAll();
+                $lessons = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                // Debug için log ekle
+                error_log("📚 API: Aktif ders sayısı: " . count($lessons));
+                foreach($lessons as $lesson) {
+                    error_log("🎯 API: Ders - ID: {$lesson['id']}, Grup: '{$lesson['group_name']}', Başlık: '{$lesson['lesson_title']}'");
+                }
 
                 successResponse(['lessons' => $lessons]);
 

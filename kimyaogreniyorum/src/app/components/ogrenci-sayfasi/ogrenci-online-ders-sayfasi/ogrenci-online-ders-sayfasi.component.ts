@@ -134,14 +134,31 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
   private loadAvailableLessons(): void {
     const token = this.getAuthToken();
 
+    console.log('🔍 ÖĞRENCİ: Ders listesi yükleniyor...');
+    console.log('👤 Öğrenci grubu:', this.studentInfo?.grubu);
+
     this.http.get<any>('/server/api/online_lesson_session.php?action=get_available_lessons', {
       headers: { Authorization: `Bearer ${token}` }
     }).subscribe({
       next: (response) => {
+        console.log('📥 ÖĞRENCİ: Sunucudan gelen ders listesi:', response);
+        
         if (response.success && response.lessons) {
-          this.availableLessons = response.lessons.filter((lesson: any) => 
-            lesson.group_name === this.studentInfo?.grubu
-          ).map((lesson: any) => ({
+          console.log('📚 Tüm aktif dersler:', response.lessons);
+          
+          // Grup adı eşleştirmesini daha esnek hale getir
+          const studentGroup = this.studentInfo?.grubu?.toString().trim();
+          console.log('👥 Aranan grup (öğrenci):', studentGroup);
+          
+          this.availableLessons = response.lessons.filter((lesson: any) => {
+            const lessonGroup = lesson.group_name?.toString().trim();
+            console.log('🎯 Ders grubu:', lessonGroup, '- Öğrenci grubu:', studentGroup);
+            
+            const isMatch = lessonGroup === studentGroup;
+            console.log('✅ Grup eşleşti mi?', isMatch);
+            
+            return isMatch;
+          }).map((lesson: any) => ({
             id: lesson.id,
             teacher_name: lesson.teacher_name,
             lesson_title: lesson.lesson_title,
@@ -149,10 +166,17 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
             group_name: lesson.group_name,
             created_at: new Date(lesson.created_at)
           }));
+          
+          console.log('📋 Filtrelenmiş ders listesi:', this.availableLessons);
+          console.log('🔢 Bulunan ders sayısı:', this.availableLessons.length);
+        } else {
+          console.log('❌ Sunucu success: false döndü veya lessons yok');
+          this.availableLessons = [];
         }
       },
       error: (error) => {
-        console.error('Ders listesi yükleme hatası:', error);
+        console.error('❌ Ders listesi yükleme hatası:', error);
+        this.availableLessons = [];
       }
     });
   }
