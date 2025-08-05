@@ -299,3 +299,45 @@
     </div>
   </div>
 </div>
+
+<!-- Missing Info Modal -->
+<div class="missing-info-modal-overlay" *ngIf="showMissingInfoModal" (click)="closeMissingInfoModal()">
+  <div class="missing-info-modal-content" (click)="$event.stopPropagation()">
+    <div class="missing-info-modal-header">
+      <div class="modal-icon">
+        <i class="bi bi-exclamation-triangle-fill text-warning"></i>
+      </div>
+      <h4>Eksik Bilgiler</h4>
+      <button type="button" class="close-btn" (click)="closeMissingInfoModal()">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+
+    <div class="missing-info-modal-body">
+      <p>Profil bilgilerinizde eksiklikler bulunmaktadır. Lütfen aşağıdaki bilgileri tamamlayınız:</p>
+      
+      <ul class="missing-fields-list">
+        <li *ngFor="let field of missingFields" class="missing-field-item">
+          <i class="bi bi-chevron-right"></i>
+          <span>{{ field }}</span>
+        </li>
+      </ul>
+
+      <div class="info-note">
+        <i class="bi bi-info-circle"></i>
+        <span>Bu bilgiler eğitim sürecinizin takibi için gereklidir.</span>
+      </div>
+    </div>
+
+    <div class="missing-info-modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="closeMissingInfoModal()">
+        <i class="bi bi-x-circle"></i>
+        Daha Sonra
+      </button>
+      <button type="button" class="btn btn-primary" (click)="goToProfile()">
+        <i class="bi bi-person-fill"></i>
+        Profili Tamamla
+      </button>
+    </div>
+  </div>
+</div>

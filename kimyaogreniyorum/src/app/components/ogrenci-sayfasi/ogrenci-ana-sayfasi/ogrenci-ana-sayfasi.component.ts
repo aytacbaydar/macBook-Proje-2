@@ -37,6 +37,10 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
   isLoading: boolean = false;
   error: string = '';
 
+  // Missing info modal
+  showMissingInfoModal: boolean = false;
+  missingFields: string[] = [];
+
   // Sınav sonuçları
   sinavSonuclari: SinavSonucu[] = [];
   comparisonChart: any;
@@ -66,6 +70,7 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
     this.loadSinavSonuclari();
     this.loadSonIslenenKonular();
     this.loadKonuAnalizi();
+    this.checkMissingInfo();
     window.addEventListener('resize', () => {
       this.checkScreenSize();
     });
@@ -439,5 +444,52 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
     return 'Geliştirilmeli';
   }
 
+  checkMissingInfo(): void {
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    
+    if (!userStr) return;
+
+    try {
+      const user = JSON.parse(userStr);
+      this.missingFields = [];
+
+      // Okulu kontrolü
+      if (!user.okulu || user.okulu.trim() === '') {
+        this.missingFields.push('Okul');
+      }
+
+      // Sınıfı kontrolü
+      if (!user.sinif || user.sinif.trim() === '') {
+        this.missingFields.push('Sınıf');
+      }
+
+      // Veli Adı kontrolü
+      if (!user.veli_adi || user.veli_adi.trim() === '') {
+        this.missingFields.push('Veli Adı');
+      }
+
+      // Veli Cep telefonu kontrolü
+      if (!user.veli_cep || user.veli_cep.trim() === '') {
+        this.missingFields.push('Veli Cep Telefonu');
+      }
+
+      // Eksik bilgi varsa modal'ı göster
+      if (this.missingFields.length > 0) {
+        this.showMissingInfoModal = true;
+      }
+    } catch (error) {
+      console.error('User bilgisi kontrol edilirken hata:', error);
+    }
+  }
+
+  closeMissingInfoModal(): void {
+    this.showMissingInfoModal = false;
+  }
+
+  goToProfile(): void {
+    this.showMissingInfoModal = false;
+    // Router ile profil sayfasına yönlendir
+    window.location.href = '/ogrenci-profil-sayfasi';
+  }
 
 }
