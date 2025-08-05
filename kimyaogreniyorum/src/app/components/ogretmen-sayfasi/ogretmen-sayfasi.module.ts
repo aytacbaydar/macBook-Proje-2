@@ -31,6 +31,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { OgretmenDuyuruSayfasiComponent } from './ogretmen-duyuru-sayfasi/ogretmen-duyuru-sayfasi.component';
 import { OgretmenOgrenciBilgiSayfasiComponent } from './ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component';
 import { OgretmenHaftalikDersProgramiSayfasiComponent } from './ogretmen-haftalik-ders-programi-sayfasi/ogretmen-haftalik-ders-programi-sayfasi.component';
+import { OgretmenOnlineDersSayfasiComponent } from './ogretmen-online-ders-sayfasi/ogretmen-online-ders-sayfasi.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import { OgretmenHaftalikDersProgramiSayfasiComponent } from './ogretmen-haftali
     OgretmenDuyuruSayfasiComponent,
     OgretmenOgrenciBilgiSayfasiComponent,
     OgretmenHaftalikDersProgramiSayfasiComponent,
+    OgretmenOnlineDersSayfasiComponent,
   ],
   imports: [
     CommonModule,

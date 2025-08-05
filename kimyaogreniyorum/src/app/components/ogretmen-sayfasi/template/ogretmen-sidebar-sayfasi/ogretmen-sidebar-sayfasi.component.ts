@@ -59,6 +59,11 @@ export class OgretmenSidebarSayfasiComponent implements OnInit, OnDestroy {
       link: 'ogretmen-sayfasi/ogretmen-islenen-konular-sayfasi',
     },
     {
+      icon: 'bi-map-fill',
+      label: 'Online Ders',
+      link: 'ogretmen-sayfasi/ogretmen-online-ders-sayfasi',
+    },
+    {
       icon: 'bi-person-badge-fill',
       label: 'Haftalık Program',
       link: 'ogretmen-sayfasi/ogretmen-haftalik-program-sayfasi',
