@@ -501,6 +501,7 @@ export class OgretmenOnlineDersSayfasiComponent implements OnInit, AfterViewInit
     const messageData = {
       action: 'send_message',
       teacher_id: this.teacherInfo?.id,
+      teacher_name: this.teacherInfo?.adi_soyadi,
       group: this.selectedGroup,
       message: this.newChatMessage,
       sender_type: 'teacher'
@@ -531,11 +532,11 @@ export class OgretmenOnlineDersSayfasiComponent implements OnInit, AfterViewInit
         if (response.success && response.messages) {
           this.chatMessages = response.messages.map((m: any) => ({
             id: m.id,
-            studentId: m.student_id,
-            studentName: m.student_name,
+            studentId: m.sender_type === 'teacher' ? 0 : m.sender_id,
+            studentName: m.sender_name,
             message: m.message,
             timestamp: new Date(m.timestamp),
-            isRead: m.is_read
+            isRead: m.is_read || false
           }));
         }
       },

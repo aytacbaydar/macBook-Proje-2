@@ -286,7 +286,7 @@ if ($method === 'POST') {
 
                 // Gönderen bilgilerini belirle
                 $senderId = $input['sender_type'] === 'teacher' ? $input['teacher_id'] : $input['student_id'];
-                $senderName = $input['sender_type'] === 'teacher' ? 'Öğretmen' : $input['student_name'];
+                $senderName = $input['sender_type'] === 'teacher' ? $input['teacher_name'] : $input['student_name'];
 
                 // Mesajı kaydet
                 $stmt = $pdo->prepare("INSERT INTO online_lesson_messages (session_id, sender_id, sender_name, sender_type, message) VALUES (?, ?, ?, ?, ?)");
