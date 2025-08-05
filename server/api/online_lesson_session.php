@@ -10,6 +10,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 require_once '../config.php';
 
+function successResponse($data) {
+    echo json_encode(['success' => true] + $data);
+    exit;
+}
+
+function errorResponse($message, $code = 400) {
+    http_response_code($code);
+    echo json_encode(['success' => false, 'error' => $message]);
+    exit;
+}
+
 // Veritabanı bağlantısını config.php'den al
 try {
     $pdo = getConnection();
@@ -191,14 +202,24 @@ if ($method === 'POST') {
                     errorResponse('Aktif ders oturumu bulunamadı');
                 }
 
-                // Öğrenci katılımını kaydet veya güncelle
-                $stmt = $pdo->prepare("INSERT INTO online_student_sessions (session_id, student_id, student_name, is_online) VALUES (?, ?, ?, TRUE) 
-                    ON DUPLICATE KEY UPDATE last_seen = NOW(), is_online = TRUE");
-                $stmt->execute([
-                    $session['id'],
-                    $input['student_id'],
-                    $input['student_name']
-                ]);
+                // Mevcut katılımı kontrol et
+                $stmt = $pdo->prepare("SELECT id FROM online_student_sessions WHERE session_id = ? AND student_id = ?");
+                $stmt->execute([$session['id'], $input['student_id']]);
+                $existingEntry = $stmt->fetch();
+
+                if ($existingEntry) {
+                    // Mevcut kaydı güncelle
+                    $stmt = $pdo->prepare("UPDATE online_student_sessions SET last_seen = NOW(), is_online = TRUE WHERE session_id = ? AND student_id = ?");
+                    $stmt->execute([$session['id'], $input['student_id']]);
+                } else {
+                    // Yeni kayıt oluştur
+                    $stmt = $pdo->prepare("INSERT INTO online_student_sessions (session_id, student_id, student_name, is_online) VALUES (?, ?, ?, TRUE)");
+                    $stmt->execute([
+                        $session['id'],
+                        $input['student_id'],
+                        $input['student_name']
+                    ]);
+                }
 
                 successResponse(['message' => 'Öğrenci katıldı', 'session_id' => $session['id']]);
 
@@ -224,6 +245,26 @@ if ($method === 'POST') {
 
             } catch(PDOException $e) {
                 errorResponse("Öğrenci heartbeat hatası: " . $e->getMessage(), 500);
+            }
+            break;
+
+        case 'student_leave':
+            // Öğrenci dersten ayrılma
+            if (!isset($input['student_id'], $input['group'])) {
+                errorResponse('Eksik bilgiler');
+            }
+
+            try {
+                $stmt = $pdo->prepare("UPDATE online_student_sessions ss 
+                    JOIN online_lesson_sessions ls ON ss.session_id = ls.id 
+                    SET ss.is_online = FALSE 
+                    WHERE ss.student_id = ? AND ls.group_name = ? AND ls.is_active = TRUE");
+                $stmt->execute([$input['student_id'], $input['group']]);
+
+                successResponse(['message' => 'Öğrenci dersten ayrıldı']);
+
+            } catch(PDOException $e) {
+                errorResponse("Öğrenci ayrılma hatası: " . $e->getMessage(), 500);
             }
             break;
 
@@ -287,9 +328,9 @@ if ($method === 'POST') {
                     successResponse(['students' => []]);
                 }
 
-                $stmt = $pdo->prepare("SELECT student_id, student_name, join_time, last_seen FROM online_student_sessions WHERE session_id = ? AND is_online = TRUE");
+                $stmt = $pdo->prepare("SELECT student_id as id, student_name as name, join_time, last_seen FROM online_student_sessions WHERE session_id = ? AND is_online = TRUE");
                 $stmt->execute([$session['id']]);
-                $students = $stmt->fetchAll();
+                $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 successResponse(['students' => $students]);
 
