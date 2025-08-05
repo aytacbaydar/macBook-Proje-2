@@ -492,7 +492,7 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
   goToProfile(): void {
     this.showMissingInfoModal = false;
     // Router ile profil sayfasına yönlendir
-    window.location.href = '/ogrenci-profil-sayfasi';
+    window.location.href = '/ogrenci-sayfasi/ogrenci-profil-sayfasi';
   }
 
 }
