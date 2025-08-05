@@ -347,11 +347,11 @@ if ($method === 'POST') {
 
             try {
                 $stmt = $pdo->prepare("
-                    SELECT m.id, m.sender_id, m.sender_name, m.sender_type, m.message, m.timestamp 
+                    SELECT m.id, m.sender_id, m.sender_name, m.sender_type, m.message, m.created_at as timestamp 
                     FROM online_lesson_messages m
                     JOIN online_lesson_sessions ls ON m.session_id = ls.id
                     WHERE ls.group_name = ? AND ls.is_active = TRUE
-                    ORDER BY m.timestamp ASC
+                    ORDER BY m.created_at ASC
                 ");
                 $stmt->execute([$_GET['group']]);
                 $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);

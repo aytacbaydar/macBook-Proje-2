@@ -423,7 +423,7 @@ export class OgretmenOnlineDersSayfasiComponent implements OnInit, AfterViewInit
         this.loadOnlineStudents();
         this.loadChatMessages();
       }
-    }, 5000); // Her 5 saniyede bir
+    }, 2000); // Her 2 saniyede bir
   }
 
   private sendHeartbeat(): void {

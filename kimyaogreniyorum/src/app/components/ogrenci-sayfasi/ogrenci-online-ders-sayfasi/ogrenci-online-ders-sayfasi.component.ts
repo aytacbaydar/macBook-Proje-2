@@ -159,11 +159,7 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
   private startLessonPolling(): void {
     this.lessonUpdateInterval = setInterval(() => {
       this.loadAvailableLessons();
-      if (this.isJoined && this.currentLesson) {
-        this.updateCanvas();
-        this.loadChatMessages();
-      }
-    }, 3000); // Her 3 saniyede bir güncelle
+    }, 5000); // Her 5 saniyede bir ders listesi güncelle
   }
 
   joinLesson(lesson: OnlineLesson): void {
@@ -225,7 +221,7 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
       if (this.isJoined && this.currentLesson) {
         this.updateCanvas();
       }
-    }, 2000); // Her 2 saniyede canvas güncelle
+    }, 1000); // Her 1 saniyede canvas güncelle
   }
 
   private startChatUpdates(): void {
@@ -233,7 +229,7 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
       if (this.isJoined && this.currentLesson) {
         this.loadChatMessages();
       }
-    }, 2000); // Her 2 saniyede chat güncelle
+    }, 1500); // Her 1.5 saniyede chat güncelle
   }
 
   private updateCanvas(): void {
@@ -245,28 +241,26 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
       headers: { Authorization: `Bearer ${token}` }
     }).subscribe({
       next: (response: any) => {
-        console.log('Canvas response:', response);
-        if (response.success && response.canvas_data) {
+        if (response.success && response.canvas_data && response.canvas_data !== 'null' && response.canvas_data.trim() !== '') {
           try {
             const canvasData = JSON.parse(response.canvas_data);
-            console.log('Canvas data parsed:', canvasData);
             
+            // Canvas'ı temizle ve yeni veriyi yükle
+            this.canvas.clear();
             this.canvas.loadFromJSON(canvasData, () => {
               this.canvas.renderAll();
-              console.log('Canvas rendered, objects count:', this.canvas.getObjects().length);
               
               // Canvas objelerini sadece görüntüleme modunda tut
               this.canvas.forEachObject((obj) => {
                 obj.selectable = false;
                 obj.evented = false;
+                obj.hoverCursor = 'default';
+                obj.moveCursor = 'default';
               });
             });
           } catch (error) {
             console.error('Canvas verisi parse edilemedi:', error);
-            console.error('Raw canvas data:', response.canvas_data);
           }
-        } else {
-          console.log('No canvas data received or failed response');
         }
       },
       error: (error) => {
