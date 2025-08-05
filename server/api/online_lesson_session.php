@@ -1,4 +1,3 @@
-
 <?php
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
@@ -72,7 +71,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'POST') {
     $input = json_decode(file_get_contents('php://input'), true);
-    
+
     if (!$input || !isset($input['action'])) {
         errorResponse('Geçersiz istek');
     }
@@ -276,23 +275,26 @@ if ($method === 'POST') {
         case 'get_students':
             // Online öğrencileri getir
             if (!isset($_GET['group'])) {
-                errorResponse('Grup belirtilmedi');
+                errorResponse('Grup parametresi gerekli');
             }
 
             try {
-                $stmt = $pdo->prepare("SELECT ss.student_id as id, ss.student_name as name, ss.join_time, ss.last_seen, ss.is_online,
-                    CASE WHEN ss.last_seen > DATE_SUB(NOW(), INTERVAL 30 SECOND) THEN 1 ELSE 0 END as is_really_online
-                    FROM online_student_sessions ss 
-                    JOIN online_lesson_sessions ls ON ss.session_id = ls.id 
-                    WHERE ls.group_name = ? AND ls.is_active = TRUE 
-                    ORDER BY ss.join_time DESC");
+                $stmt = $pdo->prepare("SELECT id FROM online_lesson_sessions WHERE group_name = ? AND is_active = TRUE ORDER BY created_at DESC LIMIT 1");
                 $stmt->execute([$_GET['group']]);
-                $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $session = $stmt->fetch();
+
+                if (!$session) {
+                    successResponse(['students' => []]);
+                }
+
+                $stmt = $pdo->prepare("SELECT student_id, student_name, join_time, last_seen FROM online_student_sessions WHERE session_id = ? AND is_online = TRUE");
+                $stmt->execute([$session['id']]);
+                $students = $stmt->fetchAll();
 
                 successResponse(['students' => $students]);
 
             } catch(PDOException $e) {
-                errorResponse("Öğrenci listesi hatası: " . $e->getMessage(), 500);
+                errorResponse("Öğrenci listesi getirme hatası: " . $e->getMessage(), 500);
             }
             break;
 
@@ -338,6 +340,42 @@ if ($method === 'POST') {
 
             } catch(PDOException $e) {
                 errorResponse("Oturum bilgisi hatası: " . $e->getMessage(), 500);
+            }
+            break;
+            
+        case 'get_available_lessons':
+            // Mevcut aktif dersleri getir
+            try {
+                $stmt = $pdo->prepare("SELECT id, teacher_name, group_name, lesson_title, lesson_subject, created_at FROM online_lesson_sessions WHERE is_active = TRUE ORDER BY created_at DESC");
+                $stmt->execute();
+                $lessons = $stmt->fetchAll();
+
+                successResponse(['lessons' => $lessons]);
+
+            } catch(PDOException $e) {
+                errorResponse("Ders listesi getirme hatası: " . $e->getMessage(), 500);
+            }
+            break;
+
+        case 'get_canvas':
+            // Canvas verisini getir
+            if (!isset($_GET['group'])) {
+                errorResponse('Grup parametresi gerekli');
+            }
+
+            try {
+                $stmt = $pdo->prepare("SELECT canvas_data FROM online_lesson_sessions WHERE group_name = ? AND is_active = TRUE ORDER BY updated_at DESC LIMIT 1");
+                $stmt->execute([$_GET['group']]);
+                $session = $stmt->fetch();
+
+                if (!$session) {
+                    successResponse(['canvas_data' => null]);
+                }
+
+                successResponse(['canvas_data' => $session['canvas_data']]);
+
+            } catch(PDOException $e) {
+                errorResponse("Canvas verisi getirme hatası: " . $e->getMessage(), 500);
             }
             break;
 
