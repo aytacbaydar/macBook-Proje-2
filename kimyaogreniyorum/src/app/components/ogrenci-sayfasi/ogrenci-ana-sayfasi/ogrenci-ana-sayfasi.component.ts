@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Chart, registerables } from 'chart.js';
 
 Chart.register(...registerables);
@@ -451,49 +451,71 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
 
     try {
       const user = JSON.parse(userStr);
-      this.missingFields = [];
+      const token = user.token || '';
 
-      console.log('Öğrenci bilgileri kontrol ediliyor:', {
-        okulu: user.okulu,
-        sinif: user.sinif,
-        veli_adi: user.veli_adi,
-        veli_cep: user.veli_cep
+      if (!token) {
+        console.log('Token bulunamadı, modal kontrolü yapılamıyor');
+        return;
+      }
+
+      // API'den güncel öğrenci bilgilerini al
+      this.http.get<any>(`./server/api/ogrenci_bilgileri.php`, {
+        headers: { Authorization: `Bearer ${token}` }
+      }).subscribe({
+        next: (response) => {
+          if (response.success && response.data) {
+            const studentData = response.data;
+            this.missingFields = [];
+
+            console.log('API\'den gelen öğrenci bilgileri:', {
+              okulu: studentData.okulu,
+              sinifi: studentData.sinifi,
+              veli_adi: studentData.veli_adi,
+              veli_cep: studentData.veli_cep
+            });
+
+            // Okulu kontrolü
+            if (!studentData.okulu || studentData.okulu.trim() === '' || studentData.okulu === null || studentData.okulu === undefined) {
+              this.missingFields.push('Okul');
+              console.log('Okul bilgisi eksik:', studentData.okulu);
+            }
+
+            // Sınıfı kontrolü  
+            if (!studentData.sinifi || studentData.sinifi.trim() === '' || studentData.sinifi === null || studentData.sinifi === undefined) {
+              this.missingFields.push('Sınıf');
+              console.log('Sınıf bilgisi eksik:', studentData.sinifi);
+            }
+
+            // Veli Adı kontrolü
+            if (!studentData.veli_adi || studentData.veli_adi.trim() === '' || studentData.veli_adi === null || studentData.veli_adi === undefined) {
+              this.missingFields.push('Veli Adı');
+              console.log('Veli adı bilgisi eksik:', studentData.veli_adi);
+            }
+
+            // Veli Cep telefonu kontrolü
+            if (!studentData.veli_cep || studentData.veli_cep.trim() === '' || studentData.veli_cep === null || studentData.veli_cep === undefined) {
+              this.missingFields.push('Veli Cep Telefonu');
+              console.log('Veli cep telefonu bilgisi eksik:', studentData.veli_cep);
+            }
+
+            console.log('Eksik alanlar:', this.missingFields);
+
+            // SADECE eksik bilgi varsa modal'ı göster
+            if (this.missingFields.length > 0) {
+              this.showMissingInfoModal = true;
+              console.log('Modal gösteriliyor - Eksik bilgiler:', this.missingFields);
+            } else {
+              this.showMissingInfoModal = false;
+              console.log('Tüm bilgiler tam - Modal gösterilmeyecek');
+            }
+          } else {
+            console.error('API\'den öğrenci bilgileri alınamadı:', response.message);
+          }
+        },
+        error: (error) => {
+          console.error('Öğrenci bilgileri kontrol edilirken hata:', error);
+        }
       });
-
-      // Okulu kontrolü
-      if (!user.okulu || user.okulu.trim() === '' || user.okulu === null || user.okulu === undefined) {
-        this.missingFields.push('Okul');
-        console.log('Okul bilgisi eksik:', user.okulu);
-      }
-
-      // Sınıfı kontrolü  
-      if (!user.sinif || user.sinif.trim() === '' || user.sinif === null || user.sinif === undefined) {
-        this.missingFields.push('Sınıf');
-        console.log('Sınıf bilgisi eksik:', user.sinif);
-      }
-
-      // Veli Adı kontrolü
-      if (!user.veli_adi || user.veli_adi.trim() === '' || user.veli_adi === null || user.veli_adi === undefined) {
-        this.missingFields.push('Veli Adı');
-        console.log('Veli adı bilgisi eksik:', user.veli_adi);
-      }
-
-      // Veli Cep telefonu kontrolü
-      if (!user.veli_cep || user.veli_cep.trim() === '' || user.veli_cep === null || user.veli_cep === undefined) {
-        this.missingFields.push('Veli Cep Telefonu');
-        console.log('Veli cep telefonu bilgisi eksik:', user.veli_cep);
-      }
-
-      console.log('Eksik alanlar:', this.missingFields);
-
-      // SADECE eksik bilgi varsa modal'ı göster
-      if (this.missingFields.length > 0) {
-        this.showMissingInfoModal = true;
-        console.log('Modal gösteriliyor - Eksik bilgiler:', this.missingFields);
-      } else {
-        this.showMissingInfoModal = false;
-        console.log('Tüm bilgiler tam - Modal gösterilmeyecek');
-      }
     } catch (error) {
       console.error('User bilgisi kontrol edilirken hata:', error);
     }
