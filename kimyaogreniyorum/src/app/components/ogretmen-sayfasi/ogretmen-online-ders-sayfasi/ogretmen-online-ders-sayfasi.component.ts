@@ -180,15 +180,38 @@ export class OgretmenOnlineDersSayfasiComponent implements OnInit, AfterViewInit
       this.canvas.freeDrawingBrush.color = this.penColor;
       this.canvas.freeDrawingBrush.width = this.penWidth;
 
-      // Canvas değişikliklerini dinle
+      // Canvas değişikliklerini dinle - daha kapsamlı event handling
       this.canvas.on('path:created', () => {
         if (this.isLessonActive) {
+          console.log('Path created - broadcasting canvas update');
           this.broadcastCanvasUpdate();
         }
       });
 
       this.canvas.on('object:modified', () => {
         if (this.isLessonActive) {
+          console.log('Object modified - broadcasting canvas update');
+          this.broadcastCanvasUpdate();
+        }
+      });
+
+      this.canvas.on('object:added', () => {
+        if (this.isLessonActive) {
+          console.log('Object added - broadcasting canvas update');
+          this.broadcastCanvasUpdate();
+        }
+      });
+
+      this.canvas.on('object:removed', () => {
+        if (this.isLessonActive) {
+          console.log('Object removed - broadcasting canvas update');
+          this.broadcastCanvasUpdate();
+        }
+      });
+
+      this.canvas.on('canvas:cleared', () => {
+        if (this.isLessonActive) {
+          console.log('Canvas cleared - broadcasting canvas update');
           this.broadcastCanvasUpdate();
         }
       });
@@ -266,7 +289,11 @@ export class OgretmenOnlineDersSayfasiComponent implements OnInit, AfterViewInit
         this.canvas.renderAll();
 
         if (this.isLessonActive) {
-          this.broadcastCanvasUpdate();
+          console.log('PDF loaded - forcing canvas update');
+          // PDF yüklemesinden sonra canvas'ı hemen güncelle
+          setTimeout(() => {
+            this.broadcastCanvasUpdate();
+          }, 100);
         }
       });
 
@@ -339,7 +366,10 @@ export class OgretmenOnlineDersSayfasiComponent implements OnInit, AfterViewInit
       this.canvas.renderAll();
 
       if (this.isLessonActive) {
-        this.broadcastCanvasUpdate();
+        console.log('Canvas cleared - forcing canvas update');
+        setTimeout(() => {
+          this.broadcastCanvasUpdate();
+        }, 100);
       }
     }
   }
@@ -423,7 +453,15 @@ export class OgretmenOnlineDersSayfasiComponent implements OnInit, AfterViewInit
         this.loadOnlineStudents();
         this.loadChatMessages();
       }
-    }, 2000); // Her 2 saniyede bir
+    }, 1000); // Her 1 saniyede bir - daha hızlı
+
+    // Ayrıca canvas'ı periyodik olarak da gönder
+    this.canvasUpdateInterval = setInterval(() => {
+      if (this.isLessonActive && this.canvas) {
+        console.log('Periodic canvas update - broadcasting');
+        this.broadcastCanvasUpdate();
+      }
+    }, 500); // Her 0.5 saniyede canvas güncelle
   }
 
   private sendHeartbeat(): void {
@@ -474,18 +512,24 @@ export class OgretmenOnlineDersSayfasiComponent implements OnInit, AfterViewInit
     if (!this.canvas || !this.isLessonActive) return;
 
     const token = this.getAuthToken();
+    const canvasData = JSON.stringify(this.canvas.toJSON());
+    
+    console.log('Broadcasting canvas update - object count:', this.canvas.getObjects().length);
+    console.log('Canvas data length:', canvasData.length);
+
     const updateData = {
       action: 'update_canvas',
       teacher_id: this.teacherInfo?.id,
       group: this.selectedGroup,
-      canvas_data: JSON.stringify(this.canvas.toJSON())
+      canvas_data: canvasData,
+      timestamp: Date.now()
     };
 
     this.http.post('/server/api/online_lesson_session.php', updateData, {
       headers: { Authorization: `Bearer ${token}` }
     }).subscribe({
       next: (response: any) => {
-        // Canvas güncelleme başarılı
+        console.log('Canvas update successful:', response);
       },
       error: (error) => {
         console.error('Canvas güncelleme hatası:', error);
