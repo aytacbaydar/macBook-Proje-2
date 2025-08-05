@@ -220,7 +220,7 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
       if (this.isJoined && this.currentLesson) {
         this.updateCanvas();
       }
-    }, 500); // Her 0.5 saniyede canvas güncelle (öğretmenle aynı)
+    }, 500); // Her 0.5 saniyede canvas güncelle - daha hızlı günceleme
   }
 
   private startChatUpdates(): void {
@@ -244,14 +244,7 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
           try {
             const canvasData = JSON.parse(response.canvas_data);
 
-            // Mevcut canvas verisiyle karşılaştır (gereksiz güncellemeleri önle)
-            const currentCanvasData = JSON.stringify(this.canvas.toJSON());
-            if (currentCanvasData === response.canvas_data) {
-              return; // Değişiklik yoksa güncelleme yapma
-            }
-
-            // Canvas'ı temizle ve yeni veriyi yükle
-            this.canvas.clear();
+            // Canvas'ı güncelle - karşılaştırma yapmadan direkt güncelle
             this.canvas.loadFromJSON(canvasData, () => {
               this.canvas.renderAll();
 
@@ -262,6 +255,12 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
                 obj.hoverCursor = 'default';
                 obj.moveCursor = 'default';
               });
+
+              // Background image da varsa onu da görüntüleme modunda tut
+              if (this.canvas.backgroundImage) {
+                this.canvas.backgroundImage.selectable = false;
+                this.canvas.backgroundImage.evented = false;
+              }
             });
           } catch (error) {
             console.error('Canvas verisi parse edilemedi:', error);
@@ -350,9 +349,9 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
   }
 
   formatTime(date: Date): string {
-    return date.toLocaleTimeString('tr-TR', { 
-      hour: '2-digit', 
-      minute: '2-digit' 
+    return date.toLocaleTimeString('tr-TR', {
+      hour: '2-digit',
+      minute: '2-digit'
     });
   }
 }
