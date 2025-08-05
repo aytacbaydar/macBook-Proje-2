@@ -453,29 +453,32 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
       const user = JSON.parse(userStr);
       this.missingFields = [];
 
-      // Okulu kontrolü
-      if (!user.okulu || user.okulu.trim() === '') {
+      // Okulu kontrolü - null, undefined veya boş string
+      if (!user.okulu || user.okulu === null || user.okulu === undefined || user.okulu.toString().trim() === '') {
         this.missingFields.push('Okul');
       }
 
-      // Sınıfı kontrolü
-      if (!user.sinif || user.sinif.trim() === '') {
+      // Sınıfı kontrolü - null, undefined veya boş string  
+      if (!user.sinif || user.sinif === null || user.sinif === undefined || user.sinif.toString().trim() === '') {
         this.missingFields.push('Sınıf');
       }
 
-      // Veli Adı kontrolü
-      if (!user.veli_adi || user.veli_adi.trim() === '') {
+      // Veli Adı kontrolü - null, undefined veya boş string
+      if (!user.veli_adi || user.veli_adi === null || user.veli_adi === undefined || user.veli_adi.toString().trim() === '') {
         this.missingFields.push('Veli Adı');
       }
 
-      // Veli Cep telefonu kontrolü
-      if (!user.veli_cep || user.veli_cep.trim() === '') {
+      // Veli Cep telefonu kontrolü - null, undefined veya boş string
+      if (!user.veli_cep || user.veli_cep === null || user.veli_cep === undefined || user.veli_cep.toString().trim() === '') {
         this.missingFields.push('Veli Cep Telefonu');
       }
 
       // Eksik bilgi varsa modal'ı göster
       if (this.missingFields.length > 0) {
         this.showMissingInfoModal = true;
+        console.log('Eksik bilgiler tespit edildi:', this.missingFields);
+      } else {
+        console.log('Tüm gerekli bilgiler mevcut, modal gösterilmeyecek');
       }
     } catch (error) {
       console.error('User bilgisi kontrol edilirken hata:', error);
