@@ -1,4 +1,3 @@
-
 import { Component, OnInit, AfterViewInit, OnDestroy, HostListener, ViewChild, ElementRef } from '@angular/core';
 import * as fabric from 'fabric';
 import { HttpClient } from '@angular/common/http';
@@ -48,11 +47,15 @@ export class OgretmenOnlineDersSayfasiComponent implements OnInit, AfterViewInit
   pdfLoading: boolean = false;
 
   // Online ders özellikleri
-  isLessonActive: boolean = false;
+  selectedGroup: string = '';
   lessonTitle: string = '';
   lessonSubject: string = '';
-  selectedGroup: string = '';
-  studentGroups: string[] = [];
+  isLessonActive: boolean = false;
+
+  get getCurrentTime(): string {
+    return new Date().toLocaleTimeString('tr-TR');
+  }
+
   onlineStudents: OnlineStudent[] = [];
   chatMessages: ChatMessage[] = [];
   newChatMessage: string = '';
@@ -115,7 +118,7 @@ export class OgretmenOnlineDersSayfasiComponent implements OnInit, AfterViewInit
 
   private loadStudentGroups(): void {
     const token = this.getAuthToken();
-    
+
     this.http.get<any>('/server/api/ogrenciler_listesi.php', {
       headers: { Authorization: `Bearer ${token}` }
     }).subscribe({
@@ -157,11 +160,11 @@ export class OgretmenOnlineDersSayfasiComponent implements OnInit, AfterViewInit
 
     const canvasEl = this.canvasElement.nativeElement;
     const container = canvasEl.parentElement;
-    
+
     if (container) {
       const width = container.clientWidth - 20;
       const height = Math.min(width * 0.7, 600);
-      
+
       canvasEl.width = width;
       canvasEl.height = height;
 
@@ -209,11 +212,11 @@ export class OgretmenOnlineDersSayfasiComponent implements OnInit, AfterViewInit
         try {
           const arrayBuffer = e.target?.result as ArrayBuffer;
           const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
-          
+
           this.loadedPdf = pdf;
           this.pdfPages = pdf.numPages;
           this.currentPdfPage = 1;
-          
+
           await this.renderPdfPage(1);
           this.toastr.success('PDF başarıyla yüklendi', 'Başarılı');
           this.pdfLoading = false;
@@ -235,12 +238,12 @@ export class OgretmenOnlineDersSayfasiComponent implements OnInit, AfterViewInit
     try {
       const page = await this.loadedPdf.getPage(pageNumber);
       const viewport = page.getViewport({ scale: 1 });
-      
+
       const scale = Math.min(
         this.canvas.width! / viewport.width,
         this.canvas.height! / viewport.height
       ) * 0.9;
-      
+
       const scaledViewport = page.getViewport({ scale });
 
       const tempCanvas = document.createElement('canvas');
@@ -258,11 +261,9 @@ export class OgretmenOnlineDersSayfasiComponent implements OnInit, AfterViewInit
         crossOrigin: 'anonymous'
       }, (img: fabric.Image) => {
         this.canvas.clear();
-        this.canvas.setBackgroundImage(img, this.canvas.renderAll.bind(this.canvas), {
-          scaleX: this.canvas.width! / img.width!,
-          scaleY: this.canvas.height! / img.height!
-        });
-        
+        this.canvas.backgroundImage = img;
+        this.canvas.renderAll();
+
         if (this.isLessonActive) {
           this.broadcastCanvasUpdate();
         }
@@ -293,7 +294,7 @@ export class OgretmenOnlineDersSayfasiComponent implements OnInit, AfterViewInit
     this.eraserMode = false;
     this.highlighterMode = false;
     this.textMode = false;
-    
+
     if (this.canvas) {
       this.canvas.isDrawingMode = true;
       this.canvas.freeDrawingBrush = new fabric.PencilBrush(this.canvas);
@@ -335,7 +336,7 @@ export class OgretmenOnlineDersSayfasiComponent implements OnInit, AfterViewInit
       this.canvas.clear();
       this.canvas.backgroundColor = '#ffffff';
       this.canvas.renderAll();
-      
+
       if (this.isLessonActive) {
         this.broadcastCanvasUpdate();
       }
@@ -353,7 +354,7 @@ export class OgretmenOnlineDersSayfasiComponent implements OnInit, AfterViewInit
     this.createLessonSession();
     this.startHeartbeat();
     this.loadOnlineStudents();
-    
+
     this.toastr.success('Ders başlatıldı! Öğrenciler bağlanabilir.', 'Başarılı');
   }
 
@@ -362,7 +363,7 @@ export class OgretmenOnlineDersSayfasiComponent implements OnInit, AfterViewInit
     this.endLessonSession();
     this.clearIntervals();
     this.onlineStudents = [];
-    
+
     this.toastr.info('Ders sonlandırıldı.', 'Bilgi');
   }
 
@@ -446,7 +447,7 @@ export class OgretmenOnlineDersSayfasiComponent implements OnInit, AfterViewInit
 
   private loadOnlineStudents(): void {
     const token = this.getAuthToken();
-    
+
     this.http.get(`/server/api/online_lesson_session.php?action=get_students&group=${this.selectedGroup}`, {
       headers: { Authorization: `Bearer ${token}` }
     }).subscribe({
@@ -520,7 +521,7 @@ export class OgretmenOnlineDersSayfasiComponent implements OnInit, AfterViewInit
 
   private loadChatMessages(): void {
     const token = this.getAuthToken();
-    
+
     this.http.get(`/server/api/online_lesson_session.php?action=get_messages&group=${this.selectedGroup}`, {
       headers: { Authorization: `Bearer ${token}` }
     }).subscribe({
@@ -557,7 +558,7 @@ export class OgretmenOnlineDersSayfasiComponent implements OnInit, AfterViewInit
         if (container) {
           const width = container.clientWidth - 20;
           const height = Math.min(width * 0.7, 600);
-          
+
           this.canvas.setDimensions({
             width: width,
             height: height
