@@ -9,24 +9,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
-require_once 'config.php';
+require_once '../config.php';
 
-function successResponse($data) {
-    echo json_encode(['success' => true] + $data);
-    exit;
-}
-
-function errorResponse($message, $code = 400) {
-    http_response_code($code);
-    echo json_encode(['success' => false, 'error' => $message]);
-    exit;
-}
-
-// Veritabanı bağlantısını kontrol et
+// Veritabanı bağlantısını config.php'den al
 try {
-    $pdo = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e) {
+    $pdo = getConnection();
+} catch(Exception $e) {
     errorResponse("Veritabanı bağlantı hatası: " . $e->getMessage(), 500);
 }
 
