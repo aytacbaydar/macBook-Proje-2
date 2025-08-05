@@ -453,32 +453,46 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
       const user = JSON.parse(userStr);
       this.missingFields = [];
 
-      // Okulu kontrolü - null, undefined veya boş string
-      if (!user.okulu || user.okulu === null || user.okulu === undefined || user.okulu.toString().trim() === '') {
+      console.log('Öğrenci bilgileri kontrol ediliyor:', {
+        okulu: user.okulu,
+        sinif: user.sinif,
+        veli_adi: user.veli_adi,
+        veli_cep: user.veli_cep
+      });
+
+      // Okulu kontrolü
+      if (!user.okulu || user.okulu.trim() === '' || user.okulu === null || user.okulu === undefined) {
         this.missingFields.push('Okul');
+        console.log('Okul bilgisi eksik:', user.okulu);
       }
 
-      // Sınıfı kontrolü - null, undefined veya boş string  
-      if (!user.sinif || user.sinif === null || user.sinif === undefined || user.sinif.toString().trim() === '') {
+      // Sınıfı kontrolü  
+      if (!user.sinif || user.sinif.trim() === '' || user.sinif === null || user.sinif === undefined) {
         this.missingFields.push('Sınıf');
+        console.log('Sınıf bilgisi eksik:', user.sinif);
       }
 
-      // Veli Adı kontrolü - null, undefined veya boş string
-      if (!user.veli_adi || user.veli_adi === null || user.veli_adi === undefined || user.veli_adi.toString().trim() === '') {
+      // Veli Adı kontrolü
+      if (!user.veli_adi || user.veli_adi.trim() === '' || user.veli_adi === null || user.veli_adi === undefined) {
         this.missingFields.push('Veli Adı');
+        console.log('Veli adı bilgisi eksik:', user.veli_adi);
       }
 
-      // Veli Cep telefonu kontrolü - null, undefined veya boş string
-      if (!user.veli_cep || user.veli_cep === null || user.veli_cep === undefined || user.veli_cep.toString().trim() === '') {
+      // Veli Cep telefonu kontrolü
+      if (!user.veli_cep || user.veli_cep.trim() === '' || user.veli_cep === null || user.veli_cep === undefined) {
         this.missingFields.push('Veli Cep Telefonu');
+        console.log('Veli cep telefonu bilgisi eksik:', user.veli_cep);
       }
 
-      // Eksik bilgi varsa modal'ı göster
+      console.log('Eksik alanlar:', this.missingFields);
+
+      // SADECE eksik bilgi varsa modal'ı göster
       if (this.missingFields.length > 0) {
         this.showMissingInfoModal = true;
-        console.log('Eksik bilgiler tespit edildi:', this.missingFields);
+        console.log('Modal gösteriliyor - Eksik bilgiler:', this.missingFields);
       } else {
-        console.log('Tüm gerekli bilgiler mevcut, modal gösterilmeyecek');
+        this.showMissingInfoModal = false;
+        console.log('Tüm bilgiler tam - Modal gösterilmeyecek');
       }
     } catch (error) {
       console.error('User bilgisi kontrol edilirken hata:', error);
