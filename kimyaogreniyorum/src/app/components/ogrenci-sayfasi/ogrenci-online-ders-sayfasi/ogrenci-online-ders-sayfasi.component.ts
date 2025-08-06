@@ -218,12 +218,22 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
           this.isJoined = true;
           this.startCanvasUpdates();
           this.startChatUpdates();
-          this.toastr.success('Derse katıldınız!', 'Başarılı');
+          this.toastr.success('Derse katıldınız!', 'Başarılı', {
+            timeOut: 5000,
+            closeButton: true,
+            tapToDismiss: false,
+            disableTimeOut: false
+          });
         }
       },
       error: (error) => {
         console.error('Derse katılım hatası:', error);
-        this.toastr.error('Derse katılamadı!', 'Hata');
+        this.toastr.error('Derse katılamadı!', 'Hata', {
+          timeOut: 5000,
+          closeButton: true,
+          tapToDismiss: false,
+          disableTimeOut: false
+        });
       }
     });
   }
@@ -246,7 +256,12 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
         this.isJoined = false;
         this.chatMessages = [];
         this.clearCanvas();
-        this.toastr.info('Dersten ayrıldınız.', 'Bilgi');
+        this.toastr.info('Dersten ayrıldınız.', 'Bilgi', {
+          timeOut: 3000,
+          closeButton: true,
+          tapToDismiss: false,
+          disableTimeOut: false
+        });
       },
       error: (error) => {
         console.error('Dersten ayrılma hatası:', error);
@@ -435,7 +450,12 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
       },
       error: (error) => {
         console.error('Mesaj gönderme hatası:', error);
-        this.toastr.error('Mesaj gönderilemedi!', 'Hata');
+        this.toastr.error('Mesaj gönderilemedi!', 'Hata', {
+          timeOut: 5000,
+          closeButton: true,
+          tapToDismiss: false,
+          disableTimeOut: false
+        });
       }
     });
   }
