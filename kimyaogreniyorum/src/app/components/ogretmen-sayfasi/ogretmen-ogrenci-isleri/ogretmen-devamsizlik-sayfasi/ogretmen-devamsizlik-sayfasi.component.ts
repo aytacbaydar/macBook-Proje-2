@@ -262,7 +262,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
             // Tarihlere göre gruplanan verileri al
             const allGroupedByDate = response.data.tarihlere_gore || [];
 
-            // Sadece normal derslerin olduğu tarihleri filtrele
+            // Sadece normal derslerin olduğu tarihleri filtrele ve en az 1 kişinin katıldığı günleri göster
             this.groupedAttendanceByDate = allGroupedByDate.filter((dateGroup: any) => {
               // O tarihteki kayıtları kontrol et
               const dateRecords = this.historicalAttendance.filter(record => 
@@ -270,9 +270,14 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
               );
 
               // Normal ders kayıtları var mı kontrol et
-              return dateRecords.some(record => 
+              const hasNormalLessons = dateRecords.some(record => 
                 !record.ders_tipi || record.ders_tipi === 'normal'
               );
+
+              // En az 1 kişinin katıldığı mı kontrol et (katilan_sayisi > 0 veya katilmayan_sayisi > 0)
+              const hasAttendance = dateGroup.katilan_sayisi > 0 || dateGroup.katilmayan_sayisi > 0;
+
+              return hasNormalLessons && hasAttendance;
             });
 
             // Eksik katılmayan öğrenci listelerini hesapla
@@ -342,7 +347,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
             // Tarihlere göre gruplanan verileri al
             const allGroupedByDate = response.data.tarihlere_gore || [];
 
-            // Sadece normal derslerin olduğu tarihleri filtrele
+            // Sadece normal derslerin olduğu tarihleri filtrele ve en az 1 kişinin katıldığı günleri göster
             this.groupedAttendanceByDate = allGroupedByDate.filter((dateGroup: any) => {
               // O tarihteki kayıtları kontrol et
               const dateRecords = this.historicalAttendance.filter(record => 
@@ -350,9 +355,14 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
               );
 
               // Normal ders kayıtları var mı kontrol et
-              return dateRecords.some(record => 
+              const hasNormalLessons = dateRecords.some(record => 
                 !record.ders_tipi || record.ders_tipi === 'normal'
               );
+
+              // En az 1 kişinin katıldığı mı kontrol et (katilan_sayisi > 0 veya katilmayan_sayisi > 0)
+              const hasAttendance = dateGroup.katilan_sayisi > 0 || dateGroup.katilmayan_sayisi > 0;
+
+              return hasNormalLessons && hasAttendance;
             });
 
             if (this.groupedAttendanceByDate.length === 0) {
@@ -1356,7 +1366,6 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
 
           // Tarihlere göre gruplanan verilerde de normal ders filtresi uygula
           this.processedLessonsGroupedByDate = this.processedLessonsGroupedByDate.filter((dateGroup: any) => {
-            // O tarihteki kayıtları kontrol et
             const dateRecords = this.processedLessons.filter(record => 
               record.tarih === dateGroup.tarih
             );
