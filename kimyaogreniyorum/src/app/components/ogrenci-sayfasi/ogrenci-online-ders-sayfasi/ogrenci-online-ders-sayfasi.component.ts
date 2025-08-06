@@ -101,34 +101,47 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
   }
 
   private initializeCanvas(): void {
-    if (!this.canvasElement) return;
+    if (!this.canvasElement) {
+      console.log('❌ Canvas element bulunamadı, 1 saniye sonra tekrar deniyor...');
+      setTimeout(() => this.initializeCanvas(), 1000);
+      return;
+    }
 
     const canvasEl = this.canvasElement.nativeElement;
     const container = canvasEl.parentElement;
 
-    if (container) {
-      const width = container.clientWidth - 40;
-      const height = Math.min(width * 0.75, 700);
-
-      canvasEl.width = width;
-      canvasEl.height = height;
-
-      this.canvas = new fabric.Canvas(canvasEl, {
-        isDrawingMode: false,
-        selection: false,
-        width: width,
-        height: height,
-        backgroundColor: '#ffffff'
-      });
-
-      // Öğrenci canvas'ı sadece görüntüleme amaçlı
-      this.canvas.forEachObject((obj) => {
-        obj.selectable = false;
-        obj.evented = false;
-      });
-
-      console.log('✅ Canvas başlatıldı - Boyut:', width, 'x', height);
+    if (!container) {
+      console.log('❌ Canvas container bulunamadı');
+      return;
     }
+
+    const width = container.clientWidth - 40;
+    const height = Math.min(width * 0.75, 700);
+
+    if (width <= 0 || height <= 0) {
+      console.log('❌ Canvas boyutu geçersiz, 1 saniye sonra tekrar deniyor...');
+      setTimeout(() => this.initializeCanvas(), 1000);
+      return;
+    }
+
+    canvasEl.width = width;
+    canvasEl.height = height;
+
+    this.canvas = new fabric.Canvas(canvasEl, {
+      isDrawingMode: false,
+      selection: false,
+      width: width,
+      height: height,
+      backgroundColor: '#ffffff'
+    });
+
+    // Öğrenci canvas'ı sadece görüntüleme amaçlı
+    this.canvas.forEachObject((obj) => {
+      obj.selectable = false;
+      obj.evented = false;
+    });
+
+    console.log('✅ ÖĞRENCİ Canvas başlatıldı - Boyut:', width, 'x', height);
   }
 
   private loadAvailableLessons(): void {
@@ -245,23 +258,42 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
     console.log('🚀 ÖĞRENCİ: Canvas güncelleme başlatılıyor...');
     console.log('📋 ÖĞRENCİ: Mevcut ders:', this.currentLesson?.lesson_title);
     console.log('👥 ÖĞRENCİ: Grup:', this.currentLesson?.group_name);
+    console.log('🎨 ÖĞRENCİ: Canvas hazır mı?', !!this.canvas);
+    
+    // Canvas hazır değilse bekle
+    if (!this.canvas) {
+      console.log('⏳ ÖĞRENCİ: Canvas hazır değil, 2 saniye bekliyor...');
+      setTimeout(() => {
+        if (this.canvas && this.isJoined && this.currentLesson) {
+          this.startCanvasUpdates();
+        } else {
+          console.log('❌ ÖĞRENCİ: Canvas hala hazır değil veya ders bitmiş');
+        }
+      }, 2000);
+      return;
+    }
     
     // İlk güncellemeyi hemen yap
     setTimeout(() => {
       this.updateCanvas();
-    }, 500); // 0.5 saniye bekle
+    }, 500);
+    
+    // Mevcut interval'ı temizle
+    if (this.canvasUpdateInterval) {
+      clearInterval(this.canvasUpdateInterval);
+    }
     
     this.canvasUpdateInterval = setInterval(() => {
-      if (this.isJoined && this.currentLesson) {
+      if (this.isJoined && this.currentLesson && this.canvas) {
         this.updateCanvas();
       } else {
-        console.log('❌ ÖĞRENCİ: Canvas güncelleme durdu - isJoined:', this.isJoined, 'currentLesson:', !!this.currentLesson);
+        console.log('❌ ÖĞRENCİ: Canvas güncelleme durdu - isJoined:', this.isJoined, 'currentLesson:', !!this.currentLesson, 'canvas:', !!this.canvas);
         if (this.canvasUpdateInterval) {
           clearInterval(this.canvasUpdateInterval);
           this.canvasUpdateInterval = null;
         }
       }
-    }, 500); // Her 0.5 saniyede canvas güncelle - daha stabil
+    }, 1000); // 1 saniyede bir güncelle - daha stabil
   }
 
   private startChatUpdates(): void {
@@ -273,8 +305,24 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
   }
 
   private updateCanvas(): void {
-    if (!this.canvas || !this.currentLesson) {
-      console.log('❌ updateCanvas: Canvas veya currentLesson yok');
+    // Güvenli kontroller
+    if (!this.canvas) {
+      console.log('❌ updateCanvas: Canvas henüz hazır değil - bekliyor...');
+      return;
+    }
+    
+    if (!this.currentLesson) {
+      console.log('❌ updateCanvas: CurrentLesson yok - ders seçilmemiş');
+      // Canvas güncellemesi durdur
+      if (this.canvasUpdateInterval) {
+        clearInterval(this.canvasUpdateInterval);
+        this.canvasUpdateInterval = null;
+      }
+      return;
+    }
+    
+    if (!this.isJoined) {
+      console.log('❌ updateCanvas: Derse katılmamış durumda');
       return;
     }
 
