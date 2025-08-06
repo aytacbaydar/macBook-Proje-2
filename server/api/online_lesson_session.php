@@ -434,14 +434,6 @@ if ($method === 'POST') {
             } catch(PDOException $e) {
                 errorResponse("Canvas getirme hatası: " . $e->getMessage(), 500);
             }
-            break; => null]);
-                }
-
-                successResponse(['canvas_data' => $session['canvas_data']]);
-
-            } catch(PDOException $e) {
-                errorResponse("Canvas verisi getirme hatası: " . $e->getMessage(), 500);
-            }
             break;
 
         default:
