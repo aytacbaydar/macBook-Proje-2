@@ -308,7 +308,7 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
           this.canvasUpdateInterval = null;
         }
       }
-    }, 1000); // 1 saniyede bir güncelle - daha stabil
+    }, 5000); // 1 saniyede bir güncelle - daha stabil
   }
 
   private startChatUpdates(): void {
