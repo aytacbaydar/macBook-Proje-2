@@ -377,25 +377,39 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
               }
 
               this.canvas.loadFromJSON(canvasData, () => {
-                // Canvas objelerini sadece görüntüleme modunda tut
+                // Canvas objelerini görünür tutarak sadece etkileşimi kapat
                 this.canvas.forEachObject((obj) => {
                   obj.selectable = false;
                   obj.evented = false;
                   obj.hoverCursor = 'default';
                   obj.moveCursor = 'default';
+                  
+                  // Objeyi görünür tut
+                  obj.visible = true;
+                  obj.opacity = obj.opacity || 1;
                 });
 
-                // Background image da varsa onu da görüntüleme modunda tut
+                // Background image ayarları
                 if (this.canvas.backgroundImage) {
                   this.canvas.backgroundImage.selectable = false;
                   this.canvas.backgroundImage.evented = false;
+                  this.canvas.backgroundImage.visible = true;
                 }
 
-                // Force render
+                // Canvas ayarlarını zorla uygula
+                this.canvas.selection = false;
+                this.canvas.interactive = false;
+                
+                // Multiple render attempts for stability
                 this.canvas.renderAll();
                 
-                console.log('✅ ÖĞRENCİ: CANVAS GÜNCELLENDİ - Yüklenen obje sayısı:', this.canvas.getObjects().length);
-                console.log('🖼️ ÖĞRENCİ: Background image var mı?', !!this.canvas.backgroundImage);
+                // Biraz gecikme ile tekrar render
+                setTimeout(() => {
+                  this.canvas.renderAll();
+                  console.log('✅ ÖĞRENCİ: CANVAS GÜNCELLENDİ - Yüklenen obje sayısı:', this.canvas.getObjects().length);
+                  console.log('🖼️ ÖĞRENCİ: Background image var mı?', !!this.canvas.backgroundImage);
+                  console.log('🎨 ÖĞRENCİ: Canvas boyutları:', this.canvas.width, 'x', this.canvas.height);
+                }, 100);
               });
             } catch (error) {
               console.error('❌ ÖĞRENCİ: Canvas verisi parse edilemedi:', error);
