@@ -396,9 +396,10 @@ export class OgrenciOnlineDersSayfasiComponent implements OnInit, AfterViewInit,
                   this.canvas.backgroundImage.visible = true;
                 }
 
-                // Canvas ayarlarını zorla uygula
+                // Canvas ayarlarını zorla uygula - öğrenci sadece görüntüleme modu
                 this.canvas.selection = false;
-                this.canvas.interactive = false;
+                this.canvas.isDrawingMode = false;
+                this.canvas.discardActiveObject();
                 
                 // Multiple render attempts for stability
                 this.canvas.renderAll();
