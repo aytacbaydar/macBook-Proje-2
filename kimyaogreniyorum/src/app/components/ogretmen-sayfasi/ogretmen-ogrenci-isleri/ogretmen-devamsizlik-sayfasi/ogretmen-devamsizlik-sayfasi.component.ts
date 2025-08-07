@@ -658,9 +658,29 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
   // Sadece gerçek katılım olan günleri filtrele (0 katıldı, 0 katılmadı kayıtları hariç)
   getFilteredGroupedAttendance(): any[] {
     const filtered = this.groupedAttendanceByDate.filter(dateGroup => {
-      // En az 1 katılan veya katılmayan öğrenci varsa göster
-      const hasAttendance = dateGroup.katilan_sayisi > 0 || dateGroup.katilmayan_sayisi > 0;
-      return hasAttendance;
+      // O tarihteki tüm kayıtları kontrol et
+      const dateRecords = this.historicalAttendance.filter(record => 
+        record.tarih === dateGroup.tarih
+      );
+      
+      // Gerçek katılım var mı kontrol et
+      const hasRealAttendance = dateRecords.length > 0 && 
+        (dateRecords.some(record => record.durum === 'present') || 
+         dateRecords.some(record => record.durum === 'absent'));
+      
+      if (hasRealAttendance) {
+        // Katılan öğrencileri hesapla
+        const katilanlar = dateRecords.filter(record => record.durum === 'present');
+        const katilmayanlar = dateRecords.filter(record => record.durum === 'absent');
+        
+        // Sayıları güncelle
+        dateGroup.katilan_sayisi = katilanlar.length;
+        dateGroup.katilmayan_sayisi = katilmayanlar.length;
+        dateGroup.katilanlar = katilanlar;
+        dateGroup.katilmayanlar = katilmayanlar;
+      }
+      
+      return hasRealAttendance && (dateGroup.katilan_sayisi > 0 || dateGroup.katilmayan_sayisi > 0);
     });
     
     console.log('Filtered attendance data:', filtered);
