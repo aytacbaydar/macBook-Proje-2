@@ -15,13 +15,21 @@ a{
     z-index: 10;
     border-radius: 8px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-
+    overflow-y: auto;
+    overflow-x: hidden;
 
     .menu-list{
         width: 100%;
         margin-top: 40px;
         padding-left: 7px;
         position: relative;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
 
         .logo {
             width: 90%;
@@ -44,6 +52,7 @@ a{
     }
     .li-menu{
         width: 100%;
+        min-height: 50px;
     }
 
     .menu-flex{
@@ -52,7 +61,7 @@ a{
         justify-content:center;
         align-items: center;
         color: #8f8e8e;
-    
+
     .badge{
         position: absolute;
         top: -6px;
@@ -80,9 +89,6 @@ a{
         padding-top: 5px;
         padding-left: 15px;
     }
-    }
-
-
     &.closed {
         width: 50px;
     .toggle-button{
@@ -123,6 +129,38 @@ a{
             }
         }
     }
+  
+    &.closed {
+        width: 60px;
+
+        .logo {
+          display: none;
+        }
+
+        p {
+          display: none;
+        }
+      }
+
+      // Mobile responsive styles
+      @media (max-width: 768px) {
+        width: 100%;
+        max-width: 250px;
+
+        .menu-sidebar {
+          padding-bottom: 20px;
+        }
+
+        .li-menu {
+          min-height: 50px;
+        }
+      }
+
+      @media (max-height: 600px) {
+        .menu-sidebar {
+          padding-bottom: 60px;
+        }
+      }
 }
 
 .toggle-button{

@@ -15,6 +15,8 @@ a{
     z-index: 999999;
     border-radius: 8px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
+    overflow-x: hidden;
 
 
     .menu-list{
@@ -22,6 +24,10 @@ a{
         margin-top: 40px;
         padding-left: 7px;
         position: relative;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+
 
         .logo {
             width: 90%;
@@ -40,10 +46,12 @@ a{
         }
         .menu-sidebar{
             margin-top: 50px;
+            padding-bottom: 20px;
         }
     }
     .li-menu{
         width: 100%;
+        min-height: 50px;
     }
 
     .menu-flex{
@@ -164,7 +172,16 @@ a{
             display: none;
         }
         }
+        width: 100%;
+        max-width: 250px;
 
+        .menu-sidebar {
+          padding-bottom: 20px;
+        }
+
+        .li-menu {
+          min-height: 50px;
+        }
     }
     .toggle-button{
         z-index: 999999;
@@ -180,3 +197,10 @@ a{
         }
     }
   }
+@media (max-height: 600px) {
+    .sidebar {
+        .menu-sidebar {
+          padding-bottom: 60px;
+        }
+    }
+}
