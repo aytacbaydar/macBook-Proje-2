@@ -11,9 +11,6 @@
             <option value="">Grup seçiniz...</option>
             <option *ngFor="let group of groups" [value]="group.name">{{ group.name }}</option>
           </select>
-          <small class="text-muted" *ngIf="isGroupFromUrl">
-            <i class="bi bi-info-circle"></i> Grup URL parametresinden otomatik seçildi
-          </small>
         </div>
 
         <div class="control-item">
