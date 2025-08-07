@@ -218,9 +218,9 @@
 
       <div class="timeline">
         <div class="timeline-item" *ngFor="let dateGroup of getFilteredGroupedAttendance()">
-        <div class="timeline-date">
-          <div class="date-badge">
-            <div class="day">{{ formatDate(dateGroup.tarih) }}</div>
+          <div class="timeline-date">
+            <div class="date-badge">
+              <div class="day">{{ formatDate(dateGroup.tarih) }}</div>
             <div class="weekday">{{ getDayName(dateGroup.tarih) }}</div>
           </div>
         </div>
