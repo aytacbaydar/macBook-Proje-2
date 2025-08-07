@@ -274,11 +274,10 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
                 !record.ders_tipi || record.ders_tipi === 'normal'
               );
 
-              // Gerçek katılım var mı kontrol et - hem katılan hem katılmayan sayısı 0 olan günleri hariç tut
-              const hasRealAttendance = dateGroup.katilan_sayisi > 0 || dateGroup.katilmayan_sayisi > 0;
-              const isNotEmptyDay = !(dateGroup.katilan_sayisi === 0 && dateGroup.katilmayan_sayisi === 0);
+              // Gerçek katılım var mı kontrol et - sadece her ikisi de 0 değilse göster
+              const hasRealAttendance = !(dateGroup.katilan_sayisi === 0 && dateGroup.katilmayan_sayisi === 0);
 
-              return hasNormalLessons && hasRealAttendance && isNotEmptyDay;
+              return hasNormalLessons && hasRealAttendance;
             });
 
             // Eksik katılmayan öğrenci listelerini hesapla
@@ -360,11 +359,10 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
                 !record.ders_tipi || record.ders_tipi === 'normal'
               );
 
-              // Gerçek katılım var mı kontrol et - hem katılan hem katılmayan sayısı 0 olan günleri hariç tut
-              const hasRealAttendance = dateGroup.katilan_sayisi > 0 || dateGroup.katilmayan_sayisi > 0;
-              const isNotEmptyDay = !(dateGroup.katilan_sayisi === 0 && dateGroup.katilmayan_sayisi === 0);
+              // Gerçek katılım var mı kontrol et - sadece her ikisi de 0 değilse göster
+              const hasRealAttendance = !(dateGroup.katilan_sayisi === 0 && dateGroup.katilmayan_sayisi === 0);
 
-              return hasNormalLessons && hasRealAttendance && isNotEmptyDay;
+              return hasNormalLessons && hasRealAttendance;
             });
 
             if (this.groupedAttendanceByDate.length === 0) {
