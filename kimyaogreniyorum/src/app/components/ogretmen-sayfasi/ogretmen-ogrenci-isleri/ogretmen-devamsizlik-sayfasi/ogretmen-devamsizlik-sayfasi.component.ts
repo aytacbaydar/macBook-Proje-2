@@ -265,50 +265,41 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
             // Tarihlere göre gruplanan verileri al
             const allGroupedByDate = response.data.tarihlere_gore || [];
 
-            // Sadece normal derslerin olduğu tarihleri filtrele ve en az 1 kişinin katıldığı günleri göster
-            this.groupedAttendanceByDate = allGroupedByDate.filter((dateGroup: any) => {
-              // O tarihteki kayıtları kontrol et - sadece seçilen gruba ait olanlar
-              const dateRecords = this.historicalAttendance.filter(record => 
-                record.tarih === dateGroup.tarih && record.grup === this.selectedGroup
-              );
+            // Sadece seçilen gruba ait tarihleri filtrele ve grup bazında sayıları yeniden hesapla
+            this.groupedAttendanceByDate = [];
 
-              // Normal ders kayıtları var mı kontrol et
-              const hasNormalLessons = dateRecords.some(record => 
-                !record.ders_tipi || record.ders_tipi === 'normal'
-              );
+            // Tarihlere göre grupla ama sadece seçilen grup için
+            const groupedByDate: { [key: string]: any } = {};
 
-              // Gerçek katılım var mı kontrol et - sadece her ikisi de 0 değilse göster
-              const hasRealAttendance = !(dateGroup.katilan_sayisi === 0 && dateGroup.katilmayan_sayisi === 0);
+            this.historicalAttendance.forEach(record => {
+              if (record.grup !== this.selectedGroup) return; // Sadece seçilen grup
 
-              return hasNormalLessons && hasRealAttendance && dateRecords.length > 0;
-            });
-
-            // Eksik katılmayan öğrenci listelerini hesapla
-            this.groupedAttendanceByDate.forEach(dateGroup => {
-              // Eğer katilmayanlar listesi boş ama katilmayan_sayisi > 0 ise, hesapla
-              if ((!dateGroup.katilmayanlar || dateGroup.katilmayanlar.length === 0) && dateGroup.katilmayan_sayisi > 0) {
-                // O tarihteki tüm devamsızlık kayıtlarını bul
-                const dateRecords = this.historicalAttendance.filter(record => 
-                  record.tarih === dateGroup.tarih
-                );
-
-                // Katılan öğrenci ID'lerini al
-                const presentStudentIds = dateRecords
-                  .filter(record => record.durum === 'present')
-                  .map(record => record.ogrenci_id);
-
-                // Katılmayan öğrenci ID'lerini al
-                const absentStudentIds = dateRecords
-                  .filter(record => record.durum === 'absent')
-                  .map(record => record.ogrenci_id);
-
-                // Katılmayan öğrencilerin detaylarını bul
-                dateGroup.katilmayanlar = this.groupStudents.filter(student => 
-                  absentStudentIds.includes(student.id)
-                );
+              const date = record.tarih;
+              if (!groupedByDate[date]) {
+                groupedByDate[date] = {
+                  tarih: date,
+                  katilan_sayisi: 0,
+                  katilmayan_sayisi: 0,
+                  katilanlar: [],
+                  katilmayanlar: []
+                };
               }
 
+              // Sadece normal ders kayıtlarını say
+              if (!record.ders_tipi || record.ders_tipi === 'normal') {
+                if (record.durum === 'present') {
+                  groupedByDate[date].katilan_sayisi++;
+                } else if (record.durum === 'absent') {
+                  groupedByDate[date].katilmayan_sayisi++;
+                }
+              }
             });
+
+            // Gerçek katılım olan günleri filtrele
+            this.groupedAttendanceByDate = Object.values(groupedByDate).filter((dateGroup: any) => {
+              const hasRealAttendance = dateGroup.katilan_sayisi > 0 || dateGroup.katilmayan_sayisi > 0;
+              return hasRealAttendance;
+            }).sort((a: any, b: any) => new Date(b.tarih).getTime() - new Date(a.tarih).getTime());
           } else {
             this.historicalAttendance = [];
             this.groupedAttendanceByDate = [];
@@ -352,23 +343,41 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
             // Tarihlere göre gruplanan verileri al
             const allGroupedByDate = response.data.tarihlere_gore || [];
 
-            // Sadece normal derslerin olduğu tarihleri filtrele ve en az 1 kişinin katıldığı günleri göster
-            this.groupedAttendanceByDate = allGroupedByDate.filter((dateGroup: any) => {
-              // O tarihteki kayıtları kontrol et - sadece seçilen gruba ait olanlar
-              const dateRecords = this.historicalAttendance.filter(record => 
-                record.tarih === dateGroup.tarih && record.grup === this.selectedGroup
-              );
+            // Sadece seçilen gruba ait tarihleri filtrele ve grup bazında sayıları yeniden hesapla
+            this.groupedAttendanceByDate = [];
 
-              // Normal ders kayıtları var mı kontrol et
-              const hasNormalLessons = dateRecords.some(record => 
-                !record.ders_tipi || record.ders_tipi === 'normal'
-              );
+            // Tarihlere göre grupla ama sadece seçilen grup için
+            const groupedByDate: { [key: string]: any } = {};
 
-              // Gerçek katılım var mı kontrol et - sadece her ikisi de 0 değilse göster
-              const hasRealAttendance = !(dateGroup.katilan_sayisi === 0 && dateGroup.katilmayan_sayisi === 0);
+            this.historicalAttendance.forEach(record => {
+              if (record.grup !== this.selectedGroup) return; // Sadece seçilen grup
 
-              return hasNormalLessons && hasRealAttendance && dateRecords.length > 0;
+              const date = record.tarih;
+              if (!groupedByDate[date]) {
+                groupedByDate[date] = {
+                  tarih: date,
+                  katilan_sayisi: 0,
+                  katilmayan_sayisi: 0,
+                  katilanlar: [],
+                  katilmayanlar: []
+                };
+              }
+
+              // Sadece normal ders kayıtlarını say
+              if (!record.ders_tipi || record.ders_tipi === 'normal') {
+                if (record.durum === 'present') {
+                  groupedByDate[date].katilan_sayisi++;
+                } else if (record.durum === 'absent') {
+                  groupedByDate[date].katilmayan_sayisi++;
+                }
+              }
             });
+
+            // Gerçek katılım olan günleri filtrele
+            this.groupedAttendanceByDate = Object.values(groupedByDate).filter((dateGroup: any) => {
+              const hasRealAttendance = dateGroup.katilan_sayisi > 0 || dateGroup.katilmayan_sayisi > 0;
+              return hasRealAttendance;
+            }).sort((a: any, b: any) => new Date(b.tarih).getTime() - new Date(a.tarih).getTime());
 
             if (this.groupedAttendanceByDate.length === 0) {
               this.toastr.info('Seçilen tarih aralığında kayıt bulunamadı', 'Bilgi');
@@ -482,7 +491,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
             this.historicalAttendance = (response.data.kayitlar || []).filter((record: any) => 
               record.grup === this.selectedGroup
             );
-            
+
             // Tarihlere göre gruplanan verileri al ve filtrele
             const allGroupedByDate = response.data.tarihlere_gore || [];
             this.groupedAttendanceByDate = allGroupedByDate.filter((dateGroup: any) => {
