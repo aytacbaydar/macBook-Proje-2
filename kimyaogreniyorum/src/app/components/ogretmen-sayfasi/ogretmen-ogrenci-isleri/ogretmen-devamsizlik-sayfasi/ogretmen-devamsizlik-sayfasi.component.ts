@@ -655,6 +655,14 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     return this.getAttendancePercentage();
   }
 
+  // Sadece gerçek katılım olan günleri filtrele (0 katıldı, 0 katılmadı kayıtları hariç)
+  getFilteredGroupedAttendance(): any[] {
+    return this.groupedAttendanceByDate.filter(dateGroup => {
+      // En az 1 katılan veya katılmayan öğrenci varsa göster
+      return dateGroup.katilan_sayisi > 0 || dateGroup.katilmayan_sayisi > 0;
+    });
+  }
+
   // Detaylı devamsızlık analizi - öğrenci bazında ders tiplerini ayır
   getStudentAttendanceAnalysis(): any[] {
     if (!this.selectedGroup || this.groupStudents.length === 0) {
