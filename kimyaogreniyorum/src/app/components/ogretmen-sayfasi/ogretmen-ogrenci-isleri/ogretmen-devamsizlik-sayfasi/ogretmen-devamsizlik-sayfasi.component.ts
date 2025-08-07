@@ -67,6 +67,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
   isQRScannerActive: boolean = false;
   isLoading: boolean = false;
   hasChanges: boolean = false;
+  isGroupFromUrl: boolean = false;
 
   // İşlenen dersler için değişkenler
   processedLessons: any[] = [];
@@ -108,12 +109,20 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
     this.route.params.subscribe((params) => {
       if (params['grupAdi']) {
         this.selectedGroup = decodeURIComponent(params['grupAdi']);
+        this.isGroupFromUrl = true;
+        console.log('URL\'den grup parametresi alındı:', this.selectedGroup);
+      } else {
+        this.isGroupFromUrl = false;
       }
     });
 
     this.loadGroups();
     this.setTodayDate();
-    this.restoreLastState();
+    
+    // Eğer URL'den grup gelmiyorsa localStorage'dan state'i restore et
+    if (!this.isGroupFromUrl) {
+      this.restoreLastState();
+    }
   }
 
   ngOnDestroy() {
@@ -184,7 +193,20 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
             );
 
             // Eğer URL'den grup parametresi geldiyse otomatik seç
-            if (this.selectedGroup) {
+            if (this.selectedGroup && this.isGroupFromUrl) {
+              // URL'den gelen grup adının geçerli olup olmadığını kontrol et
+              const groupExists = this.groups.some(group => group.name === this.selectedGroup);
+              if (groupExists) {
+                console.log('URL\'den gelen grup bulundu ve seçildi:', this.selectedGroup);
+                this.onGroupChange();
+              } else {
+                console.error('URL\'den gelen grup bulunamadı:', this.selectedGroup);
+                this.toastr.error(`"${this.selectedGroup}" adlı grup bulunamadı`, 'Hata');
+                this.selectedGroup = '';
+                this.isGroupFromUrl = false;
+              }
+            } else if (this.selectedGroup && !this.isGroupFromUrl) {
+              // localStorage'dan gelen grup seçimi
               this.onGroupChange();
             }
           }
@@ -1317,6 +1339,11 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
   }
 
   private saveLastState() {
+    // URL'den gelen grup varsa state kaydetme
+    if (this.isGroupFromUrl) {
+      return;
+    }
+    
     const state = {
       selectedGroup: this.selectedGroup,
       selectedDate: this.selectedDate,
