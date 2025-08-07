@@ -257,16 +257,19 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           if (response.success && response.data) {
-            this.historicalAttendance = response.data.kayitlar || [];
+            // Sadece seçilen gruba ait kayıtları filtrele
+            this.historicalAttendance = (response.data.kayitlar || []).filter((record: any) => 
+              record.grup === this.selectedGroup
+            );
 
             // Tarihlere göre gruplanan verileri al
             const allGroupedByDate = response.data.tarihlere_gore || [];
 
             // Sadece normal derslerin olduğu tarihleri filtrele ve en az 1 kişinin katıldığı günleri göster
             this.groupedAttendanceByDate = allGroupedByDate.filter((dateGroup: any) => {
-              // O tarihteki kayıtları kontrol et
+              // O tarihteki kayıtları kontrol et - sadece seçilen gruba ait olanlar
               const dateRecords = this.historicalAttendance.filter(record => 
-                record.tarih === dateGroup.tarih
+                record.tarih === dateGroup.tarih && record.grup === this.selectedGroup
               );
 
               // Normal ders kayıtları var mı kontrol et
@@ -277,7 +280,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
               // Gerçek katılım var mı kontrol et - sadece her ikisi de 0 değilse göster
               const hasRealAttendance = !(dateGroup.katilan_sayisi === 0 && dateGroup.katilmayan_sayisi === 0);
 
-              return hasNormalLessons && hasRealAttendance;
+              return hasNormalLessons && hasRealAttendance && dateRecords.length > 0;
             });
 
             // Eksik katılmayan öğrenci listelerini hesapla
@@ -329,7 +332,6 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       return;
     }
 
-
     this.http
       .get<any>(`./server/api/devamsizlik_kayitlari.php`, {
         headers: this.getAuthHeaders(),
@@ -342,16 +344,19 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           if (response.success && response.data) {
-            this.historicalAttendance = response.data.kayitlar || [];
+            // Sadece seçilen gruba ait kayıtları filtrele
+            this.historicalAttendance = (response.data.kayitlar || []).filter((record: any) => 
+              record.grup === this.selectedGroup
+            );
 
             // Tarihlere göre gruplanan verileri al
             const allGroupedByDate = response.data.tarihlere_gore || [];
 
             // Sadece normal derslerin olduğu tarihleri filtrele ve en az 1 kişinin katıldığı günleri göster
             this.groupedAttendanceByDate = allGroupedByDate.filter((dateGroup: any) => {
-              // O tarihteki kayıtları kontrol et
+              // O tarihteki kayıtları kontrol et - sadece seçilen gruba ait olanlar
               const dateRecords = this.historicalAttendance.filter(record => 
-                record.tarih === dateGroup.tarih
+                record.tarih === dateGroup.tarih && record.grup === this.selectedGroup
               );
 
               // Normal ders kayıtları var mı kontrol et
@@ -362,7 +367,7 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
               // Gerçek katılım var mı kontrol et - sadece her ikisi de 0 değilse göster
               const hasRealAttendance = !(dateGroup.katilan_sayisi === 0 && dateGroup.katilmayan_sayisi === 0);
 
-              return hasNormalLessons && hasRealAttendance;
+              return hasNormalLessons && hasRealAttendance && dateRecords.length > 0;
             });
 
             if (this.groupedAttendanceByDate.length === 0) {
@@ -462,7 +467,6 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
   loadAllAttendanceRecords() {
     if (!this.selectedGroup) return;
 
-
     this.http
       .get<any>(`./server/api/devamsizlik_kayitlari.php`, {
         headers: this.getAuthHeaders(),
@@ -473,10 +477,21 @@ export class OgretmenDevamsizlikSayfasiComponent implements OnInit, OnDestroy {
       })
       .subscribe({
         next: (response) => {
-
           if (response.success && response.data) {
-            this.historicalAttendance = response.data.kayitlar || [];
-            this.groupedAttendanceByDate = response.data.tarihlere_gore || [];
+            // Sadece seçilen gruba ait kayıtları filtrele
+            this.historicalAttendance = (response.data.kayitlar || []).filter((record: any) => 
+              record.grup === this.selectedGroup
+            );
+            
+            // Tarihlere göre gruplanan verileri al ve filtrele
+            const allGroupedByDate = response.data.tarihlere_gore || [];
+            this.groupedAttendanceByDate = allGroupedByDate.filter((dateGroup: any) => {
+              // O tarihteki kayıtları kontrol et - sadece seçilen gruba ait olanlar
+              const dateRecords = this.historicalAttendance.filter(record => 
+                record.tarih === dateGroup.tarih && record.grup === this.selectedGroup
+              );
+              return dateRecords.length > 0;
+            });
 
             // Tarih inputlarını temizle
             this.startDate = '';
