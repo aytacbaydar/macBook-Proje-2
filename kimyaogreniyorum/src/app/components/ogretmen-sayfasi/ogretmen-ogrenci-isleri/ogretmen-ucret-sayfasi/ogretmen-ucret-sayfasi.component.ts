@@ -34,6 +34,27 @@ interface PaymentSummary {
   currentYear: number;
 }
 
+interface MonthlyAnalysis {
+  year: number;
+  month: number;
+  monthName: string;
+  expected: number;
+  received: number;
+  deficit: number;
+  payments: Payment[];
+  studentsWhoPaid: Student[];
+  studentsWhoDidntPay: Student[];
+  paymentCount: number;
+  paidStudentCount: number;
+  unpaidStudentCount: number;
+}
+
+interface YearlyTotals {
+  totalExpected: number;
+  totalReceived: number;
+  totalDeficit: number;
+}
+
 interface MonthlyIncome {
   yil: number;
   ay: number;
@@ -73,7 +94,16 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     son_12_ay_ortalama: 0
   };
 
+  // Aylık detaylı analiz
+  monthlyAnalysis: MonthlyAnalysis[] = [];
+  yearlyTotals: YearlyTotals = {
+    totalExpected: 0,
+    totalReceived: 0,
+    totalDeficit: 0
+  };
+
   showPaymentForm = false;
+  showMonthlyAnalysis = false;
   selectedStudent: Student | null = null;
   isLoading = true;
   error: string | null = null;
@@ -126,11 +156,15 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
             this.students = response.data.students || [];
             this.payments = response.data.payments || [];
             this.summary = response.data.summary || this.summary;
+            this.monthlyAnalysis = response.data.monthlyAnalysis || [];
+            this.yearlyTotals = response.data.yearlyTotals || this.yearlyTotals;
 
             console.log('Yüklenen veriler:', {
               students: this.students.length,
               payments: this.payments.length,
-              summary: this.summary
+              summary: this.summary,
+              monthlyAnalysis: this.monthlyAnalysis.length,
+              yearlyTotals: this.yearlyTotals
             });
           } else {
             console.error('API başarısız response:', response);
@@ -278,6 +312,20 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     return currentMonthData 
       ? this.formatCurrency(currentMonthData.toplam_gelir)
       : this.formatCurrency(0);
+  }
+
+  toggleMonthlyAnalysis(): void {
+    this.showMonthlyAnalysis = !this.showMonthlyAnalysis;
+  }
+
+  getMonthlyCompletionRate(month: MonthlyAnalysis): number {
+    if (month.expected === 0) return 0;
+    return Math.round((month.received / month.expected) * 100);
+  }
+
+  getOverallCompletionRate(): number {
+    if (this.yearlyTotals.totalExpected === 0) return 0;
+    return Math.round((this.yearlyTotals.totalReceived / this.yearlyTotals.totalExpected) * 100);
   }
 
   private calculateSummary() {

@@ -55,7 +55,101 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $stmt->execute([$teacherName, $currentYear, $currentMonth]);
         $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        // 3. Özet hesaplamalar
+        // 3. Detaylı aylık analiz (2025 Ağustos - 2026 Haziran)
+        $monthlyAnalysis = [];
+        $totalExpectedAll = 0;
+        $totalReceivedAll = 0;
+        
+        // Ay listesi (2025 Ağustos - 2026 Haziran)
+        $analysisMonths = [
+            ['year' => 2025, 'month' => 8, 'name' => 'Ağustos 2025'],
+            ['year' => 2025, 'month' => 9, 'name' => 'Eylül 2025'],
+            ['year' => 2025, 'month' => 10, 'name' => 'Ekim 2025'],
+            ['year' => 2025, 'month' => 11, 'name' => 'Kasım 2025'],
+            ['year' => 2025, 'month' => 12, 'name' => 'Aralık 2025'],
+            ['year' => 2026, 'month' => 1, 'name' => 'Ocak 2026'],
+            ['year' => 2026, 'month' => 2, 'name' => 'Şubat 2026'],
+            ['year' => 2026, 'month' => 3, 'name' => 'Mart 2026'],
+            ['year' => 2026, 'month' => 4, 'name' => 'Nisan 2026'],
+            ['year' => 2026, 'month' => 5, 'name' => 'Mayıs 2026'],
+            ['year' => 2026, 'month' => 6, 'name' => 'Haziran 2026']
+        ];
+        
+        foreach ($analysisMonths as $monthInfo) {
+            $year = $monthInfo['year'];
+            $month = $monthInfo['month'];
+            $monthName = $monthInfo['name'];
+            
+            // Bu ay için ödemeleri getir
+            $monthPaymentsQuery = "
+                SELECT op.id, op.ogrenci_id, op.tutar, op.odeme_tarihi, op.aciklama,
+                       o.adi_soyadi as ogrenci_adi
+                FROM ogrenci_odemeler op
+                INNER JOIN ogrenciler o ON op.ogrenci_id = o.id
+                WHERE o.ogretmeni = ? AND op.yil = ? AND op.ay = ?
+                ORDER BY op.odeme_tarihi DESC
+            ";
+            $stmt = $conn->prepare($monthPaymentsQuery);
+            $stmt->execute([$teacherName, $year, $month]);
+            $monthPayments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            // Bu ay için beklenen toplam
+            $monthExpected = 0;
+            $monthReceived = 0;
+            $studentsWhoPaidThisMonth = [];
+            $studentsWhoDidntPayThisMonth = [];
+            $paidStudentIds = [];
+            
+            // Ödemeleri topla
+            foreach ($monthPayments as $payment) {
+                $monthReceived += floatval($payment['tutar']);
+                if (!in_array($payment['ogrenci_id'], $paidStudentIds)) {
+                    $paidStudentIds[] = $payment['ogrenci_id'];
+                }
+            }
+            
+            // Her öğrenci için analiz
+            foreach ($students as $student) {
+                $studentFee = floatval($student['ucret'] ?? 0);
+                if ($studentFee > 0) {
+                    $monthExpected += $studentFee;
+                    
+                    if (in_array($student['id'], $paidStudentIds)) {
+                        $studentsWhoPaidThisMonth[] = [
+                            'id' => $student['id'],
+                            'adi_soyadi' => $student['adi_soyadi'],
+                            'ucret' => $studentFee
+                        ];
+                    } else {
+                        $studentsWhoDidntPayThisMonth[] = [
+                            'id' => $student['id'],
+                            'adi_soyadi' => $student['adi_soyadi'],
+                            'ucret' => $studentFee
+                        ];
+                    }
+                }
+            }
+            
+            $monthlyAnalysis[] = [
+                'year' => $year,
+                'month' => $month,
+                'monthName' => $monthName,
+                'expected' => $monthExpected,
+                'received' => $monthReceived,
+                'deficit' => $monthExpected - $monthReceived,
+                'payments' => $monthPayments,
+                'studentsWhoPaid' => $studentsWhoPaidThisMonth,
+                'studentsWhoDidntPay' => $studentsWhoDidntPayThisMonth,
+                'paymentCount' => count($monthPayments),
+                'paidStudentCount' => count($studentsWhoPaidThisMonth),
+                'unpaidStudentCount' => count($studentsWhoDidntPayThisMonth)
+            ];
+            
+            $totalExpectedAll += $monthExpected;
+            $totalReceivedAll += $monthReceived;
+        }
+        
+        // Mevcut ay özeti (geriye dönük uyumluluk için)
         $totalExpected = 0;
         $totalReceived = 0;
         $studentsWhoPayThis = [];
@@ -96,6 +190,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 'studentsWhoDidntPay' => $studentsWhoDidntPay,
                 'currentMonth' => intval($currentMonth),
                 'currentYear' => intval($currentYear)
+            ],
+            'monthlyAnalysis' => $monthlyAnalysis,
+            'yearlyTotals' => [
+                'totalExpected' => $totalExpectedAll,
+                'totalReceived' => $totalReceivedAll,
+                'totalDeficit' => $totalExpectedAll - $totalReceivedAll
             ]
         ];
         
