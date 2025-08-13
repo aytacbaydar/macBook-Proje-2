@@ -21,7 +21,7 @@ a{
 
     .menu-list{
         width: 100%;
-        margin-top: 40px;
+        margin-top: 10px;
         padding-left: 7px;
         position: relative;
         display: flex;
@@ -73,9 +73,9 @@ a{
 
 
     &.closed {
-        width: 50px;
+        width: 55px;
     .toggle-button{
-        z-index: 999999;
+        z-index: 99999999999;
         margin-left: 35px;
     }
     p {
@@ -122,6 +122,9 @@ a{
       padding: 0 6px;
       font-weight: 600;
       animation: pulse 2s infinite;
+      z-index: 999;
+      margin-top: -40px;
+      margin-left: -70px;
 
       &.bg-danger {
         background-color: #dc3545 !important;
@@ -144,7 +147,7 @@ a{
 
 
 .toggle-button{
-    z-index: 9999999;
+    z-index: 999999999999;
     position: fixed;
     background-color: #ffffff;
     margin-left: 215px;
@@ -184,7 +187,7 @@ a{
         }
     }
     .toggle-button{
-        z-index: 999999;
+        z-index: 999999999999;
         margin-left: 215px;
         margin-top: 25px;
         display: block;
