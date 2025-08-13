@@ -86,9 +86,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $totalLessons = $presentCount + $absentCount;
         $attendancePercentage = $totalLessons > 0 ? round(($presentCount / $totalLessons) * 100) : 0;
 
-        // Ödeme hesaplamaları
+        // Ödeme hesaplamaları - YENİ: Ders sayısına göre ücretlendirme
+        $ucretPerSingleLesson = $ucretPerLesson / 4; // Ders ücretini 4'e böl
+        $expectedTotalAmount = $presentCount * $ucretPerSingleLesson; // Katıldığı ders sayısı ile çarp
+        
+        // 4'lü döngü hesaplaması (bilgi amaçlı)
         $expectedPaymentCycles = floor($presentCount / 4);
-        $expectedTotalAmount = $expectedPaymentCycles * $ucretPerLesson;
         $lessonsUntilNextPayment = $presentCount > 0 ? 4 - ($presentCount % 4) : 4;
 
         // Toplam ödenen tutar
@@ -130,6 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 'debt' => $debt,
                 'lessons_until_next_payment' => $lessonsUntilNextPayment,
                 'ucret_per_lesson' => $ucretPerLesson,
+                'ucret_per_single_lesson' => $ucretPerSingleLesson,
                 'payment_count' => count($payments)
             ]
         ];

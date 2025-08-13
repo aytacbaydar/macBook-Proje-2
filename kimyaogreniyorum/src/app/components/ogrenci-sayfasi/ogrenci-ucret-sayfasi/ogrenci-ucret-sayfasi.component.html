@@ -11,7 +11,7 @@
           <p>Ders katılımım ve ödeme durumum</p>
         </div>-->
       </div>
-    
+
       <div class="payment-card-content" *ngFor="let stats of getStudentAttendanceStats()">
         <!-- Öğrenci Profil Bilgileri -->
         <div class="student-profile-section">
@@ -30,7 +30,7 @@
             </div>
           </div>
         </div>
-    
+
         <!-- İstatistik Kartları -->
         <div class="stats-grid">
           <div class="stat-item present">
@@ -42,7 +42,7 @@
               <div class="stat-label">Katıldığım Ders</div>
             </div>
           </div>
-    
+
           <div class="stat-item absent">
             <div class="stat-icon">
               <i class="bi bi-x-circle-fill"></i>
@@ -52,7 +52,7 @@
               <div class="stat-label">Devamsızlık</div>
             </div>
           </div>
-    
+
           <div class="stat-item payment">
             <div class="stat-icon">
               <i class="bi bi-currency-exchange"></i>
@@ -62,7 +62,7 @@
               <div class="stat-label">Beklenen Ödeme</div>
             </div>
           </div>
-    
+
           <div class="stat-item cycles">
             <div class="stat-icon">
               <i class="bi bi-arrow-repeat"></i>
@@ -73,11 +73,10 @@
             </div>
           </div>
         </div>
-    
+
         <!-- Ödeme Durumu -->
         <div class="payment-status-section">
-          <div class="payment-progress">
-            <div class="progress-info">
+          <div class="progress-info">
               <span class="progress-label">Sonraki Ödemeye</span>
               <span class="progress-value">{{ stats.lessonsUntilNextPayment === 0 ? 'Ödeme Zamanı!' :
                 stats.lessonsUntilNextPayment + ' ders kaldı' }}</span>
@@ -88,13 +87,13 @@
               </div>
             </div>
           </div>
-    
+
           <div class="payment-alert" *ngIf="stats.lessonsUntilNextPayment === 0">
             <i class="bi bi-exclamation-triangle-fill"></i>
             <span>Ödeme yapmanız gereken zaman geldi!</span>
           </div>
         </div>
-    
+
         <!-- Detay Butonu -->
         <div class="payment-card-footer">
           <button type="button" class="detail-button" (click)="openStudentStatsModal()" [disabled]="isLoading">
@@ -356,10 +355,8 @@
                 </div>
               </div>
               <div class="col-md-3">
-                <div class="stat-item">
-                  <div class="stat-value">{{ formatCurrency(studentStats.payment_stats.expected_total_amount) }}</div>
-                  <div class="stat-label">Beklenen Tutar</div>
-                </div>
+                <div class="stat-value">{{ formatCurrency(studentStats.payment_stats.expected_total_amount) }}</div>
+                <div class="stat-label">Beklenen Tutar</div>
               </div>
               <div class="col-md-3">
                 <div class="stat-item">
@@ -368,12 +365,10 @@
                 </div>
               </div>
               <div class="col-md-3">
-                <div class="stat-item">
-                  <div class="stat-value" [class.text-danger]="studentStats.payment_stats.debt > 0" [class.text-success]="studentStats.payment_stats.debt <= 0">
-                    {{ formatCurrency(Math.abs(studentStats.payment_stats.debt)) }}
-                  </div>
-                  <div class="stat-label">{{ studentStats.payment_stats.debt > 0 ? 'Borcun' : 'Fazla Ödeme' }}</div>
+                <div class="stat-value" [class.text-danger]="studentStats.payment_stats.debt > 0" [class.text-success]="studentStats.payment_stats.debt <= 0">
+                  {{ formatCurrency(Math.abs(studentStats.payment_stats.debt)) }}
                 </div>
+                <div class="stat-label">{{ studentStats.payment_stats.debt > 0 ? 'Borcun' : 'Fazla Ödeme' }}</div>
               </div>
             </div>
           </div>

@@ -676,10 +676,13 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
     const attendancePercentage =
       totalLessons > 0 ? Math.round((presentCount / totalLessons) * 100) : 0;
 
-    // Payment calculations
+    // Payment calculations - NEW: Ders sayısına göre ücretlendirme
     const ucret = parseFloat(this.currentStudent.ucret || '0');
+    const ucretPerLesson = ucret / 4; // Ders ücretini 4'e böl
+    const expectedTotalAmount = presentCount * ucretPerLesson; // Toplam katıldığı ders sayısı ile çarp
+    
+    // 4'lü döngü hesaplaması (eskisi gibi bilgi amaçlı)
     const expectedPaymentCycles = Math.floor(presentCount / 4);
-    const expectedTotalAmount = expectedPaymentCycles * ucret;
     const lessonsUntilNextPayment =
       presentCount > 0 ? 4 - (presentCount % 4) : 4;
 
@@ -690,6 +693,7 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
         email: this.currentStudent.email,
         avatar: this.currentStudent.avatar,
         ucret: ucret,
+        ucretPerLesson: ucretPerLesson,
         presentCount: presentCount,
         absentCount: absentCount,
         totalLessons: totalLessons,
