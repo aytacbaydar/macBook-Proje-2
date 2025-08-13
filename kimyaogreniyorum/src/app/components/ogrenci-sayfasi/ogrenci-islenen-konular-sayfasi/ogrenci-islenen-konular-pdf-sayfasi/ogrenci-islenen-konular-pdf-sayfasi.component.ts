@@ -195,6 +195,24 @@ export class OgrenciIslenenKonularPdfSayfasiComponent implements OnInit {
     }
   }
 
+  // iOS cihaz kontrolü
+  isIOS(): boolean {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent);
+  }
+
+  // PDF görüntüleme metodu - iOS için özel davranış
+  viewPdf(): void {
+    if (this.selectedPdf) {
+      if (this.isIOS()) {
+        // iOS'ta doğrudan yeni sekmede aç
+        window.open(this.selectedPdf, '_blank');
+      } else {
+        // Diğer cihazlarda normal modal davranışı
+        // Modal zaten açık, başka bir işlem gerekmez
+      }
+    }
+  }
+
   downloadPdf(): void {
     if (this.selectedPdf) {
       const link = document.createElement('a');

@@ -8,7 +8,7 @@
         </div>
         <p class="mt-2 text-muted">Ders notları yükleniyor...</p>
       </div>
-      
+
       <!-- Error State -->
       <div *ngIf="error && !isLoading" class="alert alert-danger">
         <i class="bi bi-exclamation-triangle"></i> {{ error }}
@@ -30,7 +30,7 @@
             <h4>Henüz Ders Notu Bulunmuyor</h4>
             <p class="text-muted">Bu grup için henüz hiç ders notu yüklenmemiş.</p>
           </div>
-          
+
           <div *ngIf="dersKayitlari.length > 0" class="lessons-grid">
             <div *ngFor="let ders of dersKayitlari" class="lesson-card">
               <div class="lesson-header">
@@ -42,7 +42,7 @@
                   <span class="lesson-type">PDF Dokümanı</span>
                 </div>
               </div>
-          
+
               <div class="lesson-info">
                 <div class="info-item">
                   <span class="label">
@@ -66,7 +66,7 @@
                   <span class="value">{{ ders.ogretmen_adi || 'Belirtilmemiş' }}</span>
                 </div>
               </div>
-          
+
               <div class="lesson-actions">
                 <button class="action-btn view-btn" (click)="viewLessonPdf(ders.pdf_dosya_yolu)"
                   [disabled]="!ders.pdf_dosya_yolu">
@@ -78,6 +78,66 @@
           </div>
           <!--İçerik Son-->
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="pdfViewerModal" tabindex="-1" aria-labelledby="pdfViewerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="pdfViewerModalLabel">PDF Görüntüleyici</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="pdf-viewer">
+      <div class="pdf-fallback" *ngIf="isIOS()">
+        <div class="fallback-content">
+          <i class="fas fa-file-pdf pdf-icon"></i>
+          <h4>PDF Görüntüleyici</h4>
+          <p>iPhone/iPad'de PDF'i görüntülemek için aşağıdaki butona tıklayın:</p>
+          <div class="pdf-actions">
+            <button class="pdf-action-btn primary" (click)="openPdfInNewTab()">
+              <i class="fas fa-eye"></i>
+              PDF'i Aç
+            </button>
+            <button class="pdf-action-btn secondary" (click)="downloadPdf()">
+              <i class="fas fa-download"></i>
+              İndir
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="pdf-fallback" *ngIf="!isIOS() && !pdfLoaded">
+        <div class="fallback-content">
+          <i class="fas fa-file-pdf pdf-icon"></i>
+          <h4>PDF Görüntüleyici</h4>
+          <p>PDF dosyasını görüntülemek için aşağıdaki seçenekleri kullanın:</p>
+          <div class="pdf-actions">
+            <button class="pdf-action-btn primary" (click)="openPdfInNewTab()">
+              <i class="fas fa-eye"></i>
+              Yeni Sekmede Görüntüle
+            </button>
+            <button class="pdf-action-btn secondary" (click)="downloadPdf()">
+              <i class="fas fa-download"></i>
+              İndir
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <iframe 
+        [src]="selectedPdf + '#toolbar=1'" 
+        width="100%" 
+        height="600px"
+        style="border: none;"
+        (load)="onPdfLoad()"
+        (error)="onPdfLoadError($event)"
+        *ngIf="!isIOS() && selectedPdf">
+      </iframe>
+    </div>
       </div>
     </div>
   </div>
