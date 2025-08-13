@@ -298,11 +298,18 @@
                 </div>
 
                 <!-- Answers Preview -->
-                <div class="answers-preview" *ngIf="cevap.cevaplar">
+                <div class="answers-preview" *ngIf="cevap.cevaplar && Object.keys(cevap.cevaplar).length > 0">
                     <h4>
                         <i class="bi bi-check-circle me-1"></i>
                         Cevap Anahtarı
                     </h4>
+                    
+                    <div class="answers-grid">
+                        <div *ngFor="let i of getSoruDizisi(cevap); let soruNo = index" class="answer-item">
+                            <span class="question-number">{{ soruNo + 1 }}.</span>
+                            <span class="answer-letter">{{ cevap.cevaplar['ca' + (soruNo + 1)] || '-' }}</span>
+                        </div>
+                    </div>
                     <div class="answers-grid-preview">
                         <div class="answer-preview" *ngFor="let i of getSoruDizisi(cevap); let idx = index"
                             [attr.data-tooltip]="cevap.konular && cevap.konular['ka' + (idx + 1)] ? cevap.konular['ka' + (idx + 1)] : 'Konu bilgisi yok'"

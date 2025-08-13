@@ -725,7 +725,6 @@
         border-radius: 16px;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
         border: 1px solid rgba(0, 0, 0, 0.05);
-        overflow: hidden;
         transition: all 0.3s ease;
 
         &:hover {
@@ -843,7 +842,7 @@
         }
 
         .exam-content {
-            padding: 2rem;
+            padding: 1.5rem;
             display: block;
 
             &::after {
@@ -946,6 +945,35 @@
                         font-weight: 700;
                         color: #667eea;
                         font-size: 0.9rem;
+                    }
+                }
+            }
+
+            .answers-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+                gap: 8px;
+                margin-top: 1rem;
+
+                .answer-item {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    padding: 8px;
+                    background: #f8f9fa;
+                    border-radius: 6px;
+                    border: 1px solid #e9ecef;
+
+                    .question-number {
+                        font-size: 0.75rem;
+                        color: #6c757d;
+                        margin-bottom: 2px;
+                    }
+
+                    .answer-letter {
+                        font-weight: 600;
+                        font-size: 1rem;
+                        color: #495057;
                     }
                 }
             }

@@ -208,8 +208,29 @@ export class OgretmenCevapAnahtariSayfasiComponent
         console.log('API yanıtı:', response);
         this.loading = false;
         if (response.success) {
-          this.cevapAnahtarlari = response.data || [];
+          this.cevapAnahtarlari = (response.data || []).map((item: any) => {
+            // JSON string olarak gelen verileri parse et
+            try {
+              if (typeof item.cevaplar === 'string') {
+                item.cevaplar = JSON.parse(item.cevaplar);
+              }
+              if (typeof item.konular === 'string') {
+                item.konular = JSON.parse(item.konular);
+              }
+              if (typeof item.videolar === 'string') {
+                item.videolar = JSON.parse(item.videolar);
+              }
+            } catch (parseError) {
+              console.error('JSON parse hatası:', parseError, item);
+              // Parse hatası durumunda boş objeler ata
+              if (typeof item.cevaplar === 'string') item.cevaplar = {};
+              if (typeof item.konular === 'string') item.konular = {};
+              if (typeof item.videolar === 'string') item.videolar = {};
+            }
+            return item;
+          });
           console.log('Yüklenen cevap anahtarları sayısı:', this.cevapAnahtarlari.length);
+          console.log('İlk cevap anahtarı örneği:', this.cevapAnahtarlari[0]);
         } else {
           console.error('API hatası:', response);
           this.cevapAnahtarlari = [];
@@ -270,6 +291,36 @@ export class OgretmenCevapAnahtariSayfasiComponent
     this.editMode = true;
     // Derin kopya oluştur, böylece orijinal veriyi bozmayız
     this.currentEditingCevapAnahtari = JSON.parse(JSON.stringify(cevap));
+
+    // JSON string olarak gelen verileri parse et (eğer zaten parse edilmemişse)
+    try {
+      if (typeof this.currentEditingCevapAnahtari.cevaplar === 'string') {
+        this.currentEditingCevapAnahtari.cevaplar = JSON.parse(this.currentEditingCevapAnahtari.cevaplar);
+      }
+      if (typeof this.currentEditingCevapAnahtari.konular === 'string') {
+        this.currentEditingCevapAnahtari.konular = JSON.parse(this.currentEditingCevapAnahtari.konular);
+      }
+      if (typeof this.currentEditingCevapAnahtari.videolar === 'string') {
+        this.currentEditingCevapAnahtari.videolar = JSON.parse(this.currentEditingCevapAnahtari.videolar);
+      }
+    } catch (parseError) {
+      console.error('Düzenleme için JSON parse hatası:', parseError);
+      // Parse hatası durumunda boş objeler ata
+      if (typeof this.currentEditingCevapAnahtari.cevaplar === 'string') {
+        this.currentEditingCevapAnahtari.cevaplar = {};
+      }
+      if (typeof this.currentEditingCevapAnahtari.konular === 'string') {
+        this.currentEditingCevapAnahtari.konular = {};
+      }
+      if (typeof this.currentEditingCevapAnahtari.videolar === 'string') {
+        this.currentEditingCevapAnahtari.videolar = {};
+      }
+    }
+
+    // Soru sayısına göre düzenleme formunu güncelle
+    if (this.currentEditingCevapAnahtari.soru_sayisi) {
+      this.updateEditSorular(this.currentEditingCevapAnahtari.soru_sayisi);
+    }
 
     // Kapak resim önizlemesi için URL oluştur
     if (this.currentEditingCevapAnahtari.sinav_kapagi) {
@@ -391,6 +442,26 @@ export class OgretmenCevapAnahtariSayfasiComponent
   }
 
   // Klavye kısayolları için listener ekleyelim
+
+  // Düzenleme modu için soru sayısını güncelle
+  updateEditSorular(count: number) {
+    if (!this.currentEditingCevapAnahtari) return;
+    
+    this.currentEditingCevapAnahtari.soru_sayisi = count;
+
+    // Her soru için boş varsayılan değerler oluştur (eğer yoksa)
+    for (let i = 1; i <= count; i++) {
+      if (!this.currentEditingCevapAnahtari.cevaplar[`ca${i}`]) {
+        this.currentEditingCevapAnahtari.cevaplar[`ca${i}`] = '';
+      }
+      if (!this.currentEditingCevapAnahtari.konular[`ka${i}`]) {
+        this.currentEditingCevapAnahtari.konular[`ka${i}`] = '';
+      }
+      if (!this.currentEditingCevapAnahtari.videolar[`va${i}`]) {
+        this.currentEditingCevapAnahtari.videolar[`va${i}`] = '';
+      }
+    }
+  }
 
   // Component yok edildiğinde temizlik yap
   ngOnDestroy() {
