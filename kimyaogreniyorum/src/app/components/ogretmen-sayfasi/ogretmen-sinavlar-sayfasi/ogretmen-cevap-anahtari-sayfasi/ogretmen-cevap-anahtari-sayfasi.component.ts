@@ -255,7 +255,7 @@ export class OgretmenCevapAnahtariSayfasiComponent
       console.log('Soru sayısı:', cevap.soru_sayisi); // Debug için
       return Array(Number(cevap.soru_sayisi))
         .fill(0)
-        .map((_, i) => i);
+        .map((_, i) => i + 1); // 1-based array döndür
     }
 
     // Eğer cevap.soru_sayisi yoksa veya sayısal değilse, cevaplar nesnesinin anahtarlarına bak
@@ -276,7 +276,7 @@ export class OgretmenCevapAnahtariSayfasiComponent
 
       return Array(maxIndex)
         .fill(0)
-        .map((_, i) => i);
+        .map((_, i) => i + 1); // 1-based array döndür
     }
 
     // Hiçbir veri bulunamadıysa boş dizi döndür
