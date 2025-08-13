@@ -37,6 +37,7 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
       label: 'Yol Haritası',
       link: 'ogrenci-sayfasi/ogrenci-islene-konular-sayfasi',
     },
+    /*
     {
       icon: 'bi-play-circle-fill',
       label: 'Konu Anlatımı Video',
@@ -47,6 +48,7 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
       label: 'Online Canlı Ders',
       link: 'ogrenci-sayfasi/ogrenci-online-ders-sayfasi',
     },
+    */
     {
       icon: 'bi-pencil-square',
       label: 'İşlenen konular',
