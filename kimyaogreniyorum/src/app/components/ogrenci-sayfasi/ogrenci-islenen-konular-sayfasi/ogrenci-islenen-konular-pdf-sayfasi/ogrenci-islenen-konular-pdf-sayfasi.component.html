@@ -104,7 +104,8 @@
             </button>
             <button class="pdf-action-btn secondary" (click)="downloadPdf()">
               <i class="fas fa-download"></i>
-              İndir
+              <span *ngIf="isIOS()">Safari'de Aç</span>
+              <span *ngIf="!isIOS()">İndir</span>
             </button>
           </div>
         </div>
@@ -122,7 +123,8 @@
             </button>
             <button class="pdf-action-btn secondary" (click)="downloadPdf()">
               <i class="fas fa-download"></i>
-              İndir
+              <span *ngIf="isIOS()">Safari'de Aç</span>
+              <span *ngIf="!isIOS()">İndir</span>
             </button>
           </div>
         </div>

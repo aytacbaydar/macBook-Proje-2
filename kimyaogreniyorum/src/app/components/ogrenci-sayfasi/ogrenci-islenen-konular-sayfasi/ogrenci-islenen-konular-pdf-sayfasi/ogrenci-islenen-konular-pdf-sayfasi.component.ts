@@ -215,10 +215,53 @@ export class OgrenciIslenenKonularPdfSayfasiComponent implements OnInit {
 
   downloadPdf(): void {
     if (this.selectedPdf) {
-      const link = document.createElement('a');
-      link.href = this.selectedPdf;
-      link.download = 'ders_notlari.pdf';
-      document.body.appendChild(link);
+      if (this.isIOS()) {
+        // iOS için özel davranış - yeni sekmede aç
+        this.openPdfInNewTab();
+      } else {
+        // Android ve diğer cihazlar için normal indirme
+        const link = document.createElement('a');
+        link.href = this.selectedPdf;
+        link.download = 'ders_notlari.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    }
+  }
+
+  // iOS uyumlu PDF açma metodu
+  openPdfInNewTab(): void {
+    if (this.selectedPdf) {
+      // iOS için blob URL oluştur ve aç
+      if (this.isIOS()) {
+        fetch(this.selectedPdf)
+          .then(response => response.blob())
+          .then(blob => {
+            const blobUrl = URL.createObjectURL(blob);
+            const newWindow = window.open(blobUrl, '_blank');
+            
+            // Cleanup blob URL after a delay
+            setTimeout(() => {
+              URL.revokeObjectURL(blobUrl);
+            }, 10000);
+            
+            if (!newWindow) {
+              // Popup blocked - fallback to direct URL
+              window.location.href = this.selectedPdf;
+            }
+          })
+          .catch(error => {
+            console.error('PDF yüklenirken hata:', error);
+            // Fallback to direct URL
+            window.open(this.selectedPdf, '_blank');
+          });
+      } else {
+        // Android ve diğer cihazlar için normal davranış
+        window.open(this.selectedPdf, '_blank');
+      }
+    }
+  }ink);
       link.click();
       document.body.removeChild(link);
     }
