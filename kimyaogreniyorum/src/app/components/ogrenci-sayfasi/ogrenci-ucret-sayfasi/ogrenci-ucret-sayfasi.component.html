@@ -58,10 +58,10 @@
               <i class="bi bi-currency-exchange"></i>
             </div>
             <div class="stat-info">
-              <td class="text-end">
-                    {{ formatCurrency(stats.expectedPayment) }}
-                  </td>
-              <div class="stat-label">Beklenen Ödeme</div>
+              <div class="stat-number" [class.text-danger]="stats.expectedPayment > 0" [class.text-success]="stats.expectedPayment < 0">
+                {{ formatCurrency(stats.expectedPayment) }}
+              </div>
+              <div class="stat-label">{{ stats.expectedPayment < 0 ? 'Fazla Ödeme' : 'Beklenen Ödeme' }}</div>
             </div>
           </div>
 
@@ -355,9 +355,14 @@
                   <div class="stat-label">Beklenen Dönem</div>
                 </div>
               </div>
-              <td class="text-end">
+              <div class="col-md-3">
+                <div class="stat-item">
+                  <div class="stat-value" [class.text-danger]="studentStats.expectedPayment > 0" [class.text-success]="studentStats.expectedPayment < 0">
                     {{ formatCurrency(studentStats.expectedPayment) }}
-                  </td>
+                  </div>
+                  <div class="stat-label">{{ studentStats.expectedPayment < 0 ? 'Fazla Ödeme' : 'Beklenen Tutar' }}</div>
+                </div>
+              </div>
               <div class="col-md-3">
                 <div class="stat-item">
                   <div class="stat-value">{{ formatCurrency(studentStats.payment_stats.total_paid) }}</div>

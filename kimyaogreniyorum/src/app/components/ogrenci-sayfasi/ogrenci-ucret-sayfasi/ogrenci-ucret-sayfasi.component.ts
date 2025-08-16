@@ -684,8 +684,8 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
     // Yapılan ödemeleri hesapla
     const totalPaid = this.getTotalPaidAmount();
     
-    // Beklenen ödeme = Toplam beklenen tutar - Yapılan ödemeler
-    const expectedPayment = Math.max(0, expectedTotalAmount - totalPaid);
+    // Beklenen ödeme = Toplam beklenen tutar - Yapılan ödemeler (negatif değerler de gösterilsin)
+    const expectedPayment = expectedTotalAmount - totalPaid;
     
     // 4'lü döngü hesaplaması (eskisi gibi bilgi amaçlı)
     const expectedPaymentCycles = Math.floor(presentCount / 4);
