@@ -58,7 +58,9 @@
               <i class="bi bi-currency-exchange"></i>
             </div>
             <div class="stat-info">
-              <div class="stat-number">{{ formatCurrency(stats.expectedTotalAmount) }}</div>
+              <td class="text-end">
+                    {{ formatCurrency(stats.expectedPayment) }}
+                  </td>
               <div class="stat-label">Beklenen Ödeme</div>
             </div>
           </div>
@@ -353,10 +355,9 @@
                   <div class="stat-label">Beklenen Dönem</div>
                 </div>
               </div>
-              <div class="col-md-3">
-                <div class="stat-value">{{ formatCurrency(studentStats.payment_stats.expected_total_amount) }}</div>
-                <div class="stat-label">Beklenen Tutar</div>
-              </div>
+              <td class="text-end">
+                    {{ formatCurrency(studentStats.expectedPayment) }}
+                  </td>
               <div class="col-md-3">
                 <div class="stat-item">
                   <div class="stat-value">{{ formatCurrency(studentStats.payment_stats.total_paid) }}</div>
@@ -419,7 +420,7 @@
             </div>
             <div class="payment-progress-bar">
               <div class="progress-background">
-                <div class="progress-fill" 
+                <div class="progress-fill"
                      [style.width.%]="studentStats.payment_stats.lessons_until_next_payment === 0 ? 100 : ((4 - studentStats.payment_stats.lessons_until_next_payment) / 4) * 100">
                 </div>
               </div>
