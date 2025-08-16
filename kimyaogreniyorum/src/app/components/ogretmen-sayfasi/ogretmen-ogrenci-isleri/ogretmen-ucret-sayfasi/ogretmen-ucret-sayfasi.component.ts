@@ -258,34 +258,23 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
   loadIncomeOverview(): void {
     const headers = this.getAuthHeaders();
 
-    // Giriş yapan öğretmenin adını localStorage'dan al
-    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
-    let ogretmenAdi = '';
+    console.log('Aylık gelir özeti yükleniyor...');
 
-    if (userStr) {
-      try {
-        const user = JSON.parse(userStr);
-        ogretmenAdi = user.adi_soyadi || '';
-      } catch (error) {
-        console.error('Kullanıcı bilgileri alınamadı:', error);
-        return;
-      }
-    }
-
-    if (!ogretmenAdi) {
-      console.error('Öğretmen adı bulunamadı');
-      return;
-    }
-
-    this.http.post<any>('./server/api/aylik_gelir_ozeti.php', { ogretmen_adi: ogretmenAdi }, { headers })
+    this.http.get<any>('./server/api/aylik_gelir_ozeti.php', { headers })
       .subscribe({
         next: (response) => {
+          console.log('Aylık gelir API response:', response);
           if (response && response.success) {
             this.incomeOverview = response.data;
+            console.log('İncome overview yüklendi:', this.incomeOverview);
+          } else {
+            console.error('Aylık gelir API başarısız:', response);
+            this.toastr.warning('Aylık gelir verileri yüklenemedi');
           }
         },
         error: (error) => {
           console.error('Aylık gelir özeti yüklenirken hata:', error);
+          this.toastr.error('Aylık gelir verileri yüklenemedi: ' + error.message);
         }
       });
   }
