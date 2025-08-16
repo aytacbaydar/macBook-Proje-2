@@ -53,9 +53,8 @@
 // Modern Payment Card Styles
 .modern-payment-card {
   border-radius: 8px;
-  padding: 0;
+  padding: 5px;
   margin-bottom: 2rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   color: rgb(29, 29, 29);
 
@@ -97,9 +96,7 @@
     }
   }
 
-  .payment-card-content {
-    padding: 2rem;
-  }
+
 
   .student-profile-section {
     display: flex;
@@ -307,14 +304,14 @@
       width: 100%;
       box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
       border: 1px solid rgba(255, 255, 255, 0.2);
-      color: rgb(29, 29, 29);
+      color: rgb(253, 251, 251);
+      background-color: red;
       padding: 1rem 2rem;
       border-radius: 12px;
       font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
-      backdrop-filter: blur(10px);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -325,7 +322,7 @@
       }
 
       &:hover:not(:disabled) {
-        background: rgba(255, 255, 255, 0.25);
+        background: rgb(246, 88, 88);
         transform: translateY(-1px);
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
       }
@@ -576,10 +573,8 @@
 }
 
 .modern-attendance-container {
-  padding: 24px;
-  background: #f8fafc;
-  min-height: 100vh;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100%;
+  font-family: Roboto, sans-serif;
 }
 
 /* Modern Header */
@@ -1105,11 +1100,10 @@
 
 /* Timeline */
 .historical-records {
-  background: white;
   border-radius: 8px;
-  padding: 24px;
+  padding: 30px;
   margin-bottom: 24px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 }
 
 .records-header h3 {
@@ -1900,7 +1894,8 @@
 
 .payment-stats {
   .info-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #eceef5 0%, #f1f1f1 100%);
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     color: white;
     border-radius: 8px;
     padding: 20px;
@@ -2056,7 +2051,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #a0ddfc 0%, #9cc0ff 100%);
   color: white;
   border-radius: 8px 16px 0 0;
   flex-shrink: 0;
