@@ -681,6 +681,12 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
     const ucretPerLesson = ucret / 4; // Ders ücretini 4'e böl
     const expectedTotalAmount = presentCount * ucretPerLesson; // Toplam katıldığı ders sayısı ile çarp
     
+    // Yapılan ödemeleri hesapla
+    const totalPaid = this.getTotalPaidAmount();
+    
+    // Beklenen ödeme = Toplam beklenen tutar - Yapılan ödemeler
+    const expectedPayment = Math.max(0, expectedTotalAmount - totalPaid);
+    
     // 4'lü döngü hesaplaması (eskisi gibi bilgi amaçlı)
     const expectedPaymentCycles = Math.floor(presentCount / 4);
     const lessonsUntilNextPayment =
@@ -700,6 +706,8 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
         attendancePercentage: attendancePercentage,
         expectedPaymentCycles: expectedPaymentCycles,
         expectedTotalAmount: expectedTotalAmount,
+        expectedPayment: expectedPayment,
+        totalPaid: totalPaid,
         lessonsUntilNextPayment:
           lessonsUntilNextPayment === 4 ? 0 : lessonsUntilNextPayment,
       },
