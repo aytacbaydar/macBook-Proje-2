@@ -659,7 +659,7 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
     const studentRecords = this.historicalAttendance;
 
     // Count present lessons (normal + ek ders) - Katıldığı ders sayısı
-    const presentCount = this.historicalAttendance.filter(
+    const presentCount = studentRecords.filter(
       (record) =>
         record.durum === 'present' &&
         (!record.ders_tipi ||
