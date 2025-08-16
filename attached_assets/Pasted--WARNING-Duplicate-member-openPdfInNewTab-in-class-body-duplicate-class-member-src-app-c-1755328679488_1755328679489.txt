@@ -1,0 +1,173 @@
+▲ [WARNING] Duplicate member "openPdfInNewTab" in class body [duplicate-class-member]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component.ts:385:4:
+      385 │     openPdfInNewTab(): void {
+          ╵     ~~~~~~~~~~~~~~~
+
+  The original member "openPdfInNewTab" is here:
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component.ts:345:4:
+      345 │     openPdfInNewTab(): void {
+          ╵     ~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component.ts:192:2:
+      192 │   openPdfInNewTab(): void {
+          ╵   ~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component.ts:234:2:
+      234 │   openPdfInNewTab(): void {
+          ╵   ~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component.ts:251:14:
+      251 │               window.location.href = this.selectedPdf;
+          ╵               ~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string | URL | undefined'.
+  Type 'null' is not assignable to type 'string | URL | undefined'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component.ts:257:24:
+      257 │             window.open(this.selectedPdf, '_blank');
+          ╵                         ~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS1434: Unexpected keyword or identifier. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component.ts:264:3:
+      264 │   }ink);
+          ╵    ~~~
+
+
+✘ [ERROR] TS7008: Member 'ink' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component.ts:264:3:
+      264 │   }ink);
+          ╵    ~~~
+
+
+✘ [ERROR] TS1068: Unexpected token. A constructor, method, accessor, or property was expected. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component.ts:264:6:
+      264 │   }ink);
+          ╵       ^
+
+
+✘ [ERROR] TS1434: Unexpected keyword or identifier. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component.ts:265:6:
+      265 │       link.click();
+          ╵       ~~~~
+
+
+✘ [ERROR] TS7008: Member 'link' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component.ts:265:6:
+      265 │       link.click();
+          ╵       ~~~~
+
+
+✘ [ERROR] TS1068: Unexpected token. A constructor, method, accessor, or property was expected. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component.ts:265:10:
+      265 │       link.click();
+          ╵           ^
+
+
+✘ [ERROR] TS2391: Function implementation is missing or not immediately following the declaration. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component.ts:265:11:
+      265 │       link.click();
+          ╵            ~~~~~
+
+
+✘ [ERROR] TS7010: 'click', which lacks return-type annotation, implicitly has an 'any' return type. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component.ts:265:11:
+      265 │       link.click();
+          ╵            ~~~~~
+
+
+✘ [ERROR] TS1434: Unexpected keyword or identifier. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component.ts:266:6:
+      266 │       document.body.removeChild(link);
+          ╵       ~~~~~~~~
+
+
+✘ [ERROR] TS7008: Member 'document' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component.ts:266:6:
+      266 │       document.body.removeChild(link);
+          ╵       ~~~~~~~~
+
+
+✘ [ERROR] TS1068: Unexpected token. A constructor, method, accessor, or property was expected. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component.ts:266:14:
+      266 │       document.body.removeChild(link);
+          ╵               ^
+
+
+✘ [ERROR] TS1434: Unexpected keyword or identifier. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component.ts:266:15:
+      266 │       document.body.removeChild(link);
+          ╵                ~~~~
+
+
+✘ [ERROR] TS7008: Member 'body' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component.ts:266:15:
+      266 │       document.body.removeChild(link);
+          ╵                ~~~~
+
+
+✘ [ERROR] TS1068: Unexpected token. A constructor, method, accessor, or property was expected. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component.ts:266:19:
+      266 │       document.body.removeChild(link);
+          ╵                    ^
+
+
+✘ [ERROR] TS2391: Function implementation is missing or not immediately following the declaration. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component.ts:266:20:
+      266 │       document.body.removeChild(link);
+          ╵                     ~~~~~~~~~~~
+
+
+✘ [ERROR] TS7010: 'removeChild', which lacks return-type annotation, implicitly has an 'any' return type. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component.ts:266:20:
+      266 │       document.body.removeChild(link);
+          ╵                     ~~~~~~~~~~~
+
+
+✘ [ERROR] TS7006: Parameter 'link' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component.ts:266:32:
+      266 │       document.body.removeChild(link);
+          ╵                                 ~~~~
+
+
+✘ [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component.ts:268:2:
+      268 │   }
+          ╵   ^
+
+
+✘ [ERROR] TS1128: Declaration or statement expected. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-islenen-konular-pdf-sayfasi/ogrenci-islenen-konular-pdf-sayfasi.component.ts:269:0:
+      269 │ }
