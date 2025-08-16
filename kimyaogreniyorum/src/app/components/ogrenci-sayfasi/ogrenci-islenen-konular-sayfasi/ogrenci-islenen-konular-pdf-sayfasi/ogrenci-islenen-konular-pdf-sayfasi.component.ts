@@ -189,11 +189,7 @@ export class OgrenciIslenenKonularPdfSayfasiComponent implements OnInit {
     });
   }
 
-  openPdfInNewTab(): void {
-    if (this.selectedPdf) {
-      window.open(this.selectedPdf, '_blank');
-    }
-  }
+  
 
   // iOS cihaz kontrolü
   isIOS(): boolean {
@@ -246,7 +242,7 @@ export class OgrenciIslenenKonularPdfSayfasiComponent implements OnInit {
               URL.revokeObjectURL(blobUrl);
             }, 10000);
             
-            if (!newWindow) {
+            if (!newWindow && this.selectedPdf) {
               // Popup blocked - fallback to direct URL
               window.location.href = this.selectedPdf;
             }
@@ -254,16 +250,14 @@ export class OgrenciIslenenKonularPdfSayfasiComponent implements OnInit {
           .catch(error => {
             console.error('PDF yüklenirken hata:', error);
             // Fallback to direct URL
-            window.open(this.selectedPdf, '_blank');
+            if (this.selectedPdf) {
+              window.open(this.selectedPdf, '_blank');
+            }
           });
       } else {
         // Android ve diğer cihazlar için normal davranış
         window.open(this.selectedPdf, '_blank');
       }
-    }
-  }ink);
-      link.click();
-      document.body.removeChild(link);
     }
   }
 }
