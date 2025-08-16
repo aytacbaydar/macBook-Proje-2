@@ -346,34 +346,49 @@
 
         <!-- Ödeme İstatistiklerim -->
         <div class="payment-stats mb-4">
-          <div class="info-card">
-            <h6><i class="bi bi-credit-card me-2"></i>Ödeme İstatistiklerim</h6>
-            <div class="row">
-              <div class="col-md-3">
-                <div class="stat-item">
-                  <div class="stat-value">{{ studentStats.payment_stats.expected_payment_cycles }}</div>
-                  <div class="stat-label">Beklenen Dönem</div>
+          <h6 class="mb-3"><i class="bi bi-credit-card me-2"></i>Ödeme İstatistiklerim</h6>
+          <div class="row">
+            <!-- Toplam Borç -->
+            <div class="col-md-4 mb-3">
+              <div class="info-card text-center">
+                <div class="stat-icon mb-2">
+                  <i class="bi bi-calculator text-primary fs-2"></i>
                 </div>
+                <div class="stat-value text-primary fs-4 fw-bold">
+                  {{ formatCurrency(getTotalDebtAmount()) }}
+                </div>
+                <div class="stat-label text-muted">Toplam Borç</div>
+                <small class="text-muted">{{ studentStats.attendance_stats.present_count }} ders × {{ formatCurrency(studentStats.student_info.ucret / 4) }}</small>
               </div>
-              <div class="col-md-3">
-                <div class="stat-item">
-                  <div class="stat-value" [class.text-danger]="studentStats.expectedPayment > 0" [class.text-success]="studentStats.expectedPayment < 0">
-                    {{ formatCurrency(studentStats.expectedPayment) }}
-                  </div>
-                  <div class="stat-label">{{ studentStats.expectedPayment < 0 ? 'Fazla Ödeme' : 'Beklenen Tutar' }}</div>
+            </div>
+
+            <!-- Toplam Ödenen -->
+            <div class="col-md-4 mb-3">
+              <div class="info-card text-center">
+                <div class="stat-icon mb-2">
+                  <i class="bi bi-check-circle text-success fs-2"></i>
                 </div>
+                <div class="stat-value text-success fs-4 fw-bold">
+                  {{ formatCurrency(studentStats.payment_stats.total_paid) }}
+                </div>
+                <div class="stat-label text-muted">Toplam Ödenen</div>
+                <small class="text-muted">{{ paymentHistory.length }} ödeme yapıldı</small>
               </div>
-              <div class="col-md-3">
-                <div class="stat-item">
-                  <div class="stat-value">{{ formatCurrency(studentStats.payment_stats.total_paid) }}</div>
-                  <div class="stat-label">Ödenen Tutar</div>
+            </div>
+
+            <!-- Kalan Borç -->
+            <div class="col-md-4 mb-3">
+              <div class="info-card text-center">
+                <div class="stat-icon mb-2">
+                  <i class="bi bi-exclamation-triangle" [class.text-danger]="getRemainingDebt() > 0" [class.text-success]="getRemainingDebt() <= 0" class="fs-2"></i>
                 </div>
-              </div>
-              <div class="col-md-3">
-                <div class="stat-value" [class.text-danger]="studentStats.payment_stats.debt > 0" [class.text-success]="studentStats.payment_stats.debt <= 0">
-                  {{ formatCurrency(Math.abs(studentStats.payment_stats.debt)) }}
+                <div class="stat-value fs-4 fw-bold" [class.text-danger]="getRemainingDebt() > 0" [class.text-success]="getRemainingDebt() <= 0">
+                  {{ formatCurrency(Math.abs(getRemainingDebt())) }}
                 </div>
-                <div class="stat-label">{{ studentStats.payment_stats.debt > 0 ? 'Borcun' : 'Fazla Ödeme' }}</div>
+                <div class="stat-label text-muted">{{ getRemainingDebt() > 0 ? 'Kalan Borç' : 'Fazla Ödeme' }}</div>
+                <small class="text-muted" [class.text-danger]="getRemainingDebt() > 0" [class.text-success]="getRemainingDebt() <= 0">
+                  {{ getRemainingDebt() > 0 ? 'Ödeme yapılması gerekiyor' : 'Borç yoktur' }}
+                </small>
               </div>
             </div>
           </div>

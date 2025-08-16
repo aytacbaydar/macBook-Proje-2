@@ -777,4 +777,25 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
       0
     );
   }
+
+  // Modal için toplam borç hesaplama (ders ücreti/4 × ders sayısı)
+  getTotalDebtAmount(): number {
+    if (!this.studentStats || !this.studentStats.student_info || !this.studentStats.attendance_stats) {
+      return 0;
+    }
+    
+    const ucret = parseFloat(this.studentStats.student_info.ucret || '0');
+    const dersUcreti = ucret / 4;
+    const dersSayisi = this.studentStats.attendance_stats.present_count || 0;
+    
+    return dersSayisi * dersUcreti;
+  }
+
+  // Modal için kalan borç hesaplama (toplam borç - toplam ödenen)
+  getRemainingDebt(): number {
+    const totalDebt = this.getTotalDebtAmount();
+    const totalPaid = this.getTotalPaidAmount();
+    
+    return totalDebt - totalPaid;
+  }
 }
