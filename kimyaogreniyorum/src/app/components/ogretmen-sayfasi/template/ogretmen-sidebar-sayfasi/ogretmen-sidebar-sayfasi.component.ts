@@ -58,11 +58,12 @@ export class OgretmenSidebarSayfasiComponent implements OnInit, OnDestroy {
       label: 'Yol Haritası',
       link: 'ogretmen-sayfasi/ogretmen-islenen-konular-sayfasi',
     },
+    /*
     {
       icon: 'bi-map-fill',
       label: 'Online Ders',
       link: 'ogretmen-sayfasi/ogretmen-online-ders-sayfasi',
-    },
+    },*/
     {
       icon: 'bi-person-badge-fill',
       label: 'Haftalık Program',
@@ -79,10 +80,16 @@ export class OgretmenSidebarSayfasiComponent implements OnInit, OnDestroy {
       link: 'ogretmen-sayfasi/ogretmen-ucret-sayfasi',
     },
     {
+      icon: 'bi-currency-dollar',
+      label: 'Cevap Anahtari',
+      link: 'ogretmen-sayfasi/ogretmen-cevap-anahtari-sayfasi',
+    },
+    /*
+    {
       icon: 'bi-person-check-fill',
       label: 'Sınıfta Kimler Var',
       link: 'ogretmen-sayfasi/ogretmen-sinifta-kimler-var-sayfasi',
-    },
+    },*/
     {
       icon: 'bi-chat-dots-fill',
       label: 'Soru Çözümü',
