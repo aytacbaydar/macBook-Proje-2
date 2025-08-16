@@ -130,8 +130,8 @@ const routes: Routes = [
       },
       {
         path: 'ogrenci-yapay-zekali-testler-sayfasi',
-        component: OgrenciYapayZekaliTestlerSayfasiComponent,
-      },
+        component: () => import('./components/ogrenci-sayfasi/ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component').then(m => m.OgrenciYapayZekaliTestlerSayfasiComponent) },
+        { path: 'ogrenci-cevap-anahtari-sayfasi', component: () => import('./components/ogrenci-sayfasi/ogrenci-cevap-anahtari-sayfasi/ogrenci-cevap-anahtari-sayfasi.component').then(m => m.OgrenciCevapAnahtariSayfasiComponent) },
       {
         path: 'ogrenci-sinav-islemleri-sayfasi',
         component: OgrenciSinavIslemleriSayfasiComponent,
@@ -226,8 +226,8 @@ const routes: Routes = [
       },
       {
         path: 'ogretmen-yapay-zekali-testler-sayfasi',
-        component: OgretmenYapayZekaliTestlerSayfasiComponent,
-      },
+        component: () => import('./components/ogretmen-sayfasi/ogretmen-yapay-zekali-testler-sayfasi/ogretmen-yapay-zekali-testler-sayfasi.component').then(m => m.OgretmenYapayZekaliTestlerSayfasiComponent) },
+        { path: 'ogretmen-testlerin-cevap-anahtari', component: () => import('./components/ogretmen-sayfasi/ogretmen-testlerin-cevap-anahtari/ogretmen-testlerin-cevap-anahtari.component').then(m => m.OgretmenTestlerinCevapAnahtariComponent) },
       {
         path: 'ogretmen-sinavlar-sayfasi',
         component: OgretmenSinavlarSayfasiComponent,

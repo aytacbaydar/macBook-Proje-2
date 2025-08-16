@@ -1,0 +1,253 @@
+
+.test-cevap-anahtari-page {
+  padding: 20px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 25px;
+
+    .header-content {
+      .page-title {
+        color: #2c3e50;
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 600;
+      }
+
+      .page-description {
+        color: #6c757d;
+        margin: 5px 0 0 0;
+        font-size: 1rem;
+      }
+    }
+
+    .header-actions {
+      .btn {
+        border-radius: 8px;
+        font-weight: 500;
+        padding: 10px 20px;
+      }
+    }
+  }
+
+  .add-form-card {
+    margin-bottom: 25px;
+
+    .card {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+      .card-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 12px 12px 0 0;
+        padding: 20px 25px;
+
+        h3 {
+          margin: 0;
+          font-size: 1.3rem;
+          font-weight: 600;
+        }
+      }
+
+      .card-body {
+        padding: 25px;
+
+        .cevap-anahtari-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+          gap: 15px;
+          max-height: 400px;
+          overflow-y: auto;
+          border: 1px solid #dee2e6;
+          border-radius: 8px;
+          padding: 20px;
+          background-color: #f8f9fa;
+
+          .cevap-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+            .soru-label {
+              font-weight: 600;
+              color: #495057;
+              min-width: 30px;
+              margin: 0;
+            }
+
+            .form-select {
+              flex: 1;
+              font-weight: 600;
+              border-color: #dee2e6;
+
+              &:focus {
+                border-color: #667eea;
+                box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+              }
+            }
+          }
+        }
+
+        .form-actions {
+          display: flex;
+          gap: 10px;
+          justify-content: flex-end;
+          margin-top: 20px;
+          padding-top: 20px;
+          border-top: 1px solid #dee2e6;
+
+          .btn {
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 10px 20px;
+          }
+        }
+      }
+    }
+  }
+
+  .test-list-section {
+    .card {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+      .card-header {
+        background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+        color: white;
+        border: none;
+        border-radius: 12px 12px 0 0;
+        padding: 20px 25px;
+
+        h3 {
+          margin: 0;
+          font-size: 1.3rem;
+          font-weight: 600;
+        }
+      }
+
+      .card-body {
+        padding: 25px;
+
+        .table {
+          margin: 0;
+
+          thead th {
+            background-color: #f8f9fa;
+            color: #495057;
+            font-weight: 600;
+            border: none;
+            padding: 15px;
+          }
+
+          tbody {
+            tr {
+              transition: all 0.3s ease;
+
+              &:hover {
+                background-color: #f8f9fa;
+              }
+
+              td {
+                padding: 15px;
+                vertical-align: middle;
+                border-color: #dee2e6;
+              }
+            }
+          }
+
+          .badge {
+            font-size: 0.85rem;
+            padding: 6px 12px;
+          }
+
+          .btn-group {
+            .btn {
+              border-radius: 6px;
+              padding: 6px 10px;
+              margin: 0 2px;
+
+              &:first-child {
+                margin-left: 0;
+              }
+
+              &:last-child {
+                margin-right: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .alert {
+    border: none;
+    border-radius: 8px;
+    margin-bottom: 20px;
+
+    &.alert-success {
+      background-color: #d1ecf1;
+      border-color: #bee5eb;
+      color: #0c5460;
+    }
+
+    &.alert-danger {
+      background-color: #f8d7da;
+      border-color: #f5c6cb;
+      color: #721c24;
+    }
+  }
+
+  .spinner-border {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  // Responsive
+  @media (max-width: 768px) {
+    padding: 15px;
+
+    .page-header {
+      flex-direction: column;
+      gap: 15px;
+      padding: 20px;
+
+      .header-content {
+        text-align: center;
+      }
+    }
+
+    .cevap-anahtari-grid {
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 10px;
+      padding: 15px;
+    }
+
+    .table-responsive {
+      font-size: 0.9rem;
+    }
+
+    .btn-group {
+      .btn {
+        padding: 4px 8px;
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
