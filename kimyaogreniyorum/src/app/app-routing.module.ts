@@ -48,9 +48,15 @@ import { OgretmenOgrenciBilgiSayfasiComponent } from './components/ogretmen-sayf
 import { OgretmenHaftalikDersProgramiSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-haftalik-ders-programi-sayfasi/ogretmen-haftalik-ders-programi-sayfasi.component';
 import { OgretmenOnlineDersSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-online-ders-sayfasi/ogretmen-online-ders-sayfasi.component';
 import { OgrenciOnlineDersSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-online-ders-sayfasi/ogrenci-online-ders-sayfasi.component';
+import { IndexIndexSayfasiComponent } from './components/index-sayfasi/template/index-index-sayfasi/index-index-sayfasi.component';
+import { AnasayafaSayfasiComponent } from './components/index-sayfasi/anasayafa-sayfasi/anasayafa-sayfasi.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/giris-sayfasi', pathMatch: 'full' },
+  {
+    path: '',
+    component: IndexIndexSayfasiComponent,
+    children: [{ path: '', component: AnasayafaSayfasiComponent }],
+  },
   { path: 'giris-sayfasi', component: OgrenciGirisSayfasiComponent },
   { path: 'kayit-sayfasi', component: OgrenciKayitSayfasiComponent },
   { path: 'onay-sayfasi', component: OgrenciOnaySayfasiComponent },
