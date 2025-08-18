@@ -44,7 +44,7 @@ export class OgretmenOgrenciListesiSayfasiComponent implements OnInit {
   currentStudentPage = 1;
   currentTeacherPage = 1;
   currentNewUserPage = 1;
-  itemsPerPage = 6;
+  itemsPerPage = 8;
 
   // Math property for template
   Math = Math;
