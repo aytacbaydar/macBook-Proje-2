@@ -33,20 +33,29 @@ interface Fragment {
     trigger('slideContent', [
       transition('* => *', [
         style({ opacity: 0, transform: 'translateY(50px)' }),
-        animate('600ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
-      ])
+        animate(
+          '600ms ease-out',
+          style({ opacity: 1, transform: 'translateY(0)' })
+        ),
+      ]),
     ]),
     trigger('fragmentRotate', [
       state('initial', style({ transform: 'rotateY(0deg)', opacity: 1 })),
       state('rotated', style({ transform: 'rotateY(-180deg)', opacity: 0 })),
-      transition('initial => rotated', animate('{{delay}} 800ms cubic-bezier(0.25, 0.46, 0.45, 0.94)'))
+      transition(
+        'initial => rotated',
+        animate('{{delay}} 800ms cubic-bezier(0.25, 0.46, 0.45, 0.94)')
+      ),
     ]),
     trigger('fragmentRotateNext', [
       state('initial', style({ transform: 'rotateY(180deg)', opacity: 0 })),
       state('rotated', style({ transform: 'rotateY(0deg)', opacity: 1 })),
-      transition('initial => rotated', animate('{{delay}} 800ms cubic-bezier(0.25, 0.46, 0.45, 0.94)'))
-    ])
-  ]
+      transition(
+        'initial => rotated',
+        animate('{{delay}} 800ms cubic-bezier(0.25, 0.46, 0.45, 0.94)')
+      ),
+    ]),
+  ],
 })
 export class IndexHeaderSayfasiComponent implements OnInit, OnDestroy {
   // NodeJS.Timeout hatası için düzeltme
@@ -130,6 +139,12 @@ export class IndexHeaderSayfasiComponent implements OnInit, OnDestroy {
     if (event.key === 'ArrowLeft') this.previousSlide();
     if (event.key === 'ArrowRight') this.nextSlide();
   }
+
+  // Add this method to enable trackBy for fragments
+  trackByFragment(index: number, fragment: any): any {
+    return fragment.id || index;
+  }
+
   generateFragments(): void {
     this.fragments = [];
     for (let i = 0; i < this.gridCols * this.gridRows; i++) {
