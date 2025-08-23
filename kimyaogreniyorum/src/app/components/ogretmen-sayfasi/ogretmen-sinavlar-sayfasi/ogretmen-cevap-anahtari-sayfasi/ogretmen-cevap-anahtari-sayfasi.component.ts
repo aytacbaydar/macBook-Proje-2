@@ -54,7 +54,7 @@ export class OgretmenCevapAnahtariSayfasiComponent
     this.cevapAnahtari = new CevapAnahtari({
       id: undefined,
       test_adi: '',
-      sinav_turu: '',
+      test_turu: '',
       soru_sayisi: 30,
       tarih: this.formatDate(today),
       sinav_kapagi: '',
@@ -102,8 +102,8 @@ export class OgretmenCevapAnahtariSayfasiComponent
   submitForm() {
     // Veri doğrulama
     if (
-      !this.cevapAnahtari.sinav_adi ||
-      !this.cevapAnahtari.sinav_turu ||
+      !this.cevapAnahtari.test_adi ||
+      !this.cevapAnahtari.test_turu ||
       this.cevapAnahtari.soru_sayisi <= 0 ||
       !this.cevapAnahtari.tarih
     ) {
@@ -131,8 +131,8 @@ export class OgretmenCevapAnahtariSayfasiComponent
     const formData = new FormData();
 
     // Ana form değerlerini FormData'ya ekle
-    formData.append('sinav_adi', this.cevapAnahtari.sinav_adi);
-    formData.append('sinav_turu', this.cevapAnahtari.sinav_turu);
+    formData.append('test_adi', this.cevapAnahtari.test_adi);
+    formData.append('test_turu', this.cevapAnahtari.test_turu);
     formData.append('soru_sayisi', this.cevapAnahtari.soru_sayisi.toString());
     formData.append('tarih', this.cevapAnahtari.tarih);
 
@@ -365,8 +365,8 @@ export class OgretmenCevapAnahtariSayfasiComponent
 
     // Veri doğrulama
     if (
-      !this.currentEditingCevapAnahtari.sinav_adi ||
-      !this.currentEditingCevapAnahtari.sinav_turu ||
+      !this.currentEditingCevapAnahtari.test_adi ||
+      !this.currentEditingCevapAnahtari.test_turu ||
       this.currentEditingCevapAnahtari.soru_sayisi <= 0 ||
       !this.currentEditingCevapAnahtari.tarih
     ) {
@@ -381,8 +381,8 @@ export class OgretmenCevapAnahtariSayfasiComponent
     // FormData nesnesi oluştur
     const formData = new FormData();
     formData.append('id', this.currentEditingCevapAnahtari.id);
-    formData.append('sinav_adi', this.currentEditingCevapAnahtari.sinav_adi);
-    formData.append('sinav_turu', this.currentEditingCevapAnahtari.sinav_turu);
+    formData.append('test_adi', this.currentEditingCevapAnahtari.test_adi);
+    formData.append('test_turu', this.currentEditingCevapAnahtari.test_turu);
     formData.append(
       'soru_sayisi',
       this.currentEditingCevapAnahtari.soru_sayisi.toString()
@@ -520,8 +520,8 @@ export class OgretmenCevapAnahtariSayfasiComponent
     const query = this.searchQuery.toLowerCase().trim();
     return this.cevapAnahtarlari.filter(
       (cevap) =>
-        cevap.sinav_adi.toLowerCase().includes(query) ||
-        this.getSinavTuruLabel(cevap.sinav_turu).toLowerCase().includes(query)
+        cevap.test_adi.toLowerCase().includes(query) ||
+        this.getSinavTuruLabel(cevap.test_turu).toLowerCase().includes(query)
     );
   }
 
