@@ -52,7 +52,8 @@ export class OgretmenCevapAnahtariSayfasiComponent
   initModel() {
     const today = new Date();
     this.cevapAnahtari = new CevapAnahtari({
-      sinav_adi: '',
+      id: undefined,
+      test_adi: '',
       sinav_turu: '',
       soru_sayisi: 30,
       tarih: this.formatDate(today),
@@ -174,7 +175,7 @@ export class OgretmenCevapAnahtariSayfasiComponent
   loadCevapAnahtarlari() {
     this.loading = true;
     this.error = null;
-    
+
     // Token'ı al ve kontrol et
     let token = '';
     let user = null;
@@ -446,7 +447,7 @@ export class OgretmenCevapAnahtariSayfasiComponent
   // Düzenleme modu için soru sayısını güncelle
   updateEditSorular(count: number) {
     if (!this.currentEditingCevapAnahtari) return;
-    
+
     this.currentEditingCevapAnahtari.soru_sayisi = count;
 
     // Her soru için boş varsayılan değerler oluştur (eğer yoksa)

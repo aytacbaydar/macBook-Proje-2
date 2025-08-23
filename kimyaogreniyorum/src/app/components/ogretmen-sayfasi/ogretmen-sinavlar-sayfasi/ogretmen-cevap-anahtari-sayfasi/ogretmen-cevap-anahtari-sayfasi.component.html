@@ -114,7 +114,7 @@
                             <i class="bi bi-tag me-1"></i>
                             Sınav Türü
                         </label>
-                        <select class="form-select" [(ngModel)]="cevapAnahtari.sinav_turu" name="sinav_turu" required>
+                        <select class="form-input" [(ngModel)]="cevapAnahtari.test_turu" name="test_turu" required>
                             <option value="">Sınav türünü seçin</option>
                             <option *ngFor="let tur of sinavTurleri" [value]="tur.id">{{ tur.label }}</option>
                         </select>
@@ -247,7 +247,7 @@
     <div *ngIf="!loading && !error && filteredCevapAnahtarlari.length > 0" class="exams-list">
         <div class="exam-card" *ngFor="let cevap of filteredCevapAnahtarlari">
             <!-- Exam Header -->
-            <div class="exam-header" [style.background]="getExamTypeColor(cevap.sinav_turu)">
+            <div class="exam-header" [style.background]="getExamTypeColor(cevap.test_turu)">
                 <div class="exam-header-left">
                     <div class="exam-icon">
                         <i class="bi bi-file-earmark-text-fill"></i>
@@ -257,7 +257,7 @@
                         <div class="exam-meta">
                             <span class="exam-type">
                                 <i class="bi bi-tag-fill me-1"></i>
-                                {{ getSinavTuruLabel(cevap.sinav_turu) }}
+                                {{ getSinavTuruLabel(cevap.test_turu) }}
                             </span>
                             <span class="exam-date">
                                 <i class="bi bi-calendar3 me-1"></i>
@@ -371,8 +371,8 @@
 
                         <div class="form-field">
                             <label class="field-label">Sınav Türü</label>
-                            <select class="form-select" [(ngModel)]="currentEditingCevapAnahtari.sinav_turu"
-                                name="edit_sinav_turu" required>
+                            <select class="form-select" [(ngModel)]="currentEditingCevapAnahtari.test_turu"
+                                name="edit_test_turu" required>
                                 <option value="">Sınav türünü seçin</option>
                                 <option *ngFor="let tur of sinavTurleri" [value]="tur.id">{{ tur.label }}</option>
                             </select>
