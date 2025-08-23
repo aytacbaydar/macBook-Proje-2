@@ -69,41 +69,41 @@ export class IndexHeaderSayfasiComponent implements OnInit, OnDestroy {
       title: 'Kimya Öğrenmenin En Kolay Yolu',
       subtitle: 'Interaktif dersler ve uzman öğretmenlerle kimya öğrenin',
       buttonText: 'Hemen Başla',
-      image: 'assets/slide1.jpg',
-      alt: 'Kimya Laboratuvarı'
+      image: 'assets/header/header-1.png',
+      alt: 'Kimya Laboratuvarı',
     },
     {
       id: 2,
       title: 'Uzman Öğretmenlerden Ders Alın',
       subtitle: 'Alanında uzman öğretmenlerle birebir kimya dersleri',
       buttonText: 'Öğretmenleri Gör',
-      image: 'assets/slide2.jpg',
-      alt: 'Kimya Öğretmeni'
+      image: 'assets/header/header-4.png',
+      alt: 'Kimya Öğretmeni',
     },
     {
       id: 3,
       title: 'Online Test ve Sınavlar',
       subtitle: 'Bilginizi ölçün ve gelişiminizi takip edin',
       buttonText: 'Testlere Başla',
-      image: 'assets/slide3.jpg',
-      alt: 'Online Test'
+      image: 'assets/header/header-3.png',
+      alt: 'Online Test',
     },
     {
       id: 4,
       title: 'Laboratuvar Simülasyonları',
       subtitle: 'Sanal laboratuvarda güvenli deneyler yapın',
-      buttonText: 'Lab\'a Git',
-      image: 'assets/slide4.jpg',
-      alt: 'Laboratuvar Simülasyonu'
+      buttonText: "Lab'a Git",
+      image: 'assets/header/header-2.png',
+      alt: 'Laboratuvar Simülasyonu',
     },
     {
       id: 5,
       title: 'Başarı Hikayeleriniz',
       subtitle: 'Öğrencilerimizin başarı hikayelerini keşfedin',
       buttonText: 'Hikayeleri Oku',
-      image: 'assets/slide5.jpg',
-      alt: 'Başarılı Öğrenciler'
-    }
+      image: 'assets/header/header-22.png',
+      alt: 'Başarılı Öğrenciler',
+    },
   ];
   currentSlide = 0;
   isTransitioning = false;
@@ -150,7 +150,7 @@ export class IndexHeaderSayfasiComponent implements OnInit, OnDestroy {
 
       // Diagonal pattern için delay hesaplama
       const diagonalDistance = row + col;
-      const maxDistance = (this.gridRows - 1) + (this.gridCols - 1);
+      const maxDistance = this.gridRows - 1 + (this.gridCols - 1);
       const normalizedDelay = (diagonalDistance / maxDistance) * 0.8;
 
       this.fragments.push({
@@ -193,7 +193,8 @@ export class IndexHeaderSayfasiComponent implements OnInit, OnDestroy {
     if (this.isTransitioning) return;
 
     this.isTransitioning = true;
-    const prevIndex = this.currentSlide === 0 ? this.totalSlides - 1 : this.currentSlide - 1;
+    const prevIndex =
+      this.currentSlide === 0 ? this.totalSlides - 1 : this.currentSlide - 1;
 
     // Fragment transition süresini bekle
     setTimeout(() => {
@@ -257,9 +258,11 @@ export class IndexHeaderSayfasiComponent implements OnInit, OnDestroy {
     return {
       'background-image': `url(${slide.image})`,
       'background-size': `${this.gridCols * 100}% ${this.gridRows * 100}%`,
-      'background-position': `${fragment.col * (100 / (this.gridCols - 1))}% ${fragment.row * (100 / (this.gridRows - 1))}%`,
-      'left': `${fragment.col * (100 / this.gridCols)}%`,
-      'top': `${fragment.row * (100 / this.gridRows)}%`
+      'background-position': `${fragment.col * (100 / (this.gridCols - 1))}% ${
+        fragment.row * (100 / (this.gridRows - 1))
+      }%`,
+      left: `${fragment.col * (100 / this.gridCols)}%`,
+      top: `${fragment.row * (100 / this.gridRows)}%`,
     };
   }
 }
