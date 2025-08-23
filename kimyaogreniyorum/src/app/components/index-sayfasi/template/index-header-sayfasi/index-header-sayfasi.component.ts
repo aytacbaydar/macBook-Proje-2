@@ -31,50 +31,22 @@ interface Fragment {
   styleUrl: './index-header-sayfasi.component.scss',
   animations: [
     trigger('slideContent', [
-      state('in', style({ opacity: 1, transform: 'translateY(0)' })),
-      transition(':enter', [
-        style({ opacity: 0, transform: 'translateY(30px)' }),
-        animate(
-          '600ms ease-out',
-          style({ opacity: 1, transform: 'translateY(0)' })
-        ),
-      ]),
+      transition('* => *', [
+        style({ opacity: 0, transform: 'translateY(50px)' }),
+        animate('600ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ])
     ]),
     trigger('fragmentRotate', [
-      state(
-        'current',
-        style({
-          transform: 'rotateX(0deg)',
-          opacity: 1,
-        })
-      ),
-      state(
-        'transitioning',
-        style({
-          transform: 'rotateX(90deg)',
-          opacity: 0,
-        })
-      ),
-      transition('current => transitioning', [animate('700ms ease-in-out')]),
+      state('initial', style({ transform: 'rotateY(0deg)', opacity: 1 })),
+      state('rotated', style({ transform: 'rotateY(-180deg)', opacity: 0 })),
+      transition('initial => rotated', animate('{{delay}} 800ms cubic-bezier(0.25, 0.46, 0.45, 0.94)'))
     ]),
     trigger('fragmentRotateNext', [
-      state(
-        'hidden',
-        style({
-          transform: 'rotateX(-90deg)',
-          opacity: 0,
-        })
-      ),
-      state(
-        'visible',
-        style({
-          transform: 'rotateX(0deg)',
-          opacity: 1,
-        })
-      ),
-      transition('hidden => visible', [animate('700ms 200ms ease-in-out')]),
-    ]),
-  ],
+      state('initial', style({ transform: 'rotateY(180deg)', opacity: 0 })),
+      state('rotated', style({ transform: 'rotateY(0deg)', opacity: 1 })),
+      transition('initial => rotated', animate('{{delay}} 800ms cubic-bezier(0.25, 0.46, 0.45, 0.94)'))
+    ])
+  ]
 })
 export class IndexHeaderSayfasiComponent implements OnInit, OnDestroy {
   // NodeJS.Timeout hatası için düzeltme
