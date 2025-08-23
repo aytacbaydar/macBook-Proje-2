@@ -179,15 +179,13 @@ export class IndexHeaderSayfasiComponent implements OnInit, OnDestroy {
     this.isTransitioning = true;
     const nextIndex = (this.currentSlide + 1) % this.totalSlides;
 
-    // Önce geçişi başlat
-    setTimeout(() => {
-      this.currentSlide = nextIndex;
-    }, 50);
+    // Geçişi hemen başlat, delay yok
+    this.currentSlide = nextIndex;
 
     // Tüm fragmentlerin geçişini tamamlamasını bekle
     setTimeout(() => {
       this.isTransitioning = false;
-    }, 1500);
+    }, 1200);
   }
   previousSlide(): void {
     if (this.isTransitioning) return;
@@ -196,15 +194,13 @@ export class IndexHeaderSayfasiComponent implements OnInit, OnDestroy {
     const prevIndex =
       this.currentSlide === 0 ? this.totalSlides - 1 : this.currentSlide - 1;
 
-    // Önce geçişi başlat
-    setTimeout(() => {
-      this.currentSlide = prevIndex;
-    }, 50);
+    // Geçişi hemen başlat, delay yok
+    this.currentSlide = prevIndex;
 
     // Tüm fragmentlerin geçişini tamamlamasını bekle
     setTimeout(() => {
       this.isTransitioning = false;
-    }, 1500);
+    }, 1200);
   }
   goToSlide(slideIndex: number): void {
     if (this.isTransitioning || slideIndex === this.currentSlide) return;
@@ -270,10 +266,12 @@ export class IndexHeaderSayfasiComponent implements OnInit, OnDestroy {
       'background-size': `${this.gridCols * 100}% ${this.gridRows * 100}%`,
       'background-position': `${bgPosX}% ${bgPosY}%`,
       'background-repeat': 'no-repeat',
-      'width': `${fragmentWidth}%`,
-      'height': `${fragmentHeight}%`,
+      'width': `calc(${fragmentWidth}% + 1px)`,
+      'height': `calc(${fragmentHeight}% + 1px)`,
       'left': `${fragment.col * fragmentWidth}%`,
       'top': `${fragment.row * fragmentHeight}%`,
+      'border': 'none',
+      'outline': 'none'
     };
   }
 }

@@ -56,23 +56,26 @@
 
 .fragment {
   position: absolute;
-  width: 20%; // 100% / 5
-  height: 20%; // 100% / 5
+  width: calc(20% + 1px); // Siyah çizgileri önlemek için biraz overlap
+  height: calc(20% + 1px); // Siyah çizgileri önlemek için biraz overlap
   background-repeat: no-repeat;
   background-size: 500% 500%;
   overflow: hidden;
   backface-visibility: hidden;
   transform-style: preserve-3d;
-  transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-
-  &.fragment-next {
-    z-index: 1;
-  }
-
+  border: none;
+  outline: none;
+  
   // Animasyon için varsayılan durumlar
   transform: rotateY(0deg);
   opacity: 1;
-  z-index: 1;
+  z-index: 2;
+
+  &.fragment-next {
+    z-index: 1;
+    transform: rotateY(180deg);
+    opacity: 0;
+  }
 
   // Smooth transition
   transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
