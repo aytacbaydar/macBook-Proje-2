@@ -115,6 +115,8 @@ export class IndexHeaderSayfasiComponent implements OnInit, OnDestroy {
 
   private touchStartX = 0;
   private touchEndX = 0;
+  private rotationInterval: any = null;
+
   constructor() {
     this.totalSlides = this.slides.length;
     this.generateFragments();
