@@ -261,9 +261,9 @@ export class IndexHeaderSayfasiComponent implements OnInit, OnDestroy {
     const fragmentHeight = 100 / this.gridRows;
     
     // Ana resmi grid'e bölerek her fragment'ın farklı bölümünü göster
-    // Background position: her fragment kendi parçasını göstermeli
-    const bgPosX = -(fragment.col * fragmentWidth);
-    const bgPosY = -(fragment.row * fragmentHeight);
+    // Background position: her fragment resmin kendi parçasını göstermeli
+    const bgPosX = (fragment.col / (this.gridCols - 1)) * 100;
+    const bgPosY = (fragment.row / (this.gridRows - 1)) * 100;
     
     return {
       'background-image': `url(${slide.image})`,
