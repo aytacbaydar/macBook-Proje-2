@@ -60,55 +60,50 @@ interface Fragment {
 export class IndexHeaderSayfasiComponent implements OnInit, OnDestroy {
   // NodeJS.Timeout hatası için düzeltme
   private autoRotateInterval: any = null;
+  private isRotationPaused = false;
+  private autoRotationDuration = 4000; // 4 saniye
 
   slides: Slide[] = [
     {
       id: 1,
-      title: 'İnovasyon ve Tasarım',
-      subtitle:
-        'İşletmeleri dönüştüren olağanüstü dijital deneyimler yaratıyoruz',
-      buttonText: 'Başlayın',
-      image:
-        'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1920&h=1080',
-      alt: 'Modern şehir manzarası',
+      title: 'Kimya Öğrenmenin En Kolay Yolu',
+      subtitle: 'Interaktif dersler ve uzman öğretmenlerle kimya öğrenin',
+      buttonText: 'Hemen Başla',
+      image: 'assets/slide1.jpg',
+      alt: 'Kimya Laboratuvarı'
     },
     {
       id: 2,
-      title: 'Yaratıcı Çözümler',
-      subtitle: 'En son teknoloji ile hayallerinizi gerçeğe dönüştürüyoruz',
-      buttonText: 'Daha Fazla',
-      image:
-        'https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1920&h=1080',
-      alt: 'Yaratıcı çalışma alanı',
+      title: 'Uzman Öğretmenlerden Ders Alın',
+      subtitle: 'Alanında uzman öğretmenlerle birebir kimya dersleri',
+      buttonText: 'Öğretmenleri Gör',
+      image: 'assets/slide2.jpg',
+      alt: 'Kimya Öğretmeni'
     },
     {
       id: 3,
-      title: 'Uzman Ekip',
-      subtitle: 'Her projede mükemmellik sunan tutkulu profesyoneller',
-      buttonText: 'Ekibimizi Tanıyın',
-      image:
-        'https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1920&h=1080',
-      alt: 'Ofiste takım çalışması',
+      title: 'Online Test ve Sınavlar',
+      subtitle: 'Bilginizi ölçün ve gelişiminizi takip edin',
+      buttonText: 'Testlere Başla',
+      image: 'assets/slide3.jpg',
+      alt: 'Online Test'
     },
     {
       id: 4,
-      title: 'Teknoloji Lideri',
-      subtitle: 'Geleceğin teknolojilerini bugünden hayata geçiriyoruz',
-      buttonText: 'Keşfedin',
-      image:
-        'https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1920&h=1080',
-      alt: 'Teknoloji ve inovasyon',
+      title: 'Laboratuvar Simülasyonları',
+      subtitle: 'Sanal laboratuvarda güvenli deneyler yapın',
+      buttonText: 'Lab\'a Git',
+      image: 'assets/slide4.jpg',
+      alt: 'Laboratuvar Simülasyonu'
     },
     {
       id: 5,
-      title: 'Müşteri Odaklı',
-      subtitle:
-        'Müşteri memnuniyeti odaklı hizmet anlayışımızla fark yaratıyoruz',
-      buttonText: 'İletişim',
-      image:
-        'https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1920&h=1080',
-      alt: 'Müşteri hizmetleri',
-    },
+      title: 'Başarı Hikayeleriniz',
+      subtitle: 'Öğrencilerimizin başarı hikayelerini keşfedin',
+      buttonText: 'Hikayeleri Oku',
+      image: 'assets/slide5.jpg',
+      alt: 'Başarılı Öğrenciler'
+    }
   ];
   currentSlide = 0;
   isTransitioning = false;
@@ -151,11 +146,16 @@ export class IndexHeaderSayfasiComponent implements OnInit, OnDestroy {
       const row = Math.floor(i / this.gridCols);
       const col = i % this.gridCols;
 
+      // Diagonal pattern için delay hesaplama
+      const diagonalDistance = row + col;
+      const maxDistance = (this.gridRows - 1) + (this.gridCols - 1);
+      const normalizedDelay = (diagonalDistance / maxDistance) * 0.8;
+
       this.fragments.push({
         index: i,
         row: row,
         col: col,
-        delay: col * 0.1,
+        delay: normalizedDelay,
         currentBackgroundPosition: `${(col / (this.gridCols - 1)) * 100}% ${
           (row / (this.gridRows - 1)) * 100
         }%`,
@@ -175,22 +175,33 @@ export class IndexHeaderSayfasiComponent implements OnInit, OnDestroy {
     if (this.isTransitioning) return;
 
     this.isTransitioning = true;
+    const nextIndex = (this.currentSlide + 1) % this.totalSlides;
 
+    // Fragment transition süresini bekle
     setTimeout(() => {
-      this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
+      this.currentSlide = nextIndex;
+    }, 100);
+
+    // Tam transition süresini bekle
+    setTimeout(() => {
       this.isTransitioning = false;
-    }, 1000);
+    }, 1200);
   }
   previousSlide(): void {
     if (this.isTransitioning) return;
 
     this.isTransitioning = true;
+    const prevIndex = this.currentSlide === 0 ? this.totalSlides - 1 : this.currentSlide - 1;
 
+    // Fragment transition süresini bekle
     setTimeout(() => {
-      this.currentSlide =
-        (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
+      this.currentSlide = prevIndex;
+    }, 100);
+
+    // Tam transition süresini bekle
+    setTimeout(() => {
       this.isTransitioning = false;
-    }, 1000);
+    }, 1200);
   }
   goToSlide(slideIndex: number): void {
     if (this.isTransitioning || slideIndex === this.currentSlide) return;
@@ -203,21 +214,26 @@ export class IndexHeaderSayfasiComponent implements OnInit, OnDestroy {
     }, 1000);
   }
   startAutoRotation(): void {
-    this.autoRotateInterval = setInterval(() => {
-      this.nextSlide();
-    }, 12000);
+    this.rotationInterval = setInterval(() => {
+      if (!this.isTransitioning) {
+        this.nextSlide();
+      }
+    }, this.autoRotationDuration);
   }
+
   stopAutoRotation(): void {
-    if (this.autoRotateInterval) {
-      clearInterval(this.autoRotateInterval);
-      this.autoRotateInterval = null;
+    if (this.rotationInterval) {
+      clearInterval(this.rotationInterval);
+      this.rotationInterval = undefined;
     }
   }
+
   onMouseEnter(): void {
-    this.stopAutoRotation();
+    // Mouse hover'da durmuyor, sürekli devam ediyor
   }
+
   onMouseLeave(): void {
-    this.startAutoRotation();
+    // Mouse hover'da durmuyor, sürekli devam ediyor
   }
   onTouchStart(event: TouchEvent): void {
     this.touchStartX = event.changedTouches[0].screenX;
