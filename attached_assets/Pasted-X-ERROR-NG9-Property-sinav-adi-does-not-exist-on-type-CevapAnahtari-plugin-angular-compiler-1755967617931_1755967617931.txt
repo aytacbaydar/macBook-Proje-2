@@ -1,0 +1,137 @@
+X [ERROR] NG9: Property 'sinav_adi' does not exist on type 'CevapAnahtari'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-cevap-anahtari-sayfasi/ogretmen-cevap-anahtari-sayfasi.component.html:108:89:
+      108 │ ...orm-input" [(ngModel)]="cevapAnahtari.sinav_adi" name="sinav_adi"
+          ╵                                          ~~~~~~~~~
+
+  Error occurs in the template of component OgretmenCevapAnahtariSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-cevap-anahtari-sayfasi/ogretmen-cevap-anahtari-sayfasi.component.ts:10:15:
+      10 │   templateUrl: './ogretmen-cevap-anahtari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'sinav_adi' does not exist on type 'CevapAnahtari'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-cevap-anahtari-sayfasi/ogretmen-cevap-anahtari-sayfasi.component.html:108:89:
+      108 │ ...orm-input" [(ngModel)]="cevapAnahtari.sinav_adi" name="sinav_adi"
+          ╵                                          ~~~~~~~~~
+
+  Error occurs in the template of component OgretmenCevapAnahtariSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-cevap-anahtari-sayfasi/ogretmen-cevap-anahtari-sayfasi.component.ts:10:15:
+      10 │   templateUrl: './ogretmen-cevap-anahtari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'sinav_turu' does not exist on type 'CevapAnahtari'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-cevap-anahtari-sayfasi/ogretmen-cevap-anahtari-sayfasi.component.html:117:79:
+      117 │ ...(ngModel)]="cevapAnahtari.sinav_turu" name="sinav_turu" required>
+          ╵                              ~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenCevapAnahtariSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-cevap-anahtari-sayfasi/ogretmen-cevap-anahtari-sayfasi.component.ts:10:15:
+      10 │   templateUrl: './ogretmen-cevap-anahtari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'sinav_turu' does not exist on type 'CevapAnahtari'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-cevap-anahtari-sayfasi/ogretmen-cevap-anahtari-sayfasi.component.html:117:79:
+      117 │ ...(ngModel)]="cevapAnahtari.sinav_turu" name="sinav_turu" required>
+          ╵                              ~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenCevapAnahtariSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-cevap-anahtari-sayfasi/ogretmen-cevap-anahtari-sayfasi.component.ts:10:15:
+      10 │   templateUrl: './ogretmen-cevap-anahtari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'sinav_turu' does not exist on type 'CevapAnahtari'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-cevap-anahtari-sayfasi/ogretmen-cevap-anahtari-sayfasi.component.html:250:80:
+      250 │ ...-header" [style.background]="getExamTypeColor(cevap.sinav_turu)">
+          ╵                                                        ~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenCevapAnahtariSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-cevap-anahtari-sayfasi/ogretmen-cevap-anahtari-sayfasi.component.ts:10:15:
+      10 │   templateUrl: './ogretmen-cevap-anahtari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'sinav_adi' does not exist on type 'CevapAnahtari'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-cevap-anahtari-sayfasi/ogretmen-cevap-anahtari-sayfasi.component.html:256:56:
+      256 │ ...                <h3 class="exam-title">{{ cevap.sinav_adi }}</h3>
+          ╵                                                    ~~~~~~~~~
+
+  Error occurs in the template of component OgretmenCevapAnahtariSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-cevap-anahtari-sayfasi/ogretmen-cevap-anahtari-sayfasi.component.ts:10:15:
+      10 │   templateUrl: './ogretmen-cevap-anahtari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'sinav_turu' does not exist on type 'CevapAnahtari'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-cevap-anahtari-sayfasi/ogretmen-cevap-anahtari-sayfasi.component.html:260:59:
+      260 │ ...                        {{ getSinavTuruLabel(cevap.sinav_turu) }}
+          ╵                                                       ~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenCevapAnahtariSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-cevap-anahtari-sayfasi/ogretmen-cevap-anahtari-sayfasi.component.ts:10:15:
+      10 │   templateUrl: './ogretmen-cevap-anahtari-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2353: Object literal may only specify known properties, and 'sinav_adi' does not exist in type 'Partial<CevapAnahtari>'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-cevap-anahtari-sayfasi/ogretmen-cevap-anahtari-sayfasi.component.ts:55:6:
+      55 │       sinav_adi: '',
+         ╵       ~~~~~~~~~
+
+
+X [ERROR] TS2339: Property 'sinav_adi' does not exist on type 'CevapAnahtari'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-cevap-anahtari-sayfasi/ogretmen-cevap-anahtari-sayfasi.component.ts:104:26:
+      104 │       !this.cevapAnahtari.sinav_adi ||
+          ╵                           ~~~~~~~~~
+
+
+X [ERROR] TS2339: Property 'sinav_turu' does not exist on type 'CevapAnahtari'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-cevap-anahtari-sayfasi/ogretmen-cevap-anahtari-sayfasi.component.ts:105:26:
+      105 │       !this.cevapAnahtari.sinav_turu ||
+          ╵                           ~~~~~~~~~~
+
+
+X [ERROR] TS2339: Property 'sinav_adi' does not exist on type 'CevapAnahtari'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-cevap-anahtari-sayfasi/ogretmen-cevap-anahtari-sayfasi.component.ts:133:52:
+      133 │     formData.append('sinav_adi', this.cevapAnahtari.sinav_adi);
+          ╵                                                     ~~~~~~~~~
+
+
+X [ERROR] TS2339: Property 'sinav_turu' does not exist on type 'CevapAnahtari'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-cevap-anahtari-sayfasi/ogretmen-cevap-anahtari-sayfasi.component.ts:134:53:
+      134 │     formData.append('sinav_turu', this.cevapAnahtari.sinav_turu);
+          ╵                                                      ~~~~~~~~~~
+
+
+X [ERROR] TS2339: Property 'sinav_adi' does not exist on type 'CevapAnahtari'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-cevap-anahtari-sayfasi/ogretmen-cevap-anahtari-sayfasi.component.ts:522:14:
+      522 │         cevap.sinav_adi.toLowerCase().includes(query) ||
+          ╵               ~~~~~~~~~
+
+
+X [ERROR] TS2339: Property 'sinav_turu' does not exist on type 'CevapAnahtari'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-sinavlar-sayfasi/ogretmen-cevap-anahtari-sayfasi/ogretmen-cevap-anahtari-sayfasi.component.ts:523:37:
+      523 │ ...s.getSinavTuruLabel(cevap.sinav_turu).toLowerCase().includes(q...
