@@ -64,7 +64,7 @@ export class OgretmenTestlerinCevaplariSayfasiComponent implements OnInit {
   }
 
   saveCevapAnahtari(): void {
-    if (!this.newCevapAnahtari.sinav_adi || !this.newCevapAnahtari.sinav_turu ||
+    if (!this.newCevapAnahtari.test_adi || !this.newCevapAnahtari.test_turu ||
         !this.newCevapAnahtari.soru_sayisi || !this.newCevapAnahtari.tarih) {
       this.errorMessage = 'Lütfen tüm zorunlu alanları doldurunuz.';
       return;
