@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CevapAnahtari } from '../modeller/cevap-anahtari';
@@ -63,34 +62,54 @@ export class OgretmenTestlerinCevaplariSayfasiComponent implements OnInit {
     this.currentEditingCevapAnahtari = null;
   }
 
-  saveCevapAnahtari() {
-    if (!this.validateCevapAnahtari(this.newCevapAnahtari)) {
+  saveCevapAnahtari(): void {
+    if (!this.newCevapAnahtari.sinav_adi || !this.newCevapAnahtari.sinav_turu ||
+        !this.newCevapAnahtari.soru_sayisi || !this.newCevapAnahtari.tarih) {
+      this.errorMessage = 'Lütfen tüm zorunlu alanları doldurunuz.';
       return;
     }
 
+    // Validate answers
+    const hasAnswers = Object.values(this.newCevapAnahtari.cevaplar).some(answer => answer.trim() !== '');
+    if (!hasAnswers) {
+      this.errorMessage = 'En az bir cevap girmelisiniz.';
+      return;
+    }
+
+    this.loading = true;
+    this.errorMessage = '';
+
+    // Prepare form data for API
     const formData = new FormData();
     formData.append('sinav_adi', this.newCevapAnahtari.sinav_adi);
     formData.append('sinav_turu', this.newCevapAnahtari.sinav_turu);
     formData.append('soru_sayisi', this.newCevapAnahtari.soru_sayisi.toString());
     formData.append('tarih', this.newCevapAnahtari.tarih);
     formData.append('cevaplar', JSON.stringify(this.newCevapAnahtari.cevaplar));
-    formData.append('konular', JSON.stringify(this.newCevapAnahtari.konular));
-    formData.append('videolar', JSON.stringify(this.newCevapAnahtari.videolar));
-    formData.append('aktiflik', this.newCevapAnahtari.aktiflik.toString());
+    formData.append('konular', JSON.stringify({}));
+    formData.append('videolar', JSON.stringify({}));
+    formData.append('aktiflik', 'true');
 
-    this.http.post<any>('server/api/cevap-anahtari-ekle.php', formData).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.showSuccess('Cevap anahtarı başarıyla kaydedildi');
-          this.closeAddModal();
-          this.loadCevapAnahtarlari();
-        } else {
-          this.showError('Kaydetme hatası: ' + response.message);
-        }
-      },
-      error: (error) => {
-        this.showError('Kaydetme hatası: ' + error.message);
+    // API call to save answer key
+    fetch('server/api/cevap-anahtari-ekle.php', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      this.loading = false;
+      if (data.success) {
+        this.successMessage = data.message || 'Cevap anahtarı başarıyla kaydedildi.';
+        this.loadCevapAnahtarlari(); // Reload the list
+        this.closeAddModal();
+      } else {
+        this.errorMessage = data.message || 'Kaydetme işlemi başarısız oldu.';
       }
+    })
+    .catch(error => {
+      this.loading = false;
+      console.error('API Error:', error);
+      this.errorMessage = 'Kaydetme sırasında bir hata oluştu.';
     });
   }
 
@@ -175,20 +194,20 @@ export class OgretmenTestlerinCevaplariSayfasiComponent implements OnInit {
   getAnswerGroups(cevapAnahtari: CevapAnahtari): Array<{start: number, end: number, answers: Array<{soru: number, cevap: string}>}> {
     const groups = [];
     const soruSayisi = cevapAnahtari.soru_sayisi;
-    
+
     for (let i = 0; i < soruSayisi; i += 10) {
       const start = i + 1;
       const end = Math.min(i + 10, soruSayisi);
       const answers = [];
-      
+
       for (let j = start; j <= end; j++) {
         const cevap = cevapAnahtari.cevaplar[`ca${j}`] || '';
         answers.push({ soru: j, cevap });
       }
-      
+
       groups.push({ start, end, answers });
     }
-    
+
     return groups;
   }
 
