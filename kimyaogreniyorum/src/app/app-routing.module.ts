@@ -55,7 +55,10 @@ const routes: Routes = [
   {
     path: '',
     component: IndexIndexSayfasiComponent,
-    children: [{ path: '', component: AnasayafaSayfasiComponent }],
+    children: [
+      { path: '', component: AnasayafaSayfasiComponent },
+      { path: 'ogrenci-iletisim-sayfasi', component: IndexIndexSayfasiComponent },
+    ],
   },
   { path: 'giris-sayfasi', component: OgrenciGirisSayfasiComponent },
   { path: 'kayit-sayfasi', component: OgrenciKayitSayfasiComponent },

@@ -14,6 +14,7 @@ import { IndexNavbarSayfasiComponent } from './template/index-navbar-sayfasi/ind
 import { IndexSidebarSayfasiComponent } from './template/index-sidebar-sayfasi/index-sidebar-sayfasi.component';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { IndexIletisimSayfasiComponent } from './index-iletisim-sayfasi/index-iletisim-sayfasi.component';
 
 
 
@@ -27,6 +28,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     IndexIndexSayfasiComponent,
     IndexNavbarSayfasiComponent,
     IndexSidebarSayfasiComponent,
+    IndexIletisimSayfasiComponent,
   ],
   imports: [
     CommonModule,
