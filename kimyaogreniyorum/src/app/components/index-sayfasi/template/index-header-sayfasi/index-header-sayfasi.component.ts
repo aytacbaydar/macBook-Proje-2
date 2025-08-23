@@ -179,15 +179,15 @@ export class IndexHeaderSayfasiComponent implements OnInit, OnDestroy {
     this.isTransitioning = true;
     const nextIndex = (this.currentSlide + 1) % this.totalSlides;
 
-    // Fragment transition süresini bekle
+    // Önce geçişi başlat
     setTimeout(() => {
       this.currentSlide = nextIndex;
-    }, 100);
+    }, 50);
 
-    // Tam transition süresini bekle
+    // Tüm fragmentlerin geçişini tamamlamasını bekle
     setTimeout(() => {
       this.isTransitioning = false;
-    }, 1200);
+    }, 1500);
   }
   previousSlide(): void {
     if (this.isTransitioning) return;
@@ -196,15 +196,15 @@ export class IndexHeaderSayfasiComponent implements OnInit, OnDestroy {
     const prevIndex =
       this.currentSlide === 0 ? this.totalSlides - 1 : this.currentSlide - 1;
 
-    // Fragment transition süresini bekle
+    // Önce geçişi başlat
     setTimeout(() => {
       this.currentSlide = prevIndex;
-    }, 100);
+    }, 50);
 
-    // Tam transition süresini bekle
+    // Tüm fragmentlerin geçişini tamamlamasını bekle
     setTimeout(() => {
       this.isTransitioning = false;
-    }, 1200);
+    }, 1500);
   }
   goToSlide(slideIndex: number): void {
     if (this.isTransitioning || slideIndex === this.currentSlide) return;
@@ -255,14 +255,23 @@ export class IndexHeaderSayfasiComponent implements OnInit, OnDestroy {
   }
   getFragmentStyle(fragment: Fragment, isNext: boolean = false): any {
     const slide = isNext ? this.getNextSlide() : this.getCurrentSlide();
+    
+    // Fragment boyutları
+    const fragmentWidth = 100 / this.gridCols;
+    const fragmentHeight = 100 / this.gridRows;
+    
+    // Background position hesaplama - her fragment kendi parçasını göstermeli
+    const bgPosX = -(fragment.col * fragmentWidth);
+    const bgPosY = -(fragment.row * fragmentHeight);
+    
     return {
       'background-image': `url(${slide.image})`,
       'background-size': `${this.gridCols * 100}% ${this.gridRows * 100}%`,
-      'background-position': `${fragment.col * (100 / (this.gridCols - 1))}% ${
-        fragment.row * (100 / (this.gridRows - 1))
-      }%`,
-      left: `${fragment.col * (100 / this.gridCols)}%`,
-      top: `${fragment.row * (100 / this.gridRows)}%`,
+      'background-position': `${bgPosX}% ${bgPosY}%`,
+      'width': `${fragmentWidth}%`,
+      'height': `${fragmentHeight}%`,
+      'left': `${fragment.col * fragmentWidth}%`,
+      'top': `${fragment.row * fragmentHeight}%`,
     };
   }
 }

@@ -56,17 +56,29 @@
 
 .fragment {
   position: absolute;
-  width: calc(100% / 5);
-  height: calc(100% / 5);
   background-repeat: no-repeat;
-  background-size: 500% 500% !important;
-  background-position: center !important;
+  overflow: hidden;
   backface-visibility: hidden;
   transform-style: preserve-3d;
-  transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  
+  // Animasyon için varsayılan durumlar
+  transform: rotateY(0deg);
+  opacity: 1;
+  z-index: 1;
+  
+  // Smooth transition
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
   &.fragment-next {
-    z-index: 1;
+    z-index: 2;
+    transform: rotateY(180deg);
+    opacity: 0;
+  }
+
+  // Geçiş sırasında
+  &.transitioning {
+    transform: rotateY(-90deg);
+    opacity: 0;
   }
 }
 
