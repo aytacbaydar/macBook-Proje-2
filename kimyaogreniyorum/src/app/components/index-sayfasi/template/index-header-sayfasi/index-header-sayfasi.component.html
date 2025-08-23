@@ -1,14 +1,71 @@
-<!-- Carousel -->
-<div id="demo" class="carousel slide" data-bs-ride="carousel">
-    <!-- The slideshow/carousel -->
-    <div class="carousel-inner">
-        <div class="carousel-item active">
-            <div class="carousel-caption">
-                <div class="yazi wow fadeInLeft" data-wow-delay="1.2s">
-                    <h1 class="wow fadeInLeft" data-wow-delay="1.6s"><span>KİMYA</span> DESTEK SİSTEMİ İLE</h1>
-                    <h1 class="wow fadeInRight" data-wow-delay="2.0s"><span>KİMYA</span> NETLERİNİ ARTIRMA ZAMANI</h1>
-                </div>
-            </div>
+<header class="carousel-header">
+    <!-- Yükleme Durumu -->
+    <div *ngIf="isLoading" class="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p>Yükleniyor...</p>
         </div>
     </div>
-</div>
+
+    <!-- Carousel Container -->
+    <div class="carousel-container" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()"
+        (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">
+
+        <!-- Background Image with Fragments -->
+        <div class="image-container">
+            <!-- Normal görüntü (geçiş olmadığında) -->
+            <img *ngIf="!isTransitioning" [src]="getCurrentSlide().image" [alt]="getCurrentSlide().alt"
+                class="main-image">
+
+            <!-- Fragment geçişi -->
+            <div *ngIf="isTransitioning" class="fragments-container">
+                <div *ngFor="let fragment of fragments" class="fragment" [style.animation-delay.s]="fragment.delay">
+
+                    <!-- Mevcut resim parçası -->
+                    <div class="fragment-current" [ngStyle]="getFragmentStyle(fragment, false)"
+                        [@fragmentRotate]="isTransitioning ? 'transitioning' : 'current'">
+                    </div>
+
+                    <!-- Sonraki resim parçası -->
+                    <div class="fragment-next" [ngStyle]="getFragmentStyle(fragment, true)"
+                        [@fragmentRotateNext]="isTransitioning ? 'visible' : 'hidden'">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Koyu overlay -->
+            <div class="overlay"></div>
+        </div>
+
+        <!-- Content Overlay -->
+        <div class="content-overlay">
+            <div class="content" [@slideContent]="currentSlide">
+                <h1 class="title">{{ getCurrentSlide().title }}</h1>
+                <p class="subtitle">{{ getCurrentSlide().subtitle }}</p>
+                <button class="cta-button">{{ getCurrentSlide().buttonText }}</button>
+            </div>
+        </div>
+
+        <!-- Navigation Arrows -->
+        <button class="nav-button nav-button--left" (click)="previousSlide()" [disabled]="isTransitioning">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+        </button>
+
+        <button class="nav-button nav-button--right" (click)="nextSlide()" [disabled]="isTransitioning">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+        </button>
+
+        <!-- Slide Indicators -->
+        <div class="indicators">
+            <button *ngFor="let slide of slides; let i = index" class="indicator"
+                [class.indicator--active]="i === currentSlide" (click)="goToSlide(i)" [disabled]="isTransitioning">
+            </button>
+        </div>
+    </div>
+</header>

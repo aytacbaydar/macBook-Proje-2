@@ -13,6 +13,7 @@ import { IndexIndexSayfasiComponent } from './template/index-index-sayfasi/index
 import { IndexNavbarSayfasiComponent } from './template/index-navbar-sayfasi/index-navbar-sayfasi.component';
 import { IndexSidebarSayfasiComponent } from './template/index-sidebar-sayfasi/index-sidebar-sayfasi.component';
 import { RouterModule } from '@angular/router';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 
@@ -35,6 +36,7 @@ import { RouterModule } from '@angular/router';
     AppRoutingModule,
     FormsModule,
     RouterModule,
+    BrowserAnimationsModule,
   ],
 })
 export class IndexSayfasiModule {}
