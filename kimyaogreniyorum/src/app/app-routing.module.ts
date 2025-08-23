@@ -51,6 +51,7 @@ import { OgrenciOnlineDersSayfasiComponent } from './components/ogrenci-sayfasi/
 import { IndexIndexSayfasiComponent } from './components/index-sayfasi/template/index-index-sayfasi/index-index-sayfasi.component';
 import { AnasayafaSayfasiComponent } from './components/index-sayfasi/anasayafa-sayfasi/anasayafa-sayfasi.component';
 import { IndexIletisimSayfasiComponent } from './components/index-sayfasi/index-iletisim-sayfasi/index-iletisim-sayfasi.component';
+import { OgretmenTestlerinCevaplariSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-testlerin-cevaplari-sayfasi/ogretmen-testlerin-cevaplari-sayfasi.component';
 
 const routes: Routes = [
   {
@@ -58,7 +59,10 @@ const routes: Routes = [
     component: IndexIndexSayfasiComponent,
     children: [
       { path: '', component: AnasayafaSayfasiComponent },
-      { path: 'ogrenci-iletisim-sayfasi', component: IndexIletisimSayfasiComponent },
+      {
+        path: 'ogrenci-iletisim-sayfasi',
+        component: IndexIletisimSayfasiComponent,
+      },
     ],
   },
   { path: 'giris-sayfasi', component: OgrenciGirisSayfasiComponent },
@@ -177,6 +181,10 @@ const routes: Routes = [
       {
         path: 'ogretmen-ogrenci-listesi-sayfasi',
         component: OgretmenOgrenciListesiSayfasiComponent,
+      },
+      {
+        path: 'ogretmen-testlerin-cevaplari-sayfasi',
+        component: OgretmenTestlerinCevaplariSayfasiComponent,
       },
       {
         path: 'ogretmen-online-ders-sayfasi',
