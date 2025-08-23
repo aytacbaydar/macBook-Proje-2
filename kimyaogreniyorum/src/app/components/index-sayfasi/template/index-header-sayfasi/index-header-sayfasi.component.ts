@@ -179,13 +179,13 @@ export class IndexHeaderSayfasiComponent implements OnInit, OnDestroy {
     this.isTransitioning = true;
     const nextIndex = (this.currentSlide + 1) % this.totalSlides;
 
-    // Geçişi hemen başlat, delay yok
+    // Geçişi başlat
     this.currentSlide = nextIndex;
 
-    // Tüm fragmentlerin geçişini tamamlamasını bekle
+    // Tüm fragmentlerin geçişini tamamlamasını bekle (biraz daha uzun süre)
     setTimeout(() => {
       this.isTransitioning = false;
-    }, 1200);
+    }, 1400);
   }
   previousSlide(): void {
     if (this.isTransitioning) return;
@@ -194,13 +194,13 @@ export class IndexHeaderSayfasiComponent implements OnInit, OnDestroy {
     const prevIndex =
       this.currentSlide === 0 ? this.totalSlides - 1 : this.currentSlide - 1;
 
-    // Geçişi hemen başlat, delay yok
+    // Geçişi başlat
     this.currentSlide = prevIndex;
 
     // Tüm fragmentlerin geçişini tamamlamasını bekle
     setTimeout(() => {
       this.isTransitioning = false;
-    }, 1200);
+    }, 1400);
   }
   goToSlide(slideIndex: number): void {
     if (this.isTransitioning || slideIndex === this.currentSlide) return;
