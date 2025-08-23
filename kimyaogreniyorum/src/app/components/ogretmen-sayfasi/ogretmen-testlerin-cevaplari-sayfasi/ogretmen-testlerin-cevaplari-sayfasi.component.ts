@@ -26,12 +26,12 @@ export class OgretmenTestlerinCevaplariSayfasiComponent implements OnInit {
 
   loadCevapAnahtarlari() {
     this.loading = true;
-    this.http.get<any>('server/api/cevap-anahtarlari-listele.php').subscribe({
+    this.http.get<any>('server/api/test-cevap-anahtarlari-listele.php').subscribe({
       next: (response) => {
         if (response.success) {
           this.cevapAnahtarlari = response.data.map((item: any) => CevapAnahtari.fromJson(item));
         } else {
-          this.showError('Cevap anahtarları yüklenemedi: ' + response.message);
+          this.showError('Test cevap anahtarları yüklenemedi: ' + response.message);
         }
         this.loading = false;
       },
@@ -90,8 +90,8 @@ export class OgretmenTestlerinCevaplariSayfasiComponent implements OnInit {
     formData.append('videolar', JSON.stringify({}));
     formData.append('aktiflik', 'true');
 
-    // API call to save answer key
-    fetch('server/api/cevap-anahtari-ekle.php', {
+    // API call to save test answer key
+    fetch('server/api/test-cevap-anahtari-ekle.php', {
       method: 'POST',
       body: formData
     })
@@ -120,7 +120,7 @@ export class OgretmenTestlerinCevaplariSayfasiComponent implements OnInit {
 
     const data = this.currentEditingCevapAnahtari.toJson();
 
-    this.http.post<any>('server/api/cevap-anahtari-guncelle.php', data).subscribe({
+    this.http.post<any>('server/api/test-cevap-anahtari-guncelle.php', data).subscribe({
       next: (response) => {
         if (response.success) {
           this.showSuccess('Cevap anahtarı başarıyla güncellendi');
@@ -138,7 +138,7 @@ export class OgretmenTestlerinCevaplariSayfasiComponent implements OnInit {
 
   deleteCevapAnahtari(id: number) {
     if (confirm('Bu cevap anahtarını silmek istediğinizden emin misiniz?')) {
-      this.http.post<any>('server/api/cevap-anahtari-sil.php', { id }).subscribe({
+      this.http.post<any>('server/api/test-cevap-anahtari-sil.php', { id }).subscribe({
         next: (response) => {
           if (response.success) {
             this.showSuccess('Cevap anahtarı başarıyla silindi');
