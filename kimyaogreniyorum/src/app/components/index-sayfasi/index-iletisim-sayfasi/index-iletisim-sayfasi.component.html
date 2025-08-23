@@ -111,6 +111,21 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
+                            <label for="phone">Telefon</label>
+                            <input type="tel"
+                                   class="form-control p-3 fables-rounded"
+                                   [class.is-invalid]="isFieldInvalid('phone')"
+                                   placeholder="Telefon"
+                                   formControlName="phone">
+                            <div class="invalid-feedback" *ngIf="isFieldInvalid('phone')">
+                                {{ getFieldError('phone') }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <div class="form-group">
                             <label for="subject">Konu</label>
                             <input type="text"
                                    class="form-control p-3 fables-rounded"
@@ -138,34 +153,7 @@
                     </div>
                 </div>
 
-                <!-- Dosya Yükleme -->
-                <div class="form-row">
-                    <div class="form-group col-md-12">
-                        <label class="form-label">Resim Ekle (İsteğe bağlı)</label>
-                        <div class="file-upload-container">
-                            <input
-                                type="file"
-                                class="form-control"
-                                accept="image/*"
-                                (change)="onFileChange($event)"
-                                #fileInput>
-
-                            <!-- Önizleme -->
-                            <div *ngIf="previewUrl" class="image-preview mt-3">
-                                <div class="preview-container">
-                                    <img [src]="previewUrl" alt="Önizleme" class="preview-image">
-                                    <button
-                                        type="button"
-                                        class="btn btn-sm btn-danger remove-btn"
-                                        (click)="removeFile()"
-                                        title="Resmi Kaldır">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
 
                 <div class="form-row">
                     <div class="col-md-12 text-center">

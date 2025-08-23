@@ -13,8 +13,6 @@ export class IndexIletisimSayfasiComponent {
   isSubmitting = false;
   successMessage = '';
   errorMessage = '';
-  selectedFile: File | null = null;
-  previewUrl: string | null = null;
   private apiBaseUrl = './server/api';
 
   constructor(
@@ -27,41 +25,11 @@ export class IndexIletisimSayfasiComponent {
       email: ['', [Validators.required, Validators.email]],
       subject: [''],
       message: ['', [Validators.required, Validators.minLength(10)]],
-      phone: ['']
+      phone: ['', [Validators.required, Validators.minLength(10)]]
     });
   }
 
-  onFileChange(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      // Dosya türü kontrolü
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-      if (!allowedTypes.includes(file.type)) {
-        this.errorMessage = 'Sadece JPG, PNG, GIF ve WebP dosyaları kabul edilir.';
-        return;
-      }
-
-      // Dosya boyutu kontrolü (5MB max)
-      if (file.size > 5 * 1024 * 1024) {
-        this.errorMessage = 'Dosya boyutu 5MB\'dan büyük olamaz.';
-        return;
-      }
-
-      this.selectedFile = file;
-
-      // Önizleme oluştur
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.previewUrl = e.target?.result as string;
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-
-  removeFile() {
-    this.selectedFile = null;
-    this.previewUrl = null;
-  }
+  
 
   onSubmit() {
     if (this.contactForm.invalid) {
@@ -77,30 +45,14 @@ export class IndexIletisimSayfasiComponent {
 
     // Form verilerini ekle
     const formValues = this.contactForm.value;
-    const fullName = `${formValues.firstName} ${formValues.lastName}`;
-    const messageText = `
-Konu: ${formValues.subject}
-
-Ad Soyad: ${fullName}
-E-posta: ${formValues.email}
-Telefon: ${formValues.phone}
-
-Mesaj:
-${formValues.message}
-    `.trim();
-
+    
     // Genel bir öğrenci ID'si kullanacağız (admin mesajı olarak)
     formData.append('ogrenci_id', '1'); // Genel mesajlar için
     formData.append('gonderen_adi', formValues.firstName + ' ' + formValues.lastName);
     formData.append('gonderen_email', this.contactForm.get('email')?.value || '');
     formData.append('telefon', this.contactForm.get('phone')?.value || '');
     formData.append('konu', this.contactForm.get('subject')?.value || '');
-    formData.append('mesaj_metni', messageText);
-
-    // Resim varsa ekle
-    if (this.selectedFile) {
-      formData.append('resim', this.selectedFile);
-    }
+    formData.append('mesaj_metni', formValues.message);
 
     // API'ye gönder
     this.http.post<any>(`${this.apiBaseUrl}/iletisim_mesajlari.php`, formData)
@@ -109,7 +61,6 @@ ${formValues.message}
           if (response.success) {
             this.successMessage = 'Mesajınız başarıyla gönderildi. En kısa sürede size dönüş yapacağız.';
             this.contactForm.reset();
-            this.removeFile();
           } else {
             this.errorMessage = response.error || 'Mesaj gönderilirken bir hata oluştu.';
           }
