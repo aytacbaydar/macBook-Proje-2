@@ -1,0 +1,107 @@
+
+.file-upload-container {
+  .form-control {
+    padding: 0.75rem;
+    border: 2px dashed #dee2e6;
+    border-radius: 0.375rem;
+    background-color: #f8f9fa;
+    transition: border-color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+    
+    &:hover {
+      border-color: #007bff;
+      background-color: #e9ecef;
+    }
+    
+    &:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+      background-color: white;
+    }
+  }
+}
+
+.image-preview {
+  .preview-container {
+    position: relative;
+    display: inline-block;
+    max-width: 200px;
+    
+    .preview-image {
+      width: 100%;
+      max-width: 200px;
+      height: auto;
+      border-radius: 0.375rem;
+      border: 2px solid #dee2e6;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .remove-btn {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      width: 24px;
+      height: 24px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-size: 12px;
+      
+      &:hover {
+        background-color: #dc3545;
+        border-color: #dc3545;
+      }
+    }
+  }
+}
+
+.alert {
+  margin-bottom: 1.5rem;
+  
+  .fas {
+    color: inherit;
+  }
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545;
+  background-image: none;
+  
+  &:focus {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+  }
+}
+
+.invalid-feedback {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #dc3545;
+}
+
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+// Form butonun disabled durumu
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+// Responsive düzenlemeler
+@media (max-width: 768px) {
+  .image-preview {
+    .preview-container {
+      max-width: 150px;
+      
+      .preview-image {
+        max-width: 150px;
+      }
+    }
+  }
+}

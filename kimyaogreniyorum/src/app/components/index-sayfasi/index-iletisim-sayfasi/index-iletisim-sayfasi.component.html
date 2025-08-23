@@ -52,37 +52,124 @@
     </div>
     <div class="row">
         <div class="col-12 wow fadeInLeft">
-            <form class="fables-contact-form">
+            <!-- Başarı Mesajı -->
+            <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-2"></i>
+                {{ successMessage }}
+                <button type="button" class="btn-close" (click)="successMessage = ''" aria-label="Close"></button>
+            </div>
+
+            <!-- Hata Mesajı -->
+            <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                {{ errorMessage }}
+                <button type="button" class="btn-close" (click)="errorMessage = ''" aria-label="Close"></button>
+            </div>
+
+            <form class="fables-contact-form" [formGroup]="contactForm" (ngSubmit)="onSubmit()">
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <input type="text" class="form-control p-3 fables-rounded" placeholder="First Name">
+                        <input 
+                            type="text" 
+                            class="form-control p-3 fables-rounded" 
+                            [class.is-invalid]="isFieldInvalid('firstName')"
+                            placeholder="Ad" 
+                            formControlName="firstName">
+                        <div class="invalid-feedback" *ngIf="isFieldInvalid('firstName')">
+                            {{ getFieldError('firstName') }}
+                        </div>
                     </div>
                     <div class="form-group col-md-6">
-                        <input type="text" class="form-control p-3 fables-rounded" placeholder="Last Name">
+                        <input 
+                            type="text" 
+                            class="form-control p-3 fables-rounded" 
+                            [class.is-invalid]="isFieldInvalid('lastName')"
+                            placeholder="Soyad" 
+                            formControlName="lastName">
+                        <div class="invalid-feedback" *ngIf="isFieldInvalid('lastName')">
+                            {{ getFieldError('lastName') }}
+                        </div>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <input type="email" class="form-control p-3 fables-rounded" placeholder="Email">
+                        <input 
+                            type="email" 
+                            class="form-control p-3 fables-rounded" 
+                            [class.is-invalid]="isFieldInvalid('email')"
+                            placeholder="E-posta" 
+                            formControlName="email">
+                        <div class="invalid-feedback" *ngIf="isFieldInvalid('email')">
+                            {{ getFieldError('email') }}
+                        </div>
                     </div>
                     <div class="form-group col-md-6">
-                        <input type="text" class="form-control p-3 fables-rounded" placeholder="Subject">
+                        <input 
+                            type="text" 
+                            class="form-control p-3 fables-rounded" 
+                            [class.is-invalid]="isFieldInvalid('subject')"
+                            placeholder="Konu" 
+                            formControlName="subject">
+                        <div class="invalid-feedback" *ngIf="isFieldInvalid('subject')">
+                            {{ getFieldError('subject') }}
+                        </div>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-12">
-                        <textarea class="form-control p-3 fables-rounded" placeholder="Message" rows="4"></textarea>
+                        <textarea 
+                            class="form-control p-3 fables-rounded" 
+                            [class.is-invalid]="isFieldInvalid('message')"
+                            placeholder="Mesajınız" 
+                            rows="4" 
+                            formControlName="message"></textarea>
+                        <div class="invalid-feedback" *ngIf="isFieldInvalid('message')">
+                            {{ getFieldError('message') }}
+                        </div>
                     </div>
                 </div>
+
+                <!-- Dosya Yükleme -->
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label class="form-label">Resim Ekle (İsteğe bağlı)</label>
+                        <div class="file-upload-container">
+                            <input 
+                                type="file" 
+                                class="form-control" 
+                                accept="image/*" 
+                                (change)="onFileChange($event)" 
+                                #fileInput>
+                            
+                            <!-- Önizleme -->
+                            <div *ngIf="previewUrl" class="image-preview mt-3">
+                                <div class="preview-container">
+                                    <img [src]="previewUrl" alt="Önizleme" class="preview-image">
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-sm btn-danger remove-btn" 
+                                        (click)="removeFile()" 
+                                        title="Resmi Kaldır">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-row">
                     <div class="col-md-12 text-center">
-                        <button type="submit" class="btn fables-second-background-color 
-                         text-white fables-btn-rounded px-7 py-2 font-20">Send</button>
+                        <button 
+                            type="submit" 
+                            class="btn fables-second-background-color text-white fables-btn-rounded px-7 py-2 font-20" 
+                            [disabled]="isSubmitting || contactForm.invalid">
+                            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status"></span>
+                            {{ isSubmitting ? 'Gönderiliyor...' : 'Gönder' }}
+                        </button>
                     </div>
                 </div>
             </form>
-
-
         </div>
 
     </div>

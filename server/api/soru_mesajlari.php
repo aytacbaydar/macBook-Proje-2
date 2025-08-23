@@ -183,22 +183,29 @@ try {
             
         case 'POST':
             // Yeni mesaj gönder
-            $user = authorize();
+            // Ziyaretçi mesajları için authorization bypass
+            $gonderenTip = $_POST['gonderen_tip'] ?? 'ogrenci';
             
-            $ogrenciId = $_POST['ogrenci_id'] ?? $user['id'];
+            if ($gonderenTip === 'ziyaretci') {
+                $user = null; // Ziyaretçiler için kullanıcı kontrolü yapma
+            } else {
+                $user = authorize();
+            }
+            
+            $ogrenciId = $_POST['ogrenci_id'] ?? ($user ? $user['id'] : 1);
             $mesajMetni = $_POST['mesaj_metni'] ?? '';
-            $gonderenTip = $_POST['gonderen_tip'] ?? ($user['rutbe'] === 'ogretmen' ? 'ogretmen' : 'ogrenci');
-            $gonderenAdi = $_POST['gonderen_adi'] ?? $user['adi_soyadi'];
+            $gonderenTip = $_POST['gonderen_tip'] ?? ($user && $user['rutbe'] === 'ogretmen' ? 'ogretmen' : 'ogrenci');
+            $gonderenAdi = $_POST['gonderen_adi'] ?? ($user ? $user['adi_soyadi'] : 'Ziyaretçi');
             
-            // Öğrenci sadece kendi adına mesaj gönderebilir
-            if ($user['rutbe'] === 'ogrenci' && $ogrenciId != $user['id']) {
+            // Öğrenci sadece kendi adına mesaj gönderebilir (ziyaretçiler hariç)
+            if (isset($user) && $user['rutbe'] === 'ogrenci' && $ogrenciId != $user['id']) {
                 http_response_code(403);
                 echo json_encode(['error' => 'Bu işlem için yetkiniz yok']);
                 exit;
             }
             
-            // Öğretmen için öğrenci kontrolü
-            if ($user['rutbe'] === 'ogretmen') {
+            // Öğretmen için öğrenci kontrolü (ziyaretçiler hariç)
+            if ($user && $user['rutbe'] === 'ogretmen') {
                 $stmt = $conn->prepare("SELECT id FROM ogrenciler WHERE id = ? AND ogretmeni = ?");
                 $stmt->execute([$ogrenciId, $user['adi_soyadi']]);
                 if (!$stmt->fetch()) {
@@ -224,9 +231,9 @@ try {
             
             // Öğretmen ID'sini belirle
             $ogretmenId = null;
-            if ($user['rutbe'] === 'ogretmen') {
+            if ($user && $user['rutbe'] === 'ogretmen') {
                 $ogretmenId = $user['id'];
-            } else {
+            } else if ($gonderenTip !== 'ziyaretci') {
                 // Öğrenci mesajı ise, öğretmen ID'sini öğrencinin öğretmeninden al
                 $stmt = $conn->prepare("SELECT id FROM ogrenciler WHERE adi_soyadi = (SELECT ogretmeni FROM ogrenciler WHERE id = ?) AND rutbe = 'ogretmen'");
                 $stmt->execute([$ogrenciId]);
