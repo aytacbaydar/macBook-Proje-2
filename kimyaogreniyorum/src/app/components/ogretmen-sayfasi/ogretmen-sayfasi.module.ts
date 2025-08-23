@@ -32,6 +32,7 @@ import { OgretmenDuyuruSayfasiComponent } from './ogretmen-duyuru-sayfasi/ogretm
 import { OgretmenOgrenciBilgiSayfasiComponent } from './ogretmen-ogrenci-bilgi-sayfasi/ogretmen-ogrenci-bilgi-sayfasi.component';
 import { OgretmenHaftalikDersProgramiSayfasiComponent } from './ogretmen-haftalik-ders-programi-sayfasi/ogretmen-haftalik-ders-programi-sayfasi.component';
 import { OgretmenOnlineDersSayfasiComponent } from './ogretmen-online-ders-sayfasi/ogretmen-online-ders-sayfasi.component';
+import { OgretmenTestlerinCevaplariSayfasiComponent } from './ogretmen-testlerin-cevaplari-sayfasi/ogretmen-testlerin-cevaplari-sayfasi.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { OgretmenOnlineDersSayfasiComponent } from './ogretmen-online-ders-sayfa
     OgretmenOgrenciBilgiSayfasiComponent,
     OgretmenHaftalikDersProgramiSayfasiComponent,
     OgretmenOnlineDersSayfasiComponent,
+    OgretmenTestlerinCevaplariSayfasiComponent,
   ],
   imports: [
     CommonModule,
