@@ -1,4 +1,3 @@
-
 <div class="testlerin-cevaplari-container">
   <!-- Page Header -->
   <div class="page-header">
@@ -46,9 +45,9 @@
       <!-- Card Header -->
       <div class="card-header">
         <div class="card-title">
-          <h3>{{ cevapAnahtari.sinav_adi }}</h3>
+          <h3>{{ cevapAnahtari.test_adi }}</h3>
           <div class="card-meta">
-            <span class="exam-type">{{ getSinavTuruLabel(cevapAnahtari.sinav_turu) }}</span>
+            <span class="exam-type">{{ getSinavTuruLabel(cevapAnahtari.test_turu) }}</span>
             <span class="exam-date">{{ cevapAnahtari.tarih }}</span>
             <span class="question-count">{{ cevapAnahtari.soru_sayisi }} soru</span>
             <span class="status" [class.active]="cevapAnahtari.aktiflik" [class.inactive]="!cevapAnahtari.aktiflik">
@@ -118,13 +117,23 @@
       <form (ngSubmit)="saveCevapAnahtari()" #addForm="ngForm">
         <div class="form-row">
           <div class="form-group">
-            <label>Sınav Adı *</label>
-            <input type="text" class="form-control" [(ngModel)]="newCevapAnahtari.sinav_adi" 
-                   name="sinav_adi" required placeholder="Örn: Kimya 1. Yazılı">
+            <label for="testAdi" class="form-label">Test Adı</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="testAdi" 
+              [(ngModel)]="newCevapAnahtari.test_adi" 
+              placeholder="Test adını giriniz"
+              required>
           </div>
+
           <div class="form-group">
-            <label>Sınav Türü *</label>
-            <select class="form-control" [(ngModel)]="newCevapAnahtari.sinav_turu" name="sinav_turu" required>
+            <label for="testTuru" class="form-label">Test Türü</label>
+            <select 
+              class="form-control" 
+              id="testTuru" 
+              [(ngModel)]="newCevapAnahtari.test_turu" 
+              required>
               <option value="">Seçiniz</option>
               <option value="deneme">Deneme Sınavı</option>
               <option value="yazili">Yazılı Sınavı</option>
@@ -201,14 +210,22 @@
       <form (ngSubmit)="updateCevapAnahtari()" #editForm="ngForm">
         <div class="form-row">
           <div class="form-group">
-            <label>Sınav Adı *</label>
-            <input type="text" class="form-control" [(ngModel)]="currentEditingCevapAnahtari.sinav_adi" 
-                   name="edit_sinav_adi" required>
+            <label for="testAdi" class="form-label">Test Adı</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="testAdi" 
+              [(ngModel)]="currentEditingCevapAnahtari.test_adi" 
+              placeholder="Test adını giriniz"
+              required>
           </div>
           <div class="form-group">
-            <label>Sınav Türü *</label>
-            <select class="form-control" [(ngModel)]="currentEditingCevapAnahtari.sinav_turu" 
-                    name="edit_sinav_turu" required>
+            <label for="testTuru" class="form-label">Test Türü</label>
+            <select 
+              class="form-control" 
+              id="testTuru" 
+              [(ngModel)]="currentEditingCevapAnahtari.test_turu" 
+              required>
               <option value="deneme">Deneme Sınavı</option>
               <option value="yazili">Yazılı Sınavı</option>
               <option value="quiz">Quiz</option>

@@ -82,8 +82,8 @@ export class OgretmenTestlerinCevaplariSayfasiComponent implements OnInit {
 
     // Prepare form data for API
     const formData = new FormData();
-    formData.append('test_adi', this.newCevapAnahtari.sinav_adi);
-    formData.append('test_turu', this.newCevapAnahtari.sinav_turu);
+    formData.append('test_adi', this.newCevapAnahtari.test_adi);
+    formData.append('test_turu', this.newCevapAnahtari.test_turu);
     formData.append('soru_sayisi', this.newCevapAnahtari.soru_sayisi.toString());
     formData.append('tarih', this.newCevapAnahtari.tarih);
     formData.append('cevaplar', JSON.stringify(this.newCevapAnahtari.cevaplar));
@@ -156,12 +156,12 @@ export class OgretmenTestlerinCevaplariSayfasiComponent implements OnInit {
   }
 
   validateCevapAnahtari(cevapAnahtari: CevapAnahtari): boolean {
-    if (!cevapAnahtari.sinav_adi.trim()) {
-      this.showError('Sınav adı gereklidir');
+    if (!cevapAnahtari.test_adi.trim()) {
+      this.showError('Test adı gereklidir');
       return false;
     }
-    if (!cevapAnahtari.sinav_turu) {
-      this.showError('Sınav türü seçilmelidir');
+    if (!cevapAnahtari.test_turu) {
+      this.showError('Test türü seçilmelidir');
       return false;
     }
     if (cevapAnahtari.soru_sayisi <= 0) {
