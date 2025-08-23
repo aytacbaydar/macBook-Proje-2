@@ -82,8 +82,8 @@ export class OgretmenTestlerinCevaplariSayfasiComponent implements OnInit {
 
     // Prepare form data for API
     const formData = new FormData();
-    formData.append('sinav_adi', this.newCevapAnahtari.sinav_adi);
-    formData.append('sinav_turu', this.newCevapAnahtari.sinav_turu);
+    formData.append('test_adi', this.newCevapAnahtari.sinav_adi);
+    formData.append('test_turu', this.newCevapAnahtari.sinav_turu);
     formData.append('soru_sayisi', this.newCevapAnahtari.soru_sayisi.toString());
     formData.append('tarih', this.newCevapAnahtari.tarih);
     formData.append('cevaplar', JSON.stringify(this.newCevapAnahtari.cevaplar));
