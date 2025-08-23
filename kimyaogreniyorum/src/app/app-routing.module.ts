@@ -50,6 +50,7 @@ import { OgretmenOnlineDersSayfasiComponent } from './components/ogretmen-sayfas
 import { OgrenciOnlineDersSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-online-ders-sayfasi/ogrenci-online-ders-sayfasi.component';
 import { IndexIndexSayfasiComponent } from './components/index-sayfasi/template/index-index-sayfasi/index-index-sayfasi.component';
 import { AnasayafaSayfasiComponent } from './components/index-sayfasi/anasayafa-sayfasi/anasayafa-sayfasi.component';
+import { IndexIletisimSayfasiComponent } from './components/index-sayfasi/index-iletisim-sayfasi/index-iletisim-sayfasi.component';
 
 const routes: Routes = [
   {
@@ -57,7 +58,7 @@ const routes: Routes = [
     component: IndexIndexSayfasiComponent,
     children: [
       { path: '', component: AnasayafaSayfasiComponent },
-      { path: 'ogrenci-iletisim-sayfasi', component: IndexIndexSayfasiComponent },
+      { path: 'ogrenci-iletisim-sayfasi', component: IndexIletisimSayfasiComponent },
     ],
   },
   { path: 'giris-sayfasi', component: OgrenciGirisSayfasiComponent },
