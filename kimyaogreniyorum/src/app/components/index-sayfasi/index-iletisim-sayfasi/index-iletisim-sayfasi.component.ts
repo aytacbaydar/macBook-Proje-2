@@ -25,8 +25,9 @@ export class IndexIletisimSayfasiComponent {
       firstName: ['', [Validators.required, Validators.minLength(2)]],
       lastName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
-      subject: ['', [Validators.required, Validators.minLength(3)]],
-      message: ['', [Validators.required, Validators.minLength(10)]]
+      subject: [''],
+      message: ['', [Validators.required, Validators.minLength(10)]],
+      phone: ['']
     });
   }
 
@@ -47,7 +48,7 @@ export class IndexIletisimSayfasiComponent {
       }
 
       this.selectedFile = file;
-      
+
       // Önizleme oluştur
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -73,7 +74,7 @@ export class IndexIletisimSayfasiComponent {
     this.errorMessage = '';
 
     const formData = new FormData();
-    
+
     // Form verilerini ekle
     const formValues = this.contactForm.value;
     const fullName = `${formValues.firstName} ${formValues.lastName}`;
@@ -82,6 +83,7 @@ Konu: ${formValues.subject}
 
 Ad Soyad: ${fullName}
 E-posta: ${formValues.email}
+Telefon: ${formValues.phone}
 
 Mesaj:
 ${formValues.message}
@@ -89,9 +91,11 @@ ${formValues.message}
 
     // Genel bir öğrenci ID'si kullanacağız (admin mesajı olarak)
     formData.append('ogrenci_id', '1'); // Genel mesajlar için
+    formData.append('gonderen_adi', formValues.firstName + ' ' + formValues.lastName);
+    formData.append('gonderen_email', this.contactForm.get('email')?.value || '');
+    formData.append('telefon', this.contactForm.get('phone')?.value || '');
+    formData.append('konu', this.contactForm.get('subject')?.value || '');
     formData.append('mesaj_metni', messageText);
-    formData.append('gonderen_tip', 'ziyaretci');
-    formData.append('gonderen_adi', fullName);
 
     // Resim varsa ekle
     if (this.selectedFile) {
@@ -99,7 +103,7 @@ ${formValues.message}
     }
 
     // API'ye gönder
-    this.http.post<any>(`${this.apiBaseUrl}/soru_mesajlari.php`, formData)
+    this.http.post<any>(`${this.apiBaseUrl}/iletisim_mesajlari.php`, formData)
       .subscribe({
         next: (response) => {
           if (response.success) {
@@ -149,7 +153,8 @@ ${formValues.message}
       lastName: 'Soyad',
       email: 'E-posta',
       subject: 'Konu',
-      message: 'Mesaj'
+      message: 'Mesaj',
+      phone: 'Telefon'
     };
     return displayNames[fieldName] || fieldName;
   }
