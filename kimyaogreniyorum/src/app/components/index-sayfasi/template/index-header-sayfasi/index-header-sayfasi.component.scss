@@ -56,25 +56,17 @@
 
 .fragment {
   position: absolute;
-  background-size: cover;
-  background-position: center;
+  width: calc(100% / 5);
+  height: calc(100% / 5);
   background-repeat: no-repeat;
-  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  transform-origin: center;
+  background-size: 500% 500% !important;
+  background-position: center !important;
   backface-visibility: hidden;
-  will-change: transform, opacity;
-  transform: rotateY(0deg);
-  opacity: 1;
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
   &.fragment-next {
-    transform: rotateY(-90deg);
-    opacity: 0;
-    z-index: 2;
-  }
-
-  &.transitioning {
-    transform: rotateY(90deg);
-    opacity: 0;
+    z-index: 1;
   }
 }
 

@@ -61,7 +61,7 @@ export class IndexHeaderSayfasiComponent implements OnInit, OnDestroy {
   // NodeJS.Timeout hatası için düzeltme
   private autoRotateInterval: any = null;
   private isRotationPaused = false;
-  private autoRotationDuration = 4000; // 4 saniye
+  private autoRotationDuration = 12000; // 12 saniye
 
   slides: Slide[] = [
     {
@@ -257,7 +257,9 @@ export class IndexHeaderSayfasiComponent implements OnInit, OnDestroy {
     return {
       'background-image': `url(${slide.image})`,
       'background-size': `${this.gridCols * 100}% ${this.gridRows * 100}%`,
-      'background-position': fragment.currentBackgroundPosition,
+      'background-position': `${fragment.col * (100 / (this.gridCols - 1))}% ${fragment.row * (100 / (this.gridRows - 1))}%`,
+      'left': `${fragment.col * (100 / this.gridCols)}%`,
+      'top': `${fragment.row * (100 / this.gridRows)}%`
     };
   }
 }
