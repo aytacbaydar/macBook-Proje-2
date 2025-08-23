@@ -53,7 +53,8 @@ export class OgretmenTestlerinCevaplariSayfasiComponent implements OnInit {
   }
 
   showEditModalPanel(cevapAnahtari: CevapAnahtari) {
-    this.currentEditingCevapAnahtari = { ...cevapAnahtari };
+    // If you want to clone, use fromJson to preserve methods
+    this.currentEditingCevapAnahtari = CevapAnahtari.fromJson(cevapAnahtari);
     this.showEditModal = true;
   }
 
