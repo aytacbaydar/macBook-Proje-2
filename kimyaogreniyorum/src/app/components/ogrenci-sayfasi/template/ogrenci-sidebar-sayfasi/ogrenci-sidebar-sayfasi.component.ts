@@ -33,7 +33,7 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
   }> = [
     { icon: 'bi-house-fill', label: 'AnaSayfa', link: 'ogrenci-sayfasi' },
     {
-      icon: 'bi-map-fill',
+      icon: 'bi-diagram-3',
       label: 'Yol Haritası',
       link: 'ogrenci-sayfasi/ogrenci-islene-konular-sayfasi',
     },
@@ -50,7 +50,7 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
     },
     */
     {
-      icon: 'bi-pencil-square',
+      icon: 'bi-filetype-pdf',
       label: 'İşlenen konular',
       link: 'ogrenci-sayfasi/ogrenci-islene-konularin-pdf-sayfasi',
     },
@@ -58,6 +58,11 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
       icon: 'bi-clipboard2-check-fill',
       label: 'Sınavlar',
       link: 'ogrenci-sayfasi/sinav-sonuclari-sayfasi',
+    },
+    {
+      icon: 'bi-key',
+      label: 'Testlerin Cevapları',
+      link: 'ogrenci-sayfasi/ogrenci-testlerin-cevaplari-sayfasi',
     },
     {
       icon: 'bi-file-earmark-text-fill',
@@ -76,7 +81,7 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
       badgeCount: 0,
     },
     {
-      icon: 'bi-currency-dollar',
+      icon: 'bi-cash-coin',
       label: 'Ücretler',
       link: 'ogrenci-sayfasi/ogrenci-ucret-sayfasi',
     },

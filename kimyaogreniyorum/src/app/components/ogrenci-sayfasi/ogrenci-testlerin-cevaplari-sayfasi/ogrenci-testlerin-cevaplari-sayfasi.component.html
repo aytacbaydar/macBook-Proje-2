@@ -1,0 +1,242 @@
+<div class="testlerin-cevaplari-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="header-content">
+            <h1>
+                <i class="bi bi-file-earmark-check"></i>
+                Testlerin Cevap Anahtarları
+            </h1>
+            <p>Cevap anahtarı sadece doğruyu göstermek için değil, yanlışlarımızdan öğrenmemiz için vardır.</p>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-container">
+        <div class="spinner"></div>
+        <p>Cevap anahtarları yükleniyor...</p>
+    </div>
+
+    <!-- Answer Keys Grid -->
+    <div *ngIf="!loading && cevapAnahtarlari.length > 0" class="answer-keys-grid">
+        <div *ngFor="let cevapAnahtari of cevapAnahtarlari" class="answer-key-card">
+            <!-- Card Header -->
+            <div class="card-header">
+                <div class="card-title">
+                    <h3>{{ cevapAnahtari.test_adi }}</h3>
+                    <div class="card-meta">
+                        <span class="exam-type">{{ getSinavTuruLabel(cevapAnahtari.test_turu) }}</span>
+                        <span class="exam-date">{{ cevapAnahtari.tarih }}</span>
+                        <span class="question-count">{{ cevapAnahtari.soru_sayisi }} soru</span>
+                        <span class="status" [class.active]="cevapAnahtari.aktiflik"
+                            [class.inactive]="!cevapAnahtari.aktiflik">
+                            {{ cevapAnahtari.aktiflik ? 'Aktif' : 'Pasif' }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Body - Answer Groups -->
+            <div class="card-body">
+                <div class="answer-groups">
+                    <div *ngFor="let group of getAnswerGroups(cevapAnahtari)" class="answer-group">
+                        <div class="group-header">
+                            <h4>Sorular {{ group.start }}-{{ group.end }}</h4>
+                        </div>
+                        <div class="answers-list">
+                            <div *ngFor="let answer of group.answers" class="answer-item">
+                                <span class="question-number">{{ answer.soru }}.</span>
+                                <span class="answer-value" [class.empty]="!answer.cevap">
+                                    {{ answer.cevap || '-' }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && cevapAnahtarlari.length === 0" class="empty-state">
+        <div class="empty-content">
+            <i class="bi bi-file-earmark-plus"></i>
+            <h3>Henüz Test Cevap Anahtarı Bulunmuyor</h3>
+            <p>İlk test cevap anahtarınızı oluşturmak için yukarıdaki butonu kullanın.</p>
+            <button class="empty-action-btn" (click)="showAddModalPanel()">
+                <i class="bi bi-plus-circle"></i>
+                İlk Cevap Anahtarını Ekle
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Add Modal -->
+<div class="modal-overlay" *ngIf="showAddModal" (click)="closeAddModal()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h3>
+                <i class="bi bi-plus-circle"></i>
+                Yeni Cevap Anahtarı Ekle
+            </h3>
+            <button class="close-btn" (click)="closeAddModal()">
+                <i class="bi bi-x"></i>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <form (ngSubmit)="saveCevapAnahtari()" #addForm="ngForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="testAdi" class="form-label">Test Adı</label>
+                        <input type="text" class="form-control" id="testAdi" [(ngModel)]="newCevapAnahtari.test_adi"
+                            placeholder="Test adını giriniz" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="testTuru" class="form-label">Test Türü</label>
+                        <select class="form-control" id="testTuru" [(ngModel)]="newCevapAnahtari.test_turu" required>
+                            <option value="">Seçiniz</option>
+                            <option value="deneme">Deneme Sınavı</option>
+                            <option value="yazili">Yazılı Sınavı</option>
+                            <option value="quiz">Quiz</option>
+                            <option value="tarama">Tarama Testi</option>
+                            <option value="konu_testi">Konu Testi</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Soru Sayısı *</label>
+                        <input type="number" class="form-control" [(ngModel)]="newCevapAnahtari.soru_sayisi"
+                            name="soru_sayisi" required min="1" max="100"
+                            (ngModelChange)="onSoruSayisiChange(newCevapAnahtari)">
+                    </div>
+                    <div class="form-group">
+                        <label>Tarih *</label>
+                        <input type="date" class="form-control" [(ngModel)]="newCevapAnahtari.tarih" name="tarih"
+                            required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="aktiflik" [(ngModel)]="newCevapAnahtari.aktiflik" name="aktiflik">
+                        <label for="aktiflik">Aktif</label>
+                    </div>
+                </div>
+
+                <!-- Answer Inputs -->
+                <div *ngIf="newCevapAnahtari.soru_sayisi > 0" class="answers-section">
+                    <h4>Cevap Anahtarı</h4>
+                    <div class="answers-grid">
+                        <div *ngFor="let soru of getSoruDizisi(newCevapAnahtari); let i = index"
+                            class="answer-input-item">
+                            <label>{{ i + 1 }}.</label>
+                            <select [(ngModel)]="newCevapAnahtari.cevaplar['ca' + (i + 1)]" [name]="'cevap_' + (i + 1)"
+                                class="answer-select">
+                                <option value="">-</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="closeAddModal()">İptal</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="!addForm.valid">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal-overlay" *ngIf="showEditModal && currentEditingCevapAnahtari" (click)="closeEditModal()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h3>
+                <i class="bi bi-pencil-square"></i>
+                Cevap Anahtarı Düzenle
+            </h3>
+            <button class="close-btn" (click)="closeEditModal()">
+                <i class="bi bi-x"></i>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <form (ngSubmit)="updateCevapAnahtari()" #editForm="ngForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="testAdi" class="form-label">Test Adı</label>
+                        <input type="text" class="form-control" id="testAdi"
+                            [(ngModel)]="currentEditingCevapAnahtari.test_adi" placeholder="Test adını giriniz"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label for="testTuru" class="form-label">Test Türü</label>
+                        <select class="form-control" id="testTuru" [(ngModel)]="currentEditingCevapAnahtari.test_turu"
+                            required>
+                            <option value="deneme">Deneme Sınavı</option>
+                            <option value="yazili">Yazılı Sınavı</option>
+                            <option value="quiz">Quiz</option>
+                            <option value="tarama">Tarama Testi</option>
+                            <option value="konu_testi">Konu Testi</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Soru Sayısı *</label>
+                        <input type="number" class="form-control" [(ngModel)]="currentEditingCevapAnahtari.soru_sayisi"
+                            name="edit_soru_sayisi" required min="1" max="100"
+                            (ngModelChange)="onSoruSayisiChange(currentEditingCevapAnahtari)">
+                    </div>
+                    <div class="form-group">
+                        <label>Tarih *</label>
+                        <input type="date" class="form-control" [(ngModel)]="currentEditingCevapAnahtari.tarih"
+                            name="edit_tarih" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="edit_aktiflik" [(ngModel)]="currentEditingCevapAnahtari.aktiflik"
+                            name="edit_aktiflik">
+                        <label for="edit_aktiflik">Aktif</label>
+                    </div>
+                </div>
+
+                <!-- Answer Inputs -->
+                <div *ngIf="currentEditingCevapAnahtari.soru_sayisi > 0" class="answers-section">
+                    <h4>Cevap Anahtarı</h4>
+                    <div class="answers-grid">
+                        <div *ngFor="let soru of getSoruDizisi(currentEditingCevapAnahtari); let i = index"
+                            class="answer-input-item">
+                            <label>{{ i + 1 }}.</label>
+                            <select [(ngModel)]="currentEditingCevapAnahtari.cevaplar['ca' + (i + 1)]"
+                                [name]="'edit_cevap_' + (i + 1)" class="answer-select">
+                                <option value="">-</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="closeEditModal()">İptal</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="!editForm.valid">Güncelle</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -80,7 +80,7 @@ export class OgretmenSidebarSayfasiComponent implements OnInit, OnDestroy {
       link: 'ogretmen-sayfasi/ogretmen-ucret-sayfasi',
     },
     {
-      icon: 'bi-currency-dollar',
+      icon: 'bi-key-fill',
       label: 'Cevap Anahtari',
       link: 'ogretmen-sayfasi/ogretmen-testlerin-cevaplari-sayfasi',
     },

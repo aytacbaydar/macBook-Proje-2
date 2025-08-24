@@ -52,6 +52,7 @@ import { IndexIndexSayfasiComponent } from './components/index-sayfasi/template/
 import { AnasayafaSayfasiComponent } from './components/index-sayfasi/anasayafa-sayfasi/anasayafa-sayfasi.component';
 import { IndexIletisimSayfasiComponent } from './components/index-sayfasi/index-iletisim-sayfasi/index-iletisim-sayfasi.component';
 import { OgretmenTestlerinCevaplariSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-testlerin-cevaplari-sayfasi/ogretmen-testlerin-cevaplari-sayfasi.component';
+import { OgrenciTestlerinCevaplariSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-testlerin-cevaplari-sayfasi/ogrenci-testlerin-cevaplari-sayfasi.component';
 
 const routes: Routes = [
   {
@@ -145,6 +146,10 @@ const routes: Routes = [
       {
         path: 'ogrenci-yapay-zekali-testler-sayfasi',
         component: OgrenciYapayZekaliTestlerSayfasiComponent,
+      },
+      {
+        path: 'ogrenci-testlerin-cevaplari-sayfasi',
+        component: OgrenciTestlerinCevaplariSayfasiComponent,
       },
       {
         path: 'ogrenci-sinav-islemleri-sayfasi',
