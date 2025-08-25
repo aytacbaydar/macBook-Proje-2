@@ -27,6 +27,9 @@ function successResponse($data = null, $message = '') {
 }
 
 try {
+    // Veritabanı bağlantısını al
+    $conn = getConnection();
+    
     // Sadece DELETE metoduna izin ver
     if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
         errorResponse('Sadece DELETE metoduna izin verilir', 405);

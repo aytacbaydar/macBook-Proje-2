@@ -27,6 +27,9 @@ function successResponse($data = null, $message = '') {
 }
 
 try {
+    // Veritabanı bağlantısını al
+    $conn = getConnection();
+    
     // Sadece POST metoduna izin ver
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         errorResponse('Sadece POST metoduna izin verilir', 405);
