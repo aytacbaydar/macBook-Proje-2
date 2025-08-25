@@ -28,6 +28,7 @@ import { OgrenciUcretSayfasiComponent } from './ogrenci-ucret-sayfasi/ogrenci-uc
 import { OgrenciYapayZekaliTestlerSayfasiComponent } from './ogrenci-yapay-zekali-testler-sayfasi/ogrenci-yapay-zekali-testler-sayfasi.component';
 import { OgrenciOnlineDersSayfasiComponent } from './ogrenci-online-ders-sayfasi/ogrenci-online-ders-sayfasi.component';
 import { OgrenciTestlerinCevaplariSayfasiComponent } from './ogrenci-testlerin-cevaplari-sayfasi/ogrenci-testlerin-cevaplari-sayfasi.component';
+import { OgrenciOdevlerSayfasi } from './ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi';
 
 
 
@@ -50,6 +51,7 @@ import { OgrenciTestlerinCevaplariSayfasiComponent } from './ogrenci-testlerin-c
     OgrenciYapayZekaliTestlerSayfasiComponent,
     OgrenciOnlineDersSayfasiComponent,
     OgrenciTestlerinCevaplariSayfasiComponent,
+    OgrenciOdevlerSayfasi,
   ],
   imports: [
     CommonModule,
