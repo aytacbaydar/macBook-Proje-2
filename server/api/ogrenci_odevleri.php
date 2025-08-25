@@ -63,8 +63,8 @@ try {
 
     $conn = new PDO($dsn, DB_USER, DB_PASS, $options);
 
-    // Token'dan öğrenci bilgilerini al
-    $stmt = $conn->prepare("SELECT id, grubu FROM kullanicilar WHERE token = ? AND rutbe = 'ogrenci'");
+    // Token'dan öğrenci bilgilerini al - farklı grup sütun isimlerini kontrol et
+    $stmt = $conn->prepare("SELECT id, grup, grubu, sinifi FROM kullanicilar WHERE token = ? AND rutbe = 'ogrenci'");
     $stmt->execute([$token]);
     $ogrenci = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -72,13 +72,19 @@ try {
         errorResponse('Geçersiz token veya yetkisiz erişim', 401);
     }
 
-    $ogrenci_grubu = $ogrenci['grubu'];
+    // Farklı grup alanlarını kontrol et
+    $ogrenci_grubu = $ogrenci['grup'] ?? $ogrenci['grubu'] ?? $ogrenci['sinifi'] ?? '';
 
     if (empty($ogrenci_grubu)) {
+        error_log("Öğrenci verisi: " . json_encode($ogrenci));
         errorResponse('Öğrenci grup bilgisi bulunamadı');
     }
 
-    // Öğrencinin grubuna ve GET parametresine göre ödevleri getir
+    // Öğrencinin grubuna göre ödevleri getir - hem URL parametresi hem de öğrenci grubu aynı olmalı
+    if ($grup !== $ogrenci_grubu) {
+        errorResponse('Erişim reddedildi: Grup uyumsuzluğu', 403);
+    }
+
     $stmt = $conn->prepare("
         SELECT 
             id,
@@ -92,11 +98,11 @@ try {
             ogretmen_adi,
             olusturma_tarihi
         FROM odevler 
-        WHERE grup = ? AND grup = :ogrenci_grubu
+        WHERE grup = ?
         ORDER BY olusturma_tarihi DESC, bitis_tarihi ASC
     ");
 
-    $stmt->execute([$grup, $ogrenci_grubu]);
+    $stmt->execute([$grup]);
     $odevler = $stmt->fetchAll();
 
     // Tarihleri formatla ve ek bilgiler ekle
