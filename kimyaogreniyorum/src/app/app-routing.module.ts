@@ -53,6 +53,7 @@ import { AnasayafaSayfasiComponent } from './components/index-sayfasi/anasayafa-
 import { IndexIletisimSayfasiComponent } from './components/index-sayfasi/index-iletisim-sayfasi/index-iletisim-sayfasi.component';
 import { OgretmenTestlerinCevaplariSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-testlerin-cevaplari-sayfasi/ogretmen-testlerin-cevaplari-sayfasi.component';
 import { OgrenciTestlerinCevaplariSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-testlerin-cevaplari-sayfasi/ogrenci-testlerin-cevaplari-sayfasi.component';
+import { OgretmenOdevSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-islenen-konular-sayfasi/ogretmen-odev-sayfasi/ogretmen-odev-sayfasi.component';
 
 const routes: Routes = [
   {
@@ -234,6 +235,10 @@ const routes: Routes = [
       {
         path: 'ogretmen-islenen-konular-sayfasi',
         component: OgretmenIslenenKonularSayfasiComponent,
+      },
+      {
+        path: 'ogretmen-odevler-sayfasi',
+        component: OgretmenOdevSayfasiComponent,
       },
       {
         path: 'konular',

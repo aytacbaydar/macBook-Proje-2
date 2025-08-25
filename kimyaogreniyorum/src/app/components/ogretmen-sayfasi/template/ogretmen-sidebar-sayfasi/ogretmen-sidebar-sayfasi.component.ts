@@ -75,6 +75,11 @@ export class OgretmenSidebarSayfasiComponent implements OnInit, OnDestroy {
       link: 'ogretmen-sayfasi/ogretmen-islenen-konular-sayfasi',
     },
     {
+      icon: 'bi-journal-bookmark-fill',
+      label: 'Ödevler',
+      link: 'ogretmen-sayfasi/ogretmen-odevler-sayfasi',
+    },
+    {
       icon: 'bi-currency-dollar',
       label: 'Ücretler',
       link: 'ogretmen-sayfasi/ogretmen-ucret-sayfasi',

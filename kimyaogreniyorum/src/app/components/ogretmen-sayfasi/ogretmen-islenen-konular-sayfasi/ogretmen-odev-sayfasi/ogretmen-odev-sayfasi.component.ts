@@ -21,7 +21,8 @@ interface Odev {
 @Component({
   selector: 'app-ogretmen-odev-sayfasi',
   templateUrl: './ogretmen-odev-sayfasi.component.html',
-  styleUrls: ['./ogretmen-odev-sayfasi.component.scss']
+  styleUrls: ['./ogretmen-odev-sayfasi.component.scss'],
+  standalone: false,
 })
 export class OgretmenOdevSayfasiComponent implements OnInit {
   odevler: Odev[] = [];
