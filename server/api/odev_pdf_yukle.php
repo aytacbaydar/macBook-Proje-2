@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
-require_once 'config.php';
+require_once '../config.php';
 
 function errorResponse($message, $code = 400) {
     // Output buffer'ı temizle
@@ -46,6 +46,9 @@ function successResponse($data = null, $message = '') {
 }
 
 try {
+    // Veritabanı bağlantısını al
+    $pdo = getConnection();
+    
     // Sadece POST metoduna izin ver
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         errorResponse('Sadece POST metoduna izin verilir', 405);
