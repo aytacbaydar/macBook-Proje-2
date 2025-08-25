@@ -27,6 +27,9 @@ function successResponse($data = null, $message = '') {
 }
 
 try {
+    // Veritabanı bağlantısını al
+    $conn = getConnection();
+    
     // Sadece GET metoduna izin ver
     if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
         errorResponse('Sadece GET metoduna izin verilir', 405);
