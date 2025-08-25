@@ -1,0 +1,323 @@
+
+.ogrenci-odevler-container {
+  padding: 20px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+
+  .page-header {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+
+    .header-content {
+      text-align: center;
+
+      .page-title {
+        color: #2c3e50;
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .page-description {
+        color: #7f8c8d;
+        font-size: 1.1rem;
+        margin: 0;
+      }
+    }
+  }
+
+  .loading-container {
+    text-align: center;
+    padding: 50px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+
+    .spinner-border {
+      width: 3rem;
+      height: 3rem;
+    }
+
+    p {
+      color: #6c757d;
+      margin-top: 15px;
+      font-size: 1.1rem;
+    }
+  }
+
+  .odevler-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 20px;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .no-homeworks {
+    grid-column: 1 / -1;
+    
+    .no-homeworks-content {
+      text-align: center;
+      padding: 60px 30px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+
+      i {
+        font-size: 4rem;
+        color: #bdc3c7;
+        margin-bottom: 20px;
+      }
+
+      h3 {
+        color: #2c3e50;
+        margin-bottom: 15px;
+      }
+
+      p {
+        color: #7f8c8d;
+        font-size: 1.1rem;
+        margin: 0;
+      }
+    }
+  }
+
+  .odev-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border-left: 5px solid #3498db;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    &.aktif {
+      border-left-color: #27ae60;
+    }
+
+    &.suresi-dolmus {
+      border-left-color: #e74c3c;
+      opacity: 0.8;
+    }
+
+    .odev-header {
+      padding: 20px 25px 15px;
+      border-bottom: 1px solid #ecf0f1;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+
+      .odev-title {
+        flex: 1;
+
+        h3 {
+          color: #2c3e50;
+          font-size: 1.4rem;
+          font-weight: 600;
+          margin-bottom: 8px;
+        }
+
+        .grup-badge {
+          background: #3498db;
+          color: white;
+          padding: 4px 10px;
+          border-radius: 20px;
+          font-size: 0.85rem;
+          font-weight: 500;
+        }
+      }
+
+      .odev-status {
+        .durum-badge {
+          padding: 6px 12px;
+          border-radius: 20px;
+          font-size: 0.85rem;
+          font-weight: 500;
+
+          &.aktif {
+            background: #d5f4e6;
+            color: #27ae60;
+          }
+
+          &.suresi-dolmus {
+            background: #fdeaea;
+            color: #e74c3c;
+          }
+        }
+      }
+    }
+
+    .odev-body {
+      padding: 20px 25px;
+
+      .odev-info {
+        margin-bottom: 15px;
+
+        .info-item {
+          display: flex;
+          align-items: center;
+          margin-bottom: 8px;
+          color: #5d6d7e;
+
+          i {
+            width: 20px;
+            margin-right: 10px;
+            color: #3498db;
+          }
+
+          .kalan-sure {
+            font-weight: 600;
+
+            &.son-gun {
+              color: #e74c3c;
+              font-weight: bold;
+            }
+
+            &.acil {
+              color: #f39c12;
+              font-weight: bold;
+            }
+
+            &.yakin {
+              color: #f39c12;
+            }
+
+            &.normal {
+              color: #27ae60;
+            }
+          }
+        }
+      }
+
+      .odev-aciklama {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        border-left: 4px solid #3498db;
+
+        h5 {
+          color: #2c3e50;
+          font-size: 1rem;
+          margin-bottom: 10px;
+          display: flex;
+          align-items: center;
+
+          i {
+            margin-right: 8px;
+            color: #3498db;
+          }
+        }
+
+        p {
+          color: #5d6d7e;
+          margin: 0;
+          line-height: 1.6;
+        }
+      }
+    }
+
+    .odev-footer {
+      padding: 15px 25px 20px;
+      background: #f8f9fa;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .odev-actions {
+        .btn {
+          display: inline-flex;
+          align-items: center;
+          padding: 8px 16px;
+          font-size: 0.9rem;
+          border-radius: 8px;
+          transition: all 0.3s ease;
+
+          i {
+            margin-right: 6px;
+          }
+
+          &.btn-primary {
+            background: #3498db;
+            border-color: #3498db;
+
+            &:hover {
+              background: #2980b9;
+              border-color: #2980b9;
+            }
+          }
+        }
+
+        .no-pdf-text {
+          color: #95a5a6;
+          font-size: 0.9rem;
+          font-style: italic;
+
+          i {
+            margin-right: 5px;
+          }
+        }
+      }
+
+      .odev-date {
+        small {
+          color: #95a5a6;
+          font-size: 0.8rem;
+
+          i {
+            margin-right: 4px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Responsive tasarım
+@media (max-width: 768px) {
+  .ogrenci-odevler-container {
+    padding: 15px;
+
+    .page-header {
+      padding: 20px;
+
+      .header-content {
+        .page-title {
+          font-size: 2rem;
+        }
+
+        .page-description {
+          font-size: 1rem;
+        }
+      }
+    }
+
+    .odev-card {
+      .odev-header {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .odev-status {
+          margin-top: 10px;
+        }
+      }
+
+      .odev-footer {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .odev-date {
+          margin-top: 10px;
+        }
+      }
+    }
+  }
+}
