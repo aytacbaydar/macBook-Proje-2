@@ -117,13 +117,30 @@ export class OgrenciOdevlerSayfasiComponent implements OnInit {
       });
     }
 
-    // Update filteredOdevler and pagination
-    this.filteredOdevler = filtered; // Assign to the one and only filteredOdevler property
+    // Update pagination
     this.calculatePagination();
   }
 
   calculatePagination(): void {
-    this.totalPages = Math.ceil(this.filteredOdevler.length / this.itemsPerPage);
+    // Get filtered count for pagination calculation
+    let filtered = [...this.odevler];
+
+    // Apply search filter
+    if (this.searchQuery.trim()) {
+      const query = this.searchQuery.toLowerCase();
+      filtered = filtered.filter(odev =>
+        odev.konu.toLowerCase().includes(query) ||
+        odev.aciklama?.toLowerCase().includes(query) ||
+        odev.ogretmen_adi.toLowerCase().includes(query)
+      );
+    }
+
+    // Apply status filter
+    if (this.selectedStatus !== 'all') {
+      filtered = filtered.filter(odev => this.getOdevStatus(odev) === this.selectedStatus);
+    }
+
+    this.totalPages = Math.ceil(filtered.length / this.itemsPerPage);
     if (this.currentPage > this.totalPages) {
       this.currentPage = 1;
     }
