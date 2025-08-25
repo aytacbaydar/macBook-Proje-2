@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
-require_once 'config.php';
+require_once '../config.php';
 
 function errorResponse($message, $code = 400) {
     http_response_code($code);
