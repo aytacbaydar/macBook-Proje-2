@@ -1,0 +1,895 @@
+[ERROR] NG5002: Parser Error: Unexpected token ')' at column 52 in [{{ odevler.filter(o => getOdevStatus(o) === 'expired').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@89:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:187:14:
+      187 │       <button *ngIf="searchQuery" class="btn-clear-search" (click...
+          ╵               ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 53 in [{{ odevler.filter(o => getOdevStatus(o) === 'upcoming').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@80:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:187:14:
+      187 │       <button *ngIf="searchQuery" class="btn-clear-search" (click...
+          ╵               ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'active').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@71:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:187:68:
+      187 │ ...="btn-clear-search" (click)="searchQuery = ''; onSearchChange()">
+          ╵                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'expired').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@89:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:187:68:
+      187 │ ...="btn-clear-search" (click)="searchQuery = ''; onSearchChange()">
+          ╵                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'upcoming').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@80:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:187:68:
+      187 │ ...="btn-clear-search" (click)="searchQuery = ''; onSearchChange()">
+          ╵                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 51 in [{{ odevler.filter(o => getOdevStatus(o) === 'active').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@71:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:187:68:
+      187 │ ...="btn-clear-search" (click)="searchQuery = ''; onSearchChange()">
+          ╵                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 52 in [{{ odevler.filter(o => getOdevStatus(o) === 'expired').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@89:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:187:68:
+      187 │ ...="btn-clear-search" (click)="searchQuery = ''; onSearchChange()">
+          ╵                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 53 in [{{ odevler.filter(o => getOdevStatus(o) === 'upcoming').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@80:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:187:68:
+      187 │ ...="btn-clear-search" (click)="searchQuery = ''; onSearchChange()">
+          ╵                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'active').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@71:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:193:38:
+      193 │     <div class="pagination-container" *ngIf="totalPages > 1">
+          ╵                                       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'expired').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@89:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:193:38:
+      193 │     <div class="pagination-container" *ngIf="totalPages > 1">
+          ╵                                       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'upcoming').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@80:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:193:38:
+      193 │     <div class="pagination-container" *ngIf="totalPages > 1">
+          ╵                                       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 51 in [{{ odevler.filter(o => getOdevStatus(o) === 'active').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@71:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:193:38:
+      193 │     <div class="pagination-container" *ngIf="totalPages > 1">
+          ╵                                       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 52 in [{{ odevler.filter(o => getOdevStatus(o) === 'expired').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@89:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:193:38:
+      193 │     <div class="pagination-container" *ngIf="totalPages > 1">
+          ╵                                       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 53 in [{{ odevler.filter(o => getOdevStatus(o) === 'upcoming').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@80:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:193:38:
+      193 │     <div class="pagination-container" *ngIf="totalPages > 1">
+          ╵                                       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'active').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@71:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:195:42:
+      195 │ ...ass="page-btn" (click)="previousPage()" [disabled]="currentPag...
+          ╵                            ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'expired').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@89:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:195:42:
+      195 │ ...ass="page-btn" (click)="previousPage()" [disabled]="currentPag...
+          ╵                            ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'upcoming').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@80:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:195:42:
+      195 │ ...ass="page-btn" (click)="previousPage()" [disabled]="currentPag...
+          ╵                            ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 51 in [{{ odevler.filter(o => getOdevStatus(o) === 'active').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@71:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:195:42:
+      195 │ ...ass="page-btn" (click)="previousPage()" [disabled]="currentPag...
+          ╵                            ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 52 in [{{ odevler.filter(o => getOdevStatus(o) === 'expired').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@89:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:195:42:
+      195 │ ...ass="page-btn" (click)="previousPage()" [disabled]="currentPag...
+          ╵                            ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 53 in [{{ odevler.filter(o => getOdevStatus(o) === 'upcoming').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@80:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:195:42:
+      195 │ ...ass="page-btn" (click)="previousPage()" [disabled]="currentPag...
+          ╵                            ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'active').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@71:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:195:70:
+      195 │ ...age-btn" (click)="previousPage()" [disabled]="currentPage === 1">
+          ╵                                                  ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'expired').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@89:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:195:70:
+      195 │ ...age-btn" (click)="previousPage()" [disabled]="currentPage === 1">
+          ╵                                                  ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'upcoming').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@80:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:195:70:
+      195 │ ...age-btn" (click)="previousPage()" [disabled]="currentPage === 1">
+          ╵                                                  ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 51 in [{{ odevler.filter(o => getOdevStatus(o) === 'active').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@71:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:195:70:
+      195 │ ...age-btn" (click)="previousPage()" [disabled]="currentPage === 1">
+          ╵                                                  ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 52 in [{{ odevler.filter(o => getOdevStatus(o) === 'expired').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@89:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:195:70:
+      195 │ ...age-btn" (click)="previousPage()" [disabled]="currentPage === 1">
+          ╵                                                  ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 53 in [{{ odevler.filter(o => getOdevStatus(o) === 'upcoming').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@80:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:195:70:
+      195 │ ...age-btn" (click)="previousPage()" [disabled]="currentPage === 1">
+          ╵                                                  ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'active').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@71:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:200:10:
+      200 │           *ngFor="let page of [].constructor(totalPages); let i =...
+          ╵           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'expired').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@89:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:200:10:
+      200 │           *ngFor="let page of [].constructor(totalPages); let i =...
+          ╵           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'upcoming').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@80:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:200:10:
+      200 │           *ngFor="let page of [].constructor(totalPages); let i =...
+          ╵           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 51 in [{{ odevler.filter(o => getOdevStatus(o) === 'active').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@71:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:200:10:
+      200 │           *ngFor="let page of [].constructor(totalPages); let i =...
+          ╵           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 52 in [{{ odevler.filter(o => getOdevStatus(o) === 'expired').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@89:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:200:10:
+      200 │           *ngFor="let page of [].constructor(totalPages); let i =...
+          ╵           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 53 in [{{ odevler.filter(o => getOdevStatus(o) === 'upcoming').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@80:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:200:10:
+      200 │           *ngFor="let page of [].constructor(totalPages); let i =...
+          ╵           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'active').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@71:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:202:26:
+      202 │           [class.active]="currentPage === i + 1"
+          ╵                           ~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'expired').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@89:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:202:26:
+      202 │           [class.active]="currentPage === i + 1"
+          ╵                           ~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'upcoming').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@80:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:202:26:
+      202 │           [class.active]="currentPage === i + 1"
+          ╵                           ~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 51 in [{{ odevler.filter(o => getOdevStatus(o) === 'active').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@71:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:202:26:
+      202 │           [class.active]="currentPage === i + 1"
+          ╵                           ~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 52 in [{{ odevler.filter(o => getOdevStatus(o) === 'expired').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@89:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:202:26:
+      202 │           [class.active]="currentPage === i + 1"
+          ╵                           ~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 53 in [{{ odevler.filter(o => getOdevStatus(o) === 'upcoming').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@80:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:202:26:
+      202 │           [class.active]="currentPage === i + 1"
+          ╵                           ~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'active').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@71:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:203:19:
+      203 │           (click)="goToPage(i + 1)">
+          ╵                    ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'expired').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@89:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:203:19:
+      203 │           (click)="goToPage(i + 1)">
+          ╵                    ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'upcoming').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@80:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:203:19:
+      203 │           (click)="goToPage(i + 1)">
+          ╵                    ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 51 in [{{ odevler.filter(o => getOdevStatus(o) === 'active').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@71:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:203:19:
+      203 │           (click)="goToPage(i + 1)">
+          ╵                    ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 52 in [{{ odevler.filter(o => getOdevStatus(o) === 'expired').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@89:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:203:19:
+      203 │           (click)="goToPage(i + 1)">
+          ╵                    ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 53 in [{{ odevler.filter(o => getOdevStatus(o) === 'upcoming').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@80:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:203:19:
+      203 │           (click)="goToPage(i + 1)">
+          ╵                    ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'active').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@71:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:204:10:
+      204 │           {{ i + 1 }}
+          ╵           ~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'expired').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@89:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:204:10:
+      204 │           {{ i + 1 }}
+          ╵           ~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'upcoming').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@80:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:204:10:
+      204 │           {{ i + 1 }}
+          ╵           ~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 51 in [{{ odevler.filter(o => getOdevStatus(o) === 'active').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@71:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:204:10:
+      204 │           {{ i + 1 }}
+          ╵           ~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 52 in [{{ odevler.filter(o => getOdevStatus(o) === 'expired').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@89:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:204:10:
+      204 │           {{ i + 1 }}
+          ╵           ~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 53 in [{{ odevler.filter(o => getOdevStatus(o) === 'upcoming').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@80:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:204:10:
+      204 │           {{ i + 1 }}
+          ╵           ~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'active').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@71:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:207:42:
+      207 │ ...class="page-btn" (click)="nextPage()" [disabled]="currentPage ...
+          ╵                              ~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'expired').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@89:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:207:42:
+      207 │ ...class="page-btn" (click)="nextPage()" [disabled]="currentPage ...
+          ╵                              ~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'upcoming').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@80:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:207:42:
+      207 │ ...class="page-btn" (click)="nextPage()" [disabled]="currentPage ...
+          ╵                              ~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 51 in [{{ odevler.filter(o => getOdevStatus(o) === 'active').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@71:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:207:42:
+      207 │ ...class="page-btn" (click)="nextPage()" [disabled]="currentPage ...
+          ╵                              ~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 52 in [{{ odevler.filter(o => getOdevStatus(o) === 'expired').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@89:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:207:42:
+      207 │ ...class="page-btn" (click)="nextPage()" [disabled]="currentPage ...
+          ╵                              ~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 53 in [{{ odevler.filter(o => getOdevStatus(o) === 'upcoming').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@80:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:207:42:
+      207 │ ...class="page-btn" (click)="nextPage()" [disabled]="currentPage ...
+          ╵                              ~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'active').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@71:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:207:66:
+      207 │ ...tn" (click)="nextPage()" [disabled]="currentPage === totalPages">
+          ╵                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'expired').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@89:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:207:66:
+      207 │ ...tn" (click)="nextPage()" [disabled]="currentPage === totalPages">
+          ╵                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'upcoming').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@80:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:207:66:
+      207 │ ...tn" (click)="nextPage()" [disabled]="currentPage === totalPages">
+          ╵                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 51 in [{{ odevler.filter(o => getOdevStatus(o) === 'active').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@71:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:207:66:
+      207 │ ...tn" (click)="nextPage()" [disabled]="currentPage === totalPages">
+          ╵                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 52 in [{{ odevler.filter(o => getOdevStatus(o) === 'expired').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@89:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:207:66:
+      207 │ ...tn" (click)="nextPage()" [disabled]="currentPage === totalPages">
+          ╵                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 53 in [{{ odevler.filter(o => getOdevStatus(o) === 'upcoming').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@80:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:207:66:
+      207 │ ...tn" (click)="nextPage()" [disabled]="currentPage === totalPages">
+          ╵                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'active').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@71:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:213:14:
+      213 │ ...    <span>{{ filteredOdevler.length }} ödevden {{ (currentPag...
+          ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'expired').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@89:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:213:14:
+      213 │ ...    <span>{{ filteredOdevler.length }} ödevden {{ (currentPag...
+          ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Bindings cannot contain assignments at column 20 in [{{ odevler.filter(o => getOdevStatus(o) === 'upcoming').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@80:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:213:14:
+      213 │ ...    <span>{{ filteredOdevler.length }} ödevden {{ (currentPag...
+          ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 51 in [{{ odevler.filter(o => getOdevStatus(o) === 'active').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@71:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:213:14:
+      213 │ ...    <span>{{ filteredOdevler.length }} ödevden {{ (currentPag...
+          ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 52 in [{{ odevler.filter(o => getOdevStatus(o) === 'expired').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@89:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:213:14:
+      213 │ ...    <span>{{ filteredOdevler.length }} ödevden {{ (currentPag...
+          ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token ')' at column 53 in [{{ odevler.filter(o => getOdevStatus(o) === 'upcoming').length }}] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html@80:36 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:213:14:
+      213 │ ...    <span>{{ filteredOdevler.length }} ödevden {{ (currentPag...
+          ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'Math' does not exist on type 'OgrenciOdevlerSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.html:213:97:
+      213 │ ...- 1) * itemsPerPage + 1 }}-{{ Math.min(currentPage * itemsPerP...
+          ╵                                 ~~~~
+
+  Error occurs in the template of component OgrenciOdevlerSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-islenen-konular-sayfasi/ogrenci-odevler-sayfasi/ogrenci-odevler-sayfasi.component.ts:9:15:
+      9 │   templateUrl: './ogrenci-odevler-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
