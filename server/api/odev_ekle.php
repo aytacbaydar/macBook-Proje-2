@@ -63,6 +63,15 @@ try {
         errorResponse('Bitiş tarihi başlangıç tarihinden sonra olmalıdır');
     }
 
+    // PDF dosyası kontrolü - eğer PDF dosyası varsa dosya adını kontrol et
+    if (!empty($pdf_dosyasi)) {
+        // PDF dosyasının uploads klasöründe olup olmadığını kontrol et
+        $pdf_path = '../uploads/odevler/' . $pdf_dosyasi;
+        if (!file_exists($pdf_path)) {
+            errorResponse('Yüklenen PDF dosyası bulunamadı');
+        }
+    }
+
     // Veritabanına kaydet
     $stmt = $conn->prepare("
         INSERT INTO odevler (grup, konu, baslangic_tarihi, bitis_tarihi, aciklama, pdf_dosyasi, ogretmen_id, ogretmen_adi, olusturma_tarihi) 
