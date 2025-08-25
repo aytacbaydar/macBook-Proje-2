@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
@@ -28,7 +27,7 @@ export class OgretmenOdevSayfasiComponent implements OnInit {
   odevler: Odev[] = [];
   gruplar: string[] = [];
   teacherInfo: any = null;
-  
+
   currentOdev: Odev = {
     grup: '',
     konu: '',
@@ -44,6 +43,22 @@ export class OgretmenOdevSayfasiComponent implements OnInit {
   uploadProgress: number = 0;
   isUploading: boolean = false;
 
+  // Variables for the new PDF upload logic
+  selectedPdf: File | null = null;
+  pdfFileName: string = '';
+  showForm: boolean = false;
+  newOdev: Odev = { // Renamed from currentOdev for clarity in new logic, but keeping currentOdev for existing structure
+    grup: '',
+    konu: '',
+    baslangic_tarihi: '',
+    bitis_tarihi: '',
+    aciklama: '',
+    ogretmen_id: 0,
+    ogretmen_adi: '',
+    pdf_dosyasi: ''
+  };
+  currentUser: any = null; // Assuming this holds current logged-in user info
+
   private modal: any;
 
   constructor(
@@ -55,7 +70,20 @@ export class OgretmenOdevSayfasiComponent implements OnInit {
     this.loadTeacherInfo();
     this.loadGruplar();
     this.loadOdevler();
+    this.loadCurrentUser(); // Load current user info
   }
+
+  loadCurrentUser(): void {
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (userStr) {
+      try {
+        this.currentUser = JSON.parse(userStr);
+      } catch (error) {
+        console.error('Current user info not loaded:', error);
+      }
+    }
+  }
+
 
   loadTeacherInfo(): void {
     const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
@@ -64,6 +92,8 @@ export class OgretmenOdevSayfasiComponent implements OnInit {
         this.teacherInfo = JSON.parse(userStr);
         this.currentOdev.ogretmen_id = this.teacherInfo.id;
         this.currentOdev.ogretmen_adi = this.teacherInfo.adi_soyadi;
+        this.newOdev.ogretmen_id = this.teacherInfo.id; // Also set for newOdev
+        this.newOdev.ogretmen_adi = this.teacherInfo.adi_soyadi; // Also set for newOdev
       } catch (error) {
         console.error('Öğretmen bilgileri yüklenemedi:', error);
       }
@@ -123,8 +153,18 @@ export class OgretmenOdevSayfasiComponent implements OnInit {
   }
 
   editOdev(odev: Odev): void {
-    this.editingOdev = true;
-    this.currentOdev = { ...odev };
+    this.editingOdev = true; // Set editingOdev to true to indicate edit mode
+    this.currentOdev = { ...odev }; // Copy the odev to currentOdev for display in the form
+    this.newOdev = { ...odev }; // Copy the odev to newOdev for form binding
+
+    // Eğer ödevde PDF varsa, dosya adını ayarla
+    if (odev.pdf_dosyasi) {
+      this.pdfFileName = odev.pdf_dosyasi;
+    } else {
+      this.pdfFileName = '';
+      this.selectedPdf = null;
+    }
+
     this.showModal();
   }
 
@@ -143,7 +183,7 @@ export class OgretmenOdevSayfasiComponent implements OnInit {
   }
 
   resetForm(): void {
-    this.currentOdev = {
+    this.currentOdev = { // Reset currentOdev as well if it's used directly in the form
       grup: '',
       konu: '',
       baslangic_tarihi: '',
@@ -152,9 +192,24 @@ export class OgretmenOdevSayfasiComponent implements OnInit {
       ogretmen_id: this.teacherInfo?.id || 0,
       ogretmen_adi: this.teacherInfo?.adi_soyadi || ''
     };
-    this.selectedFile = null;
-    this.uploadProgress = 0;
-    this.isUploading = false;
+    this.newOdev = {
+      grup: '',
+      konu: '',
+      baslangic_tarihi: '',
+      bitis_tarihi: '',
+      aciklama: '',
+      pdf_dosyasi: ''
+    };
+    this.editingOdev = false; // Reset editingOdev flag
+    this.showForm = false;
+    this.selectedPdf = null;
+    this.pdfFileName = '';
+
+    // File input'u temizle
+    const fileInput = document.getElementById('pdfFile') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
   }
 
   onFileSelected(event: any): void {
@@ -184,10 +239,10 @@ export class OgretmenOdevSayfasiComponent implements OnInit {
 
   isFormValid(): boolean {
     return !!(
-      this.currentOdev.grup &&
-      this.currentOdev.konu &&
-      this.currentOdev.baslangic_tarihi &&
-      this.currentOdev.bitis_tarihi
+      this.newOdev.grup && // Use newOdev for validation
+      this.newOdev.konu &&
+      this.newOdev.baslangic_tarihi &&
+      this.newOdev.bitis_tarihi
     );
   }
 
@@ -197,24 +252,31 @@ export class OgretmenOdevSayfasiComponent implements OnInit {
       return;
     }
 
-    if (new Date(this.currentOdev.bitis_tarihi) <= new Date(this.currentOdev.baslangic_tarihi)) {
+    if (new Date(this.newOdev.bitis_tarihi) <= new Date(this.newOdev.baslangic_tarihi)) {
       this.toastr.error('Bitiş tarihi başlangıç tarihinden sonra olmalıdır', 'Hata');
       return;
     }
 
     this.isUploading = true;
 
-    if (this.selectedFile) {
+    if (this.selectedPdf) { // Check if a new PDF is selected
       this.uploadPdfAndSaveOdev();
-    } else {
+    } else if (this.editingOdev && this.newOdev.pdf_dosyasi) {
+      // If editing and no new PDF is selected, but an existing PDF is present, save with existing PDF name
+      this.saveOdevData();
+    }
+     else {
+      // If no PDF is selected or uploaded, and not editing an existing odev with a PDF
       this.saveOdevData();
     }
   }
 
+  // This method handles both PDF upload and then saving Odev data
   private uploadPdfAndSaveOdev(): void {
     const formData = new FormData();
-    formData.append('pdf', this.selectedFile!);
-    formData.append('ogretmen_id', this.currentOdev.ogretmen_id.toString());
+    formData.append('pdf', this.selectedPdf!);
+    // Ensure correct teacher_id is used, preferably from the loaded teacherInfo or currentUser
+    formData.append('ogretmen_id', this.teacherInfo?.id.toString() || this.currentUser?.id.toString() || '0');
 
     const token = this.getAuthToken();
 
@@ -228,8 +290,10 @@ export class OgretmenOdevSayfasiComponent implements OnInit {
           this.uploadProgress = Math.round(100 * event.loaded / (event.total || 1));
         } else if (event.type === HttpEventType.Response) {
           if (event.body?.success) {
-            this.currentOdev.pdf_dosyasi = event.body.filename;
-            this.saveOdevData();
+            // PDF successfully uploaded, assign the filename to newOdev
+            this.newOdev.pdf_dosyasi = event.body.filename;
+            this.pdfFileName = event.body.filename; // Update component's pdfFileName
+            this.saveOdevData(); // Now save the Odev data with the new PDF filename
           } else {
             this.isUploading = false;
             this.toastr.error(event.body?.message || 'PDF yükleme hatası', 'Hata');
@@ -245,12 +309,32 @@ export class OgretmenOdevSayfasiComponent implements OnInit {
     });
   }
 
+  // This method saves the Odev data without uploading a new PDF
   private saveOdevData(): void {
     const token = this.getAuthToken();
     const url = this.editingOdev ? '/server/api/odev_guncelle.php' : '/server/api/odev_ekle.php';
 
-    this.http.post<any>(url, this.currentOdev, {
-      headers: { 
+    // Ensure pdf_dosyasi is correctly set in newOdev before sending
+    // If editing and no new PDF, pdf_dosyasi should retain its original value from editOdev
+    // If creating and new PDF was uploaded, it's set in uploadPdfAndSaveOdev
+    // If creating and no PDF, it remains undefined/empty string
+
+    const odevDataToSend = {
+      ...this.newOdev,
+      // Ensure teacher_id and teacher_adi are from the correct source if newOdev wasn't fully populated
+      ogretmen_id: this.newOdev.ogretmen_id || this.teacherInfo?.id || this.currentUser?.id || 0,
+      ogretmen_adi: this.newOdev.ogretmen_adi || this.teacherInfo?.adi_soyadi || this.currentUser?.adi_soyadi || '',
+      pdf_dosyasi: this.newOdev.pdf_dosyasi // Use the pdf_dosyasi from newOdev
+    };
+
+    // If editing, ensure the ID is included
+    if (this.editingOdev && this.currentOdev.id) {
+      (odevDataToSend as any).id = this.currentOdev.id;
+    }
+
+
+    this.http.post<any>(url, odevDataToSend, {
+      headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       }
@@ -341,5 +425,18 @@ export class OgretmenOdevSayfasiComponent implements OnInit {
       return user.token || '';
     }
     return '';
+  }
+
+  // Placeholder for uploadPdf function, assuming it exists elsewhere or needs to be implemented
+  // This is a mock implementation for demonstration. Replace with actual http call.
+  async uploadPdf(file: File): Promise<{ success: boolean; data?: { filename: string }; message?: string }> {
+    console.log('Uploading file:', file.name);
+    // Simulate an API call
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const filename = `uploaded_${Date.now()}_${file.name}`;
+        resolve({ success: true, data: { filename: filename } });
+      }, 1000);
+    });
   }
 }
