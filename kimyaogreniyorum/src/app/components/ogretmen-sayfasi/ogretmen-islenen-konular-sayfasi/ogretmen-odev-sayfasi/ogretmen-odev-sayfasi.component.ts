@@ -319,8 +319,9 @@ export class OgretmenOdevSayfasiComponent implements OnInit {
         } else if (event.type === HttpEventType.Response) {
           if (event.body?.success) {
             // PDF successfully uploaded, assign the filename to newOdev
-            this.newOdev.pdf_dosyasi = event.body.filename;
-            this.pdfFileName = event.body.filename; // Update component's pdfFileName
+            this.newOdev.pdf_dosyasi = event.body.data.filename;
+            this.pdfFileName = event.body.data.filename; // Update component's pdfFileName
+            console.log('PDF yüklendi:', event.body.data.filename);
             this.saveOdevData(); // Now save the Odev data with the new PDF filename
           } else {
             this.isUploading = false;
@@ -354,6 +355,8 @@ export class OgretmenOdevSayfasiComponent implements OnInit {
       ogretmen_adi: this.newOdev.ogretmen_adi || this.teacherInfo?.adi_soyadi || this.currentUser?.adi_soyadi || '',
       pdf_dosyasi: this.newOdev.pdf_dosyasi // Use the pdf_dosyasi from newOdev
     };
+
+    console.log('Gönderilecek ödev verisi:', odevDataToSend);
 
     // If editing, ensure the ID is included
     if (this.editingOdev && this.currentOdev.id) {

@@ -109,7 +109,7 @@ try {
                 'filename' => $filename,
                 'original_name' => $file['name'],
                 'size' => $file['size'],
-                'path' => $target_path
+                'path' => '../uploads/odevler/' . $filename
             ], 'PDF başarıyla yüklendi');
         } else {
             errorResponse('Dosya taşındı ama bulunamıyor');

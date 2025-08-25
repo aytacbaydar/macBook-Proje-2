@@ -66,9 +66,13 @@ try {
     // PDF dosyası kontrolü - eğer PDF dosyası varsa dosya adını kontrol et
     if (!empty($pdf_dosyasi)) {
         // PDF dosyasının uploads klasöründe olup olmadığını kontrol et
-        $pdf_path = '../uploads/odevler/' . $pdf_dosyasi;
+        $pdf_path = __DIR__ . '/../uploads/odevler/' . $pdf_dosyasi;
+        error_log("PDF dosyası kontrol ediliyor: " . $pdf_path);
         if (!file_exists($pdf_path)) {
-            errorResponse('Yüklenen PDF dosyası bulunamadı');
+            error_log("PDF dosyası bulunamadı: " . $pdf_path);
+            errorResponse('Yüklenen PDF dosyası bulunamadı: ' . $pdf_dosyasi);
+        } else {
+            error_log("PDF dosyası bulundu: " . $pdf_path);
         }
     }
 
@@ -77,6 +81,8 @@ try {
         INSERT INTO odevler (grup, konu, baslangic_tarihi, bitis_tarihi, aciklama, pdf_dosyasi, ogretmen_id, ogretmen_adi, olusturma_tarihi) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())
     ");
+
+    error_log("Veritabanına kaydedilecek PDF dosyası: " . $pdf_dosyasi);
 
     $result = $stmt->execute([
         $grup,
@@ -91,9 +97,12 @@ try {
 
     if ($result) {
         $odev_id = $conn->lastInsertId();
+        error_log("Ödev başarıyla eklendi, ID: " . $odev_id . ", PDF: " . $pdf_dosyasi);
         successResponse(['id' => $odev_id], 'Ödev başarıyla eklendi');
     } else {
-        errorResponse('Ödev eklenirken hata oluştu');
+        $error = $stmt->errorInfo();
+        error_log("Veritabanı hatası: " . print_r($error, true));
+        errorResponse('Ödev eklenirken hata oluştu: ' . $error[2]);
     }
 
 } catch (Exception $e) {
