@@ -50,8 +50,13 @@ export class OgrenciOdevlerSayfasiComponent implements OnInit {
   }
 
   loadOdevler(): void {
-    if (!this.currentUser || !this.currentUser.grup) {
-      this.toastr.error('Grup bilgisi bulunamadı');
+    // Farklı grup alanlarını kontrol et
+    const grup = this.currentUser?.grup || this.currentUser?.grubu || this.currentUser?.sinifi;
+    
+    if (!this.currentUser || !grup) {
+      console.error('Kullanıcı verisi:', this.currentUser);
+      this.toastr.error('Grup bilgisi bulunamadı. Lütfen tekrar giriş yapınız.');
+      this.router.navigate(['/']);
       return;
     }
 
@@ -63,7 +68,7 @@ export class OgrenciOdevlerSayfasiComponent implements OnInit {
     });
 
     // Öğrencinin grubuna göre ödevleri getir
-    this.http.get<any>(`./server/api/ogrenci_odevleri.php?grup=${this.currentUser.grup}`, { headers })
+    this.http.get<any>(`./server/api/ogrenci_odevleri.php?grup=${encodeURIComponent(grup)}`, { headers })
       .subscribe({
         next: (response) => {
           console.log('Ödevler response:', response);
