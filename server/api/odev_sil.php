@@ -1,4 +1,3 @@
-
 <?php
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
@@ -29,7 +28,7 @@ function successResponse($data = null, $message = '') {
 try {
     // Veritabanı bağlantısını al
     $conn = getConnection();
-    
+
     // Sadece DELETE metoduna izin ver
     if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
         errorResponse('Sadece DELETE metoduna izin verilir', 405);
@@ -37,7 +36,7 @@ try {
 
     // Ödev ID'sini al
     $odev_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-    
+
     if ($odev_id <= 0) {
         errorResponse('Geçerli ödev ID gerekli');
     }
