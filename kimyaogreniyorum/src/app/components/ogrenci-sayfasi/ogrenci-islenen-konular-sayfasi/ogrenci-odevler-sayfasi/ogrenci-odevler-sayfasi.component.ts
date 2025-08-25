@@ -7,7 +7,8 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-ogrenci-odevler-sayfasi',
   templateUrl: './ogrenci-odevler-sayfasi.component.html',
-  styleUrl: './ogrenci-odevler-sayfasi.component.scss'
+  styleUrl: './ogrenci-odevler-sayfasi.component.scss',
+  standalone: false,
 })
 export class OgrenciOdevlerSayfasiComponent implements OnInit {
   odevler: any[] = [];
