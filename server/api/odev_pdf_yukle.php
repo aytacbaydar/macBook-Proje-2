@@ -1,6 +1,15 @@
 
 <?php
-header('Content-Type: application/json');
+// Output buffer'ı başlat ve temizle
+ob_start();
+ob_clean();
+
+// Hata raporlamayı ayarla
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+
+header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
@@ -12,17 +21,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require_once 'config.php';
 
 function errorResponse($message, $code = 400) {
+    // Output buffer'ı temizle
+    if (ob_get_length()) {
+        ob_clean();
+    }
+    
     http_response_code($code);
-    echo json_encode(['success' => false, 'message' => $message]);
+    echo json_encode(['success' => false, 'message' => $message], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
 function successResponse($data = null, $message = '') {
+    // Output buffer'ı temizle
+    if (ob_get_length()) {
+        ob_clean();
+    }
+    
     echo json_encode([
         'success' => true,
         'message' => $message,
         'data' => $data
-    ]);
+    ], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -81,6 +100,17 @@ try {
 
 } catch (Exception $e) {
     error_log("PDF yükleme hatası: " . $e->getMessage());
+    
+    // Output buffer'ı temizle
+    if (ob_get_length()) {
+        ob_clean();
+    }
+    
     errorResponse('Sunucu hatası: ' . $e->getMessage(), 500);
+}
+
+// Output buffer'ı temizle ve sonlandır
+if (ob_get_length()) {
+    ob_clean();
 }
 ?>
