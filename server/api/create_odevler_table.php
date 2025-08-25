@@ -3,6 +3,9 @@
 require_once '../config.php';
 
 try {
+    // Veritabanı bağlantısını al
+    $conn = getConnection();
+    
     $sql = "CREATE TABLE IF NOT EXISTS odevler (
         id INT AUTO_INCREMENT PRIMARY KEY,
         grup VARCHAR(50) NOT NULL,
