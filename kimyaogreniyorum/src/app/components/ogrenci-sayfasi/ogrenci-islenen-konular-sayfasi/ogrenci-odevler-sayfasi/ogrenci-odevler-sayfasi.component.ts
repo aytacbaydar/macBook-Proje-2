@@ -11,7 +11,6 @@ import { Router } from '@angular/router';
 })
 export class OgrenciOdevlerSayfasiComponent implements OnInit {
   odevler: any[] = [];
-  filteredOdevler: any[] = [];
   isLoading: boolean = false;
   currentUser: any = null;
   searchQuery: string = '';
@@ -91,7 +90,7 @@ export class OgrenciOdevlerSayfasiComponent implements OnInit {
     // Arama filtresi
     if (this.searchQuery.trim()) {
       const query = this.searchQuery.toLowerCase();
-      filtered = filtered.filter(odev => 
+      filtered = filtered.filter(odev =>
         odev.konu.toLowerCase().includes(query) ||
         odev.aciklama.toLowerCase().includes(query) ||
         odev.ogretmen_adi.toLowerCase().includes(query)
@@ -118,7 +117,8 @@ export class OgrenciOdevlerSayfasiComponent implements OnInit {
       });
     }
 
-    this.filteredOdevler = filtered;
+    // Update filteredOdevler and pagination
+    this.filteredOdevler = filtered; // Assign to the one and only filteredOdevler property
     this.calculatePagination();
   }
 
@@ -238,15 +238,30 @@ export class OgrenciOdevlerSayfasiComponent implements OnInit {
 
   // Computed properties
   get filteredOdevler(): any[] {
-    if (!this.searchQuery.trim()) {
-      return this.odevler;
+    let filtered = [...this.odevler];
+
+    // Apply search filter
+    if (this.searchQuery.trim()) {
+      const query = this.searchQuery.toLowerCase();
+      filtered = filtered.filter(odev =>
+        odev.konu.toLowerCase().includes(query) ||
+        odev.aciklama?.toLowerCase().includes(query)
+      );
     }
 
-    const query = this.searchQuery.toLowerCase();
-    return this.odevler.filter(odev => 
-      odev.konu.toLowerCase().includes(query) ||
-      odev.aciklama?.toLowerCase().includes(query)
-    );
+    // Apply status filter
+    if (this.selectedStatus !== 'all') {
+      filtered = filtered.filter(odev => this.getOdevStatus(odev) === this.selectedStatus);
+    }
+
+    // Update pagination
+    this.totalPages = Math.ceil(filtered.length / this.itemsPerPage);
+
+    // Apply pagination
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+
+    return filtered.slice(startIndex, endIndex);
   }
 
   // Helper methods for template calculations
