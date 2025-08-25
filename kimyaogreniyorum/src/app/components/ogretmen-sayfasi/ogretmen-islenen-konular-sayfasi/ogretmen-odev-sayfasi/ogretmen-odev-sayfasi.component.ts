@@ -231,8 +231,34 @@ export class OgretmenOdevSayfasiComponent implements OnInit {
     }
   }
 
+  onPdfSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      if (file.type !== 'application/pdf') {
+        this.toastr.error('Lütfen PDF dosyası seçiniz', 'Hata');
+        return;
+      }
+
+      if (file.size > 50 * 1024 * 1024) { // 50MB limit
+        this.toastr.error('Dosya boyutu 50MB\'dan büyük olamaz', 'Hata');
+        return;
+      }
+
+      this.selectedPdf = file;
+      console.log('PDF dosyası seçildi:', file.name);
+    }
+  }
+
   clearFile(): void {
     this.selectedFile = null;
+    const fileInput = document.getElementById('pdfFile') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
+  }
+
+  clearPdf(): void {
+    this.selectedPdf = null;
     const fileInput = document.getElementById('pdfFile') as HTMLInputElement;
     if (fileInput) {
       fileInput.value = '';

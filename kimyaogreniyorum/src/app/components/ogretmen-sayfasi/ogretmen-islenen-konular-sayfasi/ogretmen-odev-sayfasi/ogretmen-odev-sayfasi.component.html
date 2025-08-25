@@ -1,4 +1,3 @@
-
 <div class="container-fluid py-4">
   <!-- Header -->
   <div class="d-flex justify-content-between align-items-center mb-4">
@@ -40,7 +39,7 @@
                 </div>
                 <p class="mb-0 fw-semibold">{{ formatDate(odev.baslangic_tarihi) }}</p>
               </div>
-              
+
               <div class="mb-3">
                 <div class="d-flex align-items-center mb-2">
                   <i class="bi bi-calendar-check text-danger me-2"></i>
@@ -139,26 +138,22 @@
 
           <div class="mb-3">
             <label for="pdfFile" class="form-label">PDF Dosyası</label>
-            <div class="input-group">
-              <input type="file" class="form-control" id="pdfFile" 
-                     (change)="onFileSelected($event)" accept=".pdf">
-              <button class="btn btn-outline-secondary" type="button" 
-                      (click)="clearFile()" *ngIf="selectedFile">
+            <input type="file" class="form-control" id="pdfFile" 
+                   accept=".pdf" (change)="onPdfSelected($event)">
+            <div class="form-text">PDF formatında, maksimum 50MB</div>
+            <div *ngIf="selectedPdf" class="mt-2">
+              <small class="text-success">
+                <i class="bi bi-file-pdf me-1"></i>
+                {{ selectedPdf.name }} ({{ formatFileSize(selectedPdf.size) }})
+              </small>
+              <button type="button" class="btn btn-sm btn-outline-danger ms-2" (click)="clearPdf()">
                 <i class="bi bi-x"></i>
               </button>
             </div>
-            <div class="form-text">PDF dosyası yükleyebilirsiniz (maksimum 50MB)</div>
-            
-            <div *ngIf="uploadProgress > 0 && uploadProgress < 100" class="mt-2">
-              <div class="progress">
-                <div class="progress-bar" [style.width.%]="uploadProgress">{{ uploadProgress }}%</div>
-              </div>
-            </div>
-
-            <div *ngIf="selectedFile" class="mt-2">
-              <small class="text-success">
+            <div *ngIf="pdfFileName && !selectedPdf" class="mt-2">
+              <small class="text-info">
                 <i class="bi bi-file-pdf me-1"></i>
-                {{ selectedFile.name }} ({{ formatFileSize(selectedFile.size) }})
+                Mevcut dosya: {{ pdfFileName }}
               </small>
             </div>
           </div>

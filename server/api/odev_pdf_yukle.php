@@ -77,9 +77,16 @@ try {
     }
 
     // Upload dizinini kontrol et ve oluştur
-    $upload_dir = '../uploads/odevler/';
+    $upload_dir = __DIR__ . '/../uploads/odevler/';
     if (!is_dir($upload_dir)) {
-        mkdir($upload_dir, 0755, true);
+        if (!mkdir($upload_dir, 0755, true)) {
+            errorResponse('Upload dizini oluşturulamadı');
+        }
+    }
+    
+    // Dizinin yazılabilir olduğunu kontrol et
+    if (!is_writable($upload_dir)) {
+        errorResponse('Upload dizini yazılabilir değil');
     }
 
     // Benzersiz dosya adı oluştur
@@ -91,14 +98,26 @@ try {
     $target_path = $upload_dir . $filename;
 
     // Dosyayı taşı
+    error_log("Dosya taşınıyor: " . $file['tmp_name'] . " -> " . $target_path);
+    
     if (move_uploaded_file($file['tmp_name'], $target_path)) {
-        successResponse([
-            'filename' => $filename,
-            'original_name' => $file['name'],
-            'size' => $file['size']
-        ], 'PDF başarıyla yüklendi');
+        error_log("Dosya başarıyla taşındı: " . $target_path);
+        
+        // Dosyanın gerçekten oluştuğunu kontrol et
+        if (file_exists($target_path)) {
+            successResponse([
+                'filename' => $filename,
+                'original_name' => $file['name'],
+                'size' => $file['size'],
+                'path' => $target_path
+            ], 'PDF başarıyla yüklendi');
+        } else {
+            errorResponse('Dosya taşındı ama bulunamıyor');
+        }
     } else {
-        errorResponse('Dosya yüklenirken hata oluştu');
+        $upload_error = error_get_last();
+        error_log("Dosya taşıma hatası: " . print_r($upload_error, true));
+        errorResponse('Dosya yüklenirken hata oluştu: ' . ($upload_error['message'] ?? 'Bilinmeyen hata'));
     }
 
 } catch (Exception $e) {
