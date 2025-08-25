@@ -1,0 +1,216 @@
+
+<div class="ogrenci-odevler-container">
+  <!-- Header Section -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <i class="bi bi-journal-text"></i>
+        Ödevlerim
+      </h1>
+      <div class="student-info" *ngIf="currentUser">
+        <div class="info-item">
+          <i class="bi bi-person-circle"></i>
+          <span>{{ currentUser.adi_soyadi }}</span>
+        </div>
+        <div class="info-item">
+          <i class="bi bi-collection"></i>
+          <span>{{ currentUser.grup }}</span>
+        </div>
+      </div>
+    </div>
+    <button class="refresh-btn" (click)="refreshOdevler()" [disabled]="isLoading">
+      <i class="bi bi-arrow-clockwise" [class.spinning]="isLoading"></i>
+      Yenile
+    </button>
+  </div>
+
+  <!-- Filters and Search -->
+  <div class="filters-section">
+    <div class="search-container">
+      <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input 
+          type="text" 
+          placeholder="Ödev ara..."
+          [(ngModel)]="searchQuery"
+          (input)="onSearchChange()"
+          class="search-input">
+        <button *ngIf="searchQuery" class="clear-btn" (click)="searchQuery = ''; onSearchChange()">
+          <i class="bi bi-x"></i>
+        </button>
+      </div>
+    </div>
+    
+    <div class="status-filter">
+      <select [(ngModel)]="selectedStatus" (change)="onStatusChange()" class="status-select">
+        <option value="all">Tüm Ödevler</option>
+        <option value="active">Aktif Ödevler</option>
+        <option value="upcoming">Yaklaşan Ödevler</option>
+        <option value="expired">Süresi Dolmuş</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Ödevler yükleniyor...</p>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div *ngIf="!isLoading">
+    <!-- Stats -->
+    <div class="stats-section" *ngIf="odevler.length > 0">
+      <div class="stat-card">
+        <div class="stat-icon active">
+          <i class="bi bi-clock-fill"></i>
+        </div>
+        <div class="stat-content">
+          <span class="stat-number">{{ odevler.filter(o => getOdevStatus(o) === 'active').length }}</span>
+          <span class="stat-label">Aktif</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon upcoming">
+          <i class="bi bi-calendar-plus"></i>
+        </div>
+        <div class="stat-content">
+          <span class="stat-number">{{ odevler.filter(o => getOdevStatus(o) === 'upcoming').length }}</span>
+          <span class="stat-label">Yaklaşan</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon expired">
+          <i class="bi bi-calendar-x"></i>
+        </div>
+        <div class="stat-content">
+          <span class="stat-number">{{ odevler.filter(o => getOdevStatus(o) === 'expired').length }}</span>
+          <span class="stat-label">Süresi Dolmuş</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon total">
+          <i class="bi bi-journal-bookmark"></i>
+        </div>
+        <div class="stat-content">
+          <span class="stat-number">{{ odevler.length }}</span>
+          <span class="stat-label">Toplam</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ödevler Grid -->
+    <div class="odevler-grid" *ngIf="paginatedOdevler.length > 0">
+      <div class="odev-card" *ngFor="let odev of paginatedOdevler" [class]="getOdevStatus(odev)">
+        <div class="card-header">
+          <div class="konu-section">
+            <h3 class="konu-title">{{ odev.konu }}</h3>
+            <span class="status-badge" [class]="getOdevStatus(odev)">
+              {{ getStatusText(getOdevStatus(odev)) }}
+            </span>
+          </div>
+          <div class="ogretmen-info">
+            <i class="bi bi-person"></i>
+            <span>{{ odev.ogretmen_adi }}</span>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="aciklama" *ngIf="odev.aciklama">
+            <p>{{ odev.aciklama }}</p>
+          </div>
+
+          <div class="tarih-bilgileri">
+            <div class="tarih-item">
+              <i class="bi bi-calendar-event"></i>
+              <div class="tarih-details">
+                <span class="tarih-label">Başlangıç:</span>
+                <span class="tarih-value">{{ formatDate(odev.baslangic_tarihi) }}</span>
+              </div>
+            </div>
+            <div class="tarih-item">
+              <i class="bi bi-calendar-check"></i>
+              <div class="tarih-details">
+                <span class="tarih-label">Bitiş:</span>
+                <span class="tarih-value">{{ formatDate(odev.bitis_tarihi) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="kalan-gun" *ngIf="getOdevStatus(odev) === 'active'">
+            <i class="bi bi-hourglass-split"></i>
+            <span *ngIf="getRemainingDays(odev.bitis_tarihi) > 0" class="positive">
+              {{ getRemainingDays(odev.bitis_tarihi) }} gün kaldı
+            </span>
+            <span *ngIf="getRemainingDays(odev.bitis_tarihi) === 0" class="today">
+              Son gün!
+            </span>
+            <span *ngIf="getRemainingDays(odev.bitis_tarihi) < 0" class="negative">
+              {{ Math.abs(getRemainingDays(odev.bitis_tarihi)) }} gün geçti
+            </span>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <div class="pdf-section" *ngIf="odev.pdf_dosyasi">
+            <div class="pdf-info">
+              <i class="bi bi-file-earmark-pdf"></i>
+              <span>PDF Dosyası Mevcut</span>
+            </div>
+            <div class="pdf-actions">
+              <button class="action-btn view-btn" (click)="openPdfInNewTab(odev.pdf_dosyasi)" title="Görüntüle">
+                <i class="bi bi-eye"></i>
+              </button>
+              <button class="action-btn download-btn" (click)="downloadPdf(odev.pdf_dosyasi, odev.konu)" title="İndir">
+                <i class="bi bi-download"></i>
+              </button>
+            </div>
+          </div>
+          <div class="no-pdf" *ngIf="!odev.pdf_dosyasi">
+            <i class="bi bi-file-earmark-x"></i>
+            <span>PDF dosyası bulunmamaktadır</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && filteredOdevler.length === 0" class="empty-state">
+      <div class="empty-illustration">
+        <i class="bi bi-journal-x"></i>
+      </div>
+      <h3>{{ searchQuery ? 'Arama sonucu bulunamadı' : 'Henüz ödev yok' }}</h3>
+      <p>{{ searchQuery ? 'Arama kriterlerinizi değiştirerek tekrar deneyin' : 'Öğretmeniniz henüz ödev vermemiş' }}</p>
+      <button *ngIf="searchQuery" class="btn-clear-search" (click)="searchQuery = ''; onSearchChange()">
+        Aramayı Temizle
+      </button>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination-container" *ngIf="totalPages > 1">
+      <div class="pagination">
+        <button class="page-btn" (click)="previousPage()" [disabled]="currentPage === 1">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+        
+        <button 
+          *ngFor="let page of [].constructor(totalPages); let i = index" 
+          class="page-btn" 
+          [class.active]="currentPage === i + 1"
+          (click)="goToPage(i + 1)">
+          {{ i + 1 }}
+        </button>
+        
+        <button class="page-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">
+          <i class="bi bi-chevron-right"></i>
+        </button>
+      </div>
+      
+      <div class="pagination-info">
+        <span>{{ filteredOdevler.length }} ödevden {{ (currentPage - 1) * itemsPerPage + 1 }}-{{ Math.min(currentPage * itemsPerPage, filteredOdevler.length) }} arası gösteriliyor</span>
+      </div>
+    </div>
+  </div>
+</div>
