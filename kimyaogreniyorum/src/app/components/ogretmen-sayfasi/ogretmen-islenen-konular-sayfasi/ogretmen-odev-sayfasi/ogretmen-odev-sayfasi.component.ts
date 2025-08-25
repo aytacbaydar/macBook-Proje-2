@@ -198,7 +198,9 @@ export class OgretmenOdevSayfasiComponent implements OnInit {
       baslangic_tarihi: '',
       bitis_tarihi: '',
       aciklama: '',
-      pdf_dosyasi: ''
+      pdf_dosyasi: '',
+      ogretmen_id: this.teacherInfo?.id || this.currentUser?.id || 0,
+      ogretmen_adi: this.teacherInfo?.adi_soyadi || this.currentUser?.adi_soyadi || ''
     };
     this.editingOdev = false; // Reset editingOdev flag
     this.showForm = false;
