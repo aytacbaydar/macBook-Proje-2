@@ -2,6 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ogrenci-odevler-sayfasi',
@@ -11,32 +12,31 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class OgrenciOdevlerSayfasiComponent implements OnInit {
   odevler: any[] = [];
-  isLoading: boolean = true;
-  studentInfo: any = null;
+  isLoading: boolean = false;
+  currentUser: any = null;
 
   constructor(
     private http: HttpClient,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.loadStudentInfo();
+    this.loadCurrentUser();
     this.loadOdevler();
   }
 
-  private loadStudentInfo(): void {
+  loadCurrentUser(): void {
     const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
     if (userStr) {
-      this.studentInfo = JSON.parse(userStr);
+      this.currentUser = JSON.parse(userStr);
     }
   }
 
-  private getAuthHeaders(): HttpHeaders {
+  getAuthHeaders(): HttpHeaders {
     let token = '';
-    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
-    if (userStr) {
-      const user = JSON.parse(userStr);
-      token = user.token || '';
+    if (this.currentUser && this.currentUser.token) {
+      token = this.currentUser.token;
     }
 
     return new HttpHeaders({
@@ -46,6 +46,11 @@ export class OgrenciOdevlerSayfasiComponent implements OnInit {
   }
 
   loadOdevler(): void {
+    if (!this.currentUser) {
+      this.toastr.error('Kullanıcı bilgileri bulunamadı', 'Hata');
+      return;
+    }
+
     this.isLoading = true;
 
     this.http.get<any>('./server/api/ogrenci_odevleri.php', {
@@ -57,92 +62,74 @@ export class OgrenciOdevlerSayfasiComponent implements OnInit {
           console.log('Ödevler yüklendi:', this.odevler);
         } else {
           this.toastr.error(response.message || 'Ödevler yüklenemedi', 'Hata');
+          this.odevler = [];
         }
         this.isLoading = false;
       },
       error: (error) => {
         console.error('Ödevler yüklenirken hata:', error);
         this.toastr.error('Ödevler yüklenirken hata oluştu', 'Hata');
+        this.odevler = [];
         this.isLoading = false;
       }
     });
   }
 
-  openPdf(pdfPath: string): void {
-    if (pdfPath) {
-      const fullPath = `./server/${pdfPath}`;
-      window.open(fullPath, '_blank');
-    } else {
-      this.toastr.warning('Bu ödev için PDF dosyası bulunmuyor', 'Uyarı');
-    }
-  }
-
-  getDurumClass(durum: string): string {
-    switch (durum) {
-      case 'aktif':
-        return 'aktif';
-      case 'süresi_dolmuş':
-        return 'suresi-dolmus';
-      default:
-        return '';
-    }
-  }
-
-  getDurumText(durum: string): string {
-    switch (durum) {
-      case 'aktif':
-        return 'Aktif';
-      case 'süresi_dolmuş':
-        return 'Süresi Dolmuş';
-      default:
-        return 'Bilinmiyor';
-    }
-  }
-
   formatDate(dateString: string): string {
+    if (!dateString) return 'Tarih belirtilmemiş';
+    
     const date = new Date(dateString);
-    return date.toLocaleDateString('tr-TR');
+    return date.toLocaleDateString('tr-TR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
   }
 
-  getKalanGunText(kalanGun: number): string {
-    if (kalanGun === 0) {
-      return 'Son gün!';
-    } else if (kalanGun === 1) {
-      return '1 gün kaldı';
-    } else {
-      return `${kalanGun} gün kaldı`;
+  getProgressPercentage(odev: any): number {
+    if (!odev.baslangic_tarihi || !odev.bitis_tarihi) return 0;
+    
+    const startDate = new Date(odev.baslangic_tarihi);
+    const endDate = new Date(odev.bitis_tarihi);
+    const currentDate = new Date();
+    
+    const totalDays = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+    const remainingDays = Math.ceil((endDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
+    
+    if (remainingDays <= 0) return 100;
+    if (remainingDays >= totalDays) return 0;
+    
+    return Math.round(((totalDays - remainingDays) / totalDays) * 100);
+  }
+
+  openPdfInNewTab(pdfFileName: string): void {
+    if (!pdfFileName) {
+      this.toastr.error('PDF dosyası bulunamadı', 'Hata');
+      return;
     }
+
+    const pdfUrl = `./server/uploads/odevler/${pdfFileName}`;
+    window.open(pdfUrl, '_blank');
   }
 
-  getUrgencyClass(kalanGun: number): string {
-    if (kalanGun === 0) {
-      return 'son-gun';
-    } else if (kalanGun <= 2) {
-      return 'acil';
-    } else if (kalanGun <= 5) {
-      return 'yakin';
-    } else {
-      return 'normal';
+  downloadPdf(pdfFileName: string): void {
+    if (!pdfFileName) {
+      this.toastr.error('PDF dosyası bulunamadı', 'Hata');
+      return;
     }
-  }
 
-  // İstatistik metodları
-  getAktifOdevSayisi(): number {
-    return this.odevler.filter(odev => odev.durum === 'aktif').length;
-  }
+    const pdfUrl = `./server/uploads/odevler/${pdfFileName}`;
+    
+    // Create a temporary anchor element for download
+    const link = document.createElement('a');
+    link.href = pdfUrl;
+    link.download = pdfFileName;
+    link.target = '_blank';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 
-  getAcilOdevSayisi(): number {
-    return this.odevler.filter(odev => 
-      odev.durum === 'aktif' && odev.kalan_gun <= 2
-    ).length;
-  }
-
-  getGecmisOdevSayisi(): number {
-    return this.odevler.filter(odev => odev.durum === 'süresi_dolmuş').length;
-  }
-
-  // Ödev yeniden yükleme metodu
-  refreshOdevler(): void {
-    this.loadOdevler();
+    this.toastr.success('PDF dosyası indiriliyor...', 'Başarılı');
   }
 }
