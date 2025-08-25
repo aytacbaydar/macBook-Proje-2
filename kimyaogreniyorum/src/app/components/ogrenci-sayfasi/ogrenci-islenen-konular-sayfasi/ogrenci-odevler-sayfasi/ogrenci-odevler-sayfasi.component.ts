@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
@@ -58,7 +57,7 @@ export class OgrenciOdevlerSayfasiComponent implements OnInit {
     }
 
     this.isLoading = true;
-    
+
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.currentUser.token || ''}`
@@ -105,7 +104,7 @@ export class OgrenciOdevlerSayfasiComponent implements OnInit {
       filtered = filtered.filter(odev => {
         const bitisDate = new Date(odev.bitis_tarihi);
         const baslangicDate = new Date(odev.baslangic_tarihi);
-        
+
         switch (this.selectedStatus) {
           case 'active':
             return baslangicDate <= today && bitisDate >= today;
@@ -232,5 +231,38 @@ export class OgrenciOdevlerSayfasiComponent implements OnInit {
 
   refreshOdevler(): void {
     this.loadOdevler();
+  }
+
+  // Math object for template use
+  Math = Math;
+
+  // Computed properties
+  get filteredOdevler(): any[] {
+    if (!this.searchQuery.trim()) {
+      return this.odevler;
+    }
+
+    const query = this.searchQuery.toLowerCase();
+    return this.odevler.filter(odev => 
+      odev.konu.toLowerCase().includes(query) ||
+      odev.aciklama?.toLowerCase().includes(query)
+    );
+  }
+
+  // Helper methods for template calculations
+  getActiveOdevCount(): number {
+    return this.odevler.filter(o => this.getOdevStatus(o) === 'active').length;
+  }
+
+  getUpcomingOdevCount(): number {
+    return this.odevler.filter(o => this.getOdevStatus(o) === 'upcoming').length;
+  }
+
+  getExpiredOdevCount(): number {
+    return this.odevler.filter(o => this.getOdevStatus(o) === 'expired').length;
+  }
+
+  clearSearch(): void {
+    this.searchQuery = '';
   }
 }
