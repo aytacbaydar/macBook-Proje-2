@@ -125,4 +125,24 @@ export class OgrenciOdevlerSayfasiComponent implements OnInit {
       return 'normal';
     }
   }
+
+  // İstatistik metodları
+  getAktifOdevSayisi(): number {
+    return this.odevler.filter(odev => odev.durum === 'aktif').length;
+  }
+
+  getAcilOdevSayisi(): number {
+    return this.odevler.filter(odev => 
+      odev.durum === 'aktif' && odev.kalan_gun <= 2
+    ).length;
+  }
+
+  getGecmisOdevSayisi(): number {
+    return this.odevler.filter(odev => odev.durum === 'süresi_dolmuş').length;
+  }
+
+  // Ödev yeniden yükleme metodu
+  refreshOdevler(): void {
+    this.loadOdevler();
+  }
 }

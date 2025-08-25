@@ -1,103 +1,128 @@
-
-<div class="ogrenci-odevler-container">
-  <!-- Header -->
-  <div class="page-header">
-    <div class="header-content">
-      <h1 class="page-title">
-        <i class="bi bi-journal-text me-2"></i>
-        Ödevlerim
-      </h1>
-      <p class="page-description">
-        Öğretmeniniz tarafından verilen ödevleri burada görebilirsiniz.
-      </p>
-    </div>
-  </div>
-
-  <!-- Loading -->
-  <div *ngIf="isLoading" class="loading-container">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Yükleniyor...</span>
-    </div>
-    <p class="mt-2">Ödevler yükleniyor...</p>
-  </div>
-
-  <!-- Ödevler Listesi -->
-  <div *ngIf="!isLoading" class="odevler-grid">
-    <div *ngIf="odevler.length === 0" class="no-homeworks">
-      <div class="no-homeworks-content">
-        <i class="bi bi-journal-x"></i>
-        <h3>Henüz ödev verilmemiş</h3>
-        <p>Öğretmeniniz henüz size bir ödev vermemiş. Yeni ödevler geldiğinde burada görünecek.</p>
-      </div>
-    </div>
-
-    <div *ngFor="let odev of odevler" class="odev-card" [class]="getDurumClass(odev.durum)">
-      <!-- Ödev Başlığı -->
-      <div class="odev-header">
-        <div class="odev-title">
-          <h3>{{ odev.konu }}</h3>
-          <span class="grup-badge">{{ odev.grup }}</span>
-        </div>
-        <div class="odev-status">
-          <span class="durum-badge" [class]="getDurumClass(odev.durum)">
-            {{ getDurumText(odev.durum) }}
-          </span>
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <!-- Grup Bilgisi -->
+      <div class="alert alert-info mb-3" *ngIf="studentInfo">
+        <div class="d-flex align-items-center">
+          <i class="bi bi-info-circle-fill me-2"></i>
+          <span><strong>{{ studentInfo.adi_soyadi }}</strong> - Grup: <strong>{{ studentInfo.grubu }}</strong></span>
         </div>
       </div>
 
-      <!-- Ödev Bilgileri -->
-      <div class="odev-body">
-        <div class="odev-info">
-          <div class="info-item">
-            <i class="bi bi-person-fill"></i>
-            <span>Öğretmen: {{ odev.ogretmen_adi }}</span>
-          </div>
-          <div class="info-item">
-            <i class="bi bi-calendar-plus"></i>
-            <span>Verilme Tarihi: {{ formatDate(odev.baslangic_tarihi) }}</span>
-          </div>
-          <div class="info-item">
-            <i class="bi bi-calendar-check"></i>
-            <span>Teslim Tarihi: {{ formatDate(odev.bitis_tarihi) }}</span>
-          </div>
-          
-          <!-- Kalan Süre -->
-          <div class="info-item" *ngIf="odev.durum === 'aktif'">
-            <i class="bi bi-clock"></i>
-            <span class="kalan-sure" [class]="getUrgencyClass(odev.kalan_gun)">
-              {{ getKalanGunText(odev.kalan_gun) }}
-            </span>
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <div class="d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">
+              <i class="bi bi-book-fill me-2"></i>
+              Ödevlerim
+            </h4>
+            <div class="badge bg-light text-dark">
+              {{ odevler.length }} ödev
+            </div>
           </div>
         </div>
+        <div class="card-body">
+          <div *ngIf="odevler.length === 0" class="text-center py-5">
+            <div class="empty-state">
+              <i class="bi bi-book text-muted" style="font-size: 4rem;"></i>
+              <h5 class="text-muted mt-3 mb-2">Henüz ödev bulunmuyor</h5>
+              <p class="text-muted">Öğretmeniniz size ödev verdiğinde burada görünecek.</p>
+              <button class="btn btn-outline-primary mt-2" (click)="loadOdevler()">
+                <i class="bi bi-arrow-clockwise me-1"></i>
+                Yenile
+              </button>
+            </div>
+          </div>
 
-        <!-- Açıklama -->
-        <div class="odev-aciklama" *ngIf="odev.aciklama">
-          <h5><i class="bi bi-info-circle"></i> Açıklama:</h5>
-          <p>{{ odev.aciklama }}</p>
-        </div>
-      </div>
+          <div *ngIf="odevler.length > 0">
+            <!-- Ödev İstatistikleri -->
+            <div class="row mb-4">
+              <div class="col-md-4">
+                <div class="stat-card bg-success text-white">
+                  <div class="stat-icon">
+                    <i class="bi bi-check-circle-fill"></i>
+                  </div>
+                  <div class="stat-info">
+                    <h3>{{ getAktifOdevSayisi() }}</h3>
+                    <span>Aktif Ödev</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="stat-card bg-warning text-white">
+                  <div class="stat-icon">
+                    <i class="bi bi-clock-fill"></i>
+                  </div>
+                  <div class="stat-info">
+                    <h3>{{ getAcilOdevSayisi() }}</h3>
+                    <span>Acil Ödev</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="stat-card bg-danger text-white">
+                  <div class="stat-icon">
+                    <i class="bi bi-x-circle-fill"></i>
+                  </div>
+                  <div class="stat-info">
+                    <h3>{{ getGecmisOdevSayisi() }}</h3>
+                    <span>Süresi Dolmuş</span>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-      <!-- Ödev Aksiyonları -->
-      <div class="odev-footer">
-        <div class="odev-actions">
-          <button 
-            *ngIf="odev.pdf_dosyasi" 
-            class="btn btn-primary"
-            (click)="openPdf(odev.pdf_dosyasi)">
-            <i class="bi bi-file-pdf"></i>
-            PDF'i Görüntüle
-          </button>
-          <span *ngIf="!odev.pdf_dosyasi" class="no-pdf-text">
-            <i class="bi bi-info-circle"></i>
-            PDF dosyası eklenmemiş
-          </span>
-        </div>
-        
-        <div class="odev-date">
-          <small class="text-muted">
-            <i class="bi bi-calendar"></i>
-            Oluşturulma: {{ formatDate(odev.olusturma_tarihi) }}
-          </small>
+            <!-- Ödev Kartları -->
+            <div class="row">
+              <div *ngFor="let odev of odevler" class="col-lg-6 col-xl-4 mb-4">
+                <div class="homework-card" [class]="'homework-' + getDurumClass(odev.durum)">
+                  <div class="homework-header">
+                    <div class="homework-status">
+                      <span class="status-badge" [class]="'status-' + getDurumClass(odev.durum)">
+                        {{ getDurumText(odev.durum) }}
+                      </span>
+                      <span *ngIf="odev.durum === 'aktif'" class="urgency-badge" [class]="'urgency-' + getUrgencyClass(odev.kalan_gun)">
+                        {{ getKalanGunText(odev.kalan_gun) }}
+                      </span>
+                    </div>
+                    <h5 class="homework-title">{{ odev.konu }}</h5>
+                    <p class="homework-teacher">
+                      <i class="bi bi-person-fill me-1"></i>
+                      {{ odev.ogretmen_adi }}
+                    </p>
+                  </div>
+
+                  <div class="homework-body">
+                    <p class="homework-description">{{ odev.aciklama }}</p>
+
+                    <div class="homework-dates">
+                      <div class="date-item">
+                        <span class="date-label">Verilme Tarihi:</span>
+                        <span class="date-value">{{ formatDate(odev.baslangic_tarihi) }}</span>
+                      </div>
+                      <div class="date-item">
+                        <span class="date-label">Teslim Tarihi:</span>
+                        <span class="date-value">{{ formatDate(odev.bitis_tarihi) }}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="homework-footer">
+                    <button *ngIf="odev.pdf_dosyasi"
+                            class="btn btn-primary w-100"
+                            (click)="openPdf(odev.pdf_dosyasi)">
+                      <i class="bi bi-file-pdf-fill me-2"></i>
+                      PDF'i Görüntüle
+                    </button>
+                    <div *ngIf="!odev.pdf_dosyasi" class="no-file-message">
+                      <i class="bi bi-file-x me-1"></i>
+                      PDF dosyası bulunamadı
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
