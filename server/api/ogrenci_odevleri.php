@@ -67,10 +67,6 @@ try {
     $stmt = $conn->prepare("
         SELECT 
             o.id, 
-            o.grup, 
-            o.grubu, 
-            o.sinifi,
-            ob.grup as grup_bilgileri,
             ob.grubu as grubu_bilgileri,
             ob.sinifi as sinifi_bilgileri
         FROM ogrenciler o 
