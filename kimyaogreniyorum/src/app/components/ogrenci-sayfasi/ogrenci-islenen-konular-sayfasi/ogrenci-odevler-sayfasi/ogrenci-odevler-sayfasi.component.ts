@@ -82,7 +82,7 @@ export class OgrenciOdevlerSayfasiComponent implements OnInit {
   loadOdevler(): void {
     // Farklı grup alanlarını kontrol et
     const grup = this.currentUser?.grup || this.currentUser?.grubu || this.currentUser?.sinifi;
-    
+
     if (!this.currentUser || !grup) {
       console.error('Kullanıcı verisi:', this.currentUser);
       this.toastr.error('Grup bilgisi bulunamadı. Lütfen tekrar giriş yapınız.');
@@ -256,20 +256,6 @@ export class OgrenciOdevlerSayfasiComponent implements OnInit {
     } else {
       this.toastr.warning('Bu ödev için PDF dosyası bulunmamaktadır');
     }
-  }
-
-  downloadPdf(pdfFileName: string, odevKonu: string): void {
-    if (!pdfFileName) {
-      this.toastr.warning('Bu ödev için PDF dosyası bulunmamaktadır');
-      return;
-    }
-
-    const link = document.createElement('a');
-    link.href = `./uploads/odevler/${pdfFileName}`;
-    link.download = `${odevKonu}_odev.pdf`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   }
 
   formatDate(dateString: string): string {
