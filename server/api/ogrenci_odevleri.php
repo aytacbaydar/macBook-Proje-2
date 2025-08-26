@@ -63,7 +63,7 @@ try {
 
     $conn = new PDO($dsn, DB_USER, DB_PASS, $options);
 
-    // Token'dan öğrenci bilgilerini al - ogrenciler ve ogrenci_bilgileri tablolarından
+    // Token'dan öğrenci bilgilerini al - MD5 hash ile kontrol
     $stmt = $conn->prepare("
         SELECT 
             o.id, 
@@ -75,7 +75,7 @@ try {
             ob.sinifi as sinifi_bilgileri
         FROM ogrenciler o 
         LEFT JOIN ogrenci_bilgileri ob ON o.id = ob.ogrenci_id 
-        WHERE o.token = ? 
+        WHERE MD5(CONCAT(o.id, o.email, o.sifre)) = ? AND o.rutbe = 'ogrenci' AND o.aktif = 1
         ORDER BY o.id DESC 
         LIMIT 1
     ");
