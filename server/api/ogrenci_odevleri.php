@@ -63,8 +63,22 @@ try {
 
     $conn = new PDO($dsn, DB_USER, DB_PASS, $options);
 
-    // Token'dan öğrenci bilgilerini al - farklı grup sütun isimlerini kontrol et
-    $stmt = $conn->prepare("SELECT id, grup, grubu, sinifi FROM kullanicilar WHERE token = ? AND rutbe = 'ogrenci'");
+    // Token'dan öğrenci bilgilerini al - ogrenciler ve ogrenci_bilgileri tablolarından
+    $stmt = $conn->prepare("
+        SELECT 
+            o.id, 
+            o.grup, 
+            o.grubu, 
+            o.sinifi,
+            ob.grup as grup_bilgileri,
+            ob.grubu as grubu_bilgileri,
+            ob.sinifi as sinifi_bilgileri
+        FROM ogrenciler o 
+        LEFT JOIN ogrenci_bilgileri ob ON o.id = ob.ogrenci_id 
+        WHERE o.token = ? 
+        ORDER BY o.id DESC 
+        LIMIT 1
+    ");
     $stmt->execute([$token]);
     $ogrenci = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -72,12 +86,17 @@ try {
         errorResponse('Geçersiz token veya yetkisiz erişim', 401);
     }
 
-    // Farklı grup alanlarını kontrol et
-    $ogrenci_grubu = $ogrenci['grup'] ?? $ogrenci['grubu'] ?? $ogrenci['sinifi'] ?? '';
+    // Her iki tablodan grup bilgilerini kontrol et
+    $ogrenci_grubu = $ogrenci['grup'] ?? 
+                     $ogrenci['grubu'] ?? 
+                     $ogrenci['sinifi'] ?? 
+                     $ogrenci['grup_bilgileri'] ?? 
+                     $ogrenci['grubu_bilgileri'] ?? 
+                     $ogrenci['sinifi_bilgileri'] ?? '';
 
     if (empty($ogrenci_grubu)) {
         error_log("Öğrenci verisi: " . json_encode($ogrenci));
-        errorResponse('Öğrenci grup bilgisi bulunamadı');
+        errorResponse('Öğrenci grup bilgisi bulunamadı. Lütfen yöneticinizle iletişime geçin.');
     }
 
     // Öğrencinin grubuna göre ödevleri getir - hem URL parametresi hem de öğrenci grubu aynı olmalı
