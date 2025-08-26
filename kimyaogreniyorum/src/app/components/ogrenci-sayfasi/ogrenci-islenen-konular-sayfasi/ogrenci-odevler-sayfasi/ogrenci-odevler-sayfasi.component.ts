@@ -27,6 +27,36 @@ export class OgrenciOdevlerSayfasiComponent implements OnInit {
     private router: Router
   ) {}
 
+  viewPdf(odev: any): void {
+    if (!odev.pdf_exists || !odev.pdf_viewer_url) {
+      this.toastr.error('PDF dosyası bulunamadı');
+      return;
+    }
+
+    // Yeni sekmede PDF'i aç
+    window.open(odev.pdf_viewer_url, '_blank');
+  }
+
+  downloadPdf(odev: any): void {
+    if (!odev.pdf_exists || !odev.pdf_url) {
+      this.toastr.error('PDF dosyası bulunamadı');
+      return;
+    }
+
+    // PDF'i indir
+    const link = document.createElement('a');
+    link.href = odev.pdf_url;
+    link.download = odev.pdf_dosyasi || 'odev.pdf';
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  isIOS(): boolean {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent);
+  }
+
   ngOnInit(): void {
     this.loadUserData();
     this.loadOdevler();

@@ -159,14 +159,40 @@
               <i class="bi bi-file-earmark-pdf"></i>
               <span>PDF Dosyası Mevcut</span>
             </div>
-            <div class="pdf-actions">
-              <button class="action-btn view-btn" (click)="openPdfInNewTab(odev.pdf_dosyasi)" title="Görüntüle">
-                <i class="bi bi-eye"></i>
-              </button>
-              <button class="action-btn download-btn" (click)="downloadPdf(odev.pdf_dosyasi, odev.konu)" title="İndir">
-                <i class="bi bi-download"></i>
-              </button>
-            </div>
+            <div class="odev-actions">
+                  <span class="odev-durum" [ngClass]="{
+                    'durum-aktif': odev.status === 'active',
+                    'durum-yaklasan': odev.status === 'upcoming', 
+                    'durum-gecmis': odev.status === 'expired'
+                  }">
+                    {{ odev.durum | titlecase }}
+                  </span>
+
+                  <div class="pdf-actions" *ngIf="odev.pdf_exists">
+                    <button class="btn btn-sm btn-primary me-2" 
+                            (click)="viewPdf(odev)"
+                            title="PDF'i Görüntüle">
+                      <i class="bi bi-eye"></i>
+                      <span *ngIf="!isIOS()">Görüntüle</span>
+                      <span *ngIf="isIOS()">Aç</span>
+                    </button>
+
+                    <button class="btn btn-sm btn-secondary" 
+                            (click)="downloadPdf(odev)"
+                            title="PDF'i İndir">
+                      <i class="bi bi-download"></i>
+                      <span *ngIf="!isIOS()">İndir</span>
+                      <span *ngIf="isIOS()">Safari'de Aç</span>
+                    </button>
+                  </div>
+
+                  <div class="pdf-not-available" *ngIf="!odev.pdf_exists && odev.pdf_dosyasi">
+                    <small class="text-muted">
+                      <i class="bi bi-exclamation-triangle"></i>
+                      PDF dosyası bulunamadı
+                    </small>
+                  </div>
+                </div>
           </div>
           <div class="no-pdf" *ngIf="!odev.pdf_dosyasi">
             <i class="bi bi-file-earmark-x"></i>

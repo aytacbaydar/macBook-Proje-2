@@ -150,12 +150,25 @@ try {
         $odev['remaining_days'] = $bitisDate >= $currentDate ? $interval->days : -$interval->days;
         $odev['kalan_gun'] = max(0, $odev['remaining_days']);
 
-        // PDF dosyası kontrolü
+        // PDF dosyası kontrolü ve URL oluşturma
         if (!empty($odev['pdf_dosyasi'])) {
-            $pdf_path = __DIR__ . '/../uploads/odevler/' . $odev['pdf_dosyasi'];
+            $pdf_path = __DIR__ . '/../../uploads/odevler/' . $odev['pdf_dosyasi'];
             $odev['pdf_exists'] = file_exists($pdf_path);
+            
+            if ($odev['pdf_exists']) {
+                // PDF görüntüleme URL'i
+                $odev['pdf_url'] = 'https://www.kimyaogreniyorum.com/uploads/odevler/' . $odev['pdf_dosyasi'];
+                // PDF viewer API URL'i
+                $odev['pdf_viewer_url'] = 'https://www.kimyaogreniyorum.com/server/api/pdf_viewer.php?file=' . urlencode($odev['pdf_dosyasi']);
+            } else {
+                $odev['pdf_url'] = null;
+                $odev['pdf_viewer_url'] = null;
+                error_log("PDF dosyası bulunamadı: " . $pdf_path);
+            }
         } else {
             $odev['pdf_exists'] = false;
+            $odev['pdf_url'] = null;
+            $odev['pdf_viewer_url'] = null;
         }
     }
 
