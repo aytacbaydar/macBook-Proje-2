@@ -77,7 +77,7 @@ try {
     }
 
     // Upload dizinini kontrol et ve oluştur
-    $upload_dir = __DIR__ . '/../uploads/odevler/';
+    $upload_dir = __DIR__ . '/../../uploads/odevler/';
     if (!is_dir($upload_dir)) {
         if (!mkdir($upload_dir, 0755, true)) {
             errorResponse('Upload dizini oluşturulamadı');
