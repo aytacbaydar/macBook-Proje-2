@@ -32,9 +32,9 @@ export class OgrenciOdevlerSayfasiComponent implements OnInit {
       this.toastr.error('PDF dosyası bulunamadı');
       return;
     }
-
     // Yeni sekmede PDF'i aç
-    window.open(odev.pdf_viewer_url, '_blank');
+     const pdfUrl = `./server/api/odev_odf_viewer.php?file=${odev.pdf_viewer_url}`;
+    window.open(pdfUrl, '_blank'); // Yeni sekmede aç
   }
 
   downloadPdf(odev: any): void {

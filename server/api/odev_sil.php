@@ -57,7 +57,7 @@ try {
     if ($result) {
         // PDF dosyasını da sil
         if ($odev['pdf_dosyasi']) {
-            $file_path = '../uploads/odevler/' . $odev['pdf_dosyasi'];
+            $file_path = '../../dosyalar/odevler/' . $odev['pdf_dosyasi'];
             if (file_exists($file_path)) {
                 unlink($file_path);
             }

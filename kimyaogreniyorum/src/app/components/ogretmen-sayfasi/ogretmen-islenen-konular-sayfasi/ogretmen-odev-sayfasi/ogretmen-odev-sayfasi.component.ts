@@ -416,8 +416,12 @@ export class OgretmenOdevSayfasiComponent implements OnInit {
 
   openPdf(filename: string): void {
     if (filename) {
-      const pdfUrl = `/server/uploads/odevler/${filename}`;
-      window.open(pdfUrl, '_blank');
+
+
+    // Yeni sekmede PDF'i aç
+     const pdfUrl = `./server/api/odev_odf_viewer.php?file=${filename}`;
+    window.open(pdfUrl, '_blank'); // Yeni sekmede aç
+
     }
   }
 

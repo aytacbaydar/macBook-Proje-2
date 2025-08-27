@@ -77,7 +77,7 @@ try {
     }
 
     // Upload dizinini kontrol et ve oluştur
-    $upload_dir = __DIR__ . '/../../uploads/odevler/';
+    $upload_dir = __DIR__ . '/../../dosyalar/odevler/';
     if (!is_dir($upload_dir)) {
         if (!mkdir($upload_dir, 0755, true)) {
             errorResponse('Upload dizini oluşturulamadı');
@@ -109,7 +109,7 @@ try {
                 'filename' => $filename,
                 'original_name' => $file['name'],
                 'size' => $file['size'],
-                'path' => '../uploads/odevler/' . $filename
+                'path' => '../../dosyalar/odevler/' . $filename
             ], 'PDF başarıyla yüklendi');
         } else {
             errorResponse('Dosya taşındı ama bulunamıyor');

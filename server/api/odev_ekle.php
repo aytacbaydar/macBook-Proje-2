@@ -66,7 +66,7 @@ try {
     // PDF dosyası kontrolü - eğer PDF dosyası varsa dosya adını kontrol et
     if (!empty($pdf_dosyasi)) {
         // PDF dosyasının uploads klasöründe olup olmadığını kontrol et
-        $pdf_path = __DIR__ . '/../uploads/odevler/' . $pdf_dosyasi;
+        $pdf_path = __DIR__ . '/../../dosyalar/odevler/' . $pdf_dosyasi;
         error_log("PDF dosyası kontrol ediliyor: " . $pdf_path);
         if (!file_exists($pdf_path)) {
             error_log("PDF dosyası bulunamadı: " . $pdf_path);
