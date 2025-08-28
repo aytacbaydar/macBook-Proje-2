@@ -44,6 +44,25 @@ export class OgrenciGirisSayfasiComponent implements OnInit {
       sifre: ['', [Validators.required]],
       remember: [false],
     });
+
+    // Sayfa yüklendiğinde kaydedilmiş kullanıcı bilgilerini kontrol et
+    this.checkRememberedUser();
+  }
+
+  checkRememberedUser(): void {
+    const rememberedUser = localStorage.getItem('rememberedUser');
+    if (rememberedUser) {
+      try {
+        const userData = JSON.parse(rememberedUser);
+        this.loginForm.patchValue({
+          email: userData.email,
+          remember: true
+        });
+      } catch (error) {
+        console.error('Kaydedilmiş kullanıcı verisi okunamadı:', error);
+        localStorage.removeItem('rememberedUser');
+      }
+    }
   }
 
   // Getter for easy form field access
@@ -106,10 +125,18 @@ export class OgrenciGirisSayfasiComponent implements OnInit {
             };
 
             if (this.loginForm.value.remember) {
+              // Beni hatırla işaretliyse hem oturum hem de hatırlanacak bilgileri kaydet
               localStorage.setItem('user', JSON.stringify(storageData));
+              localStorage.setItem('rememberedUser', JSON.stringify({
+                email: this.loginForm.value.email,
+                rememberMe: true
+              }));
               console.log('User data saved to localStorage with token:', userData.token.substring(0, 10) + '...');
+              console.log('User credentials remembered for next login');
             } else {
+              // Beni hatırla işaretli değilse sessionStorage kullan ve hatırlanan bilgileri temizle
               sessionStorage.setItem('user', JSON.stringify(storageData));
+              localStorage.removeItem('rememberedUser');
               console.log('User data saved to sessionStorage with token:', userData.token.substring(0, 10) + '...');
             }
 

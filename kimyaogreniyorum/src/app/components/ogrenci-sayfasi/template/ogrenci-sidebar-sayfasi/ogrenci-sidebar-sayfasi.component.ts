@@ -24,6 +24,7 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
   refreshInterval: any;
   studentId: number | null = null;
   isClosed = true;
+  studentInfo: { name: string; avatar: string } | null = null; // studentInfo eklendi
 
   menuItems: Array<{
     icon: string;
@@ -171,33 +172,44 @@ export class OgrenciSidebarSayfasiComponent implements OnInit, OnDestroy {
   }
 
   private loadStudentInfo(): void {
-    const userStr =
-      localStorage.getItem('user') || sessionStorage.getItem('user');
-    if (userStr) {
+    // Önce localStorage'a bak (beni hatırla işaretlenmişse)
+    let userData = localStorage.getItem('user');
+    if (!userData) {
+      // localStorage'da yoksa sessionStorage'a bak
+      userData = sessionStorage.getItem('user');
+    }
+
+    if (userData) {
       try {
-        const user = JSON.parse(userStr);
+        const user = JSON.parse(userData);
         this.studentId = user.id;
+        this.studentInfo = {
+          name: user.adi_soyadi || user.name || 'Öğrenci',
+          avatar: user.avatar || './assets/default-avatar.png',
+        };
       } catch (error) {
-        console.error('Öğrenci bilgileri yüklenirken hata:', error);
+        console.error('Error parsing user data:', error);
       }
     }
   }
 
-  private getTokenFromStorage(): string {
-    let token = localStorage.getItem('token');
-    if (!token) {
-      const userStr =
-        localStorage.getItem('user') || sessionStorage.getItem('user');
-      if (userStr) {
-        try {
-          const user = JSON.parse(userStr);
-          token = user.token;
-        } catch (error) {
-          console.error('Error parsing user data:', error);
-        }
+  private getTokenFromStorage(): string | null {
+    // Önce localStorage'a bak (beni hatırla işaretlenmişse)
+    let userData = localStorage.getItem('user');
+    if (!userData) {
+      // localStorage'da yoksa sessionStorage'a bak
+      userData = sessionStorage.getItem('user');
+    }
+
+    if (userData) {
+      try {
+        const parsed = JSON.parse(userData);
+        return parsed.token || null;
+      } catch {
+        return null;
       }
     }
-    return token || '';
+    return null;
   }
 
   toggleSidebar() {
