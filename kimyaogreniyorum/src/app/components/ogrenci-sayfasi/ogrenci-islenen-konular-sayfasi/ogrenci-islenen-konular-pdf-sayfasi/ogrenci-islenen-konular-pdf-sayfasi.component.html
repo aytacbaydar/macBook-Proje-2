@@ -21,7 +21,7 @@
       <div class="card-ana bg-green">
         <div class="card-ana-header">
           <h4><i class="bi bi-collection-fill me-2"></i>Ders Notları ve Dokümanlar</h4>
-          <button *ngIf="dersKayitlari.length > 0">{{ dersKayitlari.length }} döküman</button>
+          <button *ngIf="dersKayitlari.length > 0">{{ dersKayitlari.length }} Döküman</button>
         </div>
         <div class="card-ana-body" *ngIf="!isLoading && !error">
           <!--İçerik-->
@@ -79,10 +79,22 @@
           <!--İçerik Son-->
         </div>
       </div>
+
+      <!-- ÖdevlerState -->
+      <div class="card-ana bg-orange mt-4">
+        <div class="card-ana-header">
+          <h4><i class="bi bi-collection-fill me-2"></i>Ödevler</h4>
+          <button *ngIf="dersKayitlari.length > 0">Ödevler</button>
+        </div>
+        <div class="card-ana-body" *ngIf="!isLoading && !error">
+          <!--İçerik-->
+          <app-ogrenci-odevler-sayfasi></app-ogrenci-odevler-sayfasi>
+          <!--İçerik Son-->
+        </div>
+      </div>
     </div>
   </div>
 
-  <app-ogrenci-odevler-sayfasi></app-ogrenci-odevler-sayfasi>
 </div>
 
 <div class="modal fade" id="pdfViewerModal" tabindex="-1" aria-labelledby="pdfViewerModalLabel" aria-hidden="true">

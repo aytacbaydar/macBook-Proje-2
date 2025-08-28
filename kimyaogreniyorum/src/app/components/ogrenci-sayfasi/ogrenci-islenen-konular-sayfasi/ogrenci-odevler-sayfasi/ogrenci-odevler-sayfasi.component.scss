@@ -1,9 +1,7 @@
 .ogrenci-odevler-container {
-  padding: 20px;
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
+  min-height: 100%;
 
   // Page Header
   .page-header {
@@ -266,15 +264,15 @@
   // Ödevler Grid
   .odevler-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 25px;
     margin-bottom: 40px;
 
     .odev-card {
       background: white;
-      border-radius: 20px;
+      border-radius: 8px;
       overflow: hidden;
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+      box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
       transition: all 0.3s ease;
       border-left: 6px solid #ccc;
 

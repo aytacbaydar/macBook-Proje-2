@@ -1,29 +1,6 @@
 <div class="ogrenci-odevler-container">
-  <!-- Header Section -->
-  <div class="page-header">
-    <div class="header-content">
-      <h1 class="page-title">
-        <i class="bi bi-journal-text"></i>
-        Ödevlerim
-      </h1>
-      <div class="student-info" *ngIf="currentUser">
-        <div class="info-item">
-          <i class="bi bi-person-circle"></i>
-          <span>{{ currentUser.adi_soyadi }}</span>
-        </div>
-        <div class="info-item">
-          <i class="bi bi-collection"></i>
-          <span>{{ currentUser.grup }}</span>
-        </div>
-      </div>
-    </div>
-    <button class="refresh-btn" (click)="refreshOdevler()" [disabled]="isLoading">
-      <i class="bi bi-arrow-clockwise" [class.spinning]="isLoading"></i>
-      Yenile
-    </button>
-  </div>
 
-  <!-- Filters and Search -->
+  <!-- Filters and Search
   <div class="filters-section">
     <div class="search-container">
       <div class="search-box">
@@ -49,7 +26,7 @@
       </select>
     </div>
   </div>
-
+ -->
   <!-- Loading State -->
   <div *ngIf="isLoading" class="loading-container">
     <div class="loading-spinner">
@@ -154,18 +131,7 @@
 
         <div class="card-footer">
           <div class="pdf-section" *ngIf="odev.pdf_dosyasi">
-            <div class="pdf-info">
-              <i class="bi bi-file-earmark-pdf"></i>
-              <span>PDF Dosyası Mevcut</span>
-            </div>
             <div class="odev-actions">
-                  <span class="odev-durum" [ngClass]="{
-                    'durum-aktif': odev.status === 'active',
-                    'durum-yaklasan': odev.status === 'upcoming', 
-                    'durum-gecmis': odev.status === 'expired'
-                  }">
-                    {{ odev.durum | titlecase }}
-                  </span>
 
                   <div class="pdf-actions" *ngIf="odev.pdf_exists">
                     <button class="btn btn-sm btn-primary me-2" 
