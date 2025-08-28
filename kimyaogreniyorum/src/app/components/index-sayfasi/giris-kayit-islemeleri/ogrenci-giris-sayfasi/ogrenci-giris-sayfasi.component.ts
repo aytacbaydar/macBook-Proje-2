@@ -196,4 +196,12 @@ export class OgrenciGirisSayfasiComponent implements OnInit {
   navigateToRegister(): void {
     this.router.navigate(['/kayit-sayfasi']);
   }
+
+  onForgotPassword(): void {
+    this.toastr.info('Şifre sıfırlama özelliği yakında eklenecektir.', 'Bilgi', {
+      timeOut: 3000,
+      progressBar: true,
+      closeButton: true,
+    });
+  }
 }
