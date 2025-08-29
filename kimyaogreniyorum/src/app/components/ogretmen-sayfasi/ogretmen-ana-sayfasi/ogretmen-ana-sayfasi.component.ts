@@ -213,6 +213,18 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
     this.dashboardStats.activeStudents = teacherStudents.filter(s => s.aktif).length;
     this.dashboardStats.inactiveStudents = teacherStudents.filter(s => !s.aktif).length;
     this.dashboardStats.totalGroups = [...new Set(teacherStudents.map(s => s.grubu))].filter(Boolean).length;
+    
+    // Toplam ücret hesapla
+    this.dashboardStats.completedTopics = this.calculateTotalRevenue(teacherStudents);
+  }
+
+  private calculateTotalRevenue(students: Student[]): number {
+    return students
+      .filter(student => student.aktif && student.ucret)
+      .reduce((total, student) => {
+        const fee = parseFloat(student.ucret || '0');
+        return total + fee;
+      }, 0);
   }
 
   organizeStudentsByGroups(students: Student[]): void {

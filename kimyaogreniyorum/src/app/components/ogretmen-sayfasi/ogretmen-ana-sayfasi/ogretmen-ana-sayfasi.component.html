@@ -47,11 +47,11 @@
 
         <div class="stat-card mor">
           <div class="stat-icon">
-            <i class="fas fa-book-open"></i>
+            <i class="fas fa-money-bill-wave"></i>
           </div>
           <div class="stat-content">
-            <h3>{{ dashboardStats.completedTopics }}/{{ dashboardStats.totalTopics }}</h3>
-            <p>Tamamlanan Konu</p>
+            <h3>{{ formatCurrency(dashboardStats.completedTopics) }}</h3>
+            <p>Toplam Ücret</p>
           </div>
         </div>
       </div>
@@ -320,11 +320,11 @@
 
           <div class="mini-stat">
             <div class="mini-icon success">
-              <i class="fas fa-check-circle"></i>
+              <i class="fas fa-money-bill-wave"></i>
             </div>
             <div class="mini-content">
-              <h4>{{ dashboardStats.completedTopics }}</h4>
-              <p>Tamamlanan</p>
+              <h4>{{ formatCurrency(dashboardStats.completedTopics) }}</h4>
+              <p>Toplam Ücret</p>
             </div>
           </div>
 
