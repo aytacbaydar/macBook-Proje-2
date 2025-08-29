@@ -1,4 +1,3 @@
-
 <div class="dashboard-container">
   <!-- Modern Header Section -->
   <div class="modern-page-header">
@@ -60,44 +59,47 @@
 
   <!-- Main Dashboard Grid -->
   <div class="admin-grid">
-    <!-- Quick Actions -->
+    <!-- New Students -->
     <div class="admin-container grid-6">
       <div class="card-header">
         <h3>
-          <i class="fas fa-bolt me-2"></i>
-          Hızlı İşlemler
+          <i class="bi bi-person-plus-fill me-2"></i>
+          Yeni Kayıt Olan Öğrenciler
         </h3>
+        <span class="badge bg-primary">{{ newStudents.length }}</span>
       </div>
+
       <div class="card-body">
-        <div class="action-grid">
-          <button class="action-item" (click)="navigateToTeaching()">
-            <div class="action-icon primary">
-              <i class="fas fa-chalkboard-teacher"></i>
+        <div class="new-students-list" *ngIf="newStudents.length > 0; else noNewStudents">
+          <div class="student-card" *ngFor="let student of newStudents">
+            <div class="student-info">
+              <div class="student-avatar">
+                <i class="bi bi-person-circle"></i>
+              </div>
+              <div class="student-details">
+                <h4>{{ student.adi_soyadi }}</h4>
+                <p class="student-email">{{ student.email }}</p>
+                <p class="student-school" *ngIf="student.okulu">{{ student.okulu }} - {{ student.sinifi }}</p>
+                <p class="student-date">{{ formatDate(student.kayit_tarihi) }}</p>
+              </div>
             </div>
-            <span>Ders Başlat</span>
-          </button>
-
-          <button class="action-item" (click)="navigateToGroups()">
-            <div class="action-icon success">
-              <i class="fas fa-users"></i>
+            <div class="student-actions">
+              <button class="approve-btn" (click)="approveNewStudent(student.id)" title="Onayla">
+                <i class="bi bi-check-circle"></i>
+              </button>
+              <button class="reject-btn" (click)="rejectNewStudent(student.id)" title="Reddet">
+                <i class="bi bi-x-circle"></i>
+              </button>
             </div>
-            <span>Grup Yönetimi</span>
-          </button>
-
-          <button class="action-item" (click)="navigateToStudents()">
-            <div class="action-icon warning">
-              <i class="fas fa-user-graduate"></i>
-            </div>
-            <span>Öğrenci Listesi</span>
-          </button>
-
-          <button class="action-item" (click)="navigateToReports()">
-            <div class="action-icon info">
-              <i class="fas fa-chart-bar"></i>
-            </div>
-            <span>Raporlar</span>
-          </button>
+          </div>
         </div>
+
+        <ng-template #noNewStudents>
+          <div class="empty-state">
+            <i class="bi bi-person-check fs-1 text-muted"></i>
+            <p class="text-muted mt-2">Yeni kayıt olan öğrenci bulunmuyor.</p>
+          </div>
+        </ng-template>
       </div>
     </div>
 
@@ -117,7 +119,7 @@
           <div class="spinner-border spinner-border-sm" role="status"></div>
           <span class="ms-2">Yükleniyor...</span>
         </div>
-        
+
         <div class="activity-list" *ngIf="!isLoadingActivities">
           <div class="activity-item" *ngFor="let activity of recentActivities">
             <div class="activity-avatar" [ngClass]="activity.color">
@@ -193,7 +195,7 @@
           <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
           <span class="ms-2">Yükleniyor...</span>
         </div>
-        
+
         <div class="payment-list" *ngIf="!isLoadingPayments">
           <div class="payment-item" *ngFor="let payment of upcomingPayments.slice(0, 4)">
             <div class="payment-info">
@@ -212,7 +214,7 @@
               <i class="bi bi-clock"></i>
             </div>
           </div>
-          
+
           <div *ngIf="upcomingPayments.length === 0" class="no-payments">
             <i class="bi bi-check-circle text-success"></i>
             <p>Tüm ödemeler tamamlandı!</p>

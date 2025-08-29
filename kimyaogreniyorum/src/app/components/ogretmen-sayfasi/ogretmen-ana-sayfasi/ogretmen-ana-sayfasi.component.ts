@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -21,6 +20,10 @@ interface Student {
   rutbe?: string;
   brans?: string;
   ogretmeni?: string;
+}
+
+interface NewStudent extends Student {
+  kayit_tarihi: string;
 }
 
 interface Group {
@@ -88,11 +91,19 @@ interface StudentProgress {
 export class OgretmenAnaSayfasiComponent implements OnInit {
   // Mevcut değişkenler
   groups: Group[] = [];
-  isLoading: boolean = true;
+  upcomingPayments: UpcomingPayment[] = [];
+  recentActivities: Activity[] = [];
+  upcomingClasses: UpcomingClass[] = [];
+  newStudents: NewStudent[] = [];
+
+  isLoading: boolean = false;
   error: string | null = null;
   searchQuery: string = '';
-  upcomingPayments: UpcomingPayment[] = [];
   isLoadingPayments: boolean = false;
+  isLoadingActivities: boolean = true;
+  isLoadingClasses: boolean = true;
+  isLoadingProgress: boolean = true;
+  isLoadingNewStudents: boolean = true;
 
   // Yeni dashboard değişkenleri
   dashboardStats: DashboardStats = {
@@ -106,13 +117,8 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
     pendingExams: 0
   };
 
-  recentActivities: Activity[] = [];
-  upcomingClasses: UpcomingClass[] = [];
   studentProgress: StudentProgress[] = [];
   isLoadingStats: boolean = true;
-  isLoadingActivities: boolean = true;
-  isLoadingClasses: boolean = true;
-  isLoadingProgress: boolean = true;
 
   // Öğretmen bilgileri
   teacherName: string = '';
@@ -168,6 +174,7 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
     this.loadUpcomingClasses();
     this.loadStudentProgress();
     this.loadDashboardStats();
+    this.loadNewStudents();
   }
 
   private getAuthHeaders(): HttpHeaders {
@@ -213,7 +220,7 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
     this.dashboardStats.activeStudents = teacherStudents.filter(s => s.aktif).length;
     this.dashboardStats.inactiveStudents = teacherStudents.filter(s => !s.aktif).length;
     this.dashboardStats.totalGroups = [...new Set(teacherStudents.map(s => s.grubu))].filter(Boolean).length;
-    
+
     // Toplam ücret hesapla
     this.dashboardStats.completedTopics = this.calculateTotalRevenue(teacherStudents);
   }
@@ -259,7 +266,7 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
 
   loadUpcomingPayments(): void {
     this.isLoadingPayments = true;
-    
+
     this.http.get<any>('./server/api/yaklasan_odemeler.php', { headers: this.getAuthHeaders() })
       .subscribe({
         next: (response) => {
@@ -279,7 +286,7 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
 
   private loadDashboardStats(): void {
     this.isLoadingStats = true;
-    
+
     // Konu istatistikleri için API çağrısı
     this.http.get<any>('./server/api/islenen_konular.php', { headers: this.getAuthHeaders() })
       .subscribe({
@@ -313,7 +320,7 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
 
   private loadRecentActivities(): void {
     this.isLoadingActivities = true;
-    
+
     // Son aktiviteler için simulated data - gerçek API'ye bağlanabilir
     setTimeout(() => {
       this.recentActivities = [
@@ -360,7 +367,7 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
 
   private loadUpcomingClasses(): void {
     this.isLoadingClasses = true;
-    
+
     // Yaklaşan dersler için simulated data - gerçek API'ye bağlanabilir
     setTimeout(() => {
       this.upcomingClasses = [
@@ -398,7 +405,7 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
 
   private loadStudentProgress(): void {
     this.isLoadingProgress = true;
-    
+
     // Öğrenci ilerlemesi için simulated data - gerçek API'ye bağlanabilir
     setTimeout(() => {
       this.studentProgress = [
@@ -426,6 +433,27 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
       ];
       this.isLoadingProgress = false;
     }, 600);
+  }
+
+  private loadNewStudents(): void {
+    this.isLoadingNewStudents = true;
+    this.error = null;
+
+    this.http.get<any>('./server/api/yeni_kayit_olan_ogrenciler.php', { headers: this.getAuthHeaders() })
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.newStudents = response.data || [];
+          } else {
+            this.error = response.message || 'Yeni öğrenci verileri yüklenirken hata oluştu.';
+          }
+          this.isLoadingNewStudents = false;
+        },
+        error: (error) => {
+          this.error = 'Sunucu hatası: ' + (error.error?.message || error.message);
+          this.isLoadingNewStudents = false;
+        },
+      });
   }
 
   // Utility methods
@@ -460,12 +488,72 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
     return this.dashboardStats.inactiveStudents;
   }
 
-  formatCurrency(amount: string | number): string {
-    const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+  formatCurrency(amount: number): string {
+    if (isNaN(amount) || amount === null || amount === undefined) return '₺0';
+    if (amount === 0) return '₺0';
+
     return new Intl.NumberFormat('tr-TR', {
-      style: 'currency',
-      currency: 'TRY'
-    }).format(numAmount || 0);
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount) + ' TL';
+  }
+
+  approveNewStudent(studentId: number): void {
+    if (!confirm('Bu öğrenciyi onaylamak istediğinizden emin misiniz?')) {
+      return;
+    }
+
+    const updateData = {
+      id: studentId,
+      rutbe: 'ogrenci',
+      aktif: 1,
+      ogretmeni: this.teacherName
+    };
+
+    this.http.post<any>('./server/api/kullanici_guncelle.php', updateData, {
+      headers: this.getAuthHeaders()
+    }).subscribe({
+      next: (response) => {
+        if (response.success) {
+          alert('Öğrenci başarıyla onaylandı!');
+          this.loadNewStudents();
+          this.loadStudents();
+        } else {
+          alert('Onaylama işlemi başarısız: ' + (response.error || response.message));
+        }
+      },
+      error: (error) => {
+        console.error('Onaylama hatası:', error);
+        alert('Onaylama sırasında bir hata oluştu: ' + (error.error?.message || error.message));
+      }
+    });
+  }
+
+  rejectNewStudent(studentId: number): void {
+    if (!confirm('Bu öğrenciyi reddetmek istediğinizden emin misiniz? Bu işlem öğrenciyi silecektir.')) {
+      return;
+    }
+
+    this.http.post<any>('./server/api/ogrenci_sil.php', { id: studentId }, {
+      headers: this.getAuthHeaders()
+    }).subscribe({
+      next: (response) => {
+        if (response.success) {
+          alert('Öğrenci başarıyla reddedildi!');
+          this.loadNewStudents();
+        } else {
+          alert('Reddetme işlemi başarısız: ' + (response.error || response.message));
+        }
+      },
+      error: (error) => {
+        console.error('Reddetme hatası:', error);
+        alert('Reddetme sırasında bir hata oluştu: ' + (error.error?.message || error.message));
+      }
+    });
+  }
+
+  formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleDateString('tr-TR');
   }
 
   // Navigation methods
