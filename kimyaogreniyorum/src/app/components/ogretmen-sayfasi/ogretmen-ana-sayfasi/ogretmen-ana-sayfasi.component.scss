@@ -1131,62 +1131,93 @@
 .today-schedule {
   .lesson-item {
     display: flex;
-    align-items: center;
-    padding: 1rem;
-    margin-bottom: 0.75rem;
+    align-items: flex-start;
+    padding: 16px;
     background: #f8f9fa;
-    border-radius: 10px;
-    border-left: 4px solid #007bff;
-    transition: all 0.3s ease;
-
-    &:hover {
-      background: #e9ecef;
-      transform: translateX(5px);
-    }
-
-    &:last-child {
-      margin-bottom: 0;
-    }
+    border-radius: 12px;
+    margin-bottom: 12px;
+    border-left: 4px solid var(--primary-color);
 
     .lesson-time {
-      font-weight: bold;
-      color: #007bff;
-      min-width: 80px;
-      font-size: 0.95rem;
-
-      i {
-        color: #6c757d;
-      }
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+      color: var(--primary-color);
+      min-width: 100px;
+      font-size: 0.9rem;
+      margin-top: 2px;
     }
 
     .lesson-info {
       flex: 1;
-      margin-left: 1rem;
+      margin-left: 16px;
 
-      .student-name {
+      .group-name {
         font-weight: 600;
-        margin-bottom: 0.25rem;
-        color: #333;
+        color: var(--text-color);
+        margin-bottom: 8px;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+
+        i {
+          color: var(--primary-color);
+        }
+      }
+
+      .students-list {
+        margin-bottom: 12px;
+
+        .students-container {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+          align-items: center;
+
+          .student-tag {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            white-space: nowrap;
+          }
+
+          .more-students {
+            background: #e9ecef;
+            color: #6c757d;
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            font-weight: 500;
+          }
+        }
       }
 
       .group-info {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 16px;
 
-        .group-badge {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          padding: 0.2rem 0.6rem;
-          border-radius: 12px;
-          font-size: 0.8rem;
-          font-weight: 500;
+        .student-count {
+          color: var(--text-muted);
+          font-size: 0.85rem;
+          display: flex;
+          align-items: center;
+
+          i {
+            color: var(--primary-color);
+          }
         }
 
         .lesson-fee {
-          color: #28a745;
+          background: var(--success-color);
+          color: white;
+          padding: 6px 12px;
+          border-radius: 20px;
           font-weight: 600;
-          font-size: 0.9rem;
+          font-size: 0.85rem;
         }
       }
     }

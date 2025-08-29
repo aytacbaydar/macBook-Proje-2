@@ -179,9 +179,25 @@
               {{ ders.ders_saati }}
             </div>
             <div class="lesson-info">
-              <div class="student-name">{{ ders.ogrenci_adi }}</div>
+              <div class="group-name">
+                <i class="fas fa-users me-1"></i>
+                {{ ders.grup_adi }}
+              </div>
+              <div class="students-list" *ngIf="ders.ogrenciler && ders.ogrenciler.length > 0">
+                <div class="students-container">
+                  <span class="student-tag" *ngFor="let ogrenci of ders.ogrenciler.slice(0, 3)">
+                    {{ ogrenci }}
+                  </span>
+                  <span class="more-students" *ngIf="ders.ogrenciler.length > 3">
+                    +{{ ders.ogrenciler.length - 3 }} diğer
+                  </span>
+                </div>
+              </div>
               <div class="group-info">
-                <span class="group-badge">{{ ders.grup_adi }}</span>
+                <span class="student-count">
+                  <i class="fas fa-user me-1"></i>
+                  {{ ders.ogrenciler?.length || 0 }} öğrenci
+                </span>
                 <span class="lesson-fee">{{ formatCurrency(ders.ucret) }}</span>
               </div>
             </div>

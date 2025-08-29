@@ -624,9 +624,37 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
       next: (response) => {
         if (response.success) {
           // Bugünün derslerini filtrele
-          this.dailySchedule = (response.data || []).filter((ders: any) =>
+          const todayLessons = (response.data || []).filter((ders: any) =>
             ders.ders_gunu === this.todayName
-          ).sort((a: any, b: any) => a.ders_saati.localeCompare(b.ders_saati));
+          );
+
+          // Dersleri saate göre sırala ve grup bilgilerini organize et
+          const groupedLessons = new Map();
+          
+          todayLessons.forEach((ders: any) => {
+            const key = `${ders.ders_saati}-${ders.grup_adi || ders.grubu}`;
+            
+            if (!groupedLessons.has(key)) {
+              groupedLessons.set(key, {
+                ders_saati: ders.ders_saati,
+                grup_adi: ders.grup_adi || ders.grubu || 'Grup Tanımsız',
+                ucret: ders.ucret || '0',
+                ogrenciler: []
+              });
+            }
+            
+            // Öğrenci ismini ekle
+            if (ders.ogrenci_adi && ders.ogrenci_adi.trim() !== '') {
+              const grupData = groupedLessons.get(key);
+              if (!grupData.ogrenciler.includes(ders.ogrenci_adi)) {
+                grupData.ogrenciler.push(ders.ogrenci_adi);
+              }
+            }
+          });
+
+          // Map'i array'e çevir ve saate göre sırala
+          this.dailySchedule = Array.from(groupedLessons.values())
+            .sort((a: any, b: any) => a.ders_saati.localeCompare(b.ders_saati));
         }
       },
       error: (error) => {
