@@ -184,22 +184,31 @@
                 {{ ders.grup_adi }}
               </div>
               <div class="students-list" *ngIf="ders.ogrenciler && ders.ogrenciler.length > 0">
-                <div class="students-container">
-                  <span class="student-tag" *ngFor="let ogrenci of ders.ogrenciler.slice(0, 3)">
-                    {{ ogrenci }}
-                  </span>
-                  <span class="more-students" *ngIf="ders.ogrenciler.length > 3">
-                    +{{ ders.ogrenciler.length - 3 }} diğer
-                  </span>
+                <span class="student-count">
+                  {{ ders.ogrenciler.length }} öğrenci
+                </span>
+                <div class="student-names">
+                  {{ ders.ogrenciler.join(', ') }}
                 </div>
               </div>
-              <div class="group-info">
-                <span class="student-count">
-                  <i class="fas fa-user me-1"></i>
-                  {{ ders.ogrenciler?.length || 0 }} öğrenci
-                </span>
-                <span class="lesson-fee">{{ formatCurrency(ders.ucret) }}</span>
+              <div class="lesson-info">
+              <div class="group-name">
+                <i class="fas fa-users me-1"></i>
+                {{ ders.grup_adi }}
               </div>
+              <div class="students-list">
+                <span class="student-count" *ngIf="ders.ogrenciler && ders.ogrenciler.length > 0">
+                  {{ ders.ogrenciler.length }} öğrenci
+                </span>
+                <span class="student-count" *ngIf="!ders.ogrenciler || ders.ogrenciler.length === 0">
+                  Öğrenci bilgisi alınamadı
+                </span>
+                <div class="student-names" *ngIf="ders.ogrenciler && ders.ogrenciler.length > 0">
+                  {{ ders.ogrenciler.join(', ') }}
+                </div>
+              </div>
+              <div class="lesson-fee">{{ formatCurrency(ders.ucret) }}</div>
+            </div>
             </div>
           </div>
         </div>

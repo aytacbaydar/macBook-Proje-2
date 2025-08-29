@@ -622,11 +622,16 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
 
     this.http.get<any>('./server/api/ogretmen_haftalik_program.php', { headers }).subscribe({
       next: (response) => {
+        console.log('Günlük program API yanıtı:', response);
+        
         if (response.success) {
           // Bugünün derslerini filtrele
           const todayLessons = (response.data || []).filter((ders: any) =>
             ders.ders_gunu === this.todayName
           );
+          
+          console.log('Bugünkü dersler:', todayLessons);
+          console.log('Bugünün adı:', this.todayName);
 
           // Dersleri saate göre sırala ve grup bilgilerini organize et
           const groupedLessons = new Map();
@@ -655,6 +660,8 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
           // Map'i array'e çevir ve saate göre sırala
           this.dailySchedule = Array.from(groupedLessons.values())
             .sort((a: any, b: any) => a.ders_saati.localeCompare(b.ders_saati));
+            
+          console.log('İşlenmiş günlük program:', this.dailySchedule);
         }
       },
       error: (error) => {
