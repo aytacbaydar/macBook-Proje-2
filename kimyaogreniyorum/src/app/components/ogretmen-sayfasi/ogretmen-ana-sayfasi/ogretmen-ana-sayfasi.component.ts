@@ -463,14 +463,15 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
     return this.dashboardStats.inactiveStudents;
   }
 
-  formatCurrency(amount: number): string {
-    if (isNaN(amount) || amount === null || amount === undefined) return '₺0';
-    if (amount === 0) return '₺0';
+  formatCurrency(amount: number | string): string {
+    const numAmount = typeof amount === 'string' ? parseFloat(amount) || 0 : amount;
+    if (isNaN(numAmount) || numAmount === null || numAmount === undefined) return '₺0';
+    if (numAmount === 0) return '₺0';
 
     return new Intl.NumberFormat('tr-TR', {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
-    }).format(amount) + ' TL';
+    }).format(numAmount) + ' TL';
   }
 
   approveNewStudent(studentId: number): void {
