@@ -1127,3 +1127,109 @@
     margin-bottom: 24px;
   }
 }
+
+.today-schedule {
+  .lesson-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border-left: 4px solid #007bff;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: #e9ecef;
+      transform: translateX(5px);
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .lesson-time {
+      font-weight: bold;
+      color: #007bff;
+      min-width: 80px;
+      font-size: 0.95rem;
+
+      i {
+        color: #6c757d;
+      }
+    }
+
+    .lesson-info {
+      flex: 1;
+      margin-left: 1rem;
+
+      .student-name {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        color: #333;
+      }
+
+      .group-info {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        .group-badge {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          padding: 0.2rem 0.6rem;
+          border-radius: 12px;
+          font-size: 0.8rem;
+          font-weight: 500;
+        }
+
+        .lesson-fee {
+          color: #28a745;
+          font-weight: 600;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+}
+
+.no-lessons {
+  text-align: center;
+  padding: 2rem;
+  color: #6c757d;
+
+  i {
+    font-size: 3rem;
+    color: #dee2e6;
+  }
+
+  p {
+    margin: 0;
+    font-style: italic;
+  }
+}
+
+.performance-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+
+  .metric {
+    text-align: center;
+    padding: 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 10px;
+
+    .metric-value {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .metric-label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+  }
+}

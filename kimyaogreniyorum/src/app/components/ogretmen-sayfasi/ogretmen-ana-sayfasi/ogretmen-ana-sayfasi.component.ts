@@ -120,6 +120,10 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
   studentProgress: StudentProgress[] = [];
   isLoadingStats: boolean = true;
 
+  // Günlük ders programı
+  dailySchedule: any[] = [];
+  todayName: string = '';
+
   // Öğretmen bilgileri
   teacherName: string = '';
   teacherAvatar: string = '';
@@ -131,11 +135,19 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
     '#ec4899', '#84cc16', '#f97316', '#6366f1', '#14b8a6', '#eab308',
   ];
 
+  weeklyPerformance = {
+    completedLessons: 0,
+    totalHours: 0,
+    averageAttendance: 0
+  };
+
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
     this.loadTeacherInfo();
     this.loadDashboardData();
+    this.setTodayName();
+    this.loadTodaySchedule();
   }
 
   private loadTeacherInfo(): void {
@@ -597,5 +609,29 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
 
   navigateToExamResults(): void {
     this.router.navigate(['/ogretmen-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi']);
+  }
+
+  setTodayName(): void {
+    const today = new Date();
+    const dayNames = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
+    this.todayName = dayNames[today.getDay()];
+  }
+
+  loadTodaySchedule(): void {
+    const headers = this.getAuthHeaders();
+
+    this.http.get<any>('./server/api/ogretmen_haftalik_program.php', { headers }).subscribe({
+      next: (response) => {
+        if (response.success) {
+          // Bugünün derslerini filtrele
+          this.dailySchedule = (response.data || []).filter((ders: any) =>
+            ders.ders_gunu === this.todayName
+          ).sort((a: any, b: any) => a.ders_saati.localeCompare(b.ders_saati));
+        }
+      },
+      error: (error) => {
+        console.error('Günlük ders programı yüklenirken hata:', error);
+      }
+    });
   }
 }
