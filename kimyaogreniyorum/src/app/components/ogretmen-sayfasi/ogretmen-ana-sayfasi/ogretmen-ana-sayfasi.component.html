@@ -103,38 +103,59 @@
       </div>
     </div>
 
-    <!-- Recent Activities -->
+    <!-- Last Exam Results -->
     <div class="admin-container grid-6">
       <div class="card-header">
         <h3>
-          <i class="fas fa-clock me-2"></i>
-          Son Aktiviteler
+          <i class="fas fa-chart-bar me-2"></i>
+          Son Sınav Sonuçları
         </h3>
         <div class="card-actions">
-          <span class="badge">Canlı</span>
+          <button class="btn-primary btn-sm" (click)="navigateToExamResults()">Tüm Sonuçlar</button>
         </div>
       </div>
       <div class="card-body">
-        <div *ngIf="isLoadingActivities" class="loading-state">
+        <div *ngIf="isLoadingLastExam" class="loading-state">
           <div class="spinner-border spinner-border-sm" role="status"></div>
           <span class="ms-2">Yükleniyor...</span>
         </div>
 
-        <div class="activity-list" *ngIf="!isLoadingActivities">
-          <div class="activity-item" *ngFor="let activity of recentActivities">
-            <div class="activity-avatar" [ngClass]="activity.color">
-              <i [class]="getActivityIcon(activity.type)"></i>
+        <div class="exam-results-list" *ngIf="!isLoadingLastExam && lastExamResults.length > 0">
+          <div class="exam-result-item" *ngFor="let result of lastExamResults">
+            <div class="student-info">
+              <div class="student-avatar">
+                <i class="bi bi-person-circle"></i>
+              </div>
+              <div class="student-details">
+                <h4>{{ result.ogrenci_adi }}</h4>
+                <p class="exam-name">{{ result.sinav_adi }}</p>
+              </div>
             </div>
-            <div class="activity-content">
-              <p><strong>{{ activity.title }}</strong></p>
-              <p class="activity-description">{{ activity.description }}</p>
-              <span class="time">{{ activity.time }}</span>
+            <div class="result-stats">
+              <div class="stat-grid">
+                <div class="stat-item success">
+                  <span class="stat-value">{{ result.dogru_sayisi }}</span>
+                  <span class="stat-label">D</span>
+                </div>
+                <div class="stat-item error">
+                  <span class="stat-value">{{ result.yanlis_sayisi }}</span>
+                  <span class="stat-label">Y</span>
+                </div>
+                <div class="stat-item info">
+                  <span class="stat-value">{{ calculateNet(result) | number:'1.1-1' }}</span>
+                  <span class="stat-label">Net</span>
+                </div>
+              </div>
+              <div class="performance-badge" [ngClass]="getPerformanceClass(result.yuzde)">
+                {{ result.yuzde }}%
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="activity-footer" *ngIf="!isLoadingActivities">
-          <a href="#" class="view-all">Tümünü Gör</a>
+        <div *ngIf="!isLoadingLastExam && lastExamResults.length === 0" class="empty-state">
+          <i class="bi bi-file-earmark-text text-muted"></i>
+          <p class="text-muted mt-2">Henüz sınav sonucu bulunmuyor.</p>
         </div>
       </div>
     </div>

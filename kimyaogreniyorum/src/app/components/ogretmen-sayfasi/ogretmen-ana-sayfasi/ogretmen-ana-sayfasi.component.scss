@@ -501,6 +501,117 @@
   }
 }
 
+// Exam Results Styles
+.exam-results-list {
+  .exam-result-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px solid #f0f0f0;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .student-info {
+      display: flex;
+      align-items: center;
+      flex: 1;
+
+      .student-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #f3f4f6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+        color: #6b7280;
+        font-size: 20px;
+      }
+
+      .student-details {
+        h4 {
+          margin: 0;
+          font-size: 14px;
+          font-weight: 600;
+          color: #1f2937;
+        }
+
+        .exam-name {
+          margin: 2px 0 0 0;
+          font-size: 12px;
+          color: #6b7280;
+        }
+      }
+    }
+
+    .result-stats {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .stat-grid {
+        display: flex;
+        gap: 8px;
+
+        .stat-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          min-width: 35px;
+
+          .stat-value {
+            font-size: 13px;
+            font-weight: 600;
+          }
+
+          .stat-label {
+            font-size: 10px;
+            color: #6b7280;
+            margin-top: 2px;
+          }
+
+          &.success .stat-value { color: #10b981; }
+          &.error .stat-value { color: #ef4444; }
+          &.info .stat-value { color: #06b6d4; }
+        }
+      }
+
+      .performance-badge {
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        min-width: 40px;
+        text-align: center;
+
+        &.excellent {
+          background: #d1fae5;
+          color: #065f46;
+        }
+
+        &.good {
+          background: #dbeafe;
+          color: #1e40af;
+        }
+
+        &.average {
+          background: #fef3c7;
+          color: #92400e;
+        }
+
+        &.poor {
+          background: #fee2e2;
+          color: #991b1b;
+        }
+      }
+    }
+  }
+}
+
 // Chart Placeholder
 .chart-placeholder {
   height: 200px;

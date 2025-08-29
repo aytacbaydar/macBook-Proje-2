@@ -92,15 +92,15 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
   // Mevcut değişkenler
   groups: Group[] = [];
   upcomingPayments: UpcomingPayment[] = [];
-  recentActivities: Activity[] = [];
   upcomingClasses: UpcomingClass[] = [];
   newStudents: NewStudent[] = [];
+  lastExamResults: any[] = [];
 
   isLoading: boolean = false;
   error: string | null = null;
   searchQuery: string = '';
   isLoadingPayments: boolean = false;
-  isLoadingActivities: boolean = true;
+  isLoadingLastExam: boolean = true;
   isLoadingClasses: boolean = true;
   isLoadingProgress: boolean = true;
   isLoadingNewStudents: boolean = true;
@@ -170,7 +170,7 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
   private loadDashboardData(): void {
     this.loadStudents();
     this.loadUpcomingPayments();
-    this.loadRecentActivities();
+    this.loadLastExamResults();
     this.loadUpcomingClasses();
     this.loadStudentProgress();
     this.loadDashboardStats();
@@ -318,51 +318,26 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
       });
   }
 
-  private loadRecentActivities(): void {
-    this.isLoadingActivities = true;
+  private loadLastExamResults(): void {
+    this.isLoadingLastExam = true;
 
-    // Son aktiviteler için simulated data - gerçek API'ye bağlanabilir
-    setTimeout(() => {
-      this.recentActivities = [
-        {
-          id: 1,
-          type: 'student_join',
-          title: 'Yeni Öğrenci',
-          description: 'Ahmet Yılmaz gruba katıldı',
-          time: '2 saat önce',
-          icon: 'fas fa-user-plus',
-          color: 'primary'
+    this.http.get<any>('./server/api/ogretmen_sinav_sonuclari.php', { headers: this.getAuthHeaders() })
+      .subscribe({
+        next: (response) => {
+          if (response.success && response.data) {
+            // En son yapılan sınavın sonuçlarını al (son 5 sonuç)
+            this.lastExamResults = response.data.slice(-5);
+          } else {
+            this.lastExamResults = [];
+          }
+          this.isLoadingLastExam = false;
         },
-        {
-          id: 2,
-          type: 'topic_complete',
-          title: 'Konu Tamamlandı',
-          description: 'Asit-Baz konusu işlendi',
-          time: '4 saat önce',
-          icon: 'fas fa-check-circle',
-          color: 'success'
-        },
-        {
-          id: 3,
-          type: 'lesson_start',
-          title: 'Ders Başladı',
-          description: 'Grup B dersi başladı',
-          time: '6 saat önce',
-          icon: 'fas fa-play-circle',
-          color: 'warning'
-        },
-        {
-          id: 4,
-          type: 'exam_create',
-          title: 'Yeni Sınav',
-          description: 'Organik Kimya sınavı oluşturuldu',
-          time: '1 gün önce',
-          icon: 'fas fa-file-alt',
-          color: 'info'
+        error: (error) => {
+          console.error('Son sınav sonuçları yüklenirken hata:', error);
+          this.lastExamResults = [];
+          this.isLoadingLastExam = false;
         }
-      ];
-      this.isLoadingActivities = false;
-    }, 1000);
+      });
   }
 
   private loadUpcomingClasses(): void {
@@ -605,18 +580,21 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
     this.router.navigate(['/ogretmen-sayfasi/ogretmen-ucret-sayfasi']);
   }
 
-  // Activity icon methods
-  getActivityIcon(type: string): string {
-    switch (type) {
-      case 'student_join': return 'fas fa-user-plus';
-      case 'topic_complete': return 'fas fa-check-circle';
-      case 'lesson_start': return 'fas fa-play-circle';
-      case 'exam_create': return 'fas fa-file-alt';
-      default: return 'fas fa-info-circle';
-    }
+  // Exam result methods
+  calculateNet(result: any): number {
+    const dogru = parseFloat(result.dogru_sayisi || '0');
+    const yanlis = parseFloat(result.yanlis_sayisi || '0');
+    return dogru - (yanlis / 4);
   }
 
-  getActivityColor(color: string): string {
-    return color;
+  getPerformanceClass(percentage: number): string {
+    if (percentage >= 80) return 'excellent';
+    if (percentage >= 60) return 'good';
+    if (percentage >= 40) return 'average';
+    return 'poor';
+  }
+
+  navigateToExamResults(): void {
+    this.router.navigate(['/ogretmen-sayfasi/ogretmen-ogrenci-sinav-sonuclari-sayfasi']);
   }
 }
