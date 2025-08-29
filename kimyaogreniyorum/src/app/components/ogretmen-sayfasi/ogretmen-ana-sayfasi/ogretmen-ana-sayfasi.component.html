@@ -160,43 +160,40 @@
       </div>
     </div>
 
-    <!-- Performance Chart -->
+    <!-- Today's Schedule -->
     <div class="admin-container grid-8">
       <div class="card-header">
         <h3>
-          <i class="fas fa-chart-line me-2"></i>
-          Haftalık Performans
+          <i class="fas fa-calendar-day me-2"></i>
+          Bugünkü Derslerim ({{ todayName }})
         </h3>
         <div class="card-actions">
-          <select class="period-select">
-            <option>Bu Hafta</option>
-            <option>Bu Ay</option>
-            <option>Bu Yıl</option>
-          </select>
+          <a routerLink="/ogretmen-sayfasi/ogretmen-haftalik-program-sayfasi" class="btn-primary btn-sm">Haftalık Program</a>
         </div>
       </div>
       <div class="card-body">
-        <div class="chart-placeholder">
-          <div class="chart-bars">
-            <div class="bar" style="height: 60%" data-day="Pzt"><span>P</span></div>
-            <div class="bar" style="height: 80%" data-day="Sal"><span>S</span></div>
-            <div class="bar" style="height: 45%" data-day="Çar"><span>Ç</span></div>
-            <div class="bar" style="height: 90%" data-day="Per"><span>P</span></div>
-            <div class="bar" style="height: 70%" data-day="Cum"><span>C</span></div>
-            <div class="bar" style="height: 85%" data-day="Cmt"><span>C</span></div>
-            <div class="bar" style="height: 65%" data-day="Paz"><span>P</span></div>
-          </div>
-          <div class="chart-legend">
-            <div class="legend-item">
-              <span class="dot primary"></span>
-              <span>Ders Sayısı</span>
+        <div class="today-schedule" *ngIf="dailySchedule.length > 0; else noLessonsToday">
+          <div class="lesson-item" *ngFor="let ders of dailySchedule">
+            <div class="lesson-time">
+              <i class="fas fa-clock me-2"></i>
+              {{ ders.ders_saati }}
             </div>
-            <div class="legend-item">
-              <span class="dot success"></span>
-              <span>Katılım Oranı</span>
+            <div class="lesson-info">
+              <div class="student-name">{{ ders.ogrenci_adi }}</div>
+              <div class="group-info">
+                <span class="group-badge">{{ ders.grup_adi }}</span>
+                <span class="lesson-fee">{{ formatCurrency(ders.ucret) }}</span>
+              </div>
             </div>
           </div>
         </div>
+
+        <ng-template #noLessonsToday>
+          <div class="no-lessons">
+            <i class="fas fa-calendar-check"></i>
+            <p>Bugün ders bulunmamaktadır.</p>
+          </div>
+        </ng-template>
       </div>
     </div>
 
