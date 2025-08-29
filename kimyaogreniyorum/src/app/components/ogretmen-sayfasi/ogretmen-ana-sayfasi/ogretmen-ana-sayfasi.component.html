@@ -1,104 +1,102 @@
-<div class="attendance-container">
+
+<div class="dashboard-container">
   <!-- Modern Header Section -->
   <div class="modern-page-header">
     <div class="header-content">
       <div class="header-text">
         <h1 class="modern-page-title">
-          <i class="bi bi-people-fill me-2"></i>
-          Öğrenci Grupları
+          <i class="bi bi-speedometer2 me-2"></i>
+          Öğretmen Dashboard
         </h1>
         <p class="modern-page-description">
-          Öğrencilerinizi gruplarına göre yönetin ve devamsızlık takibi yapın
+          Hoş geldiniz, {{ teacherName }}! Sınıflarınızı ve öğrencilerinizi yönetin.
         </p>
       </div>
 
-      <!-- Header Stats -->
+      <!-- Quick Stats Overview -->
       <div class="admin-overview">
         <div class="stat-card mavi">
           <div class="stat-icon">
             <i class="fas fa-users"></i>
           </div>
           <div class="stat-content">
-            <h3>{{ getTotalStudents() }}</h3>
+            <h3>{{ dashboardStats.totalStudents }}</h3>
             <p>Toplam Öğrenci</p>
           </div>
         </div>
 
         <div class="stat-card yesil">
           <div class="stat-icon">
-            <i class="fas fa-user-graduate"></i>
+            <i class="fas fa-user-check"></i>
           </div>
           <div class="stat-content">
-            <h3>{{ getActiveStudents() }}</h3>
+            <h3>{{ dashboardStats.activeStudents }}</h3>
             <p>Aktif Öğrenci</p>
           </div>
         </div>
 
         <div class="stat-card turuncu">
           <div class="stat-icon">
-            <i class="fas fa-users"></i>
+            <i class="fas fa-layer-group"></i>
           </div>
           <div class="stat-content">
-            <h3>{{ getInactiveStudents() }}</h3>
-            <p>Pasit Öğrenci</p>
+            <h3>{{ dashboardStats.totalGroups }}</h3>
+            <p>Aktif Grup</p>
           </div>
         </div>
 
-        <div class="stat-card kırmızı">
+        <div class="stat-card mor">
           <div class="stat-icon">
-            <i class="fas fa-chalkboard-teacher"></i>
+            <i class="fas fa-book-open"></i>
           </div>
           <div class="stat-content">
-            <h3>{{ groups.length }}</h3>
-            <p>Aktif Grup</p>
+            <h3>{{ dashboardStats.completedTopics }}/{{ dashboardStats.totalTopics }}</h3>
+            <p>Tamamlanan Konu</p>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <!-- Modern Header Section Son -->
 
   <!-- Main Dashboard Grid -->
   <div class="admin-grid">
     <!-- Quick Actions -->
     <div class="admin-container grid-6">
       <div class="card-header">
-        <h3>Hızlı İşlemler</h3>
-        <div class="card-actions">
-          <button class="btn-icon">
-            <i class="fas fa-ellipsis-h"></i>
-          </button>
-        </div>
+        <h3>
+          <i class="fas fa-bolt me-2"></i>
+          Hızlı İşlemler
+        </h3>
       </div>
       <div class="card-body">
         <div class="action-grid">
-          <a href="/ogretmen-ders-anlatma-tahtasi" class="action-item">
+          <button class="action-item" (click)="navigateToTeaching()">
             <div class="action-icon primary">
-              <i class="fas fa-chalkboard"></i>
+              <i class="fas fa-chalkboard-teacher"></i>
             </div>
             <span>Ders Başlat</span>
-          </a>
+          </button>
 
-          <a href="/ogretmen-gruplar-sayfasi" class="action-item">
+          <button class="action-item" (click)="navigateToGroups()">
             <div class="action-icon success">
               <i class="fas fa-users"></i>
             </div>
             <span>Grup Yönetimi</span>
-          </a>
+          </button>
 
-          <a href="/ogretmen-ogrenci-listesi" class="action-item">
+          <button class="action-item" (click)="navigateToStudents()">
             <div class="action-icon warning">
-              <i class="fas fa-user-plus"></i>
+              <i class="fas fa-user-graduate"></i>
             </div>
-            <span>Öğrenci Ekle</span>
-          </a>
+            <span>Öğrenci Listesi</span>
+          </button>
 
-          <a href="/ogretmen-raporlar" class="action-item">
+          <button class="action-item" (click)="navigateToReports()">
             <div class="action-icon info">
               <i class="fas fa-chart-bar"></i>
             </div>
             <span>Raporlar</span>
-          </a>
+          </button>
         </div>
       </div>
     </div>
@@ -106,55 +104,34 @@
     <!-- Recent Activities -->
     <div class="admin-container grid-6">
       <div class="card-header">
-        <h3>Son Aktiviteler</h3>
+        <h3>
+          <i class="fas fa-clock me-2"></i>
+          Son Aktiviteler
+        </h3>
         <div class="card-actions">
-          <span class="badge">Bugün</span>
+          <span class="badge">Canlı</span>
         </div>
       </div>
       <div class="card-body">
-        <div class="activity-list">
-          <div class="activity-item">
-            <div class="activity-avatar primary">
-              <i class="fas fa-user"></i>
+        <div *ngIf="isLoadingActivities" class="loading-state">
+          <div class="spinner-border spinner-border-sm" role="status"></div>
+          <span class="ms-2">Yükleniyor...</span>
+        </div>
+        
+        <div class="activity-list" *ngIf="!isLoadingActivities">
+          <div class="activity-item" *ngFor="let activity of recentActivities">
+            <div class="activity-avatar" [ngClass]="activity.color">
+              <i [class]="getActivityIcon(activity.type)"></i>
             </div>
             <div class="activity-content">
-              <p><strong>Ahmet Yılmaz</strong> gruba katıldı</p>
-              <span class="time">2 saat önce</span>
-            </div>
-          </div>
-
-          <div class="activity-item">
-            <div class="activity-avatar success">
-              <i class="fas fa-check"></i>
-            </div>
-            <div class="activity-content">
-              <p><strong>Asit-Baz Konusu</strong> tamamlandı</p>
-              <span class="time">4 saat önce</span>
-            </div>
-          </div>
-
-          <div class="activity-item">
-            <div class="activity-avatar warning">
-              <i class="fas fa-clock"></i>
-            </div>
-            <div class="activity-content">
-              <p><strong>Grup B</strong> dersi başladı</p>
-              <span class="time">6 saat önce</span>
-            </div>
-          </div>
-
-          <div class="activity-item">
-            <div class="activity-avatar info">
-              <i class="fas fa-file-alt"></i>
-            </div>
-            <div class="activity-content">
-              <p><strong>Yeni sınav</strong> oluşturuldu</p>
-              <span class="time">1 gün önce</span>
+              <p><strong>{{ activity.title }}</strong></p>
+              <p class="activity-description">{{ activity.description }}</p>
+              <span class="time">{{ activity.time }}</span>
             </div>
           </div>
         </div>
 
-        <div class="activity-footer">
+        <div class="activity-footer" *ngIf="!isLoadingActivities">
           <a href="#" class="view-all">Tümünü Gör</a>
         </div>
       </div>
@@ -163,7 +140,10 @@
     <!-- Performance Chart -->
     <div class="admin-container grid-8">
       <div class="card-header">
-        <h3>Haftalık Performans</h3>
+        <h3>
+          <i class="fas fa-chart-line me-2"></i>
+          Haftalık Performans
+        </h3>
         <div class="card-actions">
           <select class="period-select">
             <option>Bu Hafta</option>
@@ -175,13 +155,13 @@
       <div class="card-body">
         <div class="chart-placeholder">
           <div class="chart-bars">
-            <div class="bar" style="height: 60%"><span>P</span></div>
-            <div class="bar" style="height: 80%"><span>S</span></div>
-            <div class="bar" style="height: 45%"><span>Ç</span></div>
-            <div class="bar" style="height: 90%"><span>P</span></div>
-            <div class="bar" style="height: 70%"><span>C</span></div>
-            <div class="bar" style="height: 85%"><span>C</span></div>
-            <div class="bar" style="height: 65%"><span>P</span></div>
+            <div class="bar" style="height: 60%" data-day="Pzt"><span>P</span></div>
+            <div class="bar" style="height: 80%" data-day="Sal"><span>S</span></div>
+            <div class="bar" style="height: 45%" data-day="Çar"><span>Ç</span></div>
+            <div class="bar" style="height: 90%" data-day="Per"><span>P</span></div>
+            <div class="bar" style="height: 70%" data-day="Cum"><span>C</span></div>
+            <div class="bar" style="height: 85%" data-day="Cmt"><span>C</span></div>
+            <div class="bar" style="height: 65%" data-day="Paz"><span>P</span></div>
           </div>
           <div class="chart-legend">
             <div class="legend-item">
@@ -190,7 +170,7 @@
             </div>
             <div class="legend-item">
               <span class="dot success"></span>
-              <span>Katılım</span>
+              <span>Katılım Oranı</span>
             </div>
           </div>
         </div>
@@ -200,20 +180,22 @@
     <!-- Upcoming Payments -->
     <div class="admin-container grid-4">
       <div class="card-header">
-        <h3>Yaklaşan Ödemeler</h3>
+        <h3>
+          <i class="fas fa-money-bill me-2"></i>
+          Yaklaşan Ödemeler
+        </h3>
         <div class="card-actions">
-          <a href="/ogretmen-sayfasi/ogretmen-ucret-sayfasi" class="btn-primary btn-sm">Tümünü Gör</a>
+          <a routerLink="/ogretmen-sayfasi/ogretmen-ucret-sayfasi" class="btn-primary btn-sm">Tümünü Gör</a>
         </div>
       </div>
       <div class="card-body">
-        <div *ngIf="isLoadingPayments" class="text-center py-3">
-          <div class="spinner-border spinner-border-sm text-primary" role="status">
-            <span class="visually-hidden">Yükleniyor...</span>
-          </div>
+        <div *ngIf="isLoadingPayments" class="loading-state">
+          <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+          <span class="ms-2">Yükleniyor...</span>
         </div>
         
         <div class="payment-list" *ngIf="!isLoadingPayments">
-          <div class="payment-item" *ngFor="let payment of upcomingPayments.slice(0, 3)">
+          <div class="payment-item" *ngFor="let payment of upcomingPayments.slice(0, 4)">
             <div class="payment-info">
               <div class="student-details">
                 <h4>{{ payment.adi_soyadi }}</h4>
@@ -242,122 +224,69 @@
     <!-- Upcoming Classes -->
     <div class="admin-container grid-4">
       <div class="card-header">
-        <h3>Yaklaşan Dersler</h3>
+        <h3>
+          <i class="fas fa-calendar-alt me-2"></i>
+          Yaklaşan Dersler
+        </h3>
         <div class="card-actions">
-          <a href="#" class="btn-primary btn-sm">Yeni Ekle</a>
+          <a routerLink="/ogretmen-sayfasi/ogretmen-haftalik-program-sayfasi" class="btn-primary btn-sm">Program</a>
         </div>
       </div>
       <div class="card-body">
-        <div class="class-list">
-          <div class="class-item">
-            <div class="class-time">
-              <span class="time">14:00</span>
-              <span class="duration">1.5 saat</span>
-            </div>
-            <div class="class-info">
-              <h4>Asit ve Bazlar</h4>
-              <p>Grup A • 12 Öğrenci</p>
-            </div>
-            <div class="class-status active">
-              <i class="fas fa-play"></i>
-            </div>
-          </div>
+        <div *ngIf="isLoadingClasses" class="loading-state">
+          <div class="spinner-border spinner-border-sm" role="status"></div>
+          <span class="ms-2">Yükleniyor...</span>
+        </div>
 
-          <div class="class-item">
+        <div class="class-list" *ngIf="!isLoadingClasses">
+          <div class="class-item" *ngFor="let class of upcomingClasses">
             <div class="class-time">
-              <span class="time">16:30</span>
-              <span class="duration">2 saat</span>
+              <span class="time">{{ class.time }}</span>
+              <span class="duration">{{ class.duration }}</span>
             </div>
             <div class="class-info">
-              <h4>Organik Kimya</h4>
-              <p>Grup C • 8 Öğrenci</p>
+              <h4>{{ class.subject }}</h4>
+              <p>{{ class.group }} • {{ class.studentCount }} Öğrenci</p>
             </div>
-            <div class="class-status pending">
-              <i class="fas fa-clock"></i>
-            </div>
-          </div>
-
-          <div class="class-item">
-            <div class="class-time">
-              <span class="time">19:00</span>
-              <span class="duration">1 saat</span>
-            </div>
-            <div class="class-info">
-              <h4>Kimyasal Denge</h4>
-              <p>Grup B • 15 Öğrenci</p>
-            </div>
-            <div class="class-status pending">
-              <i class="fas fa-clock"></i>
+            <div class="class-status" [ngClass]="class.status">
+              <i class="fas" [ngClass]="class.status === 'active' ? 'fa-play' : 'fa-clock'"></i>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Students Progress -->
+    <!-- Student Progress -->
     <div class="admin-container grid-6">
       <div class="card-header">
-        <h3>Öğrenci İlerlemesi</h3>
+        <h3>
+          <i class="fas fa-chart-pie me-2"></i>
+          Öğrenci İlerlemesi
+        </h3>
         <div class="card-actions">
-          <a href="#" class="view-all">Detaylar</a>
+          <a routerLink="/ogretmen-sayfasi/ogretmen-ogrenci-listesi-sayfasi" class="view-all">Detaylar</a>
         </div>
       </div>
       <div class="card-body">
-        <div class="progress-list">
-          <div class="progress-item">
-            <div class="student-info">
-              <div class="student-avatar">
-                <img
-                  src="https://ui-avatars.com/api/?name=Ahmet+Yilmaz&background=6366f1&color=fff"
-                  alt="AY"
-                />
-              </div>
-              <div class="student-details">
-                <h4>Ahmet Yılmaz</h4>
-                <p>Organik Kimya</p>
-              </div>
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: 85%"></div>
-              <span class="progress-text">85%</span>
-            </div>
-          </div>
+        <div *ngIf="isLoadingProgress" class="loading-state">
+          <div class="spinner-border spinner-border-sm" role="status"></div>
+          <span class="ms-2">Yükleniyor...</span>
+        </div>
 
-          <div class="progress-item">
+        <div class="progress-list" *ngIf="!isLoadingProgress">
+          <div class="progress-item" *ngFor="let student of studentProgress">
             <div class="student-info">
               <div class="student-avatar">
-                <img
-                  src="https://ui-avatars.com/api/?name=Fatma+Kaya&background=10b981&color=fff"
-                  alt="FK"
-                />
+                <img [src]="student.avatar" [alt]="student.name" />
               </div>
               <div class="student-details">
-                <h4>Fatma Kaya</h4>
-                <p>Asit-Baz</p>
+                <h4>{{ student.name }}</h4>
+                <p>{{ student.subject }}</p>
               </div>
             </div>
             <div class="progress-bar">
-              <div class="progress-fill" style="width: 92%"></div>
-              <span class="progress-text">92%</span>
-            </div>
-          </div>
-
-          <div class="progress-item">
-            <div class="student-info">
-              <div class="student-avatar">
-                <img
-                  src="https://ui-avatars.com/api/?name=Mehmet+Demir&background=f59e0b&color=fff"
-                  alt="MD"
-                />
-              </div>
-              <div class="student-details">
-                <h4>Mehmet Demir</h4>
-                <p>Kimyasal Denge</p>
-              </div>
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: 78%"></div>
-              <span class="progress-text">78%</span>
+              <div class="progress-fill" [style.width.%]="student.progress"></div>
+              <span class="progress-text">{{ student.progress }}%</span>
             </div>
           </div>
         </div>
@@ -367,17 +296,25 @@
     <!-- Quick Stats -->
     <div class="admin-container grid-6">
       <div class="card-header">
-        <h3>Özet İstatistikler</h3>
+        <h3>
+          <i class="fas fa-tachometer-alt me-2"></i>
+          Özet İstatistikler
+        </h3>
       </div>
       <div class="card-body">
-        <div class="stats-mini">
+        <div *ngIf="isLoadingStats" class="loading-state">
+          <div class="spinner-border spinner-border-sm" role="status"></div>
+          <span class="ms-2">Yükleniyor...</span>
+        </div>
+
+        <div class="stats-mini" *ngIf="!isLoadingStats">
           <div class="mini-stat">
             <div class="mini-icon primary">
               <i class="fas fa-book"></i>
             </div>
             <div class="mini-content">
-              <h4>24</h4>
-              <p>Toplam Ders</p>
+              <h4>{{ dashboardStats.totalTopics }}</h4>
+              <p>Toplam Konu</p>
             </div>
           </div>
 
@@ -386,28 +323,28 @@
               <i class="fas fa-check-circle"></i>
             </div>
             <div class="mini-content">
-              <h4>18</h4>
+              <h4>{{ dashboardStats.completedTopics }}</h4>
               <p>Tamamlanan</p>
             </div>
           </div>
 
           <div class="mini-stat">
             <div class="mini-icon warning">
-              <i class="fas fa-clock"></i>
+              <i class="fas fa-file-alt"></i>
             </div>
             <div class="mini-content">
-              <h4>6</h4>
-              <p>Bekleyen</p>
+              <h4>{{ dashboardStats.totalExams }}</h4>
+              <p>Toplam Sınav</p>
             </div>
           </div>
 
           <div class="mini-stat">
             <div class="mini-icon info">
-              <i class="fas fa-star"></i>
+              <i class="fas fa-user-minus"></i>
             </div>
             <div class="mini-content">
-              <h4>4.8</h4>
-              <p>Ortalama</p>
+              <h4>{{ dashboardStats.inactiveStudents }}</h4>
+              <p>Pasif Öğrenci</p>
             </div>
           </div>
         </div>
