@@ -225,7 +225,7 @@
                 <p>{{ payment.grubu }} • {{ payment.ders_sayisi }} ders</p>
               </div>
               <div class="payment-amount">
-                <span class="amount">{{ formatCurrency(payment.ucret) }}</span>
+                <span class="amount">{{ formatCurrency(parseFloat(payment.ucret)) }}</span>
                 <span class="due-date" *ngIf="payment.son_odeme_tarihi">
                   {{ payment.son_odeme_tarihi | date:'dd/MM' }}
                 </span>
