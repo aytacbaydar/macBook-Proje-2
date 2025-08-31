@@ -1,1 +1,248 @@
-<p>ogretmen-konu-analizi-sayfasi works!</p>
+
+<div class="ogretmen-konu-analiz-container">
+
+  <!-- Loading State -->
+  <div *ngIf="loadingKonuAnalizi" class="loading-section text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Yükleniyor...</span>
+    </div>
+    <p class="mt-3 text-muted">Konu analizi yükleniyor...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loadingKonuAnalizi" class="alert alert-danger">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    {{ error }}
+    <button class="btn btn-sm btn-outline-danger ms-3" (click)="loadData()">
+      <i class="bi bi-arrow-clockwise me-1"></i>
+      Tekrar Dene
+    </button>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!loadingKonuAnalizi && !error">
+
+    <!-- Summary Statistics -->
+    <div class="summary-stats-section" *ngIf="konuAnalizleri.length > 0">
+      <div class="stats-grid">
+        <div class="stat-card primary">
+          <div class="stat-icon">
+            <i class="bi bi-book"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ getTotalTopics() }}</h3>
+            <p>Toplam Konu</p>
+          </div>
+        </div>
+
+        <div class="stat-card success">
+          <div class="stat-icon">
+            <i class="bi bi-percent"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ getAverageSuccess() }}%</h3>
+            <p>Ortalama Başarı</p>
+          </div>
+        </div>
+
+        <div class="stat-card info">
+          <div class="stat-icon">
+            <i class="bi bi-people"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ getTotalStudents() }}</h3>
+            <p>Toplam Öğrenci</p>
+          </div>
+        </div>
+
+        <div class="stat-card warning">
+          <div class="stat-icon">
+            <i class="bi bi-person-check"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ getActiveStudents() }}</h3>
+            <p>Aktif Öğrenci</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Performance Level Distribution -->
+    <div class="performance-distribution" *ngIf="konuAnalizleri.length > 0">
+      <h3><i class="bi bi-pie-chart me-2"></i>Konu Başarı Seviyesi Dağılımı</h3>
+      <div class="distribution-grid">
+        <div class="distribution-card excellent">
+          <div class="distribution-icon">
+            <i class="bi bi-trophy-fill"></i>
+          </div>
+          <div class="distribution-content">
+            <h4>{{ getMukemmelKonuSayisi() }}</h4>
+            <p>Mükemmel (80%+)</p>
+          </div>
+        </div>
+
+        <div class="distribution-card good">
+          <div class="distribution-icon">
+            <i class="bi bi-star-fill"></i>
+          </div>
+          <div class="distribution-content">
+            <h4>{{ getIyiKonuSayisi() }}</h4>
+            <p>İyi (60-79%)</p>
+          </div>
+        </div>
+
+        <div class="distribution-card medium">
+          <div class="distribution-icon">
+            <i class="bi bi-dash-circle-fill"></i>
+          </div>
+          <div class="distribution-content">
+            <h4>{{ getOrtaKonuSayisi() }}</h4>
+            <p>Orta (40-59%)</p>
+          </div>
+        </div>
+
+        <div class="distribution-card poor">
+          <div class="distribution-icon">
+            <i class="bi bi-arrow-down-circle-fill"></i>
+          </div>
+          <div class="distribution-content">
+            <h4>{{ getGelistirilmeliKonuSayisi() }}</h4>
+            <p>Geliştirilmeli (40% altı)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Highlight Cards -->
+    <div class="highlights-section" *ngIf="konuAnalizleri.length > 0">
+      <div class="row">
+        <!-- En İyi Konular -->
+        <div class="col-md-6">
+          <div class="highlight-card best-topics">
+            <h4><i class="bi bi-trophy me-2"></i>En İyi Konular</h4>
+            <div class="topics-list">
+              <div class="topic-highlight-item" *ngFor="let konu of getEnIyiKonular(); let i = index">
+                <div class="topic-rank excellent">{{ i + 1 }}</div>
+                <div class="topic-info">
+                  <h6>{{ konu.konu_adi }}</h6>
+                  <div class="topic-stats">
+                    <span class="success-rate excellent">{{ konu.ortalama_basari }}%</span>
+                    <small class="text-muted">{{ konu.cevaplayan_ogrenci }} öğrenci</small>
+                  </div>
+                </div>
+                <div class="topic-badge excellent">
+                  <i class="bi bi-trophy"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Geliştirilmesi Gereken Konular -->
+        <div class="col-md-6">
+          <div class="highlight-card improvement-topics">
+            <h4><i class="bi bi-arrow-up-circle me-2"></i>Geliştirilmesi Gereken Konular</h4>
+            <div class="topics-list">
+              <div class="topic-highlight-item" *ngFor="let konu of getGelistirilmesiGerekenKonular(); let i = index">
+                <div class="topic-rank warning">{{ i + 1 }}</div>
+                <div class="topic-info">
+                  <h6>{{ konu.konu_adi }}</h6>
+                  <div class="topic-stats">
+                    <span class="success-rate warning">{{ konu.ortalama_basari }}%</span>
+                    <small class="text-muted">{{ konu.cevaplayan_ogrenci }} öğrenci</small>
+                  </div>
+                </div>
+                <div class="topic-badge needs-work">
+                  <i class="bi bi-arrow-up"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detailed Topic Analysis -->
+    <div class="detailed-analysis" *ngIf="konuAnalizleri.length > 0">
+      <h3><i class="bi bi-list-check me-2"></i>Detaylı Konu Analizi</h3>
+      
+      <div class="topics-table-container">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead class="table-dark">
+              <tr>
+                <th>Konu Adı</th>
+                <th>Toplam Öğrenci</th>
+                <th>Cevaplayan</th>
+                <th>Ortalama Başarı</th>
+                <th>İyi Öğrenciler</th>
+                <th>Geliştirilmeli</th>
+                <th>Durum</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let konu of konuAnalizleri" class="topic-row">
+                <td class="topic-name">
+                  <strong>{{ konu.konu_adi }}</strong>
+                </td>
+                <td class="text-center">
+                  <span class="badge bg-info">{{ konu.toplam_ogrenci }}</span>
+                </td>
+                <td class="text-center">
+                  <span class="badge bg-primary">{{ konu.cevaplayan_ogrenci }}</span>
+                </td>
+                <td class="text-center">
+                  <div class="progress-container">
+                    <div class="progress" style="height: 20px;">
+                      <div 
+                        class="progress-bar" 
+                        [style.background-color]="getKonuSuccessColor(konu.ortalama_basari)"
+                        [style.width.%]="konu.ortalama_basari">
+                        {{ konu.ortalama_basari }}%
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="students-list">
+                  <div class="student-names" *ngIf="getIyiOgrenciler(konu).length > 0">
+                    <small *ngFor="let ogrenci of getIyiOgrenciler(konu); let last = last" 
+                           class="text-success">
+                      {{ ogrenci.adi_soyadi }}<span *ngIf="!last">, </span>
+                    </small>
+                  </div>
+                  <small class="text-muted" *ngIf="getIyiOgrenciler(konu).length === 0">-</small>
+                </td>
+                <td class="students-list">
+                  <div class="student-names" *ngIf="getKotuOgrenciler(konu).length > 0">
+                    <small *ngFor="let ogrenci of getKotuOgrenciler(konu); let last = last" 
+                           class="text-danger">
+                      {{ ogrenci.adi_soyadi }}<span *ngIf="!last">, </span>
+                    </small>
+                  </div>
+                  <small class="text-muted" *ngIf="getKotuOgrenciler(konu).length === 0">-</small>
+                </td>
+                <td class="text-center">
+                  <span 
+                    class="badge"
+                    [class.bg-success]="konu.ortalama_basari >= 80"
+                    [class.bg-warning]="konu.ortalama_basari >= 60 && konu.ortalama_basari < 80"
+                    [class.bg-danger]="konu.ortalama_basari < 60">
+                    {{ getKonuSuccessText(konu.ortalama_basari) }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="konuAnalizleri.length === 0" class="empty-state text-center py-5">
+      <i class="bi bi-graph-up display-1 text-muted"></i>
+      <h4 class="mt-3 text-muted">Henüz Konu Analizi Verisi Bulunmuyor</h4>
+      <p class="text-muted">Öğrencileriniz test çözdükçe burada analiz verileri görünecektir.</p>
+    </div>
+
+  </div>
+</div>
