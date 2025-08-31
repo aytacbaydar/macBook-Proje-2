@@ -89,6 +89,11 @@ export class OgretmenSidebarSayfasiComponent implements OnInit, OnDestroy {
       label: 'Cevap Anahtari',
       link: 'ogretmen-sayfasi/ogretmen-testlerin-cevaplari-sayfasi',
     },
+    {
+      icon: 'bi-key-fill',
+      label: 'Konu Analizleri',
+      link: 'ogretmen-sayfasi/ogretmen-konu-analizi-sayfasi',
+    },
     /*
     {
       icon: 'bi-person-check-fill',
