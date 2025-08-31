@@ -36,17 +36,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             exit();
         }
 
+        // Öğretmenin adını al
+        $stmt = $pdo->prepare("SELECT adi_soyadi FROM ogretmenler WHERE id = ?");
+        $stmt->execute([$ogretmenId]);
+        $ogretmen = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$ogretmen) {
+            errorResponse('Öğretmen bulunamadı');
+            exit();
+        }
+
+        $ogretmenAdi = $ogretmen['adi_soyadi'];
+
         // Öğretmenin öğrencilerini bul
         $stmt = $pdo->prepare("
             SELECT DISTINCT o.id, o.adi_soyadi, o.grubu
             FROM ogrenciler o 
-            WHERE o.ogretmeni = (
-                SELECT adi_soyadi 
-                FROM ogretmenler 
-                WHERE id = ?
-            )
+            WHERE o.ogretmeni = ?
         ");
-        $stmt->execute([$ogretmenId]);
+        $stmt->execute([$ogretmenAdi]);
         $ogrenciler = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if (empty($ogrenciler)) {
@@ -58,7 +66,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         }
 
         $ogrenciIds = array_column($ogrenciler, 'id');
-        $placeholders = str_repeat('?,', count($ogrenciIds) - 1) . '?';
 
         // Tüm konuları al
         $stmt = $pdo->prepare("
@@ -73,7 +80,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
         foreach ($konular as $konu) {
             // Bu konu için sinav sonuçlarını al
-            $stmt = $pdo->prepare("
+            $placeholders = str_repeat('?,', count($ogrenciIds) - 1) . '?';
+            
+            $sql = "
                 SELECT 
                     ss.ogrenci_id,
                     o.adi_soyadi,
@@ -86,8 +95,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 AND ss.ogrenci_id IN ($placeholders)
                 GROUP BY ss.ogrenci_id, o.adi_soyadi
                 HAVING toplam_soru > 0
-            ");
+            ";
             
+            $stmt = $pdo->prepare($sql);
             $params = array_merge([$konu['konu_id']], $ogrenciIds);
             $stmt->execute($params);
             $sonuclar = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -112,9 +122,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 $ogrenci = [
                     'id' => $sonuc['ogrenci_id'],
                     'adi_soyadi' => $sonuc['adi_soyadi'],
-                    'basari_orani' => $sonuc['basari_orani'],
-                    'dogru_sayisi' => $sonuc['dogru_sayisi'],
-                    'toplam_soru' => $sonuc['toplam_soru']
+                    'basari_orani' => floatval($sonuc['basari_orani']),
+                    'dogru_sayisi' => intval($sonuc['dogru_sayisi']),
+                    'toplam_soru' => intval($sonuc['toplam_soru'])
                 ];
 
                 if ($sonuc['basari_orani'] >= 80) {
@@ -129,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             }
 
             $konuAnalizleri[] = [
-                'konu_id' => $konu['konu_id'],
+                'konu_id' => intval($konu['konu_id']),
                 'konu_adi' => $konu['konu_adi'],
                 'toplam_ogrenci' => $toplamOgrenci,
                 'cevaplayan_ogrenci' => $cevaplayanOgrenci,
@@ -150,6 +160,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'konu_analizleri' => $konuAnalizleri
         ], 'Konu analizi başarıyla getirildi');
 
+    } catch (PDOException $e) {
+        error_log("Veritabanı hatası: " . $e->getMessage());
+        errorResponse('Veritabanı bağlantı hatası: ' . $e->getMessage(), 500);
     } catch (Exception $e) {
         error_log("Öğretmen konu analizi hatası: " . $e->getMessage());
         errorResponse('Konu analizi getirme hatası: ' . $e->getMessage(), 500);
