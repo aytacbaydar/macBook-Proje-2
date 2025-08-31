@@ -217,7 +217,7 @@ try {
             }
         }
         
-        // Bu konu için öğrenci varsa analiz ekle
+        // Tüm konuları ekle (veri olsun veya olmasın)
         if (!empty($ogrenciPerformanslari)) {
             // Performans gruplarını ayır
             $mukemmelOgrenciler = array_filter($ogrenciPerformanslari, fn($p) => $p['basari_orani'] >= 80);
@@ -238,6 +238,18 @@ try {
                 'iyi_ogrenciler' => array_map(fn($p) => ['adi_soyadi' => $p['adi_soyadi'], 'basari_orani' => $p['basari_orani']], $iyiOgrenciler),
                 'orta_ogrenciler' => array_map(fn($p) => ['adi_soyadi' => $p['adi_soyadi'], 'basari_orani' => $p['basari_orani']], $ortaOgrenciler),
                 'kotu_ogrenciler' => array_map(fn($p) => ['adi_soyadi' => $p['adi_soyadi'], 'basari_orani' => $p['basari_orani']], $kotuOgrenciler)
+            ];
+        } else {
+            // Hiç veri yoksa da konu ekle (0 değerleriyle)
+            $konuAnalizleri[] = [
+                'konu_adi' => $konuAdi,
+                'toplam_ogrenci' => 0,
+                'cevaplayan_ogrenci' => 0,
+                'ortalama_basari' => 0,
+                'mukemmel_ogrenciler' => [],
+                'iyi_ogrenciler' => [],
+                'orta_ogrenciler' => [],
+                'kotu_ogrenciler' => []
             ];
         }
     }
