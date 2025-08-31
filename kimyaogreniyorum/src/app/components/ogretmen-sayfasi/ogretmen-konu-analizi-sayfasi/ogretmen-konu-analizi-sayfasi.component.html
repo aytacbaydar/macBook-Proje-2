@@ -166,6 +166,14 @@
     <div class="detailed-analysis" *ngIf="konuAnalizleri.length > 0">
       <h3><i class="bi bi-list-check me-2"></i>Detaylı Konu Analizi</h3>
       
+      <!-- Debug Info -->
+      <div class="alert alert-info mb-3" *ngIf="konuAnalizleri.length > 0">
+        <small>
+          <strong>Debug:</strong> Toplam {{ konuAnalizleri.length }} konu bulundu. 
+          Konular: {{ getKonuAdlari() }}
+        </small>
+      </div>
+      
       <div class="topics-table-container">
         <div class="table-responsive">
           <table class="table table-hover">
@@ -181,10 +189,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let konu of konuAnalizleri; trackBy: trackByKonu" class="topic-row">
-                <td class="topic-name">
-                  <strong>{{ konu.konu_adi }}</strong>
-                </td>
+              <ng-container *ngFor="let konu of konuAnalizleri; trackBy: trackByKonu; let i = index">
+                <tr class="topic-row">
+                  <td class="topic-name">
+                    <strong>{{ i + 1 }}. {{ konu.konu_adi }}</strong>
+                  </td>
                 <td class="text-center">
                   <span class="badge bg-info">{{ konu.toplam_ogrenci }}</span>
                 </td>
@@ -230,7 +239,8 @@
                     {{ getKonuSuccessText(konu.ortalama_basari) }}
                   </span>
                 </td>
-              </tr>
+                </tr>
+              </ng-container>
             </tbody>
           </table>
         </div>

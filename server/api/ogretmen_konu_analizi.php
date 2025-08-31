@@ -1,4 +1,3 @@
-
 <?php
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
@@ -103,16 +102,16 @@ try {
 
     foreach ($konular as $konuAdi) {
         $ogrenciPerformanslari = [];
-        
+
         foreach ($ogrenciler as $ogrenci) {
             $ogrenciId = $ogrenci['id'];
             $ogrenciAdi = $ogrenci['adi_soyadi'];
-            
+
             $toplamSoru = 0;
             $dogruSayisi = 0;
             $yanlisSayisi = 0;
             $bosSayisi = 0;
-            
+
             // 1. sinav_cevaplari tablosundan analiz
             try {
                 $sinavCevaplariQuery = "
@@ -125,23 +124,23 @@ try {
                 $stmt->bindParam(':ogrenci_id', $ogrenciId);
                 $stmt->execute();
                 $sinavlar = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                
+
                 foreach ($sinavlar as $sinav) {
                     $ogrenciCevaplar = json_decode($sinav['cevaplar'], true);
                     $soruKonulari = json_decode($sinav['soru_konulari'], true);
                     $dogruCevaplar = json_decode($sinav['dogru_cevaplar'], true);
-                    
+
                     if (!$soruKonulari || !$dogruCevaplar) continue;
-                    
+
                     foreach ($soruKonulari as $soruKey => $soruKonuAdi) {
                         // Konu adı eşleşmesi kontrolü (case insensitive ve trim)
                         if (strcasecmp(trim($soruKonuAdi), trim($konuAdi)) === 0) {
                             $soruNo = str_replace('soru', '', $soruKey);
                             $ogrenciCevap = $ogrenciCevaplar[$soruKey] ?? '';
                             $dogruCevap = $dogruCevaplar["ca{$soruNo}"] ?? '';
-                            
+
                             $toplamSoru++;
-                            
+
                             if (empty($ogrenciCevap)) {
                                 $bosSayisi++;
                             } elseif ($ogrenciCevap === $dogruCevap) {
@@ -155,7 +154,7 @@ try {
             } catch (Exception $e) {
                 error_log('Sınav cevapları analiz hatası: ' . $e->getMessage());
             }
-            
+
             // 2. yapay_zeka_testler tablosundan analiz
             try {
                 $yapayZekaQuery = "
@@ -169,25 +168,25 @@ try {
                 $stmt->bindParam(':ogrenci_id', $ogrenciId);
                 $stmt->execute();
                 $yapayZekaTestler = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                
+
                 foreach ($yapayZekaTestler as $test) {
                     $sorular = json_decode($test['sorular'], true);
                     $sonuc = json_decode($test['sonuc'], true);
-                    
+
                     if (!$sonuc || !isset($sonuc['details'])) continue;
-                    
+
                     foreach ($sonuc['details'] as $detay) {
                         if (!isset($detay['soru']) || !isset($detay['soru']['konu_adi'])) continue;
-                        
+
                         $testKonuAdi = $detay['soru']['konu_adi'];
-                        
+
                         // Konu adı eşleşmesi kontrolü (case insensitive ve trim)
                         if (strcasecmp(trim($testKonuAdi), trim($konuAdi)) === 0) {
                             $isCorrect = $detay['is_correct'] ?? false;
                             $userAnswer = $detay['user_answer'] ?? '';
-                            
+
                             $toplamSoru++;
-                            
+
                             if (empty($userAnswer)) {
                                 $bosSayisi++;
                             } elseif ($isCorrect) {
@@ -201,7 +200,7 @@ try {
             } catch (Exception $e) {
                 error_log('Yapay zeka testleri analiz hatası: ' . $e->getMessage());
             }
-            
+
             // Öğrenci bu konuda soru çözdüyse performans hesapla
             if ($toplamSoru > 0) {
                 $basariOrani = round(($dogruSayisi / $toplamSoru) * 100, 2);
@@ -216,7 +215,7 @@ try {
                 ];
             }
         }
-        
+
         // Tüm konuları ekle (veri olsun veya olmasın)
         if (!empty($ogrenciPerformanslari)) {
             // Performans gruplarını ayır
@@ -224,11 +223,11 @@ try {
             $iyiOgrenciler = array_filter($ogrenciPerformanslari, fn($p) => $p['basari_orani'] >= 60 && $p['basari_orani'] < 80);
             $ortaOgrenciler = array_filter($ogrenciPerformanslari, fn($p) => $p['basari_orani'] >= 40 && $p['basari_orani'] < 60);
             $kotuOgrenciler = array_filter($ogrenciPerformanslari, fn($p) => $p['basari_orani'] < 40);
-            
+
             // Ortalama başarı hesapla
             $toplamBasari = array_sum(array_column($ogrenciPerformanslari, 'basari_orani'));
             $ortalamaBasari = round($toplamBasari / count($ogrenciPerformanslari), 2);
-            
+
             $konuAnalizleri[] = [
                 'konu_adi' => $konuAdi,
                 'toplam_ogrenci' => count($ogrenciPerformanslari),
@@ -259,20 +258,23 @@ try {
         return $b['ortalama_basari'] <=> $a['ortalama_basari'];
     });
 
-    // Debug bilgisi ekle
-    $debugInfo = [
+    // Debug bilgisi
+    $debug = [
         'ogretmen_adi' => $ogretmenAdi,
         'toplam_ogrenci' => count($ogrenciler),
         'bulunan_konular' => count($konular),
         'analiz_edilen_konular' => count($konuAnalizleri),
         'konu_listesi' => array_column($konuAnalizleri, 'konu_adi'),
         'veri_olan_konular' => count(array_filter($konuAnalizleri, fn($k) => $k['cevaplayan_ogrenci'] > 0)),
-        'veri_olmayan_konular' => count(array_filter($konuAnalizleri, fn($k) => $k['cevaplayan_ogrenci'] == 0))
+        'veri_olmayan_konular' => count(array_filter($konuAnalizleri, fn($k) => $k['cevaplayan_ogrenci'] == 0)),
+        'ilk_5_konu' => array_slice($konuAnalizleri, 0, 5),
+        'son_5_konu' => array_slice($konuAnalizleri, -5),
+        'tum_konu_sayisi' => count($konuAnalizleri)
     ];
 
     successResponse([
         'konu_analizleri' => $konuAnalizleri,
-        'debug_info' => $debugInfo
+        'debug_info' => $debug
     ], 'Konu analizi başarıyla getirildi');
 
 } catch (Exception $e) {

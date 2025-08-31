@@ -104,10 +104,19 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit {
     this.http.get<any>(`./server/api/ogretmen_konu_analizi.php?ogretmen_id=${ogretmenId}`).subscribe({
       next: (response) => {
         this.loadingKonuAnalizi = false;
+        console.log('Full response:', response);
         if (response.success && response.data) {
           this.konuAnalizleri = response.data.konu_analizleri || [];
+          console.log('Konu analizleri loaded:', this.konuAnalizleri.length, 'items');
+          console.log('Konu adları:', this.konuAnalizleri.map(k => k.konu_adi));
+          
+          // Force change detection
+          setTimeout(() => {
+            this.forceUpdate();
+          }, 100);
         } else {
           this.konuAnalizleri = [];
+          console.log('No data in response');
         }
       },
       error: (error) => {
@@ -201,5 +210,14 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit {
 
   trackByKonu(index: number, konu: any): any {
     return konu.konu_adi;
+  }
+
+  getKonuAdlari(): string {
+    return this.konuAnalizleri.map(k => k.konu_adi).join(', ');
+  }
+
+  // Force change detection
+  forceUpdate() {
+    this.konuAnalizleri = [...this.konuAnalizleri];
   }
 }
