@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
@@ -30,7 +29,7 @@ interface TeacherInfo {
 export class OgretmenKonuAnaliziSayfasiComponent implements OnInit {
   // Teacher information
   teacherInfo: TeacherInfo | null = null;
-  
+
   // Konu analizi
   konuAnalizleri: KonuAnalizi[] = [];
   loadingKonuAnalizi: boolean = false;
@@ -181,9 +180,8 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit {
 
   getGelistirilmesiGerekenKonular(): KonuAnalizi[] {
     return this.konuAnalizleri
-      .filter(konu => konu.ortalama_basari < 60)
-      .sort((a, b) => a.ortalama_basari - b.ortalama_basari)
-      .slice(0, 3);
+      .filter(konu => konu.ortalama_basari < 70 && konu.cevaplayan_ogrenci > 0)
+      .slice(0, 5);
   }
 
   // Öğrenci listelerini birleştir
@@ -193,5 +191,15 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit {
 
   getKotuOgrenciler(konu: KonuAnalizi): any[] {
     return [...(konu.orta_ogrenciler || []), ...(konu.kotu_ogrenciler || [])];
+  }
+
+  getTopStudents() {
+    return this.konuAnalizleri
+      .filter(konu => konu.ortalama_basari >= 80)
+      .slice(0, 5);
+  }
+
+  trackByKonu(index: number, konu: any): any {
+    return konu.konu_adi;
   }
 }

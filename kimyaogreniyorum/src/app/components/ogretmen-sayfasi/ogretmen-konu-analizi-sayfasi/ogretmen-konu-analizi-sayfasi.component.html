@@ -181,7 +181,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let konu of konuAnalizleri" class="topic-row">
+              <tr *ngFor="let konu of konuAnalizleri; trackBy: trackByKonu" class="topic-row">
                 <td class="topic-name">
                   <strong>{{ konu.konu_adi }}</strong>
                 </td>

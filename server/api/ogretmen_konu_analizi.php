@@ -264,7 +264,10 @@ try {
         'ogretmen_adi' => $ogretmenAdi,
         'toplam_ogrenci' => count($ogrenciler),
         'bulunan_konular' => count($konular),
-        'analiz_edilen_konular' => count($konuAnalizleri)
+        'analiz_edilen_konular' => count($konuAnalizleri),
+        'konu_listesi' => array_column($konuAnalizleri, 'konu_adi'),
+        'veri_olan_konular' => count(array_filter($konuAnalizleri, fn($k) => $k['cevaplayan_ogrenci'] > 0)),
+        'veri_olmayan_konular' => count(array_filter($konuAnalizleri, fn($k) => $k['cevaplayan_ogrenci'] == 0))
     ];
 
     successResponse([
