@@ -1,9 +1,5 @@
-<?php
-// Enable error reporting for debugging
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-ini_set('log_errors', 1);
 
+<?php
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
@@ -13,15 +9,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
-error_log("=== OGRETMEN KONU ANALIZI BAŞLADI ===");
-error_log("Request method: " . $_SERVER['REQUEST_METHOD']);
-error_log("GET parameters: " . print_r($_GET, true));
-
 try {
     require_once '../config.php';
-    error_log("Config dosyası başarıyla yüklendi");
 } catch (Exception $e) {
-    error_log("Config dosyası yüklenemedi: " . $e->getMessage());
     echo json_encode(['success' => false, 'error' => 'Config dosyası hatası: ' . $e->getMessage()]);
     exit();
 }
@@ -47,17 +37,12 @@ try {
         exit();
     }
 
-    error_log("Konu analizi başlatıldı - Öğretmen ID: " . $ogretmenId);
-
     // Veritabanı bağlantısını kontrol et
     try {
         if (!isset($conn)) {
             $conn = getConnection();
-            error_log("Veritabanı bağlantısı oluşturuldu");
         }
-        error_log("Veritabanı bağlantısı mevcut");
     } catch (Exception $e) {
-        error_log("Veritabanı bağlantı hatası: " . $e->getMessage());
         errorResponse('Veritabanı bağlantı hatası: ' . $e->getMessage());
         exit();
     }
@@ -65,34 +50,18 @@ try {
     // Öğretmenin varlığını kontrol et
     try {
         $stmt = $conn->prepare("SELECT adi_soyadi FROM ogrenciler WHERE id = :ogretmen_id AND rutbe = 'ogretmen'");
-        error_log("Öğretmen kontrol sorgusu hazırlandı");
-    } catch (Exception $e) {
-        error_log("Öğretmen kontrol sorgusu hazırlanamadı: " . $e->getMessage());
-        errorResponse('Sorgu hazırlama hatası: ' . $e->getMessage());
-        exit();
-    }
-    try {
         $stmt->bindParam(':ogretmen_id', $ogretmenId);
-        error_log("Öğretmen ID parametresi bağlandı: " . $ogretmenId);
-        
         $stmt->execute();
-        error_log("Öğretmen kontrol sorgusu çalıştırıldı");
-        
         $ogretmen = $stmt->fetch(PDO::FETCH_ASSOC);
-        error_log("Öğretmen verisi alındı: " . print_r($ogretmen, true));
     } catch (Exception $e) {
-        error_log("Öğretmen kontrol sorgusu hatası: " . $e->getMessage());
         errorResponse('Öğretmen kontrol hatası: ' . $e->getMessage());
         exit();
     }
 
     if (!$ogretmen) {
-        error_log("Öğretmen bulunamadı - ID: " . $ogretmenId);
         errorResponse('Öğretmen bulunamadı');
         exit();
     }
-
-    error_log("Öğretmen bulundu - ID: " . $ogretmenId . ", Ad: " . $ogretmen['adi_soyadi']);
 
     $ogretmenAdi = $ogretmen['adi_soyadi'];
 
@@ -102,30 +71,18 @@ try {
             k.id as konu_id,
             k.konu_adi,
             COUNT(DISTINCT ss.ogrenci_id) as toplam_ogrenci,
-            COUNT(DISTINCT CASE WHEN ss.dogru_sayisi > ss.yanlis_sayisi THEN ss.ogrenci_id END) as basarili_ogrenci,
-            COUNT(DISTINCT CASE WHEN ss.dogru_sayisi <= ss.yanlis_sayisi THEN ss.ogrenci_id END) as basarisiz_ogrenci,
+            COUNT(DISTINCT CASE WHEN (ss.dogru_sayisi * 100.0) / (ss.dogru_sayisi + ss.yanlis_sayisi) >= 80 THEN ss.ogrenci_id END) as mukemmel_ogrenci,
+            COUNT(DISTINCT CASE WHEN (ss.dogru_sayisi * 100.0) / (ss.dogru_sayisi + ss.yanlis_sayisi) >= 60 AND (ss.dogru_sayisi * 100.0) / (ss.dogru_sayisi + ss.yanlis_sayisi) < 80 THEN ss.ogrenci_id END) as iyi_ogrenci,
+            COUNT(DISTINCT CASE WHEN (ss.dogru_sayisi * 100.0) / (ss.dogru_sayisi + ss.yanlis_sayisi) >= 40 AND (ss.dogru_sayisi * 100.0) / (ss.dogru_sayisi + ss.yanlis_sayisi) < 60 THEN ss.ogrenci_id END) as orta_ogrenci,
+            COUNT(DISTINCT CASE WHEN (ss.dogru_sayisi * 100.0) / (ss.dogru_sayisi + ss.yanlis_sayisi) < 40 THEN ss.ogrenci_id END) as kotu_ogrenci,
             ROUND(AVG(CASE 
                 WHEN (ss.dogru_sayisi + ss.yanlis_sayisi) > 0 
                 THEN (ss.dogru_sayisi * 100.0) / (ss.dogru_sayisi + ss.yanlis_sayisi) 
                 ELSE 0 
             END), 2) as ortalama_basari,
-            GROUP_CONCAT(
-                DISTINCT CASE WHEN ss.dogru_sayisi > ss.yanlis_sayisi 
-                THEN o.adi_soyadi 
-                END 
-                ORDER BY o.adi_soyadi 
-                SEPARATOR ', '
-            ) as basarili_ogrenciler,
-            GROUP_CONCAT(
-                DISTINCT CASE WHEN ss.dogru_sayisi <= ss.yanlis_sayisi 
-                THEN o.adi_soyadi 
-                END 
-                ORDER BY o.adi_soyadi 
-                SEPARATOR ', '
-            ) as basarisiz_ogrenciler
+            COUNT(DISTINCT ss.ogrenci_id) as cevaplayan_ogrenci
         FROM konular k
         LEFT JOIN sinav_sonuclari ss ON k.id = ss.konu_id
-        LEFT JOIN ogrenciler o ON ss.ogrenci_id = o.id
         WHERE k.ogretmen_id = :ogretmen_id
         GROUP BY k.id, k.konu_adi
         HAVING COUNT(DISTINCT ss.ogrenci_id) > 0
@@ -133,18 +90,10 @@ try {
     ";
 
     try {
-        error_log("Ana konu analizi sorgusu hazırlanıyor...");
         $stmt = $conn->prepare($query);
-        error_log("Ana sorgu hazırlandı");
-        
         $stmt->bindParam(':ogretmen_id', $ogretmenId);
-        error_log("Parametreler bağlandı");
-        
         $stmt->execute();
-        error_log("Ana sorgu çalıştırıldı");
     } catch (Exception $e) {
-        error_log("Ana sorgu hatası: " . $e->getMessage());
-        error_log("SQL Query: " . $query);
         errorResponse('Ana sorgu hatası: ' . $e->getMessage());
         exit();
     }
@@ -152,45 +101,98 @@ try {
     $konuAnalizleri = [];
     
     try {
-        error_log("Sonuçlar işleniyor...");
-        $rowCount = 0;
-        
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $rowCount++;
-            error_log("Row " . $rowCount . " işleniyor: " . print_r($row, true));
-        $konuAnalizleri[] = [
-            'konu_id' => intval($row['konu_id']),
-            'konu_adi' => $row['konu_adi'],
-            'toplam_ogrenci' => intval($row['toplam_ogrenci']),
-            'basarili_ogrenci' => intval($row['basarili_ogrenci']),
-            'basarisiz_ogrenci' => intval($row['basarisiz_ogrenci']),
-            'ortalama_basari' => floatval($row['ortalama_basari']),
-            'basarili_ogrenciler' => $row['basarili_ogrenciler'] ? explode(', ', $row['basarili_ogrenciler']) : [],
-            'basarisiz_ogrenciler' => $row['basarisiz_ogrenciler'] ? explode(', ', $row['basarisiz_ogrenciler']) : []
-        ];
+            // Her konu için öğrenci detaylarını al
+            $konuId = $row['konu_id'];
+            
+            // Mükemmel öğrencileri getir (80-100%)
+            $mukemmelQuery = "
+                SELECT DISTINCT o.adi_soyadi 
+                FROM sinav_sonuclari ss 
+                JOIN ogrenciler o ON ss.ogrenci_id = o.id 
+                WHERE ss.konu_id = :konu_id 
+                AND (ss.dogru_sayisi * 100.0) / (ss.dogru_sayisi + ss.yanlis_sayisi) >= 80
+                ORDER BY o.adi_soyadi
+            ";
+            $mukemmelStmt = $conn->prepare($mukemmelQuery);
+            $mukemmelStmt->bindParam(':konu_id', $konuId);
+            $mukemmelStmt->execute();
+            $mukemmelOgrenciler = $mukemmelStmt->fetchAll(PDO::FETCH_COLUMN);
+
+            // İyi öğrencileri getir (60-79%)
+            $iyiQuery = "
+                SELECT DISTINCT o.adi_soyadi 
+                FROM sinav_sonuclari ss 
+                JOIN ogrenciler o ON ss.ogrenci_id = o.id 
+                WHERE ss.konu_id = :konu_id 
+                AND (ss.dogru_sayisi * 100.0) / (ss.dogru_sayisi + ss.yanlis_sayisi) >= 60
+                AND (ss.dogru_sayisi * 100.0) / (ss.dogru_sayisi + ss.yanlis_sayisi) < 80
+                ORDER BY o.adi_soyadi
+            ";
+            $iyiStmt = $conn->prepare($iyiQuery);
+            $iyiStmt->bindParam(':konu_id', $konuId);
+            $iyiStmt->execute();
+            $iyiOgrenciler = $iyiStmt->fetchAll(PDO::FETCH_COLUMN);
+
+            // Orta öğrencileri getir (40-59%)
+            $ortaQuery = "
+                SELECT DISTINCT o.adi_soyadi 
+                FROM sinav_sonuclari ss 
+                JOIN ogrenciler o ON ss.ogrenci_id = o.id 
+                WHERE ss.konu_id = :konu_id 
+                AND (ss.dogru_sayisi * 100.0) / (ss.dogru_sayisi + ss.yanlis_sayisi) >= 40
+                AND (ss.dogru_sayisi * 100.0) / (ss.dogru_sayisi + ss.yanlis_sayisi) < 60
+                ORDER BY o.adi_soyadi
+            ";
+            $ortaStmt = $conn->prepare($ortaQuery);
+            $ortaStmt->bindParam(':konu_id', $konuId);
+            $ortaStmt->execute();
+            $ortaOgrenciler = $ortaStmt->fetchAll(PDO::FETCH_COLUMN);
+
+            // Kötü öğrencileri getir (0-39%)
+            $kotuQuery = "
+                SELECT DISTINCT o.adi_soyadi 
+                FROM sinav_sonuclari ss 
+                JOIN ogrenciler o ON ss.ogrenci_id = o.id 
+                WHERE ss.konu_id = :konu_id 
+                AND (ss.dogru_sayisi * 100.0) / (ss.dogru_sayisi + ss.yanlis_sayisi) < 40
+                ORDER BY o.adi_soyadi
+            ";
+            $kotuStmt = $conn->prepare($kotuQuery);
+            $kotuStmt->bindParam(':konu_id', $konuId);
+            $kotuStmt->execute();
+            $kotuOgrenciler = $kotuStmt->fetchAll(PDO::FETCH_COLUMN);
+
+            $konuAnalizleri[] = [
+                'konu_id' => intval($row['konu_id']),
+                'konu_adi' => $row['konu_adi'],
+                'toplam_ogrenci' => intval($row['toplam_ogrenci']),
+                'cevaplayan_ogrenci' => intval($row['cevaplayan_ogrenci']),
+                'ortalama_basari' => floatval($row['ortalama_basari']),
+                'mukemmel_ogrenciler' => array_map(function($name) {
+                    return ['adi_soyadi' => $name];
+                }, $mukemmelOgrenciler),
+                'iyi_ogrenciler' => array_map(function($name) {
+                    return ['adi_soyadi' => $name];
+                }, $iyiOgrenciler),
+                'orta_ogrenciler' => array_map(function($name) {
+                    return ['adi_soyadi' => $name];
+                }, $ortaOgrenciler),
+                'kotu_ogrenciler' => array_map(function($name) {
+                    return ['adi_soyadi' => $name];
+                }, $kotuOgrenciler)
+            ];
         }
-        
-        error_log("Toplam " . $rowCount . " row işlendi");
     } catch (Exception $e) {
-        error_log("Sonuç işleme hatası: " . $e->getMessage());
         errorResponse('Sonuç işleme hatası: ' . $e->getMessage());
         exit();
     }
-
-    error_log("Konu analizi başarılı - toplam konu: " . count($konuAnalizleri));
 
     successResponse([
         'konu_analizleri' => $konuAnalizleri
     ], 'Konu analizi başarıyla getirildi');
 
 } catch (Exception $e) {
-    error_log("=== GENEL HATA ===");
-    error_log("Hata mesajı: " . $e->getMessage());
-    error_log("Hata dosyası: " . $e->getFile());
-    error_log("Hata satırı: " . $e->getLine());
-    error_log("Stack trace: " . $e->getTraceAsString());
-    error_log("=== HATA SONU ===");
-    
-    errorResponse('Sistem hatası: ' . $e->getMessage() . ' (Satır: ' . $e->getLine() . ')');
+    errorResponse('Sistem hatası: ' . $e->getMessage());
 }
 ?>
