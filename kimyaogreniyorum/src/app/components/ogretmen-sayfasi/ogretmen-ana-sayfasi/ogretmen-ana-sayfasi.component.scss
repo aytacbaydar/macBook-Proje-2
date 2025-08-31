@@ -11,8 +11,9 @@
 
 // Modern Page Header
 .modern-page-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 20px;
+  background: linear-gradient(135deg, #facf44 0%, #fc9003 100%);
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  border-radius: 8px;
   padding: 32px;
   margin-bottom: 32px;
   color: white;
@@ -26,7 +27,7 @@
     right: 0;
     width: 200px;
     height: 200px;
-    background: rgba(255, 255, 255, 0.1);
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     border-radius: 50%;
     transform: translate(50%, -50%);
   }
@@ -155,11 +156,10 @@
 
 .admin-container {
   background: white;
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
   overflow: hidden;
   transition: all 0.3s ease;
-  border: 1px solid #f1f5f9;
 
   &:hover {
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
@@ -191,16 +191,59 @@
   }
 
   .card-header {
-    padding: 24px 24px 0 24px;
+    padding: 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid #f1f5f9;
     margin-bottom: 24px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+
+
+    &.mavi{
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      }
+    
+    &.yesil{
+      background: linear-gradient(135deg, #10b981, #047857);
+    }
+  
+    &.turuncu {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+    }
+  
+    &.mor {
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    }
+
+    .header-action-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+      }
+
+      i {
+        font-size: 1.1rem;
+      }
+    }
 
     h3 {
-      font-size: 1.25rem;
-      font-weight: 600;
+      font-size: 16px;
+      font-weight: 500;
       color: #1e293b;
       margin: 0;
       display: flex;

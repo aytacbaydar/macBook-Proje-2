@@ -2,16 +2,6 @@
   <!-- Modern Header Section -->
   <div class="modern-page-header">
     <div class="header-content">
-      <div class="header-text">
-        <h1 class="modern-page-title">
-          <i class="bi bi-speedometer2 me-2"></i>
-          Öğretmen Dashboard
-        </h1>
-        <p class="modern-page-description">
-          Hoş geldiniz, {{ teacherName }}! Sınıflarınızı ve öğrencilerinizi yönetin.
-        </p>
-      </div>
-
       <!-- Quick Stats Overview -->
       <div class="admin-overview">
         <div class="stat-card mavi">
@@ -61,7 +51,7 @@
   <div class="admin-grid">
     <!-- New Students -->
     <div class="admin-container grid-6">
-      <div class="card-header">
+      <div class="card-header mavi">
         <h3>
           <i class="bi bi-person-plus-fill me-2"></i>
           Yeni Kayıt Olan Öğrenciler
@@ -105,13 +95,16 @@
 
     <!-- Last Exam Results -->
     <div class="admin-container grid-6">
-      <div class="card-header">
+      <div class="card-header turuncu">
         <h3>
           <i class="fas fa-chart-bar me-2"></i>
           Son Sınav Sonuçları
         </h3>
         <div class="card-actions">
-          <button class="btn-primary btn-sm" (click)="navigateToExamResults()">Tüm Sonuçlar</button>
+          <button class="header-action-btn detail-btn" (click)="navigateToExamResults()">
+            <i class="bi bi-clipboard-check-fill"></i>
+            <span>Tüm Sonuçlar</span>
+          </button>
         </div>
       </div>
       <div class="card-body">
@@ -162,13 +155,16 @@
 
     <!-- Today's Schedule -->
     <div class="admin-container grid-8">
-      <div class="card-header">
+      <div class="card-header yesil">
         <h3>
           <i class="fas fa-calendar-day me-2"></i>
           Bugünkü Derslerim ({{ todayName }})
         </h3>
         <div class="card-actions">
-          <a routerLink="/ogretmen-sayfasi/ogretmen-haftalik-program-sayfasi" class="btn-primary btn-sm">Haftalık Program</a>
+          <button class="header-action-btn detail-btn" (click)="haftalikdersprogrami()">
+            <i class="bi bi-clipboard-check-fill"></i>
+            <span>Haftalık Program</span>
+          </button>
         </div>
       </div>
       <div class="card-body">
@@ -224,13 +220,16 @@
 
     <!-- Upcoming Payments -->
     <div class="admin-container grid-4">
-      <div class="card-header">
+      <div class="card-header mor">
         <h3>
           <i class="fas fa-money-bill me-2"></i>
           Yaklaşan Ödemeler
         </h3>
         <div class="card-actions">
-          <a routerLink="/ogretmen-sayfasi/ogretmen-ucret-sayfasi" class="btn-primary btn-sm">Tümünü Gör</a>
+          <button class="header-action-btn detail-btn" (click)="yaklasanodemeler()">
+            <i class="bi bi-clipboard-check-fill"></i>
+            <span>Tümünü Gör</span>
+          </button>
         </div>
       </div>
       <div class="card-body">
@@ -266,7 +265,7 @@
       </div>
     </div>
 
-    <!-- Upcoming Classes -->
+    <!-- Yaklaşan Dersler
     <div class="admin-container grid-4">
       <div class="card-header">
         <h3>
@@ -299,42 +298,26 @@
           </div>
         </div>
       </div>
-    </div>
+    </div>-->
 
     <!-- Student Progress -->
-    <div class="admin-container grid-6">
-      <div class="card-header">
+    <div class="admin-container grid-12">
+      <div class="card-header turuncu">
         <h3>
           <i class="fas fa-chart-pie me-2"></i>
           Öğrenci İlerlemesi
         </h3>
         <div class="card-actions">
-          <a routerLink="/ogretmen-sayfasi/ogretmen-ogrenci-listesi-sayfasi" class="view-all">Detaylar</a>
+          <button class="header-action-btn detail-btn" (click)="konuanalizi()">
+            <i class="bi bi-clipboard-check-fill"></i>
+            <span>Haftalık Program</span>
+          </button>
         </div>
       </div>
       <div class="card-body">
-        <div *ngIf="isLoadingProgress" class="loading-state">
-          <div class="spinner-border spinner-border-sm" role="status"></div>
-          <span class="ms-2">Yükleniyor...</span>
-        </div>
-
-        <div class="progress-list" *ngIf="!isLoadingProgress">
-          <div class="progress-item" *ngFor="let student of studentProgress">
-            <div class="student-info">
-              <div class="student-avatar">
-                <img [src]="student.avatar" [alt]="student.name" />
-              </div>
-              <div class="student-details">
-                <h4>{{ student.name }}</h4>
-                <p>{{ student.subject }}</p>
-              </div>
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill" [style.width.%]="student.progress"></div>
-              <span class="progress-text">{{ student.progress }}%</span>
-            </div>
-          </div>
-        </div>
+        <!--içerik-->
+        
+        <!--içerik Son-->
       </div>
     </div>
 
