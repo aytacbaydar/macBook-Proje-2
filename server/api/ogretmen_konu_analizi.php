@@ -65,24 +65,7 @@ try {
 
     $ogretmenAdi = $ogretmen['adi_soyadi'];
 
-    // Bu öğretmenin konularını al
-    try {
-        $konularQuery = "SELECT id, konu_adi FROM konular WHERE ogretmen_id = :ogretmen_id ORDER BY konu_adi";
-        $stmt = $conn->prepare($konularQuery);
-        $stmt->bindParam(':ogretmen_id', $ogretmenId);
-        $stmt->execute();
-        $konular = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (Exception $e) {
-        errorResponse('Konular getirme hatası: ' . $e->getMessage());
-        exit();
-    }
-
-    if (empty($konular)) {
-        errorResponse('Bu öğretmene ait konu bulunamadı');
-        exit();
-    }
-
-    // Bu öğretmenin öğrencilerini al
+    // Bu öğretmenin öğrencilerini al (rutbe kontrolü ile)
     try {
         $ogrencilerQuery = "SELECT id, adi_soyadi FROM ogrenciler WHERE ogretmeni = :ogretmen_adi AND rutbe = 'ogrenci' AND aktif = 1";
         $stmt = $conn->prepare($ogrencilerQuery);
@@ -94,12 +77,31 @@ try {
         exit();
     }
 
+    if (empty($ogrenciler)) {
+        errorResponse('Bu öğretmene ait aktif öğrenci bulunamadı');
+        exit();
+    }
+
+    // Tüm konuları al (sadece bu öğretmene ait değil, genel konular)
+    try {
+        $konularQuery = "SELECT DISTINCT konu_adi FROM konular ORDER BY konu_adi";
+        $stmt = $conn->prepare($konularQuery);
+        $stmt->execute();
+        $konularResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $konular = array_column($konularResult, 'konu_adi');
+    } catch (Exception $e) {
+        errorResponse('Konular getirme hatası: ' . $e->getMessage());
+        exit();
+    }
+
+    if (empty($konular)) {
+        errorResponse('Sistemde konu bulunamadı');
+        exit();
+    }
+
     $konuAnalizleri = [];
 
-    foreach ($konular as $konu) {
-        $konuAdi = $konu['konu_adi'];
-        $konuId = $konu['id'];
-        
+    foreach ($konular as $konuAdi) {
         $ogrenciPerformanslari = [];
         
         foreach ($ogrenciler as $ogrenci) {
@@ -132,7 +134,7 @@ try {
                     if (!$soruKonulari || !$dogruCevaplar) continue;
                     
                     foreach ($soruKonulari as $soruKey => $soruKonuAdi) {
-                        // Konu adı eşleşmesi kontrolü (case insensitive)
+                        // Konu adı eşleşmesi kontrolü (case insensitive ve trim)
                         if (strcasecmp(trim($soruKonuAdi), trim($konuAdi)) === 0) {
                             $soruNo = str_replace('soru', '', $soruKey);
                             $ogrenciCevap = $ogrenciCevaplar[$soruKey] ?? '';
@@ -179,7 +181,7 @@ try {
                         
                         $testKonuAdi = $detay['soru']['konu_adi'];
                         
-                        // Konu adı eşleşmesi kontrolü (case insensitive)
+                        // Konu adı eşleşmesi kontrolü (case insensitive ve trim)
                         if (strcasecmp(trim($testKonuAdi), trim($konuAdi)) === 0) {
                             $isCorrect = $detay['is_correct'] ?? false;
                             $userAnswer = $detay['user_answer'] ?? '';
@@ -228,15 +230,14 @@ try {
             $ortalamaBasari = round($toplamBasari / count($ogrenciPerformanslari), 2);
             
             $konuAnalizleri[] = [
-                'konu_id' => intval($konuId),
                 'konu_adi' => $konuAdi,
                 'toplam_ogrenci' => count($ogrenciPerformanslari),
                 'cevaplayan_ogrenci' => count($ogrenciPerformanslari),
                 'ortalama_basari' => $ortalamaBasari,
-                'mukemmel_ogrenciler' => array_map(fn($p) => ['adi_soyadi' => $p['adi_soyadi']], $mukemmelOgrenciler),
-                'iyi_ogrenciler' => array_map(fn($p) => ['adi_soyadi' => $p['adi_soyadi']], $iyiOgrenciler),
-                'orta_ogrenciler' => array_map(fn($p) => ['adi_soyadi' => $p['adi_soyadi']], $ortaOgrenciler),
-                'kotu_ogrenciler' => array_map(fn($p) => ['adi_soyadi' => $p['adi_soyadi']], $kotuOgrenciler)
+                'mukemmel_ogrenciler' => array_map(fn($p) => ['adi_soyadi' => $p['adi_soyadi'], 'basari_orani' => $p['basari_orani']], $mukemmelOgrenciler),
+                'iyi_ogrenciler' => array_map(fn($p) => ['adi_soyadi' => $p['adi_soyadi'], 'basari_orani' => $p['basari_orani']], $iyiOgrenciler),
+                'orta_ogrenciler' => array_map(fn($p) => ['adi_soyadi' => $p['adi_soyadi'], 'basari_orani' => $p['basari_orani']], $ortaOgrenciler),
+                'kotu_ogrenciler' => array_map(fn($p) => ['adi_soyadi' => $p['adi_soyadi'], 'basari_orani' => $p['basari_orani']], $kotuOgrenciler)
             ];
         }
     }
@@ -246,8 +247,17 @@ try {
         return $b['ortalama_basari'] <=> $a['ortalama_basari'];
     });
 
+    // Debug bilgisi ekle
+    $debugInfo = [
+        'ogretmen_adi' => $ogretmenAdi,
+        'toplam_ogrenci' => count($ogrenciler),
+        'bulunan_konular' => count($konular),
+        'analiz_edilen_konular' => count($konuAnalizleri)
+    ];
+
     successResponse([
-        'konu_analizleri' => $konuAnalizleri
+        'konu_analizleri' => $konuAnalizleri,
+        'debug_info' => $debugInfo
     ], 'Konu analizi başarıyla getirildi');
 
 } catch (Exception $e) {
