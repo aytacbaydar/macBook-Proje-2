@@ -114,8 +114,31 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
         console.log('Full response:', response);
         if (response.success && response.data) {
           this.konuAnalizleri = response.data.konu_analizleri || [];
+          
+          // Veri doğrulama ve temizleme
+          this.konuAnalizleri = this.konuAnalizleri.map(konu => {
+            // Konu adının doğru şekilde set edildiğinden emin ol
+            if (!konu.konu_adi || konu.konu_adi.trim() === '') {
+              konu.konu_adi = 'Bilinmeyen Konu';
+            }
+            
+            // Sayısal değerlerin doğru formatta olduğundan emin ol
+            konu.ortalama_basari = parseFloat(konu.ortalama_basari || '0');
+            konu.toplam_ogrenci = parseInt(konu.toplam_ogrenci || '0');
+            konu.cevaplayan_ogrenci = parseInt(konu.cevaplayan_ogrenci || '0');
+            
+            // Öğrenci dizilerinin var olduğundan emin ol
+            konu.mukemmel_ogrenciler = konu.mukemmel_ogrenciler || [];
+            konu.iyi_ogrenciler = konu.iyi_ogrenciler || [];
+            konu.orta_ogrenciler = konu.orta_ogrenciler || [];
+            konu.kotu_ogrenciler = konu.kotu_ogrenciler || [];
+            
+            return konu;
+          });
+          
           console.log('Konu analizleri loaded:', this.konuAnalizleri.length, 'items');
           console.log('Konu adları:', this.konuAnalizleri.map(k => k.konu_adi));
+          console.log('Processed data:', this.konuAnalizleri);
           
           // Force change detection
           setTimeout(() => {
@@ -216,7 +239,7 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
   }
 
   trackByKonu(index: number, konu: any): any {
-    return konu.konu_adi;
+    return konu?.konu_id || konu?.konu_adi || index;
   }
 
   getKonuAdlari(): string {
@@ -242,63 +265,95 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
 
   // Konu kartları için istatistik metodları
   getTotalQuestionsByTopic(konu: KonuAnalizi): number {
-    const allStudents = [
-      ...(konu.mukemmel_ogrenciler || []),
-      ...(konu.iyi_ogrenciler || []),
-      ...(konu.orta_ogrenciler || []),
-      ...(konu.kotu_ogrenciler || [])
-    ];
-    
-    if (allStudents.length === 0) return 0;
-    
-    // Her öğrencinin toplam sorusunu al ve en yüksek değeri döndür
-    const questionCounts = allStudents.map(student => 
-      parseInt(student.toplam_soru_sayisi || student.toplam_soru || '0')
-    ).filter(count => count > 0);
-    
-    return questionCounts.length > 0 ? Math.max(...questionCounts) : 0;
+    try {
+      const allStudents = [
+        ...(konu.mukemmel_ogrenciler || []),
+        ...(konu.iyi_ogrenciler || []),
+        ...(konu.orta_ogrenciler || []),
+        ...(konu.kotu_ogrenciler || [])
+      ];
+      
+      if (allStudents.length === 0) return 0;
+      
+      // Her öğrencinin toplam sorusunu al ve en yüksek değeri döndür
+      const questionCounts = allStudents.map(student => {
+        const toplamSoru = parseInt(student.toplam_soru_sayisi || student.toplam_soru || student.soru_sayisi || '0');
+        return toplamSoru;
+      }).filter(count => count > 0);
+      
+      const result = questionCounts.length > 0 ? Math.max(...questionCounts) : 0;
+      console.log(`${konu.konu_adi} - Toplam Soru:`, result, 'Students:', allStudents.length);
+      return result;
+    } catch (error) {
+      console.error('Toplam soru hesaplama hatası:', error);
+      return 0;
+    }
   }
 
   getCorrectAnswersByTopic(konu: KonuAnalizi): number {
-    const allStudents = [
-      ...(konu.mukemmel_ogrenciler || []),
-      ...(konu.iyi_ogrenciler || []),
-      ...(konu.orta_ogrenciler || []),
-      ...(konu.kotu_ogrenciler || [])
-    ];
-    
-    return allStudents.reduce((total, student) => {
-      const dogru = parseInt(student.dogru_sayisi || student.dogru || '0');
-      return total + dogru;
-    }, 0);
+    try {
+      const allStudents = [
+        ...(konu.mukemmel_ogrenciler || []),
+        ...(konu.iyi_ogrenciler || []),
+        ...(konu.orta_ogrenciler || []),
+        ...(konu.kotu_ogrenciler || [])
+      ];
+      
+      const result = allStudents.reduce((total, student) => {
+        const dogru = parseInt(student.dogru_sayisi || student.dogru || student.dogru_cevap || '0');
+        return total + dogru;
+      }, 0);
+      
+      console.log(`${konu.konu_adi} - Doğru Cevap:`, result);
+      return result;
+    } catch (error) {
+      console.error('Doğru cevap hesaplama hatası:', error);
+      return 0;
+    }
   }
 
   getWrongAnswersByTopic(konu: KonuAnalizi): number {
-    const allStudents = [
-      ...(konu.mukemmel_ogrenciler || []),
-      ...(konu.iyi_ogrenciler || []),
-      ...(konu.orta_ogrenciler || []),
-      ...(konu.kotu_ogrenciler || [])
-    ];
-    
-    return allStudents.reduce((total, student) => {
-      const yanlis = parseInt(student.yanlis_sayisi || student.yanlis || '0');
-      return total + yanlis;
-    }, 0);
+    try {
+      const allStudents = [
+        ...(konu.mukemmel_ogrenciler || []),
+        ...(konu.iyi_ogrenciler || []),
+        ...(konu.orta_ogrenciler || []),
+        ...(konu.kotu_ogrenciler || [])
+      ];
+      
+      const result = allStudents.reduce((total, student) => {
+        const yanlis = parseInt(student.yanlis_sayisi || student.yanlis || student.yanlis_cevap || '0');
+        return total + yanlis;
+      }, 0);
+      
+      console.log(`${konu.konu_adi} - Yanlış Cevap:`, result);
+      return result;
+    } catch (error) {
+      console.error('Yanlış cevap hesaplama hatası:', error);
+      return 0;
+    }
   }
 
   getEmptyAnswersByTopic(konu: KonuAnalizi): number {
-    const allStudents = [
-      ...(konu.mukemmel_ogrenciler || []),
-      ...(konu.iyi_ogrenciler || []),
-      ...(konu.orta_ogrenciler || []),
-      ...(konu.kotu_ogrenciler || [])
-    ];
-    
-    return allStudents.reduce((total, student) => {
-      const bos = parseInt(student.bos_sayisi || student.bos || '0');
-      return total + bos;
-    }, 0);
+    try {
+      const allStudents = [
+        ...(konu.mukemmel_ogrenciler || []),
+        ...(konu.iyi_ogrenciler || []),
+        ...(konu.orta_ogrenciler || []),
+        ...(konu.kotu_ogrenciler || [])
+      ];
+      
+      const result = allStudents.reduce((total, student) => {
+        const bos = parseInt(student.bos_sayisi || student.bos || student.bos_cevap || '0');
+        return total + bos;
+      }, 0);
+      
+      console.log(`${konu.konu_adi} - Boş Cevap:`, result);
+      return result;
+    } catch (error) {
+      console.error('Boş cevap hesaplama hatası:', error);
+      return 0;
+    }
   }
 
   getBestStudentForTopic(konu: KonuAnalizi): any {

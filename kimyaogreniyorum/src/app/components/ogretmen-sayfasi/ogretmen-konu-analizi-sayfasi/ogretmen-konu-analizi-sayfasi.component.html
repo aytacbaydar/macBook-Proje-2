@@ -170,10 +170,10 @@
           <div class="card-header">
             <div class="topic-title">
               <i class="bi bi-book me-2"></i>
-              <h5>{{ konu.konu_adi }}</h5>
+              <h5>{{ konu?.konu_adi || 'Bilinmeyen Konu' }}</h5>
             </div>
-            <div class="status-badge" [style.background-color]="getKonuSuccessColor(konu.ortalama_basari)">
-              {{ getKonuSuccessText(konu.ortalama_basari) }}
+            <div class="status-badge" [style.background-color]="getKonuSuccessColor(konu?.ortalama_basari || 0)">
+              {{ getKonuSuccessText(konu?.ortalama_basari || 0) }}
             </div>
           </div>
 
@@ -184,7 +184,7 @@
                 <i class="bi bi-question-circle"></i>
               </div>
               <div class="stat-content">
-                <h4>{{ getTotalQuestionsByTopic(konu) }}</h4>
+                <h4>{{ getTotalQuestionsByTopic(konu) || 0 }}</h4>
                 <p>Toplam Soru</p>
               </div>
             </div>
@@ -194,7 +194,7 @@
                 <i class="bi bi-check-circle"></i>
               </div>
               <div class="stat-content">
-                <h4>{{ getCorrectAnswersByTopic(konu) }}</h4>
+                <h4>{{ getCorrectAnswersByTopic(konu) || 0 }}</h4>
                 <p>Doğru</p>
               </div>
             </div>
@@ -204,7 +204,7 @@
                 <i class="bi bi-x-circle"></i>
               </div>
               <div class="stat-content">
-                <h4>{{ getWrongAnswersByTopic(konu) }}</h4>
+                <h4>{{ getWrongAnswersByTopic(konu) || 0 }}</h4>
                 <p>Yanlış</p>
               </div>
             </div>
@@ -214,7 +214,7 @@
                 <i class="bi bi-dash-circle"></i>
               </div>
               <div class="stat-content">
-                <h4>{{ getEmptyAnswersByTopic(konu) }}</h4>
+                <h4>{{ getEmptyAnswersByTopic(konu) || 0 }}</h4>
                 <p>Boş</p>
               </div>
             </div>
@@ -224,12 +224,12 @@
           <div class="success-rate-container">
             <div class="progress-label">
               <span>Başarı Oranı</span>
-              <span class="percentage">{{ konu.ortalama_basari }}%</span>
+              <span class="percentage">{{ konu?.ortalama_basari || 0 }}%</span>
             </div>
             <div class="progress-bar-container">
               <div class="progress-bar" 
-                   [style.width.%]="konu.ortalama_basari"
-                   [style.background-color]="getKonuSuccessColor(konu.ortalama_basari)">
+                   [style.width.%]="konu?.ortalama_basari || 0"
+                   [style.background-color]="getKonuSuccessColor(konu?.ortalama_basari || 0)">
               </div>
             </div>
           </div>
