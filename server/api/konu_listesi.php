@@ -70,7 +70,8 @@ try {
 
     echo json_encode([
         'success' => true,
-        'konular' => $konular,
+        'data' => $konular,
+        'konular' => $konular, // Backward compatibility
         'message' => 'Konular başarıyla getirildi'
     ]);
 

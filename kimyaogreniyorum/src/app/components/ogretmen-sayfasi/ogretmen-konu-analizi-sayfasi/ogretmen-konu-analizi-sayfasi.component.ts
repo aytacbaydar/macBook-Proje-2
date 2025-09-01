@@ -424,15 +424,20 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
       
       this.http.get<any>(`./server/api/konu_listesi.php`).subscribe({
         next: (response) => {
-          if (response.success && response.data) {
-            const allTopics = response.data;
+          console.log('Topics API response:', response);
+          if (response.success && (response.data || response.konular)) {
+            const allTopics = response.data || response.konular;
+            console.log('All topics from API:', allTopics);
             
             // Update missing topic names
             this.konuAnalizleri.forEach(konu => {
               if (!konu.konu_adi || konu.konu_adi.trim() === '' || konu.konu_adi.startsWith('Bilinmeyen Konu')) {
-                const topicInfo = allTopics.find((topic: any) => topic.id == konu.konu_id);
+                // Hem id hem de konu_id ile arama yap
+                const topicInfo = allTopics.find((topic: any) => 
+                  topic.id == konu.konu_id || topic.konu_id == konu.konu_id
+                );
                 if (topicInfo) {
-                  konu.konu_adi = topicInfo.baslik || topicInfo.konu_adi || topicInfo.name || `Konu ${konu.konu_id}`;
+                  konu.konu_adi = topicInfo.konu_adi || topicInfo.baslik || topicInfo.name || `Konu ${konu.konu_id}`;
                   console.log(`Updated konu_id ${konu.konu_id} with name: ${konu.konu_adi}`);
                 } else {
                   konu.konu_adi = `Konu ${konu.konu_id}`;
