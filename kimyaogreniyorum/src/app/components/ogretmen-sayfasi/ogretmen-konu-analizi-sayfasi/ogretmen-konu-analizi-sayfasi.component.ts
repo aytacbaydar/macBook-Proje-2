@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 interface KonuAnalizi {
@@ -26,7 +26,7 @@ interface TeacherInfo {
   templateUrl: './ogretmen-konu-analizi-sayfasi.component.html',
   styleUrl: './ogretmen-konu-analizi-sayfasi.component.scss'
 })
-export class OgretmenKonuAnaliziSayfasiComponent implements OnInit {
+export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
   // Teacher information
   teacherInfo: TeacherInfo | null = null;
 
@@ -39,6 +39,13 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
+    // Add scroll event listener with null check
+    window.onscroll = () => this.scrollFunction();
+  }
+
+  ngOnDestroy(): void {
+    // Clean up scroll event listener
+    window.onscroll = null;
   }
 
   loadData() {
@@ -219,5 +226,17 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit {
   // Force change detection
   forceUpdate() {
     this.konuAnalizleri = [...this.konuAnalizleri];
+  }
+
+  // Scroll function with null check
+  scrollFunction() {
+    const scrollBtn = document.getElementById("scrollToTopBtn");
+    if (scrollBtn) {
+      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        scrollBtn.style.display = "block";
+      } else {
+        scrollBtn.style.display = "none";
+      }
+    }
   }
 }
