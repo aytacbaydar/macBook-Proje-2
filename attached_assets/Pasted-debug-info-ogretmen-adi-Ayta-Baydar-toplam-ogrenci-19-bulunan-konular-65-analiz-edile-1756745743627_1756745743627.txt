@@ -1,0 +1,201 @@
+debug_info
+: 
+{ogretmen_adi: 'Aytaç Baydar', toplam_ogrenci: 19, bulunan_konular: 65, analiz_edilen_konular: 65, konu_listesi: Array(65), …}
+konu_analizleri
+: 
+Array(65)
+0
+: 
+{konu_adi: 'Fiziksel ve Kimyasal Değişmeler', toplam_ogrenci: 5, cevaplayan_ogrenci: 5, ortalama_basari: 60, mukemmel_ogrenciler: {…}, …}
+1
+: 
+{konu_adi: 'Kimyasal Tür', toplam_ogrenci: 4, cevaplayan_ogrenci: 4, ortalama_basari: 50, mukemmel_ogrenciler: {…}, …}
+2
+: 
+{konu_adi: 'Yükseltgenme Basamakları', toplam_ogrenci: 5, cevaplayan_ogrenci: 5, ortalama_basari: 50, mukemmel_ogrenciler: {…}, …}
+3
+: 
+{konu_adi: 'Zayıf Etkileşimler', toplam_ogrenci: 5, cevaplayan_ogrenci: 5, ortalama_basari: 48.33, mukemmel_ogrenciler: Array(0), …}
+4
+: 
+{konu_adi: 'Atom Altı Parçacıklar', toplam_ogrenci: 5, cevaplayan_ogrenci: 5, ortalama_basari: 48.11, mukemmel_ogrenciler: Array(1), …}
+5
+: 
+{konu_adi: 'Atom Modelleri', toplam_ogrenci: 5, cevaplayan_ogrenci: 5, ortalama_basari: 46.67, mukemmel_ogrenciler: {…}, …}
+6
+: 
+{konu_adi: 'Atomun Kuantum Modeli', toplam_ogrenci: 5, cevaplayan_ogrenci: 5, ortalama_basari: 41.52, mukemmel_ogrenciler: Array(0), …}
+7
+: 
+{konu_adi: 'İndirgenme-Yükseltgenme Tepkimelerinde Elektrik Akımı', toplam_ogrenci: 5, cevaplayan_ogrenci: 5, ortalama_basari: 31.43, mukemmel_ogrenciler: Array(0), …}
+8
+: 
+{konu_adi: 'Güçlü Etkileşimler', toplam_ogrenci: 5, cevaplayan_ogrenci: 5, ortalama_basari: 26.67, mukemmel_ogrenciler: Array(0), …}
+9
+: 
+{konu_adi: 'Periyodik Sistem', toplam_ogrenci: 5, cevaplayan_ogrenci: 5, ortalama_basari: 17.78, mukemmel_ogrenciler: Array(0), …}
+10
+: 
+{konu_adi: 'Aldehitler - Ketonlar', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+11
+: 
+{konu_adi: 'Alkoller - Eterler', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+12
+: 
+{konu_adi: 'Anorganik ve Organik Bileşikler', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+13
+: 
+{konu_adi: 'Asit ve Bazların Özellikleri', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+14
+: 
+{konu_adi: 'Asitlerin ve Bazların Tepkimeleri', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+15
+: 
+{konu_adi: 'Asitlik/Bazlık ve Ayrışma Denge Sabitleri', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+16
+: 
+{konu_adi: 'Ayırma ve Saflaştırma Teknikleri', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+17
+: 
+{konu_adi: 'Bağ Enerjileri', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+18
+: 
+{konu_adi: 'Bağıl atom kütlesi ve mol kütlesi', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+19
+: 
+{konu_adi: 'Basit Formül ve Molekül Formülü', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+20
+: 
+{konu_adi: 'Buharlaşma, Yoğuşma ve Kaynama', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+21
+: 
+{konu_adi: 'Çözücü Çözünen Etkileşimleri', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+22
+: 
+{konu_adi: 'Çözünme-Çökelme Dengeleri', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+23
+: 
+{konu_adi: 'Çözünürlüğe Etki Eden Faktörler', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+24
+: 
+{konu_adi: 'Çözünürlük', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+25
+: 
+{konu_adi: 'Dengeyi Etkileyen Faktörler', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+26
+: 
+{konu_adi: 'Derişim Birimleri', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+27
+: 
+{konu_adi: 'Elektroliz', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+28
+: 
+{konu_adi: 'Elektrot Potansiyelleri', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+29
+: 
+{konu_adi: 'Elektrotlar ve Elektrokimyasal Hücreler', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+30
+: 
+{konu_adi: 'Gaz Karışımları', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+31
+: 
+{konu_adi: 'Gazlarda Kinetik Teori', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+32
+: 
+{konu_adi: 'Gazların Özellikleri ve Gaz Yasaları', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+33
+: 
+{konu_adi: 'Gerçek Gazlar', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+34
+: 
+{konu_adi: 'Hayatımızda Asitler ve Bazlar', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+35
+: 
+{konu_adi: 'Hibritleşme ve Molekül Geometrileri', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+36
+: 
+{konu_adi: 'Hidrokarbonlar', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+37
+: 
+{konu_adi: 'Homojen ve Heterojen Karışımlar', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+38
+: 
+{konu_adi: 'İdeal Gaz Yasası', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+39
+: 
+{konu_adi: 'Karboksilik Asitler - Esterler', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+40
+: 
+{konu_adi: 'Katılar - Sıvılar', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+41
+: 
+{konu_adi: 'Katlı Oranlar', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+42
+: 
+{konu_adi: 'Kimya Disiplinleri ve Kimyacıların Çalışma Alanları', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+43
+: 
+{konu_adi: 'Kimya Uygulamalarında İş Sağlığı ve Güvenliği', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+44
+: 
+{konu_adi: 'Kimyanın Sembolik Dili', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+45
+: 
+{konu_adi: 'Kimyanın Temel Kanunları', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+46
+: 
+{konu_adi: 'Kimyasal Denge', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+47
+: 
+{konu_adi: 'Kimyasal Tepkime Türleri', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+48
+: 
+{konu_adi: 'Kimyasal Tepkimelerde Hesaplamalar', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+49
+: 
+{konu_adi: 'Kimyasallardan Elektrik Üretimi', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+50
+: 
+{konu_adi: 'Koligatif Özellikler', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+51
+: 
+{konu_adi: 'Maddenin Halleri', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+52
+: 
+{konu_adi: 'Mol Kavramı', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+53
+: 
+{konu_adi: 'Oluşum Entalpisi', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+54
+: 
+{konu_adi: 'Periyodik Sistem ve Elektron Dizilimleri', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+55
+: 
+{konu_adi: 'Periyodik Tablodaki Grupların Özellikleri', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+56
+: 
+{konu_adi: 'pH Hesaplamaları', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+57
+: 
+{konu_adi: 'Plazma - Gazlar', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+58
+: 
+{konu_adi: 'Sabit Oranlar', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+59
+: 
+{konu_adi: 'Simyadan Kimyaya', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+60
+: 
+{konu_adi: 'Tepkime Hızını Etkileyen Faktörler', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+61
+: 
+{konu_adi: 'Tepkime Hızları', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+62
+: 
+{konu_adi: 'Tepkime Isılarının Toplanabilirliği', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+63
+: 
+{konu_adi: 'Tepkimelerde Isı Değişimi', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
+64
+: 
+{konu_adi: 'Tuzlar', toplam_ogrenci: 0, cevaplayan_ogrenci: 0, ortalama_basari: 0, mukemmel_ogrenciler: Array(0), …}
