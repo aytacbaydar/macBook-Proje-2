@@ -179,18 +179,35 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
       headers: this.getAuthHeaders()
     }).subscribe({
       next: (response) => {
-        if (response.success) {
+        if (response.success && response.data) {
           this.teacherInfo = response.data;
-          // Ensure mukemmel_ogrenciler is an array
-          if (this.teacherInfo && !Array.isArray(this.teacherInfo.mukemmel_ogrenciler)) {
-            this.teacherInfo.mukemmel_ogrenciler = [];
+          
+          // mukemmel_ogrenciler alanını güvenli hale getir
+          if (this.teacherInfo) {
+            if (!this.teacherInfo.mukemmel_ogrenciler) {
+              this.teacherInfo.mukemmel_ogrenciler = [];
+            } else if (typeof this.teacherInfo.mukemmel_ogrenciler === 'string') {
+              try {
+                this.teacherInfo.mukemmel_ogrenciler = JSON.parse(this.teacherInfo.mukemmel_ogrenciler);
+              } catch (e) {
+                console.warn('mukemmel_ogrenciler JSON parse hatası:', e);
+                this.teacherInfo.mukemmel_ogrenciler = [];
+              }
+            } else if (!Array.isArray(this.teacherInfo.mukemmel_ogrenciler)) {
+              this.teacherInfo.mukemmel_ogrenciler = [];
+            }
           }
+          
           console.log('Öğretmen bilgileri yüklendi:', this.teacherInfo);
+        } else {
+          console.warn('Öğretmen bilgileri yüklenemedi:', response);
+          this.teacherInfo = null;
         }
         this.isLoadingInfo = false;
       },
       error: (error) => {
         console.error('Öğretmen bilgileri yüklenirken hata:', error);
+        this.teacherInfo = null;
         this.isLoadingInfo = false;
       }
     });
@@ -801,12 +818,41 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
 
   // This method was added to fix the "mukemmel_ogrenciler is not iterable" error
   getIyiOgrenciler() {
-    const mukemmelOgrenciler = this.teacherInfo?.mukemmel_ogrenciler;
-    if (!mukemmelOgrenciler || !Array.isArray(mukemmelOgrenciler)) {
+    try {
+      const mukemmelOgrenciler = this.teacherInfo?.mukemmel_ogrenciler;
+      
+      // Eğer mukemmelOgrenciler yoksa veya dizi değilse boş dizi döndür
+      if (!mukemmelOgrenciler) {
+        return [];
+      }
+      
+      // String ise JSON parse etmeye çalış
+      let ogrencilerArray;
+      if (typeof mukemmelOgrenciler === 'string') {
+        try {
+          ogrencilerArray = JSON.parse(mukemmelOgrenciler);
+        } catch (e) {
+          console.warn('mukemmel_ogrenciler JSON parse hatası:', e);
+          return [];
+        }
+      } else {
+        ogrencilerArray = mukemmelOgrenciler;
+      }
+      
+      // Dizi kontrolü yap
+      if (!Array.isArray(ogrencilerArray)) {
+        console.warn('mukemmel_ogrenciler dizi değil:', typeof ogrencilerArray);
+        return [];
+      }
+      
+      // Başarı yüzdesi 90 ve üzeri olanları filtrele
+      return ogrencilerArray.filter((student: any) => {
+        const basariYuzdesi = parseFloat(student?.basari_yuzdesi || '0');
+        return basariYuzdesi >= 90;
+      });
+    } catch (error) {
+      console.error('getIyiOgrenciler metodunda hata:', error);
       return [];
     }
-    return mukemmelOgrenciler.filter((student: any) =>
-      student.basari_yuzdesi >= 90
-    );
   }
 }
