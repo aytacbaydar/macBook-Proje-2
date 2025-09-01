@@ -103,6 +103,12 @@ try {
     foreach ($konular as $konuAdi) {
         $ogrenciPerformanslari = [];
 
+        // Her konu için toplam soru bilgilerini takip et
+        $konuToplamSoru = 0;
+        $konuDogruSayisi = 0;
+        $konuYanlisSayisi = 0;
+        $konuBosSayisi = 0;
+
         foreach ($ogrenciler as $ogrenci) {
             $ogrenciId = $ogrenci['id'];
             $ogrenciAdi = $ogrenci['adi_soyadi'];
@@ -140,13 +146,17 @@ try {
                             $dogruCevap = $dogruCevaplar["ca{$soruNo}"] ?? '';
 
                             $toplamSoru++;
+                            $konuToplamSoru++;
 
                             if (empty($ogrenciCevap)) {
                                 $bosSayisi++;
+                                $konuBosSayisi++;
                             } elseif ($ogrenciCevap === $dogruCevap) {
                                 $dogruSayisi++;
+                                $konuDogruSayisi++;
                             } else {
                                 $yanlisSayisi++;
+                                $konuYanlisSayisi++;
                             }
                         }
                     }
@@ -186,13 +196,17 @@ try {
                             $userAnswer = $detay['user_answer'] ?? '';
 
                             $toplamSoru++;
+                            $konuToplamSoru++;
 
                             if (empty($userAnswer)) {
                                 $bosSayisi++;
+                                $konuBosSayisi++;
                             } elseif ($isCorrect) {
                                 $dogruSayisi++;
+                                $konuDogruSayisi++;
                             } else {
                                 $yanlisSayisi++;
+                                $konuYanlisSayisi++;
                             }
                         }
                     }
@@ -233,6 +247,12 @@ try {
                 'toplam_ogrenci' => count($ogrenciPerformanslari),
                 'cevaplayan_ogrenci' => count($ogrenciPerformanslari),
                 'ortalama_basari' => $ortalamaBasari,
+                'soru_bilgileri' => [
+                    'toplam_soru' => $konuToplamSoru,
+                    'dogru' => $konuDogruSayisi,
+                    'yanlis' => $konuYanlisSayisi,
+                    'bos' => $konuBosSayisi
+                ],
                 'mukemmel_ogrenciler' => array_map(fn($p) => ['adi_soyadi' => $p['adi_soyadi'], 'basari_orani' => $p['basari_orani']], $mukemmelOgrenciler),
                 'iyi_ogrenciler' => array_map(fn($p) => ['adi_soyadi' => $p['adi_soyadi'], 'basari_orani' => $p['basari_orani']], $iyiOgrenciler),
                 'orta_ogrenciler' => array_map(fn($p) => ['adi_soyadi' => $p['adi_soyadi'], 'basari_orani' => $p['basari_orani']], $ortaOgrenciler),
@@ -245,6 +265,12 @@ try {
                 'toplam_ogrenci' => 0,
                 'cevaplayan_ogrenci' => 0,
                 'ortalama_basari' => 0,
+                'soru_bilgileri' => [
+                    'toplam_soru' => 0,
+                    'dogru' => 0,
+                    'yanlis' => 0,
+                    'bos' => 0
+                ],
                 'mukemmel_ogrenciler' => [],
                 'iyi_ogrenciler' => [],
                 'orta_ogrenciler' => [],
