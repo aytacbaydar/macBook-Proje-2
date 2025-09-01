@@ -135,9 +135,9 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
             }
             
             // Sayısal değerlerin doğru formatta olduğundan emin ol
-            konu.ortalama_basari = parseFloat(konu.ortalama_basari || '0');
-            konu.toplam_ogrenci = parseInt(konu.toplam_ogrenci || '0');
-            konu.cevaplayan_ogrenci = parseInt(konu.cevaplayan_ogrenci || '0');
+            konu.ortalama_basari = parseFloat(String(konu.ortalama_basari || '0'));
+            konu.toplam_ogrenci = parseInt(String(konu.toplam_ogrenci || '0'));
+            konu.cevaplayan_ogrenci = parseInt(String(konu.cevaplayan_ogrenci || '0'));
             
             // Öğrenci dizilerinin var olduğundan emin ol
             konu.mukemmel_ogrenciler = konu.mukemmel_ogrenciler || [];
