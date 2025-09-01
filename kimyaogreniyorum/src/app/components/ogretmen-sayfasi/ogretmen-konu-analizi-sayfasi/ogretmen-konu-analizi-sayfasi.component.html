@@ -164,7 +164,166 @@
     <!-- Detailed Topic Analysis Cards -->
     <div class="detailed-analysis" *ngIf="ogrenciKonuAnalizleri.length > 0">
       <h3><i class="bi bi-list-check me-2"></i>Detaylı Konu Analizi</h3>
-      <div class="topics-cards-container">
+      <div class="row">
+        <div class="col-lg-6 col-xl-4 mb-4" *ngFor="let konu of ogrenciKonuAnalizleri; trackBy: trackByKonu">
+          <div class="topic-card">
+            <div class="topic-header">
+              <h5 class="topic-title">{{ konu.konu_adi || 'Bilinmeyen Konu' }}</h5>
+              <div class="topic-status" [style.background-color]="getKonuSuccessColor(konu.ortalama_basari || 0)">
+                {{ getKonuSuccessText(konu.ortalama_basari || 0) }}
+              </div>
+            </div>
+
+            <!-- Topic Statistics -->
+            <div class="topic-stats-grid">
+              <div class="stat-item">
+                <div class="stat-icon bg-primary">
+                  <i class="bi bi-people"></i>
+                </div>
+                <div class="stat-content">
+                  <h4>{{ konu.toplam_ogrenci || 0 }}</h4>
+                  <p>Toplam Öğrenci</p>
+                </div>
+              </div>
+
+              <div class="stat-item">
+                <div class="stat-icon bg-info">
+                  <i class="bi bi-person-check"></i>
+                </div>
+                <div class="stat-content">
+                  <h4>{{ konu.cevaplayan_ogrenci || 0 }}</h4>
+                  <p>Cevaplayan</p>
+                </div>
+              </div>
+
+              <div class="stat-item">
+                <div class="stat-icon bg-success">
+                  <i class="bi bi-check-circle"></i>
+                </div>
+                <div class="stat-content">
+                  <h4>{{ getTotalQuestionsByTopic(konu) || 0 }}</h4>
+                  <p>Toplam Soru</p>
+                </div>
+              </div>
+
+              <div class="stat-item">
+                <div class="stat-icon bg-success">
+                  <i class="bi bi-check-circle"></i>
+                </div>
+                <div class="stat-content">
+                  <h4>{{ getCorrectAnswersByTopic(konu) || 0 }}</h4>
+                  <p>Doğru</p>
+                </div>
+              </div>
+
+              <div class="stat-item">
+                <div class="stat-icon bg-danger">
+                  <i class="bi bi-x-circle"></i>
+                </div>
+                <div class="stat-content">
+                  <h4>{{ getWrongAnswersByTopic(konu) || 0 }}</h4>
+                  <p>Yanlış</p>
+                </div>
+              </div>
+
+              <div class="stat-item">
+                <div class="stat-icon bg-warning">
+                  <i class="bi bi-dash-circle"></i>
+                </div>
+                <div class="stat-content">
+                  <h4>{{ getEmptyAnswersByTopic(konu) || 0 }}</h4>
+                  <p>Boş</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Success Rate Progress -->
+            <div class="success-rate-container">
+              <div class="progress-label">
+                <span>Başarı Oranı</span>
+                <span class="percentage">{{ konu?.ortalama_basari || 0 }}%</span>
+              </div>
+              <div class="progress-bar-container">
+                <div class="progress-bar" 
+                     [style.width.%]="konu?.ortalama_basari || 0"
+                     [style.background-color]="getKonuSuccessColor(konu?.ortalama_basari || 0)">
+                </div>
+              </div>
+            </div>
+
+            <!-- Student Performance -->
+            <div class="student-performance">
+              <!-- Mükemmel Öğrenciler -->
+              <div class="student-category" *ngIf="objectToArray(konu.mukemmel_ogrenciler).length > 0">
+                <h6><i class="bi bi-trophy me-2"></i>Mükemmel Öğrenciler ({{ objectToArray(konu.mukemmel_ogrenciler).length }})</h6>
+                <div class="students-list">
+                  <div class="student-item excellent" *ngFor="let ogr of objectToArray(konu.mukemmel_ogrenciler)">
+                    <img [src]="ogr.avatar || getDefaultAvatar(ogr.adi_soyadi)" 
+                         class="student-avatar" alt="Avatar">
+                    <div class="student-info">
+                      <span class="student-name">{{ ogr.adi_soyadi }}</span>
+                      <span class="student-score excellent">{{ ogr.basari_orani || ogr.basari_yuzdesi }}%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- İyi Öğrenciler -->
+              <div class="student-category" *ngIf="objectToArray(konu.iyi_ogrenciler).length > 0">
+                <h6><i class="bi bi-star me-2"></i>İyi Öğrenciler ({{ objectToArray(konu.iyi_ogrenciler).length }})</h6>
+                <div class="students-list">
+                  <div class="student-item good" *ngFor="let ogr of objectToArray(konu.iyi_ogrenciler)">
+                    <img [src]="ogr.avatar || getDefaultAvatar(ogr.adi_soyadi)" 
+                         class="student-avatar" alt="Avatar">
+                    <div class="student-info">
+                      <span class="student-name">{{ ogr.adi_soyadi }}</span>
+                      <span class="student-score good">{{ ogr.basari_orani || ogr.basari_yuzdesi }}%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Orta Öğrenciler -->
+              <div class="student-category" *ngIf="objectToArray(konu.orta_ogrenciler).length > 0">
+                <h6><i class="bi bi-dash-circle me-2"></i>Orta Öğrenciler ({{ objectToArray(konu.orta_ogrenciler).length }})</h6>
+                <div class="students-list">
+                  <div class="student-item average" *ngFor="let ogr of objectToArray(konu.orta_ogrenciler)">
+                    <img [src]="ogr.avatar || getDefaultAvatar(ogr.adi_soyadi)" 
+                         class="student-avatar" alt="Avatar">
+                    <div class="student-info">
+                      <span class="student-name">{{ ogr.adi_soyadi }}</span>
+                      <span class="student-score average">{{ ogr.basari_orani || ogr.basari_yuzdesi }}%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Kötü Öğrenciler -->
+              <div class="student-category" *ngIf="objectToArray(konu.kotu_ogrenciler).length > 0">
+                <h6><i class="bi bi-arrow-up-circle me-2"></i>Geliştirilmesi Gereken Öğrenciler ({{ objectToArray(konu.kotu_ogrenciler).length }})</h6>
+                <div class="students-list">
+                  <div class="student-item poor" *ngFor="let ogr of objectToArray(konu.kotu_ogrenciler)">
+                    <img [src]="ogr.avatar || getDefaultAvatar(ogr.adi_soyadi)" 
+                         class="student-avatar" alt="Avatar">
+                    <div class="student-info">
+                      <span class="student-name">{{ ogr.adi_soyadi }}</span>
+                      <span class="student-score poor">{{ ogr.basari_orani || ogr.basari_yuzdesi }}%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll to Top Button -->
+  <button id="scrollToTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="scroll-to-top">
+    <i class="bi bi-arrow-up"></i>
+  </button>
+</div>s="topics-cards-container">
         <div class="topic-card" *ngFor="let konu of ogrenciKonuAnalizleri; let i = index; trackBy: trackByKonu">
           <!-- Card Header -->
           <div class="card-header">
