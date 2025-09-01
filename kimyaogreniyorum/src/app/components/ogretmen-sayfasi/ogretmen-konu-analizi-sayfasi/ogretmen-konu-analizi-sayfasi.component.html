@@ -170,8 +170,12 @@
           <div class="card-header">
             <div class="topic-title">
               <i class="bi bi-book me-2"></i>
-              <h5 [title]="'Index: ' + i + ', ID: ' + konu?.konu_id">
-                {{ konu && konu.konu_adi ? konu.konu_adi : 'Bilinmeyen Konu ' + (i + 1) }}
+              <h5 [title]="'Index: ' + i + ', ID: ' + (konu?.konu_id || 'N/A') + ', Original Name: ' + (konu?.konu_adi || 'undefined')">
+                {{ 
+                  (konu?.konu_adi && konu.konu_adi.trim() !== '') 
+                    ? konu.konu_adi 
+                    : (konu?.konu_id ? 'Konu ' + konu.konu_id : 'Bilinmeyen Konu ' + (i + 1))
+                }}
               </h5>
             </div>
             <div class="status-badge" [style.background-color]="getKonuSuccessColor(konu?.ortalama_basari || 0)">

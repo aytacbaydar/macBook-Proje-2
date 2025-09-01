@@ -123,12 +123,6 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
               originalKonu: konu
             });
             
-            // Konu adının doğru şekilde set edildiğinden emin ol
-            if (!konu.konu_adi || konu.konu_adi.trim() === '') {
-              console.warn(`Konu ${index + 1} için konu_adi boş veya undefined:`, konu);
-              konu.konu_adi = `Bilinmeyen Konu ${index + 1}`;
-            }
-            
             // Konu ID'sinin var olduğundan emin ol
             if (!konu.konu_id) {
               konu.konu_id = index + 1;
@@ -153,9 +147,15 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
             return konu;
           });
           
+          // Eksik konu adlarını fetch et
+          this.fetchMissingTopicNames();
+          
           console.log('Konu analizleri loaded:', this.konuAnalizleri.length, 'items');
           console.log('Konu adları:', this.konuAnalizleri.map(k => k.konu_adi));
           console.log('Processed data:', this.konuAnalizleri);
+          
+          // Debug konu data
+          this.debugKonuData();
           
           // Force change detection
           setTimeout(() => {
@@ -411,6 +411,52 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
 
   getDefaultAvatar(name: string): string {
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Öğrenci')}&background=28a745&color=fff&size=40&font-size=0.6&rounded=true`;
+  }
+
+  // Fetch missing topic names
+  fetchMissingTopicNames() {
+    const missingTopics = this.konuAnalizleri.filter(konu => 
+      !konu.konu_adi || konu.konu_adi.trim() === '' || konu.konu_adi.startsWith('Bilinmeyen Konu')
+    );
+    
+    if (missingTopics.length > 0) {
+      console.log('Fetching missing topic names for:', missingTopics.map(k => k.konu_id));
+      
+      this.http.get<any>(`./server/api/konu_listesi.php`).subscribe({
+        next: (response) => {
+          if (response.success && response.data) {
+            const allTopics = response.data;
+            
+            // Update missing topic names
+            this.konuAnalizleri.forEach(konu => {
+              if (!konu.konu_adi || konu.konu_adi.trim() === '' || konu.konu_adi.startsWith('Bilinmeyen Konu')) {
+                const topicInfo = allTopics.find((topic: any) => topic.id == konu.konu_id);
+                if (topicInfo) {
+                  konu.konu_adi = topicInfo.baslik || topicInfo.konu_adi || topicInfo.name || `Konu ${konu.konu_id}`;
+                  console.log(`Updated konu_id ${konu.konu_id} with name: ${konu.konu_adi}`);
+                } else {
+                  konu.konu_adi = `Konu ${konu.konu_id}`;
+                  console.warn(`No topic found for konu_id: ${konu.konu_id}`);
+                }
+              }
+            });
+            
+            // Force UI update
+            this.forceUpdate();
+          }
+        },
+        error: (error) => {
+          console.error('Error fetching topic names:', error);
+          // Fallback: use generic names
+          this.konuAnalizleri.forEach((konu, index) => {
+            if (!konu.konu_adi || konu.konu_adi.trim() === '' || konu.konu_adi.startsWith('Bilinmeyen Konu')) {
+              konu.konu_adi = `Konu ${konu.konu_id || (index + 1)}`;
+            }
+          });
+          this.forceUpdate();
+        }
+      });
+    }
   }
 
   // Debug method to check data integrity
