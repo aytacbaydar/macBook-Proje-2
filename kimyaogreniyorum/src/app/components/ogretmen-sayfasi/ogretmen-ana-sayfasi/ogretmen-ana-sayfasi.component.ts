@@ -82,6 +82,14 @@ interface StudentProgress {
   avatar: string;
 }
 
+interface TeacherInfo {
+  id: number;
+  adi_soyadi: string;
+  email: string;
+  avatar?: string;
+  mukemmel_ogrenciler?: any[]; // Ensure this is handled as an array
+}
+
 @Component({
   selector: 'app-ogretmen-ana-sayfasi',
   standalone: false,
@@ -128,6 +136,8 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
   teacherName: string = '';
   teacherAvatar: string = '';
   teacherId: number = 0;
+  teacherInfo: TeacherInfo | null = null; // Changed to TeacherInfo interface
+  isLoadingInfo: boolean = false; // Added loading state for teacher info
 
   // Grup renkleri
   groupColors = [
@@ -151,6 +161,9 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
     averageAttendance: 0,
   };
 
+  // API URL'sini buraya ekleyebilirsiniz veya bir servis kullanabilirsiniz
+  private apiUrl = './server/api';
+
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
@@ -161,29 +174,28 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
   }
 
   private loadTeacherInfo(): void {
-    const userStr =
-      localStorage.getItem('user') || sessionStorage.getItem('user');
-    if (userStr) {
-      try {
-        const user = JSON.parse(userStr);
-        this.teacherName = user.adi_soyadi || 'Öğretmen';
-        this.teacherId = user.id || 0;
-
-        if (user.avatar && user.avatar.trim() !== '') {
-          this.teacherAvatar = user.avatar;
-        } else {
-          this.teacherAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(
-            this.teacherName
-          )}&background=4f46e5&color=fff&size=40&font-size=0.6&rounded=true`;
+    this.isLoadingInfo = true;
+    this.http.get<any>(`${this.apiUrl}/ogretmen_bilgileri.php`, {
+      headers: this.getAuthHeaders()
+    }).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.teacherInfo = response.data;
+          // Ensure mukemmel_ogrenciler is an array
+          if (!Array.isArray(this.teacherInfo.mukemmel_ogrenciler)) {
+            this.teacherInfo.mukemmel_ogrenciler = [];
+          }
+          console.log('Öğretmen bilgileri yüklendi:', this.teacherInfo);
         }
-      } catch (error) {
-        console.error('Kullanıcı bilgileri ayrıştırılırken hata:', error);
-        this.setDefaultTeacherInfo();
+        this.isLoadingInfo = false;
+      },
+      error: (error) => {
+        console.error('Öğretmen bilgileri yüklenirken hata:', error);
+        this.isLoadingInfo = false;
       }
-    } else {
-      this.setDefaultTeacherInfo();
-    }
+    });
   }
+
 
   private setDefaultTeacherInfo(): void {
     this.teacherName = 'Öğretmen';
@@ -785,5 +797,16 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
           console.error('Günlük ders programı yüklenirken hata:', error);
         },
       });
+  }
+
+  // This method was added to fix the "mukemmel_ogrenciler is not iterable" error
+  getIyiOgrenciler() {
+    const mukemmelOgrenciler = this.teacherInfo?.mukemmel_ogrenciler;
+    if (!mukemmelOgrenciler || !Array.isArray(mukemmelOgrenciler)) {
+      return [];
+    }
+    return mukemmelOgrenciler.filter((student: any) =>
+      student.basari_yuzdesi >= 90
+    );
   }
 }
