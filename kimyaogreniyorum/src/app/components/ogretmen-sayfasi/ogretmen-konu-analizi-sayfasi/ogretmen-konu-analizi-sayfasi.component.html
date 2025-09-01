@@ -165,12 +165,14 @@
     <div class="detailed-analysis" *ngIf="konuAnalizleri.length > 0">
       <h3><i class="bi bi-list-check me-2"></i>Detaylı Konu Analizi</h3>
       <div class="topics-cards-container">
-        <div class="topic-card" *ngFor="let konu of konuAnalizleri; trackBy: trackByKonu">
+        <div class="topic-card" *ngFor="let konu of konuAnalizleri; let i = index; trackBy: trackByKonu">
           <!-- Card Header -->
           <div class="card-header">
             <div class="topic-title">
               <i class="bi bi-book me-2"></i>
-              <h5>{{ konu?.konu_adi || 'Bilinmeyen Konu' }}</h5>
+              <h5 [title]="'Index: ' + i + ', ID: ' + konu?.konu_id">
+                {{ konu && konu.konu_adi ? konu.konu_adi : 'Bilinmeyen Konu ' + (i + 1) }}
+              </h5>
             </div>
             <div class="status-badge" [style.background-color]="getKonuSuccessColor(konu?.ortalama_basari || 0)">
               {{ getKonuSuccessText(konu?.ortalama_basari || 0) }}

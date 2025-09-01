@@ -116,10 +116,22 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
           this.konuAnalizleri = response.data.konu_analizleri || [];
           
           // Veri doğrulama ve temizleme
-          this.konuAnalizleri = this.konuAnalizleri.map(konu => {
+          this.konuAnalizleri = this.konuAnalizleri.map((konu, index) => {
+            console.log(`Konu ${index + 1}:`, {
+              konu_id: konu.konu_id,
+              konu_adi: konu.konu_adi,
+              originalKonu: konu
+            });
+            
             // Konu adının doğru şekilde set edildiğinden emin ol
             if (!konu.konu_adi || konu.konu_adi.trim() === '') {
-              konu.konu_adi = 'Bilinmeyen Konu';
+              console.warn(`Konu ${index + 1} için konu_adi boş veya undefined:`, konu);
+              konu.konu_adi = `Bilinmeyen Konu ${index + 1}`;
+            }
+            
+            // Konu ID'sinin var olduğundan emin ol
+            if (!konu.konu_id) {
+              konu.konu_id = index + 1;
             }
             
             // Sayısal değerlerin doğru formatta olduğundan emin ol
@@ -132,6 +144,11 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
             konu.iyi_ogrenciler = konu.iyi_ogrenciler || [];
             konu.orta_ogrenciler = konu.orta_ogrenciler || [];
             konu.kotu_ogrenciler = konu.kotu_ogrenciler || [];
+            
+            console.log(`Processed konu ${index + 1}:`, {
+              konu_id: konu.konu_id,
+              konu_adi: konu.konu_adi
+            });
             
             return konu;
           });
@@ -239,7 +256,11 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
   }
 
   trackByKonu(index: number, konu: any): any {
-    return konu?.konu_id || konu?.konu_adi || index;
+    // Eğer konu_id varsa onu kullan, yoksa index kullan
+    if (konu && konu.konu_id) {
+      return konu.konu_id;
+    }
+    return index;
   }
 
   getKonuAdlari(): string {
@@ -390,5 +411,22 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
 
   getDefaultAvatar(name: string): string {
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Öğrenci')}&background=28a745&color=fff&size=40&font-size=0.6&rounded=true`;
+  }
+
+  // Debug method to check data integrity
+  debugKonuData() {
+    console.log('=== KONU ANALIZI DEBUG ===');
+    console.log('Total konuAnalizleri:', this.konuAnalizleri.length);
+    this.konuAnalizleri.forEach((konu, index) => {
+      console.log(`Konu ${index + 1}:`, {
+        konu_id: konu.konu_id,
+        konu_adi: konu.konu_adi,
+        ortalama_basari: konu.ortalama_basari,
+        hasKonuAdi: !!konu.konu_adi,
+        konuAdiType: typeof konu.konu_adi,
+        fullObject: konu
+      });
+    });
+    console.log('=== END DEBUG ===');
   }
 }
