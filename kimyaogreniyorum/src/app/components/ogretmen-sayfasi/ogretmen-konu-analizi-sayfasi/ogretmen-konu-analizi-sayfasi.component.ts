@@ -35,6 +35,10 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
   loadingKonuAnalizi: boolean = false;
   error: string | null = null;
 
+   ogrenciKonuAnalizleri: any[] = [];
+   loading: boolean = true;
+   ogretmenId: number = 1; // örnek ID, sen login'den geleni kullanabilirsin
+
   constructor(
     private http: HttpClient,
     private changeDetectorRef: ChangeDetectorRef
@@ -44,7 +48,27 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
     this.loadData();
     // Add scroll event listener with null check
     window.onscroll = () => this.scrollFunction();
+
+    this.getOgrenciKonuAnalizi();
   }
+
+  getOgrenciKonuAnalizi() {
+    this.http.get<any>(`./server/api/ogretmen_konu_analizi.php?ogretmen_id=${this.ogretmenId}`)
+      .subscribe(res => {
+        if (res.success) {
+          this.ogrenciKonuAnalizleri = res.data.konu_analizleri;
+        }
+        
+      });
+  }
+
+  // JSON içinde bazı yerler object bazıları array
+  objectToArray(obj: any): any[] {
+    if (!obj) return [];
+    return Array.isArray(obj) ? obj : Object.values(obj);
+  }
+
+
 
   ngOnDestroy(): void {
     // Clean up scroll event listener
