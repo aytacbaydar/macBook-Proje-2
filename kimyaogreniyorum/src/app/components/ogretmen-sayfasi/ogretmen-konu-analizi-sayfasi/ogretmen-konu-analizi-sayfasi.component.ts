@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 interface KonuAnalizi {
@@ -35,7 +35,10 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
   loadingKonuAnalizi: boolean = false;
   error: string | null = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadData();
@@ -446,8 +449,9 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
               }
             });
             
-            // Force UI update
+            // Force UI update with change detection
             this.forceUpdate();
+            this.changeDetectorRef.detectChanges();
           }
         },
         error: (error) => {
@@ -459,6 +463,7 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
             }
           });
           this.forceUpdate();
+          this.changeDetectorRef.detectChanges();
         }
       });
     }
