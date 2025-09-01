@@ -1,0 +1,49 @@
+✘ [ERROR] NG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-konu-analizi-sayfasi/ogretmen-konu-analizi-sayfasi.component.html:441:6:
+      441 │       </div>
+          ╵       ~~~~~~
+
+  Error occurs in the template of component OgretmenKonuAnaliziSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-konu-analizi-sayfasi/ogretmen-konu-analizi-sayfasi.component.ts:26:15:
+      26 │   templateUrl: './ogretmen-konu-analizi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-konu-analizi-sayfasi/ogretmen-konu-analizi-sayfasi.component.html:442:4:
+      442 │     </div>
+          ╵     ~~~~~~
+
+  Error occurs in the template of component OgretmenKonuAnaliziSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-konu-analizi-sayfasi/ogretmen-konu-analizi-sayfasi.component.ts:26:15:
+      26 │   templateUrl: './ogretmen-konu-analizi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-konu-analizi-sayfasi/ogretmen-konu-analizi-sayfasi.component.html:452:2:
+      452 │   </div>
+          ╵   ~~~~~~
+
+  Error occurs in the template of component OgretmenKonuAnaliziSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-konu-analizi-sayfasi/ogretmen-konu-analizi-sayfasi.component.ts:26:15:
+      26 │   templateUrl: './ogretmen-konu-analizi-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-konu-analizi-sayfasi/ogretmen-konu-analizi-sayfasi.component.html:453:0:
+      453 │ </div>
+          ╵ ~~~~~~
+
+  Error occurs in the template of component OgretmenKonuAnaliziSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-konu-analizi-sayfasi/ogretmen-konu-analizi-sayfasi.component.ts:26:15:
+      26 │   templateUrl: './ogretmen-konu-analizi-sayfasi.component.html',
