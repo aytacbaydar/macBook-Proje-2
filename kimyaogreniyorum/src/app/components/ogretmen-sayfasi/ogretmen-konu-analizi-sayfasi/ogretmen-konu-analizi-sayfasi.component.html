@@ -258,7 +258,7 @@
                 <h6><i class="bi bi-trophy me-2"></i>Mükemmel Öğrenciler ({{ objectToArray(konu.mukemmel_ogrenciler).length }})</h6>
                 <div class="students-list">
                   <div class="student-item excellent" *ngFor="let ogr of objectToArray(konu.mukemmel_ogrenciler)">
-                    <img [src]="ogr.avatar || getDefaultAvatar(ogr.adi_soyadi)" 
+                    <img [src]="ogr.avatar" 
                          class="student-avatar" alt="Avatar">
                     <div class="student-info">
                       <span class="student-name">{{ ogr.adi_soyadi }}</span>
