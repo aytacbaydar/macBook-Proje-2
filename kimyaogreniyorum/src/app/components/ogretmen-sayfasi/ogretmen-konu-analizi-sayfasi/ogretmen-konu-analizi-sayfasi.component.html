@@ -201,7 +201,7 @@
                   <i class="bi bi-check-circle"></i>
                 </div>
                 <div class="stat-content">
-                  <h4>{{ getTotalQuestionsByTopic(konu) || 0 }}</h4>
+                  <h4>{{ konu.soru_bilgileri?.toplam_soru }}</h4>
                   <p>Toplam Soru</p>
                 </div>
               </div>
@@ -211,7 +211,7 @@
                   <i class="bi bi-check-circle"></i>
                 </div>
                 <div class="stat-content">
-                  <h4>{{ getCorrectAnswersByTopic(konu) || 0 }}</h4>
+                  <h4>{{ konu.soru_bilgileri?.dogru}}</h4>
                   <p>Doğru</p>
                 </div>
               </div>
@@ -221,7 +221,7 @@
                   <i class="bi bi-x-circle"></i>
                 </div>
                 <div class="stat-content">
-                  <h4>{{ getWrongAnswersByTopic(konu) || 0 }}</h4>
+                  <h4>{{ konu.soru_bilgileri?.yanlis }}</h4>
                   <p>Yanlış</p>
                 </div>
               </div>
@@ -231,7 +231,7 @@
                   <i class="bi bi-dash-circle"></i>
                 </div>
                 <div class="stat-content">
-                  <h4>{{ getEmptyAnswersByTopic(konu) || 0 }}</h4>
+                  <h4>{{ konu.soru_bilgileri?.bos }}</h4>
                   <p>Boş</p>
                 </div>
               </div>
@@ -327,58 +327,3 @@
 
   </div>
 </div>
-
-
-<h2>selam</h2>
-
-
-
-
-  <div *ngFor="let konu of ogrenciKonuAnalizleri" class="mb-6 p-4 border rounded shadow-sm">
-    <h2 class="text-xl font-bold mb-2">{{ konu.konu_adi }}</h2>
-    <p class="mb-2">
-      Toplam Öğrenci: {{ konu.toplam_ogrenci }} | 
-      Cevaplayan: {{ konu.cevaplayan_ogrenci }} | 
-      Ortalama Başarı: %{{ konu.ortalama_basari }}
-    </p>
-
-    <!-- Mükemmel Öğrenciler -->
-    <div *ngIf="objectToArray(konu.mukemmel_ogrenciler).length > 0" class="mb-3">
-      <h3 class="font-semibold text-green-600">Mükemmel Öğrenciler</h3>
-      <ul class="list-disc list-inside">
-        <li *ngFor="let ogr of objectToArray(konu.mukemmel_ogrenciler)">
-          {{ ogr.adi_soyadi }} - %{{ ogr.basari_orani }}
-        </li>
-      </ul>
-    </div>
-
-    <!-- İyi Öğrenciler -->
-    <div *ngIf="objectToArray(konu.iyi_ogrenciler).length > 0" class="mb-3">
-      <h3 class="font-semibold text-blue-600">İyi Öğrenciler</h3>
-      <ul class="list-disc list-inside">
-        <li *ngFor="let ogr of objectToArray(konu.iyi_ogrenciler)">
-          {{ ogr.adi_soyadi }} - %{{ ogr.basari_orani }}
-        </li>
-      </ul>
-    </div>
-
-    <!-- Orta Öğrenciler -->
-    <div *ngIf="objectToArray(konu.orta_ogrenciler).length > 0" class="mb-3">
-      <h3 class="font-semibold text-yellow-600">Orta Öğrenciler</h3>
-      <ul class="list-disc list-inside">
-        <li *ngFor="let ogr of objectToArray(konu.orta_ogrenciler)">
-          {{ ogr.adi_soyadi }} - %{{ ogr.basari_orani }}
-        </li>
-      </ul>
-    </div>
-
-    <!-- Kötü Öğrenciler -->
-    <div *ngIf="objectToArray(konu.kotu_ogrenciler).length > 0" class="mb-3">
-      <h3 class="font-semibold text-red-600">Kötü Öğrenciler</h3>
-      <ul class="list-disc list-inside">
-        <li *ngFor="let ogr of objectToArray(konu.kotu_ogrenciler)">
-          {{ ogr.adi_soyadi }} - %{{ ogr.basari_orani }}
-        </li>
-      </ul>
-    </div>
-  </div>
