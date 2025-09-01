@@ -182,7 +182,7 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
         if (response.success) {
           this.teacherInfo = response.data;
           // Ensure mukemmel_ogrenciler is an array
-          if (!Array.isArray(this.teacherInfo.mukemmel_ogrenciler)) {
+          if (this.teacherInfo && !Array.isArray(this.teacherInfo.mukemmel_ogrenciler)) {
             this.teacherInfo.mukemmel_ogrenciler = [];
           }
           console.log('Öğretmen bilgileri yüklendi:', this.teacherInfo);
