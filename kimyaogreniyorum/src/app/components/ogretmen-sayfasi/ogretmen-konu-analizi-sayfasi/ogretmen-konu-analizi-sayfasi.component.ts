@@ -239,4 +239,101 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
       }
     }
   }
+
+  // Konu kartları için istatistik metodları
+  getTotalQuestionsByTopic(konu: KonuAnalizi): number {
+    const allStudents = [
+      ...(konu.mukemmel_ogrenciler || []),
+      ...(konu.iyi_ogrenciler || []),
+      ...(konu.orta_ogrenciler || []),
+      ...(konu.kotu_ogrenciler || [])
+    ];
+    
+    if (allStudents.length === 0) return 0;
+    
+    // Her öğrencinin toplam sorusunu al ve en yüksek değeri döndür
+    const questionCounts = allStudents.map(student => 
+      parseInt(student.toplam_soru_sayisi || student.toplam_soru || '0')
+    ).filter(count => count > 0);
+    
+    return questionCounts.length > 0 ? Math.max(...questionCounts) : 0;
+  }
+
+  getCorrectAnswersByTopic(konu: KonuAnalizi): number {
+    const allStudents = [
+      ...(konu.mukemmel_ogrenciler || []),
+      ...(konu.iyi_ogrenciler || []),
+      ...(konu.orta_ogrenciler || []),
+      ...(konu.kotu_ogrenciler || [])
+    ];
+    
+    return allStudents.reduce((total, student) => {
+      const dogru = parseInt(student.dogru_sayisi || student.dogru || '0');
+      return total + dogru;
+    }, 0);
+  }
+
+  getWrongAnswersByTopic(konu: KonuAnalizi): number {
+    const allStudents = [
+      ...(konu.mukemmel_ogrenciler || []),
+      ...(konu.iyi_ogrenciler || []),
+      ...(konu.orta_ogrenciler || []),
+      ...(konu.kotu_ogrenciler || [])
+    ];
+    
+    return allStudents.reduce((total, student) => {
+      const yanlis = parseInt(student.yanlis_sayisi || student.yanlis || '0');
+      return total + yanlis;
+    }, 0);
+  }
+
+  getEmptyAnswersByTopic(konu: KonuAnalizi): number {
+    const allStudents = [
+      ...(konu.mukemmel_ogrenciler || []),
+      ...(konu.iyi_ogrenciler || []),
+      ...(konu.orta_ogrenciler || []),
+      ...(konu.kotu_ogrenciler || [])
+    ];
+    
+    return allStudents.reduce((total, student) => {
+      const bos = parseInt(student.bos_sayisi || student.bos || '0');
+      return total + bos;
+    }, 0);
+  }
+
+  getBestStudentForTopic(konu: KonuAnalizi): any {
+    const allStudents = [
+      ...(konu.mukemmel_ogrenciler || []),
+      ...(konu.iyi_ogrenciler || []),
+      ...(konu.orta_ogrenciler || []),
+      ...(konu.kotu_ogrenciler || [])
+    ];
+
+    if (allStudents.length === 0) return null;
+
+    // En yüksek başarı yüzdesine sahip öğrenciyi bul
+    return allStudents.reduce((best, current) => {
+      const currentScore = parseFloat(current.basari_yuzdesi || current.basari_orani || '0');
+      const bestScore = parseFloat(best.basari_yuzdesi || best.basari_orani || '0');
+      return currentScore > bestScore ? current : best;
+    });
+  }
+
+  getPoorStudentsForTopic(konu: KonuAnalizi): any[] {
+    const poorStudents = [
+      ...(konu.orta_ogrenciler || []),
+      ...(konu.kotu_ogrenciler || [])
+    ];
+
+    // Başarı yüzdesine göre sırala (en düşükten en yükseğe)
+    return poorStudents.sort((a, b) => {
+      const scoreA = parseFloat(a.basari_yuzdesi || a.basari_orani || '0');
+      const scoreB = parseFloat(b.basari_yuzdesi || b.basari_orani || '0');
+      return scoreA - scoreB;
+    });
+  }
+
+  getDefaultAvatar(name: string): string {
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Öğrenci')}&background=28a745&color=fff&size=40&font-size=0.6&rounded=true`;
+  }
 }

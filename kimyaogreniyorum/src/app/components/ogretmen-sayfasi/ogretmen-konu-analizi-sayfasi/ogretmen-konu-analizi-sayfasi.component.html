@@ -161,87 +161,117 @@
       </div>
     </div>
 
-    <!-- Detailed Topic Analysis -->
+    <!-- Detailed Topic Analysis Cards -->
     <div class="detailed-analysis" *ngIf="konuAnalizleri.length > 0">
       <h3><i class="bi bi-list-check me-2"></i>Detaylı Konu Analizi</h3>
+      <div class="topics-cards-container">
+        <div class="topic-card" *ngFor="let konu of konuAnalizleri; trackBy: trackByKonu">
+          <!-- Card Header -->
+          <div class="card-header">
+            <div class="topic-title">
+              <i class="bi bi-book me-2"></i>
+              <h5>{{ konu.konu_adi }}</h5>
+            </div>
+            <div class="status-badge" [style.background-color]="getKonuSuccessColor(konu.ortalama_basari)">
+              {{ getKonuSuccessText(konu.ortalama_basari) }}
+            </div>
+          </div>
 
-      <!-- Debug Info -->
-      <div class="alert alert-info mb-3" *ngIf="konuAnalizleri.length > 0">
-        <small>
-          <strong>Debug:</strong> Toplam {{ konuAnalizleri.length }} konu bulundu. 
-          Konular: {{ getKonuAdlari() }}
-        </small>
-      </div>
+          <!-- Statistics Grid -->
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="stat-icon bg-primary">
+                <i class="bi bi-question-circle"></i>
+              </div>
+              <div class="stat-content">
+                <h4>{{ getTotalQuestionsByTopic(konu) }}</h4>
+                <p>Toplam Soru</p>
+              </div>
+            </div>
 
-      <div class="topics-table-container">
-        <div class="table-responsive">
-          <table class="table table-hover">
-            <thead class="table-dark">
-              <tr>
-                <th>Konu Adı</th>
-                <th>Toplam Öğrenci</th>
-                <th>Cevaplayan</th>
-                <th>Ortalama Başarı</th>
-                <th>İyi Öğrenciler</th>
-                <th>Geliştirilmeli</th>
-                <th>Durum</th>
-              </tr>
-            </thead>
-            <tbody>
-              <ng-container *ngFor="let konu of konuAnalizleri; trackBy: trackByKonu; let i = index">
-                <tr class="topic-row">
-                  <td class="topic-name">
-                    <strong>{{ i + 1 }}. {{ konu.konu_adi }}</strong>
-                  </td>
-                <td class="text-center">
-                  <span class="badge bg-info">{{ konu.toplam_ogrenci }}</span>
-                </td>
-                <td class="text-center">
-                  <span class="badge bg-primary">{{ konu.cevaplayan_ogrenci }}</span>
-                </td>
-                <td class="text-center">
-                  <div class="progress-container">
-                    <div class="progress" style="height: 20px;">
-                      <div 
-                        class="progress-bar" 
-                        [style.background-color]="getKonuSuccessColor(konu.ortalama_basari)"
-                        [style.width.%]="konu.ortalama_basari">
-                        {{ konu.ortalama_basari }}%
-                      </div>
-                    </div>
+            <div class="stat-item">
+              <div class="stat-icon bg-success">
+                <i class="bi bi-check-circle"></i>
+              </div>
+              <div class="stat-content">
+                <h4>{{ getCorrectAnswersByTopic(konu) }}</h4>
+                <p>Doğru</p>
+              </div>
+            </div>
+
+            <div class="stat-item">
+              <div class="stat-icon bg-danger">
+                <i class="bi bi-x-circle"></i>
+              </div>
+              <div class="stat-content">
+                <h4>{{ getWrongAnswersByTopic(konu) }}</h4>
+                <p>Yanlış</p>
+              </div>
+            </div>
+
+            <div class="stat-item">
+              <div class="stat-icon bg-warning">
+                <i class="bi bi-dash-circle"></i>
+              </div>
+              <div class="stat-content">
+                <h4>{{ getEmptyAnswersByTopic(konu) }}</h4>
+                <p>Boş</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Success Rate Progress -->
+          <div class="success-rate-container">
+            <div class="progress-label">
+              <span>Başarı Oranı</span>
+              <span class="percentage">{{ konu.ortalama_basari }}%</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar" 
+                   [style.width.%]="konu.ortalama_basari"
+                   [style.background-color]="getKonuSuccessColor(konu.ortalama_basari)">
+              </div>
+            </div>
+          </div>
+
+          <!-- Student Performance -->
+          <div class="student-performance">
+            <!-- En İyi Öğrenci -->
+            <div class="best-student" *ngIf="getBestStudentForTopic(konu)">
+              <h6><i class="bi bi-trophy me-2"></i>En İyi Öğrenci</h6>
+              <div class="student-item best">
+                <img [src]="getBestStudentForTopic(konu).avatar || getDefaultAvatar(getBestStudentForTopic(konu).adi_soyadi)" 
+                     class="student-avatar" alt="Avatar">
+                <div class="student-info">
+                  <span class="student-name">{{ getBestStudentForTopic(konu).adi_soyadi }}</span>
+                  <span class="student-score">{{ getBestStudentForTopic(konu).basari_yuzdesi }}%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Geliştirilmesi Gereken Öğrenciler -->
+            <div class="poor-students" *ngIf="getPoorStudentsForTopic(konu).length > 0">
+              <h6><i class="bi bi-arrow-up-circle me-2"></i>Geliştirilmesi Gereken Öğrenciler</h6>
+              <div class="students-list">
+                <div class="student-item poor" *ngFor="let student of getPoorStudentsForTopic(konu)">
+                  <img [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)" 
+                       class="student-avatar" alt="Avatar">
+                  <div class="student-info">
+                    <span class="student-name">{{ student.adi_soyadi }}</span>
+                    <span class="student-score">{{ student.basari_yuzdesi }}%</span>
                   </div>
-                </td>
-                <td class="students-list">
-                  <div class="student-names" *ngIf="getIyiOgrenciler(konu).length > 0">
-                    <small *ngFor="let ogrenci of getIyiOgrenciler(konu); let last = last" 
-                           class="text-success">
-                      {{ ogrenci.adi_soyadi }}<span *ngIf="!last">, </span>
-                    </small>
-                  </div>
-                  <small class="text-muted" *ngIf="getIyiOgrenciler(konu).length === 0">-</small>
-                </td>
-                <td class="students-list">
-                  <div class="student-names" *ngIf="getKotuOgrenciler(konu).length > 0">
-                    <small *ngFor="let ogrenci of getKotuOgrenciler(konu); let last = last" 
-                           class="text-danger">
-                      {{ ogrenci.adi_soyadi }}<span *ngIf="!last">, </span>
-                    </small>
-                  </div>
-                  <small class="text-muted" *ngIf="getKotuOgrenciler(konu).length === 0">-</small>
-                </td>
-                <td class="text-center">
-                  <span 
-                    class="badge"
-                    [class.bg-success]="konu.ortalama_basari >= 80"
-                    [class.bg-warning]="konu.ortalama_basari >= 60 && konu.ortalama_basari < 80"
-                    [class.bg-danger]="konu.ortalama_basari < 60">
-                    {{ getKonuSuccessText(konu.ortalama_basari) }}
-                  </span>
-                </td>
-                </tr>
-              </ng-container>
-            </tbody>
-          </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Participation Info -->
+          <div class="participation-info">
+            <div class="participation-stat">
+              <i class="bi bi-people"></i>
+              <span>{{ konu.cevaplayan_ogrenci }}/{{ konu.toplam_ogrenci }} öğrenci katıldı</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
