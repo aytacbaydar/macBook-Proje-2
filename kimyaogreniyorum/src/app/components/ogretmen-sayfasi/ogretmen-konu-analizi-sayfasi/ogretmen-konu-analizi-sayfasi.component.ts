@@ -272,7 +272,11 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
 
   // Force change detection
   forceUpdate() {
-    this.konuAnalizleri = [...this.konuAnalizleri];
+    // Create completely new array reference
+    this.konuAnalizleri = JSON.parse(JSON.stringify(this.konuAnalizleri));
+    
+    // Force Angular to recognize the change
+    this.changeDetectorRef.markForCheck();
   }
 
   // Scroll function with null check
@@ -449,9 +453,16 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
               }
             });
             
-            // Force UI update with change detection
+            // Force template re-render
             this.forceUpdate();
             this.changeDetectorRef.detectChanges();
+            
+            // Additional force update with setTimeout
+            setTimeout(() => {
+              this.forceUpdate();
+              this.changeDetectorRef.markForCheck();
+              this.changeDetectorRef.detectChanges();
+            }, 50);
           }
         },
         error: (error) => {
@@ -464,6 +475,13 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
           });
           this.forceUpdate();
           this.changeDetectorRef.detectChanges();
+          
+          // Additional force update
+          setTimeout(() => {
+            this.forceUpdate();
+            this.changeDetectorRef.markForCheck();
+            this.changeDetectorRef.detectChanges();
+          }, 50);
         }
       });
     }
