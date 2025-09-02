@@ -30,9 +30,19 @@ try {
     $token = $matches[1];
     
     // Token'dan kullanıcı bilgilerini al
-    $stmt = $conn->prepare("SELECT * FROM ogrenciler WHERE token = ?");
-    $stmt->execute([$token]);
-    $currentUser = $stmt->fetch(PDO::FETCH_ASSOC);
+    // Token format: md5(id + email + password)
+    $stmt = $conn->prepare("SELECT id, adi_soyadi, email, sifre, rutbe FROM ogrenciler WHERE aktif = 1");
+    $stmt->execute();
+    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    $currentUser = null;
+    foreach ($users as $user) {
+        $expectedToken = md5($user['id'] . $user['email'] . $user['sifre']);
+        if ($expectedToken === $token) {
+            $currentUser = $user;
+            break;
+        }
+    }
     
     if (!$currentUser) {
         echo json_encode([
