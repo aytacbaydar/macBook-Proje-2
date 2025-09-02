@@ -303,13 +303,13 @@
             <h4><i class="bi bi-exclamation-triangle-fill me-2 text-warning"></i>Geliştirilmesi Gereken Konular</h4>
             <p class="text-muted">En düşük başarı oranına sahip 5 konu</p>
           </div>
-          
+
           <div class="worst-topics-list">
             <div class="worst-topic-item" *ngFor="let konu of worstTopics; let i = index">
               <div class="topic-rank">
                 <span class="rank-number">{{ i + 1 }}</span>
               </div>
-              
+
               <div class="topic-info">
                 <h6 class="topic-name">{{ konu.konu_adi }}</h6>
                 <div class="topic-stats">
@@ -319,7 +319,7 @@
                   </div>
                 </div>
               </div>
-              
+
               <div class="topic-performance">
                 <div class="performance-badge" [style.background-color]="getWorstTopicColor(konu.ortalama_basari)">
                   {{ konu.ortalama_basari }}%
@@ -328,7 +328,7 @@
                   {{ getWorstTopicText(konu.ortalama_basari) }}
                 </div>
               </div>
-              
+
               <div class="progress-bar-container">
                 <div class="progress-bar-bg">
                   <div class="progress-bar-fill" 
@@ -339,7 +339,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="worst-topics-actions">
             <button class="btn btn-outline-primary btn-sm" (click)="konuanalizi()">
               <i class="bi bi-bar-chart-line-fill me-1"></i>
@@ -347,7 +347,7 @@
             </button>
           </div>
         </div>
-        
+
         <!-- Loading State -->
         <div class="loading-container" *ngIf="isLoadingWorstTopics">
           <div class="spinner-border text-primary" role="status">
@@ -355,7 +355,7 @@
           </div>
           <p class="mt-2 text-muted">Konu analizi yükleniyor...</p>
         </div>
-        
+
         <!-- Empty State -->
         <div class="empty-state" *ngIf="!isLoadingWorstTopics && worstTopics.length === 0">
           <div class="empty-icon">
@@ -431,3 +431,17 @@
     </div>
   </div>
 </div>
+<script>
+  window.onscroll = function() {scrollFunction()};
+
+  function scrollFunction() {
+    const myBtn = document.getElementById("myBtn");
+    if (myBtn) {
+      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        myBtn.style.display = "block";
+      } else {
+        myBtn.style.display = "none";
+      }
+    }
+  }
+</script>

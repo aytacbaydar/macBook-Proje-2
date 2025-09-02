@@ -176,6 +176,20 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
     this.setTodayName();
     this.loadTodaySchedule();
     this.loadWorstTopics();
+    this.initScrollFunction();
+  }
+
+  private initScrollFunction(): void {
+    window.onscroll = () => {
+      const myBtn = document.getElementById("myBtn");
+      if (myBtn) {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+          myBtn.style.display = "block";
+        } else {
+          myBtn.style.display = "none";
+        }
+      }
+    };
   }
 
   private loadTeacherInfo(): void {
