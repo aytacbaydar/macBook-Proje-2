@@ -90,6 +90,17 @@ interface TeacherInfo {
   mukemmel_ogrenciler?: any[]; // Ensure this is handled as an array
 }
 
+interface Announcement {
+  id?: number;
+  baslik: string;
+  icerik: string;
+  grup?: string;
+  olusturma_tarihi?: string;
+  ogretmen_id?: number;
+  ogretmen_adi?: string;
+  durum: 'aktif' | 'pasif';
+}
+
 @Component({
   selector: 'app-ogretmen-ana-sayfasi',
   standalone: false,
@@ -151,6 +162,18 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
   teacherInfo: TeacherInfo | null = null; // Changed to TeacherInfo interface
   isLoadingInfo: boolean = false; // Added loading state for teacher info
 
+  // Duyuru yönetimi
+  announcements: Announcement[] = [];
+  isLoadingAnnouncements: boolean = false;
+  showAnnouncementModal: boolean = false;
+  newAnnouncement: Announcement = {
+    baslik: '',
+    icerik: '',
+    grup: '',
+    durum: 'aktif'
+  };
+  groupsList: string[] = [];
+
   // Grup renkleri
   groupColors = [
     '#4f46e5',
@@ -185,6 +208,7 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
     this.loadTodaySchedule();
     this.loadWorstTopics();
     this.loadMonthlyStats();
+    this.loadAnnouncements();
     this.initScrollFunction();
   }
 
@@ -1035,6 +1059,152 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
         this.isLoadingMonthlyStats = false;
       }
     });
+  }
+
+  // Duyuru yönetimi metodları
+  private loadAnnouncements(): void {
+    this.isLoadingAnnouncements = true;
+
+    this.http.get<any>('./server/api/duyurular_listesi.php', {
+      headers: this.getAuthHeaders()
+    }).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.announcements = response.data.slice(0, 5); // Son 5 duyuru
+        } else {
+          this.announcements = [];
+        }
+        this.isLoadingAnnouncements = false;
+      },
+      error: (error) => {
+        console.error('Duyurular yüklenirken hata:', error);
+        this.announcements = [];
+        this.isLoadingAnnouncements = false;
+      }
+    });
+
+    // Grup listesini de yükle (duyuru eklerken kullanmak için)
+    this.loadGroupsList();
+  }
+
+  private loadGroupsList(): void {
+    if (this.groups.length > 0) {
+      this.groupsList = this.groups.map(group => group.name).filter(name => name !== 'Grup Atanmamış');
+    } else {
+      // Gruplar henüz yüklenmemişse, öğrenci listesinden grupları çek
+      this.http.get<any>('./server/api/ogrenciler_listesi.php', {
+        headers: this.getAuthHeaders()
+      }).subscribe({
+        next: (response) => {
+          if (response.success && response.data) {
+            const teacherStudents = response.data.filter((student: any) => 
+              student.rutbe === 'ogrenci' && student.ogretmeni === this.teacherName
+            );
+            const uniqueGroups = [...new Set(teacherStudents.map((s: any) => s.grubu))].filter(Boolean);
+            this.groupsList = uniqueGroups as string[];
+          }
+        },
+        error: (error) => {
+          console.error('Grup listesi yüklenirken hata:', error);
+        }
+      });
+    }
+  }
+
+  duyuruEkle(): void {
+    this.newAnnouncement = {
+      baslik: '',
+      icerik: '',
+      grup: '',
+      durum: 'aktif'
+    };
+    this.showAnnouncementModal = true;
+  }
+
+  closeAnnouncementModal(): void {
+    this.showAnnouncementModal = false;
+    this.newAnnouncement = {
+      baslik: '',
+      icerik: '',
+      grup: '',
+      durum: 'aktif'
+    };
+  }
+
+  saveAnnouncement(): void {
+    if (!this.newAnnouncement.baslik.trim() || !this.newAnnouncement.icerik.trim()) {
+      alert('Lütfen başlık ve içerik alanlarını doldurun.');
+      return;
+    }
+
+    const announcementData = {
+      baslik: this.newAnnouncement.baslik,
+      icerik: this.newAnnouncement.icerik,
+      grup: this.newAnnouncement.grup || null, // Boşsa genel duyuru
+      ogretmen_id: this.teacherId,
+      ogretmen_adi: this.teacherName,
+      durum: this.newAnnouncement.durum
+    };
+
+    this.http.post<any>('./server/api/duyuru_ekle.php', announcementData, {
+      headers: this.getAuthHeaders()
+    }).subscribe({
+      next: (response) => {
+        if (response.success) {
+          alert('Duyuru başarıyla eklendi!');
+          this.closeAnnouncementModal();
+          this.loadAnnouncements();
+        } else {
+          alert('Duyuru eklenirken hata: ' + (response.message || response.error));
+        }
+      },
+      error: (error) => {
+        console.error('Duyuru ekleme hatası:', error);
+        alert('Duyuru eklenirken bir hata oluştu.');
+      }
+    });
+  }
+
+  deleteAnnouncement(announcementId: number): void {
+    if (!confirm('Bu duyuruyu silmek istediğinizden emin misiniz?')) {
+      return;
+    }
+
+    this.http.post<any>('./server/api/duyuru_sil.php', { id: announcementId }, {
+      headers: this.getAuthHeaders()
+    }).subscribe({
+      next: (response) => {
+        if (response.success) {
+          alert('Duyuru silindi!');
+          this.loadAnnouncements();
+        } else {
+          alert('Duyuru silinirken hata: ' + (response.message || response.error));
+        }
+      },
+      error: (error) => {
+        console.error('Duyuru silme hatası:', error);
+        alert('Duyuru silinirken bir hata oluştu.');
+      }
+    });
+  }
+
+  formatAnnouncementDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('tr-TR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
+
+  getAnnouncementTypeText(grup: string): string {
+    return grup ? `${grup} Grubu` : 'Genel Duyuru';
+  }
+
+  getAnnouncementTypeClass(grup: string): string {
+    return grup ? 'group-announcement' : 'general-announcement';
   }
 
 }

@@ -139,7 +139,7 @@
 
   &.mor {
     border-left-color: #8b5cf6;
-    
+
     .stat-icon {
       background: linear-gradient(135deg, #8b5cf6, #7c3aed);
     }
@@ -147,7 +147,7 @@
 
   &.kirmizi {
     border-left-color: #ef4444;
-    
+
     .stat-icon {
       background: linear-gradient(135deg, #ef4444, #dc2626);
     }
@@ -155,7 +155,7 @@
 
   &.cyan {
     border-left-color: #06b6d4;
-    
+
     .stat-icon {
       background: linear-gradient(135deg, #06b6d4, #0891b2);
     }
@@ -1545,5 +1545,249 @@
   .topic-info .topic-name {
     white-space: normal;
     text-align: center;
+  }
+}
+
+// Duyuru stilleri
+.announcements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.announcement-item {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 16px;
+  border-left: 4px solid #fd7e14;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #e9ecef;
+    transform: translateY(-1px);
+  }
+}
+
+.announcement-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.announcement-type {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 12px;
+
+  &.general-announcement {
+    background: #e3f2fd;
+    color: #1976d2;
+  }
+
+  &.group-announcement {
+    background: #f3e5f5;
+    color: #7b1fa2;
+  }
+
+  i {
+    font-size: 11px;
+  }
+}
+
+.announcement-date {
+  font-size: 11px;
+  color: #6c757d;
+}
+
+.delete-announcement-btn {
+  background: none;
+  border: none;
+  color: #dc3545;
+  padding: 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #f8d7da;
+    color: #721c24;
+  }
+
+  i {
+    font-size: 12px;
+  }
+}
+
+.announcement-content {
+  .announcement-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 6px;
+  }
+
+  .announcement-text {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.4;
+    margin: 0;
+  }
+}
+
+// Modal stilleri
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-container {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #eee;
+
+  h3 {
+    margin: 0;
+    color: #333;
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    i {
+      color: #fd7e14;
+    }
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #999;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: #f5f5f5;
+      color: #666;
+    }
+  }
+}
+
+.modal-body {
+  padding: 24px;
+
+  .form-group {
+    margin-bottom: 20px;
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      color: #333;
+      font-size: 14px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: border-color 0.3s ease;
+
+      &:focus {
+        outline: none;
+        border-color: #fd7e14;
+        box-shadow: 0 0 0 2px rgba(253, 126, 20, 0.1);
+      }
+
+      &.ng-invalid.ng-touched {
+        border-color: #dc3545;
+      }
+    }
+
+    textarea.form-control {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .form-text {
+      margin-top: 4px;
+      font-size: 12px;
+    }
+  }
+
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &.btn-secondary {
+        background: #6c757d;
+        color: white;
+
+        &:hover {
+          background: #5a6268;
+        }
+      }
+
+      &.btn-primary {
+        background: #fd7e14;
+        color: white;
+
+        &:hover:not(:disabled) {
+          background: #e8690b;
+        }
+
+        &:disabled {
+          background: #ccc;
+          cursor: not-allowed;
+        }
+
+        i {
+          font-size: 12px;
+        }
+      }
+    }
   }
 }

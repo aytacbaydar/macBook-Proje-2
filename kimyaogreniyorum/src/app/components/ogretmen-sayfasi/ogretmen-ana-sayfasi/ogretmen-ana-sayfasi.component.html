@@ -458,20 +458,57 @@
     <div class="admin-container grid-8">
       <div class="card-header turuncu">
         <h3>
-          <i class="fas fa-tachometer-alt me-2"></i>
+          <i class="fas fa-bullhorn me-2"></i>
           Duyurular
         </h3>
         <div class="card-actions">
           <button class="header-action-btn detail-btn" (click)="duyuruEkle()">
-            <i class="bi bi-clipboard-check-fill"></i>
+            <i class="bi bi-plus-circle"></i>
             <span>Duyuru Ekle</span>
           </button>
         </div>
       </div>
       <div class="card-body">
-        <!--içerik-->
+        <!-- Loading State -->
+        <div *ngIf="isLoadingAnnouncements" class="loading-state">
+          <div class="spinner-border spinner-border-sm" role="status"></div>
+          <span class="ms-2">Yükleniyor...</span>
+        </div>
 
-        <!--içerik Son-->
+        <!-- Duyuru Listesi -->
+        <div *ngIf="!isLoadingAnnouncements && announcements.length > 0" class="announcements-list">
+          <div class="announcement-item" *ngFor="let announcement of announcements">
+            <div class="announcement-header">
+              <div class="announcement-type" [ngClass]="getAnnouncementTypeClass(announcement.grup!)">
+                <i class="fas" [ngClass]="announcement.grup ? 'fa-users' : 'fa-globe'"></i>
+                <span>{{ getAnnouncementTypeText(announcement.grup!) }}</span>
+              </div>
+              <div class="announcement-date">
+                {{ formatAnnouncementDate(announcement.olusturma_tarihi!) }}
+              </div>
+              <button class="delete-announcement-btn" (click)="deleteAnnouncement(announcement.id!)" title="Duyuruyu Sil">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+            <div class="announcement-content">
+              <h4 class="announcement-title">{{ announcement.baslik }}</h4>
+              <p class="announcement-text">{{ announcement.icerik }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="!isLoadingAnnouncements && announcements.length === 0" class="empty-state">
+          <div class="empty-icon">
+            <i class="bi bi-megaphone"></i>
+          </div>
+          <h5>Henüz Duyuru Bulunmuyor</h5>
+          <p class="text-muted">İlk duyurunuzu oluşturmak için yukarıdaki butonu kullanın.</p>
+          <button class="btn btn-primary btn-sm" (click)="duyuruEkle()">
+            <i class="bi bi-plus-circle me-1"></i>
+            İlk Duyuruyu Ekle
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -490,3 +527,71 @@
     }
   }
 </script>
+
+<!-- Duyuru Ekleme Modal -->
+<div class="modal-overlay" *ngIf="showAnnouncementModal" (click)="closeAnnouncementModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>
+        <i class="bi bi-megaphone"></i>
+        Yeni Duyuru Ekle
+      </h3>
+      <button class="close-btn" (click)="closeAnnouncementModal()">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form (ngSubmit)="saveAnnouncement()" #announcementForm="ngForm">
+        <div class="form-group">
+          <label for="announcementTitle">Duyuru Başlığı *</label>
+          <input 
+            type="text" 
+            id="announcementTitle"
+            class="form-control" 
+            [(ngModel)]="newAnnouncement.baslik" 
+            name="baslik"
+            placeholder="Duyuru başlığını girin..."
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="announcementContent">Duyuru İçeriği *</label>
+          <textarea 
+            id="announcementContent"
+            class="form-control" 
+            [(ngModel)]="newAnnouncement.icerik" 
+            name="icerik"
+            rows="4"
+            placeholder="Duyuru içeriğini girin..."
+            required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="announcementGroup">Hedef Grup</label>
+          <select 
+            id="announcementGroup"
+            class="form-control" 
+            [(ngModel)]="newAnnouncement.grup" 
+            name="grup">
+            <option value="">Genel Duyuru (Tüm Öğrenciler)</option>
+            <option *ngFor="let group of groupsList" [value]="group">{{ group }}</option>
+          </select>
+          <small class="form-text text-muted">
+            Grup seçilmezse duyuru tüm öğrencilere gönderilir
+          </small>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="closeAnnouncementModal()">
+            İptal
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="!announcementForm.valid">
+            <i class="bi bi-check-circle me-1"></i>
+            Duyuru Ekle
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
