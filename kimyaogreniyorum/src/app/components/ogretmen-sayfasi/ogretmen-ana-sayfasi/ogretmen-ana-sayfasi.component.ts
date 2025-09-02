@@ -190,22 +190,8 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
           this.teacherInfo = response.data;
           
           // teacherName ve teacherAvatar'ı güncelle
-          this.teacherName = this.teacherInfo.adi_soyadi || this.teacherName;
-          this.teacherAvatar = this.teacherInfo.avatar || this.generateAvatarUrl(this.teacherName);
-          
-          // mukemmel_ogrenciler alanını güvenli hale getir
-          if (!this.teacherInfo.mukemmel_ogrenciler) {
-            this.teacherInfo.mukemmel_ogrenciler = [];
-          } else if (typeof this.teacherInfo.mukemmel_ogrenciler === 'string') {
-            try {
-              this.teacherInfo.mukemmel_ogrenciler = JSON.parse(this.teacherInfo.mukemmel_ogrenciler);
-            } catch (e) {
-              console.warn('mukemmel_ogrenciler JSON parse hatası:', e);
-              this.teacherInfo.mukemmel_ogrenciler = [];
-            }
-          } else if (!Array.isArray(this.teacherInfo.mukemmel_ogrenciler)) {
-            this.teacherInfo.mukemmel_ogrenciler = [];
-          }
+          this.teacherName = this.teacherInfo?.adi_soyadi || this.teacherName;
+          this.teacherAvatar = this.teacherInfo?.avatar || this.generateAvatarUrl(this.teacherName);
           
           console.log('Öğretmen bilgileri başarıyla yüklendi:', this.teacherInfo);
         } else {
@@ -872,16 +858,4 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
       });
   }
 
-  // Güvenli öğrenci listesi getirme metodu
-  getIyiOgrenciler() {
-    // mukemmel_ogrenciler alanını güvenlik nedeniyle kaldırdık
-    // Bunun yerine mevcut öğrenci verilerinden başarılı olanları döndürüyoruz
-    return [];i = parseFloat(student?.basari_yuzdesi || '0');
-        return basariYuzdesi >= 90;
-      });
-    } catch (error) {
-      console.error('getIyiOgrenciler metodunda hata:', error);
-      return [];
-    }
-  }
 }
