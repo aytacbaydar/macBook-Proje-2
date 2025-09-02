@@ -444,6 +444,20 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Öğrenci')}&background=28a745&color=fff&size=40&font-size=0.6&rounded=true`;
   }
 
+  getSuccessBadgeClass(basariOrani: number): string {
+    if (basariOrani >= 80) return 'excellent';
+    if (basariOrani >= 60) return 'good';
+    if (basariOrani >= 40) return 'average';
+    return 'needs-improvement';
+  }
+
+  getProgressColor(basariOrani: number): string {
+    if (basariOrani >= 80) return 'linear-gradient(135deg, #28a745, #20c997)';
+    if (basariOrani >= 60) return 'linear-gradient(135deg, #ffc107, #fd7e14)';
+    if (basariOrani >= 40) return 'linear-gradient(135deg, #fd7e14, #dc3545)';
+    return 'linear-gradient(135deg, #dc3545, #c82333)';
+  }
+
   // Fetch missing topic names
   fetchMissingTopicNames() {
     const missingTopics = this.konuAnalizleri.filter(konu => 
