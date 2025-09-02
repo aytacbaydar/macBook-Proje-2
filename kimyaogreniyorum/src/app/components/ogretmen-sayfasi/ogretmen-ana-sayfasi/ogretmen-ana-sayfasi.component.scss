@@ -203,15 +203,15 @@
     &.mavi{
         background: linear-gradient(135deg, #3b82f6, #1d4ed8);
       }
-    
+
     &.yesil{
       background: linear-gradient(135deg, #10b981, #047857);
     }
-  
+
     &.turuncu {
       background: linear-gradient(135deg, #f59e0b, #d97706);
     }
-  
+
     &.mor {
       background: linear-gradient(135deg, #8b5cf6, #7c3aed);
     }
@@ -1305,5 +1305,212 @@
       font-size: 0.9rem;
       opacity: 0.9;
     }
+  }
+}
+
+// Worst Topics Styles
+.worst-topics-container {
+  padding: 20px;
+}
+
+.worst-topics-header {
+  margin-bottom: 20px;
+  text-align: center;
+
+  h4 {
+    color: #333;
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+
+  p {
+    font-size: 14px;
+    margin: 0;
+  }
+}
+
+.worst-topics-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.worst-topic-item {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+  }
+}
+
+.topic-rank {
+  .rank-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 14px;
+    margin-right: 15px;
+  }
+}
+
+.topic-info {
+  flex: 1;
+  min-width: 0;
+
+  .topic-name {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+    font-size: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .topic-stats {
+    display: flex;
+    gap: 15px;
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: #666;
+
+      i {
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+.topic-performance {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  margin-right: 15px;
+
+  .performance-badge {
+    padding: 4px 8px;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+    min-width: 45px;
+    text-align: center;
+  }
+
+  .performance-text {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+}
+
+.progress-bar-container {
+  width: 100px;
+
+  .progress-bar-bg {
+    width: 100%;
+    height: 6px;
+    background-color: #f0f0f0;
+    border-radius: 3px;
+    overflow: hidden;
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.5s ease;
+    }
+  }
+}
+
+.worst-topics-actions {
+  text-align: center;
+
+  .btn {
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+  }
+}
+
+.loading-container, .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.empty-state {
+  .empty-icon {
+    font-size: 48px;
+    color: #ddd;
+    margin-bottom: 15px;
+  }
+
+  h5 {
+    color: #666;
+    margin-bottom: 10px;
+  }
+
+  p {
+    margin-bottom: 20px;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .worst-topic-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+
+    .topic-rank {
+      align-self: center;
+      margin-right: 0;
+      margin-bottom: 5px;
+    }
+
+    .topic-performance {
+      margin-right: 0;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+    }
+  }
+
+  .topic-info .topic-name {
+    white-space: normal;
+    text-align: center;
   }
 }

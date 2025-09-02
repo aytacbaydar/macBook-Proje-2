@@ -132,6 +132,10 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
   dailySchedule: any[] = [];
   todayName: string = '';
 
+  // Konu analizi - en kötü konular
+  worstTopics: any[] = [];
+  isLoadingWorstTopics: boolean = false;
+
   // Öğretmen bilgileri
   teacherName: string = '';
   teacherAvatar: string = '';
@@ -171,6 +175,7 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
     this.loadDashboardData();
     this.setTodayName();
     this.loadTodaySchedule();
+    this.loadWorstTopics();
   }
 
   private loadTeacherInfo(): void {
@@ -840,6 +845,102 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
           this.dailySchedule = [];
         },
       });
+  }
+
+  loadWorstTopics(): void {
+    this.isLoadingWorstTopics = true;
+    
+    if (!this.teacherInfo?.id) {
+      // Eğer teacher info henüz yüklenmediyse, biraz bekleyip tekrar dene
+      setTimeout(() => {
+        if (this.teacherInfo?.id) {
+          this.loadWorstTopics();
+        } else {
+          this.isLoadingWorstTopics = false;
+        }
+      }, 1000);
+      return;
+    }
+
+    const ogretmenId = this.teacherInfo.id;
+    
+    this.http.get<any>(`${this.apiUrl}/ogretmen_konu_analizi.php?ogretmen_id=${ogretmenId}`, {
+      headers: this.getAuthHeaders()
+    }).subscribe({
+      next: (response) => {
+        if (response.success && response.data && response.data.konu_analizleri) {
+          const konuAnalizleri = response.data.konu_analizleri;
+          
+          // Yüzdesi 0'dan büyük olan konuları filtrele, başarı oranına göre sırala ve en kötü 5'ini al
+          this.worstTopics = konuAnalizleri
+            .filter((konu: any) => parseFloat(konu.ortalama_basari || '0') > 0)
+            .sort((a: any, b: any) => parseFloat(a.ortalama_basari || '0') - parseFloat(b.ortalama_basari || '0'))
+            .slice(0, 5)
+            .map((konu: any) => ({
+              ...konu,
+              ortalama_basari: parseFloat(konu.ortalama_basari || '0'),
+              konu_adi: konu.konu_adi || `Konu ${konu.konu_id}`,
+              toplam_ogrenci: parseInt(konu.toplam_ogrenci || '0'),
+              cevaplayan_ogrenci: parseInt(konu.cevaplayan_ogrenci || '0')
+            }));
+            
+          // Eksik konu adlarını düzelt
+          this.fetchTopicNamesForWorstTopics();
+        }
+        this.isLoadingWorstTopics = false;
+      },
+      error: (error) => {
+        console.error('En kötü konular yüklenirken hata:', error);
+        this.worstTopics = [];
+        this.isLoadingWorstTopics = false;
+      }
+    });
+  }
+
+  private fetchTopicNamesForWorstTopics(): void {
+    const missingTopics = this.worstTopics.filter(konu => 
+      !konu.konu_adi || konu.konu_adi.startsWith('Konu ')
+    );
+    
+    if (missingTopics.length > 0) {
+      this.http.get<any>(`${this.apiUrl}/konu_listesi.php`, {
+        headers: this.getAuthHeaders()
+      }).subscribe({
+        next: (response) => {
+          if (response.success && (response.data || response.konular)) {
+            const allTopics = response.data || response.konular;
+            
+            this.worstTopics.forEach(konu => {
+              if (!konu.konu_adi || konu.konu_adi.startsWith('Konu ')) {
+                const topicInfo = allTopics.find((topic: any) => 
+                  topic.id == konu.konu_id || topic.konu_id == konu.konu_id
+                );
+                if (topicInfo) {
+                  konu.konu_adi = topicInfo.konu_adi || topicInfo.baslik || topicInfo.name || `Konu ${konu.konu_id}`;
+                }
+              }
+            });
+          }
+        },
+        error: (error) => {
+          console.error('Konu adları yüklenirken hata:', error);
+        }
+      });
+    }
+  }
+
+  getWorstTopicColor(basariOrani: number): string {
+    if (basariOrani >= 60) return '#ffc107'; // Sarı
+    if (basariOrani >= 40) return '#fd7e14'; // Turuncu
+    if (basariOrani >= 20) return '#dc3545'; // Kırmızı
+    return '#6f42c1'; // Mor (çok kötü)
+  }
+
+  getWorstTopicText(basariOrani: number): string {
+    if (basariOrani >= 60) return 'Orta';
+    if (basariOrani >= 40) return 'Zayıf';
+    if (basariOrani >= 20) return 'Kötü';
+    return 'Çok Kötü';
   }
 
 }
