@@ -1,0 +1,36 @@
+X [ERROR] NG9: Property 'encodeURIComponent' does not exist on type 'OgretmenAnaSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ana-sayfasi/ogretmen-ana-sayfasi.component.html:101:82:
+      101 │ ...ars.com/api/?name=' + encodeURIComponent(student.adi_soyadi) +...
+          ╵                          ~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenAnaSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ana-sayfasi/ogretmen-ana-sayfasi.component.ts:107:15:
+      107 │   templateUrl: './ogretmen-ana-sayfasi.component.html',
+          ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'created_at' does not exist on type 'NewStudent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ana-sayfasi/ogretmen-ana-sayfasi.component.html:107:86:
+      107 │ ...>{{ formatDate(student.kayit_tarihi || student.created_at) }}</p>
+          ╵                                                   ~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenAnaSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ana-sayfasi/ogretmen-ana-sayfasi.component.ts:107:15:
+      107 │   templateUrl: './ogretmen-ana-sayfasi.component.html',
+          ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG1: Property 'loadNewStudents' is private and only accessible within class 'OgretmenAnaSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ana-sayfasi/ogretmen-ana-sayfasi.component.html:127:71:
+      127 │ ...btn btn-sm btn-outline-primary mt-2" (click)="loadNewStudents()">
+          ╵                                                  ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenAnaSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ana-sayfasi/ogretmen-ana-sayfasi.component.ts:107:15:
+      107 │   templateUrl: './ogretmen-ana-sayfasi.component.html',
