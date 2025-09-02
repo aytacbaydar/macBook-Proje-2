@@ -1,7 +1,10 @@
 //circle progress bar
 function animateElements() {
     $('.progressbar').each(function () {
-        var elementPos = $(this).offset().top;
+        var offset = $(this).offset();
+        if (!offset) return; // Güvenlik kontrolü eklendi
+        
+        var elementPos = offset.top;
         var topOfWindow = $(window).scrollTop();
         var percent = $(this).find('.circle').attr('data-percent');
         var percentage = parseInt(percent, 10) / parseInt(100, 10);
@@ -31,7 +34,7 @@ $(window).scroll(animateElements);
     if (fablesCounter.length === 0) return;
     
     var offset = fablesCounter.offset();
-    if (!offset) return;
+    if (!offset) return; // Güvenlik kontrolü zaten var
     
     var oTop = offset.top - window.innerHeight;
     if (a == 0 && $(window).scrollTop() > oTop) {
