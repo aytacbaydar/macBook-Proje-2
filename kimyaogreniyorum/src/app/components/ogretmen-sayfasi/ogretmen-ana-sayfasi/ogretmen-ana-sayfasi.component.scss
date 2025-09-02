@@ -138,18 +138,27 @@
   }
 
   &.mor {
-    background: linear-gradient(135deg, #8b5cf6, #a855f7);
-    border-left: 4px solid #7c3aed;
+    border-left-color: #8b5cf6;
+    
+    .stat-icon {
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    }
   }
 
   &.kirmizi {
-    background: linear-gradient(135deg, #ef4444, #f87171);
-    border-left: 4px solid #dc2626;
+    border-left-color: #ef4444;
+    
+    .stat-icon {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+    }
   }
 
   &.cyan {
-    background: linear-gradient(135deg, #06b6d4, #22d3ee);
-    border-left: 4px solid #0891b2;
+    border-left-color: #06b6d4;
+    
+    .stat-icon {
+      background: linear-gradient(135deg, #06b6d4, #0891b2);
+    }
   }
 }
 

@@ -52,7 +52,7 @@
             <i class="fas fa-file-alt"></i>
           </div>
           <div class="stat-content">
-            <h3>{{ isLoadingMonthlyStats ? 'Yükleniyor...' : monthlyPaymentStats.totalTests }}</h3>
+            <h3>{{ isLoadingMonthlyStats ? '...' : (monthlyPaymentStats.totalTests || '0') }}</h3>
             <p>Deneme Sınavı</p>
           </div>
         </div>
@@ -62,7 +62,7 @@
             <i class="fas fa-question-circle"></i>
           </div>
           <div class="stat-content">
-            <h3>{{ isLoadingMonthlyStats ? 'Yükleniyor...' : monthlyPaymentStats.totalQuestions }}</h3>
+            <h3>{{ isLoadingMonthlyStats ? '...' : (monthlyPaymentStats.totalQuestions || '0') }}</h3>
             <p>Toplam Soru</p>
           </div>
         </div>

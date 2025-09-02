@@ -996,14 +996,37 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
       headers: this.getAuthHeaders()
     }).subscribe({
       next: (response) => {
+        console.log('Test verileri API yanıtı:', response);
         if (response.success && response.data) {
-          const tests = response.data.filter((test: any) => test.test_tipi === 'yapay_zeka' || test.test_tipi === 'ai');
-          this.monthlyPaymentStats.totalTests = tests.length;
+          // Tüm testleri al (sadece yapay zeka değil, hepsini)
+          const allTests = response.data || [];
+          console.log('Tüm testler:', allTests);
+          
+          // Deneme sınavı sayısını hesapla (yapay zeka testleri veya test_tipi içeren testler)
+          const aiTests = allTests.filter((test: any) => 
+            test.test_tipi === 'yapay_zeka' || 
+            test.test_tipi === 'ai' || 
+            test.sinav_adi?.toLowerCase().includes('yapay') ||
+            test.sinav_adi?.toLowerCase().includes('ai') ||
+            test.sinav_adi?.toLowerCase().includes('deneme')
+          );
+          
+          this.monthlyPaymentStats.totalTests = aiTests.length;
+          console.log('Filtrelenmiş AI testler:', aiTests);
           
           // Toplam soru sayısını hesapla
-          this.monthlyPaymentStats.totalQuestions = tests.reduce((total: number, test: any) => {
-            return total + parseInt(test.soru_sayisi || '0');
+          this.monthlyPaymentStats.totalQuestions = aiTests.reduce((total: number, test: any) => {
+            const soruSayisi = parseInt(test.soru_sayisi || test.toplam_soru || '0');
+            console.log(`Test: ${test.sinav_adi}, Soru sayısı: ${soruSayisi}`);
+            return total + soruSayisi;
           }, 0);
+          
+          console.log('Hesaplanan istatistikler:', {
+            totalTests: this.monthlyPaymentStats.totalTests,
+            totalQuestions: this.monthlyPaymentStats.totalQuestions
+          });
+        } else {
+          console.warn('Test verileri API yanıtında data bulunamadı:', response);
         }
         this.isLoadingMonthlyStats = false;
       },
