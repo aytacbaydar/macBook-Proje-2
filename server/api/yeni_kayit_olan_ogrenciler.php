@@ -12,6 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 }
 
 try {
+    // Veritabanı bağlantısını al
+    $conn = getConnection();
+    
     // Token doğrulama
     $headers = getallheaders();
     $authHeader = $headers['Authorization'] ?? '';
