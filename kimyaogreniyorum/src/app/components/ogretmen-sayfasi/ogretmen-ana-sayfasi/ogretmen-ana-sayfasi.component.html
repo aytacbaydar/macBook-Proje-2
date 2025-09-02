@@ -39,8 +39,31 @@
             <i class="fas fa-money-bill-wave"></i>
           </div>
           <div class="stat-content">
-            <h3>{{ formatCurrency(dashboardStats.completedTopics) }}</h3>
-            <p>Toplam Ücret</p>
+            <h3>{{ isLoadingMonthlyStats ? 'Yükleniyor...' : formatCurrency(monthlyPaymentStats.totalReceived) }}</h3>
+            <p>Bu Ay Ödenen</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Ek İstatistikler -->
+      <div class="additional-stats">
+        <div class="stat-card kirmizi">
+          <div class="stat-icon">
+            <i class="fas fa-file-alt"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ isLoadingMonthlyStats ? 'Yükleniyor...' : monthlyPaymentStats.totalTests }}</h3>
+            <p>Deneme Sınavı</p>
+          </div>
+        </div>
+
+        <div class="stat-card cyan">
+          <div class="stat-icon">
+            <i class="fas fa-question-circle"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ isLoadingMonthlyStats ? 'Yükleniyor...' : monthlyPaymentStats.totalQuestions }}</h3>
+            <p>Toplam Soru</p>
           </div>
         </div>
       </div>

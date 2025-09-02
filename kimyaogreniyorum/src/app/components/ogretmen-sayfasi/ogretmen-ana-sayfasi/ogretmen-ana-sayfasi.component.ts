@@ -136,6 +136,14 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
   worstTopics: any[] = [];
   isLoadingWorstTopics: boolean = false;
 
+  // Aylık ödeme ve test istatistikleri
+  monthlyPaymentStats = {
+    totalReceived: 0,
+    totalTests: 0,
+    totalQuestions: 0
+  };
+  isLoadingMonthlyStats: boolean = false;
+
   // Öğretmen bilgileri
   teacherName: string = '';
   teacherAvatar: string = '';
@@ -176,6 +184,7 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
     this.setTodayName();
     this.loadTodaySchedule();
     this.loadWorstTopics();
+    this.loadMonthlyStats();
     this.initScrollFunction();
   }
 
@@ -955,6 +964,54 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
     if (basariOrani >= 40) return 'Zayıf';
     if (basariOrani >= 20) return 'Kötü';
     return 'Çok Kötü';
+  }
+
+  private loadMonthlyStats(): void {
+    this.isLoadingMonthlyStats = true;
+    
+    // Bu ay ödenen ücretleri yükle
+    this.http.get<any>('./server/api/ogretmen_ucret_yonetimi.php', {
+      headers: this.getAuthHeaders()
+    }).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          // Bu ay ödenen toplam tutarı hesapla
+          const thisMonthPayments = response.data.thisMonthPayments || [];
+          this.monthlyPaymentStats.totalReceived = thisMonthPayments.reduce((total: number, payment: any) => {
+            return total + parseFloat(payment.tutar || '0');
+          }, 0);
+        }
+        this.loadTestStats();
+      },
+      error: (error) => {
+        console.error('Aylık ödeme istatistikleri yüklenirken hata:', error);
+        this.loadTestStats();
+      }
+    });
+  }
+
+  private loadTestStats(): void {
+    // Yapay zeka testlerinin toplam sayısını ve soru sayısını yükle
+    this.http.get<any>('./server/api/cevap-anahtarlari-listele.php', {
+      headers: this.getAuthHeaders()
+    }).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          const tests = response.data.filter((test: any) => test.test_tipi === 'yapay_zeka' || test.test_tipi === 'ai');
+          this.monthlyPaymentStats.totalTests = tests.length;
+          
+          // Toplam soru sayısını hesapla
+          this.monthlyPaymentStats.totalQuestions = tests.reduce((total: number, test: any) => {
+            return total + parseInt(test.soru_sayisi || '0');
+          }, 0);
+        }
+        this.isLoadingMonthlyStats = false;
+      },
+      error: (error) => {
+        console.error('Test istatistikleri yüklenirken hata:', error);
+        this.isLoadingMonthlyStats = false;
+      }
+    });
   }
 
 }

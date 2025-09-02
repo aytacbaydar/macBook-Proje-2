@@ -136,7 +136,31 @@
   &.mor .stat-icon {
     background: linear-gradient(135deg, #8b5cf6, #7c3aed);
   }
+
+  &.mor {
+    background: linear-gradient(135deg, #8b5cf6, #a855f7);
+    border-left: 4px solid #7c3aed;
+  }
+
+  &.kirmizi {
+    background: linear-gradient(135deg, #ef4444, #f87171);
+    border-left: 4px solid #dc2626;
+  }
+
+  &.cyan {
+    background: linear-gradient(135deg, #06b6d4, #22d3ee);
+    border-left: 4px solid #0891b2;
+  }
 }
+
+// Additional Stats
+.additional-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
 
 // Dashboard Grid
 .admin-grid {
