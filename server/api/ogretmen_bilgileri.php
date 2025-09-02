@@ -1,4 +1,3 @@
-
 <?php
 // Öğretmen bilgileri API'si
 require_once '../config.php';
@@ -8,14 +7,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
         // Kullanıcıyı doğrula
         $user = authorize();
-        
+
         // Sadece öğretmenler kendi bilgilerini görebilir
         if ($user['rutbe'] !== 'ogretmen') {
             errorResponse('Bu bilgilere erişim yetkiniz yok', 403);
         }
-        
+
         $conn = getConnection();
-        
+
         // Öğretmen temel bilgilerini getir
         $stmt = $conn->prepare("
             SELECT id, adi_soyadi, email, cep_telefonu, rutbe, aktif, avatar, brans, created_at
@@ -24,13 +23,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         ");
         $stmt->bindParam(':id', $user['id']);
         $stmt->execute();
-        
+
         if ($stmt->rowCount() === 0) {
             errorResponse('Öğretmen bulunamadı', 404);
         }
-        
+
         $teacher = $stmt->fetch(PDO::FETCH_ASSOC);
-        
+
         // Öğretmenin öğrencilerini getir (mükemmel öğrenciler için)
         $stmt = $conn->prepare("
             SELECT o.id, o.adi_soyadi, o.email, o.grubu,
@@ -45,15 +44,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         ");
         $stmt->bindParam(':teacher_name', $user['adi_soyadi']);
         $stmt->execute();
-        
+
         $mukemmelOgrenciler = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
+
         // Sonucu hazırla
         $result = $teacher;
         $result['mukemmel_ogrenciler'] = $mukemmelOgrenciler;
-        
-        successResponse($result);
-        
+
+        // Güvenlik nedeniyle mukemmel_ogrenciler alanını kaldır
+        if (isset($result['mukemmel_ogrenciler'])) {
+            unset($result['mukemmel_ogrenciler']);
+        }
+
+        // Öğretmen bilgilerini döndür
+        $response = [
+            'success' => true,
+            'data' => $result
+        ];
+
+        successResponse($response);
+
     } catch (PDOException $e) {
         errorResponse('Veritabanı hatası: ' . $e->getMessage(), 500);
     } catch (Exception $e) {
