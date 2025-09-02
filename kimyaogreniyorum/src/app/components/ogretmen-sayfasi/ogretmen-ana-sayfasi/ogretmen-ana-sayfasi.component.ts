@@ -448,15 +448,16 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
     this.isLoadingLastExam = true;
 
     this.http
-      .get<any>('./server/api/ogretmen_sinav_sonuclari.php', {
+      .get<any>('./server/api/ogretmen_son_sinav_sonuclari.php', {
         headers: this.getAuthHeaders(),
       })
       .subscribe({
         next: (response) => {
           if (response.success && response.data) {
-            // En son yapılan sınavın sonuçlarını al (son 5 sonuç)
-            this.lastExamResults = response.data.slice(-5);
+            // Son 5 sonucu al
+            this.lastExamResults = response.data.slice(0, 5);
           } else {
+            console.warn('Son sınav sonuçları API yanıtı:', response);
             this.lastExamResults = [];
           }
           this.isLoadingLastExam = false;
