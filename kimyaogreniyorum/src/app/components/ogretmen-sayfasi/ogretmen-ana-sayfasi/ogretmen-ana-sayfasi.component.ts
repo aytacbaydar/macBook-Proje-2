@@ -24,6 +24,7 @@ interface Student {
 
 interface NewStudent extends Student {
   kayit_tarihi: string;
+  created_at?: string;
 }
 
 interface Group {
@@ -560,7 +561,7 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
   }
 
 
-  private loadNewStudents(): void {
+  loadNewStudents(): void {
     this.isLoadingNewStudents = true;
     this.error = null;
 
@@ -1220,6 +1221,10 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
 
   trackByStudentId(index: number, student: any): number {
     return student.id;
+  }
+
+  encodeURIComponent(str: string): string {
+    return encodeURIComponent(str);
   }
 
 }
