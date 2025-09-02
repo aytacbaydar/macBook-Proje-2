@@ -564,15 +564,25 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
     this.isLoadingNewStudents = true;
     this.error = null;
 
+    console.log('Yeni kayıt öğrencileri yükleniyor...');
+    console.log('Öğretmen bilgileri:', {
+      id: this.teacherId,
+      name: this.teacherName
+    });
+
     this.http
       .get<any>('./server/api/yeni_kayit_olan_ogrenciler.php', {
         headers: this.getAuthHeaders(),
       })
       .subscribe({
         next: (response) => {
+          console.log('Yeni kayıt öğrencileri API yanıtı:', response);
           if (response.success) {
             this.newStudents = response.data || [];
+            console.log('Yüklenen yeni öğrenci sayısı:', this.newStudents.length);
+            console.log('Yeni öğrenciler:', this.newStudents);
           } else {
+            console.error('API başarısız yanıt:', response);
             this.error =
               response.message ||
               'Yeni öğrenci verileri yüklenirken hata oluştu.';
@@ -580,6 +590,7 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
           this.isLoadingNewStudents = false;
         },
         error: (error) => {
+          console.error('Yeni öğrenciler API hatası:', error);
           this.error =
             'Sunucu hatası: ' + (error.error?.message || error.message);
           this.isLoadingNewStudents = false;
@@ -1205,6 +1216,10 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
 
   getAnnouncementTypeClass(grup: string): string {
     return grup ? 'group-announcement' : 'general-announcement';
+  }
+
+  trackByStudentId(index: number, student: any): number {
+    return student.id;
   }
 
 }

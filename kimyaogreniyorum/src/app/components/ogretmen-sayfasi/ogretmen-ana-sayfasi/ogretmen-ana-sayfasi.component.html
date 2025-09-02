@@ -44,7 +44,7 @@
           </div>
         </div>
       </div>
-      
+
       <!-- Ek İstatistikler -->
       <div class="additional-stats">
         <div class="stat-card kirmizi">
@@ -83,17 +83,31 @@
       </div>
 
       <div class="card-body">
-        <div class="new-students-list" *ngIf="newStudents.length > 0; else noNewStudents">
-          <div class="student-card" *ngFor="let student of newStudents">
+        <!-- Debug bilgisi (geliştirme aşamasında) -->
+        <div class="debug-info mb-2" style="font-size: 12px; color: #666;">
+          Toplam yeni kayıt: {{ newStudents.length }}, Loading: {{ isLoadingNewStudents }}
+        </div>
+
+        <div *ngIf="isLoadingNewStudents" class="loading-state text-center p-3">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Yükleniyor...</span>
+          </div>
+          <p class="mt-2 text-muted">Yeni kayıtlar yükleniyor...</p>
+        </div>
+
+        <div *ngIf="!isLoadingNewStudents && newStudents && newStudents.length > 0" class="new-students-list">
+          <div *ngFor="let student of newStudents; trackBy: trackByStudentId" class="new-student-item">
             <div class="student-info">
-              <div class="student-avatar">
-                <i class="bi bi-person-circle"></i>
-              </div>
+              <img [src]="student.avatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(student.adi_soyadi) + '&background=4f46e5&color=fff&size=60&font-size=0.6&rounded=true'" 
+                   alt="Avatar" class="student-avatar">
               <div class="student-details">
                 <h4>{{ student.adi_soyadi }}</h4>
                 <p class="student-email">{{ student.email }}</p>
                 <p class="student-school" *ngIf="student.okulu">{{ student.okulu }} - {{ student.sinifi }}</p>
-                <p class="student-date">{{ formatDate(student.kayit_tarihi) }}</p>
+                <p class="student-date">{{ formatDate(student.kayit_tarihi || student.created_at) }}</p>
+                <p class="student-status" style="font-size: 11px; color: #888;">
+                  Rütbe: {{ student.rutbe || 'Belirsiz' }}, Öğretmen: {{ student.ogretmeni || 'Atanmamış' }}
+                </p>
               </div>
             </div>
             <div class="student-actions">
@@ -107,12 +121,14 @@
           </div>
         </div>
 
-        <ng-template #noNewStudents>
-          <div class="empty-state">
-            <i class="bi bi-person-check fs-1 text-muted"></i>
-            <p class="text-muted mt-2">Yeni kayıt olan öğrenci bulunmuyor.</p>
-          </div>
-        </ng-template>
+        <div *ngIf="!isLoadingNewStudents && (!newStudents || newStudents.length === 0)" class="empty-state">
+          <i class="bi bi-person-check fs-1 text-muted"></i>
+          <p class="text-muted mt-2">Yeni kayıt olan öğrenci bulunmuyor.</p>
+          <button class="btn btn-sm btn-outline-primary mt-2" (click)="loadNewStudents()">
+            <i class="bi bi-arrow-clockwise me-1"></i>
+            Yenile
+          </button>
+        </div>
       </div>
     </div>
 
