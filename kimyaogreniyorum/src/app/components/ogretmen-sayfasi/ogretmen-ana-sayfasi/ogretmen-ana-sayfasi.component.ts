@@ -201,7 +201,7 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
         this.isLoadingInfo = false;
       },
       error: (error) => {
-        console.error('Öğretmen bilgileri yüklenirken hata:', error);
+        //console.error('Öğretmen bilgileri yüklenirken hata:', error);
         
         // Hata detaylarını logla
         if (error.error && typeof error.error === 'string' && error.error.includes('<!doctype')) {
@@ -237,11 +237,11 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
           mukemmel_ogrenciler: []
         };
         
-        console.log('Öğretmen bilgileri localStorage\'dan yüklendi:', {
+        /*console.log('Öğretmen bilgileri localStorage\'dan yüklendi:', {
           id: user.id,
           name: this.teacherName,
           avatar: this.teacherAvatar
-        });
+        });*/
       } catch (error) {
         console.error('localStorage parse hatası:', error);
         this.setDefaultTeacherInfo();
@@ -267,7 +267,6 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
     this.loadUpcomingPayments();
     this.loadLastExamResults();
     this.loadUpcomingClasses();
-    this.loadStudentProgress();
     this.loadDashboardStats();
     this.loadNewStudents();
   }
@@ -457,7 +456,7 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
             // Son 5 sonucu al
             this.lastExamResults = response.data.slice(0, 5);
           } else {
-            console.warn('Son sınav sonuçları API yanıtı:', response);
+            //console.warn('Son sınav sonuçları API yanıtı:', response);
             this.lastExamResults = [];
           }
           this.isLoadingLastExam = false;
@@ -508,40 +507,6 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
     }, 800);
   }
 
-  private loadStudentProgress(): void {
-    this.isLoadingProgress = true;
-
-    // Öğrenci ilerlemesi için simulated data - gerçek API'ye bağlanabilir
-    setTimeout(() => {
-      this.studentProgress = [
-        {
-          id: 1,
-          name: 'Ahmet Yılmaz',
-          subject: 'Organik Kimya',
-          progress: 85,
-          avatar:
-            'https://ui-avatars.com/api/?name=Ahmet+Yilmaz&background=6366f1&color=fff',
-        },
-        {
-          id: 2,
-          name: 'Fatma Kaya',
-          subject: 'Asit-Baz',
-          progress: 92,
-          avatar:
-            'https://ui-avatars.com/api/?name=Fatma+Kaya&background=10b981&color=fff',
-        },
-        {
-          id: 3,
-          name: 'Mehmet Demir',
-          subject: 'Kimyasal Denge',
-          progress: 78,
-          avatar:
-            'https://ui-avatars.com/api/?name=Mehmet+Demir&background=f59e0b&color=fff',
-        },
-      ];
-      this.isLoadingProgress = false;
-    }, 600);
-  }
 
   private loadNewStudents(): void {
     this.isLoadingNewStudents = true;
@@ -810,7 +775,7 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
       .get<any>('./server/api/ogretmen_haftalik_program.php', { headers })
       .subscribe({
         next: (response) => {
-          console.log('Günlük program API yanıtı:', response);
+         // console.log('Günlük program API yanıtı:', response);
 
           if (response.success) {
             // Bugünün derslerini filtrele
@@ -818,8 +783,8 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
               (ders: any) => ders.ders_gunu === this.todayName
             );
 
-            console.log('Bugünkü dersler:', todayLessons);
-            console.log('Bugünün adı:', this.todayName);
+            // console.log('Bugünkü dersler:', todayLessons);
+            // console.log('Bugünün adı:', this.todayName);
 
             // Dersleri saate göre sırala ve grup bilgilerini organize et
             const groupedLessons = new Map();
@@ -853,20 +818,20 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
               (a: any, b: any) => a.ders_saati.localeCompare(b.ders_saati)
             );
 
-            console.log('İşlenmiş günlük program:', this.dailySchedule);
-            console.log('Toplam grup sayısı:', this.dailySchedule.length);
+            //console.log('İşlenmiş günlük program:', this.dailySchedule);
+            //console.log('Toplam grup sayısı:', this.dailySchedule.length);
             
             // Her grup için detaylı log
             this.dailySchedule.forEach((grup: any, index: number) => {
-              console.log(`Grup ${index + 1}:`, {
+              /*console.log(`Grup ${index + 1}:`, {
                 saat: grup.ders_saati,
                 grup: grup.grup_adi,
                 ogrenci_sayisi: grup.ogrenciler.length,
                 ogrenciler: grup.ogrenciler
-              });
+              });*/
             });
           } else {
-            console.warn('API başarısız yanıt:', response);
+            //console.warn('API başarısız yanıt:', response);
             this.dailySchedule = [];
           }
         },
