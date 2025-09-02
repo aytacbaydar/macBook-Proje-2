@@ -138,18 +138,12 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
     this.http.get<any>(`./server/api/ogretmen_konu_analizi.php?ogretmen_id=${ogretmenId}`).subscribe({
       next: (response) => {
         this.loadingKonuAnalizi = false;
-        console.log('Full response:', response);
+        // console.log('Full response:', response);
         if (response.success && response.data) {
           this.konuAnalizleri = response.data.konu_analizleri || [];
           
           // Veri doğrulama ve temizleme
           this.konuAnalizleri = this.konuAnalizleri.map((konu, index) => {
-            console.log(`Konu ${index + 1}:`, {
-              konu_id: konu.konu_id,
-              konu_adi: konu.konu_adi,
-              originalKonu: konu
-            });
-            
             // Konu ID'sinin var olduğundan emin ol
             if (!konu.konu_id) {
               konu.konu_id = index + 1;
@@ -166,11 +160,6 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
             konu.orta_ogrenciler = konu.orta_ogrenciler || [];
             konu.kotu_ogrenciler = konu.kotu_ogrenciler || [];
             
-            console.log(`Processed konu ${index + 1}:`, {
-              konu_id: konu.konu_id,
-              konu_adi: konu.konu_adi
-            });
-            
             return konu;
           });
           
@@ -182,7 +171,7 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
           console.log('Processed data:', this.konuAnalizleri);
           
           // Debug konu data
-          this.debugKonuData();
+          //this.debugKonuData();
           
           // Force change detection
           setTimeout(() => {
@@ -334,10 +323,10 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
       }).filter(count => count > 0);
       
       const result = questionCounts.length > 0 ? Math.max(...questionCounts) : 0;
-      console.log(`${konu.konu_adi} - Toplam Soru:`, result, 'Students:', allStudents.length);
+      //console.log(`${konu.konu_adi} - Toplam Soru:`, result, 'Students:', allStudents.length);
       return result;
     } catch (error) {
-      console.error('Toplam soru hesaplama hatası:', error);
+      //console.error('Toplam soru hesaplama hatası:', error);
       return 0;
     }
   }
@@ -356,10 +345,10 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
         return total + dogru;
       }, 0);
       
-      console.log(`${konu.konu_adi} - Doğru Cevap:`, result);
+      //console.log(`${konu.konu_adi} - Doğru Cevap:`, result);
       return result;
     } catch (error) {
-      console.error('Doğru cevap hesaplama hatası:', error);
+      //console.error('Doğru cevap hesaplama hatası:', error);
       return 0;
     }
   }
@@ -378,10 +367,10 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
         return total + yanlis;
       }, 0);
       
-      console.log(`${konu.konu_adi} - Yanlış Cevap:`, result);
+      //console.log(`${konu.konu_adi} - Yanlış Cevap:`, result);
       return result;
     } catch (error) {
-      console.error('Yanlış cevap hesaplama hatası:', error);
+      //console.error('Yanlış cevap hesaplama hatası:', error);
       return 0;
     }
   }
@@ -400,10 +389,10 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
         return total + bos;
       }, 0);
       
-      console.log(`${konu.konu_adi} - Boş Cevap:`, result);
+      //console.log(`${konu.konu_adi} - Boş Cevap:`, result);
       return result;
     } catch (error) {
-      console.error('Boş cevap hesaplama hatası:', error);
+      //console.error('Boş cevap hesaplama hatası:', error);
       return 0;
     }
   }
@@ -465,14 +454,14 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
     );
     
     if (missingTopics.length > 0) {
-      console.log('Fetching missing topic names for:', missingTopics.map(k => k.konu_id));
+      //console.log('Fetching missing topic names for:', missingTopics.map(k => k.konu_id));
       
       this.http.get<any>(`./server/api/konu_listesi.php`).subscribe({
         next: (response) => {
-          console.log('Topics API response:', response);
+          //console.log('Topics API response:', response);
           if (response.success && (response.data || response.konular)) {
             const allTopics = response.data || response.konular;
-            console.log('All topics from API:', allTopics);
+            //console.log('All topics from API:', allTopics);
             
             // Update missing topic names
             this.konuAnalizleri.forEach(konu => {
@@ -483,10 +472,10 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
                 );
                 if (topicInfo) {
                   konu.konu_adi = topicInfo.konu_adi || topicInfo.baslik || topicInfo.name || `Konu ${konu.konu_id}`;
-                  console.log(`Updated konu_id ${konu.konu_id} with name: ${konu.konu_adi}`);
+                 // console.log(`Updated konu_id ${konu.konu_id} with name: ${konu.konu_adi}`);
                 } else {
                   konu.konu_adi = `Konu ${konu.konu_id}`;
-                  console.warn(`No topic found for konu_id: ${konu.konu_id}`);
+                  //console.warn(`No topic found for konu_id: ${konu.konu_id}`);
                 }
               }
             });
@@ -526,6 +515,7 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
   }
 
   // Debug method to check data integrity
+  /*
   debugKonuData() {
     console.log('=== KONU ANALIZI DEBUG ===');
     console.log('Total konuAnalizleri:', this.konuAnalizleri.length);
@@ -540,5 +530,5 @@ export class OgretmenKonuAnaliziSayfasiComponent implements OnInit, OnDestroy {
       });
     });
     console.log('=== END DEBUG ===');
-  }
+  }*/
 }

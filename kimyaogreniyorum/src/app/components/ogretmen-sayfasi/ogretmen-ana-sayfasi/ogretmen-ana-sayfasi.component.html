@@ -187,24 +187,6 @@
                   {{ ders.ogrenciler.join(', ') }}
                 </div>
               </div>
-              <div class="lesson-info">
-              <div class="group-name">
-                <i class="fas fa-users me-1"></i>
-                {{ ders.grup_adi }}
-              </div>
-              <div class="students-list">
-                <span class="student-count" *ngIf="ders.ogrenciler && ders.ogrenciler.length > 0">
-                  {{ ders.ogrenciler.length }} öğrenci
-                </span>
-                <span class="student-count" *ngIf="!ders.ogrenciler || ders.ogrenciler.length === 0">
-                  Öğrenci bilgisi alınamadı
-                </span>
-                <div class="student-names" *ngIf="ders.ogrenciler && ders.ogrenciler.length > 0">
-                  {{ ders.ogrenciler.join(', ') }}
-                </div>
-              </div>
-              <div class="lesson-fee">{{ formatCurrency(ders.ucret) }}</div>
-            </div>
             </div>
           </div>
         </div>
