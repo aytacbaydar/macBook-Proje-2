@@ -175,42 +175,98 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
 
   private loadTeacherInfo(): void {
     this.isLoadingInfo = true;
+    
+    // Önce localStorage'dan öğretmen bilgilerini yükle
+    this.setTeacherInfoFromStorage();
+    
+    // Sonra API'den güncel bilgileri al
     this.http.get<any>(`${this.apiUrl}/ogretmen_bilgileri.php`, {
-      headers: this.getAuthHeaders()
+      headers: this.getAuthHeaders(),
+      responseType: 'json'
     }).subscribe({
       next: (response) => {
-        if (response.success && response.data) {
+        console.log('API yanıtı:', response);
+        if (response && response.success && response.data) {
           this.teacherInfo = response.data;
           
+          // teacherName ve teacherAvatar'ı güncelle
+          this.teacherName = this.teacherInfo.adi_soyadi || this.teacherName;
+          this.teacherAvatar = this.teacherInfo.avatar || this.generateAvatarUrl(this.teacherName);
+          
           // mukemmel_ogrenciler alanını güvenli hale getir
-          if (this.teacherInfo) {
-            if (!this.teacherInfo.mukemmel_ogrenciler) {
-              this.teacherInfo.mukemmel_ogrenciler = [];
-            } else if (typeof this.teacherInfo.mukemmel_ogrenciler === 'string') {
-              try {
-                this.teacherInfo.mukemmel_ogrenciler = JSON.parse(this.teacherInfo.mukemmel_ogrenciler);
-              } catch (e) {
-                console.warn('mukemmel_ogrenciler JSON parse hatası:', e);
-                this.teacherInfo.mukemmel_ogrenciler = [];
-              }
-            } else if (!Array.isArray(this.teacherInfo.mukemmel_ogrenciler)) {
+          if (!this.teacherInfo.mukemmel_ogrenciler) {
+            this.teacherInfo.mukemmel_ogrenciler = [];
+          } else if (typeof this.teacherInfo.mukemmel_ogrenciler === 'string') {
+            try {
+              this.teacherInfo.mukemmel_ogrenciler = JSON.parse(this.teacherInfo.mukemmel_ogrenciler);
+            } catch (e) {
+              console.warn('mukemmel_ogrenciler JSON parse hatası:', e);
               this.teacherInfo.mukemmel_ogrenciler = [];
             }
+          } else if (!Array.isArray(this.teacherInfo.mukemmel_ogrenciler)) {
+            this.teacherInfo.mukemmel_ogrenciler = [];
           }
           
-          console.log('Öğretmen bilgileri yüklendi:', this.teacherInfo);
+          console.log('Öğretmen bilgileri başarıyla yüklendi:', this.teacherInfo);
         } else {
-          console.warn('Öğretmen bilgileri yüklenemedi:', response);
-          this.teacherInfo = null;
+          console.warn('API yanıtı başarısız veya data yok:', response);
+          // localStorage'dan yüklenen bilgileri kullan
         }
         this.isLoadingInfo = false;
       },
       error: (error) => {
         console.error('Öğretmen bilgileri yüklenirken hata:', error);
-        this.teacherInfo = null;
+        
+        // Hata detaylarını logla
+        if (error.error && typeof error.error === 'string' && error.error.includes('<!doctype')) {
+          console.error('API HTML döndürüyor, muhtemelen routing hatası veya dosya bulunamadı');
+        }
+        
+        // localStorage'dan yüklenen bilgileri kullan, API hatası olsa da devam et
         this.isLoadingInfo = false;
       }
     });
+  }
+
+  private setTeacherInfoFromStorage(): void {
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        this.teacherName = user.adi_soyadi || 'Öğretmen';
+        this.teacherId = user.id || 0;
+        
+        if (user.avatar && user.avatar.trim() !== '') {
+          this.teacherAvatar = user.avatar;
+        } else {
+          this.teacherAvatar = this.generateAvatarUrl(this.teacherName);
+        }
+        
+        // Temel teacher info oluştur
+        this.teacherInfo = {
+          id: user.id,
+          adi_soyadi: this.teacherName,
+          email: user.email || '',
+          avatar: this.teacherAvatar,
+          mukemmel_ogrenciler: []
+        };
+        
+        console.log('Öğretmen bilgileri localStorage\'dan yüklendi:', {
+          id: user.id,
+          name: this.teacherName,
+          avatar: this.teacherAvatar
+        });
+      } catch (error) {
+        console.error('localStorage parse hatası:', error);
+        this.setDefaultTeacherInfo();
+      }
+    } else {
+      this.setDefaultTeacherInfo();
+    }
+  }
+
+  private generateAvatarUrl(name: string): string {
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=4f46e5&color=fff&size=40&font-size=0.6&rounded=true`;
   }
 
 
