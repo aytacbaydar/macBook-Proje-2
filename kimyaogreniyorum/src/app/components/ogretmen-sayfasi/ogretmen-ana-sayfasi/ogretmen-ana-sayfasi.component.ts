@@ -825,22 +825,25 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
             const groupedLessons = new Map();
 
             todayLessons.forEach((ders: any) => {
-              const key = `${ders.ders_saati}-${ders.grup_adi || ders.grubu}`;
+              // Grup adını belirle - öncelik sırası: grubu > grup_adi
+              const grupAdi = ders.grubu || ders.grup_adi || 'Grup Tanımsız';
+              const key = `${ders.ders_saati}-${grupAdi}`;
 
               if (!groupedLessons.has(key)) {
                 groupedLessons.set(key, {
                   ders_saati: ders.ders_saati,
-                  grup_adi: ders.grup_adi || ders.grubu || 'Grup Tanımsız',
+                  grup_adi: grupAdi,
                   ucret: ders.ucret || '0',
                   ogrenciler: [],
                 });
               }
 
-              // Öğrenci ismini ekle
-              if (ders.ogrenci_adi && ders.ogrenci_adi.trim() !== '') {
+              // Öğrenci ismini ekle - adi_soyadi alanını kontrol et
+              const ogrenciAdi = ders.adi_soyadi || ders.ogrenci_adi;
+              if (ogrenciAdi && ogrenciAdi.trim() !== '') {
                 const grupData = groupedLessons.get(key);
-                if (!grupData.ogrenciler.includes(ders.ogrenci_adi)) {
-                  grupData.ogrenciler.push(ders.ogrenci_adi);
+                if (!grupData.ogrenciler.includes(ogrenciAdi)) {
+                  grupData.ogrenciler.push(ogrenciAdi);
                 }
               }
             });
@@ -851,10 +854,25 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
             );
 
             console.log('İşlenmiş günlük program:', this.dailySchedule);
+            console.log('Toplam grup sayısı:', this.dailySchedule.length);
+            
+            // Her grup için detaylı log
+            this.dailySchedule.forEach((grup: any, index: number) => {
+              console.log(`Grup ${index + 1}:`, {
+                saat: grup.ders_saati,
+                grup: grup.grup_adi,
+                ogrenci_sayisi: grup.ogrenciler.length,
+                ogrenciler: grup.ogrenciler
+              });
+            });
+          } else {
+            console.warn('API başarısız yanıt:', response);
+            this.dailySchedule = [];
           }
         },
         error: (error) => {
           console.error('Günlük ders programı yüklenirken hata:', error);
+          this.dailySchedule = [];
         },
       });
   }
