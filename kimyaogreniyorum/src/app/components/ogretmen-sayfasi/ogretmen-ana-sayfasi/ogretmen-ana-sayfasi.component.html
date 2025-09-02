@@ -104,7 +104,7 @@
                 <h4>{{ student.adi_soyadi }}</h4>
                 <p class="student-email">{{ student.email }}</p>
                 <p class="student-school" *ngIf="student.okulu">{{ student.okulu }} - {{ student.sinifi }}</p>
-                <p class="student-date">{{ formatDate(student.kayit_tarihi || student.created_at) }}</p>
+                <p class="student-date">{{ formatDate(student.kayit_tarihi || student.created_at || '') }}</p>
                 <p class="student-status" style="font-size: 11px; color: #888;">
                   Rütbe: {{ student.rutbe || 'Belirsiz' }}, Öğretmen: {{ student.ogretmeni || 'Atanmamış' }}
                 </p>
