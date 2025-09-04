@@ -141,13 +141,39 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     });
   }
 
+  private getTeacherName(): string | null {
+    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        return user.adi_soyadi || null;
+      } catch (error) {
+        console.error('User parse error:', error);
+        return null;
+      }
+    }
+    return null;
+  }
+
   loadPaymentData(): void {
     this.isLoading = true;
     const headers = this.getAuthHeaders();
 
-    console.log('API çağrısı yapılıyor...');
+    // Öğretmen adını al
+    const teacherName = this.getTeacherName();
+    if (!teacherName) {
+      this.error = 'Öğretmen bilgisi bulunamadı';
+      this.toastr.error(this.error);
+      this.isLoading = false;
+      return;
+    }
 
-    this.http.get<any>('./server/api/ucret_yonetimi.php', { headers })
+    console.log('API çağrısı yapılıyor...', 'Teacher:', teacherName);
+
+    this.http.get<any>('./server/api/ogretmen_ucret_yonetimi.php', { 
+      headers,
+      params: { ogretmen: teacherName }
+    })
       .subscribe({
         next: (response) => {
           console.log('API Response:', response);
@@ -212,9 +238,19 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
       return;
     }
 
-    const headers = this.getAuthHeaders();
+    const teacherName = this.getTeacherName();
+    if (!teacherName) {
+      this.toastr.error('Öğretmen bilgisi bulunamadı');
+      return;
+    }
 
-    this.http.post('./server/api/ucret_yonetimi.php', this.paymentForm, { headers })
+    const headers = this.getAuthHeaders();
+    const paymentData = {
+      ...this.paymentForm,
+      ogretmen: teacherName
+    };
+
+    this.http.post('./server/api/ogretmen_ucret_yonetimi.php', paymentData, { headers })
       .subscribe({
         next: (response: any) => {
           if (response && response.success) {
@@ -257,10 +293,19 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
 
   loadIncomeOverview(): void {
     const headers = this.getAuthHeaders();
+    const teacherName = this.getTeacherName();
+    
+    if (!teacherName) {
+      this.toastr.error('Öğretmen bilgisi bulunamadı');
+      return;
+    }
 
-    console.log('Aylık gelir özeti yükleniyor...');
+    console.log('Aylık gelir özeti yükleniyor...', 'Teacher:', teacherName);
 
-    this.http.get<any>('./server/api/aylik_gelir_ozeti.php', { headers })
+    this.http.get<any>('./server/api/aylik_gelir_ozeti.php', { 
+      headers,
+      params: { ogretmen: teacherName }
+    })
       .subscribe({
         next: (response) => {
           console.log('Aylık gelir API response:', response);
