@@ -152,7 +152,9 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
   monthlyPaymentStats = {
     totalReceived: 0,
     totalTests: 0,
-    totalQuestions: 0
+    totalQuestions: 0,
+    totalPaid: 0, // Added totalPaid
+    totalExpected: 0, // Added totalExpected
   };
   isLoadingMonthlyStats: boolean = false;
 
@@ -1017,14 +1019,20 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
     this.isLoadingMonthlyStats = true;
 
     // Bu ay ödenen ücretleri yükle
+    this.loadMonthlyPaymentStats();
+  }
+
+  private loadMonthlyPaymentStats(): void {
     this.http.get<any>('./server/api/ogretmen_ucret_yonetimi.php', {
-      headers: this.getAuthHeaders()
+      headers: this.getAuthHeaders(),
+      params: { ogretmen: this.teacherName }
     }).subscribe({
       next: (response) => {
+        console.log('Aylık ödeme API yanıtı:', response);
         if (response.success && response.data) {
-          // Bu ay ödenen toplam tutarı hesapla
-          const thisMonthPayments = response.data.thisMonthPayments || [];
-          this.monthlyPaymentStats.totalReceived = thisMonthPayments.reduce((total: number, payment: any) => {
+          this.monthlyPaymentStats.totalReceived = response.data.summary?.totalReceived || 0;
+          this.monthlyPaymentStats.totalExpected = response.data.summary?.totalExpected || 0;
+          this.monthlyPaymentStats.totalPaid = response.data.thisMonthPayments?.reduce((total: number, payment: any) => {
             return total + parseFloat(payment.tutar || '0');
           }, 0);
         }
