@@ -65,18 +65,12 @@ try {
     error_log("Öğretmen adı: " . $teacherName);
     
     // Yeni kayıt olan öğrencileri getir
-    // Kriteria: rutbe boş veya 'bekleme' olan ve son 30 gün içinde kayıt olan kullanıcılar
+    // Kriteria: rutbe = 'yeni' olan kullanıcılar
     $stmt = $conn->prepare("
         SELECT o.*, ob.okulu, ob.sinifi, ob.grubu, ob.ders_gunu, ob.ders_saati, ob.ucret, ob.veli_adi, ob.veli_cep
         FROM ogrenciler o
         LEFT JOIN ogrenci_bilgileri ob ON o.id = ob.ogrenci_id
-        WHERE (
-            o.rutbe = '' OR 
-            o.rutbe IS NULL OR 
-            o.rutbe = 'bekleme' OR
-            (o.rutbe = 'ogrenci' AND (o.ogretmeni = '' OR o.ogretmeni IS NULL))
-        )
-        AND o.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+        WHERE o.rutbe = 'yeni'
         ORDER BY o.created_at DESC
     ");
     
