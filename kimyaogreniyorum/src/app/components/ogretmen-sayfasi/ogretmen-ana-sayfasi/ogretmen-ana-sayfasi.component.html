@@ -90,28 +90,40 @@
           <p class="mt-2 text-muted">Yeni kayıtlar yükleniyor...</p>
         </div>
 
-        <div *ngIf="!isLoadingNewStudents && newStudents && newStudents.length > 0" class="new-students-list">
-          <div *ngFor="let student of newStudents; trackBy: trackByStudentId" class="new-student-card">
-            <div class="card-content">
-              <div class="student-info">
-                <img [src]="student.avatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(student.adi_soyadi) + '&background=4f46e5&color=fff&size=60&font-size=0.6&rounded=true'" 
-                     alt="Avatar" class="student-avatar">
-                <div class="student-details">
-                  <h4>{{ student.adi_soyadi }}</h4>
-                  <p class="student-email">{{ student.email }}</p>
-                  <p class="student-school" *ngIf="student.okulu">{{ student.okulu }} - {{ student.sinifi }}</p>
-                  <p class="student-date">{{ formatDate(student.kayit_tarihi || student.created_at || '') }}</p>
+        <div *ngIf="!isLoadingNewStudents && newStudents && newStudents.length > 0" class="row g-3">
+          <div *ngFor="let student of newStudents; trackBy: trackByStudentId" class="col-12">
+            <div class="card shadow-sm border-0 h-100">
+              <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                  <img [src]="student.avatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(student.adi_soyadi) + '&background=4f46e5&color=fff&size=60&font-size=0.6&rounded=true'" 
+                       alt="Avatar" class="rounded-circle me-3" width="60" height="60">
+                  <div class="flex-grow-1">
+                    <h5 class="card-title mb-1">{{ student.adi_soyadi }}</h5>
+                    <p class="text-primary mb-1 small">{{ student.email }}</p>
+                    <p class="text-muted mb-1 small" *ngIf="student.okulu">
+                      <i class="bi bi-building me-1"></i>{{ student.okulu }} - {{ student.sinifi }}
+                    </p>
+                    <p class="text-muted mb-0 small">
+                      <i class="bi bi-calendar me-1"></i>{{ formatDate(student.kayit_tarihi || student.created_at || '') }}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div class="student-actions">
-                <button class="approve-btn" (click)="approveNewStudent(student.id)" title="Onayla">
-                  <i class="bi bi-check-circle"></i>
-                  <span>Onayla</span>
-                </button>
-                <button class="reject-btn" (click)="rejectNewStudent(student.id)" title="Reddet">
-                  <i class="bi bi-x-circle"></i>
-                  <span>Reddet</span>
-                </button>
+                <div class="d-flex gap-2 justify-content-end">
+                  <button type="button" 
+                          class="btn btn-success btn-sm" 
+                          (click)="approveNewStudent(student.id)" 
+                          title="Öğrenciyi Onayla">
+                    <i class="bi bi-check-circle me-1"></i>
+                    Onayla
+                  </button>
+                  <button type="button" 
+                          class="btn btn-danger btn-sm" 
+                          (click)="rejectNewStudent(student.id)" 
+                          title="Öğrenciyi Reddet">
+                    <i class="bi bi-x-circle me-1"></i>
+                    Reddet
+                  </button>
+                </div>
               </div>
             </div>
           </div>
