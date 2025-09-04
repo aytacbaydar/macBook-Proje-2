@@ -228,10 +228,10 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
 
   private loadTeacherInfo(): void {
     this.isLoadingInfo = true;
-    
+
     // Önce localStorage'dan öğretmen bilgilerini yükle
     this.setTeacherInfoFromStorage();
-    
+
     // Sonra API'den güncel bilgileri al
     this.http.get<any>(`${this.apiUrl}/ogretmen_bilgileri.php`, {
       headers: this.getAuthHeaders(),
@@ -241,11 +241,11 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
         console.log('API yanıtı:', response);
         if (response && response.success && response.data) {
           this.teacherInfo = response.data;
-          
+
           // teacherName ve teacherAvatar'ı güncelle
           this.teacherName = this.teacherInfo?.adi_soyadi || this.teacherName;
           this.teacherAvatar = this.teacherInfo?.avatar || this.generateAvatarUrl(this.teacherName);
-          
+
           console.log('Öğretmen bilgileri başarıyla yüklendi:', this.teacherInfo);
         } else {
           console.warn('API yanıtı başarısız veya data yok:', response);
@@ -255,12 +255,12 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
       },
       error: (error) => {
         //console.error('Öğretmen bilgileri yüklenirken hata:', error);
-        
+
         // Hata detaylarını logla
         if (error.error && typeof error.error === 'string' && error.error.includes('<!doctype')) {
           console.error('API HTML döndürüyor, muhtemelen routing hatası veya dosya bulunamadı');
         }
-        
+
         // localStorage'dan yüklenen bilgileri kullan, API hatası olsa da devam et
         this.isLoadingInfo = false;
       }
@@ -274,13 +274,13 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
         const user = JSON.parse(userStr);
         this.teacherName = user.adi_soyadi || 'Öğretmen';
         this.teacherId = user.id || 0;
-        
+
         if (user.avatar && user.avatar.trim() !== '') {
           this.teacherAvatar = user.avatar;
         } else {
           this.teacherAvatar = this.generateAvatarUrl(this.teacherName);
         }
-        
+
         // Temel teacher info oluştur
         this.teacherInfo = {
           id: user.id,
@@ -289,7 +289,7 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
           avatar: this.teacherAvatar,
           mukemmel_ogrenciler: []
         };
-        
+
         /*console.log('Öğretmen bilgileri localStorage\'dan yüklendi:', {
           id: user.id,
           name: this.teacherName,
@@ -725,7 +725,18 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
   }
 
   formatDate(dateString: string): string {
-    return new Date(dateString).toLocaleDateString('tr-TR');
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('tr-TR');
+  }
+
+  getStudentInitials(fullName: string): string {
+    if (!fullName) return '';
+    const names = fullName.split(' ');
+    if (names.length >= 2) {
+      return (names[0].charAt(0) + names[1].charAt(0)).toUpperCase();
+    }
+    return names[0].charAt(0).toUpperCase();
   }
 
   // Navigation methods
@@ -884,7 +895,7 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
 
             //console.log('İşlenmiş günlük program:', this.dailySchedule);
             //console.log('Toplam grup sayısı:', this.dailySchedule.length);
-            
+
             // Her grup için detaylı log
             this.dailySchedule.forEach((grup: any, index: number) => {
               /*console.log(`Grup ${index + 1}:`, {
@@ -908,7 +919,7 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
 
   loadWorstTopics(): void {
     this.isLoadingWorstTopics = true;
-    
+
     if (!this.teacherInfo?.id) {
       // Eğer teacher info henüz yüklenmediyse, biraz bekleyip tekrar dene
       setTimeout(() => {
@@ -922,14 +933,14 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
     }
 
     const ogretmenId = this.teacherInfo.id;
-    
+
     this.http.get<any>(`${this.apiUrl}/ogretmen_konu_analizi.php?ogretmen_id=${ogretmenId}`, {
       headers: this.getAuthHeaders()
     }).subscribe({
       next: (response) => {
         if (response.success && response.data && response.data.konu_analizleri) {
           const konuAnalizleri = response.data.konu_analizleri;
-          
+
           // Yüzdesi 0'dan büyük olan konuları filtrele, başarı oranına göre sırala ve en kötü 5'ini al
           this.worstTopics = konuAnalizleri
             .filter((konu: any) => parseFloat(konu.ortalama_basari || '0') > 0)
@@ -942,7 +953,7 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
               toplam_ogrenci: parseInt(konu.toplam_ogrenci || '0'),
               cevaplayan_ogrenci: parseInt(konu.cevaplayan_ogrenci || '0')
             }));
-            
+
           // Eksik konu adlarını düzelt
           this.fetchTopicNamesForWorstTopics();
         }
@@ -957,10 +968,10 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
   }
 
   private fetchTopicNamesForWorstTopics(): void {
-    const missingTopics = this.worstTopics.filter(konu => 
+    const missingTopics = this.worstTopics.filter(konu =>
       !konu.konu_adi || konu.konu_adi.startsWith('Konu ')
     );
-    
+
     if (missingTopics.length > 0) {
       this.http.get<any>(`${this.apiUrl}/konu_listesi.php`, {
         headers: this.getAuthHeaders()
@@ -968,10 +979,10 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
         next: (response) => {
           if (response.success && (response.data || response.konular)) {
             const allTopics = response.data || response.konular;
-            
+
             this.worstTopics.forEach(konu => {
               if (!konu.konu_adi || konu.konu_adi.startsWith('Konu ')) {
-                const topicInfo = allTopics.find((topic: any) => 
+                const topicInfo = allTopics.find((topic: any) =>
                   topic.id == konu.konu_id || topic.konu_id == konu.konu_id
                 );
                 if (topicInfo) {
@@ -1004,7 +1015,7 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
 
   private loadMonthlyStats(): void {
     this.isLoadingMonthlyStats = true;
-    
+
     // Bu ay ödenen ücretleri yükle
     this.http.get<any>('./server/api/ogretmen_ucret_yonetimi.php', {
       headers: this.getAuthHeaders()
@@ -1037,26 +1048,26 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
           // Tüm testleri al (sadece yapay zeka değil, hepsini)
           const allTests = response.data || [];
           console.log('Tüm testler:', allTests);
-          
+
           // Deneme sınavı sayısını hesapla (yapay zeka testleri veya test_tipi içeren testler)
-          const aiTests = allTests.filter((test: any) => 
-            test.test_tipi === 'yapay_zeka' || 
-            test.test_tipi === 'ai' || 
+          const aiTests = allTests.filter((test: any) =>
+            test.test_tipi === 'yapay_zeka' ||
+            test.test_tipi === 'ai' ||
             test.sinav_adi?.toLowerCase().includes('yapay') ||
             test.sinav_adi?.toLowerCase().includes('ai') ||
             test.sinav_adi?.toLowerCase().includes('deneme')
           );
-          
+
           this.monthlyPaymentStats.totalTests = aiTests.length;
           console.log('Filtrelenmiş AI testler:', aiTests);
-          
+
           // Toplam soru sayısını hesapla
           this.monthlyPaymentStats.totalQuestions = aiTests.reduce((total: number, test: any) => {
             const soruSayisi = parseInt(test.soru_sayisi || test.toplam_soru || '0');
             console.log(`Test: ${test.sinav_adi}, Soru sayısı: ${soruSayisi}`);
             return total + soruSayisi;
           }, 0);
-          
+
           console.log('Hesaplanan istatistikler:', {
             totalTests: this.monthlyPaymentStats.totalTests,
             totalQuestions: this.monthlyPaymentStats.totalQuestions
@@ -1109,7 +1120,7 @@ export class OgretmenAnaSayfasiComponent implements OnInit {
       }).subscribe({
         next: (response) => {
           if (response.success && response.data) {
-            const teacherStudents = response.data.filter((student: any) => 
+            const teacherStudents = response.data.filter((student: any) =>
               student.rutbe === 'ogrenci' && student.ogretmeni === this.teacherName
             );
             const uniqueGroups = [...new Set(teacherStudents.map((s: any) => s.grubu))].filter(Boolean);
