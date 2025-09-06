@@ -1,4 +1,3 @@
-
 <div class="cevap-anahtari-container">
   <!-- Header -->
   <div class="page-header">
@@ -21,7 +20,7 @@
           <p>Toplam Cevap Anahtarı</p>
         </div>
       </div>
-      
+
       <div class="stat-card">
         <div class="stat-icon success">
           <i class="fas fa-calendar-check"></i>
@@ -31,7 +30,7 @@
           <p>Bu Ay Eklenen</p>
         </div>
       </div>
-      
+
       <div class="stat-card">
         <div class="stat-icon warning">
           <i class="fas fa-chart-line"></i>
@@ -67,7 +66,7 @@
           [(ngModel)]="searchQuery">
       </div>
     </div>
-    
+
     <button 
       type="button" 
       class="btn btn-primary add-btn"
@@ -175,7 +174,7 @@
         <!-- Cevaplar -->
         <div class="cevaplar-section" *ngIf="cevapAnahtari.soru_sayisi > 0">
           <h4><i class="fas fa-list-ol"></i> Cevaplar</h4>
-          
+
           <div class="cevaplar-grid">
             <div *ngFor="let soruNo of getSoruDizisi(cevapAnahtari); trackBy: trackByFn" 
                  class="cevap-item">
@@ -218,101 +217,28 @@
     </div>
 
     <div *ngIf="!loading && filteredCevapAnahtarlari.length === 0" class="empty-state">
-      <i class="fas fa-clipboard-list"></i>
-      <h3>Henüz Cevap Anahtarı Bulunmuyor</h3>
-      <p>İlk cevap anahtarınızı oluşturmak için yukarıdaki "Yeni Cevap Anahtarı" butonunu kullanın.</p>
-    </div>
-
-    <div *ngIf="!loading && filteredCevapAnahtarlari.length > 0" class="cevap-anahtarlari-grid">
-      <div *ngFor="let cevap of filteredCevapAnahtarlari; trackBy: trackByFn" 
-           class="cevap-card" 
-           [class.inactive]="!cevap.aktiflik">
-        
-        <div class="card-header">
-          <div class="title-section">
-            <h3 class="card-title">{{ cevap.sinav_adi }}</h3>
-            <span class="sinav-turu-badge" [attr.data-type]="cevap.sinav_turu">
-              {{ getSinavTuruLabel(cevap.sinav_turu) }}
-            </span>
-          </div>
-          
-          <div class="card-actions">
-            <button type="button" 
-                    class="btn-icon edit-btn" 
-                    (click)="editCevapAnahtari(cevap)" 
-                    title="Düzenle">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button type="button" 
-                    class="btn-icon delete-btn" 
-                    (click)="deleteCevapAnahtari(cevap.id!)" 
-                    title="Sil">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-        </div>
-
-        <div class="card-body">
-          <div class="info-grid">
-            <div class="info-item">
-              <i class="fas fa-calendar"></i>
-              <span>{{ cevap.tarih | date:'dd/MM/yyyy' }}</span>
-            </div>
-            <div class="info-item">
-              <i class="fas fa-question-circle"></i>
-              <span>{{ cevap.soru_sayisi }} Soru</span>
-            </div>
-            <div class="info-item">
-              <i class="fas fa-toggle-on" *ngIf="cevap.aktiflik"></i>
-              <i class="fas fa-toggle-off" *ngIf="!cevap.aktiflik"></i>
-              <span>{{ cevap.aktiflik ? 'Aktif' : 'Pasif' }}</span>
-            </div>
-          </div>
-
-          <!-- Sınav Kapağı -->
-          <div *ngIf="cevap.sinav_kapagi" class="sinav-kapagi">
-            <img [src]="'./server/uploads/' + cevap.sinav_kapagi" 
-                 [alt]="cevap.sinav_adi"
-                 class="kapak-resmi">
-          </div>
-
-          <!-- Cevap Özeti -->
-          <div class="cevap-ozeti">
-            <h5><i class="fas fa-list"></i> Cevap Özeti</h5>
-            <div class="cevap-preview">
-              <div *ngFor="let soruNo of getSoruDizisi(cevap).slice(0, 20); trackBy: trackByFn" 
-                   class="cevap-mini">
-                <span class="soru-no">{{ soruNo }}</span>
-                <span class="cevap-harfi" 
-                      [class.empty]="!cevap.cevaplar['ca' + soruNo]">
-                  {{ cevap.cevaplar['ca' + soruNo] || '-' }}
-                </span>
-              </div>
-              <span *ngIf="getSoruDizisi(cevap).length > 20" class="more-indicator">
-                +{{ getSoruDizisi(cevap).length - 20 }} soru daha...
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <i class="bi bi-file-earmark-check"></i>
+      <h3>Henüz cevap anahtarı bulunmuyor</h3>
+      <p>İlk cevap anahtarınızı oluşturmak için yukarıdaki butonu kullanın.</p>
     </div>
   </div>
-</div>
 
-<!-- Edit Modal -->
-<div class="modal-overlay" *ngIf="showModal && currentEditingCevapAnahtari" (click)="closeEditModal()">
-  <div class="modal-container" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h3><i class="fas fa-edit"></i> Cevap Anahtarını Düzenle</h3>
-      <button type="button" class="close-btn" (click)="closeEditModal()">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
+  <!-- Edit Modal -->
+  <div class="modal-overlay" *ngIf="showModal && isEditing && currentEditingCevapAnahtari" (click)="closeEditModal()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>
+          <i class="bi bi-pencil"></i>
+          Cevap Anahtarını Düzenle
+        </h3>
+        <button class="close-btn" (click)="closeEditModal()">
+          <i class="bi bi-x"></i>
+        </button>
+      </div>
 
-    <div class="modal-body">
-      <form (ngSubmit)="updateCevapAnahtari()">
-        <!-- Temel Bilgiler -->
-        <div class="form-row">
+      <div class="modal-body">
+        <form (ngSubmit)="updateCevapAnahtari()" #editForm="ngForm">
+          <!-- Sınav Adı -->
           <div class="form-group">
             <label for="edit_sinav_adi">Sınav Adı *</label>
             <input 
@@ -320,24 +246,25 @@
               id="edit_sinav_adi"
               class="form-control" 
               [(ngModel)]="currentEditingCevapAnahtari.sinav_adi" 
-              name="edit_sinav_adi"
+              name="sinav_adi"
               required>
           </div>
 
+          <!-- Sınav Türü -->
           <div class="form-group">
             <label for="edit_sinav_turu">Sınav Türü *</label>
             <select 
               id="edit_sinav_turu"
               class="form-control" 
               [(ngModel)]="currentEditingCevapAnahtari.sinav_turu" 
-              name="edit_sinav_turu"
+              name="sinav_turu"
               required>
+              <option value="" disabled>Seçiniz...</option>
               <option *ngFor="let tur of sinavTurleri" [value]="tur.id">{{ tur.label }}</option>
             </select>
           </div>
-        </div>
 
-        <div class="form-row">
+          <!-- Soru Sayısı -->
           <div class="form-group">
             <label for="edit_soru_sayisi">Soru Sayısı *</label>
             <input 
@@ -345,69 +272,99 @@
               id="edit_soru_sayisi"
               class="form-control" 
               [(ngModel)]="currentEditingCevapAnahtari.soru_sayisi" 
-              name="edit_soru_sayisi"
+              name="soru_sayisi"
               min="1" 
-              [max]="maxSoruSayisi"
+              max="100"
               required>
           </div>
 
+          <!-- Tarih -->
           <div class="form-group">
-            <label for="edit_tarih">Sınav Tarihi *</label>
+            <label for="edit_tarih">Tarih *</label>
             <input 
               type="date" 
               id="edit_tarih"
               class="form-control" 
               [(ngModel)]="currentEditingCevapAnahtari.tarih" 
-              name="edit_tarih"
+              name="tarih"
               required>
           </div>
-        </div>
 
-        <div class="form-group">
-          <label class="checkbox-label">
-            <input 
-              type="checkbox" 
-              [(ngModel)]="currentEditingCevapAnahtari.aktiflik" 
-              name="edit_aktiflik">
-            <span class="checkbox-custom"></span>
-            Aktif
-          </label>
-        </div>
-
-        <!-- Cevaplar -->
-        <div class="cevaplar-section">
-          <h4><i class="fas fa-list-ol"></i> Cevaplar</h4>
-          
-          <div class="cevaplar-grid">
-            <div *ngFor="let soruNo of getSoruDizisi(currentEditingCevapAnahtari); trackBy: trackByFn" 
-                 class="cevap-item">
-              <label class="cevap-label">{{ soruNo }}</label>
-              <select 
-                class="form-control cevap-select" 
-                [(ngModel)]="currentEditingCevapAnahtari.cevaplar['ca' + soruNo]" 
-                [name]="'edit_cevap_' + soruNo">
-                <option value="">-</option>
-                <option value="A">A</option>
-                <option value="B">B</option>
-                <option value="C">C</option>
-                <option value="D">D</option>
-                <option value="E">E</option>
-              </select>
+          <!-- Cevaplar -->
+          <div class="form-group">
+            <label>Cevap Anahtarı</label>
+            <div class="cevaplar-grid">
+              <div *ngFor="let i of getSoruDizisi(currentEditingCevapAnahtari); trackBy: trackByFn" class="cevap-item">
+                <label class="soru-label">{{ i }}.</label>
+                <input 
+                  type="text" 
+                  class="cevap-input"
+                  [(ngModel)]="currentEditingCevapAnahtari.cevaplar['ca' + i]" 
+                  [name]="'cevap_' + i"
+                  maxlength="1"
+                  placeholder="?">
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Form Actions -->
-        <div class="form-actions">
-          <button type="button" class="btn btn-secondary" (click)="closeEditModal()">
-            İptal
-          </button>
-          <button type="submit" class="btn btn-primary">
-            <i class="fas fa-save"></i>
-            Güncelle
-          </button>
-        </div>
-      </form>
+          <!-- Konular (Opsiyonel) -->
+          <div class="form-group">
+            <label>Konu Kodları (Opsiyonel)</label>
+            <div class="cevaplar-grid">
+              <div *ngFor="let i of getSoruDizisi(currentEditingCevapAnahtari); trackBy: trackByFn" class="cevap-item">
+                <label class="soru-label">{{ i }}.</label>
+                <input 
+                  type="text" 
+                  class="cevap-input"
+                  [(ngModel)]="currentEditingCevapAnahtari.konular!['ka' + i]" 
+                  [name]="'konu_' + i"
+                  maxlength="10"
+                  placeholder="K1">
+              </div>
+            </div>
+          </div>
+
+          <!-- Video Kodları (Opsiyonel) -->
+          <div class="form-group">
+            <label>Video Kodları (Opsiyonel)</label>
+            <div class="cevaplar-grid">
+              <div *ngFor="let i of getSoruDizisi(currentEditingCevapAnahtari); trackBy: trackByFn" class="cevap-item">
+                <label class="soru-label">{{ i }}.</label>
+                <input 
+                  type="text" 
+                  class="cevap-input"
+                  [(ngModel)]="currentEditingCevapAnahtari.videolar!['va' + i]" 
+                  [name]="'video_' + i"
+                  maxlength="20"
+                  placeholder="V1">
+              </div>
+            </div>
+          </div>
+
+          <!-- Aktiflik -->
+          <div class="form-group">
+            <label>
+              <input 
+                type="checkbox" 
+                [(ngModel)]="currentEditingCevapAnahtari.aktiflik" 
+                name="aktiflik">
+              Aktif
+            </label>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" (click)="closeEditModal()">
+              <i class="bi bi-x-circle me-1"></i>
+              İptal
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="!editForm.valid">
+              <i class="bi bi-check-circle me-1"></i>
+              Güncelle
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>
