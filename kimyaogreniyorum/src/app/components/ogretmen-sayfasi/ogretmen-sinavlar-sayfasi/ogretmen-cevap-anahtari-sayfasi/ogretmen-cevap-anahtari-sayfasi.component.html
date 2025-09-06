@@ -248,29 +248,14 @@
         <div class="exam-card" *ngFor="let cevap of filteredCevapAnahtarlari">
             <!-- Exam Header -->
             <div class="exam-header" [style.background]="getExamTypeColor(cevap.test_turu)">
-                <div class="exam-header-left">
-                    <div class="exam-icon">
-                        <i class="bi bi-file-earmark-text-fill"></i>
-                    </div>
+                <div class="exam-meta">
                     <div class="exam-info">
-                        <h3 class="exam-title">{{ cevap.test_adi }}</h3>
-                        <div class="exam-meta">
-                            <span class="exam-type">
-                                <i class="bi bi-tag-fill me-1"></i>
-                                {{ getSinavTuruLabel(cevap.test_turu) }}
-                            </span>
-                            <span class="exam-date">
-                                <i class="bi bi-calendar3 me-1"></i>
-                                {{ cevap.tarih }}
-                            </span>
-                            <span class="question-count">
-                                <i class="bi bi-list-ol me-1"></i>
-                                {{ cevap.soru_sayisi }} soru
-                            </span>
-                            <span class="aktiflik-badge" [class.active]="cevap.aktiflik"
-                                [class.inactive]="!cevap.aktiflik">
-                                <i class="bi" [class.bi-check-circle-fill]="cevap.aktiflik"
-                                    [class.bi-x-circle-fill]="!cevap.aktiflik"></i>
+                        <h3 class="exam-title">{{ cevap.test_adi || 'Test Adı Belirtilmemiş' }}</h3>
+                        <div class="exam-details">
+                            <span class="exam-type">{{ getSinavTuruLabel(cevap.test_turu) }}</span>
+                            <span class="exam-date">{{ cevap.tarih | date:'dd/MM/yyyy' }}</span>
+                            <span class="question-count">{{ cevap.soru_sayisi }} soru</span>
+                            <span class="status" [class]="cevap.aktiflik ? 'active' : 'inactive'">
                                 {{ cevap.aktiflik ? 'Aktif' : 'Pasif' }}
                             </span>
                         </div>
@@ -365,7 +350,7 @@
                     <div class="form-grid">
                         <div class="form-field">
                             <label class="field-label">Sınav Adı</label>
-                            <input type="text" class="form-input" [(ngModel)]="currentEditingCevapAnahtari.sinav_adi"
+                            <input type="text" class="form-input" [(ngModel)]="currentEditingCevapAnahtari.test_adi"
                                 name="edit_sinav_adi" required>
                         </div>
 

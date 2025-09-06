@@ -36,6 +36,11 @@ export class OgretmenCevapAnahtariSayfasiComponent
   // Soruları kolay yönetmek için dizi
   sorular: number[] = [];
   cevapForm!: FormGroup<any>;
+  // Düzenleme modu için eklenecek değişkenler
+  isEditing = false;
+  showModal = false;
+  currentEditingCevapAnahtari: any = null; // Changed to 'any' to accommodate potential string JSONs before parsing
+
   constructor(private http: HttpClient) {}
   ngOnInit() {
     this.initModel();
@@ -44,7 +49,7 @@ export class OgretmenCevapAnahtariSayfasiComponent
 
     // ESC tuşu ile modalı kapatma
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && this.editMode) {
+      if (event.key === 'Escape' && this.isEditing) { // Changed from this.editMode to this.isEditing
         this.cancelEdit();
       }
     });
@@ -283,40 +288,27 @@ export class OgretmenCevapAnahtariSayfasiComponent
     // Hiçbir veri bulunamadıysa boş dizi döndür
     return [];
   }
-  // Düzenleme modu için eklenecek değişkenler
-  editMode = false;
-  currentEditingCevapAnahtari: any = null;
+
 
   // Düzenleme modunu açma metodu
-  editCevapAnahtari(cevap: any) {
-    this.editMode = true;
-    // Derin kopya oluştur, böylece orijinal veriyi bozmayız
-    this.currentEditingCevapAnahtari = JSON.parse(JSON.stringify(cevap));
+  editCevapAnahtari(cevapAnahtari: CevapAnahtari): void {
+    // Deep copy the object to avoid reference issues
+    this.currentEditingCevapAnahtari = {
+      ...cevapAnahtari,
+      cevaplar: { ...(cevapAnahtari.cevaplar || {}) }, // Handle cases where cevaplar might be null or undefined
+      konular: { ...(cevapAnahtari.konular || {}) },   // Handle cases where konular might be null or undefined
+      videolar: { ...(cevapAnahtari.videolar || {}) }  // Handle cases where videolar might be null or undefined
+    };
 
-    // JSON string olarak gelen verileri parse et (eğer zaten parse edilmemişse)
-    try {
-      if (typeof this.currentEditingCevapAnahtari.cevaplar === 'string') {
-        this.currentEditingCevapAnahtari.cevaplar = JSON.parse(this.currentEditingCevapAnahtari.cevaplar);
-      }
-      if (typeof this.currentEditingCevapAnahtari.konular === 'string') {
-        this.currentEditingCevapAnahtari.konular = JSON.parse(this.currentEditingCevapAnahtari.konular);
-      }
-      if (typeof this.currentEditingCevapAnahtari.videolar === 'string') {
-        this.currentEditingCevapAnahtari.videolar = JSON.parse(this.currentEditingCevapAnahtari.videolar);
-      }
-    } catch (parseError) {
-      console.error('Düzenleme için JSON parse hatası:', parseError);
-      // Parse hatası durumunda boş objeler ata
-      if (typeof this.currentEditingCevapAnahtari.cevaplar === 'string') {
-        this.currentEditingCevapAnahtari.cevaplar = {};
-      }
-      if (typeof this.currentEditingCevapAnahtari.konular === 'string') {
-        this.currentEditingCevapAnahtari.konular = {};
-      }
-      if (typeof this.currentEditingCevapAnahtari.videolar === 'string') {
-        this.currentEditingCevapAnahtari.videolar = {};
-      }
+    // Ensure the test name is displayed properly
+    if (!this.currentEditingCevapAnahtari.test_adi || this.currentEditingCevapAnahtari.test_adi.trim() === '') {
+      this.currentEditingCevapAnahtari.test_adi = 'Test Adı Belirtilmemiş';
     }
+
+    this.isEditing = true;
+    this.showModal = true;
+
+    console.log('Düzenleme için yüklenen veri:', this.currentEditingCevapAnahtari);
 
     // Soru sayısına göre düzenleme formunu güncelle
     if (this.currentEditingCevapAnahtari.soru_sayisi) {
@@ -325,8 +317,8 @@ export class OgretmenCevapAnahtariSayfasiComponent
 
     // Kapak resim önizlemesi için URL oluştur
     if (this.currentEditingCevapAnahtari.sinav_kapagi) {
-      this.imagePreview =
-        '/uploads/' + this.currentEditingCevapAnahtari.sinav_kapagi;
+      // Assuming uploads are in a /uploads directory
+      this.imagePreview = '/uploads/' + this.currentEditingCevapAnahtari.sinav_kapagi;
     } else {
       this.imagePreview = null;
     }
@@ -337,7 +329,8 @@ export class OgretmenCevapAnahtariSayfasiComponent
 
   // Düzenleme modunu iptal etme metodu
   cancelEdit() {
-    this.editMode = false;
+    this.isEditing = false;
+    this.showModal = false;
     this.currentEditingCevapAnahtari = null;
     this.imagePreview = null;
 
@@ -421,13 +414,10 @@ export class OgretmenCevapAnahtariSayfasiComponent
           this.submitting = false;
           if (response.success) {
             this.showSuccess('Cevap anahtarı başarıyla güncellendi.');
-            this.editMode = false;
-            this.currentEditingCevapAnahtari = null;
-            this.imagePreview = null;
+            this.cancelEdit(); // Use cancelEdit to reset state and close modal
             this.loadCevapAnahtarlari(); // Listeyi yenile
 
-            // Scroll'u geri etkinleştir
-            document.body.style.overflow = '';
+            // Scroll'u geri etkinleştir already handled in cancelEdit
           } else {
             this.showError(response.message || 'Bir hata oluştu.');
           }
@@ -587,5 +577,41 @@ export class OgretmenCevapAnahtariSayfasiComponent
     return this.konular.filter((konu) =>
       konu.konu_adi.toLowerCase().includes(searchTerm.toLowerCase())
     );
+  }
+
+  // Added a placeholder for getAuthHeaders as it's used but not defined in the original snippet
+  private getAuthHeaders(): HttpHeaders {
+    const token = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!).token : '';
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+  }
+
+  // Added validateCevapAnahtari and closeModal placeholders
+  private validateCevapAnahtari(): boolean {
+    // Implement validation logic here
+    if (!this.currentEditingCevapAnahtari.test_adi || this.currentEditingCevapAnahtari.test_adi.trim() === '') {
+      this.showError('Test adı boş olamaz.');
+      return false;
+    }
+    if (!this.currentEditingCevapAnahtari.test_turu) {
+      this.showError('Test türü seçilmelidir.');
+      return false;
+    }
+    if (this.currentEditingCevapAnahtari.soru_sayisi <= 0) {
+      this.showError('Soru sayısı 0\'dan büyük olmalıdır.');
+      return false;
+    }
+    // Add more validation as needed...
+    return true;
+  }
+
+  private closeModal(): void {
+    this.isEditing = false;
+    this.showModal = false;
+    this.currentEditingCevapAnahtari = null;
+    this.imagePreview = null;
+    document.body.style.overflow = ''; // Ensure scroll is re-enabled
   }
 }
