@@ -250,7 +250,7 @@
             <div class="exam-header" [style.background]="getExamTypeColor(cevap.test_turu)">
                 <div class="exam-meta">
                     <div class="exam-info">
-                        <h3 class="exam-title">{{ cevap.test_adi || 'Test Adı Belirtilmemiş' }}</h3>
+                        <h3 class="exam-title">{{ cevap.sinav_adi || 'Test Adı Belirtilmemiş' }}</h3>
                         <div class="exam-details">
                             <span class="exam-type">{{ getSinavTuruLabel(cevap.test_turu) }}</span>
                             <span class="exam-date">{{ cevap.tarih | date:'dd/MM/yyyy' }}</span>

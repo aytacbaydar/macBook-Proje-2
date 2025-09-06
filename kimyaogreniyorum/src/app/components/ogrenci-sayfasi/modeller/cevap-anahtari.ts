@@ -1,6 +1,6 @@
 export class CevapAnahtari {
   id?: number;
-  test_adi: string;
+  sinav_adi: string;
   test_turu: string;
   soru_sayisi: number;
   tarih: string;
@@ -16,7 +16,7 @@ export class CevapAnahtari {
 
   constructor(data?: Partial<CevapAnahtari>) {
     this.id = data?.id;
-    this.test_adi = data?.test_adi || '';
+    this.sinav_adi = data?.sinav_adi || '';
     this.test_turu = data?.test_turu || '';
     this.soru_sayisi = data?.soru_sayisi || 0;
     this.tarih = data?.tarih || '';

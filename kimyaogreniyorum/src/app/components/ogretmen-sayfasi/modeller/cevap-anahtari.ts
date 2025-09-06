@@ -1,6 +1,6 @@
 export class CevapAnahtari {
   id?: number;
-  test_adi: string;
+  sinav_adi: string;
   test_turu: string;
   soru_sayisi: number;
   tarih: string;
@@ -16,7 +16,7 @@ export class CevapAnahtari {
 
   constructor(data?: Partial<CevapAnahtari>) {
     this.id = data?.id;
-    this.test_adi = data?.test_adi || '';
+    this.sinav_adi = data?.sinav_adi || '';
     this.test_turu = data?.test_turu || '';
     this.soru_sayisi = data?.soru_sayisi || 0;
     this.tarih = data?.tarih || '';
@@ -31,7 +31,7 @@ export class CevapAnahtari {
   static fromJson(json: any): CevapAnahtari {
     return new CevapAnahtari({
       id: json.id,
-      test_adi: json.test_adi,
+      sinav_adi: json.sinav_adi,
       test_turu: json.test_turu,
       soru_sayisi: json.soru_sayisi,
       tarih: json.tarih,
@@ -56,7 +56,7 @@ export class CevapAnahtari {
   toJson(): any {
     return {
       id: this.id,
-      test_adi: this.test_adi,
+      sinav_adi: this.sinav_adi,
       test_turu: this.test_turu,
       soru_sayisi: this.soru_sayisi,
       tarih: this.tarih,
