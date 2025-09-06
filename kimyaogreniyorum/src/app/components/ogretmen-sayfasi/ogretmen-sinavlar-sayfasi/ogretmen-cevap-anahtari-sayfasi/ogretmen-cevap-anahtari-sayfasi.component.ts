@@ -1,8 +1,19 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CevapAnahtari } from '../../modeller/cevap-anahtari';
 
+interface CevapAnahtariInterface {
+  id?: number;
+  sinav_adi: string;
+  sinav_turu: string;
+  soru_sayisi: number;
+  tarih: string;
+  sinav_kapagi?: string;
+  cevaplar: { [key: string]: string };
+  konular?: { [key: string]: string };
+  videolar?: { [key: string]: string };
+  aktiflik: boolean;
+  created_at?: string;
+}
 
 @Component({
   selector: 'app-ogretmen-cevap-anahtari-sayfasi',
@@ -10,22 +21,37 @@ import { CevapAnahtari } from '../../modeller/cevap-anahtari';
   templateUrl: './ogretmen-cevap-anahtari-sayfasi.component.html',
   styleUrl: './ogretmen-cevap-anahtari-sayfasi.component.scss',
 })
-export class OgretmenCevapAnahtariSayfasiComponent
-  implements OnInit, OnDestroy
-{
-  cevapAnahtari: CevapAnahtari = new CevapAnahtari();
+export class OgretmenCevapAnahtariSayfasiComponent implements OnInit, OnDestroy {
+  // Ana cevap anahtarı verisi
+  cevapAnahtari: CevapAnahtariInterface = {
+    sinav_adi: '',
+    sinav_turu: '',
+    soru_sayisi: 50,
+    tarih: this.formatDate(new Date()),
+    cevaplar: {},
+    konular: {},
+    videolar: {},
+    aktiflik: true
+  };
+
+  // UI durumları
   imagePreview: string | null = null;
   submitting = false;
   successMessage = '';
   errorMessage = '';
-  cevapAnahtarlari: CevapAnahtari[] = [];
   loading = true;
   maxSoruSayisi = 100;
   searchQuery = '';
   showAddForm = false;
   error: string | null = null;
-  konular: any[] = [];
-  loadingKonular = false;
+
+  // Liste verileri
+  cevapAnahtarlari: CevapAnahtariInterface[] = [];
+
+  // Düzenleme modu
+  isEditing = false;
+  showModal = false;
+  currentEditingCevapAnahtari: CevapAnahtariInterface | null = null;
 
   sinavTurleri = [
     { id: 'TYT', label: 'TYT Deneme' },
@@ -33,179 +59,35 @@ export class OgretmenCevapAnahtariSayfasiComponent
     { id: 'TAR', label: 'Tarama Sınavı' },
     { id: 'TEST', label: 'Konu Testi' },
   ];
-  // Soruları kolay yönetmek için dizi
-  sorular: number[] = [];
-  cevapForm!: FormGroup<any>;
-  // Düzenleme modu için eklenecek değişkenler
-  isEditing = false;
-  showModal = false;
-  currentEditingCevapAnahtari: any = null; // Changed to 'any' to accommodate potential string JSONs before parsing
 
   constructor(private http: HttpClient) {}
-  ngOnInit() {
-    this.initModel();
+
+  ngOnInit(): void {
     this.loadCevapAnahtarlari();
-    this.loadKonular();
-
-    // ESC tuşu ile modalı kapatma
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && this.isEditing) { // Changed from this.editMode to this.isEditing
-        this.cancelEdit();
-      }
-    });
+    this.initializeCevaplar();
   }
-  initModel() {
-    const today = new Date();
-    this.cevapAnahtari = new CevapAnahtari({
-      id: undefined,
-      test_adi: '',
-      test_turu: '',
-      soru_sayisi: 30,
-      tarih: this.formatDate(today),
-      sinav_kapagi: '',
-      cevaplar: {},
-      konular: {},
-      videolar: {},
-      aktiflik: true,
-    });
 
-    // Varsayılan 20 soru için soruları güncelle
-    this.updateSorular(7);
+  ngOnDestroy() {
+    document.body.style.overflow = '';
   }
-  updateSorular(count: number) {
-    this.cevapAnahtari.soru_sayisi = count;
-    this.sorular = Array(count)
-      .fill(0)
-      .map((_, i) => i + 1);
 
-    // Her soru için boş varsayılan değerler oluştur
-    for (let i = 1; i <= count; i++) {
-      if (!this.cevapAnahtari.cevaplar[`ca${i}`]) {
-        this.cevapAnahtari.cevaplar[`ca${i}`] = '';
-      }
-      if (!this.cevapAnahtari.konular[`ka${i}`]) {
-        this.cevapAnahtari.konular[`ka${i}`] = '';
-      }
-      if (!this.cevapAnahtari.videolar[`va${i}`]) {
-        this.cevapAnahtari.videolar[`va${i}`] = '';
-      }
-    }
-  }
-  onImageSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      // Dosya seçildiğinde önizleme göster
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.imagePreview = reader.result as string;
-      };
-      reader.readAsDataURL(file);
-      // Dosyayı formun değerine ata
-      this.cevapAnahtari.sinav_kapagi = file.name;
-    }
-  }
-  submitForm() {
-    // Veri doğrulama
-    if (
-      !this.cevapAnahtari.test_adi ||
-      !this.cevapAnahtari.test_turu ||
-      this.cevapAnahtari.soru_sayisi <= 0 ||
-      !this.cevapAnahtari.tarih
-    ) {
-      this.showError('Lütfen zorunlu alanları doldurun.');
-      return;
-    }
-
-    // Cevapları doğrula
-    let cevaplarinTamamiVar = true;
-    for (let i = 1; i <= this.cevapAnahtari.soru_sayisi; i++) {
-      if (!this.cevapAnahtari.cevaplar[`ca${i}`]) {
-        cevaplarinTamamiVar = false;
-        break;
-      }
-    }
-
-    if (!cevaplarinTamamiVar) {
-      this.showError('Lütfen tüm soruların cevaplarını girin.');
-      return;
-    }
-    this.submitting = true;
-    this.successMessage = '';
-    this.errorMessage = '';
-    // Form verilerini FormData nesnesine dönüştür
-    const formData = new FormData();
-
-    // Ana form değerlerini FormData'ya ekle
-    formData.append('test_adi', this.cevapAnahtari.test_adi);
-    formData.append('test_turu', this.cevapAnahtari.test_turu);
-    formData.append('soru_sayisi', this.cevapAnahtari.soru_sayisi.toString());
-    formData.append('tarih', this.cevapAnahtari.tarih);
-
-    // JSON verilerini ekle
-    formData.append('cevaplar', JSON.stringify(this.cevapAnahtari.cevaplar));
-    formData.append('konular', JSON.stringify(this.cevapAnahtari.konular));
-    formData.append('videolar', JSON.stringify(this.cevapAnahtari.videolar));
-    formData.append('aktiflik', this.cevapAnahtari.aktiflik ? '1' : '0');
-
-    // Dosya ekle
-    const fileInput = document.getElementById(
-      'sinav_kapagi'
-    ) as HTMLInputElement;
-    if (fileInput.files && fileInput.files.length > 0) {
-      formData.append('sinav_kapagi', fileInput.files[0]);
-    }
-    // API'ye gönder
-    this.http.post(`./server/api/cevap-anahtari-ekle.php`, formData).subscribe(
-      (response: any) => {
-        this.submitting = false;
-        if ((response as { success: boolean; data: any[] }).success) {
-          this.showSuccess('Cevap anahtarı başarıyla kaydedildi.');
-          this.initModel();
-          this.imagePreview = null;
-          // Dosya input'unu temizle
-          if (fileInput) fileInput.value = '';
-          this.loadCevapAnahtarlari(); // Listeyi yenile
-        } else {
-          this.showError(response.message || 'Bir hata oluştu.');
-        }
-      },
-      (error) => {
-        this.submitting = false;
-        this.showError(
-          'Sunucu hatası: ' + (error.message || 'Bilinmeyen bir hata oluştu.')
-        );
-      }
-    );
-  }
-  loadCevapAnahtarlari() {
-    this.loading = true;
-    this.error = null;
-
-    // Token'ı al ve kontrol et
+  // Auth headers
+  private getAuthHeaders(): HttpHeaders {
     let token = '';
-    let user = null;
     const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
     if (userStr) {
-      try {
-        user = JSON.parse(userStr);
-        token = user.token || '';
-        console.log('Token bulundu:', token ? 'Var' : 'Yok');
-        console.log('Kullanıcı bilgileri:', { id: user.id, name: user.adi_soyadi, rutbe: user.rutbe });
-      } catch (e) {
-        console.error('Kullanıcı bilgisi parse hatası:', e);
-      }
+      const user = JSON.parse(userStr);
+      token = user.token || '';
     }
-
-    if (!token) {
-      this.loading = false;
-      this.error = 'Oturum bilgileri bulunamadı. Lütfen tekrar giriş yapın.';
-      return;
-    }
-
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`,
     });
+  }
+
+  // Cevap anahtarlarını yükle
+  loadCevapAnahtarlari() {
+    this.loading = true;
+    const headers = this.getAuthHeaders();
 
     console.log('API çağrısı yapılıyor: cevap-anahtarlari-listele.php');
 
@@ -215,7 +97,6 @@ export class OgretmenCevapAnahtariSayfasiComponent
         this.loading = false;
         if (response.success) {
           this.cevapAnahtarlari = (response.data || []).map((item: any) => {
-            // JSON string olarak gelen verileri parse et
             try {
               if (typeof item.cevaplar === 'string') {
                 item.cevaplar = JSON.parse(item.cevaplar);
@@ -228,7 +109,6 @@ export class OgretmenCevapAnahtariSayfasiComponent
               }
             } catch (parseError) {
               console.error('JSON parse hatası:', parseError, item);
-              // Parse hatası durumunda boş objeler ata
               if (typeof item.cevaplar === 'string') item.cevaplar = {};
               if (typeof item.konular === 'string') item.konular = {};
               if (typeof item.videolar === 'string') item.videolar = {};
@@ -236,14 +116,11 @@ export class OgretmenCevapAnahtariSayfasiComponent
             return item;
           });
           console.log('Yüklenen cevap anahtarları sayısı:', this.cevapAnahtarlari.length);
-          console.log('İlk cevap anahtarı örneği:', this.cevapAnahtarlari[0]);
         } else {
           console.error('API hatası:', response);
           this.cevapAnahtarlari = [];
           this.error = response.error || response.message || 'Bilinmeyen hata';
-          this.showError(
-            'Cevap anahtarları yüklenirken bir hata oluştu: ' + this.error
-          );
+          this.showError('Cevap anahtarları yüklenirken bir hata oluştu: ' + this.error);
         }
       },
       error: (error) => {
@@ -255,19 +132,34 @@ export class OgretmenCevapAnahtariSayfasiComponent
       },
     });
   }
+
+  // Cevapları başlat
+  initializeCevaplar() {
+    this.cevapAnahtari.cevaplar = {};
+    this.cevapAnahtari.konular = {};
+    this.cevapAnahtari.videolar = {};
+
+    for (let i = 1; i <= this.cevapAnahtari.soru_sayisi; i++) {
+      this.cevapAnahtari.cevaplar[`ca${i}`] = '';
+      this.cevapAnahtari.konular[`ka${i}`] = '';
+      this.cevapAnahtari.videolar[`va${i}`] = '';
+    }
+  }
+
+  // Soru sayısı değiştiğinde
+  onSoruSayisiChange() {
+    this.initializeCevaplar();
+  }
+
+  // Soru dizisini al
   getSoruDizisi(cevap: any): number[] {
-    // Eğer cevap.soru_sayisi varsa ve sayısal bir değerse, o sayıyı kullan
     if (cevap.soru_sayisi && !isNaN(Number(cevap.soru_sayisi))) {
-      console.log('Soru sayısı:', cevap.soru_sayisi); // Debug için
       return Array(Number(cevap.soru_sayisi))
         .fill(0)
-        .map((_, i) => i + 1); // 1-based array döndür
+        .map((_, i) => i + 1);
     }
 
-    // Eğer cevap.soru_sayisi yoksa veya sayısal değilse, cevaplar nesnesinin anahtarlarına bak
     if (cevap.cevaplar) {
-      console.log('Cevaplar:', cevap.cevaplar); // Debug için
-      // ca1, ca2, ca3 gibi anahtarları bul ve en büyük sayıyı tespit et
       const keys = Object.keys(cevap.cevaplar);
       let maxIndex = 0;
 
@@ -279,205 +171,190 @@ export class OgretmenCevapAnahtariSayfasiComponent
           }
         }
       }
-
-      return Array(maxIndex)
-        .fill(0)
-        .map((_, i) => i + 1); // 1-based array döndür
+      return Array(maxIndex).fill(0).map((_, i) => i + 1);
     }
 
-    // Hiçbir veri bulunamadıysa boş dizi döndür
     return [];
   }
 
+  // Form gönderme
+  onSubmit() {
+    if (this.submitting) return;
 
-  // Düzenleme modunu açma metodu
-  editCevapAnahtari(cevapAnahtari: CevapAnahtari): void {
-    // Deep copy the object to avoid reference issues
-    this.currentEditingCevapAnahtari = {
-      ...cevapAnahtari,
-      cevaplar: { ...(cevapAnahtari.cevaplar || {}) }, // Handle cases where cevaplar might be null or undefined
-      konular: { ...(cevapAnahtari.konular || {}) },   // Handle cases where konular might be null or undefined
-      videolar: { ...(cevapAnahtari.videolar || {}) }  // Handle cases where videolar might be null or undefined
-    };
-
-    // Ensure the test name is displayed properly
-    if (!this.currentEditingCevapAnahtari.test_adi || this.currentEditingCevapAnahtari.test_adi.trim() === '') {
-      this.currentEditingCevapAnahtari.test_adi = 'Test Adı Belirtilmemiş';
-    }
-
-    this.isEditing = true;
-    this.showModal = true;
-
-    console.log('Düzenleme için yüklenen veri:', this.currentEditingCevapAnahtari);
-
-    // Soru sayısına göre düzenleme formunu güncelle
-    if (this.currentEditingCevapAnahtari.soru_sayisi) {
-      this.updateEditSorular(this.currentEditingCevapAnahtari.soru_sayisi);
-    }
-
-    // Kapak resim önizlemesi için URL oluştur
-    if (this.currentEditingCevapAnahtari.sinav_kapagi) {
-      // Assuming uploads are in a /uploads directory
-      this.imagePreview = '/uploads/' + this.currentEditingCevapAnahtari.sinav_kapagi;
-    } else {
-      this.imagePreview = null;
-    }
-
-    // Modal açıldığında scroll'u engelle
-    document.body.style.overflow = 'hidden';
-  }
-
-  // Düzenleme modunu iptal etme metodu
-  cancelEdit() {
-    this.isEditing = false;
-    this.showModal = false;
-    this.currentEditingCevapAnahtari = null;
-    this.imagePreview = null;
-
-    // Scroll'u geri etkinleştir
-    document.body.style.overflow = '';
-  }
-
-  // Modal backdrop click handler
-  onModalBackdropClick(event: MouseEvent) {
-    // Sadece backdrop'a tıklandığında modalı kapat
-    if (event.target === event.currentTarget) {
-      this.cancelEdit();
-    }
-  }
-
-  // Düzenleme formunu gönderme
-  submitEditForm() {
-    if (
-      !this.currentEditingCevapAnahtari ||
-      !this.currentEditingCevapAnahtari.id
-    ) {
-      this.showError('Düzenlenecek kayıt bulunamadı.');
+    if (!this.cevapAnahtari.sinav_adi.trim()) {
+      this.showError('Sınav adı gereklidir.');
       return;
     }
 
-    // Veri doğrulama
-    if (
-      !this.currentEditingCevapAnahtari.test_adi ||
-      !this.currentEditingCevapAnahtari.test_turu ||
-      this.currentEditingCevapAnahtari.soru_sayisi <= 0 ||
-      !this.currentEditingCevapAnahtari.tarih
-    ) {
-      this.showError('Lütfen tüm zorunlu alanları doldurun.');
+    if (!this.cevapAnahtari.sinav_turu) {
+      this.showError('Sınav türü seçilmelidir.');
+      return;
+    }
+
+    if (this.cevapAnahtari.soru_sayisi <= 0) {
+      this.showError('Soru sayısı 0\'dan büyük olmalıdır.');
       return;
     }
 
     this.submitting = true;
-    this.successMessage = '';
-    this.errorMessage = '';
 
-    // FormData nesnesi oluştur
     const formData = new FormData();
-    formData.append('id', this.currentEditingCevapAnahtari.id);
-    formData.append('test_adi', this.currentEditingCevapAnahtari.test_adi);
-    formData.append('test_turu', this.currentEditingCevapAnahtari.test_turu);
-    formData.append(
-      'soru_sayisi',
-      this.currentEditingCevapAnahtari.soru_sayisi.toString()
-    );
-    formData.append('tarih', this.currentEditingCevapAnahtari.tarih);
-    formData.append(
-      'cevaplar',
-      JSON.stringify(this.currentEditingCevapAnahtari.cevaplar)
-    );
-    formData.append(
-      'konular',
-      JSON.stringify(this.currentEditingCevapAnahtari.konular)
-    );
-    formData.append(
-      'videolar',
-      JSON.stringify(this.currentEditingCevapAnahtari.videolar)
-    );
-    formData.append(
-      'aktiflik',
-      this.currentEditingCevapAnahtari.aktiflik ? '1' : '0'
-    );
+    formData.append('sinav_adi', this.cevapAnahtari.sinav_adi);
+    formData.append('sinav_turu', this.cevapAnahtari.sinav_turu);
+    formData.append('soru_sayisi', this.cevapAnahtari.soru_sayisi.toString());
+    formData.append('tarih', this.cevapAnahtari.tarih);
+    formData.append('cevaplar', JSON.stringify(this.cevapAnahtari.cevaplar));
+    formData.append('konular', JSON.stringify(this.cevapAnahtari.konular || {}));
+    formData.append('videolar', JSON.stringify(this.cevapAnahtari.videolar || {}));
+    formData.append('aktiflik', this.cevapAnahtari.aktiflik ? '1' : '0');
 
-    // Dosya ekle (eğer varsa)
-    const fileInput = document.getElementById(
-      'edit_sinav_kapagi'
-    ) as HTMLInputElement;
-    if (fileInput && fileInput.files && fileInput.files.length > 0) {
+    const fileInput = document.getElementById('sinav_kapagi') as HTMLInputElement;
+    if (fileInput?.files && fileInput.files.length > 0) {
       formData.append('sinav_kapagi', fileInput.files[0]);
     }
 
-    // API'ye gönder
-    this.http
-      .post(`./server/api/cevap-anahtari-guncelle.php`, formData)
-      .subscribe(
-        (response: any) => {
-          this.submitting = false;
-          if (response.success) {
-            this.showSuccess('Cevap anahtarı başarıyla güncellendi.');
-            this.cancelEdit(); // Use cancelEdit to reset state and close modal
-            this.loadCevapAnahtarlari(); // Listeyi yenile
-
-            // Scroll'u geri etkinleştir already handled in cancelEdit
-          } else {
-            this.showError(response.message || 'Bir hata oluştu.');
-          }
-        },
-        (error) => {
-          this.submitting = false;
-          console.error('Güncelleme hatası:', error);
-          this.showError(
-            'Sunucu hatası: ' + (error.message || 'Bilinmeyen bir hata oluştu.')
-          );
+    this.http.post(`./server/api/cevap-anahtari-ekle.php`, formData).subscribe(
+      (response: any) => {
+        this.submitting = false;
+        if (response.success) {
+          this.showSuccess('Cevap anahtarı başarıyla kaydedildi.');
+          this.resetForm();
+          this.loadCevapAnahtarlari();
+        } else {
+          this.showError(response.message || 'Bir hata oluştu.');
         }
-      );
+      },
+      (error) => {
+        this.submitting = false;
+        this.showError('Sunucu hatası: ' + (error.message || 'Bilinmeyen bir hata oluştu.'));
+      }
+    );
   }
 
-  // Klavye kısayolları için listener ekleyelim
+  // Formu sıfırla
+  resetForm() {
+    this.cevapAnahtari = {
+      sinav_adi: '',
+      sinav_turu: '',
+      soru_sayisi: 50,
+      tarih: this.formatDate(new Date()),
+      cevaplar: {},
+      konular: {},
+      videolar: {},
+      aktiflik: true
+    };
+    this.initializeCevaplar();
+    this.imagePreview = null;
 
-  // Düzenleme modu için soru sayısını güncelle
-  updateEditSorular(count: number) {
-    if (!this.currentEditingCevapAnahtari) return;
+    const fileInput = document.getElementById('sinav_kapagi') as HTMLInputElement;
+    if (fileInput) fileInput.value = '';
+  }
 
-    this.currentEditingCevapAnahtari.soru_sayisi = count;
+  // Düzenleme modunu aç
+  editCevapAnahtari(cevapAnahtari: CevapAnahtariInterface): void {
+    this.currentEditingCevapAnahtari = {
+      ...cevapAnahtari,
+      cevaplar: { ...(cevapAnahtari.cevaplar || {}) },
+      konular: { ...(cevapAnahtari.konular || {}) },
+      videolar: { ...(cevapAnahtari.videolar || {}) }
+    };
 
-    // Her soru için boş varsayılan değerler oluştur (eğer yoksa)
-    for (let i = 1; i <= count; i++) {
+    // Eksik cevapları, konuları ve videoları ekle
+    for (let i = 1; i <= this.currentEditingCevapAnahtari.soru_sayisi; i++) {
       if (!this.currentEditingCevapAnahtari.cevaplar[`ca${i}`]) {
         this.currentEditingCevapAnahtari.cevaplar[`ca${i}`] = '';
       }
-      if (!this.currentEditingCevapAnahtari.konular[`ka${i}`]) {
-        this.currentEditingCevapAnahtari.konular[`ka${i}`] = '';
+      if (!this.currentEditingCevapAnahtari.konular![`ka${i}`]) {
+        this.currentEditingCevapAnahtari.konular![`ka${i}`] = '';
       }
-      if (!this.currentEditingCevapAnahtari.videolar[`va${i}`]) {
-        this.currentEditingCevapAnahtari.videolar[`va${i}`] = '';
+      if (!this.currentEditingCevapAnahtari.videolar![`va${i}`]) {
+        this.currentEditingCevapAnahtari.videolar![`va${i}`] = '';
       }
     }
+
+    this.isEditing = true;
+    this.showModal = true;
+    document.body.style.overflow = 'hidden';
   }
 
-  // Component yok edildiğinde temizlik yap
-  ngOnDestroy() {
-    // Scroll'u geri etkinleştir
+  // Düzenleme modunu kapat
+  closeEditModal(): void {
+    this.isEditing = false;
+    this.showModal = false;
+    this.currentEditingCevapAnahtari = null;
     document.body.style.overflow = '';
   }
+
+  // Güncelleme
+  updateCevapAnahtari(): void {
+    if (!this.currentEditingCevapAnahtari) return;
+
+    if (!this.currentEditingCevapAnahtari.sinav_adi.trim()) {
+      this.showError('Sınav adı gereklidir.');
+      return;
+    }
+
+    const data = {
+      id: this.currentEditingCevapAnahtari.id,
+      sinav_adi: this.currentEditingCevapAnahtari.sinav_adi,
+      sinav_turu: this.currentEditingCevapAnahtari.sinav_turu,
+      soru_sayisi: this.currentEditingCevapAnahtari.soru_sayisi,
+      tarih: this.currentEditingCevapAnahtari.tarih,
+      cevaplar: JSON.stringify(this.currentEditingCevapAnahtari.cevaplar),
+      konular: JSON.stringify(this.currentEditingCevapAnahtari.konular || {}),
+      videolar: JSON.stringify(this.currentEditingCevapAnahtari.videolar || {}),
+      aktiflik: this.currentEditingCevapAnahtari.aktiflik
+    };
+
+    this.http.post('./server/api/cevap-anahtari-guncelle.php', data, {
+      headers: { 'Content-Type': 'application/json' }
+    }).subscribe(
+      (response: any) => {
+        if (response.success) {
+          this.showSuccess('Cevap anahtarı başarıyla güncellendi.');
+          this.closeEditModal();
+          this.loadCevapAnahtarlari();
+        } else {
+          this.showError(response.message || 'Güncelleme başarısız.');
+        }
+      },
+      (error) => {
+        this.showError('Sunucu hatası: ' + (error.message || 'Bilinmeyen bir hata oluştu.'));
+      }
+    );
+  }
+
+  // Silme
   deleteCevapAnahtari(id: number) {
     if (confirm('Bu cevap anahtarını silmek istediğinize emin misiniz?')) {
       this.http.post(`./server/api/cevap-anahtari-sil.php`, { id }).subscribe(
         (response: any) => {
           if (response.success) {
             this.showSuccess('Cevap anahtarı başarıyla silindi.');
-            this.loadCevapAnahtarlari(); // Listeyi yenile
+            this.loadCevapAnahtarlari();
           } else {
             this.showError(response.message || 'Silme işlemi başarısız.');
           }
         },
         (error) => {
-          this.showError(
-            'Sunucu hatası: ' + (error.message || 'Bilinmeyen bir hata oluştu.')
-          );
+          this.showError('Sunucu hatası: ' + (error.message || 'Bilinmeyen bir hata oluştu.'));
         }
       );
     }
   }
+
+  // Resim önizleme
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.imagePreview = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
   // Yardımcı metodlar
   formatDate(date: Date): string {
     const year = date.getFullYear();
@@ -485,24 +362,28 @@ export class OgretmenCevapAnahtariSayfasiComponent
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   }
+
   getSinavTuruLabel(id: string): string {
     const tur = this.sinavTurleri.find((t) => t.id === id);
     return tur ? tur.label : id;
   }
+
   showSuccess(message: string) {
     this.successMessage = message;
-    setTimeout(() => (this.successMessage = ''), 5000); // 5 saniye sonra mesajı kaldır
+    setTimeout(() => (this.successMessage = ''), 5000);
   }
+
   showError(message: string) {
     this.errorMessage = message;
-    setTimeout(() => (this.errorMessage = ''), 5000); // 5 saniye sonra mesajı kaldır
+    setTimeout(() => (this.errorMessage = ''), 5000);
   }
+
   trackByFn(index: number, item: any) {
     return index;
   }
 
-  // Filtreleme için getter
-  get filteredCevapAnahtarlari(): CevapAnahtari[] {
+  // Filtreleme
+  get filteredCevapAnahtarlari(): CevapAnahtariInterface[] {
     if (!this.searchQuery.trim()) {
       return this.cevapAnahtarlari;
     }
@@ -510,12 +391,12 @@ export class OgretmenCevapAnahtariSayfasiComponent
     const query = this.searchQuery.toLowerCase().trim();
     return this.cevapAnahtarlari.filter(
       (cevap) =>
-        cevap.test_adi.toLowerCase().includes(query) ||
-        this.getSinavTuruLabel(cevap.test_turu).toLowerCase().includes(query)
+        cevap.sinav_adi.toLowerCase().includes(query) ||
+        this.getSinavTuruLabel(cevap.sinav_turu).toLowerCase().includes(query)
     );
   }
 
-  // İstatistik metodları
+  // İstatistikler
   getActiveSinavCount(): number {
     const today = new Date();
     const oneMonthAgo = new Date();
@@ -535,83 +416,5 @@ export class OgretmenCevapAnahtariSayfasiComponent
       const cevapDate = new Date(cevap.tarih);
       return cevapDate >= firstDayOfMonth;
     }).length;
-  }
-
-  // Sınav türüne göre renk
-  getExamTypeColor(sinavTuru: string): string {
-    const colors: { [key: string]: string } = {
-      TYT: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      AYT: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-      TAR: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-      TEST: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-    };
-    return (
-      colors[sinavTuru] || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
-    );
-  }
-
-  loadKonular() {
-    this.loadingKonular = true;
-    this.http.get<any>('./server/api/konu_listesi.php').subscribe({
-      next: (response) => {
-        this.loadingKonular = false;
-        if (response.success) {
-          this.konular = response.konular || [];
-          console.log('Konular yüklendi:', this.konular);
-        } else {
-          console.error('Konular yüklenirken hata:', response.message);
-          this.konular = [];
-        }
-      },
-      error: (error) => {
-        this.loadingKonular = false;
-        console.error('Konular yüklenirken hata:', error);
-        this.konular = [];
-      },
-    });
-  }
-
-  // Konu seçimi için filtreleme
-  filterKonular(searchTerm: string): any[] {
-    if (!searchTerm) return this.konular;
-    return this.konular.filter((konu) =>
-      konu.konu_adi.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }
-
-  // Added a placeholder for getAuthHeaders as it's used but not defined in the original snippet
-  private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!).token : '';
-    return new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
-  }
-
-  // Added validateCevapAnahtari and closeModal placeholders
-  private validateCevapAnahtari(): boolean {
-    // Implement validation logic here
-    if (!this.currentEditingCevapAnahtari.test_adi || this.currentEditingCevapAnahtari.test_adi.trim() === '') {
-      this.showError('Test adı boş olamaz.');
-      return false;
-    }
-    if (!this.currentEditingCevapAnahtari.test_turu) {
-      this.showError('Test türü seçilmelidir.');
-      return false;
-    }
-    if (this.currentEditingCevapAnahtari.soru_sayisi <= 0) {
-      this.showError('Soru sayısı 0\'dan büyük olmalıdır.');
-      return false;
-    }
-    // Add more validation as needed...
-    return true;
-  }
-
-  private closeModal(): void {
-    this.isEditing = false;
-    this.showModal = false;
-    this.currentEditingCevapAnahtari = null;
-    this.imagePreview = null;
-    document.body.style.overflow = ''; // Ensure scroll is re-enabled
   }
 }
