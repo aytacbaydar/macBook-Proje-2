@@ -64,7 +64,7 @@ export class OgretmenTestlerinCevaplariSayfasiComponent implements OnInit {
   }
 
   saveCevapAnahtari(): void {
-    if (!this.newCevapAnahtari.test_adi || !this.newCevapAnahtari.test_turu ||
+    if (!this.newCevapAnahtari.sinav_adi || !this.newCevapAnahtari.test_turu ||
         !this.newCevapAnahtari.soru_sayisi || !this.newCevapAnahtari.tarih) {
       this.errorMessage = 'Lütfen tüm zorunlu alanları doldurunuz.';
       return;
@@ -82,7 +82,7 @@ export class OgretmenTestlerinCevaplariSayfasiComponent implements OnInit {
 
     // Prepare form data for API
     const formData = new FormData();
-    formData.append('test_adi', this.newCevapAnahtari.test_adi);
+    formData.append('sinav_adi', this.newCevapAnahtari.sinav_adi);
     formData.append('test_turu', this.newCevapAnahtari.test_turu);
     formData.append('soru_sayisi', this.newCevapAnahtari.soru_sayisi.toString());
     formData.append('tarih', this.newCevapAnahtari.tarih);
@@ -156,7 +156,7 @@ export class OgretmenTestlerinCevaplariSayfasiComponent implements OnInit {
   }
 
   validateCevapAnahtari(cevapAnahtari: CevapAnahtari): boolean {
-    if (!cevapAnahtari.test_adi.trim()) {
+    if (!cevapAnahtari.sinav_adi.trim()) {
       this.showError('Test adı gereklidir');
       return false;
     }
