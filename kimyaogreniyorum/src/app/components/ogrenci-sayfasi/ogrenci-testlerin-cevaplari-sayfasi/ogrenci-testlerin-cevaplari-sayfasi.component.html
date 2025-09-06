@@ -22,7 +22,7 @@
             <!-- Card Header -->
             <div class="card-header">
                 <div class="card-title">
-                    <h3>{{ cevapAnahtari.test_adi }}</h3>
+                    <h3>{{ cevapAnahtari.sinav_adi }}</h3>
                     <div class="card-meta">
                         <span class="exam-type">{{ getSinavTuruLabel(cevapAnahtari.test_turu) }}</span>
                         <span class="exam-date">{{ cevapAnahtari.tarih }}</span>
@@ -88,7 +88,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="testAdi" class="form-label">Test Adı</label>
-                        <input type="text" class="form-control" id="testAdi" [(ngModel)]="newCevapAnahtari.test_adi"
+                        <input type="text" class="form-control" id="testAdi" [(ngModel)]="newCevapAnahtari.sinav_adi"
                             placeholder="Test adını giriniz" required>
                     </div>
 
@@ -174,7 +174,7 @@
                     <div class="form-group">
                         <label for="testAdi" class="form-label">Test Adı</label>
                         <input type="text" class="form-control" id="testAdi"
-                            [(ngModel)]="currentEditingCevapAnahtari.test_adi" placeholder="Test adını giriniz"
+                            [(ngModel)]="currentEditingCevapAnahtari.sinav_adi" placeholder="Test adını giriniz"
                             required>
                     </div>
                     <div class="form-group">
