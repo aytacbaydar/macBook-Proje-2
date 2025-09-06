@@ -31,7 +31,7 @@ export class CevapAnahtari {
   static fromJson(json: any): CevapAnahtari {
     return new CevapAnahtari({
       id: json.id,
-      test_adi: json.test_adi,
+      sinav_adi: json.sinav_adi,
       test_turu: json.test_turu,
       soru_sayisi: json.soru_sayisi,
       tarih: json.tarih,
@@ -56,7 +56,7 @@ export class CevapAnahtari {
   toJson(): any {
     return {
       id: this.id,
-      test_adi: this.test_adi,
+      sinav_adi: this.sinav_adi,
       test_turu: this.test_turu,
       soru_sayisi: this.soru_sayisi,
       tarih: this.tarih,
