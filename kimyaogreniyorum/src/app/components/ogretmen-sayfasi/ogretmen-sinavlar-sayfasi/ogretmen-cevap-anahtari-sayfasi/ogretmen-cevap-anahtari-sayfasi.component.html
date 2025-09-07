@@ -210,11 +210,56 @@
   </div>
 
   <!-- Cevap Anahtarları Listesi -->
-  <div class="list-container">
-    <div *ngIf="loading" class="loading-state">
-      <div class="spinner"></div>
-      <p>Cevap anahtarları yükleniyor...</p>
+  <div *ngIf="!loading && cevapAnahtarlari.length > 0" class="answer-keys-grid">
+    <div *ngFor="let cevapAnahtari of cevapAnahtarlari" class="answer-key-card">
+      <div class="card-header">
+        <h3>{{ cevapAnahtari.sinav_adi }}</h3>
+        <span class="date-badge">{{ formatDate(cevapAnahtari.olusturma_tarihi) }}</span>
+      </div>
+
+      <div class="card-body">
+        <div class="exam-info">
+          <div class="info-item">
+            <i class="bi bi-calendar-event"></i>
+            <span>{{ formatDate(cevapAnahtari.sinav_tarihi) }}</span>
+          </div>
+          <div class="info-item">
+            <i class="bi bi-clock"></i>
+            <span>{{ cevapAnahtari.sinav_suresi }} dk</span>
+          </div>
+          <div class="info-item">
+            <i class="bi bi-list-ol"></i>
+            <span>{{ getSoruSayisi(cevapAnahtari.cevaplar) }} Soru</span>
+          </div>
+        </div>
+
+        <div class="answer-preview">
+          <h4>Cevap Anahtarı</h4>
+          <div class="answers-row">
+            <div *ngFor="let cevap of getAnswersArray(cevapAnahtari.cevaplar); let i = index" class="answer-item">
+              <span class="question-number">{{ i + 1 }}</span>
+              <span class="answer-letter">{{ cevap }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <button class="btn btn-outline-primary btn-sm" (click)="viewAnswerKey(cevapAnahtari)">
+          <i class="bi bi-eye"></i>
+          Görüntüle
+        </button>
+        <button class="btn btn-outline-warning btn-sm" (click)="editAnswerKey(cevapAnahtari)">
+          <i class="bi bi-pencil"></i>
+          Düzenle
+        </button>
+        <button class="btn btn-outline-danger btn-sm" (click)="deleteAnswerKey(cevapAnahtari.id)">
+          <i class="bi bi-trash"></i>
+          Sil
+        </button>
+      </div>
     </div>
+  </div>
 
     <div *ngIf="!loading && filteredCevapAnahtarlari.length === 0" class="empty-state">
       <i class="bi bi-file-earmark-check"></i>
