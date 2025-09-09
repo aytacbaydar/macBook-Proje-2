@@ -1302,6 +1302,111 @@
       }
     }
 
+    // Soru detayları için yeni düzen
+    .soru-detaylari-info {
+      margin-bottom: 20px;
+
+      .text-muted {
+        color: #6b7280;
+        font-size: 0.9rem;
+      }
+    }
+
+    .soru-detaylari-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-height: 500px;
+      overflow-y: auto;
+      padding-right: 8px;
+
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: rgba(148, 163, 184, 0.1);
+        border-radius: 3px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        border-radius: 3px;
+      }
+    }
+
+    .soru-detay-card {
+      background: rgba(255, 255, 255, 0.8);
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+
+      &:hover {
+        border-color: #6366f1;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+        transform: translateY(-2px);
+      }
+
+      .soru-header {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        color: white;
+        padding: 12px 20px;
+        font-weight: 600;
+
+        .soru-number {
+          font-size: 1rem;
+        }
+      }
+
+      .soru-content {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+
+        .field-group {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+
+          .field-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.9rem;
+
+            i {
+              color: #6366f1;
+              font-size: 0.9rem;
+            }
+          }
+
+          .field-input {
+            padding: 10px 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            background: white;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+
+            &:focus {
+              outline: none;
+              border-color: #6366f1;
+              box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            }
+
+            &:disabled {
+              background: #f3f4f6;
+              color: #9ca3af;
+            }
+          }
+        }
+      }
+    }
+
     .konu-grid {
       gap: 12px;
 
