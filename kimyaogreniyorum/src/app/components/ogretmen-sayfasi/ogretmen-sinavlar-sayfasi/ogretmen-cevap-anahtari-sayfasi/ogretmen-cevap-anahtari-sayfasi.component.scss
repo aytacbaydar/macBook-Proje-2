@@ -1349,10 +1349,57 @@
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
       gap: 15px;
 
+      &.konu-grid {
+        // Konu seçimleri için alt alta dizilim
+        grid-template-columns: 1fr;
+        gap: 12px;
+        max-height: 400px;
+        overflow-y: auto;
+        padding-right: 8px;
+
+        &::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: rgba(148, 163, 184, 0.1);
+          border-radius: 3px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: linear-gradient(135deg, #6366f1, #8b5cf6);
+          border-radius: 3px;
+        }
+      }
+
       .cevap-item {
         display: flex;
         flex-direction: column;
         gap: 8px;
+
+        &.konu-item {
+          // Konu seçimi için yatay düzen
+          flex-direction: row;
+          align-items: center;
+          gap: 15px;
+          padding: 12px;
+
+          .soru-label {
+            font-weight: 600;
+            color: #374151;
+            min-width: 30px;
+            text-align: center;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 0.9rem;
+          }
+
+          .konu-select-wrapper {
+            flex: 1;
+          }
+        }
 
         .soru-label {
           font-weight: 600;
@@ -1372,6 +1419,11 @@
             outline: none;
             border-color: #6366f1;
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+          }
+
+          &.konu-select {
+            text-align: left;
+            padding: 10px 40px 10px 12px;
           }
         }
       }
