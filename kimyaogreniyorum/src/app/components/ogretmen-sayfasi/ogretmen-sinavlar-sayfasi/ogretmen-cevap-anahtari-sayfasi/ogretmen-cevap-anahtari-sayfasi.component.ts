@@ -524,7 +524,7 @@ export class OgretmenCevapAnahtariSayfasiComponent implements OnInit, OnDestroy 
   loadKonular(): void {
     this.konularLoading = true;
     
-    this.http.get<KonuApiResponse>('https://kimyaogreniyorum.replit.app/server/api/konu_listesi.php')
+    this.http.get<KonuApiResponse>('https://kimyaogreniyorum.com/server/api/konu_listesi.php')
       .subscribe({
         next: (response) => {
           if (response.success) {
