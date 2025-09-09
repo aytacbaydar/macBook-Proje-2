@@ -237,8 +237,8 @@
           <h4>Cevap Anahtarı</h4>
           <div class="answers-row">
             <div *ngFor="let cevap of getAnswersArray(cevapAnahtari.cevaplar); let i = index" class="answer-item">
-              <span class="question-number">{{ i + 1 }}</span>
-              <span class="answer-letter">{{ cevap }}</span>
+              <span class="question-number">{{ cevap.index }}</span>
+              <span class="answer-letter">{{ cevap.value || '-' }}</span>
             </div>
           </div>
         </div>
