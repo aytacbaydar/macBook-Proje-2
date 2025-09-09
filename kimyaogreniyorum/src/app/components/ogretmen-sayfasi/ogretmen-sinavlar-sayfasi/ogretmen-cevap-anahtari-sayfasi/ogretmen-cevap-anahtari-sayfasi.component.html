@@ -383,73 +383,59 @@
               required>
           </div>
 
-          <!-- Soru Detayları (Cevap + Konu + Video) -->
+          <!-- Soru Detayları -->
           <div class="form-group">
-            <label><i class="fas fa-list-ol"></i> Soru Detayları</label>
-            <div class="soru-detaylari-info">
-              <small class="text-muted">Her soru için cevap, konu ve video bilgilerini girebilirsiniz</small>
-            </div>
-            <div class="soru-detaylari-grid">
-              <div *ngFor="let i of getSoruDizisi(currentEditingCevapAnahtari); trackBy: trackByFn" class="soru-detay-card">
-                <div class="soru-header">
-                  <span class="soru-number">{{ i }}. Soru</span>
-                </div>
+            <label>Soru Detayları</label>
+            <div class="basit-soru-listesi">
+              <div *ngFor="let i of getSoruDizisi(currentEditingCevapAnahtari); trackBy: trackByFn" class="basit-soru-item">
                 
-                <div class="soru-content">
-                  <!-- Cevap -->
-                  <div class="field-group">
-                    <label class="field-label">
-                      <i class="fas fa-check-circle"></i>
-                      Cevap
-                    </label>
-                    <select 
-                      class="field-input"
-                      [(ngModel)]="currentEditingCevapAnahtari.cevaplar['ca' + i]" 
-                      [name]="'cevap_' + i">
-                      <option value="">Seçiniz</option>
-                      <option value="A">A</option>
-                      <option value="B">B</option>
-                      <option value="C">C</option>
-                      <option value="D">D</option>
-                      <option value="E">E</option>
-                    </select>
-                  </div>
-
-                  <!-- Konu -->
-                  <div class="field-group">
-                    <label class="field-label">
-                      <i class="fas fa-book"></i>
-                      Konu (İsteğe bağlı)
-                    </label>
-                    <select 
-                      class="field-input"
-                      [(ngModel)]="currentEditingCevapAnahtari.konular!['ka' + i]" 
-                      [name]="'konu_' + i"
-                      [disabled]="konularLoading">
-                      <option value="">Konu seçiniz</option>
-                      <optgroup *ngFor="let seviye of getSinifSeviyeleri()" [label]="seviye + '. Sınıf'">
-                        <option *ngFor="let konu of getKonularByLevel(seviye)" [value]="konu.konu_adi">
-                          {{ konu.konu_adi }} - {{ konu.unite_adi }}
-                        </option>
-                      </optgroup>
-                    </select>
-                  </div>
-
-                  <!-- Video -->
-                  <div class="field-group">
-                    <label class="field-label">
-                      <i class="fas fa-video"></i>
-                      Video Kodu (İsteğe bağlı)
-                    </label>
-                    <input 
-                      type="text" 
-                      class="field-input"
-                      [(ngModel)]="currentEditingCevapAnahtari.videolar!['vi' + i]" 
-                      [name]="'video_' + i"
-                      maxlength="20"
-                      placeholder="Örn: V001, YT_abc123">
-                  </div>
+                <div class="soru-baslik">{{ i }}. Soru</div>
+                
+                <!-- Cevap -->
+                <div class="alan-grubu">
+                  <label>Cevap:</label>
+                  <select 
+                    class="basit-input"
+                    [(ngModel)]="currentEditingCevapAnahtari.cevaplar['ca' + i]" 
+                    [name]="'cevap_' + i">
+                    <option value="">Seçiniz</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                    <option value="E">E</option>
+                  </select>
                 </div>
+
+                <!-- Konu -->
+                <div class="alan-grubu">
+                  <label>Konu:</label>
+                  <select 
+                    class="basit-input"
+                    [(ngModel)]="currentEditingCevapAnahtari.konular!['ka' + i]" 
+                    [name]="'konu_' + i"
+                    [disabled]="konularLoading">
+                    <option value="">Konu seçiniz</option>
+                    <optgroup *ngFor="let seviye of getSinifSeviyeleri()" [label]="seviye + '. Sınıf'">
+                      <option *ngFor="let konu of getKonularByLevel(seviye)" [value]="konu.konu_adi">
+                        {{ konu.konu_adi }} - {{ konu.unite_adi }}
+                      </option>
+                    </optgroup>
+                  </select>
+                </div>
+
+                <!-- Video -->
+                <div class="alan-grubu">
+                  <label>Video:</label>
+                  <input 
+                    type="text" 
+                    class="basit-input"
+                    [(ngModel)]="currentEditingCevapAnahtari.videolar!['vi' + i]" 
+                    [name]="'video_' + i"
+                    maxlength="20"
+                    placeholder="Video kodu">
+                </div>
+
               </div>
             </div>
           </div>
