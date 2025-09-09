@@ -167,7 +167,7 @@ export class OgretmenCevapAnahtariSayfasiComponent implements OnInit, OnDestroy 
     for (let i = 1; i <= this.cevapAnahtari.soru_sayisi; i++) {
       this.cevapAnahtari.cevaplar[`ca${i}`] = '';
       this.cevapAnahtari.konular[`ka${i}`] = '';
-      this.cevapAnahtari.videolar[`va${i}`] = '';
+      this.cevapAnahtari.videolar[`vi${i}`] = '';
     }
   }
 
@@ -292,8 +292,8 @@ export class OgretmenCevapAnahtariSayfasiComponent implements OnInit, OnDestroy 
       if (!this.currentEditingCevapAnahtari.konular![`ka${i}`]) {
         this.currentEditingCevapAnahtari.konular![`ka${i}`] = '';
       }
-      if (!this.currentEditingCevapAnahtari.videolar![`va${i}`]) {
-        this.currentEditingCevapAnahtari.videolar![`va${i}`] = '';
+      if (!this.currentEditingCevapAnahtari.videolar![`vi${i}`]) {
+        this.currentEditingCevapAnahtari.videolar![`vi${i}`] = '';
       }
     }
 

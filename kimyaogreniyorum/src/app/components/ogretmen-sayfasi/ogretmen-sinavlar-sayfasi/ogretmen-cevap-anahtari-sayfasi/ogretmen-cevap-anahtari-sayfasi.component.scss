@@ -1336,11 +1336,14 @@
     }
 
     .soru-detay-card {
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.95);
       border: 2px solid #e5e7eb;
       border-radius: 12px;
       overflow: hidden;
       transition: all 0.3s ease;
+      margin-bottom: 15px;
+      width: 100%;
+      display: block;
 
       &:hover {
         border-color: #6366f1;
@@ -1349,13 +1352,17 @@
       }
 
       .soru-header {
-        background: linear-gradient(135deg, #6366f1, #8b5cf6);
-        color: white;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+        color: white !important;
         padding: 12px 20px;
         font-weight: 600;
+        display: block !important;
+        width: 100% !important;
 
         .soru-number {
           font-size: 1rem;
+          color: white !important;
+          display: block !important;
         }
       }
 
