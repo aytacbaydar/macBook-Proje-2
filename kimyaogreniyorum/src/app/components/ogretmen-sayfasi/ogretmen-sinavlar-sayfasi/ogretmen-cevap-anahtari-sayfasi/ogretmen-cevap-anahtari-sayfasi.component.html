@@ -256,8 +256,8 @@
   </div>
 
   <!-- Cevap Anahtarları Listesi -->
-  <div *ngIf="!loading && cevapAnahtarlari.length > 0" class="answer-keys-grid">
-    <div *ngFor="let cevapAnahtari of cevapAnahtarlari" class="answer-key-card">
+  <div *ngIf="!loading && filteredCevapAnahtarlari.length > 0" class="answer-keys-grid">
+    <div *ngFor="let cevapAnahtari of filteredCevapAnahtarlari" class="answer-key-card">
       <div class="card-header">
         <h3>{{ cevapAnahtari.sinav_adi }}</h3>
         <span class="date-badge">{{ formatDate(cevapAnahtari.olusturma_tarihi) }}</span>
