@@ -402,17 +402,27 @@
 
           <!-- Konular (Opsiyonel) -->
           <div class="form-group">
-            <label>Konu Kodları (Opsiyonel)</label>
-            <div class="cevaplar-grid">
-              <div *ngFor="let i of getSoruDizisi(currentEditingCevapAnahtari); trackBy: trackByFn" class="cevap-item">
+            <label><i class="fas fa-book-open"></i> Konu Kodları (Opsiyonel)</label>
+            <div class="konu-kodlari-info">
+              <small class="text-muted">Her soru için uygun konu kodunu seçebilirsiniz</small>
+            </div>
+            <div class="cevaplar-grid konu-grid">
+              <div *ngFor="let i of getSoruDizisi(currentEditingCevapAnahtari); trackBy: trackByFn" class="cevap-item konu-item">
                 <label class="soru-label">{{ i }}.</label>
-                <input 
-                  type="text" 
-                  class="cevap-input"
-                  [(ngModel)]="currentEditingCevapAnahtari.konular!['ka' + i]" 
-                  [name]="'konu_' + i"
-                  maxlength="10"
-                  placeholder="K1">
+                <div class="konu-select-wrapper">
+                  <select 
+                    class="cevap-input konu-select"
+                    [(ngModel)]="currentEditingCevapAnahtari.konular!['ka' + i]" 
+                    [name]="'konu_' + i"
+                    [disabled]="konuKodlariLoading">
+                    <option value="">Konu seçiniz</option>
+                    <option *ngFor="let konu of konuKodlari" [value]="konu.konu_kodu">
+                      {{ konu.konu_kodu }} - {{ konu.konu_adi }} ({{ konu.ders_adi }})
+                    </option>
+                  </select>
+                  <i class="fas fa-book select-icon" *ngIf="!konuKodlariLoading"></i>
+                  <i class="fas fa-spinner fa-spin select-icon" *ngIf="konuKodlariLoading"></i>
+                </div>
               </div>
             </div>
           </div>
