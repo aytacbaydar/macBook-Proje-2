@@ -1322,67 +1322,69 @@
     }
 
     // Basit soru listesi (hem modal hem de form için)
-.basit-soru-listesi {
-  max-height: 400px;
-  overflow-y: auto;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  background: white;
-}
-
-.basit-soru-item {
-  padding: 15px;
-  border-bottom: 1px solid #f3f4f6;
-
-  &:last-child {
-    border-bottom: none;
-  }
-
-  .soru-baslik {
-    font-weight: 600;
-    color: #374151;
-    margin-bottom: 12px;
-    font-size: 1rem;
-  }
-
-  .alan-grubu {
-    margin-bottom: 10px;
-    
-    &:last-child {
-      margin-bottom: 0;
-    }
-
-    label {
-      display: block;
-      font-weight: 500;
-      color: #6b7280;
-      margin-bottom: 4px;
-      font-size: 0.9rem;
-    }
-
-    .basit-input {
-      width: 100%;
-      padding: 8px 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
+    .basit-soru-listesi {
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
       background: white;
-      font-size: 0.9rem;
 
-      &:focus {
-        outline: none;
-        border-color: #6366f1;
-        box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
-      }
+      .basit-soru-item {
+        padding: 15px;
+        border-bottom: 1px solid #f3f4f6;
 
-      &:disabled {
-        background: #f9fafb;
-        color: #9ca3af;
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .soru-baslik {
+          font-weight: 600;
+          color: #374151;
+          margin-bottom: 12px;
+          font-size: 1rem;
+        }
+
+        .alan-grubu {
+          margin-bottom: 10px;
+          
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          label {
+            display: block;
+            font-weight: 500;
+            color: #6b7280;
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+          }
+
+          .basit-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            background: white;
+            font-size: 0.9rem;
+
+            &:focus {
+              outline: none;
+              border-color: #6366f1;
+              box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+            }
+
+            &:disabled {
+              background: #f9fafb;
+              color: #9ca3af;
+            }
+          }
+        }
       }
     }
   }
 }
 
-// Cevaplar section düzenlemesi
+// Cevaplar section düzenlemesi (form için)
 .cevaplar-section {
   margin-top: 20px;
   padding: 20px;
@@ -1405,47 +1407,47 @@
   }
 }
 
-    .konu-grid {
-      gap: 12px;
+.konu-grid {
+  gap: 12px;
 
-      .konu-item {
-        background: rgba(255, 255, 255, 0.7);
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        padding: 10px;
-        transition: all 0.3s ease;
+  .konu-item {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 10px;
+    transition: all 0.3s ease;
 
-        &:hover {
-          background: rgba(255, 255, 255, 0.9);
-          border-color: #6366f1;
-          transform: translateY(-1px);
-        }
+    &:hover {
+      background: rgba(255, 255, 255, 0.9);
+      border-color: #6366f1;
+      transform: translateY(-1px);
+    }
 
-        .konu-select-wrapper {
-          position: relative;
-          display: flex;
-          align-items: center;
+    .konu-select-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
 
-          .konu-select {
-            padding-right: 35px;
-            font-size: 0.85rem;
-            
-            &:disabled {
-              background: #f3f4f6;
-              color: #9ca3af;
-            }
-          }
-
-          .select-icon {
-            position: absolute;
-            right: 12px;
-            color: #6366f1;
-            font-size: 0.9rem;
-            pointer-events: none;
-          }
+      .konu-select {
+        padding-right: 35px;
+        font-size: 0.85rem;
+        
+        &:disabled {
+          background: #f3f4f6;
+          color: #9ca3af;
         }
       }
+
+      .select-icon {
+        position: absolute;
+        right: 12px;
+        color: #6366f1;
+        font-size: 0.9rem;
+        pointer-events: none;
+      }
     }
+  }
+}
 
     .cevaplar-grid {
       display: grid;
@@ -1531,7 +1533,6 @@
         }
       }
     }
-  }
 
   .form-actions {
     display: flex;
@@ -1581,7 +1582,6 @@
       }
     }
   }
-}
 
 @keyframes fadeIn {
   from {
