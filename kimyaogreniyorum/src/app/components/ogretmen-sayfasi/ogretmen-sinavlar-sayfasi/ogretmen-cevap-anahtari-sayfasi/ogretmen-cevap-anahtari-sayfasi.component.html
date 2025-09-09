@@ -414,14 +414,16 @@
                     class="cevap-input konu-select"
                     [(ngModel)]="currentEditingCevapAnahtari.konular!['ka' + i]" 
                     [name]="'konu_' + i"
-                    [disabled]="konuKodlariLoading">
+                    [disabled]="konularLoading">
                     <option value="">Konu seçiniz</option>
-                    <option *ngFor="let konu of konuKodlari" [value]="konu.konu_kodu">
-                      {{ konu.konu_kodu }} - {{ konu.konu_adi }} ({{ konu.ders_adi }})
-                    </option>
+                    <optgroup *ngFor="let seviye of getSinifSeviyeleri()" [label]="seviye + '. Sınıf'">
+                      <option *ngFor="let konu of getKonularByLevel(seviye)" [value]="konu.konu_adi">
+                        {{ konu.konu_adi }} - {{ konu.unite_adi }}
+                      </option>
+                    </optgroup>
                   </select>
-                  <i class="fas fa-book select-icon" *ngIf="!konuKodlariLoading"></i>
-                  <i class="fas fa-spinner fa-spin select-icon" *ngIf="konuKodlariLoading"></i>
+                  <i class="fas fa-book select-icon" *ngIf="!konularLoading"></i>
+                  <i class="fas fa-spinner fa-spin select-icon" *ngIf="konularLoading"></i>
                 </div>
               </div>
             </div>

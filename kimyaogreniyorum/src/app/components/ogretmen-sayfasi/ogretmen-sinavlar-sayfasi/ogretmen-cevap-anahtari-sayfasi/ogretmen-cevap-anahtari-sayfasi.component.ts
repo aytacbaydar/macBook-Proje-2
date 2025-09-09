@@ -1,13 +1,20 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
-interface KonuKoduInterface {
+interface KonuInterface {
   id: number;
-  konu_kodu: string;
   konu_adi: string;
   sinif_seviyesi: string;
-  ders_adi: string;
-  created_at?: string;
+  unite_adi: string;
+  aciklama?: string;
+  olusturma_tarihi?: string;
+}
+
+interface KonuApiResponse {
+  success: boolean;
+  data: KonuInterface[];
+  konular: KonuInterface[];
+  message: string;
 }
 
 interface CevapAnahtariInterface {
@@ -73,15 +80,15 @@ export class OgretmenCevapAnahtariSayfasiComponent implements OnInit, OnDestroy 
     { id: 'TEST', label: 'Konu Testi' },
   ];
 
-  // Konu kodları
-  konuKodlari: KonuKoduInterface[] = [];
-  konuKodlariLoading = false;
+  // Konular
+  konular: KonuInterface[] = [];
+  konularLoading = false;
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     this.loadCevapAnahtarlari();
-    this.loadKonuKodlari();
+    this.loadKonular();
     this.initializeCevaplar();
   }
 
@@ -513,56 +520,83 @@ export class OgretmenCevapAnahtariSayfasiComponent implements OnInit, OnDestroy 
     return 'Sonuç bulunamadı';
   }
 
-  // Konu kodlarını yükle
-  loadKonuKodlari(): void {
-    this.konuKodlariLoading = true;
+  // Konuları yükle
+  loadKonular(): void {
+    this.konularLoading = true;
     
-    this.http.get<KonuKoduInterface[]>('https://kimyaogreniyorum.replit.app/api/kolar')
+    this.http.get<KonuApiResponse>('https://kimyaogreniyorum.replit.app/server/api/konu_listesi.php')
       .subscribe({
-        next: (data) => {
-          this.konuKodlari = data;
-          this.konuKodlariLoading = false;
+        next: (response) => {
+          if (response.success) {
+            this.konular = response.data || response.konular || [];
+            console.log('Konular başarıyla yüklendi:', this.konular.length, 'adet');
+          } else {
+            console.error('API hatası:', response.message);
+            this.loadFallbackKonular();
+          }
+          this.konularLoading = false;
         },
         error: (error) => {
-          console.error('Konu kodları yüklenirken hata:', error);
-          this.konuKodlariLoading = false;
-          // Test verisi olarak yerel veriyi kullan
-          this.konuKodlari = [
-            { id: 1, konu_kodu: 'KIM01', konu_adi: 'Atom Yapısı', sinif_seviyesi: '9', ders_adi: 'Kimya' },
-            { id: 2, konu_kodu: 'KIM02', konu_adi: 'Periyodik Sistem', sinif_seviyesi: '9', ders_adi: 'Kimya' },
-            { id: 3, konu_kodu: 'KIM03', konu_adi: 'Kimyasal Bağlar', sinif_seviyesi: '10', ders_adi: 'Kimya' },
-            { id: 4, konu_kodu: 'MAT01', konu_adi: 'Fonksiyonlar', sinif_seviyesi: '9', ders_adi: 'Matematik' },
-            { id: 5, konu_kodu: 'FIZ01', konu_adi: 'Hareket', sinif_seviyesi: '9', ders_adi: 'Fizik' }
-          ];
+          console.error('Konular yüklenirken hata:', error);
+          this.loadFallbackKonular();
+          this.konularLoading = false;
         }
       });
   }
 
-  // Konu kodu seçimi değiştiğinde
-  onKonuKoduChange(soruIndex: number, konuKodu: string): void {
+  // Fallback konular (API erişilemezse)
+  private loadFallbackKonular(): void {
+    this.konular = [
+      { id: 1, konu_adi: 'Asitler ve Bazlar', sinif_seviyesi: '9', unite_adi: 'Asit-Baz Dengesi' },
+      { id: 2, konu_adi: 'Periyodik Sistem', sinif_seviyesi: '9', unite_adi: 'Atom ve Periyodik Özellikler' },
+      { id: 3, konu_adi: 'Kimyasal Bağlar', sinif_seviyesi: '9', unite_adi: 'Kimyasal Bağlanma' },
+      { id: 4, konu_adi: 'Karışımlar', sinif_seviyesi: '9', unite_adi: 'Maddenin Halleri' },
+      { id: 5, konu_adi: 'Atom Modelleri', sinif_seviyesi: '9', unite_adi: 'Atom Yapısı' },
+      { id: 6, konu_adi: 'İyonik Bağ', sinif_seviyesi: '10', unite_adi: 'Kimyasal Bağlar' },
+      { id: 7, konu_adi: 'Kovalent Bağ', sinif_seviyesi: '10', unite_adi: 'Kimyasal Bağlar' },
+      { id: 8, konu_adi: 'Organik Kimya', sinif_seviyesi: '11', unite_adi: 'Organik Bileşikler' },
+      { id: 9, konu_adi: 'Hidrokarbon', sinif_seviyesi: '11', unite_adi: 'Organik Kimya' },
+      { id: 10, konu_adi: 'Termodinamik', sinif_seviyesi: '12', unite_adi: 'Enerji ve Kimya' }
+    ];
+    console.log('Fallback konuları yüklendi');
+  }
+
+  // Konu seçimi değiştiğinde
+  onKonuChange(soruIndex: number, konuAdi: string): void {
     if (!this.cevapAnahtari.konular) {
       this.cevapAnahtari.konular = {};
     }
-    this.cevapAnahtari.konular[`q${soruIndex}`] = konuKodu;
+    this.cevapAnahtari.konular[`q${soruIndex}`] = konuAdi;
   }
 
-  // Seçili konu kodunu al
-  getSelectedKonuKodu(soruIndex: number): string {
+  // Seçili konu adını al
+  getSelectedKonu(soruIndex: number): string {
     return this.cevapAnahtari.konular?.[`q${soruIndex}`] || '';
   }
 
-  // Edit modal için konu kodu seçimi
-  onEditKonuKoduChange(soruIndex: number, konuKodu: string): void {
+  // Edit modal için konu seçimi
+  onEditKonuChange(soruIndex: number, konuAdi: string): void {
     if (this.currentEditingCevapAnahtari) {
       if (!this.currentEditingCevapAnahtari.konular) {
         this.currentEditingCevapAnahtari.konular = {};
       }
-      this.currentEditingCevapAnahtari.konular[`q${soruIndex}`] = konuKodu;
+      this.currentEditingCevapAnahtari.konular[`q${soruIndex}`] = konuAdi;
     }
   }
 
-  // Edit modal için seçili konu kodunu al
-  getEditSelectedKonuKodu(soruIndex: number): string {
+  // Edit modal için seçili konu adını al
+  getEditSelectedKonu(soruIndex: number): string {
     return this.currentEditingCevapAnahtari?.konular?.[`q${soruIndex}`] || '';
+  }
+
+  // Konuları sınıf seviyesine göre filtrele
+  getKonularByLevel(level: string): KonuInterface[] {
+    return this.konular.filter(konu => konu.sinif_seviyesi === level);
+  }
+
+  // Tüm sınıf seviyelerini al
+  getSinifSeviyeleri(): string[] {
+    const seviyeler = [...new Set(this.konular.map(k => k.sinif_seviyesi))];
+    return seviyeler.sort();
   }
 }
