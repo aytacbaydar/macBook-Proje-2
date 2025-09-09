@@ -13,6 +13,9 @@ interface CevapAnahtariInterface {
   videolar?: { [key: string]: string };
   aktiflik: boolean;
   created_at?: string;
+  olusturma_tarihi?: string;
+  sinav_tarihi?: string;
+  sinav_suresi?: number;
 }
 
 @Component({
@@ -356,10 +359,21 @@ export class OgretmenCevapAnahtariSayfasiComponent implements OnInit, OnDestroy 
   }
 
   // Yardımcı metodlar
-  formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
+  formatDate(date: Date | string | undefined): string {
+    if (!date) return '-';
+    
+    let actualDate: Date;
+    if (typeof date === 'string') {
+      actualDate = new Date(date);
+    } else {
+      actualDate = date;
+    }
+    
+    if (isNaN(actualDate.getTime())) return '-';
+    
+    const year = actualDate.getFullYear();
+    const month = String(actualDate.getMonth() + 1).padStart(2, '0');
+    const day = String(actualDate.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   }
 
@@ -416,5 +430,43 @@ export class OgretmenCevapAnahtariSayfasiComponent implements OnInit, OnDestroy 
       const cevapDate = new Date(cevap.tarih);
       return cevapDate >= firstDayOfMonth;
     }).length;
+  }
+
+  // Şablonda kullanılan eksik metodlar
+  getSoruSayisi(cevaplar: any): number {
+    if (!cevaplar) return 0;
+    return Object.keys(cevaplar).filter(key => key.startsWith('ca')).length;
+  }
+
+  getAnswersArray(cevaplar: any): any[] {
+    if (!cevaplar) return [];
+    return Object.keys(cevaplar)
+      .filter(key => key.startsWith('ca'))
+      .sort((a, b) => {
+        const numA = parseInt(a.substring(2));
+        const numB = parseInt(b.substring(2));
+        return numA - numB;
+      })
+      .map(key => ({
+        key: key,
+        value: cevaplar[key],
+        index: parseInt(key.substring(2))
+      }));
+  }
+
+  viewAnswerKey(cevapAnahtari: CevapAnahtariInterface): void {
+    // Cevap anahtarını görüntüleme işlemi - modal veya detay sayfasına yönlendirme
+    console.log('Cevap anahtarı görüntüleniyor:', cevapAnahtari);
+    // Burada detaylı görüntüleme logic'i eklenebilir
+  }
+
+  editAnswerKey(cevapAnahtari: CevapAnahtariInterface): void {
+    this.editCevapAnahtari(cevapAnahtari);
+  }
+
+  deleteAnswerKey(id: number | undefined): void {
+    if (id !== undefined) {
+      this.deleteCevapAnahtari(id);
+    }
   }
 }
