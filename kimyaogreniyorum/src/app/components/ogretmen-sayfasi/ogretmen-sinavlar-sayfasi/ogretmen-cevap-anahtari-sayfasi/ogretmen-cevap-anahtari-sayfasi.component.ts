@@ -47,6 +47,7 @@ export class OgretmenCevapAnahtariSayfasiComponent implements OnInit, OnDestroy 
   searchQuery = '';
   showAddForm = false;
   error: string | null = null;
+  selectedFilter: string = 'ALL';
 
   // Liste verileri
   cevapAnahtarlari: CevapAnahtariInterface[] = [];
@@ -398,16 +399,24 @@ export class OgretmenCevapAnahtariSayfasiComponent implements OnInit, OnDestroy 
 
   // Filtreleme
   get filteredCevapAnahtarlari(): CevapAnahtariInterface[] {
-    if (!this.searchQuery.trim()) {
-      return this.cevapAnahtarlari;
+    let filtered = this.cevapAnahtarlari;
+
+    // Sınav türü filtresi
+    if (this.selectedFilter !== 'ALL') {
+      filtered = filtered.filter(cevap => cevap.sinav_turu === this.selectedFilter);
     }
 
-    const query = this.searchQuery.toLowerCase().trim();
-    return this.cevapAnahtarlari.filter(
-      (cevap) =>
-        cevap.sinav_adi.toLowerCase().includes(query) ||
-        this.getSinavTuruLabel(cevap.sinav_turu).toLowerCase().includes(query)
-    );
+    // Arama filtresi
+    if (this.searchQuery.trim()) {
+      const query = this.searchQuery.toLowerCase().trim();
+      filtered = filtered.filter(
+        (cevap) =>
+          cevap.sinav_adi.toLowerCase().includes(query) ||
+          this.getSinavTuruLabel(cevap.sinav_turu).toLowerCase().includes(query)
+      );
+    }
+
+    return filtered;
   }
 
   // İstatistikler
@@ -468,5 +477,25 @@ export class OgretmenCevapAnahtariSayfasiComponent implements OnInit, OnDestroy 
     if (id !== undefined) {
       this.deleteCevapAnahtari(id);
     }
+  }
+
+  // Filtreleme metodları
+  setFilter(filterType: string): void {
+    this.selectedFilter = filterType;
+  }
+
+  getCountByType(type: string): number {
+    return this.cevapAnahtarlari.filter(cevap => cevap.sinav_turu === type).length;
+  }
+
+  getEmptyStateMessage(): string {
+    if (this.searchQuery && this.selectedFilter !== 'ALL') {
+      return `"${this.searchQuery}" araması için ${this.getSinavTuruLabel(this.selectedFilter)} türünde sonuç bulunamadı`;
+    } else if (this.searchQuery) {
+      return `"${this.searchQuery}" araması için sonuç bulunamadı`;
+    } else if (this.selectedFilter !== 'ALL') {
+      return `${this.getSinavTuruLabel(this.selectedFilter)} türünde cevap anahtarı bulunmuyor`;
+    }
+    return 'Sonuç bulunamadı';
   }
 }

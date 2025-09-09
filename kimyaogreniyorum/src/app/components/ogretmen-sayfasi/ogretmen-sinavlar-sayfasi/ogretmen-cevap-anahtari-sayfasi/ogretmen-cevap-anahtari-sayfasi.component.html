@@ -54,6 +54,52 @@
     {{ errorMessage }}
   </div>
 
+  <!-- Filter Buttons -->
+  <div class="filter-bar">
+    <div class="filter-buttons">
+      <button 
+        type="button" 
+        class="btn filter-btn"
+        [class.active]="selectedFilter === 'ALL'"
+        (click)="setFilter('ALL')">
+        <i class="fas fa-list"></i>
+        Tümü ({{ cevapAnahtarlari.length }})
+      </button>
+      <button 
+        type="button" 
+        class="btn filter-btn"
+        [class.active]="selectedFilter === 'TYT'"
+        (click)="setFilter('TYT')">
+        <i class="fas fa-graduation-cap"></i>
+        TYT ({{ getCountByType('TYT') }})
+      </button>
+      <button 
+        type="button" 
+        class="btn filter-btn"
+        [class.active]="selectedFilter === 'AYT'"
+        (click)="setFilter('AYT')">
+        <i class="fas fa-book"></i>
+        AYT ({{ getCountByType('AYT') }})
+      </button>
+      <button 
+        type="button" 
+        class="btn filter-btn"
+        [class.active]="selectedFilter === 'TAR'"
+        (click)="setFilter('TAR')">
+        <i class="fas fa-search"></i>
+        Tarama ({{ getCountByType('TAR') }})
+      </button>
+      <button 
+        type="button" 
+        class="btn filter-btn"
+        [class.active]="selectedFilter === 'TEST'"
+        (click)="setFilter('TEST')">
+        <i class="fas fa-clipboard-list"></i>
+        Test ({{ getCountByType('TEST') }})
+      </button>
+    </div>
+  </div>
+
   <!-- Action Bar -->
   <div class="action-bar">
     <div class="search-section">
@@ -62,7 +108,7 @@
         <input 
           type="text" 
           class="form-control search-input" 
-          placeholder="Sınav adı veya türü ile ara..."
+          placeholder="Sınav adı ile ara..."
           [(ngModel)]="searchQuery">
       </div>
     </div>
@@ -262,9 +308,11 @@
   </div>
 
     <div *ngIf="!loading && filteredCevapAnahtarlari.length === 0" class="empty-state">
-      <i class="bi bi-file-earmark-check"></i>
-      <h3>Henüz cevap anahtarı bulunmuyor</h3>
-      <p>İlk cevap anahtarınızı oluşturmak için yukarıdaki butonu kullanın.</p>
+      <i class="fas fa-search"></i>
+      <h3 *ngIf="selectedFilter === 'ALL' && !searchQuery">Henüz cevap anahtarı bulunmuyor</h3>
+      <h3 *ngIf="selectedFilter !== 'ALL' || searchQuery">{{ getEmptyStateMessage() }}</h3>
+      <p *ngIf="selectedFilter === 'ALL' && !searchQuery">İlk cevap anahtarınızı oluşturmak için yukarıdaki butonu kullanın.</p>
+      <p *ngIf="selectedFilter !== 'ALL' || searchQuery">Farklı kriterlerle tekrar arayabilir veya yeni cevap anahtarı ekleyebilirsiniz.</p>
     </div>
   </div>
 
