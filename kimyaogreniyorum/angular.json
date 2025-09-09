@@ -75,9 +75,9 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "ssl": true,
-            "sslKey": "./ssl/server.key",
-            "sslCert": "./ssl/server.crt"
+            "host": "0.0.0.0",
+            "port": 5000,
+            "allowedHosts": ["all"]
           },
           "configurations": {
             "production": {

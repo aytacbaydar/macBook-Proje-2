@@ -5,7 +5,7 @@ run = "node index.js"
 channel = "stable-25_05"
 
 [workflows]
-runButton = "Angular Dev Server HTTPS"
+runButton = "Project"
 
 [[workflows.workflow]]
 name = "Angular Dev Server"
@@ -46,11 +46,36 @@ args = "cd kimyaogreniyorum"
 task = "shell.exec"
 args = "ng serve --ssl --host 0.0.0.0 --port 4200"
 
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Angular Server"
+
+[[workflows.workflow]]
+name = "Angular Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd kimyaogreniyorum && ng serve --disable-host-check --host 0.0.0.0 --port 5000"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
 [deployment]
 run = ["sh", "-c", "node index.js"]
 
 [[ports]]
 localPort = 8000
+externalPort = 80
+
+[[ports]]
+localPort = 5000
 externalPort = 80
 
 [agent]
