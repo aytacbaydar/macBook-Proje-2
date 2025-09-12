@@ -210,18 +210,56 @@ a{
     }
 }
 
-/* Mobil Footer Menu */
+/* Mobil Footer Menu - 3D Görünümü */
 .mobile-footer-menu {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 1000;
-  background: linear-gradient(145deg, rgba(255, 102, 0, 0.95) 0%, rgba(255, 102, 0, 0.9) 100%);
+  background: linear-gradient(145deg, 
+    rgba(255, 102, 0, 0.95) 0%, 
+    rgba(255, 102, 0, 0.9) 50%, 
+    rgba(220, 80, 0, 0.95) 100%);
   backdrop-filter: blur(20px);
-  border-top: 1px solid rgba(255, 102, 0, 0.3);
-  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.1);
+  border-top: 1px solid rgba(255, 102, 0, 0.4);
+  /* 3D Shadow Efekti */
+  box-shadow: 
+    0 -15px 35px rgba(0, 0, 0, 0.2),
+    0 -5px 15px rgba(255, 102, 0, 0.3),
+    0 -2px 8px rgba(255, 102, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
   padding: 5px 0 env(safe-area-inset-bottom, 0);
+  /* 3D Derinlik */
+  transform-style: preserve-3d;
+  position: relative;
+  
+  /* 3D Bottom Border */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(255, 255, 255, 0.5) 50%, 
+      transparent 100%);
+  }
+  
+  /* 3D Highlight */
+  &::after {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 10px;
+  }
 }
 
 .footer-menu-container {
@@ -272,13 +310,39 @@ a{
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.25);
   margin-bottom: 4px;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* 3D Button Efekti */
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.15),
+    0 2px 4px rgba(255, 102, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  
+  /* 3D Highlight */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    right: 2px;
+    height: 50%;
+    background: linear-gradient(180deg, 
+      rgba(255, 255, 255, 0.2) 0%, 
+      transparent 100%);
+    border-radius: 8px;
+    pointer-events: none;
+  }
   
   i {
     font-size: 20px;
     transition: all 0.3s ease;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+    position: relative;
+    z-index: 2;
   }
 }
 
@@ -293,44 +357,81 @@ a{
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #ff8f00 0%, #ff6600 100%);
+    background: linear-gradient(145deg, #ff8f00 0%, #ff6600 50%, #e55a00 100%);
     color: white;
     margin-bottom: 4px;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
     cursor: pointer;
     position: relative;
+    /* Güçlü 3D Efekt */
+    box-shadow: 
+      0 8px 25px rgba(255, 102, 0, 0.4),
+      0 4px 12px rgba(0, 0, 0, 0.2),
+      0 2px 6px rgba(255, 102, 0, 0.6),
+      inset 0 2px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.4);
     
+    /* 3D Glow Ring */
     &::before {
       content: '';
       position: absolute;
-      top: -2px;
-      left: -2px;
-      right: -2px;
-      bottom: -2px;
+      top: -4px;
+      left: -4px;
+      right: -4px;
+      bottom: -4px;
       border-radius: 50%;
       background: linear-gradient(135deg, #ff8f00 0%, #ff6600 100%);
       z-index: -1;
       opacity: 0;
-      transition: opacity 0.3s ease;
+      transition: all 0.3s ease;
+      filter: blur(2px);
+    }
+    
+    /* Inner Highlight */
+    &::after {
+      content: '';
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      right: 4px;
+      height: 50%;
+      background: linear-gradient(180deg, 
+        rgba(255, 255, 255, 0.4) 0%, 
+        transparent 100%);
+      border-radius: 50%;
+      pointer-events: none;
     }
     
     &:hover {
-      transform: translateY(-4px) scale(1.05);
-      box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+      transform: translateY(-6px) scale(1.08);
+      box-shadow: 
+        0 15px 40px rgba(255, 102, 0, 0.5),
+        0 8px 20px rgba(0, 0, 0, 0.3),
+        0 4px 10px rgba(255, 102, 0, 0.7),
+        inset 0 2px 0 rgba(255, 255, 255, 0.4),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.3);
       
       &::before {
-        opacity: 0.7;
+        opacity: 0.8;
+        transform: scale(1.1);
       }
     }
     
     &:active {
-      transform: translateY(-2px) scale(1.02);
+      transform: translateY(-3px) scale(1.04);
+      box-shadow: 
+        0 8px 20px rgba(255, 102, 0, 0.4),
+        0 4px 10px rgba(0, 0, 0, 0.2),
+        inset 0 2px 4px rgba(0, 0, 0, 0.2);
     }
     
     i {
       font-size: 24px;
       transition: all 0.3s ease;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+      position: relative;
+      z-index: 3;
     }
   }
 }
@@ -343,18 +444,31 @@ a{
   transition: all 0.3s ease;
 }
 
-// Hover efektleri
+// Hover efektleri - 3D
 .footer-menu-item:hover {
   .footer-menu-icon {
-    background: linear-gradient(135deg, #ff8f00 0%, #ff6600 100%);
+    background: linear-gradient(145deg, #ff8f00 0%, #ff6600 50%, #e55a00 100%);
     color: white;
-    transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+    transform: translateY(-3px) scale(1.08);
+    box-shadow: 
+      0 8px 25px rgba(255, 102, 0, 0.4),
+      0 4px 12px rgba(0, 0, 0, 0.2),
+      0 2px 6px rgba(255, 102, 0, 0.6),
+      inset 0 2px 0 rgba(255, 255, 255, 0.4),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    
+    &::before {
+      background: linear-gradient(180deg, 
+        rgba(255, 255, 255, 0.3) 0%, 
+        transparent 100%);
+    }
   }
   
   .footer-menu-text {
     color: #ffcc80;
     font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   }
 }
 
@@ -376,7 +490,7 @@ a{
 // Mobilde ana içerik için alt boşluk - Footer menu ile overlap'i önlemek için
 @media (max-width: 768px) {
   body {
-    padding-bottom: 90px;
+    padding-bottom: 120px; // Footer için daha fazla boşluk
   }
   
   // Tüm main content container'lara padding ekle
@@ -388,8 +502,9 @@ a{
     app-ogrenci-ana-sayfasi,
     app-ogrenci-profil-sayfasi,
     app-sinav-sonuclari-sayfasi,
-    app-ogrenci-islene-konular-sayfasi {
-      padding-bottom: 100px !important;
+    app-ogrenci-islene-konular-sayfasi,
+    app-ogrenci-islene-konularin-pdf-sayfasi {
+      padding-bottom: 140px !important; // Sayfa alt bilgileri için daha fazla boşluk
     }
     
     // Form button'ları için özel padding
@@ -398,12 +513,29 @@ a{
     .btn-warning,
     .btn-danger,
     button[type="submit"] {
-      margin-bottom: 20px;
+      margin-bottom: 30px;
     }
     
     // Card'ların alt kısımları
     .card {
-      margin-bottom: 100px;
+      margin-bottom: 120px;
+    }
+    
+    // Footer bilgileri, copyright vs için
+    footer,
+    .footer,
+    .page-footer,
+    .copyright,
+    .site-info {
+      margin-bottom: 140px !important;
+      padding-bottom: 20px !important;
+    }
+    
+    // Sayfa sonundaki herhangi bir bilgi için
+    .page-bottom,
+    .bottom-info,
+    .last-section {
+      margin-bottom: 140px !important;
     }
   }
 }
