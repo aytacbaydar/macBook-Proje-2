@@ -1,11 +1,34 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 import { MobileDetectionService } from '../../services/mobile-detection.service';
 
 @Component({
   selector: 'app-mobile-app-download-alert',
   templateUrl: './mobile-app-download-alert.component.html',
   styleUrls: ['./mobile-app-download-alert.component.scss'],
-  standalone: false
+  standalone: false,
+  animations: [
+    trigger('fadeInOut', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('300ms ease-in', style({ opacity: 1 }))
+      ]),
+      transition(':leave', [
+        animate('300ms ease-out', style({ opacity: 0 }))
+      ])
+    ]),
+    trigger('slideUp', [
+      transition(':enter', [
+        style({ transform: 'translateY(50px) scale(0.9)', opacity: 0 }),
+        animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)', 
+          style({ transform: 'translateY(0) scale(1)', opacity: 1 }))
+      ]),
+      transition(':leave', [
+        animate('300ms ease-in', 
+          style({ transform: 'translateY(-30px) scale(0.95)', opacity: 0 }))
+      ])
+    ])
+  ]
 })
 export class MobileAppDownloadAlertComponent implements OnInit {
   @Output() closeAlert = new EventEmitter<void>();
@@ -19,13 +42,19 @@ export class MobileAppDownloadAlertComponent implements OnInit {
   constructor(private mobileDetectionService: MobileDetectionService) { }
 
   ngOnInit(): void {
-    // Mobil cihazda ve PWA yüklü değilse alert göster
+    // Centralized visibility logic - check both mobile platform and TTL expiry
     if (this.mobileDetectionService.shouldShowInstallPrompt()) {
-      // LocalStorage'da daha önce kapatılmış mı kontrol et
-      const dismissed = localStorage.getItem('mobile-app-alert-dismissed');
-      if (!dismissed) {
-        this.initializeAlert();
-      }
+      this.checkDismissalStatus();
+    }
+  }
+
+  private checkDismissalStatus(): void {
+    const dismissed = localStorage.getItem('mobile-app-alert-dismissed');
+    const currentTime = new Date().getTime();
+    
+    // Show alert if never dismissed OR dismissal has expired
+    if (!dismissed || parseInt(dismissed) < currentTime) {
+      this.initializeAlert();
     }
   }
 
@@ -46,8 +75,8 @@ export class MobileAppDownloadAlertComponent implements OnInit {
       // Android için APK indirme
       this.downloadAPK();
     } else if (this.platform === 'ios') {
-      // iOS için App Store'a yönlendirme
-      window.open(this.downloadUrl, '_blank');
+      // iOS için PWA talimatları (App Store link henüz hazır değil)
+      this.showPWAInstructions();
     } else {
       // Web için PWA yükleme talimatları
       this.showPWAInstructions();

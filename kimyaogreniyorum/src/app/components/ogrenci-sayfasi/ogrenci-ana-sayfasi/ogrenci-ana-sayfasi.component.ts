@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Chart, registerables } from 'chart.js';
+import { MobileDetectionService } from '../../../shared/services/mobile-detection.service';
 
 Chart.register(...registerables);
 
@@ -62,7 +63,12 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
     'TEST': { color: '#fa709a', label: 'Konu Testi' }
   };
 
-  constructor(private http: HttpClient) {}
+  // Mobile app alert - now managed entirely by child component
+
+  constructor(
+    private http: HttpClient,
+    private mobileDetectionService: MobileDetectionService
+  ) {}
 
   ngOnInit(): void {
     this.loadStudentInfo();
@@ -74,6 +80,8 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
     window.addEventListener('resize', () => {
       this.checkScreenSize();
     });
+
+    // Mobile app alert now manages itself
   }
 
   ngAfterViewInit() {
@@ -531,5 +539,7 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
     window.location.href = '/ogrenci-sayfasi/ogrenci-profil-sayfasi';
   }
 
-
+  onMobileAppAlertClose(): void {
+    // Alert closed - no action needed, child manages visibility
+  }
 }
