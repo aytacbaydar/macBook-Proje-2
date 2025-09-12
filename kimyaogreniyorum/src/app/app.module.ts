@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -14,6 +14,7 @@ import { YoneticiSayfasiModule } from './components/yonetici-sayfasi/yonetici-sa
 import { OgretmenSayfasiModule } from './components/ogretmen-sayfasi/ogretmen-sayfasi.module';
 import { OgrenciSayfasiModule } from './components/ogrenci-sayfasi/ogrenci-sayfasi.module';
 import { SharedModule } from './shared/shared.module';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
   declarations: [AppComponent],
@@ -36,7 +37,13 @@ import { SharedModule } from './shared/shared.module';
     YoneticiSayfasiModule,
     OgretmenSayfasiModule,
     OgrenciSayfasiModule,
-    SharedModule
+    SharedModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    })
   ],
   providers: [],
   bootstrap: [AppComponent],
