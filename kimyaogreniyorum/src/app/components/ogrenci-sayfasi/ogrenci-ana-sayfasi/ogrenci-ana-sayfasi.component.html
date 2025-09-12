@@ -341,3 +341,52 @@
     </div>
   </div>
 </div>
+
+<!-- Mobil Footer Menu -->
+<div class="mobile-footer-menu d-block d-lg-none">
+  <div class="footer-menu-container">
+    <div class="footer-menu-items">
+      
+      <!-- Anasayfa -->
+      <a routerLink="/ogrenci-sayfasi/ogrenci-ana-sayfasi" class="footer-menu-item" [routerLinkActive]="'active'">
+        <div class="footer-menu-icon">
+          <i class="bi bi-house"></i>
+        </div>
+        <span class="footer-menu-text">Anasayfa</span>
+      </a>
+
+      <!-- Sınavlar -->
+      <a routerLink="/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi" class="footer-menu-item">
+        <div class="footer-menu-icon">
+          <i class="bi bi-clipboard-check"></i>
+        </div>
+        <span class="footer-menu-text">Sınavlar</span>
+      </a>
+
+      <!-- Sidebar Butonu (Ortada) -->
+      <div class="footer-menu-item center-item" (click)="toggleMobileSidebar()">
+        <div class="footer-menu-icon-center">
+          <i class="bi bi-grid"></i>
+        </div>
+        <span class="footer-menu-text">Menü</span>
+      </div>
+
+      <!-- Konular -->
+      <a routerLink="/ogrenci-sayfasi/ogrenci-islene-konular-sayfasi" class="footer-menu-item">
+        <div class="footer-menu-icon">
+          <i class="bi bi-book"></i>
+        </div>
+        <span class="footer-menu-text">Konular</span>
+      </a>
+
+      <!-- Profil -->
+      <a routerLink="/ogrenci-sayfasi/ogrenci-profil-sayfasi" class="footer-menu-item">
+        <div class="footer-menu-icon">
+          <i class="bi bi-person"></i>
+        </div>
+        <span class="footer-menu-text">Profil</span>
+      </a>
+
+    </div>
+  </div>
+</div>
