@@ -106,39 +106,39 @@
       </div>
       <div class="modal-body">
         <div class="pdf-viewer">
-      <div class="pdf-fallback" *ngIf="isIOS()">
+      <div class="pdf-fallback" *ngIf="isIOSDevice()">
         <div class="fallback-content">
           <i class="fas fa-file-pdf pdf-icon"></i>
           <h4>PDF Görüntüleyici</h4>
           <p>iPhone/iPad'de PDF'i görüntülemek için aşağıdaki butona tıklayın:</p>
           <div class="pdf-actions">
-            <button class="pdf-action-btn primary" (click)="openPdfInNewTab()">
+            <button class="pdf-action-btn primary" (click)="viewPdf()">
               <i class="fas fa-eye"></i>
               PDF'i Aç
             </button>
             <button class="pdf-action-btn secondary" (click)="downloadPdf()">
               <i class="fas fa-download"></i>
-              <span *ngIf="isIOS()">Safari'de Aç</span>
-              <span *ngIf="!isIOS()">İndir</span>
+              <span *ngIf="isIOSDevice()">Safari'de Aç</span>
+              <span *ngIf="!isIOSDevice()">İndir</span>
             </button>
           </div>
         </div>
       </div>
 
-      <div class="pdf-fallback" *ngIf="!isIOS() && !pdfLoaded">
+      <div class="pdf-fallback" *ngIf="!isIOSDevice() && !pdfLoaded">
         <div class="fallback-content">
           <i class="fas fa-file-pdf pdf-icon"></i>
           <h4>PDF Görüntüleyici</h4>
           <p>PDF dosyasını görüntülemek için aşağıdaki seçenekleri kullanın:</p>
           <div class="pdf-actions">
-            <button class="pdf-action-btn primary" (click)="openPdfInNewTab()">
+            <button class="pdf-action-btn primary" (click)="viewPdf()">
               <i class="fas fa-eye"></i>
               Yeni Sekmede Görüntüle
             </button>
             <button class="pdf-action-btn secondary" (click)="downloadPdf()">
               <i class="fas fa-download"></i>
-              <span *ngIf="isIOS()">Safari'de Aç</span>
-              <span *ngIf="!isIOS()">İndir</span>
+              <span *ngIf="isIOSDevice()">Safari'de Aç</span>
+              <span *ngIf="!isIOSDevice()">İndir</span>
             </button>
           </div>
         </div>
@@ -151,7 +151,7 @@
         style="border: none;"
         (load)="onPdfLoad()"
         (error)="onPdfLoadError($event)"
-        *ngIf="!isIOS() && selectedPdf">
+        *ngIf="!isIOSDevice() && selectedPdf">
       </iframe>
     </div>
       </div>
