@@ -165,7 +165,7 @@ export class NativeFeaturesService {
         directory: Directory.Documents
       });
       
-      return files.files.map(file => file.name);
+      return files.files.map((file: any) => file.name);
     } catch (error) {
       console.error('PDF list error:', error);
       return [];
@@ -190,7 +190,7 @@ export class NativeFeaturesService {
 
   // App State Listeners
   setupAppStateListeners(): void {
-    App.addListener('appStateChange', ({ isActive }) => {
+    App.addListener('appStateChange', ({ isActive }: any) => {
       console.log('App state changed. Is active?', isActive);
       
       if (isActive) {
@@ -234,7 +234,7 @@ export class NativeFeaturesService {
         directory: Directory.Documents
       });
       
-      return cachedFiles.files.map(file => file.name);
+      return cachedFiles.files.map((file: any) => file.name);
     } catch (error) {
       // Cache klasörü yoksa oluştur
       await this.createCacheDirectory();
