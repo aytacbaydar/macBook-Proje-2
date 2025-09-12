@@ -151,7 +151,71 @@ export class OgrenciIslenenKonularPdfSayfasiComponent implements OnInit {
     }
 
     const pdfUrl = `./server/api/pdf_viewer.php?file=${encodeURIComponent(fileName)}`;
-    window.open(pdfUrl, '_blank'); // Yeni sekmede aç
+    
+    if (this.isIOS()) {
+      // iOS Safari için özel davranış
+      this.openIosPdf(pdfUrl);
+    } else {
+      // Android ve diğer cihazlar için normal davranış
+      window.open(pdfUrl, '_blank');
+    }
+  }
+
+  // iOS Safari için özel PDF açma metodu
+  openIosPdf(pdfUrl: string): void {
+    try {
+      // Önce fetch ile PDF'i al
+      fetch(pdfUrl)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('PDF yüklenemedi');
+          }
+          return response.blob();
+        })
+        .then(blob => {
+          // Blob URL oluştur
+          const blobUrl = URL.createObjectURL(blob);
+          
+          // iOS Safari için özel davranış
+          const userAgent = navigator.userAgent.toLowerCase();
+          if (userAgent.includes('safari') && !userAgent.includes('chrome')) {
+            // Safari'de doğrudan aç
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.target = '_blank';
+            a.download = 'ders_notu.pdf'; // Safari için download attribute ekle
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+          } else {
+            // Diğer iOS tarayıcılar için normal window.open
+            window.open(blobUrl, '_blank');
+          }
+          
+          // Blob URL'yi temizle
+          setTimeout(() => {
+            URL.revokeObjectURL(blobUrl);
+          }, 10000);
+        })
+        .catch(error => {
+          console.error('PDF yüklenirken hata:', error);
+          this.toaster.error('PDF yüklenirken hata oluştu. Lütfen tekrar deneyin.', 'Hata');
+          
+          // Fallback: doğrudan URL'i aç
+          try {
+            window.open(pdfUrl, '_blank');
+          } catch (e) {
+            // Son çare: aynı sekmeye yönlendir
+            window.location.href = pdfUrl;
+          }
+        });
+    } catch (error) {
+      console.error('iOS PDF açma hatası:', error);
+      this.toaster.error('PDF açılamadı. Lütfen tekrar deneyin.', 'Hata');
+      
+      // Fallback: normal window.open
+      window.open(pdfUrl, '_blank');
+    }
   }
 
   closePdfViewer(): void {

@@ -76,13 +76,5 @@ build = ["npm", "run", "build", "--", "--configuration", "production"]
 localPort = 5000
 externalPort = 80
 
-[[ports]]
-localPort = 8000
-externalPort = 80
-
-[[ports]]
-localPort = 33447
-externalPort = 3000
-
 [agent]
 expertMode = true
