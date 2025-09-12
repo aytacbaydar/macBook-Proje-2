@@ -87,15 +87,26 @@
     window.onscroll = function () { scrollFunction() };
 
     function scrollFunction() {
+      // Element var mı kontrol et (null check)
+      const navbar = document.getElementById("navbar");
+      const logo = document.getElementById("logo");
+      
+      if (!navbar) {
+        return; // Navbar element yoksa fonksiyondan çık
+      }
+      
       if (document.body.scrollTop > 0 || document.documentElement.scrollTop > 0) {
-        document.getElementById("navbar").style.padding = "5px";
-        document.getElementById("navbar").style.backgroundColor = "#29303c";
-        document.getElementById("logo").style.fontSize = "24px";
-
+        navbar.style.padding = "5px";
+        navbar.style.backgroundColor = "#29303c";
+        if (logo) {
+          logo.style.fontSize = "24px";
+        }
       } else {
-        document.getElementById("navbar").style.padding = "8px";
-        document.getElementById("navbar").style.backgroundColor = "#77777760";
-
+        navbar.style.padding = "8px";
+        navbar.style.backgroundColor = "#77777760";
+        if (logo) {
+          logo.style.fontSize = "25px"; // Orijinal font size
+        }
       }
     }
   </script>
