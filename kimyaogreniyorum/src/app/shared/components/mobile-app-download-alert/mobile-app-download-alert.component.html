@@ -1,0 +1,68 @@
+<!-- Mobile App Download Alert -->
+<div class="mobile-app-alert-overlay" *ngIf="showAlert" [@fadeInOut]>
+  <div class="mobile-app-alert" [@slideUp]>
+    <!-- Header -->
+    <div class="alert-header">
+      <img src="/app-icon.png" alt="Kimya Öğreniyorum" class="app-logo">
+      <h4>📱 Mobil Uygulamayı İndir</h4>
+      <button class="close-btn" (click)="dismissAlert()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Content -->
+    <div class="alert-content">
+      <p class="alert-text">
+        <strong>{{ platformName }}</strong> cihazınız için özel olarak tasarlanmış
+        <strong>Kimya Öğreniyorum</strong> uygulamasını indirin!
+      </p>
+      
+      <div class="features-list">
+        <div class="feature-item">
+          <i class="fas fa-offline text-success"></i>
+          <span>Offline çalışma</span>
+        </div>
+        <div class="feature-item">
+          <i class="fas fa-bell text-warning"></i>
+          <span>Push bildirimleri</span>
+        </div>
+        <div class="feature-item">
+          <i class="fas fa-rocket text-primary"></i>
+          <span>Daha hızlı performans</span>
+        </div>
+        <div class="feature-item">
+          <i class="fas fa-mobile-alt text-info"></i>
+          <span>Ana ekran kısayolu</span>
+        </div>
+      </div>
+
+      <div class="platform-info">
+        <i class="{{ platformIcon }} platform-icon"></i>
+        <span class="platform-text">{{ platformName }} için optimize edildi</span>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="alert-actions">
+      <button class="btn btn-primary download-btn" (click)="downloadApp()">
+        <i class="fas fa-download me-2"></i>
+        <span *ngIf="platform === 'android'">APK İndir</span>
+        <span *ngIf="platform === 'ios'">App Store'dan İndir</span>
+        <span *ngIf="platform === 'web'">Ana Ekrana Ekle</span>
+      </button>
+      
+      <button class="btn btn-outline-secondary later-btn" (click)="laterReminder()">
+        <i class="fas fa-clock me-1"></i>
+        Daha Sonra
+      </button>
+    </div>
+
+    <!-- App Store Badges (if needed) -->
+    <div class="store-badges" *ngIf="platform === 'ios'">
+      <img src="/assets/app-store-badge.png" alt="App Store" class="store-badge">
+    </div>
+    <div class="store-badges" *ngIf="platform === 'android'">
+      <img src="/assets/google-play-badge.png" alt="Google Play" class="store-badge">
+    </div>
+  </div>
+</div>

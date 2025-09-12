@@ -1,0 +1,260 @@
+.mobile-app-alert-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  backdrop-filter: blur(5px);
+}
+
+.mobile-app-alert {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  border: 2px solid #ff6600;
+}
+
+.alert-header {
+  background: linear-gradient(135deg, #ff6600 0%, #ff8533 100%);
+  color: white;
+  padding: 20px;
+  text-align: center;
+  position: relative;
+
+  .app-logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    border: 3px solid white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  h4 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.3rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.1);
+    }
+  }
+}
+
+.alert-content {
+  padding: 25px 20px;
+
+  .alert-text {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .features-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      color: #555;
+      
+      i {
+        font-size: 16px;
+        width: 20px;
+        text-align: center;
+      }
+    }
+  }
+
+  .platform-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #e9ecef;
+
+    .platform-icon {
+      font-size: 24px;
+      color: #ff6600;
+    }
+
+    .platform-text {
+      font-weight: 500;
+      color: #333;
+    }
+  }
+}
+
+.alert-actions {
+  padding: 0 20px 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .download-btn {
+    background: linear-gradient(135deg, #ff6600 0%, #ff8533 100%);
+    border: none;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 12px rgba(255, 102, 0, 0.3);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(255, 102, 0, 0.4);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  .later-btn {
+    color: #6c757d;
+    border: 1px solid #dee2e6;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: #f8f9fa;
+      border-color: #adb5bd;
+    }
+  }
+}
+
+.store-badges {
+  text-align: center;
+  padding: 0 20px 20px;
+
+  .store-badge {
+    height: 40px;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+// Animations
+@keyframes fadeInOut {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// Responsive Design
+@media (max-width: 480px) {
+  .mobile-app-alert {
+    margin: 10px;
+    max-width: calc(100% - 20px);
+  }
+
+  .alert-content .features-list {
+    grid-template-columns: 1fr;
+  }
+
+  .alert-header {
+    padding: 15px;
+
+    .app-logo {
+      width: 50px;
+      height: 50px;
+    }
+
+    h4 {
+      font-size: 1.1rem;
+    }
+  }
+
+  .alert-content {
+    padding: 20px 15px;
+  }
+
+  .alert-actions {
+    padding: 0 15px 20px;
+  }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  .mobile-app-alert {
+    background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+    color: #ffffff;
+  }
+
+  .alert-content .alert-text {
+    color: #e0e0e0;
+  }
+
+  .alert-content .platform-info {
+    background: #333333;
+    border-color: #444444;
+    color: #ffffff;
+  }
+
+  .alert-content .features-list .feature-item {
+    color: #cccccc;
+  }
+}
