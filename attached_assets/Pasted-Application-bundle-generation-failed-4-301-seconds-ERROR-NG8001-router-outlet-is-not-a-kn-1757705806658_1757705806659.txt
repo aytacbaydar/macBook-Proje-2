@@ -1,0 +1,115 @@
+Application bundle generation failed. [4.301 seconds]
+
+✘ [ERROR] NG8001: 'router-outlet' is not a known element:
+1. If 'router-outlet' is an Angular component, then verify that it is part of this module.
+2. If 'router-outlet' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/app.component.html:0:0:
+      0 │ 
+        ╵ ^
+
+  Error occurs in the template of component AppComponent.
+
+    src/app/app.component.ts:8:15:
+      8 │   templateUrl: './app.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] Could not resolve "@angular/service-worker"
+
+    src/app/app.module.ts:17:36:
+      17 │ import { ServiceWorkerModule } from '@angular/service-worker';
+         ╵                                     ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "@angular/service-worker" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+
+✘ [ERROR] TS2307: Cannot find module '@angular/service-worker' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/app.module.ts:17:36:
+      17 │ import { ServiceWorkerModule } from '@angular/service-worker';
+         ╵                                     ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS-991010: Value at position 14 in the NgModule.imports of AppModule is not a reference
+  Value could not be determined statically. [plugin angular-compiler]
+
+    src/app/app.module.ts:21:11:
+      21 │   imports: [
+         ╵            ^
+
+  Unable to evaluate this expression statically.
+
+    src/app/app.module.ts:41:4:
+      41 │     ServiceWorkerModule.register('ngsw-worker.js', {
+         ╵     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Unknown reference.
+
+    src/app/app.module.ts:41:4:
+      41 │     ServiceWorkerModule.register('ngsw-worker.js', {
+         ╵     ~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] Could not resolve "@capacitor/preferences"
+
+    src/app/shared/services/native-features.service.ts:2:28:
+      2 │ import { Preferences } from '@capacitor/preferences';
+        ╵                             ~~~~~~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "@capacitor/preferences" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+
+✘ [ERROR] TS2307: Cannot find module '@capacitor/preferences' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/shared/services/native-features.service.ts:2:28:
+      2 │ import { Preferences } from '@capacitor/preferences';
+        ╵                             ~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] Could not resolve "@capacitor/filesystem"
+
+    src/app/shared/services/native-features.service.ts:4:38:
+      4 │ import { Filesystem, Directory } from '@capacitor/filesystem';
+        ╵                                       ~~~~~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "@capacitor/filesystem" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+
+✘ [ERROR] TS2307: Cannot find module '@capacitor/filesystem' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/shared/services/native-features.service.ts:4:38:
+      4 │ import { Filesystem, Directory } from '@capacitor/filesystem';
+        ╵                                       ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] Could not resolve "@capacitor/app"
+
+    src/app/shared/services/native-features.service.ts:5:20:
+      5 │ import { App } from '@capacitor/app';
+        ╵                     ~~~~~~~~~~~~~~~~
+
+  You can mark the path "@capacitor/app" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+
+✘ [ERROR] TS2307: Cannot find module '@capacitor/app' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/shared/services/native-features.service.ts:5:20:
+      5 │ import { App } from '@capacitor/app';
+        ╵                     ~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] Could not resolve "@capacitor/push-notifications"
+
+    src/app/shared/services/push-notification.service.ts:2:41:
+      2 │ ... { PushNotifications, Token } from '@capacitor/push-notifications';
+        ╵                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "@capacitor/push-notifications" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+
+✘ [ERROR] TS2307: Cannot find module '@capacitor/push-notifications' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/shared/services/push-notification.service.ts:2:41:
+      2 │ ... { PushNotifications, Token } from '@capacitor/push-notifications';
+        ╵                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
