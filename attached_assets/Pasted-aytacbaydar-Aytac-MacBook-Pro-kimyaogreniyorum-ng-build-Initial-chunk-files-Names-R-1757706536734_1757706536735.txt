@@ -1,0 +1,196 @@
+aytacbaydar@Aytac-MacBook-Pro kimyaogreniyorum % ng build
+Initial chunk files   | Names         |  Raw size | Estimated transfer size
+main-3YJYOACY.js      | main          |   3.82 MB |               681.85 kB
+styles-TJ6OKMTN.css   | styles        | 340.14 kB |                47.17 kB
+chunk-5WMYFDU6.js     | -             | 203.11 kB |                38.51 kB
+scripts-Z6VWI63P.js   | scripts       |  80.36 kB |                21.59 kB
+polyfills-FFHMD2TL.js | polyfills     |  34.52 kB |                11.28 kB
+chunk-C3GRVDOV.js     | -             |   1.88 kB |               822 bytes
+chunk-FK6H3RFT.js     | -             | 272 bytes |               272 bytes
+
+                      | Initial total |   4.48 MB |               801.50 kB
+
+Lazy chunk files      | Names         |  Raw size | Estimated transfer size
+chunk-T4RZUX5A.js     | index-es      | 157.96 kB |                46.51 kB
+chunk-XNHHBE7C.js     | purify-es     |  21.56 kB |                 7.60 kB
+chunk-ET4GMBHE.js     | html2canvas   |  83 bytes |                83 bytes
+
+Application bundle generation failed. [9.607 seconds]
+
+▲ [WARNING] Module 'core-js/modules/es.promise.js' used by 'node_modules/canvg/lib/index.es.js' is not ESM
+
+  CommonJS or AMD dependencies can cause optimization bailouts.
+  For more information see: https://angular.dev/tools/cli/build#configuring-commonjs-dependencies
+
+
+▲ [WARNING] Module 'core-js/modules/es.string.match.js' used by 'node_modules/canvg/lib/index.es.js' is not ESM
+
+  CommonJS or AMD dependencies can cause optimization bailouts.
+  For more information see: https://angular.dev/tools/cli/build#configuring-commonjs-dependencies
+
+
+▲ [WARNING] Module 'core-js/modules/es.string.replace.js' used by 'node_modules/canvg/lib/index.es.js' is not ESM
+
+  CommonJS or AMD dependencies can cause optimization bailouts.
+  For more information see: https://angular.dev/tools/cli/build#configuring-commonjs-dependencies
+
+
+▲ [WARNING] Module 'core-js/modules/es.string.starts-with.js' used by 'node_modules/canvg/lib/index.es.js' is not ESM
+
+  CommonJS or AMD dependencies can cause optimization bailouts.
+  For more information see: https://angular.dev/tools/cli/build#configuring-commonjs-dependencies
+
+
+▲ [WARNING] Module 'core-js/modules/es.array.iterator.js' used by 'node_modules/canvg/lib/index.es.js' is not ESM
+
+  CommonJS or AMD dependencies can cause optimization bailouts.
+  For more information see: https://angular.dev/tools/cli/build#configuring-commonjs-dependencies
+
+
+▲ [WARNING] Module 'core-js/modules/web.dom-collections.iterator.js' used by 'node_modules/canvg/lib/index.es.js' is not ESM
+
+  CommonJS or AMD dependencies can cause optimization bailouts.
+  For more information see: https://angular.dev/tools/cli/build#configuring-commonjs-dependencies
+
+
+▲ [WARNING] Module 'core-js/modules/es.array.reduce.js' used by 'node_modules/canvg/lib/index.es.js' is not ESM
+
+  CommonJS or AMD dependencies can cause optimization bailouts.
+  For more information see: https://angular.dev/tools/cli/build#configuring-commonjs-dependencies
+
+
+▲ [WARNING] Module 'core-js/modules/es.string.ends-with.js' used by 'node_modules/canvg/lib/index.es.js' is not ESM
+
+  CommonJS or AMD dependencies can cause optimization bailouts.
+  For more information see: https://angular.dev/tools/cli/build#configuring-commonjs-dependencies
+
+
+▲ [WARNING] Module 'core-js/modules/es.string.split.js' used by 'node_modules/canvg/lib/index.es.js' is not ESM
+
+  CommonJS or AMD dependencies can cause optimization bailouts.
+  For more information see: https://angular.dev/tools/cli/build#configuring-commonjs-dependencies
+
+
+▲ [WARNING] Module 'raf' used by 'node_modules/canvg/lib/index.es.js' is not ESM
+
+  CommonJS or AMD dependencies can cause optimization bailouts.
+  For more information see: https://angular.dev/tools/cli/build#configuring-commonjs-dependencies
+
+
+▲ [WARNING] Module 'core-js/modules/es.string.trim.js' used by 'node_modules/canvg/lib/index.es.js' is not ESM
+
+  CommonJS or AMD dependencies can cause optimization bailouts.
+  For more information see: https://angular.dev/tools/cli/build#configuring-commonjs-dependencies
+
+
+▲ [WARNING] Module 'rgbcolor' used by 'node_modules/canvg/lib/index.es.js' is not ESM
+
+  CommonJS or AMD dependencies can cause optimization bailouts.
+  For more information see: https://angular.dev/tools/cli/build#configuring-commonjs-dependencies
+
+
+▲ [WARNING] Module 'core-js/modules/es.array.index-of.js' used by 'node_modules/canvg/lib/index.es.js' is not ESM
+
+  CommonJS or AMD dependencies can cause optimization bailouts.
+  For more information see: https://angular.dev/tools/cli/build#configuring-commonjs-dependencies
+
+
+▲ [WARNING] Module 'core-js/modules/es.string.includes.js' used by 'node_modules/canvg/lib/index.es.js' is not ESM
+
+  CommonJS or AMD dependencies can cause optimization bailouts.
+  For more information see: https://angular.dev/tools/cli/build#configuring-commonjs-dependencies
+
+
+▲ [WARNING] Module 'core-js/modules/es.array.reverse.js' used by 'node_modules/canvg/lib/index.es.js' is not ESM
+
+  CommonJS or AMD dependencies can cause optimization bailouts.
+  For more information see: https://angular.dev/tools/cli/build#configuring-commonjs-dependencies
+
+
+▲ [WARNING] Module 'core-js/modules/es.regexp.to-string.js' used by 'node_modules/canvg/lib/index.es.js' is not ESM
+
+  CommonJS or AMD dependencies can cause optimization bailouts.
+  For more information see: https://angular.dev/tools/cli/build#configuring-commonjs-dependencies
+
+
+▲ [WARNING] Module 'jsqr' used by 'src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts' is not ESM
+
+  CommonJS or AMD dependencies can cause optimization bailouts.
+  For more information see: https://angular.dev/tools/cli/build#configuring-commonjs-dependencies
+
+
+▲ [WARNING] Module 'html2canvas' used by 'src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-sinifta-kimler-var-sayfasi/ogretmen-sinifta-kimler-var-sayfasi.component.ts' is not ESM
+
+  CommonJS or AMD dependencies can cause optimization bailouts.
+  For more information see: https://angular.dev/tools/cli/build#configuring-commonjs-dependencies
+
+
+▲ [WARNING] Module 'qrcode' used by 'src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-qr-generator/ogretmen-qr-generator.component.ts' is not ESM
+
+  CommonJS or AMD dependencies can cause optimization bailouts.
+  For more information see: https://angular.dev/tools/cli/build#configuring-commonjs-dependencies
+
+
+▲ [WARNING] Unable to locate stylesheet: /unified-design.css
+
+
+▲ [WARNING] Unable to locate stylesheet: /temel-css.css
+
+
+▲ [WARNING] Unable to locate stylesheet: /card.css
+
+
+▲ [WARNING] Unable to locate stylesheet: /anasayfa.css
+
+
+▲ [WARNING] Unable to locate stylesheet: /vendor/animate.css-master/animate.min.css
+
+
+▲ [WARNING] Unable to locate stylesheet: /vendor/loadscreen/css/spinkit.css
+
+
+▲ [WARNING] Unable to locate stylesheet: /vendor/fontawesome/css/fontawesome-all.min.css
+
+
+▲ [WARNING] Unable to locate stylesheet: /custom/css/fables-icons.css
+
+
+▲ [WARNING] Unable to locate stylesheet: /vendor/bootstrap/css/bootstrap.min.css
+
+
+▲ [WARNING] Unable to locate stylesheet: /vendor/bootstrap/css/bootstrap-4-navbar.css
+
+
+▲ [WARNING] Unable to locate stylesheet: /vendor/portfolio-filter-gallery/portfolio-filter-gallery.css
+
+
+▲ [WARNING] Unable to locate stylesheet: /vendor/fancybox-master/jquery.fancybox.min.css
+
+
+▲ [WARNING] Unable to locate stylesheet: /vendor/range-slider/range-slider.css
+
+
+▲ [WARNING] Unable to locate stylesheet: /vendor/owlcarousel/owl.carousel.min.css
+
+
+▲ [WARNING] Unable to locate stylesheet: /vendor/owlcarousel/owl.theme.default.min.css
+
+
+▲ [WARNING] Unable to locate stylesheet: /custom/css/custom.css
+
+
+▲ [WARNING] Unable to locate stylesheet: /custom/css/custom-responsive.css
+
+
+▲ [WARNING] 8 rules skipped due to selector errors:
+  .form-floating>~label -> Did not expect successive traversals.
+  .btn-group>+.btn -> Did not expect successive traversals.
+  .btn-group>+.btn -> Did not expect successive traversals.
+  .btn-group-vertical>+.btn -> Did not expect successive traversals.
+  0% -> Unmatched selector: %
+  5% -> Unmatched selector: %
+  0% -> Unmatched selector: %
+  5% -> Unmatched selector: %
+
+
+✘ [ERROR] Cannot find package '@angular/service-worker' imported from /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/node_modules/@angular/build/src/utils/load-esm.js
