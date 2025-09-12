@@ -21,4 +21,5 @@ export class IndexNavbarSayfasiComponent {
       sidenav.style.width = '0';
     }
   }
+
 }

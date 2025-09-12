@@ -68,7 +68,9 @@ waitForPort = 5000
 outputType = "webview"
 
 [deployment]
-run = ["sh", "-c", "node index.js"]
+run = ["npx", "ng", "serve", "--host", "0.0.0.0", "--port", "5000", "--configuration", "production"]
+deploymentTarget = "autoscale"
+build = ["npm", "run", "build", "--", "--configuration", "production"]
 
 [[ports]]
 localPort = 5000

@@ -21,7 +21,7 @@
         </div>
         <div class="profile-section">
             <div class="avatar-container">
-                <img src="/avatar/avatar.jpg" alt="Profil" class="profile-avatar">
+                <img src="/public/ogrenci/ogrenci-1.webp" alt="Profil" class="profile-avatar">
             </div>
             <h3 class="welcome-text">Hoş Geldiniz</h3>
             <p class="platform-name">Kimya Öğreniyorum</p>
@@ -30,18 +30,18 @@
     
     <div class="sidenav-content">
         <div class="menu-section">
-            <a href="/ogrenci-bizden-beklentileriniz-sayfasi" class="menu-item">
+            <a [routerLink]="['/ogrenci-bizden-beklentileriniz-sayfasi']" class="menu-item">
                 <i class="fas fa-star"></i>
                 <span>Bizden Beklentiniz..!</span>
             </a>
-            <a href="/ogrenci-iletisim-sayfasi" class="menu-item">
+            <a [routerLink]="['/ogrenci-iletisim-sayfasi']" class="menu-item">
                 <i class="fas fa-envelope"></i>
                 <span>İletişim</span>
             </a>
         </div>
         
         <div class="login-section">
-            <a href="/giris-sayfasi" class="login-btn">
+            <a [routerLink]="['/giris-sayfasi']" class="login-btn">
                 <i class="fas fa-sign-in-alt"></i>
                 <span>Üye Girişi</span>
                 <i class="fas fa-arrow-right arrow-icon"></i>
