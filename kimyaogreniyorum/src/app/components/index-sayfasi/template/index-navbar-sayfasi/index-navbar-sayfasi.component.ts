@@ -8,4 +8,17 @@ import { Component } from '@angular/core';
 })
 export class IndexNavbarSayfasiComponent {
 
+  openNav() {
+    const sidenav = document.getElementById('mySidenav');
+    if (sidenav) {
+      sidenav.style.width = '280px';
+    }
+  }
+
+  closeNav() {
+    const sidenav = document.getElementById('mySidenav');
+    if (sidenav) {
+      sidenav.style.width = '0';
+    }
+  }
 }

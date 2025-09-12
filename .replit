@@ -61,7 +61,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd kimyaogreniyorum && ng serve --disable-host-check --host 0.0.0.0 --port 5000"
+args = "cd kimyaogreniyorum && npx ng serve --disable-host-check --host 0.0.0.0 --port 5000"
 waitForPort = 5000
 
 [workflows.workflow.metadata]
@@ -71,12 +71,16 @@ outputType = "webview"
 run = ["sh", "-c", "node index.js"]
 
 [[ports]]
+localPort = 5000
+externalPort = 80
+
+[[ports]]
 localPort = 8000
 externalPort = 80
 
 [[ports]]
-localPort = 5000
-externalPort = 80
+localPort = 40891
+externalPort = 3000
 
 [agent]
 expertMode = true
