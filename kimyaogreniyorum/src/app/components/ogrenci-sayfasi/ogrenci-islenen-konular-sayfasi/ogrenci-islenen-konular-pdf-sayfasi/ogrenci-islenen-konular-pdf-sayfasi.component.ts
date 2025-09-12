@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
+import { PdfService } from '../../../../shared/services/pdf.service';
 
 interface DersKaydi {
   id: number;
@@ -27,7 +28,11 @@ export class OgrenciIslenenKonularPdfSayfasiComponent implements OnInit {
   pdfLoaded: boolean = false;
   studentInfo: any = null;
 
-  constructor(private http: HttpClient, private toaster: ToastrService) {}
+  constructor(
+    private http: HttpClient, 
+    private toaster: ToastrService,
+    private pdfService: PdfService
+  ) {}
 
   ngOnInit(): void {
     this.loadData();
@@ -150,18 +155,14 @@ export class OgrenciIslenenKonularPdfSayfasiComponent implements OnInit {
       return;
     }
 
-    const pdfUrl = `./server/api/pdf_viewer.php?file=${encodeURIComponent(fileName)}`;
-    this.openPdfUnified(pdfUrl);
+    // Use centralized PDF service
+    this.pdfService.viewLessonPdf(fileName);
   }
 
   // Unified PDF opening method with robust iOS handling
   openPdfUnified(pdfUrl: string): void {
-    if (this.isIOSDevice()) {
-      this.openPdfForIOS(pdfUrl);
-    } else {
-      // Standard behavior for all other platforms
-      window.open(pdfUrl, '_blank');
-    }
+    // Use centralized PDF service
+    this.pdfService.openPdfUnified(pdfUrl);
   }
 
   // iOS-specific PDF opening with synchronous window opening and async blob URL assignment
@@ -279,49 +280,20 @@ export class OgrenciIslenenKonularPdfSayfasiComponent implements OnInit {
 
   // Robust iOS device detection including iPadOS 13+
   isIOSDevice(): boolean {
-    const userAgent = navigator.userAgent;
-    
-    // Standard iOS devices
-    if (/iPad|iPhone|iPod/.test(userAgent)) {
-      return true;
-    }
-    
-    // iPadOS 13+ detection (appears as desktop Safari)
-    // Check for touch support + macOS-like userAgent + no mouse
-    if (/Macintosh/.test(userAgent) && 'ontouchend' in document) {
-      return true;
-    }
-    
-    // Additional Safari iOS detection
-    const isSafari = /Safari/.test(userAgent) && !/Chrome/.test(userAgent);
-    const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    
-    return isSafari && hasTouch && /Mobile/.test(userAgent);
+    return this.pdfService.isIOSDevice();
   }
 
   // Unified PDF viewing method for modal context
   viewPdf(): void {
     if (this.selectedPdf) {
-      this.openPdfUnified(this.selectedPdf);
+      this.pdfService.openPdfUnified(this.selectedPdf);
     }
   }
 
   // Unified PDF download method
   downloadPdf(): void {
     if (this.selectedPdf) {
-      if (this.isIOSDevice()) {
-        // iOS: Open in new tab (iOS doesn't support programmatic downloads)
-        this.openPdfUnified(this.selectedPdf);
-        this.toaster.info('iOS\'ta PDF yeni sekmede açıldı. Paylaş menüsünden kaydedebilirsiniz.', 'Bilgi');
-      } else {
-        // Other platforms: Standard download
-        const link = document.createElement('a');
-        link.href = this.selectedPdf;
-        link.download = 'ders_notlari.pdf';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
+      this.pdfService.downloadOrOpen(this.selectedPdf, 'ders_notlari.pdf');
     }
   }
 }

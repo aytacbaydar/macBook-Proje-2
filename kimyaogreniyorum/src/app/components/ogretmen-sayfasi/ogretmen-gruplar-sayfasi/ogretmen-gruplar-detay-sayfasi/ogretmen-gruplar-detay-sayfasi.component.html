@@ -121,7 +121,7 @@
         PDF Görüntüleyici
       </h3>
       <!--<div class="pdf-controls">
-        <button class="control-btn" (click)="openPdfInNewTab()" title="Yeni sekmede aç">
+        <button class="control-btn" (click)="viewLessonPdf(selectedPdf!)" title="Yeni sekmede aç">
           <i class="bi bi-box-arrow-up-right"></i>
           Yeni Sekmede Aç
         </button>
@@ -141,7 +141,7 @@
           <h4>PDF Görüntüleyici</h4>
           <p>PDF dosyasını görüntülemek için aşağıdaki seçenekleri kullanın:</p>
           <div class="pdf-actions">
-            <button class="pdf-action-btn primary" (click)="openPdfInNewTab()">
+            <button class="pdf-action-btn primary" (click)="viewLessonPdf(selectedPdf!)">
               <i class="bi bi-eye"></i>
               Yeni Sekmede Görüntüle
             </button>

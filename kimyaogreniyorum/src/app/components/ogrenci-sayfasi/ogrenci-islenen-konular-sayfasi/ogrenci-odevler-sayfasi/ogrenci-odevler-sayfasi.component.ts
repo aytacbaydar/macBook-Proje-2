@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { PdfService } from '../../../../shared/services/pdf.service';
 
 @Component({
   selector: 'app-ogrenci-odevler-sayfasi',
@@ -24,7 +25,8 @@ export class OgrenciOdevlerSayfasiComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    private pdfService: PdfService
   ) {}
 
   viewPdf(odev: any): void {
@@ -32,29 +34,22 @@ export class OgrenciOdevlerSayfasiComponent implements OnInit {
       this.toastr.error('PDF dosyası bulunamadı');
       return;
     }
-    // Yeni sekmede PDF'i aç
-     const pdfUrl = `./server/api/odev_odf_viewer.php?file=${odev.pdf_viewer_url}`;
-    window.open(pdfUrl, '_blank'); // Yeni sekmede aç
+    // Use centralized PDF service for iOS-optimized viewing
+    this.pdfService.viewHomeworkPdf(odev.pdf_viewer_url);
   }
 
   downloadPdf(odev: any): void {
-    if (!odev.pdf_exists || !odev.pdf_url) {
+    if (!odev.pdf_exists || !odev.pdf_viewer_url) {
       this.toastr.error('PDF dosyası bulunamadı');
       return;
     }
 
-    // PDF'i indir
-    const link = document.createElement('a');
-    link.href = odev.pdf_url;
-    link.download = odev.pdf_dosyasi || 'odev.pdf';
-    link.target = '_blank';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Use centralized PDF service for cross-platform download
+    this.pdfService.downloadHomeworkPdf(odev.pdf_viewer_url);
   }
 
-  isIOS(): boolean {
-    return /iPad|iPhone|iPod/.test(navigator.userAgent);
+  isIOSDevice(): boolean {
+    return this.pdfService.isIOSDevice();
   }
 
   ngOnInit(): void {
@@ -251,8 +246,8 @@ export class OgrenciOdevlerSayfasiComponent implements OnInit {
 
   openPdfInNewTab(pdfFileName: string): void {
     if (pdfFileName) {
-      const pdfUrl = `./uploads/odevler/${pdfFileName}`;
-      window.open(pdfUrl, '_blank');
+      // Use centralized service for consistent PDF handling
+      this.pdfService.viewHomeworkPdf(pdfFileName);
     } else {
       this.toastr.warning('Bu ödev için PDF dosyası bulunmamaktadır');
     }

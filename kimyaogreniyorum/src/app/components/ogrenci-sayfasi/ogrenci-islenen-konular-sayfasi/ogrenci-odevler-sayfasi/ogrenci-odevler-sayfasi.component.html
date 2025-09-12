@@ -138,16 +138,16 @@
                             (click)="viewPdf(odev)"
                             title="PDF'i Görüntüle">
                       <i class="bi bi-eye"></i>
-                      <span *ngIf="!isIOS()">Görüntüle</span>
-                      <span *ngIf="isIOS()">Aç</span>
+                      <span *ngIf="!isIOSDevice()">Görüntüle</span>
+                      <span *ngIf="isIOSDevice()">Aç</span>
                     </button>
 
                     <button class="btn btn-sm btn-secondary" 
                             (click)="downloadPdf(odev)"
                             title="PDF'i İndir">
                       <i class="bi bi-download"></i>
-                      <span *ngIf="!isIOS()">İndir</span>
-                      <span *ngIf="isIOS()">Safari'de Aç</span>
+                      <span *ngIf="!isIOSDevice()">İndir</span>
+                      <span *ngIf="isIOSDevice()">Safari'de Aç</span>
                     </button>
                   </div>
 

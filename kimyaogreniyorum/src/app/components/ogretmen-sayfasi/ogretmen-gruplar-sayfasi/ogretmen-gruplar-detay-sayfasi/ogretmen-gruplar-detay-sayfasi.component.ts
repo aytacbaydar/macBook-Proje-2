@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { PdfService } from '../../../../shared/services/pdf.service';
 
 interface DersKaydi {
   id: number;
@@ -45,7 +46,11 @@ export class OgretmenGruplarDetaySayfasiComponent implements OnInit {
   pdfLoaded: boolean = false;
   private apiBaseUrl = this.getApiBaseUrl();
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) {}
+  constructor(
+    private route: ActivatedRoute, 
+    private http: HttpClient,
+    private pdfService: PdfService
+  ) {}
 
   private getApiBaseUrl(): string {
     // Production'da kimyaogreniyorum.com, development'da localhost kullan
@@ -185,10 +190,8 @@ export class OgretmenGruplarDetaySayfasiComponent implements OnInit {
   }
 
   openPdfViewer(pdfYolu: string): void {
-    // PDF API endpoint'ini kullan
-    this.selectedPdf = `./server/api/pdf_viewer.php?file=${encodeURIComponent(
-      pdfYolu
-    )}`;
+    // Use centralized PDF service for iOS-optimized viewing
+    this.pdfService.viewLessonPdf(pdfYolu);
   }
 
   closePdfViewer(): void {
@@ -228,37 +231,21 @@ export class OgretmenGruplarDetaySayfasiComponent implements OnInit {
       return;
     }
 
-    console.log('PDF açılıyor:', fileName);
-    console.log('API Base URL:', this.apiBaseUrl);
-
-    // PDF state'ini sıfırla
-    this.pdfLoaded = false;
-    this.selectedPdf = null;
-
-    // Modal'ı aç
-    this.showPdfModal = true;
-
-    // Kısa bir gecikme ile PDF URL'ini ayarla
-    setTimeout(() => {
-      this.selectedPdf = `./server/api/pdf_viewer.php?file=${encodeURIComponent(fileName)}`;
-      console.log('PDF URL oluşturuldu:', this.selectedPdf);
-    }, 100);
+    // Use centralized PDF service for iOS-optimized viewing
+    this.pdfService.viewLessonPdf(fileName);
   }
 
   openPdfInNewTab(): void {
     if (this.selectedPdf) {
-      window.open(this.selectedPdf, '_blank');
+      // Use centralized PDF service for consistent cross-platform behavior
+      this.pdfService.openPdfUnified(this.selectedPdf);
     }
   }
 
   downloadPdf(): void {
     if (this.selectedPdf) {
-      const link = document.createElement('a');
-      link.href = this.selectedPdf;
-      link.download = 'ders_notlari.pdf';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      // Use centralized PDF service for cross-platform download
+      this.pdfService.downloadOrOpen(this.selectedPdf, 'ders_notlari.pdf');
     }
   }
 
@@ -274,22 +261,19 @@ export class OgretmenGruplarDetaySayfasiComponent implements OnInit {
 
   downloadFile(fileName: string, type: 'pdf' | 'png'): void {
     if (fileName) {
-      const apiUrl =
-        type === 'pdf'
-          ? `${this.apiBaseUrl}/pdf_viewer.php?file=${encodeURIComponent(
-              fileName
-            )}`
-          : `${this.apiBaseUrl}/png_viewer.php?file=${encodeURIComponent(
-              fileName
-            )}`;
-
-      // Dosyayı indir
-      const link = document.createElement('a');
-      link.href = apiUrl;
-      link.download = fileName;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      if (type === 'pdf') {
+        // Use centralized PDF service for PDF downloads
+        this.pdfService.downloadLessonPdf(fileName);
+      } else {
+        // Keep original logic for PNG files
+        const apiUrl = `${this.apiBaseUrl}/png_viewer.php?file=${encodeURIComponent(fileName)}`;
+        const link = document.createElement('a');
+        link.href = apiUrl;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
     }
   }
 

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
+import { PdfService } from '../../../../shared/services/pdf.service';
 
 declare var bootstrap: any;
 
@@ -63,7 +64,8 @@ export class OgretmenOdevSayfasiComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private pdfService: PdfService
   ) {}
 
   ngOnInit(): void {
@@ -416,12 +418,8 @@ export class OgretmenOdevSayfasiComponent implements OnInit {
 
   openPdf(filename: string): void {
     if (filename) {
-
-
-    // Yeni sekmede PDF'i aç
-     const pdfUrl = `./server/api/odev_odf_viewer.php?file=${filename}`;
-    window.open(pdfUrl, '_blank'); // Yeni sekmede aç
-
+      // Use centralized PDF service for iOS-optimized viewing
+      this.pdfService.viewHomeworkPdf(filename);
     }
   }
 

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { PdfService } from '../../../../shared/services/pdf.service';
 
 interface DersKaydi {
   id: number;
@@ -47,7 +48,8 @@ export class GrupDetaySayfasiComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private http: HttpClient
+    private http: HttpClient,
+    private pdfService: PdfService
   ) {}
 
   private getApiBaseUrl(): string {
@@ -173,8 +175,8 @@ export class GrupDetaySayfasiComponent implements OnInit {
   }
 
   openPdfViewer(pdfYolu: string): void {
-    // PDF API endpoint'ini kullan
-    this.selectedPdf = `./server/api/pdf_viewer.php?file=${encodeURIComponent(pdfYolu)}`;
+    // Use centralized PDF service for iOS-optimized viewing
+    this.pdfService.viewLessonPdf(pdfYolu);
   }
 
   closePdfViewer(): void {
@@ -198,8 +200,8 @@ export class GrupDetaySayfasiComponent implements OnInit {
 
   viewLessonPdf(fileName: string): void {
     if (fileName) {
-      this.selectedPdf = `${this.apiBaseUrl}/pdf_viewer.php?file=${encodeURIComponent(fileName)}`;
-      this.showPdfModal = true;
+      // Use centralized PDF service
+      this.pdfService.viewLessonPdf(fileName);
     }
   }
 
@@ -213,17 +215,19 @@ export class GrupDetaySayfasiComponent implements OnInit {
 
   downloadFile(fileName: string, type: 'pdf' | 'png'): void {
     if (fileName) {
-      const apiUrl = type === 'pdf' 
-        ? `${this.apiBaseUrl}/pdf_viewer.php?file=${encodeURIComponent(fileName)}`
-        : `${this.apiBaseUrl}/png_viewer.php?file=${encodeURIComponent(fileName)}`;
-
-      // Dosyayı indir
-      const link = document.createElement('a');
-      link.href = apiUrl;
-      link.download = fileName;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      if (type === 'pdf') {
+        // Use centralized PDF service for PDF downloads
+        this.pdfService.downloadLessonPdf(fileName);
+      } else {
+        // Keep original logic for PNG files
+        const apiUrl = `${this.apiBaseUrl}/png_viewer.php?file=${encodeURIComponent(fileName)}`;
+        const link = document.createElement('a');
+        link.href = apiUrl;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
     }
   }
 }
