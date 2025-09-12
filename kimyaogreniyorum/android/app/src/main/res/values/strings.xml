@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Kimya Öğreniyorum</string>
+    <string name="title_activity_main">Kimya Öğreniyorum</string>
+    <string name="package_name">com.kimyaogreniyorum.app</string>
+    <string name="custom_url_scheme">com.kimyaogreniyorum.app</string>
+</resources>
