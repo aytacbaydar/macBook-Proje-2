@@ -3,7 +3,6 @@
 </div>
 <div class="sidebar" [class.closed]="isClosed">
     <ul class="menu-list" >
-        <div class="logo" *ngIf="!isClosed">Kimya<span>Öğreniyorum</span></div>
         <div class="menu-sidebar">
             <li class="li-menu" *ngFor="let item of menuItems">
                 <a href="{{ item.link }}" style="position: relative;">
@@ -29,7 +28,7 @@
     <div class="footer-menu-items">
       
       <!-- Anasayfa -->
-      <a routerLink="/ogrenci-sayfasi/ogrenci-ana-sayfasi" class="footer-menu-item" [routerLinkActive]="'active'">
+      <a routerLink="/ogrenci-sayfasi/" class="footer-menu-item" [routerLinkActive]="'active'">
         <div class="footer-menu-icon">
           <i class="bi bi-house"></i>
         </div>
@@ -57,7 +56,7 @@
         <div class="footer-menu-icon">
           <i class="bi bi-book"></i>
         </div>
-        <span class="footer-menu-text">Konular</span>
+        <span class="footer-menu-text">Konu PDF</span>
       </a>
 
       <!-- Profil -->

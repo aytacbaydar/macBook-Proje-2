@@ -21,7 +21,6 @@ a{
 
     .menu-list{
         width: 100%;
-        margin-top: 10px;
         padding-left: 7px;
         position: relative;
         display: flex;
@@ -45,7 +44,7 @@ a{
             }
         }
         .menu-sidebar{
-            margin-top: 50px;
+            margin-top: 10px;
             padding-bottom: 20px;
         }
     }
@@ -189,17 +188,7 @@ a{
         }
     }
     .toggle-button{
-        z-index: 99999999999;
-        margin-left: 215px;
-        margin-top: 25px;
-        display: block;
-        &.closed {
-            margin-left: 12px;
-            margin-top: 5px;
-        p {
-            display: none;
-        }
-        }
+        display: none;
     }
   }
 @media (max-height: 600px) {

@@ -36,6 +36,7 @@
     .main-container {
         grid-area: main-container;
         margin-top:20px;
+        margin-bottom: 100px;
         padding: 1px;
 
         &.closed {
