@@ -1,14 +1,55 @@
 <!-- Mobile App Download Alert -->
 <app-mobile-app-download-alert 
-  (closeAlert)="onMobileAppAlertClose()"
-  (openInstallationGuide)="onOpenInstallationGuide()">
+  (closeAlert)="onMobileAppAlertClose()">
 </app-mobile-app-download-alert>
 
-<!-- APK Installation Guide Modal -->
-<app-apk-installation-guide 
-  *ngIf="showInstallationGuide"
-  (closeModal)="onCloseInstallationGuide()">
-</app-apk-installation-guide>
+<!-- APK Download Section (Direct Download) -->
+<div class="apk-download-section" *ngIf="shouldShowAPKDownload()">
+  <div class="container">
+    <div class="apk-card">
+      <div class="apk-header">
+        <img src="/app-icon.png" alt="Kimya Öğreniyorum" class="app-icon">
+        <div class="app-info">
+          <h3>📱 Mobil Uygulamayı İndir</h3>
+          <p>Android telefonunuz için özel geliştirildi</p>
+        </div>
+      </div>
+      
+      <div class="apk-features">
+        <div class="feature">
+          <i class="fas fa-rocket text-primary"></i>
+          <span>Daha Hızlı Erişim</span>
+        </div>
+        <div class="feature">
+          <i class="fas fa-bell text-warning"></i>
+          <span>Anlık Bildirimler</span>
+        </div>
+        <div class="feature">
+          <i class="fas fa-wifi text-success"></i>
+          <span>Çevrimdışı Çalışma</span>
+        </div>
+      </div>
+
+      <div class="apk-actions">
+        <button class="btn btn-primary apk-download-btn" (click)="downloadAPK()">
+          <i class="fas fa-download me-2"></i>
+          APK İndir (Android)
+        </button>
+        
+        <div class="install-steps">
+          <small class="text-muted">
+            <i class="fas fa-info-circle me-1"></i>
+            İndirdikten sonra: Dosya → Kur → Aç
+          </small>
+        </div>
+      </div>
+
+      <button class="close-apk-section" (click)="hideAPKDownload()" aria-label="Kapat">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+</div>
 
 <div class="container-full">
   <div class="row">

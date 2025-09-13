@@ -63,8 +63,8 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
     'TEST': { color: '#fa709a', label: 'Konu Testi' }
   };
 
-  // Mobile app alert and installation guide
-  showInstallationGuide: boolean = false;
+  // APK download section
+  hideAPKSection: boolean = false;
 
   constructor(
     private http: HttpClient,
@@ -544,11 +544,31 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
     // Alert closed - no action needed, child manages visibility
   }
 
-  onOpenInstallationGuide(): void {
-    this.showInstallationGuide = true;
+  shouldShowAPKDownload(): boolean {
+    // Android cihazlarda ve APK section gizlenmemişse göster
+    const isHidden = localStorage.getItem('apk-section-hidden');
+    if (isHidden && new Date().getTime() < parseInt(isHidden)) {
+      return false;
+    }
+    return this.mobileDetectionService.getPlatform() === 'android' && !this.hideAPKSection;
   }
 
-  onCloseInstallationGuide(): void {
-    this.showInstallationGuide = false;
+  downloadAPK(): void {
+    // APK indirme işlemi
+    const link = document.createElement('a');
+    link.href = '/downloads/kimya-ogreniyorum.apk';
+    link.download = 'kimya-ogreniyorum.apk';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    console.log('APK download started');
+  }
+
+  hideAPKDownload(): void {
+    this.hideAPKSection = true;
+    // 24 saat boyunca gizle
+    const hideTime = new Date().getTime() + (24 * 60 * 60 * 1000);
+    localStorage.setItem('apk-section-hidden', hideTime.toString());
   }
 }

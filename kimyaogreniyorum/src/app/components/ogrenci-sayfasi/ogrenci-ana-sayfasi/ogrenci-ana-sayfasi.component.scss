@@ -1,3 +1,237 @@
+// APK Download Section Styles
+.apk-download-section {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: 95%;
+  max-width: 450px;
+  animation: slideDown 0.4s ease-out;
+
+  @media (max-width: 768px) {
+    top: 60px;
+    width: 95%;
+  }
+
+  .apk-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    border: 3px solid #ff6600;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #ff6600, #ff8533, #ff6600);
+    }
+
+    .apk-header {
+      padding: 25px 20px 15px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+
+      .app-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 15px;
+        border: 2px solid #ff6600;
+        box-shadow: 0 4px 12px rgba(255, 102, 0, 0.3);
+      }
+
+      .app-info {
+        h3 {
+          margin: 0 0 5px 0;
+          color: #333;
+          font-size: 1.3rem;
+          font-weight: 600;
+        }
+
+        p {
+          margin: 0;
+          color: #666;
+          font-size: 0.9rem;
+        }
+      }
+    }
+
+    .apk-features {
+      padding: 0 20px 15px;
+      display: flex;
+      justify-content: space-around;
+      gap: 10px;
+
+      .feature {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        flex: 1;
+        padding: 10px 5px;
+        background: rgba(255, 102, 0, 0.05);
+        border-radius: 10px;
+        border: 1px solid rgba(255, 102, 0, 0.1);
+
+        i {
+          font-size: 20px;
+        }
+
+        span {
+          font-size: 0.8rem;
+          font-weight: 500;
+          color: #333;
+          text-align: center;
+          line-height: 1.2;
+        }
+      }
+    }
+
+    .apk-actions {
+      padding: 20px;
+      text-align: center;
+
+      .apk-download-btn {
+        background: linear-gradient(135deg, #ff6600 0%, #ff8533 100%);
+        border: none;
+        color: white;
+        padding: 15px 30px;
+        border-radius: 15px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        box-shadow: 0 6px 20px rgba(255, 102, 0, 0.4);
+        transition: all 0.3s ease;
+        width: 100%;
+
+        &:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 8px 25px rgba(255, 102, 0, 0.5);
+        }
+
+        &:active {
+          transform: translateY(-1px);
+        }
+
+        i {
+          margin-right: 8px;
+        }
+      }
+
+      .install-steps {
+        margin-top: 12px;
+        padding: 10px;
+        background: #e3f2fd;
+        border-radius: 8px;
+        border-left: 3px solid #2196f3;
+
+        small {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #1976d2;
+          font-weight: 500;
+
+          i {
+            margin-right: 5px;
+            color: #2196f3;
+          }
+        }
+      }
+    }
+
+    .close-apk-section {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(108, 117, 125, 0.1);
+      border: none;
+      color: #6c757d;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: rgba(108, 117, 125, 0.2);
+        color: #495057;
+        transform: scale(1.1);
+      }
+    }
+  }
+}
+
+// Animation
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+// Responsive Design
+@media (max-width: 480px) {
+  .apk-download-section {
+    top: 50px;
+    width: 98%;
+
+    .apk-card {
+      .apk-header {
+        padding: 20px 15px 12px;
+        
+        .app-icon {
+          width: 50px;
+          height: 50px;
+        }
+
+        .app-info h3 {
+          font-size: 1.1rem;
+        }
+      }
+
+      .apk-features {
+        padding: 0 15px 12px;
+        gap: 5px;
+
+        .feature {
+          padding: 8px 3px;
+
+          i {
+            font-size: 18px;
+          }
+
+          span {
+            font-size: 0.75rem;
+          }
+        }
+      }
+
+      .apk-actions {
+        padding: 15px;
+
+        .apk-download-btn {
+          padding: 12px 20px;
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}
+
 .container-full{
   margin-top: 5px !important;
 }
