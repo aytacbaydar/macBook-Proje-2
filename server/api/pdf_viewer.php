@@ -36,8 +36,8 @@ if (!preg_match('/\.pdf$/i', $fileName)) {
 // Güvenlik: path traversal saldırılarını önle
 $fileName = basename($fileName);
 
-// Dosya yolunu oluştur - doğru yol yapısı
-$filePath = __DIR__ . '/../../dosyalar/pdf/' . $fileName;
+// Dosya yolunu oluştur - doğru yol yapısı  
+$filePath = __DIR__ . '/../dosyalar/pdf/' . $fileName;
 
 // Dosyanın var olup olmadığını kontrol et
 if (!file_exists($filePath)) {

@@ -23,99 +23,44 @@ export class PdfService {
   }
 
   /**
-   * iOS-specific PDF opening with improved fallback handling
-   * @param pdfUrl - The URL of the PDF to open
-   * @param fileName - Optional filename for user feedback
+   * iPhone/iPad için süper basit ve kesinlikle çalışan PDF açma
+   * @param pdfUrl - PDF dosyasının URL'i
+   * @param fileName - Dosya adı (opsiyonel)
    */
   openPdfForIOS(pdfUrl: string, fileName?: string): void {
-    try {
-      // For iOS, try direct approach first (more reliable)
-      this.toastr.info('PDF yeni sekmede açılıyor...', 'Bilgi');
+    console.log('📱 iPhone/iPad PDF açılıyor:', { pdfUrl, fileName });
+    
+    // iPhone için en güvenilir yöntem - direkt açma
+    this.toastr.info('📄 PDF açılıyor... (iPhone/iPad)', 'Bilgi');
+    
+    // 1. Önce direkt yeni sekme dene
+    const pdfWindow = window.open('about:blank', '_blank');
+    
+    if (pdfWindow) {
+      // Başarılı - yeni pencere açıldı
+      console.log('✅ iPhone: Yeni pencere başarıyla açıldı');
       
-      // Direct approach - let iOS Safari handle the PDF
-      const newWindow = window.open(pdfUrl, '_blank');
+      // PDF'i direkt yükle
+      pdfWindow.location.href = pdfUrl;
       
-      if (!newWindow) {
-        // Popup was blocked, fallback to same tab
-        this.toastr.warning('Popup engellendi. PDF aynı sekmede açılıyor.', 'Uyarı');
-        window.location.href = pdfUrl;
-        return;
-      }
-
-      // Additional fallback with timeout check
+      this.toastr.success('✅ PDF yeni sekmede açıldı!', 'Başarılı');
+      
+      // 2 saniye sonra kontrol et
       setTimeout(() => {
-        try {
-          // Check if window is still loading or if we need to provide guidance
-          if (newWindow && !newWindow.closed) {
-            // Show user guidance in case PDF doesn't load
-            const guideWindow = window.open('about:blank', '_blank');
-            if (guideWindow) {
-              guideWindow.document.write(`
-                <html>
-                  <head>
-                    <title>PDF Görüntüleme Rehberi</title>
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                  </head>
-                  <body style="margin:0; padding:20px; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:#f5f5f5;">
-                    <div style="max-width:400px; margin:20px auto; background:white; padding:30px; border-radius:15px; box-shadow:0 4px 20px rgba(0,0,0,0.1);">
-                      <div style="text-align:center; margin-bottom:25px;">
-                        <div style="width:60px; height:60px; margin:0 auto 15px; background:#ff6600; border-radius:50%; display:flex; align-items:center; justify-content:center;">
-                          <span style="color:white; font-size:24px;">📄</span>
-                        </div>
-                        <h2 style="margin:0; color:#333; font-size:20px;">PDF Görüntüleme</h2>
-                      </div>
-                      
-                      <div style="margin-bottom:20px;">
-                        <h3 style="color:#ff6600; font-size:16px; margin-bottom:10px;">📱 iPhone/iPad'de PDF'i açmak için:</h3>
-                        <div style="background:#f8f9fa; padding:15px; border-radius:10px; border-left:4px solid #ff6600;">
-                          <p style="margin:5px 0; color:#555; font-size:14px;">1. Üstteki sekmeye geçin</p>
-                          <p style="margin:5px 0; color:#555; font-size:14px;">2. PDF yüklenene kadar bekleyin</p>
-                          <p style="margin:5px 0; color:#555; font-size:14px;">3. Paylaş butonu ile kaydedebilirsiniz</p>
-                        </div>
-                      </div>
-
-                      <div style="margin-bottom:25px;">
-                        <h3 style="color:#17a2b8; font-size:16px; margin-bottom:10px;">⚠️ PDF açılmazsa:</h3>
-                        <div style="background:#e7f3ff; padding:15px; border-radius:10px; border-left:4px solid #17a2b8;">
-                          <p style="margin:5px 0; color:#555; font-size:14px;">1. Safari ayarlarını kontrol edin</p>
-                          <p style="margin:5px 0; color:#555; font-size:14px;">2. Popup engelleyicisini kapatın</p>
-                          <p style="margin:5px 0; color:#555; font-size:14px;">3. Sayfayı yenilemiyi deneyin</p>
-                        </div>
-                      </div>
-
-                      <div style="text-align:center;">
-                        <button onclick="window.open('${pdfUrl}', '_blank')" style="background:#ff6600; color:white; border:none; padding:12px 24px; border-radius:8px; font-size:14px; cursor:pointer; margin:5px;">
-                          🔄 PDF'i Tekrar Aç
-                        </button>
-                        <br><br>
-                        <button onclick="window.close()" style="background:#6c757d; color:white; border:none; padding:10px 20px; border-radius:8px; font-size:14px; cursor:pointer;">
-                          ✕ Bu Pencereyi Kapat
-                        </button>
-                      </div>
-
-                      <div style="margin-top:25px; padding:15px; background:#fff3cd; border-radius:10px; border:1px solid #ffeaa7;">
-                        <p style="margin:0; color:#856404; font-size:12px; text-align:center;">
-                          <strong>💡 İpucu:</strong> Sorun devam ederse öğretmeninize bildirin.
-                        </p>
-                      </div>
-                    </div>
-                  </body>
-                </html>
-              `);
-            }
-          }
-        } catch (e) {
-          // Silently ignore errors in fallback guidance
-          console.log('Guide window creation failed:', e);
+        if (pdfWindow.closed) {
+          console.log('ℹ️ PDF penceresi kapatıldı');
+        } else {
+          console.log('✅ PDF başarıyla görüntüleniyor');
         }
       }, 2000);
-        
-    } catch (error) {
-      console.error('iOS PDF opening error:', error);
-      this.toastr.error('PDF açılamadı. Lütfen tekrar deneyin.', 'Hata');
       
-      // Final fallback: direct URL
-      window.open(pdfUrl, '_blank');
+    } else {
+      // Popup engellendi - aynı sekmede aç
+      console.log('⚠️ iPhone: Popup engellendi, aynı sekmede açılıyor');
+      this.toastr.warning('Popup engellendi. PDF aynı sekmede açılıyor.', 'Uyarı');
+      
+      // Direkt aynı sekmede aç
+      window.location.href = pdfUrl;
     }
   }
 
@@ -167,11 +112,12 @@ export class PdfService {
   }
 
   /**
-   * Generate PDF URL for lesson viewer endpoint
+   * Generate PDF URL for lesson viewer endpoint  
    * @param fileName - The PDF filename
    * @returns Full URL for pdf_viewer.php endpoint
    */
   getLessonPdfUrl(fileName: string): string {
+    // Use the corrected PDF viewer endpoint
     return `./server/api/pdf_viewer.php?file=${encodeURIComponent(fileName)}`;
   }
 
@@ -195,7 +141,30 @@ export class PdfService {
     }
 
     const pdfUrl = this.getLessonPdfUrl(fileName);
-    this.openPdfUnified(pdfUrl, fileName);
+    console.log('📄 PDF açılıyor:', { fileName, pdfUrl });
+    
+    // Test URL accessibility before opening
+    fetch(pdfUrl, { method: 'HEAD' })
+      .then(response => {
+        console.log('📄 PDF URL testi:', response.status, response.statusText);
+        if (response.ok) {
+          this.openPdfUnified(pdfUrl, fileName);
+        } else {
+          console.error('📄 PDF bulunamadı:', response.status);
+          this.toastr.error(`PDF dosyası bulunamadı: ${fileName} (${response.status})`, 'Hata');
+          
+          // Show helpful message
+          this.toastr.info('PDF dosyasının yüklendiğinden emin olun veya öğretmeninizle iletişime geçin.', 'Bilgi');
+        }
+      })
+      .catch(error => {
+        console.error('📄 PDF URL test hatası:', error);
+        this.toastr.error(`PDF erişiminde hata: ${error.message}`, 'Hata');
+        
+        // Still try to open - might be CORS issue with HEAD request
+        this.toastr.info('Yine de PDF açmayı deniyoruz...', 'Bilgi');
+        this.openPdfUnified(pdfUrl, fileName);
+      });
   }
 
   /**
