@@ -55,7 +55,7 @@ export class MobileDetectionService {
     
     switch (platform) {
       case 'android':
-        return '/downloads/kimya-ogreniyorum.apk'; // APK dosya yolu
+        return '/public/downloads/kimya-ogreniyorum.apk'; // APK dosya yolu
       case 'ios':
         return 'https://apps.apple.com/app/kimya-ogreniyorum/id123456789'; // App Store link
       default:
