@@ -23,75 +23,92 @@ export class PdfService {
   }
 
   /**
-   * iOS-specific PDF opening with synchronous window opening and async blob URL assignment
+   * iOS-specific PDF opening with improved fallback handling
    * @param pdfUrl - The URL of the PDF to open
    * @param fileName - Optional filename for user feedback
    */
   openPdfForIOS(pdfUrl: string, fileName?: string): void {
     try {
-      // CRITICAL: Open window synchronously to avoid popup blocking
-      const newWindow = window.open('about:blank', '_blank');
+      // For iOS, try direct approach first (more reliable)
+      this.toastr.info('PDF yeni sekmede açılıyor...', 'Bilgi');
+      
+      // Direct approach - let iOS Safari handle the PDF
+      const newWindow = window.open(pdfUrl, '_blank');
       
       if (!newWindow) {
-        // Popup was blocked, fallback to direct URL
-        this.toastr.warning('Popup engellendi. PDF\'i aynı sekmede açıyoruz.', 'Uyarı');
+        // Popup was blocked, fallback to same tab
+        this.toastr.warning('Popup engellendi. PDF aynı sekmede açılıyor.', 'Uyarı');
         window.location.href = pdfUrl;
         return;
       }
 
-      // Set loading content while fetching PDF
-      newWindow.document.write(`
-        <html>
-          <head><title>PDF Yükleniyor...</title></head>
-          <body style="margin:0; padding:20px; font-family:Arial,sans-serif; text-align:center;">
-            <div style="margin-top:50px;">
-              <h3>PDF yükleniyor...</h3>
-              <div style="border:4px solid #f3f3f3; border-top:4px solid #3498db; border-radius:50%; width:40px; height:40px; animation:spin 2s linear infinite; margin:20px auto;"></div>
-              <style>@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style>
-            </div>
-          </body>
-        </html>
-      `);
+      // Additional fallback with timeout check
+      setTimeout(() => {
+        try {
+          // Check if window is still loading or if we need to provide guidance
+          if (newWindow && !newWindow.closed) {
+            // Show user guidance in case PDF doesn't load
+            const guideWindow = window.open('about:blank', '_blank');
+            if (guideWindow) {
+              guideWindow.document.write(`
+                <html>
+                  <head>
+                    <title>PDF Görüntüleme Rehberi</title>
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  </head>
+                  <body style="margin:0; padding:20px; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:#f5f5f5;">
+                    <div style="max-width:400px; margin:20px auto; background:white; padding:30px; border-radius:15px; box-shadow:0 4px 20px rgba(0,0,0,0.1);">
+                      <div style="text-align:center; margin-bottom:25px;">
+                        <div style="width:60px; height:60px; margin:0 auto 15px; background:#ff6600; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                          <span style="color:white; font-size:24px;">📄</span>
+                        </div>
+                        <h2 style="margin:0; color:#333; font-size:20px;">PDF Görüntüleme</h2>
+                      </div>
+                      
+                      <div style="margin-bottom:20px;">
+                        <h3 style="color:#ff6600; font-size:16px; margin-bottom:10px;">📱 iPhone/iPad'de PDF'i açmak için:</h3>
+                        <div style="background:#f8f9fa; padding:15px; border-radius:10px; border-left:4px solid #ff6600;">
+                          <p style="margin:5px 0; color:#555; font-size:14px;">1. Üstteki sekmeye geçin</p>
+                          <p style="margin:5px 0; color:#555; font-size:14px;">2. PDF yüklenene kadar bekleyin</p>
+                          <p style="margin:5px 0; color:#555; font-size:14px;">3. Paylaş butonu ile kaydedebilirsiniz</p>
+                        </div>
+                      </div>
 
-      // Now fetch PDF asynchronously and update the window content
-      fetch(pdfUrl)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                      <div style="margin-bottom:25px;">
+                        <h3 style="color:#17a2b8; font-size:16px; margin-bottom:10px;">⚠️ PDF açılmazsa:</h3>
+                        <div style="background:#e7f3ff; padding:15px; border-radius:10px; border-left:4px solid #17a2b8;">
+                          <p style="margin:5px 0; color:#555; font-size:14px;">1. Safari ayarlarını kontrol edin</p>
+                          <p style="margin:5px 0; color:#555; font-size:14px;">2. Popup engelleyicisini kapatın</p>
+                          <p style="margin:5px 0; color:#555; font-size:14px;">3. Sayfayı yenilemiyi deneyin</p>
+                        </div>
+                      </div>
+
+                      <div style="text-align:center;">
+                        <button onclick="window.open('${pdfUrl}', '_blank')" style="background:#ff6600; color:white; border:none; padding:12px 24px; border-radius:8px; font-size:14px; cursor:pointer; margin:5px;">
+                          🔄 PDF'i Tekrar Aç
+                        </button>
+                        <br><br>
+                        <button onclick="window.close()" style="background:#6c757d; color:white; border:none; padding:10px 20px; border-radius:8px; font-size:14px; cursor:pointer;">
+                          ✕ Bu Pencereyi Kapat
+                        </button>
+                      </div>
+
+                      <div style="margin-top:25px; padding:15px; background:#fff3cd; border-radius:10px; border:1px solid #ffeaa7;">
+                        <p style="margin:0; color:#856404; font-size:12px; text-align:center;">
+                          <strong>💡 İpucu:</strong> Sorun devam ederse öğretmeninize bildirin.
+                        </p>
+                      </div>
+                    </div>
+                  </body>
+                </html>
+              `);
+            }
           }
-          return response.blob();
-        })
-        .then(blob => {
-          const blobUrl = URL.createObjectURL(blob);
-          
-          // Update window location to blob URL
-          newWindow.location.href = blobUrl;
-          
-          // Clean up blob URL after delay
-          setTimeout(() => {
-            URL.revokeObjectURL(blobUrl);
-          }, 30000); // Increased timeout for better reliability
-        })
-        .catch(error => {
-          console.error('PDF fetch error:', error);
-          
-          // Update window with error message and fallback
-          newWindow.document.body.innerHTML = `
-            <div style="margin:50px auto; max-width:400px; text-align:center;">
-              <h3 style="color:#e74c3c;">PDF Yüklenemedi</h3>
-              <p>PDF dosyası yüklenirken hata oluştu: ${error.message}</p>
-              <button onclick="window.location.href='${pdfUrl}'" style="background:#3498db; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer;">
-                Tekrar Dene
-              </button>
-              <br><br>
-              <button onclick="window.close()" style="background:#95a5a6; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer;">
-                Kapat
-              </button>
-            </div>
-          `;
-          
-          this.toastr.error('PDF yüklenirken hata oluştu. Yeni sekmede tekrar deneyin.', 'Hata');
-        });
+        } catch (e) {
+          // Silently ignore errors in fallback guidance
+          console.log('Guide window creation failed:', e);
+        }
+      }, 2000);
         
     } catch (error) {
       console.error('iOS PDF opening error:', error);
