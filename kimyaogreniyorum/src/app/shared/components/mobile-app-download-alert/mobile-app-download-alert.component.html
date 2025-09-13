@@ -51,6 +51,11 @@
         <span *ngIf="platform === 'web'">Ana Ekrana Ekle</span>
       </button>
       
+      <button class="btn btn-outline-info guide-btn" (click)="showInstallationGuide()">
+        <i class="fas fa-question-circle me-2"></i>
+        Nasıl Kurulur?
+      </button>
+      
       <button class="btn btn-outline-secondary later-btn" (click)="laterReminder()">
         <i class="fas fa-clock me-1"></i>
         Daha Sonra

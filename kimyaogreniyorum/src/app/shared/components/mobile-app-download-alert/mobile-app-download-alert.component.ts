@@ -32,6 +32,7 @@ import { MobileDetectionService } from '../../services/mobile-detection.service'
 })
 export class MobileAppDownloadAlertComponent implements OnInit {
   @Output() closeAlert = new EventEmitter<void>();
+  @Output() openInstallationGuide = new EventEmitter<void>();
 
   showAlert = false;
   platform: string = '';
@@ -116,5 +117,9 @@ export class MobileAppDownloadAlertComponent implements OnInit {
     const remindTime = new Date().getTime() + (4 * 60 * 60 * 1000);
     localStorage.setItem('mobile-app-alert-dismissed', remindTime.toString());
     this.closeAlert.emit();
+  }
+
+  showInstallationGuide(): void {
+    this.openInstallationGuide.emit();
   }
 }

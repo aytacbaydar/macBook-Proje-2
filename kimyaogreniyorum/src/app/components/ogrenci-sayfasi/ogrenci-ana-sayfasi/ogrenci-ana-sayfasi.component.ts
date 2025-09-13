@@ -63,7 +63,8 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
     'TEST': { color: '#fa709a', label: 'Konu Testi' }
   };
 
-  // Mobile app alert - now managed entirely by child component
+  // Mobile app alert and installation guide
+  showInstallationGuide: boolean = false;
 
   constructor(
     private http: HttpClient,
@@ -541,5 +542,13 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
 
   onMobileAppAlertClose(): void {
     // Alert closed - no action needed, child manages visibility
+  }
+
+  onOpenInstallationGuide(): void {
+    this.showInstallationGuide = true;
+  }
+
+  onCloseInstallationGuide(): void {
+    this.showInstallationGuide = false;
   }
 }

@@ -153,6 +153,23 @@
     }
   }
 
+  .guide-btn {
+    background: #fff;
+    color: #17a2b8;
+    border: 1px solid #17a2b8;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: #17a2b8;
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(23, 162, 184, 0.3);
+    }
+  }
+
   .later-btn {
     color: #6c757d;
     border: 1px solid #dee2e6;

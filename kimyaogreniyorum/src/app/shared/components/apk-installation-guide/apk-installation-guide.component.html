@@ -1,0 +1,123 @@
+<!-- APK Installation Guide Modal -->
+<div class="modal-overlay" *ngIf="showModal" [@modalAnimation]>
+  <div class="installation-guide-modal">
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="header-content">
+        <div class="app-info">
+          <img src="/app-icon.png" alt="Kimya Öğreniyorum" class="app-icon">
+          <div class="app-details">
+            <h3>📱 Mobil Uygulama Kurulum Rehberi</h3>
+            <p>Android telefonunuza adım adım kurulum</p>
+          </div>
+        </div>
+        <button class="close-btn" (click)="close()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <!-- Progress Bar -->
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="(currentStep / totalSteps) * 100"></div>
+        </div>
+        <span class="progress-text">{{ currentStep }} / {{ totalSteps }}</span>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="modal-content">
+      <!-- Current Step Display -->
+      <div class="current-step">
+        <div class="step-icon">
+          <i [class]="getCurrentStep().icon"></i>
+        </div>
+        <div class="step-content">
+          <h4>{{ getCurrentStep().title }}</h4>
+          <p class="step-description">{{ getCurrentStep().description }}</p>
+          
+          <!-- Step Details -->
+          <div class="step-details">
+            <ul>
+              <li *ngFor="let detail of getCurrentStep().details; let i = index">
+                <span class="step-number">{{ i + 1 }}</span>
+                {{ detail }}
+              </li>
+            </ul>
+          </div>
+
+          <!-- Special Actions for Specific Steps -->
+          <div class="step-actions" *ngIf="currentStep === 1">
+            <button class="download-btn" (click)="downloadAPK()">
+              <i class="fas fa-download me-2"></i>
+              APK'yı Şimdi İndir
+            </button>
+          </div>
+
+          <div class="step-actions" *ngIf="currentStep === 2">
+            <div class="warning-box">
+              <i class="fas fa-exclamation-triangle"></i>
+              <span>Bu ayar sadece APK kurulumu için gereklidir. Kurulum sonrası kapatabilirsiniz.</span>
+            </div>
+          </div>
+
+          <div class="step-actions" *ngIf="currentStep === 5">
+            <div class="success-box">
+              <i class="fas fa-check-circle"></i>
+              <span>Tebrikler! Artık mobil uygulamayı kullanabilirsiniz.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step Navigation Dots -->
+      <div class="step-indicators">
+        <div 
+          *ngFor="let step of steps; let i = index" 
+          class="step-dot"
+          [class.active]="currentStep === i + 1"
+          [class.completed]="currentStep > i + 1"
+          (click)="goToStep(i + 1)">
+          <span>{{ i + 1 }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <div class="navigation-buttons">
+        <button 
+          class="btn btn-outline-secondary" 
+          (click)="prevStep()" 
+          [disabled]="currentStep === 1">
+          <i class="fas fa-chevron-left me-2"></i>
+          Önceki
+        </button>
+        
+        <button 
+          *ngIf="currentStep < totalSteps"
+          class="btn btn-primary" 
+          (click)="nextStep()">
+          Sonraki
+          <i class="fas fa-chevron-right ms-2"></i>
+        </button>
+        
+        <button 
+          *ngIf="currentStep === totalSteps"
+          class="btn btn-success" 
+          (click)="close()">
+          <i class="fas fa-check me-2"></i>
+          Tamamlandı
+        </button>
+      </div>
+      
+      <!-- Help Text -->
+      <div class="help-text">
+        <p>
+          <i class="fas fa-question-circle me-2"></i>
+          Sorun yaşıyorsanız öğretmeninizle iletişime geçin.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

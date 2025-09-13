@@ -1,7 +1,14 @@
 <!-- Mobile App Download Alert -->
 <app-mobile-app-download-alert 
-  (closeAlert)="onMobileAppAlertClose()">
+  (closeAlert)="onMobileAppAlertClose()"
+  (openInstallationGuide)="onOpenInstallationGuide()">
 </app-mobile-app-download-alert>
+
+<!-- APK Installation Guide Modal -->
+<app-apk-installation-guide 
+  *ngIf="showInstallationGuide"
+  (closeModal)="onCloseInstallationGuide()">
+</app-apk-installation-guide>
 
 <div class="container-full">
   <div class="row">
