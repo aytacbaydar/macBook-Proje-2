@@ -114,12 +114,11 @@ export class PdfService {
   /**
    * Generate PDF URL for lesson viewer endpoint  
    * @param fileName - The PDF filename  
-   * @returns Full URL for pdf_viewer.php endpoint
+   * @returns Direct path to PDF file
    */
   getLessonPdfUrl(fileName: string): string {
-    // iPhone için direkt dosya yolunu kullan (Angular dev server sorununu çözer)
-    const baseUrl = window.location.origin;
-    return `${baseUrl}/server/api/pdf_viewer.php?file=${encodeURIComponent(fileName)}`;
+    // iPhone için direkt dosya yolu - static serving
+    return `/dosyalar/pdf/${fileName}`;
   }
 
   /**
