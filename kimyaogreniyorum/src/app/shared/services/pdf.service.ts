@@ -113,12 +113,13 @@ export class PdfService {
 
   /**
    * Generate PDF URL for lesson viewer endpoint  
-   * @param fileName - The PDF filename
+   * @param fileName - The PDF filename  
    * @returns Full URL for pdf_viewer.php endpoint
    */
   getLessonPdfUrl(fileName: string): string {
-    // Use the corrected PDF viewer endpoint
-    return `./server/api/pdf_viewer.php?file=${encodeURIComponent(fileName)}`;
+    // iPhone için direkt dosya yolunu kullan (Angular dev server sorununu çözer)
+    const baseUrl = window.location.origin;
+    return `${baseUrl}/server/api/pdf_viewer.php?file=${encodeURIComponent(fileName)}`;
   }
 
   /**
@@ -143,7 +144,15 @@ export class PdfService {
     const pdfUrl = this.getLessonPdfUrl(fileName);
     console.log('📄 PDF açılıyor:', { fileName, pdfUrl });
     
-    // Test URL accessibility before opening
+    // iPhone için doğrudan aç (test yapmadan)
+    if (this.isIOSDevice()) {
+      console.log('📱 iPhone/iPad tespit edildi, doğrudan PDF açılıyor');
+      this.toastr.info('📄 PDF açılıyor...', 'Bilgi');
+      this.openPdfUnified(pdfUrl, fileName);
+      return;
+    }
+    
+    // Diğer cihazlar için önce test yap
     fetch(pdfUrl, { method: 'HEAD' })
       .then(response => {
         console.log('📄 PDF URL testi:', response.status, response.statusText);
@@ -159,10 +168,7 @@ export class PdfService {
       })
       .catch(error => {
         console.error('📄 PDF URL test hatası:', error);
-        this.toastr.error(`PDF erişiminde hata: ${error.message}`, 'Hata');
-        
-        // Still try to open - might be CORS issue with HEAD request
-        this.toastr.info('Yine de PDF açmayı deniyoruz...', 'Bilgi');
+        this.toastr.info('PDF açmayı deniyoruz...', 'Bilgi');
         this.openPdfUnified(pdfUrl, fileName);
       });
   }
