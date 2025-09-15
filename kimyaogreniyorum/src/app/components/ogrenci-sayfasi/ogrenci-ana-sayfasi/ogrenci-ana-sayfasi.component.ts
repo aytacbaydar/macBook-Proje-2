@@ -540,9 +540,6 @@ export class OgrenciAnaSayfasiComponent implements OnInit, AfterViewInit {
     window.location.href = '/ogrenci-sayfasi/ogrenci-profil-sayfasi';
   }
 
-  onMobileAppAlertClose(): void {
-    // Alert closed - no action needed, child manages visibility
-  }
 
   shouldShowAPKDownload(): boolean {
     // Android cihazlarda ve APK section gizlenmemişse göster
