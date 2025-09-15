@@ -55,6 +55,8 @@ import { OgretmenTestlerinCevaplariSayfasiComponent } from './components/ogretme
 import { OgrenciTestlerinCevaplariSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-testlerin-cevaplari-sayfasi/ogrenci-testlerin-cevaplari-sayfasi.component';
 import { OgretmenOdevSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-islenen-konular-sayfasi/ogretmen-odev-sayfasi/ogretmen-odev-sayfasi.component';
 import { OgretmenKonuAnaliziSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-konu-analizi-sayfasi/ogretmen-konu-analizi-sayfasi.component';
+import { DovmeSayfasiIndexSayfasiComponent } from './components/dovme-sayfasi/template/dovme-sayfasi-index-sayfasi/dovme-sayfasi-index-sayfasi.component';
+import { DovmeAnaSayfasiComponent } from './components/dovme-sayfasi/dovme-ana-sayfasi/dovme-ana-sayfasi.component';
 
 const routes: Routes = [
   {
@@ -111,6 +113,8 @@ const routes: Routes = [
       },
     ],
   },
+
+
 
   //öğrenci sayfaları
   {
@@ -283,6 +287,21 @@ const routes: Routes = [
       },
     ],
   },
+
+
+  //dovme sayfaları
+  {
+    path: 'dovme-sayfasi',
+    component: DovmeSayfasiIndexSayfasiComponent,
+    children: [
+      {
+        path: '',
+        component: DovmeAnaSayfasiComponent,
+      },
+      
+    ],
+  },
+
 ];
 
 @NgModule({
