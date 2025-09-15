@@ -1,1 +1,73 @@
-<p>dovme-sayfasi-navbar-sayfasi works!</p>
+<nav class="dovme-navbar">
+  <div class="navbar-container">
+    <!-- Logo / Brand -->
+    <div class="navbar-brand">
+      <a routerLink="/dovme-sayfasi">
+        <i class="fas fa-crown brand-icon"></i>
+        <span class="brand-text">INK<span class="accent">MASTER</span></span>
+      </a>
+    </div>
+
+    <!-- Navbar Toggle -->
+    <button class="navbar-toggle" type="button" [class.active]="isMenuOpen" (click)="toggleMenu()">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+
+    <!-- Navigation Menu -->
+    <div class="navbar-menu" [class.active]="isMenuOpen">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a routerLink="/dovme-sayfasi" class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+            <i class="fas fa-home"></i>
+            <span>Ana Sayfa</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/dovme-sayfasi/galeriler" class="nav-link" routerLinkActive="active">
+            <i class="fas fa-images"></i>
+            <span>Galeri</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/dovme-sayfasi/sanatcilar" class="nav-link" routerLinkActive="active">
+            <i class="fas fa-palette"></i>
+            <span>Sanatçılar</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/dovme-sayfasi/hizmetler" class="nav-link" routerLinkActive="active">
+            <i class="fas fa-magic"></i>
+            <span>Hizmetler</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/dovme-sayfasi/iletisim" class="nav-link" routerLinkActive="active">
+            <i class="fas fa-phone"></i>
+            <span>İletişim</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- Sosyal Medya & CTA -->
+      <div class="navbar-actions">
+        <div class="social-links">
+          <a href="#" class="social-link" title="Instagram">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="#" class="social-link" title="Facebook">
+            <i class="fab fa-facebook"></i>
+          </a>
+          <a href="#" class="social-link" title="WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+          </a>
+        </div>
+        <button class="btn-appointment">
+          <i class="fas fa-calendar-alt"></i>
+          <span>Randevu Al</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>

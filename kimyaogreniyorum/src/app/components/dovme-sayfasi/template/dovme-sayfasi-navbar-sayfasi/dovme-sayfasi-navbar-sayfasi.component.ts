@@ -7,5 +7,13 @@ import { Component } from '@angular/core';
   styleUrl: './dovme-sayfasi-navbar-sayfasi.component.scss'
 })
 export class DovmeSayfasiNavbarSayfasiComponent {
+  isMenuOpen = false;
 
+  toggleMenu(): void {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  closeMenu(): void {
+    this.isMenuOpen = false;
+  }
 }
