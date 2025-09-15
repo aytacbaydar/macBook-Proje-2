@@ -113,9 +113,9 @@
 
     // Brand Section
     .brand-section {
+      margin-top: 20px;
       .main-title {
         font-family: 'Impact', 'Arial Black', sans-serif;
-        font-size: 4rem;
         font-weight: 900;
         color: #ffffff;
         text-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
@@ -125,6 +125,7 @@
 
         .title-line-1 {
           display: block;
+          font-size: 5rem;
           background: linear-gradient(45deg, #ffffff, #ff6b35);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
@@ -133,6 +134,7 @@
 
         .title-line-2 {
           display: block;
+          font-size: 4rem;
           color: #ff6b35;
           text-shadow: 0 0 30px rgba(255, 107, 53, 0.8);
         }
@@ -367,7 +369,12 @@
       }
 
       .brand-section .main-title {
-        font-size: 3.5rem;
+        .title-line-1 {
+          font-size: 4.5rem;
+        }
+        .title-line-2 {
+          font-size: 3.5rem;
+        }
       }
     }
   }
@@ -404,7 +411,12 @@
       }
 
       .brand-section .main-title {
-        font-size: 3rem;
+        .title-line-1 {
+          font-size: 4rem;
+        }
+        .title-line-2 {
+          font-size: 3rem;
+        }
       }
     }
   }
@@ -422,7 +434,12 @@
       }
 
       .brand-section .main-title {
-        font-size: 2.5rem;
+        .title-line-1 {
+          font-size: 3rem;
+        }
+        .title-line-2 {
+          font-size: 2.5rem;
+        }
       }
 
       .action-buttons {
