@@ -16,9 +16,9 @@
   }
 
   .navbar-container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 15px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -106,31 +106,36 @@
   .navbar-menu {
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 1.5rem;
+    flex: 1;
+    justify-content: space-between;
 
     .navbar-nav {
       display: flex;
       list-style: none;
       margin: 0;
       padding: 0;
-      gap: 2rem;
+      gap: 1rem;
+      flex: 1;
+      justify-content: center;
 
       .nav-item {
         .nav-link {
           display: flex;
           align-items: center;
-          gap: 8px;
+          gap: 6px;
           text-decoration: none;
           color: #cccccc;
           font-weight: 500;
-          font-size: 0.95rem;
-          padding: 10px 15px;
+          font-size: 0.85rem;
+          padding: 8px 12px;
           border-radius: 8px;
           transition: all 0.3s ease;
           text-transform: uppercase;
-          letter-spacing: 1px;
+          letter-spacing: 0.5px;
           position: relative;
           overflow: hidden;
+          white-space: nowrap;
 
           &::before {
             content: '';
@@ -183,7 +188,8 @@
     .navbar-actions {
       display: flex;
       align-items: center;
-      gap: 1.5rem;
+      gap: 1rem;
+      flex-shrink: 0;
 
       .social-links {
         display: flex;
@@ -219,19 +225,20 @@
       .btn-appointment {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
         background: linear-gradient(135deg, #ff6b35, #ff8c42);
         color: #ffffff;
         border: none;
-        padding: 12px 20px;
+        padding: 10px 16px;
         border-radius: 25px;
         font-weight: 600;
-        font-size: 0.9rem;
+        font-size: 0.8rem;
         text-transform: uppercase;
-        letter-spacing: 1px;
+        letter-spacing: 0.5px;
         cursor: pointer;
         transition: all 0.3s ease;
         box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        white-space: nowrap;
         border: 2px solid transparent;
 
         &:hover {
