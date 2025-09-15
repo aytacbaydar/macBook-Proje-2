@@ -56,40 +56,40 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
       align-items: center;
       gap: 12px;
       border-bottom: 1px solid #e9ecef;
+    }
 
-      .icon {
-        font-size: 24px;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-      }
+    .dialog-header .icon {
+      font-size: 24px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
 
-      .warning { background: #ff9800; }
-      .danger { background: #f44336; }
-      .info { background: #2196f3; }
-      .success { background: #4caf50; }
+    .dialog-header .warning { background: #ff9800; }
+    .dialog-header .danger { background: #f44336; }
+    .dialog-header .info { background: #2196f3; }
+    .dialog-header .success { background: #4caf50; }
 
-      h3 {
-        margin: 0;
-        font-size: 1.25rem;
-        font-weight: 600;
-        color: #333;
-      }
+    .dialog-header h3 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #333;
     }
 
     .dialog-body {
       padding: 20px 24px;
+    }
 
-      p {
-        margin: 0;
-        line-height: 1.5;
-        color: #666;
-        font-size: 1rem;
-      }
+    .dialog-body p {
+      margin: 0;
+      line-height: 1.5;
+      color: #666;
+      font-size: 1rem;
     }
 
     .dialog-actions {
@@ -97,52 +97,61 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
       display: flex;
       gap: 12px;
       justify-content: flex-end;
+    }
 
-      .btn {
-        padding: 10px 20px;
-        border-radius: 8px;
-        border: none;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        min-width: 80px;
+    .dialog-actions .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-width: 80px;
+    }
 
-        &:hover {
-          transform: translateY(-1px);
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-      }
+    .dialog-actions .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
 
-      .btn-cancel {
-        background: #f8f9fa;
-        color: #6c757d;
-        border: 1px solid #dee2e6;
+    .dialog-actions .btn-cancel {
+      background: #f8f9fa;
+      color: #6c757d;
+      border: 1px solid #dee2e6;
+    }
 
-        &:hover {
-          background: #e9ecef;
-          color: #495057;
-        }
-      }
+    .dialog-actions .btn-cancel:hover {
+      background: #e9ecef;
+      color: #495057;
+    }
 
-      .btn-confirm {
-        color: white;
+    .dialog-actions .btn-confirm {
+      color: white;
+    }
 
-        &.danger {
-          background: #dc3545;
-          &:hover { background: #c82333; }
-        }
+    .dialog-actions .btn-confirm.danger {
+      background: #dc3545;
+    }
 
-        &.primary {
-          background: #007bff;
-          &:hover { background: #0056b3; }
-        }
+    .dialog-actions .btn-confirm.danger:hover {
+      background: #c82333;
+    }
 
-        &.warning {
-          background: #ffc107;
-          color: #212529;
-          &:hover { background: #e0a800; }
-        }
-      }
+    .dialog-actions .btn-confirm.primary {
+      background: #007bff;
+    }
+
+    .dialog-actions .btn-confirm.primary:hover {
+      background: #0056b3;
+    }
+
+    .dialog-actions .btn-confirm.warning {
+      background: #ffc107;
+      color: #212529;
+    }
+
+    .dialog-actions .btn-confirm.warning:hover {
+      background: #e0a800;
     }
 
     @keyframes fadeIn {
@@ -170,10 +179,10 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 
       .dialog-actions {
         flex-direction: column;
+      }
 
-        .btn {
-          width: 100%;
-        }
+      .dialog-actions .btn {
+        width: 100%;
       }
     }
   `]
@@ -191,10 +200,10 @@ export class ConfirmDialogComponent {
 
   get iconClass(): string {
     const icons = {
-      warning: 'bi bi-exclamation-triangle warning',
-      danger: 'bi bi-trash danger',
-      info: 'bi bi-info-circle info',
-      success: 'bi bi-check-circle success'
+      warning: 'fa fa-exclamation-triangle warning',
+      danger: 'fa fa-trash danger',
+      info: 'fa fa-info-circle info',
+      success: 'fa fa-check-circle success'
     };
     return icons[this.type];
   }
