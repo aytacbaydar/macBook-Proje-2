@@ -68,9 +68,9 @@ args = "cd kimyaogreniyorum && npm run start"
 waitForPort = 5000
 
 [deployment]
-run = ["npx", "serve", "-s", "dist/kimyaogreniyorum", "-l", "5000"]
+run = ["npx", "http-server", "dist/kimyaogreniyorum/browser", "-p", "5000", "-a", "0.0.0.0", "--cors"]
 deploymentTarget = "autoscale"
-build = ["npm", "run", "build"]
+build = ["npm", "run", "build", "--", "--configuration=production"]
 
 [[ports]]
 localPort = 5000
