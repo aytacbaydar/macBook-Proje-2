@@ -120,6 +120,18 @@
       justify-content: center;
 
       .nav-item {
+        &.icon-only {
+          .nav-link {
+            padding: 8px;
+            min-width: 40px;
+            justify-content: center;
+            
+            i {
+              font-size: 1.1rem;
+            }
+          }
+        }
+
         .nav-link {
           display: flex;
           align-items: center;
@@ -309,6 +321,20 @@
 
         .nav-item {
           width: 100%;
+
+          &.icon-only {
+            .nav-link {
+              padding: 12px;
+              justify-content: center;
+              
+              &::after {
+                content: attr(title);
+                margin-left: 10px;
+                font-size: 0.8rem;
+                color: #cccccc;
+              }
+            }
+          }
 
           .nav-link {
             padding: 15px 20px;
