@@ -88,24 +88,6 @@
           opacity: 0.3;
         }
 
-        // Delik efekti
-        &::after {
-          content: '';
-          position: absolute;
-          top: 15px;
-          left: 10px;
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          background: #333;
-          box-shadow: 
-            0 25px 0 #333,
-            0 50px 0 #333,
-            0 75px 0 #333,
-            0 100px 0 #333,
-            0 125px 0 #333,
-            0 150px 0 #333;
-        }
 
 
         .note-inner {
