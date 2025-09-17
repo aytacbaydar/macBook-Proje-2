@@ -161,37 +161,21 @@
           text-overflow: ellipsis;
         }
 
-        // Farklı açılar - notlar açılı, içerik düz
+        // Farklı açılar - not ve fotoğraf bir bütün halinde açılı
         &.note-1 {
           transform: rotate(5deg);
-          
-          .note-inner {
-            transform: rotate(-5deg);
-          }
         }
 
         &.note-2 {
           transform: rotate(-3deg);
-          
-          .note-inner {
-            transform: rotate(3deg);
-          }
         }
 
         &.note-3 {
           transform: rotate(-5deg);
-          
-          .note-inner {
-            transform: rotate(5deg);
-          }
         }
 
         &.note-4 {
           transform: rotate(3deg);
-          
-          .note-inner {
-            transform: rotate(-3deg);
-          }
         }
       }
     }
