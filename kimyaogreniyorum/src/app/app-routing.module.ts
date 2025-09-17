@@ -58,6 +58,7 @@ import { OgretmenKonuAnaliziSayfasiComponent } from './components/ogretmen-sayfa
 import { DovmeSayfasiIndexSayfasiComponent } from './components/dovme-sayfasi/template/dovme-sayfasi-index-sayfasi/dovme-sayfasi-index-sayfasi.component';
 import { DovmeAnaSayfasiComponent } from './components/dovme-sayfasi/dovme-ana-sayfasi/dovme-ana-sayfasi.component';
 import { DovmeRandevuSayfasiComponent } from './components/dovme-sayfasi/dovme-randevu-sayfasi/dovme-randevu-sayfasi.component';
+import { DovmeSayfasiHeaderSayfasiComponent } from './components/dovme-sayfasi/template/dovme-sayfasi-header-sayfasi/dovme-sayfasi-header-sayfasi.component';
 
 const routes: Routes = [
   {
@@ -297,7 +298,7 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: DovmeAnaSayfasiComponent,
+        component: DovmeSayfasiHeaderSayfasiComponent,
       },
       {
         path: 'randevu',
