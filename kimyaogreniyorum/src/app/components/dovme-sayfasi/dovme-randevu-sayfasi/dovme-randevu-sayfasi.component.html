@@ -10,15 +10,8 @@
   </div>
 
   <div class="randevu-content">
-    <!-- Success Message -->
-    <div class="success-message" [class.show]="submitSuccess">
-      <i class="fas fa-check-circle"></i>
-      <h3>Randevunuz Başarıyla Alındı!</h3>
-      <p>En kısa sürede sizi arayarak randevu detaylarını kesinleştireceğiz.</p>
-    </div>
-
     <!-- Randevu Form -->
-    <form [formGroup]="randevuForm" (ngSubmit)="onSubmit()" class="randevu-form" [class.hidden]="submitSuccess">
+    <form [formGroup]="randevuForm" (ngSubmit)="onSubmit()" class="randevu-form">
       <div class="form-grid">
         <!-- Personal Information -->
         <div class="form-section">

@@ -62,46 +62,6 @@
   z-index: 2;
 }
 
-// Success Message
-.success-message {
-  background: linear-gradient(135deg, #28a745, #20c997);
-  border-radius: 15px;
-  padding: 40px;
-  text-align: center;
-  color: #ffffff;
-  margin-bottom: 30px;
-  opacity: 0;
-  transform: translateY(30px);
-  transition: all 0.5s ease;
-  box-shadow: 0 10px 30px rgba(40, 167, 69, 0.3);
-
-  &.show {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  &.hidden {
-    display: none;
-  }
-
-  i {
-    font-size: 4rem;
-    margin-bottom: 20px;
-    color: #ffffff;
-  }
-
-  h3 {
-    font-size: 2rem;
-    margin: 0 0 15px 0;
-    font-weight: 700;
-  }
-
-  p {
-    font-size: 1.1rem;
-    margin: 0;
-    opacity: 0.9;
-  }
-}
 
 // Form Styles
 .randevu-form {
@@ -115,9 +75,6 @@
   backdrop-filter: blur(10px);
   margin-bottom: 40px;
 
-  &.hidden {
-    display: none;
-  }
 }
 
 .form-grid {

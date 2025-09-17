@@ -10,7 +10,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class DovmeRandevuSayfasiComponent implements OnInit {
   randevuForm: FormGroup;
   isSubmitting = false;
-  submitSuccess = false;
   minDate: string = '';
 
   constructor(private fb: FormBuilder) {
@@ -43,13 +42,7 @@ export class DovmeRandevuSayfasiComponent implements OnInit {
       setTimeout(() => {
         console.log('Randevu Bilgileri:', this.randevuForm.value);
         this.isSubmitting = false;
-        this.submitSuccess = true;
         this.randevuForm.reset();
-        
-        // Reset success message after 3 seconds
-        setTimeout(() => {
-          this.submitSuccess = false;
-        }, 3000);
       }, 1500);
     } else {
       this.markFormGroupTouched();
