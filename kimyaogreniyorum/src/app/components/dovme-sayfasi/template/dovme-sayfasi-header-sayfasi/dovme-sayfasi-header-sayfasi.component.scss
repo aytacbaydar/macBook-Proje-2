@@ -144,6 +144,20 @@
         }
 
         // Farklı açılar - not ve fotoğraf bir bütün halinde açılı
+        // Tüm notlar için aynı padding değerlerini garantileyelim
+        &.note-1,
+        &.note-2, 
+        &.note-3,
+        &.note-4 {
+          .note-content {
+            padding: 15px !important;
+          }
+          
+          .note-label {
+            padding: 12px 15px !important;
+          }
+        }
+        
         &.note-1 {
           transform: rotate(5deg);
         }
