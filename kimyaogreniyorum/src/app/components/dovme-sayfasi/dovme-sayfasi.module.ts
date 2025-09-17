@@ -7,6 +7,7 @@ import { DovmeSayfasiNavbarSayfasiComponent } from './template/dovme-sayfasi-nav
 import { DovmeSayfasiHeaderSayfasiComponent } from './template/dovme-sayfasi-header-sayfasi/dovme-sayfasi-header-sayfasi.component';
 import { DovmeAnaSayfasiComponent } from './dovme-ana-sayfasi/dovme-ana-sayfasi.component';
 import { DovmeRandevuSayfasiComponent } from './dovme-randevu-sayfasi/dovme-randevu-sayfasi.component';
+import { DovmeGaleriSayfasiComponent } from './dovme-galeri-sayfasi/dovme-galeri-sayfasi.component';
 
 
 
@@ -16,7 +17,8 @@ import { DovmeRandevuSayfasiComponent } from './dovme-randevu-sayfasi/dovme-rand
     DovmeSayfasiNavbarSayfasiComponent,
     DovmeSayfasiHeaderSayfasiComponent,
     DovmeAnaSayfasiComponent,
-    DovmeRandevuSayfasiComponent
+    DovmeRandevuSayfasiComponent,
+    DovmeGaleriSayfasiComponent
   ],
   imports: [
     CommonModule,
