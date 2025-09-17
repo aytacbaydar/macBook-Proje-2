@@ -146,6 +146,36 @@
         }
       }
 
+      .btn-gallery {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: transparent;
+        color: #ffffff;
+        border: 2px solid #ff6b35;
+        padding: 10px 16px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+        text-decoration: none;
+
+        &:hover {
+          background: rgba(255, 107, 53, 0.1);
+          color: #ff6b35;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
+        }
+
+        i {
+          font-size: 1rem;
+        }
+      }
+
       .btn-appointment {
         display: flex;
         align-items: center;

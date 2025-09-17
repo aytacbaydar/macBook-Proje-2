@@ -1,1 +1,93 @@
-<p>dovme-galeri-sayfasi works!</p>
+<div class="dovme-galeri">
+  <!-- Header Section -->
+  <div class="galeri-header">
+    <div class="header-content">
+      <h1 class="galeri-title">
+        <span class="accent">DOVME</span> GALERİSİ
+      </h1>
+      <p class="galeri-subtitle">
+        En iyi çalışmalarımızı keşfedin
+      </p>
+    </div>
+  </div>
+
+  <!-- Category Filter -->
+  <div class="category-filter">
+    <div class="filter-container">
+      <button 
+        *ngFor="let category of categories" 
+        (click)="selectCategory(category.id)"
+        [class.active]="selectedCategory === category.id"
+        class="filter-btn">
+        <span class="category-name">{{ category.name }}</span>
+        <span class="category-count">{{ category.count }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Gallery Grid -->
+  <div class="gallery-grid">
+    <div class="grid-container">
+      <div 
+        *ngFor="let item of filteredGalleries; let i = index" 
+        class="gallery-item"
+        (click)="openLightbox(i)">
+        <div class="image-wrapper">
+          <img [src]="item.image" [alt]="item.title" class="gallery-image">
+          <div class="image-overlay">
+            <div class="overlay-content">
+              <h3 class="image-title">{{ item.title }}</h3>
+              <p class="image-description">{{ item.description }}</p>
+              <div class="view-icon">
+                <i class="fas fa-expand-alt"></i>
+                <span>Büyüt</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lightbox Modal -->
+  <div class="lightbox-modal" [class.show]="isLightboxOpen" (click)="closeLightbox()">
+    <div class="lightbox-content" (click)="$event.stopPropagation()">
+      <!-- Close Button -->
+      <button class="lightbox-close" (click)="closeLightbox()">
+        <i class="fas fa-times"></i>
+      </button>
+
+      <!-- Navigation Buttons -->
+      <button class="lightbox-nav prev" (click)="prevImage()">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <button class="lightbox-nav next" (click)="nextImage()">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+
+      <!-- Image Container -->
+      <div class="lightbox-image-container" *ngIf="selectedImageIndex >= 0">
+        <img 
+          [src]="getCurrentImage()?.image" 
+          [alt]="getCurrentImage()?.title" 
+          class="lightbox-image">
+        
+        <!-- Image Info -->
+        <div class="lightbox-info">
+          <h3 class="lightbox-title">{{ getCurrentImage()?.title }}</h3>
+          <p class="lightbox-description">{{ getCurrentImage()?.description }}</p>
+          <div class="lightbox-meta">
+            <span class="image-number">
+              {{ selectedImageIndex + 1 }} / {{ filteredGalleries.length }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Background Overlay -->
+  <div class="background-pattern">
+    <div class="pattern-layer"></div>
+  </div>
+</div>
