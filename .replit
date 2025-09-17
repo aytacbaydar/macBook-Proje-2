@@ -64,7 +64,7 @@ outputType = "webview"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd kimyaogreniyorum && npm run start"
+args = "cd kimyaogreniyorum && npm start"
 waitForPort = 5000
 
 [deployment]
@@ -75,10 +75,6 @@ build = ["npm", "run", "build", "--", "--configuration=production"]
 [[ports]]
 localPort = 5000
 externalPort = 80
-
-[[ports]]
-localPort = 43783
-externalPort = 3000
 
 [agent]
 expertMode = true
