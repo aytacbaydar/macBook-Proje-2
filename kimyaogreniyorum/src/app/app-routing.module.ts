@@ -59,6 +59,7 @@ import { DovmeSayfasiIndexSayfasiComponent } from './components/dovme-sayfasi/te
 import { DovmeAnaSayfasiComponent } from './components/dovme-sayfasi/dovme-ana-sayfasi/dovme-ana-sayfasi.component';
 import { DovmeRandevuSayfasiComponent } from './components/dovme-sayfasi/dovme-randevu-sayfasi/dovme-randevu-sayfasi.component';
 import { DovmeSayfasiHeaderSayfasiComponent } from './components/dovme-sayfasi/template/dovme-sayfasi-header-sayfasi/dovme-sayfasi-header-sayfasi.component';
+import { DovmeGaleriSayfasiComponent } from './components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component';
 
 const routes: Routes = [
   {
@@ -303,6 +304,10 @@ const routes: Routes = [
       {
         path: 'randevu',
         component: DovmeRandevuSayfasiComponent,
+      },
+      {
+        path: 'galeri',
+        component: DovmeGaleriSayfasiComponent,
       },
       
     ],
