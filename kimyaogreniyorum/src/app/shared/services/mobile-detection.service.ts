@@ -48,6 +48,48 @@ export class MobileDetectionService {
   }
 
   /**
+   * iOS Safari browser kontrolü (PWA modal için)
+   */
+  isIOSSafari(): boolean {
+    const userAgent = navigator.userAgent.toLowerCase();
+    
+    // iOS device kontrolü
+    const isIOS = /iphone|ipad|ipod/.test(userAgent) || 
+                  (/macintosh/.test(userAgent) && 'ontouchend' in document);
+    
+    // Safari browser kontrolü
+    const isSafari = /safari/.test(userAgent) && !/chrome/.test(userAgent);
+    
+    // In-app browser'ları exclude et (Instagram, Facebook, etc.)
+    const isInApp = /instagram|fbav|fban|twitter|line|wechat|linkedin|tiktok|snapchat/i.test(userAgent);
+    
+    return isIOS && isSafari && !isInApp;
+  }
+
+  /**
+   * iOS PWA kurulum modal'ını göstermeli mi?
+   */
+  shouldShowIOSPWAModal(): boolean {
+    // iOS Safari kontrolü
+    if (!this.isIOSSafari()) {
+      return false;
+    }
+
+    // PWA zaten yüklü mü?
+    if (this.isPWAInstalled()) {
+      return false;
+    }
+
+    // "Don't show again" seçili mi?
+    const dontShow = localStorage.getItem('ios-pwa-dont-show');
+    if (dontShow === 'true') {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
    * Platform bazlı indirme URL'si
    */
   getDownloadUrl(): string {

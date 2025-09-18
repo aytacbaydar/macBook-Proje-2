@@ -1,9 +1,11 @@
 {
-  "name": "kimyaogreniyorum",
-  "short_name": "kimyaogreniyorum",
-  "theme_color": "#1976d2",
-  "background_color": "#fafafa",
+  "name": "Kimya Öğreniyorum",
+  "short_name": "Kimya Öğren",
+  "description": "Türkiye'nin en kapsamlı kimya eğitim platformu",
+  "theme_color": "#ff6600",
+  "background_color": "#ffffff",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "scope": "./",
   "start_url": "./",
   "icons": [

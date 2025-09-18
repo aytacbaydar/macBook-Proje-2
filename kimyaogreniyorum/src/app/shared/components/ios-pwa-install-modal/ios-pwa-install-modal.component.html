@@ -1,0 +1,89 @@
+<!-- iOS PWA Kurulum Modal'ı -->
+<div 
+  class="ios-pwa-modal-overlay" 
+  *ngIf="showModal"
+  [@modalAnimation]
+  (click)="closeModal()">
+  
+  <div 
+    class="ios-pwa-modal-content" 
+    (click)="$event.stopPropagation()">
+    
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="app-info">
+        <img src="assets/icons/apple-touch-icon.png" alt="Kimya Öğreniyorum" class="app-icon">
+        <div class="app-details">
+          <h3>Kimya Öğreniyorum</h3>
+          <p>Ana ekranınıza ekleyin</p>
+        </div>
+      </div>
+      <button class="close-btn" (click)="closeModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Instructions -->
+    <div class="modal-body">
+      <h4>📱 iPhone'unuzda App Gibi Kullanın!</h4>
+      
+      <div class="instructions">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <p><strong>Paylaş düğmesine</strong> dokunun</p>
+            <div class="icon-demo">
+              <i class="fas fa-share" style="color: #007AFF;"></i>
+              <span>(Safari'nin altındaki orta simge)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <p><strong>"Ana Ekrana Ekle"</strong> seçeneğini bulun</p>
+            <div class="icon-demo">
+              <i class="fas fa-plus-square" style="color: #007AFF;"></i>
+              <span>Ana Ekrana Ekle</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <p><strong>"Ekle"</strong> düğmesine dokunun</p>
+            <div class="icon-demo">
+              <i class="fas fa-check-circle" style="color: #34C759;"></i>
+              <span>Ana ekranınızda uygulama simgesi görünecek!</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Benefits -->
+      <div class="benefits">
+        <h5>✨ Avantajları:</h5>
+        <ul>
+          <li>🚀 Daha hızlı erişim</li>
+          <li>📱 App gibi tam ekran deneyim</li>
+          <li>🔔 Bildirimleri kaçırmayın</li>
+          <li>💾 Çevrimdışı çalışma</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="dontShowAgainClick()">
+        Bir Daha Gösterme
+      </button>
+      <button class="btn-primary" (click)="addToHomeScreen()">
+        <i class="fas fa-plus"></i>
+        Anladım!
+      </button>
+    </div>
+
+  </div>
+</div>
