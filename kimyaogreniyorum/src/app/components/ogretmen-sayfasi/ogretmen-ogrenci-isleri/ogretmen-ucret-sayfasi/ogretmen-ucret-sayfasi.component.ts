@@ -12,6 +12,7 @@ interface Student {
   grubu?: string;
   okulu?: string;
   sinifi?: string;
+  ders_sayisi?: number; // Haftalık ders sayısı
 }
 
 interface Payment {
@@ -396,5 +397,58 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     this.summary.studentsWhoDidntPay = this.students.filter(student => 
       !paidStudentIds.includes(student.id)
     );
+  }
+
+  // Tablo hesaplama metodları
+  getBirimUcret(student: Student): number {
+    const ucret = parseFloat(student.ucret || '0');
+    return ucret / 4;
+  }
+
+  getDersSayisi(student: Student): number {
+    return student.ders_sayisi || 8; // Default 8 ders
+  }
+
+  getOdemesiGerekenMiktar(student: Student): number {
+    return this.getBirimUcret(student) * this.getDersSayisi(student);
+  }
+
+  getOdedigiMiktar(student: Student): number {
+    const currentMonth = new Date().getMonth() + 1;
+    const currentYear = new Date().getFullYear();
+    
+    return this.payments
+      .filter(payment => {
+        if (!payment.odeme_tarihi) return false;
+        const paymentDate = new Date(payment.odeme_tarihi);
+        return payment.ogrenci_id === student.id &&
+               paymentDate.getMonth() + 1 === currentMonth &&
+               paymentDate.getFullYear() === currentYear;
+      })
+      .reduce((total, payment) => total + payment.tutar, 0);
+  }
+
+  getKalanMiktar(student: Student): number {
+    return this.getOdemesiGerekenMiktar(student) - this.getOdedigiMiktar(student);
+  }
+
+  getAllStudentsTableData(): Student[] {
+    return this.students.filter(student => student.aktif);
+  }
+
+  // Toplam hesaplama metodları
+  getTotalOdemesiGereken(): number {
+    return this.getAllStudentsTableData()
+      .reduce((total, student) => total + this.getOdemesiGerekenMiktar(student), 0);
+  }
+
+  getTotalOdedigiMiktar(): number {
+    return this.getAllStudentsTableData()
+      .reduce((total, student) => total + this.getOdedigiMiktar(student), 0);
+  }
+
+  getTotalKalanMiktar(): number {
+    return this.getAllStudentsTableData()
+      .reduce((total, student) => total + this.getKalanMiktar(student), 0);
   }
 }
