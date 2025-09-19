@@ -64,7 +64,7 @@ outputType = "webview"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd kimyaogreniyorum && npm start"
+args = "cd kimyaogreniyorum && npx ng serve --disable-host-check --host 0.0.0.0 --port 5000"
 waitForPort = 5000
 
 [deployment]
@@ -77,12 +77,8 @@ localPort = 5000
 externalPort = 80
 
 [[ports]]
-localPort = 35347
+localPort = 33705
 externalPort = 3000
-
-[[ports]]
-localPort = 44213
-externalPort = 3001
 
 [agent]
 expertMode = true
