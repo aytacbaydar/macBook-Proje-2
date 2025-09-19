@@ -96,6 +96,42 @@ export class OgretmenCevapAnahtariSayfasiComponent implements OnInit, OnDestroy 
     document.body.style.overflow = '';
   }
 
+  // Modal Methods
+  openAddModal(): void {
+    this.showAddForm = true;
+    document.body.style.overflow = 'hidden';
+    this.resetForm();
+  }
+
+  closeAddModal(): void {
+    this.showAddForm = false;
+    document.body.style.overflow = '';
+    this.resetForm();
+  }
+
+  // File Methods
+  removeFile(): void {
+    this.imagePreview = null;
+    // Reset the file input
+    const fileInput = document.querySelector('#sinav_kapagi') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
+  }
+
+  // Progress Methods
+  getCompletedAnswersCount(): number {
+    let completed = 0;
+    for (let i = 1; i <= this.cevapAnahtari.soru_sayisi; i++) {
+      if (this.cevapAnahtari.cevaplar['ca' + i]) {
+        completed++;
+      }
+    }
+    return completed;
+  }
+
+  // Helper method is already implemented elsewhere in the file
+
   // Auth headers
   private getAuthHeaders(): HttpHeaders {
     let token = '';

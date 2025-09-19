@@ -115,178 +115,238 @@
 
     <button 
       type="button" 
-      class="btn btn-primary add-btn"
-      (click)="showAddForm = !showAddForm">
+      class="btn btn-primary add-btn modern-add-btn"
+      (click)="openAddModal()">
       <i class="fas fa-plus"></i>
       <span>Yeni Cevap Anahtarı</span>
+      <div class="btn-ripple"></div>
     </button>
   </div>
 
-  <!-- Add Form -->
-  <div class="add-form-container" *ngIf="showAddForm">
-    <div class="form-card">
-      <div class="form-header">
-        <h3><i class="fas fa-plus-circle"></i> Yeni Cevap Anahtarı Ekle</h3>
-        <button type="button" class="close-btn" (click)="showAddForm = false">
+  <!-- Modern Bootstrap Modal -->
+  <div class="modal-overlay" *ngIf="showAddForm" (click)="closeAddModal()">
+    <div class="modern-modal" (click)="$event.stopPropagation()">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <div class="modal-title">
+          <i class="fas fa-sparkles"></i>
+          <h2>Yeni Cevap Anahtarı</h2>
+        </div>
+        <button type="button" class="close-btn" (click)="closeAddModal()">
           <i class="fas fa-times"></i>
         </button>
       </div>
 
-      <form (ngSubmit)="onSubmit()" class="cevap-form">
-        <!-- Temel Bilgiler -->
-        <div class="form-row">
-          <div class="form-group">
-            <label for="sinav_adi">Sınav Adı *</label>
-            <input 
-              type="text" 
-              id="sinav_adi"
-              class="form-control" 
-              [(ngModel)]="cevapAnahtari.sinav_adi" 
-              name="sinav_adi"
-              placeholder="Örn: TYT Deneme - 1. Hafta"
-              required>
-          </div>
-
-          <div class="form-group">
-            <label for="sinav_turu">Sınav Türü *</label>
-            <select 
-              id="sinav_turu"
-              class="form-control" 
-              [(ngModel)]="cevapAnahtari.sinav_turu" 
-              name="sinav_turu"
-              required>
-              <option value="">Sınav Türü Seçiniz</option>
-              <option *ngFor="let tur of sinavTurleri" [value]="tur.id">{{ tur.label }}</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="soru_sayisi">Soru Sayısı *</label>
-            <input 
-              type="number" 
-              id="soru_sayisi"
-              class="form-control" 
-              [(ngModel)]="cevapAnahtari.soru_sayisi" 
-              name="soru_sayisi"
-              min="1" 
-              [max]="maxSoruSayisi"
-              (ngModelChange)="onSoruSayisiChange()"
-              required>
-          </div>
-
-          <div class="form-group">
-            <label for="tarih">Sınav Tarihi *</label>
-            <input 
-              type="date" 
-              id="tarih"
-              class="form-control" 
-              [(ngModel)]="cevapAnahtari.tarih" 
-              name="tarih"
-              required>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="sinav_kapagi">Sınav Kapağı</label>
-            <input 
-              type="file" 
-              id="sinav_kapagi"
-              class="form-control" 
-              accept="image/*"
-              (change)="onFileSelected($event)">
-            <small class="form-text">JPG, JPEG, PNG veya GIF formatında resim yükleyebilirsiniz.</small>
-          </div>
-
-          <div class="form-group">
-            <label class="checkbox-label">
-              <input 
-                type="checkbox" 
-                [(ngModel)]="cevapAnahtari.aktiflik" 
-                name="aktiflik">
-              <span class="checkbox-custom"></span>
-              Aktif
-            </label>
-          </div>
-        </div>
-
-        <!-- Image Preview -->
-        <div class="image-preview" *ngIf="imagePreview">
-          <img [src]="imagePreview" alt="Sınav Kapağı Önizleme">
-        </div>
-
-        <!-- Soru Detayları -->
-        <div class="cevaplar-section" *ngIf="cevapAnahtari.soru_sayisi > 0">
-          <h4><i class="fas fa-list-ol"></i> Soru Detayları</h4>
-
-          <div class="basit-soru-listesi">
-            <div *ngFor="let i of getSoruDizisi(cevapAnahtari); trackBy: trackByFn" class="basit-soru-item">
-              
-              <div class="soru-baslik">{{ i }}. Soru</div>
-              
-              <!-- Cevap -->
-              <div class="alan-grubu">
-                <label>Cevap:</label>
-                <select 
-                  class="basit-input"
-                  [(ngModel)]="cevapAnahtari.cevaplar['ca' + i]" 
-                  [name]="'cevap_' + i">
-                  <option value="">Seçiniz</option>
-                  <option value="A">A</option>
-                  <option value="B">B</option>
-                  <option value="C">C</option>
-                  <option value="D">D</option>
-                  <option value="E">E</option>
-                </select>
-              </div>
-
-              <!-- Konu -->
-              <div class="alan-grubu">
-                <label>Konu:</label>
-                <select 
-                  class="basit-input"
-                  [(ngModel)]="cevapAnahtari.konular!['ka' + i]" 
-                  [name]="'konu_' + i"
-                  [disabled]="konularLoading">
-                  <option value="">Konu seçiniz</option>
-                  <optgroup *ngFor="let seviye of getSinifSeviyeleri()" [label]="seviye + '. Sınıf'">
-                    <option *ngFor="let konu of getKonularByLevel(seviye)" [value]="konu.konu_adi">
-                      {{ konu.konu_adi }} - {{ konu.unite_adi }}
-                    </option>
-                  </optgroup>
-                </select>
-              </div>
-
-              <!-- Video -->
-              <div class="alan-grubu">
-                <label>Video:</label>
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <form (ngSubmit)="onSubmit()" class="modern-form" #addForm="ngForm">
+          <!-- Temel Bilgiler Card -->
+          <div class="form-section">
+            <div class="section-header">
+              <i class="fas fa-info-circle"></i>
+              <h3>Temel Bilgiler</h3>
+            </div>
+            
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">
+                  <i class="fas fa-edit"></i>
+                  Sınav Adı *
+                </label>
                 <input 
-                  type="text" 
-                  class="basit-input"
-                  [(ngModel)]="cevapAnahtari.videolar!['vi' + i]" 
-                  [name]="'video_' + i"
-                  maxlength="20"
-                  placeholder="Video kodu">
+                  type="text"
+                  class="form-control modern-input" 
+                  [(ngModel)]="cevapAnahtari.sinav_adi" 
+                  name="sinav_adi"
+                  placeholder="Örn: TYT Deneme - 1. Hafta"
+                  required>
               </div>
 
+              <div class="form-group">
+                <label class="form-label">
+                  <i class="fas fa-graduation-cap"></i>
+                  Sınav Türü *
+                </label>
+                <select 
+                  class="form-select modern-select" 
+                  [(ngModel)]="cevapAnahtari.sinav_turu" 
+                  name="sinav_turu" 
+                  required>
+                  <option value="">Sınav Türü Seçiniz</option>
+                  <option *ngFor="let tur of sinavTurleri" [value]="tur.id">
+                    {{ tur.label }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">
+                  <i class="fas fa-list-ol"></i>
+                  Soru Sayısı *
+                </label>
+                <input 
+                  type="number"
+                  class="form-control modern-input" 
+                  [(ngModel)]="cevapAnahtari.soru_sayisi" 
+                  name="soru_sayisi"
+                  min="1" 
+                  [max]="maxSoruSayisi"
+                  (ngModelChange)="onSoruSayisiChange()"
+                  required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">
+                  <i class="fas fa-calendar"></i>
+                  Sınav Tarihi *
+                </label>
+                <input 
+                  type="date"
+                  class="form-control modern-input" 
+                  [(ngModel)]="cevapAnahtari.tarih" 
+                  name="tarih"
+                  required>
+              </div>
+            </div>
+
+            <!-- File Upload Section -->
+            <div class="file-upload-section">
+              <div class="upload-area" [class.has-file]="imagePreview">
+                <input 
+                  type="file" 
+                  #fileInput
+                  accept="image/*"
+                  (change)="onFileSelected($event)"
+                  style="display: none">
+                
+                <div class="upload-content" *ngIf="!imagePreview" (click)="fileInput.click()">
+                  <i class="fas fa-cloud-upload-alt"></i>
+                  <p>Sınav kapağı yükleyin</p>
+                  <small>JPG, PNG veya GIF (Max: 5MB)</small>
+                </div>
+
+                <div class="file-preview" *ngIf="imagePreview">
+                  <img [src]="imagePreview" alt="Sınav Kapağı">
+                  <button type="button" class="remove-file" (click)="removeFile()">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Aktiflik Toggle -->
+            <div class="toggle-section">
+              <div class="form-check form-switch">
+                <input 
+                  class="form-check-input modern-switch" 
+                  type="checkbox" 
+                  id="aktiflik"
+                  [(ngModel)]="cevapAnahtari.aktiflik" 
+                  name="aktiflik">
+                <label class="form-check-label toggle-label" for="aktiflik">
+                  <i class="fas fa-toggle-on"></i>
+                  Aktif Durum
+                </label>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Form Actions -->
-        <div class="form-actions">
-          <button type="button" class="btn btn-secondary" (click)="showAddForm = false">
-            İptal
-          </button>
-          <button type="submit" class="btn btn-primary" [disabled]="submitting">
-            <i class="fas fa-save"></i>
-            <span *ngIf="!submitting">Kaydet</span>
-            <span *ngIf="submitting">Kaydediliyor...</span>
-          </button>
-        </div>
-      </form>
+          <!-- Soru Detayları Card -->
+          <div class="form-section" *ngIf="cevapAnahtari.soru_sayisi > 0">
+            <div class="section-header">
+              <i class="fas fa-list-ol"></i>
+              <h3>Soru Detayları</h3>
+              <div class="progress-info">
+                {{ getCompletedAnswersCount() }}/{{ cevapAnahtari.soru_sayisi }} tamamlandı
+              </div>
+            </div>
+
+            <div class="questions-container">
+              <div *ngFor="let i of getSoruDizisi(cevapAnahtari); trackBy: trackByFn; let idx = index" 
+                   class="question-card">
+                
+                <div class="question-header">
+                  <span class="question-number">{{ i }}</span>
+                  <span class="question-label">. Soru</span>
+                </div>
+                
+                <div class="question-fields">
+                  <div class="form-group">
+                    <label class="form-label">
+                      <i class="fas fa-question-circle"></i>
+                      Cevap
+                    </label>
+                    <select 
+                      class="form-select modern-select" 
+                      [(ngModel)]="cevapAnahtari.cevaplar['ca' + i]" 
+                      [name]="'cevap_' + i">
+                      <option value="">Seçiniz</option>
+                      <option value="A">A</option>
+                      <option value="B">B</option>
+                      <option value="C">C</option>
+                      <option value="D">D</option>
+                      <option value="E">E</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">
+                      <i class="fas fa-bookmark"></i>
+                      Konu
+                    </label>
+                    <select 
+                      class="form-select modern-select" 
+                      [(ngModel)]="cevapAnahtari.konular!['ka' + i]" 
+                      [name]="'konu_' + i"
+                      [disabled]="konularLoading">
+                      <option value="">Konu seçiniz</option>
+                      <optgroup *ngFor="let seviye of getSinifSeviyeleri()" [label]="seviye + '. Sınıf'">
+                        <option *ngFor="let konu of getKonularByLevel(seviye)" [value]="konu.konu_adi">
+                          {{ konu.konu_adi }} - {{ konu.unite_adi }}
+                        </option>
+                      </optgroup>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">
+                      <i class="fas fa-video"></i>
+                      Video Kodu
+                    </label>
+                    <input 
+                      type="text"
+                      class="form-control modern-input" 
+                      [(ngModel)]="cevapAnahtari.videolar!['vi' + i]" 
+                      [name]="'video_' + i"
+                      maxlength="20"
+                      placeholder="Opsiyonel">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeAddModal()">
+          <i class="fas fa-times"></i>
+          İptal
+        </button>
+        <button 
+          type="submit" 
+          class="btn btn-primary" 
+          [disabled]="submitting || !addForm?.valid"
+          (click)="onSubmit()">
+          <i class="fas fa-save"></i>
+          <span *ngIf="!submitting">Kaydet</span>
+          <span *ngIf="submitting">
+            <i class="fas fa-spinner fa-spin"></i>
+            Kaydediliyor...
+          </span>
+        </button>
+      </div>
     </div>
   </div>
 
