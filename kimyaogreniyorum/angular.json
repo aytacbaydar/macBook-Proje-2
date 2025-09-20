@@ -121,7 +121,7 @@
     }
   },
   "cli": {
-    "analytics": "bf0f2b0c-db8a-47fb-be88-3217ea3925be"
+    "analytics": false
   },
   "schematics": {
     "@schematics/angular:component": {
