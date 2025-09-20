@@ -542,15 +542,34 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     
     const attendanceRecords = this.studentAttendanceData[student.id] || [];
     
-    const thisMonthAttended = attendanceRecords.filter(record => {
-      const recordDate = new Date(record.tarih);
-      return record.durum === 'present' && 
-             recordDate.getMonth() + 1 === currentMonth &&
-             recordDate.getFullYear() === currentYear &&
-             (!record.ders_tipi || record.ders_tipi === 'normal' || record.ders_tipi === 'ek_ders');
-    }).length;
+    console.log(`=== ${student.adi_soyadi} ATTENDANCE DEBUG ===`);
+    console.log(`Öğrenci ID: ${student.id}`);
+    console.log(`Bu ay: ${currentMonth}/${currentYear}`);
+    console.log(`Ham attendance kayıt sayısı:`, attendanceRecords.length);
+    console.log(`Ham attendance kayıtları:`, attendanceRecords);
     
-    console.log(`${student.adi_soyadi} bu ay katıldığı ders sayısı:`, thisMonthAttended);
+    // Filtrelemeleri adım adım yapalım
+    const presentRecords = attendanceRecords.filter(record => record.durum === 'present');
+    console.log(`Present kayıt sayısı:`, presentRecords.length);
+    
+    const thisMonthRecords = presentRecords.filter(record => {
+      const recordDate = new Date(record.tarih);
+      const recordMonth = recordDate.getMonth() + 1;
+      const recordYear = recordDate.getFullYear();
+      console.log(`Kayıt: ${record.tarih} -> ${recordMonth}/${recordYear} (durum: ${record.durum}, ders_tipi: ${record.ders_tipi})`);
+      return recordMonth === currentMonth && recordYear === currentYear;
+    });
+    console.log(`Bu ayın present kayıt sayısı:`, thisMonthRecords.length);
+    
+    const validLessonTypes = thisMonthRecords.filter(record => 
+      !record.ders_tipi || record.ders_tipi === 'normal' || record.ders_tipi === 'ek_ders'
+    );
+    console.log(`Geçerli ders tipi kayıt sayısı:`, validLessonTypes.length);
+    console.log(`Geçerli kayıtlar:`, validLessonTypes.map(r => `${r.tarih} (${r.ders_tipi || 'normal'})`));
+    
+    const thisMonthAttended = validLessonTypes.length;
+    console.log(`SONUÇ - ${student.adi_soyadi} bu ay katıldığı ders sayısı:`, thisMonthAttended);
+    console.log(`=== SON DEBUG ===`);
     
     // Eğer bu ay için attendance kaydı hiç yoksa, haftalık ders sayısı × 4 kullan
     if (attendanceRecords.length === 0) {
