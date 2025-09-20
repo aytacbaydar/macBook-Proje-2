@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
-import { forkJoin } from 'rxjs';
 
 interface Student {
   id: number;
@@ -142,36 +141,34 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
       return;
     }
 
-    // İki API'yi paralel çağır ve ikisi de tamamlandığında işlem yap
-    forkJoin({
-      paymentData: this.http.get<any>('https://www.kimyaogreniyorum.com/server/api/ogretmen_ucret_yonetimi.php', { 
-        headers,
-        params: { ogretmen: teacherName }
-      }),
-      studentPayments: this.http.get<any>('https://www.kimyaogreniyorum.com/server/api/ogrenci_odemeler.php', { 
-        headers,
-        params: { ogretmen: teacherName, action: 'get_payments' }
-      })
-    }).subscribe({
-      next: (responses) => {
-        console.log('Tüm API çağrıları tamamlandı:', responses);
-        
-        // Öğrenci verileri
-        if (responses.paymentData?.success) {
-          this.students = responses.paymentData.data.students || [];
-          this.monthlyAnalysis = responses.paymentData.data.monthlyAnalysis || [];
-          this.yearlyTotals = responses.paymentData.data.yearlyTotals || this.yearlyTotals;
-        }
-        
-        // Gerçek ödeme verileri (ogrenci_odemeler tablosundan)
-        if (responses.studentPayments?.success) {
-          this.studentPaymentsData = responses.studentPayments.data || [];
-        }
-        
-        // Şimdi her iki veri de hazır, özeti hesapla
-        this.calculateCompleteSecondaryFromRealData();
-        this.isLoading = false;
-      },
+    // Ana API'den tüm verileri al (hem öğrenci hem de ödeme verileri)
+    this.http.get<any>('https://www.kimyaogreniyorum.com/server/api/ogretmen_ucret_yonetimi.php', { 
+      headers,
+      params: { ogretmen: teacherName }
+    })
+      .subscribe({
+        next: (response) => {
+          console.log('API çağrısı tamamlandı:', response);
+          
+          if (response && response.success) {
+            // Öğrenci verileri
+            this.students = response.data.students || [];
+            this.monthlyAnalysis = response.data.monthlyAnalysis || [];
+            this.yearlyTotals = response.data.yearlyTotals || this.yearlyTotals;
+            
+            // Ödeme verileri (bu API'den gelen)
+            this.studentPaymentsData = response.data.payments || [];
+            console.log('Yüklenen öğrenci sayısı:', this.students.length);
+            console.log('Yüklenen ödeme sayısı:', this.studentPaymentsData.length);
+            
+            // Şimdi tüm veriler hazır, özeti hesapla
+            this.calculateCompleteSecondaryFromRealData();
+          } else {
+            this.error = 'Veriler yüklenemedi: ' + (response?.message || 'API başarısız response');
+            this.toastr.error(this.error);
+          }
+          this.isLoading = false;
+        },
       error: (error) => {
         console.error('Veri yükleme hatası:', error);
         this.error = 'Veriler yüklenemedi: ' + (error.message || 'Bilinmeyen hata');
