@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
+import { forkJoin } from 'rxjs';
 
 interface Student {
   id: number;
@@ -124,9 +125,60 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadPaymentData();
-    this.loadStudentPayments();
+    this.loadAllData();
     this.loadIncomeOverview();
+  }
+  
+  // Tüm verileri senkronize şekilde yükle
+  loadAllData(): void {
+    this.isLoading = true;
+    const headers = this.getAuthHeaders();
+    const teacherName = this.getTeacherName();
+    
+    if (!teacherName) {
+      this.error = 'Öğretmen bilgisi bulunamadı';
+      this.toastr.error(this.error);
+      this.isLoading = false;
+      return;
+    }
+
+    // İki API'yi paralel çağır ve ikisi de tamamlandığında işlem yap
+    forkJoin({
+      paymentData: this.http.get<any>('https://www.kimyaogreniyorum.com/server/api/ogretmen_ucret_yonetimi.php', { 
+        headers,
+        params: { ogretmen: teacherName }
+      }),
+      studentPayments: this.http.get<any>('https://www.kimyaogreniyorum.com/server/api/ogrenci_odemeler.php', { 
+        headers,
+        params: { ogretmen: teacherName, action: 'get_payments' }
+      })
+    }).subscribe({
+      next: (responses) => {
+        console.log('Tüm API çağrıları tamamlandı:', responses);
+        
+        // Öğrenci verileri
+        if (responses.paymentData?.success) {
+          this.students = responses.paymentData.data.students || [];
+          this.monthlyAnalysis = responses.paymentData.data.monthlyAnalysis || [];
+          this.yearlyTotals = responses.paymentData.data.yearlyTotals || this.yearlyTotals;
+        }
+        
+        // Gerçek ödeme verileri (ogrenci_odemeler tablosundan)
+        if (responses.studentPayments?.success) {
+          this.studentPaymentsData = responses.studentPayments.data || [];
+        }
+        
+        // Şimdi her iki veri de hazır, özeti hesapla
+        this.calculateCompleteSecondaryFromRealData();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Veri yükleme hatası:', error);
+        this.error = 'Veriler yüklenemedi: ' + (error.message || 'Bilinmeyen hata');
+        this.toastr.error(this.error);
+        this.isLoading = false;
+      }
+    });
   }
 
   private getAuthHeaders(): HttpHeaders {
@@ -258,7 +310,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
           if (response && response.success) {
             this.toastr.success('Ödeme başarıyla kaydedildi!');
             this.closePaymentForm();
-            this.loadPaymentData(); // Verileri yenile
+            this.loadAllData(); // Tüm verileri senkronize şekilde yenile
           } else {
             this.toastr.error('Ödeme kaydedilemedi: ' + (response?.message || 'Bilinmeyen hata'));
           }
@@ -285,7 +337,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
   // Template'te kullanılan metodlar
   loadData(): void {
     this.error = null;
-    this.loadPaymentData();
+    this.loadAllData(); // Tüm verileri senkronize şekilde yenile
   }
 
   getCollectionRate(): number {
@@ -293,39 +345,8 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     return (this.summary.totalReceived / this.summary.totalExpected) * 100;
   }
 
-  loadStudentPayments(): void {
-    const headers = this.getAuthHeaders();
-    const teacherName = this.getTeacherName();
-    
-    if (!teacherName) {
-      this.toastr.error('Öğretmen bilgisi bulunamadı');
-      return;
-    }
-
-    console.log('Öğrenci ödemeleri yükleniyor...', 'Teacher:', teacherName);
-
-    this.http.get<any>('https://www.kimyaogreniyorum.com/server/api/ogrenci_odemeler.php', { 
-      headers,
-      params: { ogretmen: teacherName }
-    })
-      .subscribe({
-        next: (response) => {
-          console.log('Öğrenci ödemeleri API response:', response);
-          if (response && response.success) {
-            // Ödemeleri güncelle - ogrenci_odemeler tablosundan gelen verilerle
-            this.payments = response.data || [];
-            console.log('Öğrenci ödemeleri yüklendi:', this.payments.length);
-          } else {
-            console.error('Öğrenci ödemeleri API başarısız:', response);
-            this.toastr.warning('Öğrenci ödeme verileri yüklenemedi');
-          }
-        },
-        error: (error) => {
-          console.error('Öğrenci ödemeleri yüklenirken hata:', error);
-          this.toastr.error('Öğrenci ödeme verileri yüklenemedi: ' + error.message);
-        }
-      });
-  }
+  // Öğrenci ödemelerini ogrenci_odemeler tablosundan yükle
+  studentPaymentsData: Payment[] = []; // Gerçek ödeme verilerini burada tut
 
   loadIncomeOverview(): void {
     const headers = this.getAuthHeaders();
@@ -398,6 +419,66 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     return Math.round((this.yearlyTotals.totalReceived / this.yearlyTotals.totalExpected) * 100);
   }
 
+  // Tüm özet verilerini gerçek payment verilerinden hesapla
+  private calculateCompleteSecondaryFromRealData() {
+    const currentMonth = new Date().getMonth() + 1;
+    const currentYear = new Date().getFullYear();
+
+    // Aktif ve ücreti 0'dan büyük öğrencileri al (tablo ile tutarlı)
+    const activeStudents = this.students.filter(student => 
+      student.aktif && parseFloat(student.ucret || '0') > 0
+    );
+
+    // Bu ayın gerçek ödemelerini filtrele (ogrenci_odemeler tablosundan)
+    const currentMonthPayments = this.studentPaymentsData.filter(payment => {
+      if (!payment || !payment.odeme_tarihi) return false;
+      const paymentDate = new Date(payment.odeme_tarihi);
+      return paymentDate.getMonth() + 1 === currentMonth && 
+             paymentDate.getFullYear() === currentYear;
+    });
+
+    // Bu ay ödeme yapan aktif öğrencilerin ID'lerini al
+    const paidStudentIds = [...new Set(currentMonthPayments.map(payment => payment.ogrenci_id))];
+
+    // Aktif öğrencileri ödeme durumuna göre ayır
+    this.summary.studentsWhoPayThis = activeStudents.filter(student => 
+      paidStudentIds.includes(student.id)
+    );
+
+    this.summary.studentsWhoDidntPay = activeStudents.filter(student => 
+      !paidStudentIds.includes(student.id)
+    );
+
+    // Toplam beklenen gelir hesapla (aktif öğrenciler için)
+    this.summary.totalExpected = activeStudents.reduce((total, student) => {
+      const birimUcret = parseFloat(student.ucret || '0') / 4;
+      const dersSayisi = student.ders_sayisi || 8;
+      return total + (birimUcret * dersSayisi);
+    }, 0);
+
+    // Toplam alınan gelir hesapla (bu ayın ödemeleri)
+    this.summary.totalReceived = currentMonthPayments.reduce((total, payment) => 
+      total + payment.tutar, 0
+    );
+
+    // Ay ve yıl bilgilerini güncelle
+    this.summary.currentMonth = currentMonth;
+    this.summary.currentYear = currentYear;
+
+    // payments array'ini de güncelle (template'te kullanılıyor)
+    this.payments = currentMonthPayments;
+    
+    console.log('Tam özet hesaplandı:', {
+      activeStudents: activeStudents.length,
+      studentsWhoPaid: this.summary.studentsWhoPayThis.length,
+      studentsWhoDidntPay: this.summary.studentsWhoDidntPay.length,
+      payments: this.payments.length,
+      totalExpected: this.summary.totalExpected,
+      totalReceived: this.summary.totalReceived,
+      collectionRate: this.getCollectionRate()
+    });
+  }
+
   private calculateSummary() {
     const currentMonth = new Date().getMonth() + 1;
     const currentYear = new Date().getFullYear();
@@ -441,7 +522,9 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
   }
 
   getDersSayisi(student: Student): number {
-    return student.ders_sayisi || 8; // Default 8 ders
+    // Öğrencinin gerçek ders sayısını kullan, yoksa 8 default
+    console.log(`${student.adi_soyadi} ders sayısı:`, student.ders_sayisi);
+    return student.ders_sayisi || 8;
   }
 
   getOdemesiGerekenMiktar(student: Student): number {
@@ -449,16 +532,11 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
   }
 
   getOdedigiMiktar(student: Student): number {
-    // Öğrenci ödemeleri API'sinden veri al
-    const teacherName = this.getTeacherName();
-    if (!teacherName) return 0;
-    
     const currentMonth = new Date().getMonth() + 1;
     const currentYear = new Date().getFullYear();
     
-    // Bu method'u async yapamayacağımız için, component yüklenirken ödeme verilerini yükleyeceğiz
-    // Şimdilik mevcut payments array'ini kullan ama ogrenci_odemeler tablosuna göre güncellenmiş veriyle
-    return this.payments
+    // ogrenci_odemeler tablosundan gelen gerçek veriyi kullan
+    const studentPayments = this.studentPaymentsData
       .filter(payment => {
         if (!payment.odeme_tarihi) return false;
         const paymentDate = new Date(payment.odeme_tarihi);
@@ -467,6 +545,9 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
                paymentDate.getFullYear() === currentYear;
       })
       .reduce((total, payment) => total + payment.tutar, 0);
+      
+    console.log(`${student.adi_soyadi} bu ay ödediği miktar (ogrenci_odemeler):`, studentPayments);
+    return studentPayments;
   }
 
   getKalanMiktar(student: Student): number {
