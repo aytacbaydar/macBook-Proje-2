@@ -156,13 +156,21 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     }
 
     // Ana API'den tüm verileri al (hem öğrenci hem de ödeme verileri)
+    console.log('=== API ÇAĞRI DEBUG ===');
+    console.log('API URL:', './server/api/ogretmen_ucret_yonetimi.php');
+    console.log('Öğretmen adı:', teacherName);
+    console.log('Headers:', headers);
+    
     this.http.get<any>('./server/api/ogretmen_ucret_yonetimi.php', { 
       headers,
       params: { ogretmen: teacherName }
     })
       .subscribe({
         next: (response) => {
-          console.log('API çağrısı tamamlandı:', response);
+          console.log('=== API RESPONSE DEBUG ===');
+          console.log('Raw API Response:', response);
+          console.log('Response success:', response?.success);
+          console.log('Response data:', response?.data);
           
           if (response && response.success) {
             // Öğrenci verileri
@@ -172,18 +180,34 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
             
             // Ödeme verileri (bu API'den gelen)
             this.studentPaymentsData = response.data.payments || [];
-            console.log('Yüklenen öğrenci sayısı:', this.students.length);
-            console.log('Yüklenen ödeme sayısı:', this.studentPaymentsData.length);
             
-            // Şimdi attendance verilerini yükle, sonra özeti hesapla
-            this.loadStudentAttendanceData().then(() => {
+            console.log('=== VERİ PARSE DEBUG ===');
+            console.log('Students array:', this.students);
+            console.log('Yüklenen öğrenci sayısı:', this.students.length);
+            console.log('StudentPaymentsData array:', this.studentPaymentsData);
+            console.log('Yüklenen ödeme sayısı:', this.studentPaymentsData.length);
+            console.log('Monthly analysis:', this.monthlyAnalysis);
+            console.log('=== VERİ PARSE SON ===');
+            
+            // FIXED: Only set loading false after ALL async operations complete
+            Promise.all([
+              this.loadPaymentDataFromNew(),
+              this.loadStudentAttendanceData()
+            ]).then(() => {
+              console.log('All payment and attendance data loaded, calculating final totals...');
               this.calculateCompleteSecondaryFromRealData();
+              this.isLoading = false;
+            }).catch(error => {
+              console.error('Error loading additional data:', error);
+              this.isLoading = false;
             });
           } else {
+            console.error('=== API ERROR ===');
+            console.error('Response:', response);
             this.error = 'Veriler yüklenemedi: ' + (response?.message || 'API başarısız response');
             this.toastr.error(this.error);
+            this.isLoading = false;
           }
-          this.isLoading = false;
         },
       error: (error) => {
         console.error('Veri yükleme hatası:', error);
@@ -462,11 +486,17 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
       !paidStudentIds.includes(student.id)
     );
 
-    // Toplam beklenen gelir hesapla (aktif öğrenciler için)
+    // Toplam beklenen gelir hesapla (FIXED: consistent per-lesson pricing)
     this.summary.totalExpected = activeStudents.reduce((total, student) => {
-      const birimUcret = parseFloat(student.ucret || '0') / 4;
-      const dersSayisi = student.ders_sayisi || 8;
-      return total + (birimUcret * dersSayisi);
+      const monthlyFee = parseFloat(student.ucret || '0');
+      const weeklyLessons = student.ders_sayisi || 2;
+      const expectedMonthlyLessons = weeklyLessons * 4;
+      const perLessonPrice = monthlyFee / expectedMonthlyLessons;
+      const attendedLessons = this.getStudentAttendedLessonsCount(student);
+      
+      const expectedAmount = perLessonPrice * attendedLessons;
+      console.log(`Summary: ${student.adi_soyadi} = ${monthlyFee}₺ / ${expectedMonthlyLessons} × ${attendedLessons} = ${expectedAmount}₺`);
+      return total + expectedAmount;
     }, 0);
 
     // Toplam alınan gelir hesapla (bu ayın ödemeleri)
@@ -530,8 +560,13 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
 
   // Tablo hesaplama metodları
   getBirimUcret(student: Student): number {
-    const ucret = parseFloat(student.ucret || '0');
-    return ucret / 4; // Birim ücret = Aylık ücret / 4
+    const monthlyFee = parseFloat(student.ucret || '0');
+    const weeklyLessons = student.ders_sayisi || 2; // Haftalık ders sayısı
+    const expectedMonthlyLessons = weeklyLessons * 4; // Aylık beklenen ders
+    const perLessonPrice = monthlyFee / expectedMonthlyLessons; // Ders başına ücret
+    
+    console.log(`${student.adi_soyadi} pricing: ${monthlyFee}₺ / ${expectedMonthlyLessons} ders = ${perLessonPrice}₺/ders`);
+    return perLessonPrice;
   }
 
   getStudentAttendedLessonsCount(student: Student): number {
@@ -641,6 +676,55 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
   getTotalKalanMiktar(): number {
     return this.getAllStudentsTableData()
       .reduce((total, student) => total + this.getKalanMiktar(student), 0);
+  }
+
+  // Yeni API'den ödeme verilerini yükle
+  private async loadPaymentDataFromNew(): Promise<void> {
+    const headers = this.getAuthHeaders();
+    
+    console.log('=== ÖDEME API DEBUG ===');
+    console.log('Ödeme API URL:', './server/api/ogretmen_odemeler.php');
+    console.log('Headers sent (token masked):', { 
+      Authorization: headers.get('Authorization') ? 'Bearer [MASKED]' : 'none' 
+    });
+    
+    try {
+      const response = await lastValueFrom(
+        this.http.get<any>('./server/api/ogretmen_odemeler.php', { headers })
+      );
+      
+      console.log('=== ÖDEME API RESPONSE ===');
+      console.log('Raw Payment Response:', response);
+      
+      if (response && response.success) {
+        // CRITICAL FIX: Payment.tutar'ları string'den number'a çevir
+        this.studentPaymentsData = (response.data.all_payments || []).map((payment: any) => ({
+          ...payment,
+          tutar: Number(payment.tutar) || 0, // String'den number'a çevir
+          ay: Number(payment.ay) || 0,
+          yil: Number(payment.yil) || 0,
+          ogrenci_id: Number(payment.ogrenci_id) || 0
+        }));
+        
+        console.log('Yeni API\'den yüklenen ödeme sayısı:', this.studentPaymentsData.length);
+        console.log('Ödeme verileri (number converted):', this.studentPaymentsData);
+        
+        // Bu ayın ödemelerini ayrı tut
+        const currentMonthPayments = (response.data.current_month_payments || []).map((payment: any) => ({
+          ...payment,
+          tutar: Number(payment.tutar) || 0
+        }));
+        console.log('Bu ayın ödeme sayısı:', currentMonthPayments.length);
+        
+      } else {
+        console.error('Ödeme API hatası:', response?.message);
+        this.studentPaymentsData = [];
+      }
+    } catch (error) {
+      console.error('Ödeme API çağrı hatası:', error);
+      this.studentPaymentsData = [];
+    }
+    console.log('=== ÖDEME API SON ===');
   }
 
   // Her öğrenci için attendance verilerini yükle (ogrenci-ucret-sayfasi mantığı)
