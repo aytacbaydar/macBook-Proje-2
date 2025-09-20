@@ -125,6 +125,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadPaymentData();
+    this.loadStudentPayments();
     this.loadIncomeOverview();
   }
 
@@ -171,7 +172,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
 
     console.log('API çağrısı yapılıyor...', 'Teacher:', teacherName);
 
-    this.http.get<any>('./server/api/ogretmen_ucret_yonetimi.php', { 
+    this.http.get<any>('https://www.kimyaogreniyorum.com/server/api/ogretmen_ucret_yonetimi.php', { 
       headers,
       params: { ogretmen: teacherName }
     })
@@ -251,7 +252,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
       ogretmen: teacherName
     };
 
-    this.http.post('./server/api/ogretmen_ucret_yonetimi.php', paymentData, { headers })
+    this.http.post('https://www.kimyaogreniyorum.com/server/api/ogretmen_ucret_yonetimi.php', paymentData, { headers })
       .subscribe({
         next: (response: any) => {
           if (response && response.success) {
@@ -292,6 +293,40 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     return (this.summary.totalReceived / this.summary.totalExpected) * 100;
   }
 
+  loadStudentPayments(): void {
+    const headers = this.getAuthHeaders();
+    const teacherName = this.getTeacherName();
+    
+    if (!teacherName) {
+      this.toastr.error('Öğretmen bilgisi bulunamadı');
+      return;
+    }
+
+    console.log('Öğrenci ödemeleri yükleniyor...', 'Teacher:', teacherName);
+
+    this.http.get<any>('https://www.kimyaogreniyorum.com/server/api/ogrenci_odemeler.php', { 
+      headers,
+      params: { ogretmen: teacherName }
+    })
+      .subscribe({
+        next: (response) => {
+          console.log('Öğrenci ödemeleri API response:', response);
+          if (response && response.success) {
+            // Ödemeleri güncelle - ogrenci_odemeler tablosundan gelen verilerle
+            this.payments = response.data || [];
+            console.log('Öğrenci ödemeleri yüklendi:', this.payments.length);
+          } else {
+            console.error('Öğrenci ödemeleri API başarısız:', response);
+            this.toastr.warning('Öğrenci ödeme verileri yüklenemedi');
+          }
+        },
+        error: (error) => {
+          console.error('Öğrenci ödemeleri yüklenirken hata:', error);
+          this.toastr.error('Öğrenci ödeme verileri yüklenemedi: ' + error.message);
+        }
+      });
+  }
+
   loadIncomeOverview(): void {
     const headers = this.getAuthHeaders();
     const teacherName = this.getTeacherName();
@@ -303,7 +338,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
 
     console.log('Aylık gelir özeti yükleniyor...', 'Teacher:', teacherName);
 
-    this.http.get<any>('./server/api/aylik_gelir_ozeti.php', { 
+    this.http.get<any>('https://www.kimyaogreniyorum.com/server/api/aylik_gelir_ozeti.php', { 
       headers,
       params: { ogretmen: teacherName }
     })
@@ -414,9 +449,15 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
   }
 
   getOdedigiMiktar(student: Student): number {
+    // Öğrenci ödemeleri API'sinden veri al
+    const teacherName = this.getTeacherName();
+    if (!teacherName) return 0;
+    
     const currentMonth = new Date().getMonth() + 1;
     const currentYear = new Date().getFullYear();
     
+    // Bu method'u async yapamayacağımız için, component yüklenirken ödeme verilerini yükleyeceğiz
+    // Şimdilik mevcut payments array'ini kullan ama ogrenci_odemeler tablosuna göre güncellenmiş veriyle
     return this.payments
       .filter(payment => {
         if (!payment.odeme_tarihi) return false;
@@ -433,7 +474,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
   }
 
   getAllStudentsTableData(): Student[] {
-    return this.students.filter(student => student.aktif);
+    return this.students.filter(student => student.aktif && parseFloat(student.ucret || '0') > 0);
   }
 
   // Toplam hesaplama metodları
