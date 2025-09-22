@@ -16,9 +16,9 @@ try {
     $aylikGelirler = [];
     
     // Son 12 ayın tarihlerini oluştur
-    for ($i = 11; $i >= 0; $i--) {
+    for ($i = 9; $i >= 0; $i--) {
         $tarih = new DateTime();
-        $tarih->modify("-$i months");
+        $tarih->modify("+$i months");
         $ay = (int)$tarih->format('m');
         $yil = (int)$tarih->format('Y');
         $ayAdi = $tarih->format('F Y');
