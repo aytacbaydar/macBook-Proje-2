@@ -561,7 +561,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
   // Tablo hesaplama metodları
   getBirimUcret(student: Student): number {
     const monthlyFee = parseFloat(student.ucret || '0');
-    const weeklyLessons = student.ders_sayisi || 2; // Default 2 haftalık ders
+    const weeklyLessons = student.ders_sayisi || 1; // Default 1 haftalık ders
     const expectedMonthlyLessons = weeklyLessons * 4; // Aylık beklenen ders sayısı (4 hafta)
     
     if (expectedMonthlyLessons === 0) {
@@ -590,7 +590,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     
     // Eğer attendance verisi hiç yok veya boşsa, haftalık ders sayısından tahmin et
     if (!attendanceRecords || attendanceRecords.length === 0) {
-      const weeklyLessons = student.ders_sayisi || 2; // Default 2 haftalık ders
+      const weeklyLessons = student.ders_sayisi || 1; // Default 1 haftalık ders
       const estimatedMonthlyLessons = weeklyLessons * 4;
       console.log(`${student.adi_soyadi} attendance verisi yok, tahmini: ${weeklyLessons} × 4 = ${estimatedMonthlyLessons}`);
       console.log(`=== SON DEBUG ===`);
@@ -630,7 +630,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     
     // Eğer attendance verisi yoksa, haftalık ders sayısından tahmin et
     if (attendedLessons === 0 && this.studentAttendanceData[student.id]?.length === 0) {
-      const weeklyLessons = student.ders_sayisi || 2; // Default 2 haftalık ders
+      const weeklyLessons = student.ders_sayisi || 1; // Default 1 haftalık ders
       const estimatedMonthlyLessons = weeklyLessons * 4; // 4 hafta
       console.log(`${student.adi_soyadi} attendance verisi yok, tahmini ders sayısı:`, estimatedMonthlyLessons);
       return estimatedMonthlyLessons;
