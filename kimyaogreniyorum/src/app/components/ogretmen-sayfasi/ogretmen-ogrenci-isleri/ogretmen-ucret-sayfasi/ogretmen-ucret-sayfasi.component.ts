@@ -634,29 +634,15 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
   }
 
   getDersSayisi(student: Student): number {
-    const attendanceRecords = this.studentAttendanceData[student.id] || [];
-    console.log(`=== DERS SAYISI DEBUG - ${student.adi_soyadi} ===`);
-    console.log(`Toplam attendance kaydı:`, attendanceRecords.length);
+    // Bu öğrencinin TÜM ZAMANLARDAKİ devamsızlık kayıtlarını filtrele (present durumundaki)
+    const studentAttendance = this.studentAttendanceData[student.id] || [];
+    const totalPresent = studentAttendance.filter(record => {
+      return record.durum === 'present';
+    });
 
-    // Tüm zamanlar için katıldığı dersleri say (sadece present olanlar)
-    const attendedLessons = attendanceRecords.filter(record => 
-      record.durum === 'present' && 
-      (!record.ders_tipi || record.ders_tipi === 'normal' || record.ders_tipi === 'ek_ders')
-    ).length;
-
-    console.log(`Tüm zamanlarda katıldığı ders sayısı:`, attendedLessons);
-
-    // Eğer attendance verisi hiç yok veya boşsa, haftalık ders sayısından tahmin et
-    if (!attendanceRecords || attendanceRecords.length === 0) {
-      const weeklyLessons = student.ders_sayisi || 1; // Default 1 haftalık ders
-      const estimatedMonthlyLessons = weeklyLessons * 4;
-      console.log(`${student.adi_soyadi} attendance verisi yok, tahmini: ${weeklyLessons} × 4 = ${estimatedMonthlyLessons}`);
-      console.log(`=== SON DEBUG ===`);
-      return estimatedMonthlyLessons;
-    }
-
-    console.log(`=== SON DEBUG ===`);
-    return attendedLessons;
+    const dersSayisi = totalPresent.length;
+    console.log(`${student.adi_soyadi} tüm zamanlarda katıldığı toplam ders sayısı: ${dersSayisi}`);
+    return dersSayisi;
   }
 
   getOdemesiGerekenMiktar(student: Student): number {
@@ -670,7 +656,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
   }
 
   getOdedigiMiktar(student: Student): number {
-    // TÜME ZAMANLARDA öğrencinin ödediği toplam miktar (tablodaki istek ile uyumlu)
+    // TÜME ZAMANLARDA öğrencinin ödediği toplam miktar (tablo ile uyumlu)
     if (!this.studentPaymentsData || this.studentPaymentsData.length === 0) {
       console.log(`${student.adi_soyadi} ödeme verisi yok`);
       return 0;
