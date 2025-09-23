@@ -489,7 +489,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     // Toplam beklenen gelir hesapla (FIXED: consistent per-lesson pricing)
     this.summary.totalExpected = activeStudents.reduce((total, student) => {
       const monthlyFee = parseFloat(student.ucret || '0');
-      const weeklyLessons = student.ders_sayisi || 2;
+      const weeklyLessons = student.ders_sayisi || 1;
       const expectedMonthlyLessons = weeklyLessons * 4;
       const perLessonPrice = monthlyFee / expectedMonthlyLessons;
       const attendedLessons = this.getStudentAttendedLessonsCount(student);
@@ -561,7 +561,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
   // Tablo hesaplama metodları
   getBirimUcret(student: Student): number {
     const monthlyFee = parseFloat(student.ucret || '0');
-    const weeklyLessons = student.ders_sayisi || 2; // Haftalık ders sayısı
+    const weeklyLessons = student.ders_sayisi || 1; // Haftalık ders sayısı
     const expectedMonthlyLessons = weeklyLessons * 4; // Aylık beklenen ders
     const perLessonPrice = monthlyFee / expectedMonthlyLessons; // Ders başına ücret
     
