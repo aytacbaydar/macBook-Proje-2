@@ -321,3 +321,98 @@ try {
     errorResponse('Bir hata oluştu: ' . $e->getMessage(), 500);
 }
 ?>
+<?php
+require_once '../config.php';
+
+// CORS headers
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Content-Type: application/json; charset=UTF-8");
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+// GET: Öğrenci ödemelerini getir
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    try {
+        $user = authorize();
+        
+        if ($user['rutbe'] !== 'ogretmen') {
+            errorResponse('Bu işlem için yetkiniz yok.', 403);
+        }
+        
+        $conn = getConnection();
+        $teacherName = $user['adi_soyadi'];
+        
+        // Bu öğretmenin öğrencilerinin ödemelerini al (bu ay)
+        $current_month = date('n');
+        $current_year = date('Y');
+        
+        $query = "
+            SELECT 
+                o.id,
+                o.ogrenci_id,
+                o.tutar,
+                o.odeme_tarihi,
+                o.aciklama,
+                o.ay,
+                o.yil,
+                og.adi_soyadi as ogrenci_adi,
+                og.ogretmeni as ogretmen_adi
+            FROM ogrenci_odemeler o
+            INNER JOIN ogrenciler og ON o.ogrenci_id = og.id
+            WHERE og.ogretmeni = ?
+            AND og.aktif = 1
+            AND o.ay = ?
+            AND o.yil = ?
+            ORDER BY o.odeme_tarihi DESC
+        ";
+        
+        $stmt = $conn->prepare($query);
+        $stmt->execute([$teacherName, $current_month, $current_year]);
+        $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Tüm zamanların ödemelerini de al (toplam için)
+        $query_all = "
+            SELECT 
+                o.id,
+                o.ogrenci_id,
+                o.tutar,
+                o.odeme_tarihi,
+                o.aciklama,
+                o.ay,
+                o.yil,
+                og.adi_soyadi as ogrenci_adi
+            FROM ogrenci_odemeler o
+            INNER JOIN ogrenciler og ON o.ogrenci_id = og.id
+            WHERE og.ogretmeni = ?
+            AND og.aktif = 1
+            ORDER BY o.odeme_tarihi DESC
+        ";
+        
+        $stmt = $conn->prepare($query_all);
+        $stmt->execute([$teacherName]);
+        $all_payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Response
+        successResponse([
+            'current_month_payments' => $payments,
+            'all_payments' => $all_payments,
+            'summary' => [
+                'current_month_total' => array_sum(array_column($payments, 'tutar')),
+                'all_time_total' => array_sum(array_column($all_payments, 'tutar')),
+                'payment_count' => count($payments),
+                'all_payment_count' => count($all_payments)
+            ]
+        ]);
+        
+    } catch (Exception $e) {
+        errorResponse('Ödeme verileri getirme hatası: ' . $e->getMessage(), 500);
+    }
+}
+
+errorResponse('Desteklenmeyen HTTP metodu', 405);
+?>

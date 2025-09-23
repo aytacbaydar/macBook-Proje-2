@@ -470,7 +470,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
       const paymentDate = new Date(payment.odeme_tarihi);
       const isCurrentMonth = paymentDate.getMonth() + 1 === currentMonth && 
                             paymentDate.getFullYear() === currentYear;
-      
+
       console.log(`Payment check: ${payment.ogrenci_adi} - ${payment.odeme_tarihi} - ${payment.tutar}₺ - Current month: ${isCurrentMonth}`);
       return isCurrentMonth;
     });
@@ -680,11 +680,11 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
       .filter(payment => {
         if (!payment || !payment.ogrenci_id) return false;
         const matches = payment.ogrenci_id === student.id;
-        
+
         if (matches) {
           console.log(`${student.adi_soyadi} toplam ödeme bulundu: ${payment.tutar}₺ (${payment.odeme_tarihi})`);
         }
-        
+
         return matches;
       })
       .reduce((total, payment) => total + Number(payment.tutar || 0), 0);
