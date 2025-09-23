@@ -68,14 +68,14 @@
       <!-- Image Container -->
       <div class="lightbox-image-container" *ngIf="selectedImageIndex >= 0">
         <img 
-          [src]="getCurrentImage()?.image" 
-          [alt]="getCurrentImage()?.title" 
+          [src]="getCurrentImage().image" 
+          [alt]="getCurrentImage().title" 
           class="lightbox-image">
-        
+
         <!-- Image Info -->
         <div class="lightbox-info">
-          <h3 class="lightbox-title">{{ getCurrentImage()?.title }}</h3>
-          <p class="lightbox-description">{{ getCurrentImage()?.description }}</p>
+          <h3 class="lightbox-title">{{ getCurrentImage().title }}</h3>
+          <p class="lightbox-description">{{ getCurrentImage().description }}</p>
           <div class="lightbox-meta">
             <span class="image-number">
               {{ selectedImageIndex + 1 }} / {{ filteredGalleries.length }}

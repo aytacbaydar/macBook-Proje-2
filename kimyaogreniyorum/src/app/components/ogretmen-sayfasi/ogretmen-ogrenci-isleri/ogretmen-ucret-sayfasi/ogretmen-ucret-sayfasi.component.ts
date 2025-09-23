@@ -8,11 +8,12 @@ interface Student {
   adi_soyadi: string;
   email: string;
   cep_telefonu: string;
+  avatar?: string;
+  sinifi: string;
+  okulu: string;
+  grubu: string;
   aktif: boolean;
-  ucret: string;
-  grubu?: string;
-  okulu?: string;
-  sinifi?: string;
+  ucret?: string;
   ders_sayisi?: number; // Haftalık ders sayısı
 }
 
@@ -92,7 +93,7 @@ interface IncomeOverview {
 export class OgretmenUcretSayfasiComponent implements OnInit {
   // Math nesnesini template'de kullanmak için expose et
   Math = Math;
-  
+
   students: Student[] = [];
   payments: Payment[] = [];
   studentAttendanceData: { [studentId: number]: AttendanceRecord[] } = {};
@@ -367,12 +368,12 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     }).format(amount);
   }
 
-  // parseFloat metodunu template'te kullanabilmek için
+  // parseFloat metodunu template'de kullanabilmek için
   parseFloat(value: string): number {
     return parseFloat(value);
   }
 
-  // Template'te kullanılan metodlar
+  // Template'de kullanılan metodlar
   loadData(): void {
     this.error = null;
     this.loadAllData(); // Tüm verileri senkronize şekilde yenile
@@ -495,7 +496,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
       !paidStudentIds.includes(student.id)
     );
 
-    // Toplam beklenen gelir hesapla (FIXED: consistent per-lesson pricing)
+    // Toplam beklenen gelir hesapla (FIXED: per-lesson pricing)
     this.summary.totalExpected = activeStudents.reduce((total, student) => {
       const monthlyFee = parseFloat(student.ucret || '0');
       const weeklyLessons = student.ders_sayisi || 1;
@@ -640,13 +641,13 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     // Bu öğrencinin TÜM ZAMANLARDAKİ devamsızlık kayıtlarını filtrele 
     // Sadece 'present' durumundaki ve 'normal' ya da 'ek_ders' tipindeki dersleri say
     const studentAttendance = this.studentAttendanceData[student.id] || [];
-    
+
     const validLessons = studentAttendance.filter(record => {
       const isPresent = record.durum === 'present';
       const isValidType = !record.ders_tipi || 
                          record.ders_tipi === 'normal' || 
                          record.ders_tipi === 'ek_ders';
-      
+
       return isPresent && isValidType;
     });
 
