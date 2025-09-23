@@ -90,6 +90,9 @@ interface IncomeOverview {
   styleUrls: ['./ogretmen-ucret-sayfasi.component.scss']
 })
 export class OgretmenUcretSayfasiComponent implements OnInit {
+  // Math nesnesini template'de kullanmak için expose et
+  Math = Math;
+  
   students: Student[] = [];
   payments: Payment[] = [];
   studentAttendanceData: { [studentId: number]: AttendanceRecord[] } = {};
@@ -815,5 +818,33 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
         this.studentAttendanceData[student.id] = [];
       });
     }
+  }
+
+  // Template'de kullanılan eksik metodlar
+  getStudentPaymentInfo(): Student[] {
+    return this.getAllStudentsTableData();
+  }
+
+  getDefaultAvatar(name: string): string {
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=4f46e5&color=fff&size=40&font-size=0.6&rounded=true`;
+  }
+
+  getBeklenenOdeme(student: Student): number {
+    return this.getOdemesiGerekenMiktar(student);
+  }
+
+  getOdenenTutar(student: Student): number {
+    return this.getOdedigiMiktar(student);
+  }
+
+  getKalanBorc(student: Student): number {
+    return this.getKalanMiktar(student);
+  }
+
+  openStudentDetail(student: Student): void {
+    // Öğrenci detay sayfasına yönlendirme
+    console.log('Öğrenci detayı açılıyor:', student.adi_soyadi);
+    // Router kullanarak öğrenci detay sayfasına yönlendirilebilir
+    // this.router.navigate(['/ogretmen-sayfasi/ogretmen-ogrenci-detay-sayfasi', student.id]);
   }
 }
