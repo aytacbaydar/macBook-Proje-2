@@ -214,7 +214,7 @@
       </div>
     </div>-->
 
-    <!-- Ödeme yapan öğrenciler -->
+    <!-- Ödeme yapan öğrenciler 
     <div class="card mb-4">
       <div class="card-header">
         <h5 class="mb-0">
@@ -243,8 +243,8 @@
         </div>
       </div>
     </div>
-
-    <!-- Ödeme yapmayan öğrenciler -->
+    -->
+    <!-- Ödeme yapmayan öğrenciler 
     <div class="card mb-4">
       <div class="card-header">
         <h5 class="mb-0">
@@ -273,7 +273,7 @@
         </div>
       </div>
     </div>
-
+    -->
     <!-- Bu ayın ödemeleri -->
     <div class="card mb-4">
       <div class="card-header">
@@ -342,7 +342,7 @@
                   [class]="getKalanMiktar(student) <= 0 ? 'table-success' : getKalanMiktar(student) >= getBirimUcret(student) * 4 ? 'table-danger' : 'table-warning'">
                 <td>{{ student.adi_soyadi }}</td>
                 <td>{{ formatCurrency(parseFloat(student.ucret || '0')) }}</td>
-                <td class="text-center">{{ student.ders_sayisi || 2 }}</td>
+                <td class="text-center">{{ student.ders_sayisi || 1 }}</td>
                 <td>{{ formatCurrency(getBirimUcret(student)) }}</td>
                 <td class="text-center">{{ getDersSayisi(student) }}</td>
                 <td>{{ formatCurrency(getOdemesiGerekenMiktar(student)) }}</td>
