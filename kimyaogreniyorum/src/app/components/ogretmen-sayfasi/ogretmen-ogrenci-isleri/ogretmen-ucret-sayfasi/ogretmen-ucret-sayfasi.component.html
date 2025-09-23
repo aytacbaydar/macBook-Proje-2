@@ -366,44 +366,8 @@
                 </td>
                 <td>
                   <span class="badge" 
-                        [class.bg-success]="getKalanMiktar(student) <= 0"
-                        [class.bg-warning]="getKalanMiktar(student) > 0 && getKalanMiktar(student) < getBirimUcret(student) * 2"
-                        [class.bg-danger]="getKalanMiktar(student) >= getBirimUcret(student) * 2">
+                        [class]="getKalanMiktar(student) <= 0 ? 'bg-success' : getKalanMiktar(student) >= getBirimUcret(student) * 2 ? 'bg-danger' : 'bg-warning'">
                     {{ getKalanMiktar(student) <= 0 ? 'Ödendi' : getKalanMiktar(student) >= getBirimUcret(student) * 2 ? 'Yüksek Borç' : 'Düşük Borç' }}
-                  </span>
-                </td>
-              </tr>OdemesiGerekenMiktar(student) ? 'table-danger' : 'table-warning'">
-                <td>
-                  <div class="student-info-cell">
-                    <strong>{{ student.adi_soyadi }}</strong>
-                    <small class="text-muted d-block">{{ student.email }}</small>
-                    <span class="badge bg-secondary" *ngIf="student.grubu">{{ student.grubu }}</span>
-                  </div>
-                </td>
-                <td>
-                  <span class="fw-bold text-primary">{{ formatCurrency(parseFloat(student.ucret || '0')) }}</span>
-                </td>
-                <td>
-                  <span class="text-info">{{ formatCurrency(getBirimUcret(student)) }}</span>
-                </td>
-                <td>
-                  <span class="badge bg-info">{{ getDersSayisi(student) }} ders</span>
-                </td>
-                <td>
-                  <span class="fw-bold text-warning">{{ formatCurrency(getOdemesiGerekenMiktar(student)) }}</span>
-                </td>
-                <td>
-                  <span class="fw-bold text-success">{{ formatCurrency(getOdedigiMiktar(student)) }}</span>
-                </td>
-                <td>
-                  <span class="fw-bold" [class]="getKalanMiktar(student) <= 0 ? 'text-success' : 'text-danger'">
-                    {{ formatCurrency(getKalanMiktar(student)) }}
-                  </span>
-                </td>
-                <td>
-                  <span class="badge" 
-                        [class]="getKalanMiktar(student) <= 0 ? 'bg-success' : getKalanMiktar(student) >= getOdemesiGerekenMiktar(student) ? 'bg-danger' : 'bg-warning'">
-                    {{ getKalanMiktar(student) <= 0 ? 'Tamamlandı' : getKalanMiktar(student) >= getOdemesiGerekenMiktar(student) ? 'Ödenmedi' : 'Kısmi Ödeme' }}
                   </span>
                 </td>
               </tr>
