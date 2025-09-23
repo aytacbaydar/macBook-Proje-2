@@ -1,0 +1,63 @@
+▲ [WARNING] NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. [plugin angular-compiler]
+
+    src/app/components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component.html:71:36:
+      71 │           [src]="getCurrentImage()?.image"
+         ╵                                     ~~~~~
+
+  Warning occurs in the template of component DovmeGaleriSayfasiComponent.
+
+    src/app/components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component.ts:6:15:
+      6 │   templateUrl: './dovme-galeri-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+▲ [WARNING] NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. [plugin angular-compiler]
+
+    src/app/components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component.html:72:36:
+      72 │           [alt]="getCurrentImage()?.title"
+         ╵                                     ~~~~~
+
+  Warning occurs in the template of component DovmeGaleriSayfasiComponent.
+
+    src/app/components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component.ts:6:15:
+      6 │   templateUrl: './dovme-galeri-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+▲ [WARNING] NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. [plugin angular-compiler]
+
+    src/app/components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component.html:77:59:
+      77 │ ...    <h3 class="lightbox-title">{{ getCurrentImage()?.title }}</h3>
+         ╵                                                         ~~~~~
+
+  Warning occurs in the template of component DovmeGaleriSayfasiComponent.
+
+    src/app/components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component.ts:6:15:
+      6 │   templateUrl: './dovme-galeri-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+▲ [WARNING] NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. [plugin angular-compiler]
+
+    src/app/components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component.html:78:64:
+      78 │ ...ss="lightbox-description">{{ getCurrentImage()?.description }}</p>
+         ╵                                                    ~~~~~~~~~~~
+
+  Warning occurs in the template of component DovmeGaleriSayfasiComponent.
+
+    src/app/components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component.ts:6:15:
+      6 │   templateUrl: './dovme-galeri-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Unexpected closing tag "tr". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:409:14:
+      409 │               </tr>
+          ╵               ~~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:89:15:
+      89 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵   
