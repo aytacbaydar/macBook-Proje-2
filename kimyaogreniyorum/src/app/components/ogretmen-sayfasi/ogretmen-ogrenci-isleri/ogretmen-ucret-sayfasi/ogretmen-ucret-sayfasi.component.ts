@@ -329,19 +329,17 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
       return;
     }
 
-    const teacherName = this.getTeacherName();
-    if (!teacherName) {
-      this.toastr.error('Öğretmen bilgisi bulunamadı');
-      return;
-    }
-
     const headers = this.getAuthHeaders();
     const paymentData = {
-      ...this.paymentForm,
-      ogretmen: teacherName
+      ogrenci_id: this.paymentForm.ogrenci_id,
+      tutar: this.paymentForm.tutar,
+      odeme_tarihi: this.paymentForm.odeme_tarihi,
+      aciklama: this.paymentForm.aciklama,
+      ay: this.paymentForm.ay,
+      yil: this.paymentForm.yil
     };
 
-    this.http.post('./server/api/ogretmen_ucret_yonetimi.php', paymentData, { headers })
+    this.http.post('./server/api/ogrenci_odemeler.php', paymentData, { headers })
       .subscribe({
         next: (response: any) => {
           if (response && response.success) {
@@ -725,16 +723,27 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
   // Yeni API'den ödeme verilerini yükle
   private async loadPaymentDataFromNew(): Promise<void> {
     const headers = this.getAuthHeaders();
+    const teacherName = this.getTeacherName();
+
+    if (!teacherName) {
+      console.error('Öğretmen adı bulunamadı, ödeme verileri yüklenmedi');
+      this.studentPaymentsData = [];
+      return;
+    }
 
     console.log('=== ÖDEME API DEBUG ===');
-    console.log('Ödeme API URL:', './server/api/ogretmen_odemeler.php');
+    console.log('Ödeme API URL:', './server/api/ogrenci_odemeler.php');
+    console.log('Öğretmen adı:', teacherName);
     console.log('Headers sent (token masked):', { 
       Authorization: headers.get('Authorization') ? 'Bearer [MASKED]' : 'none' 
     });
 
     try {
       const response = await lastValueFrom(
-        this.http.get<any>('./server/api/ogretmen_odemeler.php', { headers })
+        this.http.get<any>('./server/api/ogrenci_odemeler.php', { 
+          headers,
+          params: { ogretmen: teacherName }
+        })
       );
 
       console.log('=== ÖDEME API RESPONSE ===');
