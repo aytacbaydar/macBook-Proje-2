@@ -470,12 +470,20 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     const currentMonthPayments = this.studentPaymentsData.filter(payment => {
       if (!payment || !payment.odeme_tarihi) return false;
       const paymentDate = new Date(payment.odeme_tarihi);
-      return paymentDate.getMonth() + 1 === currentMonth && 
-             paymentDate.getFullYear() === currentYear;
+      const isCurrentMonth = paymentDate.getMonth() + 1 === currentMonth && 
+                            paymentDate.getFullYear() === currentYear;
+      
+      console.log(`Payment check: ${payment.ogrenci_adi} - ${payment.odeme_tarihi} - ${payment.tutar}₺ - Current month: ${isCurrentMonth}`);
+      return isCurrentMonth;
     });
+
+    console.log(`=== ÖDEME HESAPLAMA DEBUG ===`);
+    console.log(`Bu ayın toplam ödeme sayısı: ${currentMonthPayments.length}`);
+    console.log(`Bu ayın toplam ödeme tutarı: ${currentMonthPayments.reduce((total, payment) => total + payment.tutar, 0)}₺`);
 
     // Bu ay ödeme yapan aktif öğrencilerin ID'lerini al
     const paidStudentIds = [...new Set(currentMonthPayments.map(payment => payment.ogrenci_id))];
+    console.log(`Bu ay ödeme yapan öğrenci ID'leri:`, paidStudentIds);
 
     // Aktif öğrencileri ödeme durumuna göre ayır
     this.summary.studentsWhoPayThis = activeStudents.filter(student => 
@@ -501,7 +509,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
 
     // Toplam alınan gelir hesapla (bu ayın ödemeleri)
     this.summary.totalReceived = currentMonthPayments.reduce((total, payment) => 
-      total + payment.tutar, 0
+      total + Number(payment.tutar || 0), 0
     );
 
     // Ay ve yıl bilgilerini güncelle
@@ -509,17 +517,20 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     this.summary.currentYear = currentYear;
 
     // payments array'ini de güncelle (template'te kullanılıyor)
-    this.payments = currentMonthPayments;
+    this.payments = currentMonthPayments.map(payment => ({
+      ...payment,
+      tutar: Number(payment.tutar || 0) // Ensure numeric conversion
+    }));
 
-    console.log('Tam özet hesaplandı:', {
-      activeStudents: activeStudents.length,
-      studentsWhoPaid: this.summary.studentsWhoPayThis.length,
-      studentsWhoDidntPay: this.summary.studentsWhoDidntPay.length,
-      payments: this.payments.length,
-      totalExpected: this.summary.totalExpected,
-      totalReceived: this.summary.totalReceived,
-      collectionRate: this.getCollectionRate()
-    });
+    console.log('=== ÖZET HESAPLAMA SONUCU ===');
+    console.log(`Aktif öğrenci sayısı: ${activeStudents.length}`);
+    console.log(`Bu ay ödeme yapan öğrenci sayısı: ${this.summary.studentsWhoPayThis.length}`);
+    console.log(`Bu ay ödeme yapmayan öğrenci sayısı: ${this.summary.studentsWhoDidntPay.length}`);
+    console.log(`Bu ay yapılan ödeme sayısı: ${this.payments.length}`);
+    console.log(`Toplam beklenen gelir: ${this.summary.totalExpected}₺`);
+    console.log(`Toplam alınan gelir: ${this.summary.totalReceived}₺`);
+    console.log(`Tahsilat oranı: ${this.getCollectionRate()}%`);
+    console.log('=== ÖZET SON ===');
   }
 
   private calculateSummary() {
@@ -661,11 +672,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
   }
 
   getOdedigiMiktar(student: Student): number {
-    // Bu ayda öğrencinin ödediği toplam miktar
-    const currentDate = new Date();
-    const currentMonth = currentDate.getMonth() + 1;
-    const currentYear = currentDate.getFullYear();
-
+    // TÜME ZAMANLARDA öğrencinin ödediği toplam miktar (tablodaki istek ile uyumlu)
     if (!this.studentPaymentsData || this.studentPaymentsData.length === 0) {
       console.log(`${student.adi_soyadi} ödeme verisi yok`);
       return 0;
@@ -673,25 +680,18 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
 
     const studentPayments = this.studentPaymentsData
       .filter(payment => {
-        if (!payment || !payment.odeme_tarihi || !payment.ogrenci_id) return false;
-
-        const paymentDate = new Date(payment.odeme_tarihi);
-        const paymentMonth = paymentDate.getMonth() + 1;
-        const paymentYear = paymentDate.getFullYear();
-
-        const matches = payment.ogrenci_id === student.id &&
-                       paymentMonth === currentMonth &&
-                       paymentYear === currentYear;
-
+        if (!payment || !payment.ogrenci_id) return false;
+        const matches = payment.ogrenci_id === student.id;
+        
         if (matches) {
-          console.log(`${student.adi_soyadi} ödeme bulundu: ${payment.tutar}₺ (${payment.odeme_tarihi})`);
+          console.log(`${student.adi_soyadi} toplam ödeme bulundu: ${payment.tutar}₺ (${payment.odeme_tarihi})`);
         }
-
+        
         return matches;
       })
       .reduce((total, payment) => total + Number(payment.tutar || 0), 0);
 
-    console.log(`${student.adi_soyadi} bu ay toplam ödediği:`, studentPayments);
+    console.log(`${student.adi_soyadi} tüm zamanlarda ödediği toplam:`, studentPayments);
     return studentPayments;
   }
 

@@ -279,17 +279,16 @@
       <div class="card-header">
         <h5 class="mb-0">
           <i class="bi bi-clock-history"></i> 
-          Bu Ay Yapılan Ödemeler ({{ payments.length }})
-        </h5>
+          Bu Ay Yapılan Ödemeler ({{ payments.length }})</h5>
       </div>
       <div class="card-body">
-        <div class="table-responsive" *ngIf="payments.length > 0">
+        <div *ngIf="payments && payments.length > 0" class="table-responsive">
           <table class="table table-striped">
             <thead>
               <tr>
                 <th>Öğrenci</th>
                 <th>Tutar</th>
-                <th>Tarih</th>
+                <th>Ödeme Tarihi</th>
                 <th>Açıklama</th>
               </tr>
             </thead>
@@ -298,31 +297,18 @@
                 <td>{{ payment.ogrenci_adi }}</td>
                 <td>{{ formatCurrency(payment.tutar) }}</td>
                 <td>{{ payment.odeme_tarihi | date:'dd/MM/yyyy' }}</td>
-                <td>{{ payment.aciklama || '-' }}</td>
+                <td>{{ payment.aciklama || 'Ders ücreti' }}</td>
               </tr>
             </tbody>
-            <tfoot class="table-secondary">
-              <tr class="fw-bold">
-                <td colspan="5" class="text-end">TOPLAM:</td>
-                <td>{{ formatCurrency(getTotalOdemesiGereken()) }}</td>
-                <td>{{ formatCurrency(getTotalOdedigiMiktar()) }}</td>
-                <td [class]="getTotalKalanMiktar() > 0 ? 'text-danger' : 'text-success'">
-                  {{ formatCurrency(getTotalKalanMiktar()) }}
-                </td>
-                <td>
-                  <span class="badge" 
-                        [class.bg-success]="getTotalKalanMiktar() <= 0"
-                        [class.bg-danger]="getTotalKalanMiktar() > 0">
-                    {{ getTotalKalanMiktar() <= 0 ? 'Tahsilat Tamam' : 'Eksik Tahsilat' }}
-                  </span>
-                </td>
-              </tr>
-            </tfoot>
           </table>
+          <div class="mt-3">
+            <strong>Bu ay toplam gelir: {{ formatCurrency(summary.totalReceived) }}</strong>
+          </div>
         </div>
-        <div *ngIf="payments.length === 0" class="text-center text-muted">
-          <i class="bi bi-receipt fs-1"></i>
-          <p>Bu ay henüz ödeme kaydı yok.</p>
+        <div *ngIf="!payments || payments.length === 0" class="text-center text-muted">
+          <i class="bi bi-info-circle fs-1"></i>
+          <p>Bu ay henüz ödeme yapılmamış.</p>
+          <small class="text-muted">Debug: payments array length = {{ payments?.length || 0 }}</small>
         </div>
       </div>
     </div>
