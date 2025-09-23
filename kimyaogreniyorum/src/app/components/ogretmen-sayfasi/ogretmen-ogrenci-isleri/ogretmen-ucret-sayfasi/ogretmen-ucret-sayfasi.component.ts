@@ -561,16 +561,22 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
   // Tablo hesaplama metodları
   getBirimUcret(student: Student): number {
     const monthlyFee = parseFloat(student.ucret || '0');
-    const weeklyLessons = student.ders_sayisi || 1; // Haftalık ders sayısı
-    const expectedMonthlyLessons = weeklyLessons * 4; // Aylık beklenen ders
+    const weeklyLessons = student.ders_sayisi || 2; // Default 2 haftalık ders
+    const expectedMonthlyLessons = weeklyLessons * 4; // Aylık beklenen ders sayısı (4 hafta)
+    
+    if (expectedMonthlyLessons === 0) {
+      console.log(`${student.adi_soyadi} ders sayısı 0, birim ücret hesaplanamıyor`);
+      return 0;
+    }
+    
     const perLessonPrice = monthlyFee / expectedMonthlyLessons; // Ders başına ücret
     
-    console.log(`${student.adi_soyadi} pricing: ${monthlyFee}₺ / ${expectedMonthlyLessons} ders = ${perLessonPrice}₺/ders`);
+    console.log(`${student.adi_soyadi} birim ücret: ${monthlyFee}₺ / (${weeklyLessons} × 4) = ${perLessonPrice.toFixed(2)}₺/ders`);
     return perLessonPrice;
   }
 
   getStudentAttendedLessonsCount(student: Student): number {
-    // Bu ayda öğrencinin katıldığı ders sayısını hesapla (ogrenci-ucret-sayfasi mantığı)
+    // Bu ayda öğrencinin katıldığı ders sayısını hesapla
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth() + 1;
     const currentYear = currentDate.getFullYear();
@@ -581,73 +587,101 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     console.log(`Öğrenci ID: ${student.id}`);
     console.log(`Bu ay: ${currentMonth}/${currentYear}`);
     console.log(`Ham attendance kayıt sayısı:`, attendanceRecords.length);
-    console.log(`Ham attendance kayıtları:`, attendanceRecords);
     
-    // Filtrelemeleri adım adım yapalım
-    const presentRecords = attendanceRecords.filter(record => record.durum === 'present');
-    console.log(`Present kayıt sayısı:`, presentRecords.length);
+    // Eğer attendance verisi hiç yok veya boşsa, haftalık ders sayısından tahmin et
+    if (!attendanceRecords || attendanceRecords.length === 0) {
+      const weeklyLessons = student.ders_sayisi || 2; // Default 2 haftalık ders
+      const estimatedMonthlyLessons = weeklyLessons * 4;
+      console.log(`${student.adi_soyadi} attendance verisi yok, tahmini: ${weeklyLessons} × 4 = ${estimatedMonthlyLessons}`);
+      console.log(`=== SON DEBUG ===`);
+      return estimatedMonthlyLessons;
+    }
     
-    const thisMonthRecords = presentRecords.filter(record => {
+    // Bu ayın 'present' kayıtlarını filtrele
+    const thisMonthPresentRecords = attendanceRecords.filter(record => {
+      if (record.durum !== 'present') return false;
+      
       const recordDate = new Date(record.tarih);
       const recordMonth = recordDate.getMonth() + 1;
       const recordYear = recordDate.getFullYear();
-      console.log(`Kayıt: ${record.tarih} -> ${recordMonth}/${recordYear} (durum: ${record.durum}, ders_tipi: ${record.ders_tipi})`);
-      return recordMonth === currentMonth && recordYear === currentYear;
+      
+      const isThisMonth = recordMonth === currentMonth && recordYear === currentYear;
+      const isValidLessonType = !record.ders_tipi || 
+                               record.ders_tipi === 'normal' || 
+                               record.ders_tipi === 'ek_ders';
+      
+      if (isThisMonth && isValidLessonType) {
+        console.log(`Geçerli kayıt: ${record.tarih} (${record.ders_tipi || 'normal'})`);
+      }
+      
+      return isThisMonth && isValidLessonType;
     });
-    console.log(`Bu ayın present kayıt sayısı:`, thisMonthRecords.length);
     
-    const validLessonTypes = thisMonthRecords.filter(record => 
-      !record.ders_tipi || record.ders_tipi === 'normal' || record.ders_tipi === 'ek_ders'
-    );
-    console.log(`Geçerli ders tipi kayıt sayısı:`, validLessonTypes.length);
-    console.log(`Geçerli kayıtlar:`, validLessonTypes.map(r => `${r.tarih} (${r.ders_tipi || 'normal'})`));
-    
-    const thisMonthAttended = validLessonTypes.length;
-    console.log(`SONUÇ - ${student.adi_soyadi} bu ay katıldığı ders sayısı:`, thisMonthAttended);
+    const attendedLessonsCount = thisMonthPresentRecords.length;
+    console.log(`SONUÇ - ${student.adi_soyadi} bu ay katıldığı ders sayısı:`, attendedLessonsCount);
     console.log(`=== SON DEBUG ===`);
     
-    // Eğer bu ay için attendance kaydı hiç yoksa, haftalık ders sayısı × 4 kullan
-    if (attendanceRecords.length === 0) {
-      const weeklyLessons = student.ders_sayisi || 2; // Default 2 haftalık
-      const monthlyPlanned = weeklyLessons * 4;
-      console.log(`${student.adi_soyadi} attendance kaydı yok, planlanan: ${weeklyLessons} × 4 = ${monthlyPlanned}`);
-      return monthlyPlanned;
-    }
-    
-    return thisMonthAttended;
+    return attendedLessonsCount;
   }
 
   getDersSayisi(student: Student): number {
     // Öğrencinin bu ay katıldığı ders sayısını hesapla
     const attendedLessons = this.getStudentAttendedLessonsCount(student);
+    
+    // Eğer attendance verisi yoksa, haftalık ders sayısından tahmin et
+    if (attendedLessons === 0 && this.studentAttendanceData[student.id]?.length === 0) {
+      const weeklyLessons = student.ders_sayisi || 2; // Default 2 haftalık ders
+      const estimatedMonthlyLessons = weeklyLessons * 4; // 4 hafta
+      console.log(`${student.adi_soyadi} attendance verisi yok, tahmini ders sayısı:`, estimatedMonthlyLessons);
+      return estimatedMonthlyLessons;
+    }
+    
     console.log(`${student.adi_soyadi} bu ay katıldığı ders sayısı:`, attendedLessons);
     return attendedLessons;
   }
 
   getOdemesiGerekenMiktar(student: Student): number {
-    // Katıldığı ders sayısı × birim ücret (ogrenci-ucret-sayfasi mantığı)
+    // Katıldığı ders sayısı × birim ücret
     const birimUcret = this.getBirimUcret(student);
     const dersSayisi = this.getDersSayisi(student);
-    return birimUcret * dersSayisi;
+    const expectedAmount = birimUcret * dersSayisi;
+    
+    console.log(`${student.adi_soyadi} ödeme hesabı: ${dersSayisi} ders × ${birimUcret}₺ = ${expectedAmount}₺`);
+    return expectedAmount;
   }
 
   getOdedigiMiktar(student: Student): number {
-    // Bu ayda öğrencinin ödediği miktar (ogrenci-ucret-sayfasi mantığı)
+    // Bu ayda öğrencinin ödediği toplam miktar
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth() + 1;
     const currentYear = currentDate.getFullYear();
     
+    if (!this.studentPaymentsData || this.studentPaymentsData.length === 0) {
+      console.log(`${student.adi_soyadi} ödeme verisi yok`);
+      return 0;
+    }
+    
     const studentPayments = this.studentPaymentsData
       .filter(payment => {
-        if (!payment.odeme_tarihi) return false;
+        if (!payment || !payment.odeme_tarihi || !payment.ogrenci_id) return false;
+        
         const paymentDate = new Date(payment.odeme_tarihi);
-        return payment.ogrenci_id === student.id &&
-               paymentDate.getMonth() + 1 === currentMonth &&
-               paymentDate.getFullYear() === currentYear;
+        const paymentMonth = paymentDate.getMonth() + 1;
+        const paymentYear = paymentDate.getFullYear();
+        
+        const matches = payment.ogrenci_id === student.id &&
+                       paymentMonth === currentMonth &&
+                       paymentYear === currentYear;
+        
+        if (matches) {
+          console.log(`${student.adi_soyadi} ödeme bulundu: ${payment.tutar}₺ (${payment.odeme_tarihi})`);
+        }
+        
+        return matches;
       })
-      .reduce((total, payment) => total + payment.tutar, 0);
+      .reduce((total, payment) => total + Number(payment.tutar || 0), 0);
       
-    console.log(`${student.adi_soyadi} bu ay ödediği miktar:`, studentPayments);
+    console.log(`${student.adi_soyadi} bu ay toplam ödediği:`, studentPayments);
     return studentPayments;
   }
 

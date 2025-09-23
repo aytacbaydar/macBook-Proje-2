@@ -301,6 +301,23 @@
                 <td>{{ payment.aciklama || '-' }}</td>
               </tr>
             </tbody>
+            <tfoot class="table-secondary">
+              <tr class="fw-bold">
+                <td colspan="5" class="text-end">TOPLAM:</td>
+                <td>{{ formatCurrency(getTotalOdemesiGereken()) }}</td>
+                <td>{{ formatCurrency(getTotalOdedigiMiktar()) }}</td>
+                <td [class]="getTotalKalanMiktar() > 0 ? 'text-danger' : 'text-success'">
+                  {{ formatCurrency(getTotalKalanMiktar()) }}
+                </td>
+                <td>
+                  <span class="badge" 
+                        [class.bg-success]="getTotalKalanMiktar() <= 0"
+                        [class.bg-danger]="getTotalKalanMiktar() > 0">
+                    {{ getTotalKalanMiktar() <= 0 ? 'Tahsilat Tamam' : 'Eksik Tahsilat' }}
+                  </span>
+                </td>
+              </tr>
+            </tfoot>
           </table>
         </div>
         <div *ngIf="payments.length === 0" class="text-center text-muted">
@@ -325,8 +342,9 @@
               <tr>
                 <th>Öğrenci Adı</th>
                 <th>Aylık Ücret</th>
+                <th>Haft./Ders Sayısı</th>
                 <th>Birim Ücret</th>
-                <th>Ders Sayısı</th>
+                <th>Bu Ay Katıldığı Ders</th>
                 <th>Ödemesi Gereken</th>
                 <th>Ödediği Miktar</th>
                 <th>Kalan Miktar</th>
@@ -335,7 +353,26 @@
             </thead>
             <tbody>
               <tr *ngFor="let student of getAllStudentsTableData(); index as i" 
-                  [class]="getKalanMiktar(student) <= 0 ? 'table-success' : getKalanMiktar(student) >= getOdemesiGerekenMiktar(student) ? 'table-danger' : 'table-warning'">
+                  [class]="getKalanMiktar(student) <= 0 ? 'table-success' : getKalanMiktar(student) >= getBirimUcret(student) * 4 ? 'table-danger' : 'table-warning'">
+                <td>{{ student.adi_soyadi }}</td>
+                <td>{{ formatCurrency(parseFloat(student.ucret || '0')) }}</td>
+                <td class="text-center">{{ student.ders_sayisi || 2 }}</td>
+                <td>{{ formatCurrency(getBirimUcret(student)) }}</td>
+                <td class="text-center">{{ getDersSayisi(student) }}</td>
+                <td>{{ formatCurrency(getOdemesiGerekenMiktar(student)) }}</td>
+                <td>{{ formatCurrency(getOdedigiMiktar(student)) }}</td>
+                <td [class]="getKalanMiktar(student) > 0 ? 'text-danger fw-bold' : 'text-success fw-bold'">
+                  {{ formatCurrency(getKalanMiktar(student)) }}
+                </td>
+                <td>
+                  <span class="badge" 
+                        [class.bg-success]="getKalanMiktar(student) <= 0"
+                        [class.bg-warning]="getKalanMiktar(student) > 0 && getKalanMiktar(student) < getBirimUcret(student) * 2"
+                        [class.bg-danger]="getKalanMiktar(student) >= getBirimUcret(student) * 2">
+                    {{ getKalanMiktar(student) <= 0 ? 'Ödendi' : getKalanMiktar(student) >= getBirimUcret(student) * 2 ? 'Yüksek Borç' : 'Düşük Borç' }}
+                  </span>
+                </td>
+              </tr>OdemesiGerekenMiktar(student) ? 'table-danger' : 'table-warning'">
                 <td>
                   <div class="student-info-cell">
                     <strong>{{ student.adi_soyadi }}</strong>
