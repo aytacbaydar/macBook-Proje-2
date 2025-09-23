@@ -1,0 +1,89 @@
+▲ [WARNING] NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. [plugin angular-compiler]
+
+    src/app/components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component.html:71:36:
+      71 │           [src]="getCurrentImage()?.image"
+         ╵                                     ~~~~~
+
+  Warning occurs in the template of component DovmeGaleriSayfasiComponent.
+
+    src/app/components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component.ts:6:15:
+      6 │   templateUrl: './dovme-galeri-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+▲ [WARNING] NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. [plugin angular-compiler]
+
+    src/app/components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component.html:72:36:
+      72 │           [alt]="getCurrentImage()?.title"
+         ╵                                     ~~~~~
+
+  Warning occurs in the template of component DovmeGaleriSayfasiComponent.
+
+    src/app/components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component.ts:6:15:
+      6 │   templateUrl: './dovme-galeri-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+▲ [WARNING] NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. [plugin angular-compiler]
+
+    src/app/components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component.html:77:59:
+      77 │ ...    <h3 class="lightbox-title">{{ getCurrentImage()?.title }}</h3>
+         ╵                                                         ~~~~~
+
+  Warning occurs in the template of component DovmeGaleriSayfasiComponent.
+
+    src/app/components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component.ts:6:15:
+      6 │   templateUrl: './dovme-galeri-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+▲ [WARNING] NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. [plugin angular-compiler]
+
+    src/app/components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component.html:78:64:
+      78 │ ...ss="lightbox-description">{{ getCurrentImage()?.description }}</p>
+         ╵                                                    ~~~~~~~~~~~
+
+  Warning occurs in the template of component DovmeGaleriSayfasiComponent.
+
+    src/app/components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component.ts:6:15:
+      6 │   templateUrl: './dovme-galeri-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+▲ [WARNING] NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:311:80:
+      311 │ ...ebug: payments array length = {{ payments?.length || 0 }}</small>
+          ╵                                               ~~~~~~
+
+  Warning occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:89:15:
+      89 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'avatar' does not exist on type 'Student'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:342:40:
+      342 │ ...        <img [src]="student.avatar || getDefaultAvatar(student...
+          ╵                                ~~~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:89:15:
+      89 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'avatar' does not exist on type 'Student'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:393:36:
+      393 │ ...        <img [src]="student.avatar || getDefaultAvatar(student...
+          ╵                                ~~~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:89:15:
+      89 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
