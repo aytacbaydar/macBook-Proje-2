@@ -634,14 +634,21 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
   }
 
   getDersSayisi(student: Student): number {
-    // Bu öğrencinin TÜM ZAMANLARDAKİ devamsızlık kayıtlarını filtrele (present durumundaki)
+    // Bu öğrencinin TÜM ZAMANLARDAKİ devamsızlık kayıtlarını filtrele 
+    // Sadece 'present' durumundaki ve 'normal' ya da 'ek_ders' tipindeki dersleri say
     const studentAttendance = this.studentAttendanceData[student.id] || [];
-    const totalPresent = studentAttendance.filter(record => {
-      return record.durum === 'present';
+    
+    const validLessons = studentAttendance.filter(record => {
+      const isPresent = record.durum === 'present';
+      const isValidType = !record.ders_tipi || 
+                         record.ders_tipi === 'normal' || 
+                         record.ders_tipi === 'ek_ders';
+      
+      return isPresent && isValidType;
     });
 
-    const dersSayisi = totalPresent.length;
-    console.log(`${student.adi_soyadi} tüm zamanlarda katıldığı toplam ders sayısı: ${dersSayisi}`);
+    const dersSayisi = validLessons.length;
+    console.log(`${student.adi_soyadi} tüm zamanlarda katıldığı toplam ders sayısı (normal + ek_ders): ${dersSayisi}`);
     return dersSayisi;
   }
 
@@ -766,24 +773,14 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
     console.log('=== ÖDEME API SON ===');
   }
 
-  // Her öğrenci için attendance verilerini yükle (ogrenci-ucret-sayfasi mantığı)
+  // Her öğrenci için attendance verilerini yükle (TÜM ZAMANLAR için)
   private async loadStudentAttendanceData(): Promise<void> {
     if (!this.students || this.students.length === 0) {
       console.log('Öğrenci listesi boş, attendance verisi yüklenmedi');
       return;
     }
 
-    const currentDate = new Date();
-    const currentMonth = currentDate.getMonth() + 1;
-    const currentYear = currentDate.getFullYear();
-
-    // Bu ayın başlangıç ve bitiş tarihleri
-    const startDate = new Date(currentYear, currentMonth - 1, 1);
-    const endDate = new Date(currentYear, currentMonth, 0);
-    const startDateStr = startDate.toISOString().split('T')[0];
-    const endDateStr = endDate.toISOString().split('T')[0];
-
-    console.log(`Attendance verilerini yüklüyorum: ${startDateStr} - ${endDateStr}`);
+    console.log('Tüm zamanların attendance verilerini yüklüyorum...');
 
     const headers = this.getAuthHeaders();
     const requests = this.students.map(student => 
@@ -791,8 +788,7 @@ export class OgretmenUcretSayfasiComponent implements OnInit {
         headers,
         params: {
           ogrenci_id: student.id.toString(),
-          baslangic_tarih: startDateStr,
-          bitis_tarih: endDateStr
+          butun_kayitlar: 'true'  // Tüm kayıtları getir parametresi
         }
       })
     );
