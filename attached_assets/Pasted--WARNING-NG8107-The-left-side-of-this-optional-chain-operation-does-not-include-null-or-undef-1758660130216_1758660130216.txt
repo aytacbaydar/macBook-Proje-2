@@ -1,0 +1,297 @@
+▲ [WARNING] NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. [plugin angular-compiler]
+
+    src/app/components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component.html:71:36:
+      71 │           [src]="getCurrentImage()?.image"
+         ╵                                     ~~~~~
+
+  Warning occurs in the template of component DovmeGaleriSayfasiComponent.
+
+    src/app/components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component.ts:6:15:
+      6 │   templateUrl: './dovme-galeri-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+▲ [WARNING] NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. [plugin angular-compiler]
+
+    src/app/components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component.html:72:36:
+      72 │           [alt]="getCurrentImage()?.title"
+         ╵                                     ~~~~~
+
+  Warning occurs in the template of component DovmeGaleriSayfasiComponent.
+
+    src/app/components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component.ts:6:15:
+      6 │   templateUrl: './dovme-galeri-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+▲ [WARNING] NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. [plugin angular-compiler]
+
+    src/app/components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component.html:77:59:
+      77 │ ...    <h3 class="lightbox-title">{{ getCurrentImage()?.title }}</h3>
+         ╵                                                         ~~~~~
+
+  Warning occurs in the template of component DovmeGaleriSayfasiComponent.
+
+    src/app/components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component.ts:6:15:
+      6 │   templateUrl: './dovme-galeri-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+▲ [WARNING] NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. [plugin angular-compiler]
+
+    src/app/components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component.html:78:64:
+      78 │ ...ss="lightbox-description">{{ getCurrentImage()?.description }}</p>
+         ╵                                                    ~~~~~~~~~~~
+
+  Warning occurs in the template of component DovmeGaleriSayfasiComponent.
+
+    src/app/components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component.ts:6:15:
+      6 │   templateUrl: './dovme-galeri-sayfasi.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+▲ [WARNING] NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:311:80:
+      311 │ ...ebug: payments array length = {{ payments?.length || 0 }}</small>
+          ╵                                               ~~~~~~
+
+  Warning occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:89:15:
+      89 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'getStudentPaymentInfo' does not exist on type 'OgretmenUcretSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:339:41:
+      339 │               <tr *ngFor="let student of getStudentPaymentInfo()">
+          ╵                                          ~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:89:15:
+      89 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'getDefaultAvatar' does not exist on type 'OgretmenUcretSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:342:50:
+      342 │ ...mg [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)"
+          ╵                                ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:89:15:
+      89 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'Math' does not exist on type 'OgretmenUcretSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:354:54:
+      354 │ ...lass="badge bg-secondary">{{ Math.floor(getDersSayisi(student)...
+          ╵                                 ~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:89:15:
+      89 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'getBeklenenOdeme' does not exist on type 'OgretmenUcretSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:357:99:
+      357 │ ... 0.85rem;">{{ formatCurrency(getBeklenenOdeme(student)) }}</span>
+          ╵                                 ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:89:15:
+      89 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'getOdenenTutar' does not exist on type 'OgretmenUcretSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:360:99:
+      360 │ ...e: 0.85rem;">{{ formatCurrency(getOdenenTutar(student)) }}</span>
+          ╵                                   ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:89:15:
+      89 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'getKalanBorc' does not exist on type 'OgretmenUcretSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:363:89:
+      363 │ ...t-size: 0.85rem;" [class.text-danger]="getKalanBorc(student) > 0"
+          ╵                                           ~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:89:15:
+      89 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'getKalanBorc' does not exist on type 'OgretmenUcretSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:364:46:
+      364 │ ...               [class.text-success]="getKalanBorc(student) <= 0">
+          ╵                                         ~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:89:15:
+      89 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'Math' does not exist on type 'OgretmenUcretSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:365:38:
+      365 │ ...            {{ formatCurrency(Math.abs(getKalanBorc(student))) }}
+          ╵                                  ~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:89:15:
+      89 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'getKalanBorc' does not exist on type 'OgretmenUcretSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:365:47:
+      365 │ ...            {{ formatCurrency(Math.abs(getKalanBorc(student))) }}
+          ╵                                           ~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:89:15:
+      89 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'openStudentDetail' does not exist on type 'OgretmenUcretSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:369:66:
+      369 │ ...ss="btn btn-sm btn-primary" (click)="openStudentDetail(student)">
+          ╵                                         ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:89:15:
+      89 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'getStudentPaymentInfo' does not exist on type 'OgretmenUcretSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:390:38:
+      390 │ ...ngFor="let student of getStudentPaymentInfo()" class="card mb-3">
+          ╵                          ~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:89:15:
+      89 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'getDefaultAvatar' does not exist on type 'OgretmenUcretSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:393:46:
+      393 │ ...mg [src]="student.avatar || getDefaultAvatar(student.adi_soyadi)"
+          ╵                                ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:89:15:
+      89 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'getBeklenenOdeme' does not exist on type 'OgretmenUcretSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:407:92:
+      407 │ ...0.8rem;">{{ formatCurrency(getBeklenenOdeme(student)) }}</strong>
+          ╵                               ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:89:15:
+      89 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'getKalanBorc' does not exist on type 'OgretmenUcretSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:411:47:
+      411 │ ...          <strong [class.text-danger]="getKalanBorc(student) > 0"
+          ╵                                           ~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:89:15:
+      89 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'getKalanBorc' does not exist on type 'OgretmenUcretSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:412:48:
+      412 │ ...                [class.text-success]="getKalanBorc(student) <= 0"
+          ╵                                          ~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:89:15:
+      89 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'Math' does not exist on type 'OgretmenUcretSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:414:38:
+      414 │ ...            {{ formatCurrency(Math.abs(getKalanBorc(student))) }}
+          ╵                                  ~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:89:15:
+      89 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'getKalanBorc' does not exist on type 'OgretmenUcretSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:414:47:
+      414 │ ...            {{ formatCurrency(Math.abs(getKalanBorc(student))) }}
+          ╵                                           ~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:89:15:
+      89 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'openStudentDetail' does not exist on type 'OgretmenUcretSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.html:419:70:
+      419 │ ...n btn-sm btn-primary w-100" (click)="openStudentDetail(student)">
+          ╵                                         ~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgretmenUcretSayfasiComponent.
+
+    src/app/components/ogretmen-sayfasi/ogretmen-ogrenci-isleri/ogretmen-ucret-sayfasi/ogretmen-ucret-sayfasi.component.ts:89:15:
+      89 │   templateUrl: './ogretmen-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
