@@ -15,13 +15,29 @@ try {
     // Son 12 ay için aylık gelir hesapla
     $aylikGelirler = [];
     
+    // Türkçe ay adları
+    $turkceAylar = [
+        1 => 'Ocak',
+        2 => 'Şubat', 
+        3 => 'Mart',
+        4 => 'Nisan',
+        5 => 'Mayıs',
+        6 => 'Haziran',
+        7 => 'Temmuz',
+        8 => 'Ağustos',
+        9 => 'Eylül',
+        10 => 'Ekim',
+        11 => 'Kasım',
+        12 => 'Aralık'
+    ];
+    
     // Son 12 ayın tarihlerini oluştur
     for ($i = 9; $i >= 0; $i--) {
         $tarih = new DateTime();
         $tarih->modify("+$i months");
         $ay = (int)$tarih->format('m');
         $yil = (int)$tarih->format('Y');
-        $ayAdi = $tarih->format('F Y');
+        $ayAdi = $turkceAylar[$ay] . ' ' . $yil;
         
         // Bu ay için ödemeleri al
         $stmt = $conn->prepare("
