@@ -1,0 +1,37 @@
+✘ [ERROR] NG5002: Parser Error: Unexpected token 'Date' at column 6 in [ new Date() | date:'dd/MM/yyyy' ] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-ucret-sayfasi/ogrenci-ucret-sayfasi.component.html@232:18 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-ucret-sayfasi/ogrenci-ucret-sayfasi.component.html:233:18:
+      233 │         <p>Tarih: {{ new Date() | date:'dd/MM/yyyy' }}</p>
+          ╵                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciUcretSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-ucret-sayfasi/ogrenci-ucret-sayfasi.component.ts:50:15:
+      50 │   templateUrl: './ogrenci-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG5002: Parser Error: Unexpected token | at column 13 in [ new Date() | date:'dd/MM/yyyy' ] in /Users/aytacbaydar/Documents/Web Sayfalarım/macBook-Proje-2/kimyaogreniyorum/src/app/components/ogrenci-sayfasi/ogrenci-ucret-sayfasi/ogrenci-ucret-sayfasi.component.html@232:18 [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-ucret-sayfasi/ogrenci-ucret-sayfasi.component.html:233:18:
+      233 │         <p>Tarih: {{ new Date() | date:'dd/MM/yyyy' }}</p>
+          ╵                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component OgrenciUcretSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-ucret-sayfasi/ogrenci-ucret-sayfasi.component.ts:50:15:
+      50 │   templateUrl: './ogrenci-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'new' does not exist on type 'OgrenciUcretSayfasiComponent'. [plugin angular-compiler]
+
+    src/app/components/ogrenci-sayfasi/ogrenci-ucret-sayfasi/ogrenci-ucret-sayfasi.component.html:233:21:
+      233 │         <p>Tarih: {{ new Date() | date:'dd/MM/yyyy' }}</p>
+          ╵                      ~~~
+
+  Error occurs in the template of component OgrenciUcretSayfasiComponent.
+
+    src/app/components/ogrenci-sayfasi/ogrenci-ucret-sayfasi/ogrenci-ucret-sayfasi.component.ts:50:15:
+      50 │   templateUrl: './ogrenci-ucret-sayfasi.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
