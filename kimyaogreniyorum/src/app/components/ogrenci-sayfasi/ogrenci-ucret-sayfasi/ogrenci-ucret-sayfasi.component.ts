@@ -54,6 +54,11 @@ export class OgrenciUcretSayfasiComponent implements OnInit, OnDestroy {
   // Math nesnesini template'de kullanmak için expose et
   Math = Math;
 
+  // Güncel tarihi döndüren method
+  getCurrentDate(): Date {
+    return new Date();
+  }
+
   private apiBaseUrl = 'http://localhost:8000/api';
 
   // Data properties - Student specific

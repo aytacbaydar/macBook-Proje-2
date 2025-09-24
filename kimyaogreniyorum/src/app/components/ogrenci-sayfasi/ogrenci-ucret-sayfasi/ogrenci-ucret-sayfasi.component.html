@@ -230,7 +230,7 @@
       <div class="pdf-header">
         <h1>Ücret ve Ödeme Raporu</h1>
         <p>{{ studentStats.student_info.name }}</p>
-        <p>Tarih: {{ new Date() | date:'dd/MM/yyyy' }}</p>
+        <p>Tarih: {{ getCurrentDate() | date:'dd/MM/yyyy' }}</p>
       </div>
 
       <div class="pdf-stats">
