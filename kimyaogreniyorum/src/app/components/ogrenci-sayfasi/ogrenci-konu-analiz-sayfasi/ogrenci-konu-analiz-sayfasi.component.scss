@@ -420,20 +420,29 @@
 
   // Responsive Design
   @media (max-width: 768px) {
-    padding: 15px;
+    padding: 8px;
 
     .page-header {
+      margin-bottom: 20px;
+
       .header-content {
         flex-direction: column;
         text-align: center;
+        gap: 15px;
 
         .header-text h1 {
-          font-size: 2rem;
+          font-size: 1.8rem;
+          margin-bottom: 8px;
+        }
+
+        .header-text p {
+          font-size: 1rem;
         }
 
         .student-info-card {
           flex-direction: column;
           text-align: center;
+          padding: 15px;
 
           .student-details .student-meta {
             align-items: center;
@@ -442,31 +451,281 @@
       }
     }
 
-    .summary-stats-section .stats-grid {
-      grid-template-columns: 1fr;
-      gap: 15px;
+    .summary-stats-section {
+      margin-bottom: 20px;
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
     }
 
-    .performance-distribution .distribution-grid {
-      grid-template-columns: repeat(2, 1fr);
+    .performance-distribution {
+      margin-bottom: 20px;
+      padding: 20px;
+
+      h3 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+      }
+
+      .distribution-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
     }
 
-    .topics-highlights .row {
-      .col-md-6 {
+    .topics-highlights {
+      margin-bottom: 20px;
+
+      .row {
+        .col-md-6 {
+          margin-bottom: 15px;
+        }
+      }
+
+      .highlight-card {
+        padding: 20px;
+
+        h4 {
+          font-size: 1.3rem;
+          margin-bottom: 15px;
+        }
+
+        .topics-list .topic-highlight-item {
+          padding: 12px;
+          margin-bottom: 8px;
+
+          .topic-rank {
+            width: 30px;
+            height: 30px;
+            font-size: 0.8rem;
+          }
+
+          .topic-info h6 {
+            font-size: 0.9rem;
+          }
+
+          .topic-badge {
+            width: 35px;
+            height: 35px;
+            font-size: 1rem;
+          }
+        }
+      }
+    }
+
+    .detailed-analysis {
+      padding: 20px;
+
+      h3 {
+        font-size: 1.5rem;
         margin-bottom: 20px;
+      }
+
+      .analysis-description p {
+        font-size: 0.9rem;
+      }
+
+      .konu-analizi-container {
+        .konu-item {
+          padding: 15px;
+          margin-bottom: 15px;
+
+          .konu-header {
+            .konu-adi {
+              font-size: 1rem;
+            }
+
+            .badge {
+              padding: 6px 10px;
+              font-size: 0.8rem;
+            }
+          }
+
+          .progress {
+            height: 20px;
+            margin-bottom: 15px;
+
+            .progress-bar span {
+              font-size: 0.8rem;
+            }
+          }
+
+          .konu-detaylar {
+            .badge {
+              font-size: 0.8rem;
+              padding: 6px 8px;
+            }
+
+            small {
+              font-size: 0.75rem;
+            }
+          }
+        }
+      }
+    }
+
+    .empty-state {
+      padding: 40px 20px;
+
+      .empty-content {
+        i {
+          font-size: 3rem !important;
+        }
+
+        h3 {
+          font-size: 1.5rem;
+        }
+
+        p {
+          font-size: 1rem;
+        }
       }
     }
   }
 
   @media (max-width: 480px) {
-    .performance-distribution .distribution-grid {
-      grid-template-columns: 1fr;
-    }
+    padding: 5px;
 
     .summary-stats-section .stats-grid .stat-card {
       flex-direction: column;
       text-align: center;
-      gap: 15px;
+      gap: 12px;
+      padding: 20px;
+
+      .stat-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.3rem;
+      }
+
+      .stat-content h3 {
+        font-size: 1.5rem;
+      }
+    }
+
+    .performance-distribution .distribution-grid {
+      grid-template-columns: 1fr;
+      gap: 10px;
+
+      .distribution-card {
+        padding: 15px;
+
+        .distribution-icon {
+          font-size: 1.5rem;
+        }
+
+        .distribution-content h4 {
+          font-size: 1.5rem;
+        }
+      }
+    }
+
+    .topics-highlights .highlight-card {
+      padding: 15px;
+
+      .topics-list .topic-highlight-item {
+        padding: 10px;
+        flex-wrap: wrap;
+
+        .topic-rank {
+          width: 25px;
+          height: 25px;
+          font-size: 0.7rem;
+        }
+
+        .topic-info {
+          flex: 1;
+          min-width: 0;
+
+          h6 {
+            font-size: 0.85rem;
+            margin-bottom: 3px;
+          }
+
+          .topic-stats {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+
+            .success-rate {
+              font-size: 0.9rem;
+            }
+
+            small {
+              font-size: 0.7rem;
+            }
+          }
+        }
+
+        .topic-badge {
+          width: 30px;
+          height: 30px;
+          font-size: 0.9rem;
+        }
+      }
+    }
+
+    .detailed-analysis {
+      padding: 15px;
+
+      .konu-analizi-container .konu-item {
+        padding: 12px;
+
+        .konu-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 8px;
+
+          .konu-adi {
+            font-size: 0.9rem;
+          }
+        }
+
+        .konu-detaylar .row {
+          .col-3 {
+            flex: 0 0 50%;
+            max-width: 50%;
+            margin-bottom: 10px;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 375px) {
+    .summary-stats-section .stats-grid .stat-card {
+      padding: 15px;
+
+      .stat-content h3 {
+        font-size: 1.3rem;
+      }
+
+      .stat-content p {
+        font-size: 0.9rem;
+      }
+    }
+
+    .topics-highlights .highlight-card .topics-list .topic-highlight-item {
+      .topic-info .topic-stats {
+        .success-rate {
+          font-size: 0.8rem;
+        }
+      }
+    }
+
+    .detailed-analysis .konu-analizi-container .konu-item {
+      .konu-detaylar .row .col-3 {
+        flex: 0 0 100%;
+        max-width: 100%;
+        text-align: left;
+        
+        .badge {
+          display: inline-block;
+          margin-right: 8px;
+        }
+      }
     }
   }
 }
