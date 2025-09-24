@@ -173,69 +173,45 @@
         </div>
 
       <div class="konu-analizi-container">
-        <div class="konu-item mb-4" *ngFor="let konu of konuAnalizi; let i = index">
-          <div class="konu-header d-flex justify-content-between align-items-center mb-2">
-            <h6 class="konu-adi mb-0 fw-bold">{{ konu.konu_adi }}</h6>
-            <span class="badge" [style.background-color]="getKonuSuccessColor(konu.basari_orani)">
-              {{ getKonuSuccessText(konu.basari_orani) }}
-            </span>
-          </div>
-
-          <div class="progress mb-2" style="height: 25px;">
-            <div class="progress-bar" 
-                 [style.width.%]="konu.basari_orani"
-                 [style.background-color]="getKonuSuccessColor(konu.basari_orani)"
-                 role="progressbar" 
-                 [attr.aria-valuenow]="konu.basari_orani" 
-                 aria-valuemin="0" 
-                 aria-valuemax="100">
-              <span class="fw-bold">{{ konu.basari_orani }}%</span>
+        <div class="konu-item" *ngFor="let konu of konuAnalizi; let i = index">
+          <!-- Konu Başlığı -->
+          <div class="konu-header">
+            <div class="konu-title-wrapper">
+              <h6 class="konu-adi">{{ konu.konu_adi }}</h6>
+              <span class="success-badge" [style.background-color]="getKonuSuccessColor(konu.basari_orani)">
+                {{ getKonuSuccessText(konu.basari_orani) }}
+              </span>
             </div>
           </div>
 
-          <div class="konu-detaylar">
-            <!-- Desktop görünüm -->
-            <div class="row text-center d-none d-md-flex">
-              <div class="col-3">
-                <span class="badge bg-success d-block mb-1">{{ konu.dogru_sayisi }}</span>
-                <small class="text-muted">Doğru</small>
-              </div>
-              <div class="col-3">
-                <span class="badge bg-danger d-block mb-1">{{ konu.yanlis_sayisi }}</span>
-                <small class="text-muted">Yanlış</small>
-              </div>
-              <div class="col-3">
-                <span class="badge bg-warning d-block mb-1">{{ konu.bos_sayisi }}</span>
-                <small class="text-muted">Boş</small>
-              </div>
-              <div class="col-3">
-                <span class="badge bg-info d-block mb-1">{{ konu.toplam_soru }}</span>
-                <small class="text-muted">Toplam</small>
+          <!-- Progress Bar -->
+          <div class="progress-section">
+            <div class="progress-bar-custom">
+              <div class="progress-fill" 
+                   [style.width.%]="konu.basari_orani"
+                   [style.background-color]="getKonuSuccessColor(konu.basari_orani)">
+                <span class="progress-text">{{ konu.basari_orani }}%</span>
               </div>
             </div>
+          </div>
 
-            <!-- Mobile görünüm -->
-            <div class="mobile-stats d-md-none">
-              <div class="mobile-stat-row">
-                <div class="mobile-stat-item">
-                  <span class="badge bg-success">{{ konu.dogru_sayisi }}</span>
-                  <small class="text-muted">Doğru</small>
-                </div>
-                <div class="mobile-stat-item">
-                  <span class="badge bg-danger">{{ konu.yanlis_sayisi }}</span>
-                  <small class="text-muted">Yanlış</small>
-                </div>
-              </div>
-              <div class="mobile-stat-row">
-                <div class="mobile-stat-item">
-                  <span class="badge bg-warning">{{ konu.bos_sayisi }}</span>
-                  <small class="text-muted">Boş</small>
-                </div>
-                <div class="mobile-stat-item">
-                  <span class="badge bg-info">{{ konu.toplam_soru }}</span>
-                  <small class="text-muted">Toplam</small>
-                </div>
-              </div>
+          <!-- İstatistikler - Mobile First Design -->
+          <div class="stats-container">
+            <div class="stat-item correct">
+              <div class="stat-number">{{ konu.dogru_sayisi }}</div>
+              <div class="stat-label">Doğru</div>
+            </div>
+            <div class="stat-item wrong">
+              <div class="stat-number">{{ konu.yanlis_sayisi }}</div>
+              <div class="stat-label">Yanlış</div>
+            </div>
+            <div class="stat-item empty">
+              <div class="stat-number">{{ konu.bos_sayisi }}</div>
+              <div class="stat-label">Boş</div>
+            </div>
+            <div class="stat-item total">
+              <div class="stat-number">{{ konu.toplam_soru }}</div>
+              <div class="stat-label">Toplam</div>
             </div>
           </div>
         </div>

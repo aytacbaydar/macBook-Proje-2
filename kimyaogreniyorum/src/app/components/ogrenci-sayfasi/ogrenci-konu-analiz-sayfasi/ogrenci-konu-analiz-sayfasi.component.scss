@@ -332,96 +332,147 @@
   .detailed-analysis {
     background: white;
     border-radius: 8px;
-    padding: 25px;
+    padding: 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 
     h3 {
       color: #2c3e50;
       font-weight: 700;
-      margin-bottom: 25px;
-      padding-bottom: 15px;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
       border-bottom: 3px solid #e9ecef;
+      font-size: 1.3rem;
     }
 
     .konu-analizi-container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+
       .konu-item {
         background: #f8f9fa;
-        border-radius: 8px;
-        padding: 20px;
-        border-left: 5px solid #667eea;
+        border-radius: 12px;
+        padding: 16px;
+        border-left: 4px solid #667eea;
         transition: all 0.3s ease;
+        margin-bottom: 0;
 
         &:hover {
-          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          transform: translateY(-1px);
         }
 
         .konu-header {
-          .konu-adi {
-            color: #2c3e50;
-            font-size: 1.1rem;
-          }
+          margin-bottom: 15px;
 
-          .badge {
-            color: white;
-            font-weight: 600;
-            padding: 8px 12px;
-            border-radius: 4px;
+          .konu-title-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 8px;
+
+            .konu-adi {
+              color: #2c3e50;
+              font-size: 1rem;
+              font-weight: 600;
+              margin: 0;
+              flex: 1;
+              min-width: 0;
+              line-height: 1.3;
+            }
+
+            .success-badge {
+              color: white;
+              font-weight: 600;
+              padding: 6px 10px;
+              border-radius: 6px;
+              font-size: 0.8rem;
+              white-space: nowrap;
+              flex-shrink: 0;
+            }
           }
         }
 
-        .progress {
-          background-color: #e9ecef;
-          border-radius: 8px;
-          overflow: hidden;
+        .progress-section {
+          margin-bottom: 15px;
 
-          .progress-bar {
-            border-radius: 4px;
-            transition: width 0.6s ease;
-          }
-        }
+          .progress-bar-custom {
+            width: 100%;
+            height: 20px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
 
-        .konu-detaylar {
-          .badge {
-            font-size: 0.9rem;
-            padding: 8px 10px;
-            border-radius: 4px;
-          }
-
-          small {
-            font-size: 0.8rem;
-            font-weight: 500;
-          }
-
-          .mobile-stats {
-            .mobile-stat-row {
+            .progress-fill {
+              height: 100%;
+              border-radius: 10px;
+              transition: width 0.6s ease;
               display: flex;
-              justify-content: space-between;
-              margin-bottom: 10px;
+              align-items: center;
+              justify-content: center;
+              position: relative;
 
-              &:last-child {
-                margin-bottom: 0;
+              .progress-text {
+                font-weight: 700;
+                font-size: 0.8rem;
+                color: white;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
               }
+            }
+          }
+        }
 
-              .mobile-stat-item {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                flex: 1;
-                margin: 0 5px;
+        .stats-container {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 10px;
 
-                .badge {
-                  margin-bottom: 5px;
-                  font-size: 1rem;
-                  padding: 10px 12px;
-                  min-width: 40px;
-                }
+          .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 8px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
 
-                small {
-                  font-size: 0.85rem;
-                  font-weight: 600;
-                }
-              }
+            &:hover {
+              transform: scale(1.02);
+            }
+
+            .stat-number {
+              font-size: 1.2rem;
+              font-weight: 700;
+              color: white;
+              margin-bottom: 4px;
+            }
+
+            .stat-label {
+              font-size: 0.75rem;
+              font-weight: 600;
+              color: rgba(255, 255, 255, 0.9);
+              text-transform: uppercase;
+              letter-spacing: 0.5px;
+            }
+
+            &.correct {
+              background: linear-gradient(135deg, #28a745, #20c997);
+            }
+
+            &.wrong {
+              background: linear-gradient(135deg, #dc3545, #c82333);
+            }
+
+            &.empty {
+              background: linear-gradient(135deg, #ffc107, #fd7e14);
+            }
+
+            &.total {
+              background: linear-gradient(135deg, #007bff, #0056b3);
             }
           }
         }
@@ -450,148 +501,113 @@
     }
   }
 
-  // Responsive Design
+  // Mobile Responsive Design
   @media (max-width: 768px) {
-    padding: 8px;
-
-    .page-header {
-      margin-bottom: 20px;
-
-      .header-content {
-        flex-direction: column;
-        text-align: center;
-        gap: 15px;
-
-        .header-text h1 {
-          font-size: 1.8rem;
-          margin-bottom: 8px;
-        }
-
-        .header-text p {
-          font-size: 1rem;
-        }
-
-        .student-info-card {
-          flex-direction: column;
-          text-align: center;
-          padding: 15px;
-
-          .student-details .student-meta {
-            align-items: center;
-          }
-        }
-      }
-    }
+    padding: 5px;
 
     .summary-stats-section {
-      margin-bottom: 20px;
-
+      margin-bottom: 15px;
       .stats-grid {
         grid-template-columns: 1fr;
-        gap: 12px;
+        gap: 10px;
+        .stat-card {
+          padding: 15px;
+          .stat-content h3 {
+            font-size: 1.5rem;
+          }
+        }
       }
     }
 
     .performance-distribution {
-      margin-bottom: 20px;
-      padding: 20px;
-
+      margin-bottom: 15px;
+      padding: 15px;
       h3 {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
         margin-bottom: 15px;
       }
-
       .distribution-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
+        gap: 8px;
+        .distribution-card {
+          padding: 12px;
+          .distribution-icon {
+            font-size: 1.5rem;
+          }
+        }
       }
     }
 
     .topics-highlights {
-      margin-bottom: 20px;
-
-      .row {
-        .col-md-6 {
-          margin-bottom: 15px;
-        }
-      }
-
+      margin-bottom: 15px;
       .highlight-card {
-        padding: 20px;
-
+        padding: 15px;
         h4 {
-          font-size: 1.3rem;
-          margin-bottom: 15px;
+          font-size: 1.2rem;
+          margin-bottom: 12px;
         }
-
         .topics-list .topic-highlight-item {
-          padding: 12px;
-          margin-bottom: 8px;
-
+          padding: 10px;
+          margin-bottom: 6px;
           .topic-rank {
+            width: 28px;
+            height: 28px;
+            font-size: 0.75rem;
+          }
+          .topic-info h6 {
+            font-size: 0.85rem;
+          }
+          .topic-badge {
             width: 30px;
             height: 30px;
-            font-size: 0.8rem;
-          }
-
-          .topic-info h6 {
             font-size: 0.9rem;
-          }
-
-          .topic-badge {
-            width: 35px;
-            height: 35px;
-            font-size: 1rem;
           }
         }
       }
     }
 
     .detailed-analysis {
-      padding: 20px;
-
+      padding: 12px;
       h3 {
-        font-size: 1.5rem;
-        margin-bottom: 20px;
+        font-size: 1.2rem;
+        margin-bottom: 15px;
       }
-
       .analysis-description p {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
+        margin-bottom: 15px;
       }
-
       .konu-analizi-container {
+        gap: 12px;
         .konu-item {
-          padding: 15px;
-          margin-bottom: 15px;
-
-          .konu-header {
+          padding: 12px;
+          .konu-header .konu-title-wrapper {
             .konu-adi {
-              font-size: 1rem;
+              font-size: 0.9rem;
             }
-
-            .badge {
-              padding: 6px 10px;
-              font-size: 0.8rem;
-            }
-          }
-
-          .progress {
-            height: 20px;
-            margin-bottom: 15px;
-
-            .progress-bar span {
-              font-size: 0.8rem;
-            }
-          }
-
-          .konu-detaylar {
-            .badge {
-              font-size: 0.8rem;
-              padding: 6px 8px;
-            }
-
-            small {
+            .success-badge {
               font-size: 0.75rem;
+              padding: 4px 8px;
+            }
+          }
+          .progress-section {
+            margin-bottom: 12px;
+            .progress-bar-custom {
+              height: 18px;
+              .progress-fill .progress-text {
+                font-size: 0.75rem;
+              }
+            }
+          }
+          .stats-container {
+            gap: 8px;
+            .stat-item {
+              padding: 10px 6px;
+              .stat-number {
+                font-size: 1.1rem;
+              }
+              .stat-label {
+                font-size: 0.7rem;
+              }
             }
           }
         }
@@ -599,19 +615,102 @@
     }
 
     .empty-state {
-      padding: 40px 20px;
-
+      padding: 30px 15px;
       .empty-content {
-        i {
-          font-size: 3rem !important;
-        }
-
         h3 {
-          font-size: 1.5rem;
+          font-size: 1.3rem;
         }
-
         p {
-          font-size: 1rem;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+
+  // Extra small devices
+  @media (max-width: 480px) {
+    padding: 3px;
+
+    .summary-stats-section .stats-grid .stat-card {
+      flex-direction: column;
+      text-align: center;
+      padding: 12px;
+      .stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+        margin-bottom: 8px;
+      }
+      .stat-content {
+        h3 {
+          font-size: 1.3rem;
+        }
+        p {
+          font-size: 0.8rem;
+        }
+      }
+    }
+
+    .performance-distribution {
+      padding: 10px;
+      .distribution-grid {
+        grid-template-columns: 1fr;
+        gap: 6px;
+        .distribution-card {
+          padding: 10px;
+          .distribution-content h4 {
+            font-size: 1.3rem;
+          }
+        }
+      }
+    }
+
+    .detailed-analysis {
+      padding: 8px;
+      h3 {
+        font-size: 1.1rem;
+      }
+      .konu-analizi-container {
+        gap: 10px;
+        .konu-item {
+          padding: 10px;
+          border-radius: 8px;
+          .konu-header .konu-title-wrapper {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+            .konu-adi {
+              font-size: 0.85rem;
+              line-height: 1.2;
+            }
+            .success-badge {
+              font-size: 0.7rem;
+              padding: 3px 6px;
+              align-self: flex-start;
+            }
+          }
+          .progress-section {
+            margin-bottom: 10px;
+            .progress-bar-custom {
+              height: 16px;
+              .progress-fill .progress-text {
+                font-size: 0.7rem;
+              }
+            }
+          }
+          .stats-container {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+            .stat-item {
+              padding: 8px 4px;
+              .stat-number {
+                font-size: 1rem;
+              }
+              .stat-label {
+                font-size: 0.65rem;
+              }
+            }
+          }
         }
       }
     }
