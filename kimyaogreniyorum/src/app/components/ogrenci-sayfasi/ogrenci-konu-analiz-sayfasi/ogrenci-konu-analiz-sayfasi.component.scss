@@ -392,6 +392,38 @@
             font-size: 0.8rem;
             font-weight: 500;
           }
+
+          .mobile-stats {
+            .mobile-stat-row {
+              display: flex;
+              justify-content: space-between;
+              margin-bottom: 10px;
+
+              &:last-child {
+                margin-bottom: 0;
+              }
+
+              .mobile-stat-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                flex: 1;
+                margin: 0 5px;
+
+                .badge {
+                  margin-bottom: 5px;
+                  font-size: 1rem;
+                  padding: 10px 12px;
+                  min-width: 40px;
+                }
+
+                small {
+                  font-size: 0.85rem;
+                  font-weight: 600;
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -680,14 +712,45 @@
 
           .konu-adi {
             font-size: 0.9rem;
+            line-height: 1.3;
+          }
+
+          .badge {
+            align-self: flex-start;
           }
         }
 
-        .konu-detaylar .row {
-          .col-3 {
+        .progress {
+          height: 18px;
+          margin-bottom: 12px;
+
+          .progress-bar span {
+            font-size: 0.75rem;
+          }
+        }
+
+        .konu-detaylar {
+          .row .col-3 {
             flex: 0 0 50%;
             max-width: 50%;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+          }
+
+          .mobile-stats {
+            .mobile-stat-row {
+              margin-bottom: 8px;
+
+              .mobile-stat-item {
+                .badge {
+                  font-size: 0.85rem;
+                  padding: 6px 8px;
+                }
+
+                small {
+                  font-size: 0.75rem;
+                }
+              }
+            }
           }
         }
       }
@@ -716,14 +779,34 @@
     }
 
     .detailed-analysis .konu-analizi-container .konu-item {
-      .konu-detaylar .row .col-3 {
-        flex: 0 0 100%;
-        max-width: 100%;
-        text-align: left;
-        
-        .badge {
-          display: inline-block;
-          margin-right: 8px;
+      .konu-detaylar {
+        .row .col-3 {
+          flex: 0 0 100%;
+          max-width: 100%;
+          text-align: left;
+          
+          .badge {
+            display: inline-block;
+            margin-right: 8px;
+          }
+        }
+
+        .mobile-stats {
+          .mobile-stat-row {
+            .mobile-stat-item {
+              margin: 0 2px;
+
+              .badge {
+                font-size: 0.9rem;
+                padding: 8px 10px;
+                min-width: 35px;
+              }
+
+              small {
+                font-size: 0.8rem;
+              }
+            }
+          }
         }
       }
     }

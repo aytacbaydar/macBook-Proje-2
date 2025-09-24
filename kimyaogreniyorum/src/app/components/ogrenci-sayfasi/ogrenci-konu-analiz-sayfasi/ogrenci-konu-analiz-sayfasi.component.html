@@ -194,7 +194,8 @@
           </div>
 
           <div class="konu-detaylar">
-            <div class="row text-center">
+            <!-- Desktop görünüm -->
+            <div class="row text-center d-none d-md-flex">
               <div class="col-3">
                 <span class="badge bg-success d-block mb-1">{{ konu.dogru_sayisi }}</span>
                 <small class="text-muted">Doğru</small>
@@ -210,6 +211,30 @@
               <div class="col-3">
                 <span class="badge bg-info d-block mb-1">{{ konu.toplam_soru }}</span>
                 <small class="text-muted">Toplam</small>
+              </div>
+            </div>
+
+            <!-- Mobile görünüm -->
+            <div class="mobile-stats d-md-none">
+              <div class="mobile-stat-row">
+                <div class="mobile-stat-item">
+                  <span class="badge bg-success">{{ konu.dogru_sayisi }}</span>
+                  <small class="text-muted">Doğru</small>
+                </div>
+                <div class="mobile-stat-item">
+                  <span class="badge bg-danger">{{ konu.yanlis_sayisi }}</span>
+                  <small class="text-muted">Yanlış</small>
+                </div>
+              </div>
+              <div class="mobile-stat-row">
+                <div class="mobile-stat-item">
+                  <span class="badge bg-warning">{{ konu.bos_sayisi }}</span>
+                  <small class="text-muted">Boş</small>
+                </div>
+                <div class="mobile-stat-item">
+                  <span class="badge bg-info">{{ konu.toplam_soru }}</span>
+                  <small class="text-muted">Toplam</small>
+                </div>
               </div>
             </div>
           </div>
