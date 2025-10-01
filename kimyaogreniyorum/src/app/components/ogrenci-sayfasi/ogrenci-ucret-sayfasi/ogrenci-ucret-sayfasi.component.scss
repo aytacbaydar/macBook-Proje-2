@@ -689,6 +689,10 @@
 
   /* Responsive Design */
   @media (max-width: 768px) {
+
+    .analysis-section {
+      display: none;
+    }
     padding: 16px;
 
     .payment-header {
@@ -736,10 +740,11 @@
       text-align: center;
 
       .attendance-date {
-        width: auto;
+        width: 100%;
       }
 
       .attendance-status {
+        width: 100%;
         justify-content: center;
         flex-wrap: wrap;
       }
