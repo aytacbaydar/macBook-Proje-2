@@ -377,7 +377,8 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
       orta_soru_sayisi: ortaCount,
       zor_soru_sayisi: zorCount,
       single_difficulty_mode: this.singleDifficultyMode,
-      selected_single_difficulty: this.selectedSingleDifficulty
+      selected_single_difficulty: this.selectedSingleDifficulty,
+      toplam_soru_sayisi: this.getTotalQuestionCount() // Toplam soru sayısını açık şekilde gönder
     };
 
     this.http.post<any>('./server/api/yapay_zeka_test_olustur.php', testData).subscribe({
