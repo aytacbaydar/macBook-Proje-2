@@ -85,9 +85,11 @@ switch ($method) {
         break;
 
     case 'POST':
-        // FormData ile gelen veriler için
-        if (isset($_POST['konu_adi'])) {
-            // FormData verilerini al
+        $action = $_POST['action'] ?? 'add';
+
+        if ($action === 'update') {
+            // Soru güncelleme
+            $id = $_POST['id'] ?? '';
             $konu_adi = $_POST['konu_adi'] ?? '';
             $sinif_seviyesi = $_POST['sinif_seviyesi'] ?? '';
             $zorluk_derecesi = $_POST['zorluk_derecesi'] ?? '';
@@ -95,17 +97,83 @@ switch ($method) {
             $dogru_cevap = $_POST['dogru_cevap'] ?? '';
             $ogretmen_id = $_POST['ogretmen_id'] ?? '';
 
-            // Resim upload işlemi
-            $soru_resmi = '';
+            if (empty($id) || empty($konu_adi) || empty($sinif_seviyesi) || empty($zorluk_derecesi) || empty($dogru_cevap) || empty($ogretmen_id)) {
+                echo json_encode(['success' => false, 'message' => 'Gerekli alanlar eksik']);
+                exit;
+            }
+
+            // Önce sorunun bu öğretmene ait olduğunu kontrol et
+            $checkSql = "SELECT soru_resmi FROM yapay_zeka_sorular WHERE id = ? AND ogretmen_id = ?";
+            $checkStmt = $pdo->prepare($checkSql);
+            $checkStmt->execute([$id, $ogretmen_id]);
+            $existingSoru = $checkStmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$existingSoru) {
+                echo json_encode(['success' => false, 'message' => 'Soru bulunamadı veya yetkiniz yok']);
+                exit;
+            }
+
+            $soru_resmi = $existingSoru['soru_resmi']; // Mevcut resmi koru
+
+            // Yeni resim yüklenmişse
             if (isset($_FILES['soru_resmi']) && $_FILES['soru_resmi']['error'] === UPLOAD_ERR_OK) {
-                $uploadDir = '../../uploads/soru_resimleri/';
-                if (!file_exists($uploadDir)) {
-                    mkdir($uploadDir, 0755, true);
+                $upload_dir = '../uploads/soru_resimleri/';
+                if (!file_exists($upload_dir)) {
+                    mkdir($upload_dir, 0777, true);
                 }
 
-                $fileInfo = pathinfo($_FILES['soru_resmi']['name']);
-                $fileExt = strtolower($fileInfo['extension']);
-                
+                $file_extension = strtolower(pathinfo($_FILES['soru_resmi']['name'], PATHINFO_EXTENSION));
+                $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
+
+                if (!in_array($file_extension, $allowed_extensions)) {
+                    echo json_encode(['success' => false, 'message' => 'Geçersiz dosya formatı']);
+                    exit;
+                }
+
+                // Eski resmi sil
+                if ($soru_resmi && file_exists($upload_dir . $soru_resmi)) {
+                    unlink($upload_dir . $soru_resmi);
+                }
+
+                $soru_resmi = uniqid() . '.' . $file_extension;
+                $upload_path = $upload_dir . $soru_resmi;
+
+                if (!move_uploaded_file($_FILES['soru_resmi']['tmp_name'], $upload_path)) {
+                    echo json_encode(['success' => false, 'message' => 'Dosya yüklenemedi']);
+                    exit;
+                }
+            }
+
+            $sql = "UPDATE yapay_zeka_sorular SET konu_adi = ?, sinif_seviyesi = ?, zorluk_derecesi = ?, soru_aciklamasi = ?, soru_resmi = ?, dogru_cevap = ? WHERE id = ? AND ogretmen_id = ?";
+            $stmt = $pdo->prepare($sql);
+
+            if ($stmt->execute([$konu_adi, $sinif_seviyesi, $zorluk_derecesi, $soru_aciklamasi, $soru_resmi, $dogru_cevap, $id, $ogretmen_id])) {
+                echo json_encode(['success' => true, 'message' => 'Soru başarıyla güncellendi']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Soru güncellenemedi']);
+            }
+        } else {
+            // Yeni soru ekleme
+            $konu_adi = $_POST['konu_adi'] ?? '';
+            $sinif_seviyesi = $_POST['sinif_seviyesi'] ?? '';
+            $zorluk_derecesi = $_POST['zorluk_derecesi'] ?? '';
+            $soru_aciklamasi = $_POST['soru_aciklamasi'] ?? '';
+            $dogru_cevap = $_POST['dogru_cevap'] ?? '';
+            $ogretmen_id = $_POST['ogretmen_id'] ?? '';
+
+            if (empty($konu_adi) || empty($sinif_seviyesi) || empty($zorluk_derecesi) || empty($dogru_cevap) || empty($ogretmen_id)) {
+                echo json_encode(['success' => false, 'message' => 'Gerekli alanlar eksik']);
+                exit;
+            }
+
+            $soru_resmi = null;
+            if (isset($_FILES['soru_resmi']) && $_FILES['soru_resmi']['error'] === UPLOAD_ERR_OK) {
+                $uploadDir = '../uploads/soru_resimleri/';
+                if (!file_exists($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
+
+                $fileExt = strtolower(pathinfo($_FILES['soru_resmi']['name'], PATHINFO_EXTENSION));
                 $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
                 if (!in_array($fileExt, $allowedExtensions)) {
                     echo json_encode(['success' => false, 'message' => 'Sadece JPG, PNG ve GIF dosyaları kabul edilir']);
@@ -122,15 +190,6 @@ switch ($method) {
 
                 if (!move_uploaded_file($_FILES['soru_resmi']['tmp_name'], $targetFile)) {
                     echo json_encode(['success' => false, 'message' => 'Resim yüklenirken hata oluştu']);
-                    exit;
-                }
-            }
-
-            // Zorunlu alanları kontrol et
-            $required_fields = ['konu_adi', 'sinif_seviyesi', 'zorluk_derecesi', 'dogru_cevap', 'ogretmen_id'];
-            foreach ($required_fields as $field) {
-                if (empty($$field)) {
-                    echo json_encode(['success' => false, 'message' => "Gerekli alan eksik: $field"]);
                     exit;
                 }
             }
@@ -160,43 +219,6 @@ switch ($method) {
             } else {
                 echo json_encode(['success' => false, 'message' => 'Soru eklenirken hata oluştu']);
             }
-        } else {
-            // JSON verilerini kontrol et (eski format için uyumluluk)
-            $input = json_decode(file_get_contents('php://input'), true);
-
-            if (!$input) {
-                echo json_encode(['success' => false, 'message' => 'Geçersiz veri formatı']);
-                exit;
-            }
-
-            $required_fields = ['konu_adi', 'sinif_seviyesi', 'zorluk_derecesi', 'soru_metni', 'secenekler', 'dogru_cevap', 'ogretmen_id'];
-
-            foreach ($required_fields as $field) {
-                if (!isset($input[$field]) || empty($input[$field])) {
-                    echo json_encode(['success' => false, 'message' => "Gerekli alan eksik: $field"]);
-                    exit;
-                }
-            }
-
-            $sql = "INSERT INTO yapay_zeka_sorular (konu_adi, sinif_seviyesi, zorluk_derecesi, soru_metni, secenekler, dogru_cevap, ogretmen_id) 
-                    VALUES (:konu_adi, :sinif_seviyesi, :zorluk_derecesi, :soru_metni, :secenekler, :dogru_cevap, :ogretmen_id)";
-
-            $stmt = $pdo->prepare($sql);
-            $result = $stmt->execute([
-                'konu_adi' => $input['konu_adi'],
-                'sinif_seviyesi' => $input['sinif_seviyesi'],
-                'zorluk_derecesi' => $input['zorluk_derecesi'],
-                'soru_metni' => $input['soru_metni'],
-                'secenekler' => json_encode($input['secenekler']),
-                'dogru_cevap' => $input['dogru_cevap'],
-                'ogretmen_id' => $input['ogretmen_id']
-            ]);
-
-            if ($result) {
-                echo json_encode(['success' => true, 'message' => 'Soru başarıyla eklendi', 'id' => $pdo->lastInsertId()]);
-            } else {
-                echo json_encode(['success' => false, 'message' => 'Soru eklenirken hata oluştu']);
-            }
         }
         break;
 
@@ -209,11 +231,29 @@ switch ($method) {
             exit;
         }
 
+        // Önce sorunun bu öğretmene ait olduğunu kontrol et ve resmi sil
+        $checkSql = "SELECT soru_resmi FROM yapay_zeka_sorular WHERE id = ? AND ogretmen_id = ?";
+        $checkStmt = $pdo->prepare($checkSql);
+        $checkStmt->execute([$soru_id, $ogretmen_id]);
+        $existingSoru = $checkStmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$existingSoru) {
+            echo json_encode(['success' => false, 'message' => 'Soru bulunamadı veya yetkiniz yok']);
+            exit;
+        }
+
+        $soru_resmi_to_delete = $existingSoru['soru_resmi'];
+        $upload_dir = '../uploads/soru_resimleri/';
+
         $sql = "DELETE FROM yapay_zeka_sorular WHERE id = :id AND ogretmen_id = :ogretmen_id";
         $stmt = $pdo->prepare($sql);
         $result = $stmt->execute(['id' => $soru_id, 'ogretmen_id' => $ogretmen_id]);
 
         if ($result && $stmt->rowCount() > 0) {
+            // Soru başarıyla silindiyse resmi de sil
+            if ($soru_resmi_to_delete && file_exists($upload_dir . $soru_resmi_to_delete)) {
+                unlink($upload_dir . $soru_resmi_to_delete);
+            }
             echo json_encode(['success' => true, 'message' => 'Soru başarıyla silindi']);
         } else {
             echo json_encode(['success' => false, 'message' => 'Soru silinirken hata oluştu']);

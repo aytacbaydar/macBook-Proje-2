@@ -521,7 +521,7 @@
           </div>
         </div>
       </div>
-      
+
       <!-- Selected Topic Questions -->
       <div *ngIf="selectedTopic" class="selected-topic-questions mt-4">
         <div class="topic-header-detail">
@@ -534,7 +534,7 @@
             Tümünü Göster
           </button>
         </div>
-        
+
         <div class="table-container">
           <table class="table table-hover">
             <thead>
@@ -578,6 +578,11 @@
                 </td>
                 <td>
                   <div class="action-buttons">
+                    <button class="btn btn-sm btn-outline-primary me-1" 
+                            (click)="editSoru(soru)"
+                            [disabled]="loading">
+                      <i class="bi bi-pencil"></i>
+                    </button>
                     <button class="btn btn-sm btn-outline-danger" 
                             (click)="deleteSoru(soru)"
                             [disabled]="loading">

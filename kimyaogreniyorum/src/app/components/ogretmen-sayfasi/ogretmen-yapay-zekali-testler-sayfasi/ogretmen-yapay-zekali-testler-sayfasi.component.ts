@@ -50,8 +50,12 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
     ogretmen_id: 0,
   };
 
+  // Düzenleme için
+  duzenlenecekSoru: Soru | null = null;
+
   // UI state
   showAddForm = false;
+  showEditForm = false;
   showPdfUploadForm = false;
   loading = false;
   error: string | null = null;
@@ -166,6 +170,8 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
 
   toggleAddForm(): void {
     this.showAddForm = !this.showAddForm;
+    this.showEditForm = false;
+    this.showPdfUploadForm = false;
     if (this.showAddForm) {
       this.resetForm();
     }
@@ -239,6 +245,68 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
           (error.error?.message || error.message);
       },
     });
+  }
+
+  editSoru(soru: Soru): void {
+    this.duzenlenecekSoru = { ...soru };
+    this.yeniSoru = { ...soru };
+    this.showEditForm = true;
+    this.showAddForm = false;
+    this.showPdfUploadForm = false;
+    this.error = null;
+    this.success = null;
+
+    // Eğer soru resmi varsa önizleme olarak göster
+    if (soru.soru_resmi) {
+      this.imagePreview = this.getSoruResmiUrl(soru);
+    }
+  }
+
+  updateSoru(): void {
+    if (!this.duzenlenecekSoru || !this.validateForm()) return;
+
+    this.loading = true;
+    this.error = null;
+    this.success = null;
+
+    const formData = new FormData();
+    formData.append('id', this.duzenlenecekSoru.id?.toString() || '');
+    formData.append('konu_adi', this.yeniSoru.konu_adi);
+    formData.append('sinif_seviyesi', this.yeniSoru.sinif_seviyesi);
+    formData.append('zorluk_derecesi', this.yeniSoru.zorluk_derecesi);
+    formData.append('soru_aciklamasi', this.yeniSoru.soru_aciklamasi);
+    formData.append('dogru_cevap', this.yeniSoru.dogru_cevap);
+    formData.append('ogretmen_id', this.yeniSoru.ogretmen_id.toString());
+    formData.append('action', 'update');
+
+    if (this.selectedFile) {
+      formData.append('soru_resmi', this.selectedFile);
+    }
+
+    this.http.post<any>('./server/api/soru_yonetimi.php', formData).subscribe({
+      next: (response) => {
+        this.loading = false;
+        if (response.success) {
+          this.success = 'Soru başarıyla güncellendi';
+          this.cancelEdit();
+          this.loadSorular();
+        } else {
+          this.error = response.message || 'Soru güncellenemedi';
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+        this.error =
+          'Soru güncellenirken hata oluştu: ' +
+          (error.error?.message || error.message);
+      },
+    });
+  }
+
+  cancelEdit(): void {
+    this.showEditForm = false;
+    this.duzenlenecekSoru = null;
+    this.resetForm();
   }
 
   deleteSoru(soru: Soru): void {
@@ -509,6 +577,7 @@ export class OgretmenYapayZekaliTestlerSayfasiComponent implements OnInit {
     this.showPdfUploadForm = !this.showPdfUploadForm;
     if (this.showPdfUploadForm) {
       this.showAddForm = false;
+      this.showEditForm = false;
       this.resetPdfUploadData();
     }
   }
