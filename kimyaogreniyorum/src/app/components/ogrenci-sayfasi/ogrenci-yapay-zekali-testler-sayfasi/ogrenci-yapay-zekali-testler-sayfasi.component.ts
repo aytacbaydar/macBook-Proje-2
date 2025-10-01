@@ -143,7 +143,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   }
 
   constructor(
-    private http: HttpClient, 
+    private http: HttpClient,
     private toaster: ToastrService,
     private cdr: ChangeDetectorRef
   ) {}
@@ -244,7 +244,10 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
         console.log('Konu listesi response:', response);
 
         if (response && response.success && response.konular) {
-          this.tumKonular = response.konular;
+          // Konuları alfabetik sıraya göre sırala
+          this.tumKonular = response.konular.sort((a: Konu, b: Konu) =>
+            a.konu_adi.localeCompare(b.konu_adi, 'tr', { sensitivity: 'base' })
+          );
         } else if (response) {
           this.error = response.message || 'Konular yüklenemedi';
         } else {
@@ -332,8 +335,8 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   createTest(): void {
     if (!this.studentInfo) return;
 
-    if (this.selectedImprovementTopics.length === 0 && 
-        this.selectedBestTopics.length === 0 && 
+    if (this.selectedImprovementTopics.length === 0 &&
+        this.selectedBestTopics.length === 0 &&
         this.selectedOtherTopics.length === 0) {
       this.error = 'En az bir konu seçmelisiniz';
       return;
@@ -742,7 +745,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
           formattedSecenekler.push({ harf, metin });
         }
       });
-    } 
+    }
     else if (typeof secenekler === 'object') {
       const harfler = ['A', 'B', 'C', 'D', 'E'];
       harfler.forEach(harf => {
@@ -929,7 +932,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
   // Optik form için yeni metodlar
   getOptionsArray(secenekler: any): string[] {
     if (!secenekler) return [];
-    
+
     if (Array.isArray(secenekler)) {
       return secenekler;
     } else if (typeof secenekler === 'object') {
@@ -945,7 +948,7 @@ export class OgrenciYapayZekaliTestlerSayfasiComponent implements OnInit {
 
   hasOption(soru: TestSoru, optionIndex: number): boolean {
     if (!soru || !soru.secenekler) return false;
-    
+
     const options = this.getOptionsArray(soru.secenekler);
     return options.length > optionIndex && typeof options[optionIndex] === 'string' && options[optionIndex].trim() !== '';
   }
