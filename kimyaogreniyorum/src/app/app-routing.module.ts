@@ -60,6 +60,7 @@ import { DovmeAnaSayfasiComponent } from './components/dovme-sayfasi/dovme-ana-s
 import { DovmeRandevuSayfasiComponent } from './components/dovme-sayfasi/dovme-randevu-sayfasi/dovme-randevu-sayfasi.component';
 import { DovmeSayfasiHeaderSayfasiComponent } from './components/dovme-sayfasi/template/dovme-sayfasi-header-sayfasi/dovme-sayfasi-header-sayfasi.component';
 import { DovmeGaleriSayfasiComponent } from './components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component';
+import { KullaniciIndexSayfasiComponent } from './components/kullanici-sayfalari/template/kullanici-index-sayfasi/kullanici-index-sayfasi.component';
 
 const routes: Routes = [
   {
@@ -80,7 +81,7 @@ const routes: Routes = [
   //yönetici sayfaları
   {
     path: 'yonetici-sayfasi',
-    component: YoneticiIndexSayfasiComponent,
+    component: KullaniciIndexSayfasiComponent,
     children: [
       {
         path: '',
