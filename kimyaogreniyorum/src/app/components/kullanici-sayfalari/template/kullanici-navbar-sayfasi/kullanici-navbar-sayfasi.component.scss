@@ -1,0 +1,258 @@
+
+// Desktop Navbar Stilleri
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #ff6600 0%, #ff8c42 100%);
+  padding: 12px 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+
+  @media (max-width: 991px) {
+    display: none;
+  }
+
+  .logo {
+    a {
+      font-size: 28px;
+      font-weight: 700;
+      color: white;
+      text-decoration: none;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+
+      span {
+        color: #fff3e0;
+        font-weight: 800;
+      }
+    }
+  }
+
+  .profil-button {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+
+    .user-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    .kullanici-bilgisi {
+      a {
+        text-decoration: none;
+        color: white;
+
+        .user-name {
+          font-size: 16px;
+          font-weight: 600;
+          margin-bottom: 2px;
+        }
+
+        .user-role {
+          font-size: 13px;
+          opacity: 0.9;
+          font-weight: 400;
+        }
+      }
+    }
+
+    .dropdown-menu {
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      border: none;
+      margin-top: 10px;
+      min-width: 200px;
+
+      .dropdown-item {
+        padding: 12px 20px;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background-color: #fff5f5;
+        }
+
+        .cikis {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          p {
+            margin: 0;
+            font-weight: 500;
+          }
+
+          i {
+            font-size: 20px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Mobile Navbar Stilleri
+.navbar-mobile {
+  display: none;
+  background: linear-gradient(135deg, #ff6600 0%, #ff8c42 100%);
+  padding: 10px 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  @media (max-width: 991px) {
+    display: block;
+  }
+
+  .mobile-navbar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .logo-mobile {
+      a {
+        font-size: 20px;
+        font-weight: 700;
+        color: white;
+        text-decoration: none;
+        letter-spacing: 0.5px;
+
+        @media (max-width: 575px) {
+          font-size: 18px;
+        }
+
+        span {
+          color: #fff3e0;
+          font-weight: 800;
+        }
+      }
+    }
+
+    .mobile-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .user-avatar-mobile {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid white;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+
+        @media (max-width: 575px) {
+          width: 35px;
+          height: 35px;
+        }
+      }
+
+      .user-info-mobile {
+        color: white;
+
+        .user-name-mobile {
+          font-size: 14px;
+          font-weight: 600;
+          margin-bottom: 2px;
+
+          @media (max-width: 575px) {
+            font-size: 13px;
+          }
+        }
+
+        .user-role-mobile {
+          font-size: 11px;
+          opacity: 0.9;
+
+          @media (max-width: 575px) {
+            font-size: 10px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Tablet özel ayarları
+@media (min-width: 768px) and (max-width: 991px) {
+  .navbar-mobile {
+    padding: 12px 20px;
+
+    .mobile-navbar-content {
+      .logo-mobile a {
+        font-size: 22px;
+      }
+
+      .mobile-profile {
+        gap: 12px;
+
+        .user-avatar-mobile {
+          width: 45px;
+          height: 45px;
+        }
+
+        .user-info-mobile {
+          .user-name-mobile {
+            font-size: 15px;
+          }
+
+          .user-role-mobile {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Çok küçük ekranlar için
+@media (max-width: 375px) {
+  .navbar-mobile {
+    padding: 8px 10px;
+
+    .mobile-navbar-content {
+      .logo-mobile a {
+        font-size: 16px;
+      }
+
+      .mobile-profile {
+        gap: 8px;
+
+        .user-avatar-mobile {
+          width: 32px;
+          height: 32px;
+        }
+
+        .user-info-mobile {
+          .user-name-mobile {
+            font-size: 12px;
+          }
+
+          .user-role-mobile {
+            font-size: 9px;
+          }
+        }
+      }
+    }
+  }
+}

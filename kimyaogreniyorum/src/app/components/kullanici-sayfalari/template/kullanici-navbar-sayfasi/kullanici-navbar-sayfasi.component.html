@@ -1,1 +1,40 @@
-<p>kullanici-navbar-sayfasi works!</p>
+
+<div class="navbar">
+  <div class="logo">
+    <a routerLink="/kullanici-sayfasi/">Kimya<span>Öğreniyorum</span></a>
+  </div>
+  <div class="profil-button ms-auto dropdown">
+    <img [src]="userAvatar" alt="Avatar" class="user-avatar">
+    <div class="kullanici-bilgisi">
+      <a href="#" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <div class="user-name">{{ userName }}</div>
+        <div class="user-role">Kullanıcı</div>
+      </a>
+    
+      <ul class="dropdown-menu" aria-labelledby="userDropdown">
+        <li>
+          <a class="dropdown-item text-danger" href="#">
+            <div class="cikis">
+              <p>Güvenli Çıkış</p>
+              <i class="material-icons">logout</i>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="navbar-mobile d-block d-lg-none">
+  <div class="mobile-navbar-content">
+    <div class="logo-mobile">
+      <a routerLink="/kullanici-sayfasi/">Kimya<span>Öğreniyorum</span></a>
+    </div>
+    <div class="mobile-profile">
+      <img [src]="userAvatar" alt="Avatar" class="user-avatar-mobile">
+      <div class="user-info-mobile">
+        <div class="user-name-mobile">{{ userName }}</div>
+        <div class="user-role-mobile">Kullanıcı</div>
+      </div>
+    </div>
+  </div>
+</div>
