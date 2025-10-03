@@ -78,10 +78,14 @@ const routes: Routes = [
   { path: 'kayit-sayfasi', component: OgrenciKayitSayfasiComponent },
   { path: 'onay-sayfasi', component: OgrenciOnaySayfasiComponent },
 
+  //kullanicilar Sayfalari
+
+  { path: 'yonetici-sayfasi', component: KullaniciIndexSayfasiComponent },
+
   //yönetici sayfaları
   {
-    path: 'yonetici-sayfasi',
-    component: KullaniciIndexSayfasiComponent,
+    path: 'yonetici-sayfasi2',
+    component: YoneticiIndexSayfasiComponent,
     children: [
       {
         path: '',
