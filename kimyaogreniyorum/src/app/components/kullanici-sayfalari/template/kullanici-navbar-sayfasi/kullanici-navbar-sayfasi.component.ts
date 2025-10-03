@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -27,5 +26,10 @@ export class KullaniciNavbarSayfasiComponent implements OnInit {
         console.error('Kullanıcı bilgileri yüklenemedi:', error);
       }
     }
+  }
+
+  toggleSidebar() {
+    // Sidebar toggle logic will be implemented based on your sidebar component
+    console.log('Sidebar toggled');
   }
 }
