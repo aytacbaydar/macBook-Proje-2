@@ -1,2 +1,15 @@
-<app-kullanici-navbar-sayfasi></app-kullanici-navbar-sayfasi>
-<p>kullanici-index-sayfasi works!</p>
+<div class="app-container">
+  <!-- Sidebar -->
+  <app-kullanici-sidebar-sayfasi></app-kullanici-sidebar-sayfasi>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Navbar -->
+    <app-kullanici-navbar-sayfasi></app-kullanici-navbar-sayfasi>
+
+    <!-- Content Area -->
+    <div class="content-wrapper">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

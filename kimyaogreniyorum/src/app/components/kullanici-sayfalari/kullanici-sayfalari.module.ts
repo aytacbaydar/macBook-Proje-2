@@ -4,6 +4,7 @@ import { KullaniciNavbarSayfasiComponent } from './template/kullanici-navbar-say
 import { KullaniciHeaderSayfasiComponent } from './template/kullanici-header-sayfasi/kullanici-header-sayfasi.component';
 import { KullaniciIndexSayfasiComponent } from './template/kullanici-index-sayfasi/kullanici-index-sayfasi.component';
 import { KullaniciAnaSayfaSayfasiComponent } from './kullanici-ana-sayfa-sayfasi/kullanici-ana-sayfa-sayfasi.component';
+import { KullaniciSidebarSayfasiComponent } from './template/kullanici-sidebar-sayfasi/kullanici-sidebar-sayfasi.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
@@ -15,7 +16,8 @@ import { SharedModule } from '../../shared/shared.module';
     KullaniciNavbarSayfasiComponent,
     KullaniciHeaderSayfasiComponent,
     KullaniciIndexSayfasiComponent,
-    KullaniciAnaSayfaSayfasiComponent
+    KullaniciAnaSayfaSayfasiComponent,
+    KullaniciSidebarSayfasiComponent
   ],
   imports: [
     CommonModule,

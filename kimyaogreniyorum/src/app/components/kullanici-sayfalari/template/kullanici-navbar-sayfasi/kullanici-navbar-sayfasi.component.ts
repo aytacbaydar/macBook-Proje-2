@@ -10,11 +10,25 @@ import { HttpClient } from '@angular/common/http';
 export class KullaniciNavbarSayfasiComponent implements OnInit {
   userName: string = 'Kullanıcı';
   userAvatar: string = 'https://ui-avatars.com/api/?name=Kullanici&background=ff6600&color=fff';
+  isSidebarOpen: boolean = false;
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     this.loadUserData();
+    this.checkSidebarState();
+  }
+
+  toggleSidebar(): void {
+    this.isSidebarOpen = !this.isSidebarOpen;
+    localStorage.setItem('sidebarOpen', JSON.stringify(this.isSidebarOpen));
+    // Event dispatch ederek sidebar component'ine bildir
+    window.dispatchEvent(new CustomEvent('toggleSidebar'));
+  }
+
+  private checkSidebarState(): void {
+    const savedState = localStorage.getItem('sidebarOpen');
+    this.isSidebarOpen = savedState ? JSON.parse(savedState) : false;
   }
 
   loadUserData(): void {
