@@ -16,8 +16,7 @@ import { SharedModule } from '../../shared/shared.module';
     KullaniciNavbarSayfasiComponent,
     KullaniciHeaderSayfasiComponent,
     KullaniciIndexSayfasiComponent,
-    KullaniciAnaSayfaSayfasiComponent,
-    KullaniciSidebarSayfasiComponent
+    KullaniciAnaSayfaSayfasiComponent
   ],
   imports: [
     CommonModule,
