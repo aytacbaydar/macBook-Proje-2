@@ -159,13 +159,13 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  right: 0;
+  bottom: 0;
   background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
-  z-index: 1998;
 
   &.active {
     opacity: 1;
@@ -177,35 +177,31 @@
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 100%;
-  background: #29303c;
+  right: 0;
+  background: white;
   border-radius: 20px 20px 0 0;
-  transform: translateY(100%);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 1999;
   max-height: 80vh;
-  overflow-y: auto;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  z-index: 1001;
+  overflow: hidden;
 
   &.active {
     transform: translateY(0);
   }
 
   .bottom-sheet-header {
-    padding: 1.5rem;
-    border-bottom: 1px solid rgba(255, 102, 0, 0.3);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: sticky;
-    top: 0;
-    background: #29303c;
-    z-index: 1;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #eee;
+    background: #ff6600;
 
     h3 {
       margin: 0;
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #ff6600;
+      font-size: 1.2rem;
+      color: white;
     }
 
     .close-btn {
@@ -223,7 +219,10 @@
   }
 
   .bottom-sheet-content {
-    padding: 1rem;
+    padding: 1.5rem;
+    overflow-y: auto;
+    max-height: calc(80vh - 70px);
+    background: #ff6600;
 
     .menu-grid {
       display: grid;
