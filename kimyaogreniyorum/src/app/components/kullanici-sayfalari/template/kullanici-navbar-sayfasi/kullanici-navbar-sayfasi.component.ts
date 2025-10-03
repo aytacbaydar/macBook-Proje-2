@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-kullanici-navbar-sayfasi',
@@ -8,28 +9,65 @@ import { Component, OnInit } from '@angular/core';
 })
 export class KullaniciNavbarSayfasiComponent implements OnInit {
   userName: string = 'Kullanıcı';
-  userAvatar: string = 'ogrenci/ogrenci-1.webp';
+  userAvatar: string = 'https://ui-avatars.com/api/?name=Kullanici&background=ff6600&color=fff';
+
+  constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.loadUserInfo();
+    this.loadUserData();
   }
 
-  loadUserInfo(): void {
-    // LocalStorage'dan kullanıcı bilgilerini al
-    const userDataString = localStorage.getItem('userData');
-    if (userDataString) {
-      try {
-        const userData = JSON.parse(userDataString);
-        this.userName = userData.name || 'Kullanıcı';
-        this.userAvatar = userData.avatar || 'ogrenci/ogrenci-1.webp';
-      } catch (error) {
-        console.error('Kullanıcı bilgileri yüklenemedi:', error);
-      }
+  loadUserData(): void {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.log('Token bulunamadı');
+      return;
     }
-  }
 
-  toggleSidebar() {
-    // Sidebar toggle logic will be implemented based on your sidebar component
-    console.log('Sidebar toggled');
+    const userData = JSON.parse(localStorage.getItem('user') || '{}');
+
+    if (userData && userData.name) {
+      this.userName = userData.name;
+
+      // Avatar varsa kullan, yoksa UI Avatars kullan
+      if (userData.avatar && userData.avatar.trim() !== '') {
+        this.userAvatar = userData.avatar.startsWith('http') 
+          ? userData.avatar 
+          : `https://www.kimyaogreniyorum.com/${userData.avatar}`;
+      } else {
+        // İsimden avatar oluştur
+        const nameParts = userData.name.split(' ');
+        const initials = nameParts.map((n: string) => n[0]).join('');
+        this.userAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(userData.name)}&background=ff6600&color=fff&size=128`;
+      }
+    } else {
+      // API'den kullanıcı bilgilerini çek
+      this.http.get<any>('https://www.kimyaogreniyorum.com/server/api/kullanici_profil.php', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      }).subscribe({
+        next: (response) => {
+          if (response.success && response.data) {
+            this.userName = response.data.adi_soyadi || response.data.name || 'Kullanıcı';
+
+            if (response.data.avatar && response.data.avatar.trim() !== '') {
+              this.userAvatar = response.data.avatar.startsWith('http') 
+                ? response.data.avatar 
+                : `https://www.kimyaogreniyorum.com/${response.data.avatar}`;
+            } else {
+              this.userAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(this.userName)}&background=ff6600&color=fff&size=128`;
+            }
+
+            // Kullanıcı bilgilerini localStorage'a kaydet
+            localStorage.setItem('user', JSON.stringify({
+              name: this.userName,
+              avatar: response.data.avatar
+            }));
+          }
+        },
+        error: (error) => {
+          console.error('Kullanıcı bilgileri yüklenirken hata:', error);
+        }
+      });
+    }
   }
 }
