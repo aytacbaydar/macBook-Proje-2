@@ -16,6 +16,7 @@ import { OgretmenSayfasiModule } from './components/ogretmen-sayfasi/ogretmen-sa
 import { OgrenciSayfasiModule } from './components/ogrenci-sayfasi/ogrenci-sayfasi.module';
 import { SharedModule } from './shared/shared.module';
 import { DovmeSayfasiModule } from './components/dovme-sayfasi/dovme-sayfasi.module';
+import { KullaniciSayfalariModule } from './components/kullanici-sayfalari/kullanici-sayfalari.module';
 // import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
@@ -41,6 +42,7 @@ import { DovmeSayfasiModule } from './components/dovme-sayfasi/dovme-sayfasi.mod
     OgretmenSayfasiModule,
     OgrenciSayfasiModule,
     DovmeSayfasiModule,
+    KullaniciSayfalariModule,
     SharedModule
     // ServiceWorkerModule.register('ngsw-worker.js', {
     //   enabled: !isDevMode(),
