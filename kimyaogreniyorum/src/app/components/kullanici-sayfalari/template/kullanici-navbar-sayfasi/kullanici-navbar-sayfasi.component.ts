@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-kullanici-navbar-sayfasi',
@@ -10,25 +11,32 @@ import { HttpClient } from '@angular/common/http';
 export class KullaniciNavbarSayfasiComponent implements OnInit {
   userName: string = 'Kullanıcı';
   userAvatar: string = 'https://ui-avatars.com/api/?name=Kullanici&background=ff6600&color=fff';
-  isSidebarOpen: boolean = false;
+  isBottomSheetOpen: boolean = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
     this.loadUserData();
-    this.checkSidebarState();
   }
 
-  toggleSidebar(): void {
-    this.isSidebarOpen = !this.isSidebarOpen;
-    localStorage.setItem('sidebarOpen', JSON.stringify(this.isSidebarOpen));
-    // Event dispatch ederek sidebar component'ine bildir
-    window.dispatchEvent(new CustomEvent('toggleSidebar'));
+  toggleBottomSheet(): void {
+    this.isBottomSheetOpen = !this.isBottomSheetOpen;
+    if (this.isBottomSheetOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
   }
 
-  private checkSidebarState(): void {
-    const savedState = localStorage.getItem('sidebarOpen');
-    this.isSidebarOpen = savedState ? JSON.parse(savedState) : false;
+  closeBottomSheet(): void {
+    this.isBottomSheetOpen = false;
+    document.body.style.overflow = '';
+  }
+
+  logout(): void {
+    localStorage.clear();
+    this.closeBottomSheet();
+    this.router.navigate(['/']);
   }
 
   loadUserData(): void {
