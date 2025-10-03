@@ -149,8 +149,13 @@
   }
 
   .footer-menu-text {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 500;
+    margin-top: 4px;
+    text-align: center;
+  }
+
+  &.center-item {
   }
 }
 
