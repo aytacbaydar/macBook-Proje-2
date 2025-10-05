@@ -9,9 +9,37 @@
     margin-top: 60px;
     margin-bottom: 100px;
     background-color: rgb(231, 201, 3);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
   }
+
+  .sayfalar{
+    width: calc(100% - 40px); /* Sidebar genişliğini çıkar */
+    margin-left: 40px; /* Sidebar genişliği kadar boşluk bırak */
+    background-color: rgb(231, 3, 231);
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 60px; /* Navbar yüksekliği kadar boşluk bırak */
+    left: 0;
+    width: 60px; /* Sidebar genişliği */
+    height: calc(100% - 60px); /* Navbar yüksekliğini çıkar */
+    background-color: #057bf2;
+    border-right: 1px solid #dee2e6;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-y: auto; /* İçerik taşarsa kaydırma çubuğu ekle */
+    z-index: 1000; /* Navbar'ın altında kalmasını sağla */
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .ana-icerik {
+  .sidebar {
+    display: none;
+  }
+  .sayfalar{
+    width: 100% !important; /* Sidebar genişliğini çıkar */
+    margin-left: 0 !important; /* Sidebar genişliği kadar boşluk bırak */
+  }
+}
 }
