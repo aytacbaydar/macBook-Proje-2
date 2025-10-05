@@ -1,1 +1,91 @@
-<p>kullanici-sidebar-sayfasi works!</p>
+
+<div class="modern-sidebar" [class.collapsed]="isCollapsed">
+  <!-- Sidebar Header -->
+  <div class="sidebar-header">
+    <div class="logo-container">
+      <div class="logo-icon">
+        <i class="fas fa-graduation-cap"></i>
+      </div>
+      <span class="logo-text" *ngIf="!isCollapsed">KimyaÖğreniyorum</span>
+    </div>
+    <button class="toggle-btn" (click)="toggleSidebar()">
+      <i class="fas" [class.fa-bars]="isCollapsed" [class.fa-times]="!isCollapsed"></i>
+    </button>
+  </div>
+
+  <!-- User Profile Section -->
+  <div class="user-profile" *ngIf="!isCollapsed">
+    <div class="avatar-container">
+      <img [src]="userAvatar || 'assets/default-avatar.png'" alt="User Avatar" class="user-avatar">
+      <div class="status-indicator"></div>
+    </div>
+    <div class="user-info">
+      <h3 class="user-name">{{ userName }}</h3>
+      <p class="user-role">{{ userRole }}</p>
+    </div>
+  </div>
+
+  <!-- Navigation Menu -->
+  <nav class="sidebar-nav">
+    <div class="nav-section">
+      <h4 class="section-title" *ngIf="!isCollapsed">ANA MENÜ</h4>
+      
+      <a routerLink="/kullanici/anasayfa" routerLinkActive="active" class="nav-item">
+        <i class="fas fa-home"></i>
+        <span *ngIf="!isCollapsed">Ana Sayfa</span>
+      </a>
+
+      <a routerLink="/kullanici/profil" routerLinkActive="active" class="nav-item">
+        <i class="fas fa-user"></i>
+        <span *ngIf="!isCollapsed">Profilim</span>
+      </a>
+
+      <a routerLink="/kullanici/ayarlar" routerLinkActive="active" class="nav-item">
+        <i class="fas fa-cog"></i>
+        <span *ngIf="!isCollapsed">Ayarlar</span>
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <h4 class="section-title" *ngIf="!isCollapsed">AKADEMİK</h4>
+      
+      <a routerLink="/kullanici/dersler" routerLinkActive="active" class="nav-item">
+        <i class="fas fa-book"></i>
+        <span *ngIf="!isCollapsed">Derslerim</span>
+      </a>
+
+      <a routerLink="/kullanici/sinavlar" routerLinkActive="active" class="nav-item">
+        <i class="fas fa-clipboard-list"></i>
+        <span *ngIf="!isCollapsed">Sınavlar</span>
+      </a>
+
+      <a routerLink="/kullanici/odevler" routerLinkActive="active" class="nav-item">
+        <i class="fas fa-tasks"></i>
+        <span *ngIf="!isCollapsed">Ödevler</span>
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <h4 class="section-title" *ngIf="!isCollapsed">DİĞER</h4>
+      
+      <a routerLink="/kullanici/bildirimler" routerLinkActive="active" class="nav-item">
+        <i class="fas fa-bell"></i>
+        <span *ngIf="!isCollapsed">Bildirimler</span>
+        <span class="badge" *ngIf="!isCollapsed && notificationCount > 0">{{ notificationCount }}</span>
+      </a>
+
+      <a routerLink="/kullanici/mesajlar" routerLinkActive="active" class="nav-item">
+        <i class="fas fa-envelope"></i>
+        <span *ngIf="!isCollapsed">Mesajlar</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Logout Button -->
+  <div class="sidebar-footer">
+    <button class="logout-btn" (click)="logout()">
+      <i class="fas fa-sign-out-alt"></i>
+      <span *ngIf="!isCollapsed">Çıkış Yap</span>
+    </button>
+  </div>
+</div>
