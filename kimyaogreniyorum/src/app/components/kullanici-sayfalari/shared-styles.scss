@@ -1073,6 +1073,203 @@
 }
 
 /* ============================================
+   LOADING SPINNER SYSTEM
+   ============================================ */
+
+/* Loading Container */
+.modern-loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  padding: 40px 20px;
+  background: white;
+  border-radius: 12px;
+}
+
+/* Spinner Animation */
+.modern-spinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid #f3f4f6;
+  border-top: 4px solid #4f46e5;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Loading Text */
+.loading-text {
+  color: #6b7280;
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 16px;
+  
+  h4 {
+    color: #374151;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+  }
+  
+  p {
+    margin: 0;
+    font-size: 14px;
+    color: #9ca3af;
+  }
+}
+
+/* Pulse Spinner (Alternative Style) */
+.modern-pulse-spinner {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.pulse-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #4f46e5;
+  animation: pulse 1.4s ease-in-out infinite;
+  
+  &:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  
+  &:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* ============================================
+   EMPTY STATE SYSTEM
+   ============================================ */
+
+/* Empty State Container */
+.modern-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  padding: 60px 20px;
+  text-align: center;
+  background: white;
+  border-radius: 12px;
+}
+
+/* Empty State Icon */
+.empty-state-icon {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  
+  i {
+    font-size: 48px;
+    color: #9ca3af;
+  }
+}
+
+/* Empty State Content */
+.empty-state-content {
+  max-width: 400px;
+  
+  h3 {
+    color: #374151;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 12px 0;
+  }
+  
+  p {
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0 0 24px 0;
+  }
+}
+
+/* Empty State Action */
+.empty-state-action {
+  .modern-btn {
+    padding: 12px 24px;
+    font-size: 14px;
+    
+    i {
+      margin-right: 8px;
+    }
+  }
+}
+
+/* Empty State Variants */
+.modern-empty-state {
+  &.empty-no-data {
+    .empty-state-icon {
+      background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+      
+      i {
+        color: #3b82f6;
+      }
+    }
+  }
+  
+  &.empty-no-results {
+    .empty-state-icon {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      
+      i {
+        color: #f59e0b;
+      }
+    }
+  }
+  
+  &.empty-error {
+    .empty-state-icon {
+      background: linear-gradient(135deg, #fee2e2, #fecaca);
+      
+      i {
+        color: #ef4444;
+      }
+    }
+  }
+  
+  &.empty-success {
+    .empty-state-icon {
+      background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+      
+      i {
+        color: #10b981;
+      }
+    }
+  }
+}
+
+/* ============================================
    RESPONSIVE DESIGN
    ============================================ */
 
@@ -1214,6 +1411,52 @@
     }
     
     .alert-message {
+      font-size: 13px;
+    }
+  }
+  
+  /* Loading Responsive */
+  .modern-loading-container {
+    min-height: 200px;
+    padding: 30px 16px;
+  }
+  
+  .modern-spinner {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .loading-text {
+    h4 {
+      font-size: 16px;
+    }
+    
+    p {
+      font-size: 13px;
+    }
+  }
+  
+  /* Empty State Responsive */
+  .modern-empty-state {
+    min-height: 250px;
+    padding: 40px 16px;
+  }
+  
+  .empty-state-icon {
+    width: 100px;
+    height: 100px;
+    
+    i {
+      font-size: 40px;
+    }
+  }
+  
+  .empty-state-content {
+    h3 {
+      font-size: 18px;
+    }
+    
+    p {
       font-size: 13px;
     }
   }

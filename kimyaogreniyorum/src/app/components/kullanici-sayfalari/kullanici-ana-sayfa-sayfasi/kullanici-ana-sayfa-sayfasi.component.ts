@@ -15,6 +15,16 @@ export class KullaniciAnaSayfaSayfasiComponent implements OnInit {
   // Alert kontrolleri
   alerts: Alert[] = [];
 
+  // Loading kontrolleri
+  isLoading = false;
+  loadingMessage = 'Yükleniyor...';
+  
+  // Empty state kontrolleri
+  showEmptyState = false;
+  emptyStateType: 'no-data' | 'no-results' | 'error' | 'success' = 'no-data';
+  emptyStateTitle = 'Henüz Veri Yok';
+  emptyStateMessage = 'Görünüşe göre henüz hiç kayıt bulunmuyor.';
+
   constructor() { }
 
   ngOnInit(): void {
@@ -73,6 +83,44 @@ export class KullaniciAnaSayfaSayfasiComponent implements OnInit {
 
   testInfoAlert(): void {
     this.showAlert('info', 'Bilgi', 'İşleminiz devam ediyor...');
+  }
+
+  // Loading metodları
+  showLoading(message: string = 'Yükleniyor...'): void {
+    this.isLoading = true;
+    this.loadingMessage = message;
+  }
+
+  hideLoading(): void {
+    this.isLoading = false;
+  }
+
+  // Empty State metodları
+  showEmpty(type: 'no-data' | 'no-results' | 'error' | 'success', title: string, message: string): void {
+    this.showEmptyState = true;
+    this.emptyStateType = type;
+    this.emptyStateTitle = title;
+    this.emptyStateMessage = message;
+  }
+
+  hideEmpty(): void {
+    this.showEmptyState = false;
+  }
+
+  // Örnek veri yükleme simülasyonu
+  loadData(): void {
+    this.showLoading('Veriler yükleniyor...');
+    
+    // API çağrısı simülasyonu
+    setTimeout(() => {
+      this.hideLoading();
+      
+      // Eğer veri yoksa empty state göster
+      const hasData = false; // API'den gelen veri kontrolü
+      if (!hasData) {
+        this.showEmpty('no-data', 'Henüz Veri Yok', 'Görünüşe göre henüz hiç sınav sonucu bulunmuyor.');
+      }
+    }, 2000);
   }
 }
 
