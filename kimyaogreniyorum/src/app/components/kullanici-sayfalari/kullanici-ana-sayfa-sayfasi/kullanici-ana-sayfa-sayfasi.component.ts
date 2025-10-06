@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -11,20 +10,20 @@ export class KullaniciAnaSayfaSayfasiComponent implements OnInit {
   // Modal kontrolleri
   showPdfModal = false;
   showExamDetailModal = false;
-  
+
   // Alert kontrolleri
   alerts: Alert[] = [];
 
   // Loading kontrolleri
   isLoading = false;
   loadingMessage = 'Yükleniyor...';
-  
+
   // Empty state kontrolleri
   showEmptyState = false;
   emptyStateType: 'no-data' | 'no-results' | 'error' | 'success' = 'no-data';
   emptyStateTitle = 'Henüz Veri Yok';
   emptyStateMessage = 'Görünüşe göre henüz hiç kayıt bulunmuyor.';
-  
+
   // Filter & Search kontrolleri
   searchTerm = '';
   selectedSinavTuru = '';
@@ -32,6 +31,17 @@ export class KullaniciAnaSayfaSayfasiComponent implements OnInit {
   selectedKonu = '';
   selectedQuickFilter = 'ALL';
   activeFilters: ActiveFilter[] = [];
+
+  // Tabs kontrolleri
+  activeTab = 'genel';
+  activePillTab = 'tyt';
+  activeVerticalTab = 'profil';
+
+  // Dropdown kontrolleri
+  activeDropdown: string | null = null;
+
+  // Accordion kontrolleri
+  activeAccordion: string | null = null;
 
   constructor() { }
 
@@ -63,9 +73,9 @@ export class KullaniciAnaSayfaSayfasiComponent implements OnInit {
       title,
       message
     };
-    
+
     this.alerts.push(alert);
-    
+
     // 5 saniye sonra otomatik kapat
     setTimeout(() => {
       this.closeAlert(alert.id);
@@ -118,17 +128,27 @@ export class KullaniciAnaSayfaSayfasiComponent implements OnInit {
   // Örnek veri yükleme simülasyonu
   loadData(): void {
     this.showLoading('Veriler yükleniyor...');
-    
+
     // API çağrısı simülasyonu
     setTimeout(() => {
       this.hideLoading();
-      
+
       // Eğer veri yoksa empty state göster
       const hasData = false; // API'den gelen veri kontrolü
       if (!hasData) {
         this.showEmpty('no-data', 'Henüz Veri Yok', 'Görünüşe göre henüz hiç sınav sonucu bulunmuyor.');
       }
     }, 2000);
+  }
+
+  // Dropdown metodları
+  toggleDropdown(id: string): void {
+    this.activeDropdown = this.activeDropdown === id ? null : id;
+  }
+
+  // Accordion metodları
+  toggleAccordion(id: string): void {
+    this.activeAccordion = this.activeAccordion === id ? null : id;
   }
 }
 

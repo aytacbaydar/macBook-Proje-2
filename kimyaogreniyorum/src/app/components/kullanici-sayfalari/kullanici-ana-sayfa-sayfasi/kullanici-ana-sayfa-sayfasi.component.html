@@ -763,151 +763,431 @@
 763:        </div>
 764:        <div class="mobile-card-row">
 765:          <span class="mobile-card-label">Tutar</span>
-766:          <span class="mobile-card-value">600 TL</span>
-767:        </div>
-768:        <div class="mobile-card-row">
-769:          <span class="mobile-card-label">Açıklama</span>
-770:          <span class="mobile-card-value">Ocak Ayı Ücreti</span>
-771:        </div>
-772:        <div class="mobile-card-row">
-773:          <span class="mobile-card-label">Durum</span>
-774:          <span class="mobile-card-value">
-775:            <span class="table-badge badge-success">Ödendi</span>
-776:          </span>
-777:        </div>
-778:      </div>
-779:      
-780:      <div class="mobile-card-item">
-781:        <div class="mobile-card-row">
-782:          <span class="mobile-card-label">Tarih</span>
-783:          <span class="mobile-card-value">05.01.2025</span>
-784:        </div>
-785:        <div class="mobile-card-row">
-786:          <span class="mobile-card-label">Öğrenci</span>
-787:          <span class="mobile-card-value">Mehmet Demir</span>
-788:        </div>
-789:        <div class="mobile-card-row">
-790:          <span class="mobile-card-label">Tutar</span>
-791:          <span class="mobile-card-value">550 TL</span>
-792:        </div>
-793:        <div class="mobile-card-row">
-794:          <span class="mobile-card-label">Açıklama</span>
-795:          <span class="mobile-card-value">Ocak Ayı Ücreti</span>
-796:        </div>
-797:        <div class="mobile-card-row">
-798:          <span class="mobile-card-label">Durum</span>
-799:          <span class="mobile-card-value">
-800:            <span class="table-badge badge-danger">Bekliyor</span>
-801:          </span>
-802:        </div>
-803:      </div>
-804:    </div>
-805:  </div>
-806:
-807:  <hr class="my-5">
-808:
-809:  <!-- ============================================
-810:       MODAL EXAMPLES
-811:       ============================================ -->
-812:
-813:  <h2 class="section-title mb-4">
-814:    <i class="fas fa-window-maximize"></i>
-815:    Modal Sistemi
-816:  </h2>
-817:
-818:  <div class="mb-3">
-819:    <button class="modern-btn modern-btn-primary" (click)="showPdfModal = true">
-820:      <i class="fas fa-eye"></i>
-821:      Modal Aç
-822:    </button>
-823:  </div>
-824:
-825:  <!-- Modal Example -->
-826:  <div class="modern-modal-overlay" *ngIf="showPdfModal">
-827:    <div class="modern-modal-container modal-md">
-828:      <!-- Modal Header -->
-829:      <div class="modern-modal-header">
-830:        <h3>
-831:          <i class="fas fa-file-pdf"></i>
-832:          PDF Görüntüle
-833:        </h3>
-834:        <button class="modal-close-btn" (click)="showPdfModal = false">
-835:          <i class="fas fa-times"></i>
-836:        </button>
-837:      </div>
-838:      
-839:      <!-- Modal Body -->
-840:      <div class="modern-modal-body">
-841:        <p>Modal içeriği buraya gelecek...</p>
-842:        <p>PDF görüntüleme, sınav detayları, form düzenleme vs.</p>
-843:      </div>
-844:      
-845:      <!-- Modal Footer -->
-846:      <div class="modern-modal-footer">
-847:        <button class="modern-btn modern-btn-secondary" (click)="showPdfModal = false">
-848:          <i class="fas fa-times"></i>
-849:          İptal
-850:        </button>
-851:        <button class="modern-btn modern-btn-primary">
-852:          <i class="fas fa-check"></i>
-853:          Tamam
-854:        </button>
-855:      </div>
-856:    </div>
-857:  </div>
-858:
-859:  <hr class="my-5">
-860:
-861:  <!-- ============================================
-862:       BUTTON EXAMPLES
-863:       ============================================ -->
-864:
-865:  <h2 class="section-title mb-4">
-866:    <i class="fas fa-hand-pointer"></i>
-867:    Modern Buton Örnekleri
-868:  </h2>
-869:
-870:  <div class="mb-3">
-871:    <button class="modern-btn modern-btn-primary me-2">
-872:      <i class="fas fa-check"></i>
-873:      Primary Button
-874:    </button>
-875:    <button class="modern-btn modern-btn-secondary me-2">
-876:      <i class="fas fa-times"></i>
-877:      Secondary Button
-878:    </button>
-879:    <button class="modern-btn modern-btn-success me-2">
-880:      <i class="fas fa-check-circle"></i>
-881:      Success Button
-882:    </button>
-883:    <button class="modern-btn modern-btn-danger me-2">
-884:      <i class="fas fa-trash"></i>
-885:      Danger Button
-886:    </button>
-887:    <button class="modern-btn modern-btn-warning">
-888:      <i class="fas fa-exclamation-triangle"></i>
-889:      Warning Button
-890:    </button>
-891:  </div>
-892:
-893:  <hr class="my-5">
-894:
-895:  <!-- ============================================
-896:       BADGE EXAMPLES
-897:       ============================================ -->
-898:
-899:  <h2 class="section-title mb-4">
-900:    <i class="fas fa-tags"></i>
-901:    Badge (Etiket) Örnekleri
-902:  </h2>
-903:
-904:  <div class="mb-3">
-905:    <span class="table-badge badge-success me-2">Başarılı</span>
-906:    <span class="table-badge badge-danger me-2">Hata</span>
-907:    <span class="table-badge badge-warning me-2">Uyarı</span>
-908:    <span class="table-badge badge-info me-2">Bilgi</span>
-909:    <span class="table-badge badge-primary">Birincil</span>
-910:  </div>
-911:
-912:</div>
-913:
+767:          <span class="mobile-card-value">600 TL</span>
+768:        </div>
+769:        <div class="mobile-card-row">
+770:          <span class="mobile-card-label">Açıklama</span>
+771:          <span class="mobile-card-value">Ocak Ayı Ücreti</span>
+772:        </div>
+773:        <div class="mobile-card-row">
+774:          <span class="mobile-card-label">Durum</span>
+775:          <span class="mobile-card-value">
+776:            <span class="table-badge badge-success">Ödendi</span>
+777:          </span>
+778:        </div>
+779:      </div>
+780:      
+781:      <div class="mobile-card-item">
+782:        <div class="mobile-card-row">
+783:          <span class="mobile-card-label">Tarih</span>
+784:          <span class="mobile-card-value">05.01.2025</span>
+785:        </div>
+786:        <div class="mobile-card-row">
+787:          <span class="mobile-card-label">Öğrenci</span>
+788:          <span class="mobile-card-value">Mehmet Demir</span>
+789:        </div>
+790:        <div class="mobile-card-row">
+791:          <span class="mobile-card-label">Tutar</span>
+792:          <span class="mobile-card-value">550 TL</span>
+793:        </div>
+794:        <div class="mobile-card-row">
+795:          <span class="mobile-card-label">Açıklama</span>
+796:          <span class="mobile-card-value">Ocak Ayı Ücreti</span>
+797:        </div>
+798:        <div class="mobile-card-row">
+799:          <span class="mobile-card-label">Durum</span>
+800:          <span class="mobile-card-value">
+801:            <span class="table-badge badge-danger">Bekliyor</span>
+802:          </span>
+803:        </div>
+804:      </div>
+805:    </div>
+806:  </div>
+807:
+808:  <hr class="my-5">
+809:
+810:  <!-- ============================================
+811:       MODAL EXAMPLES
+812:       ============================================ -->
+813:
+814:  <h2 class="section-title mb-4">
+815:    <i class="fas fa-window-maximize"></i>
+816:    Modal Sistemi
+817:  </h2>
+818:
+819:  <div class="mb-3">
+820:    <button class="modern-btn modern-btn-primary" (click)="showPdfModal = true">
+821:      <i class="fas fa-eye"></i>
+822:      Modal Aç
+823:    </button>
+824:  </div>
+825:
+826:  <!-- Modal Example -->
+827:  <div class="modern-modal-overlay" *ngIf="showPdfModal">
+828:    <div class="modern-modal-container modal-md">
+829:      <!-- Modal Header -->
+830:      <div class="modern-modal-header">
+831:        <h3>
+832:          <i class="fas fa-file-pdf"></i>
+833:          PDF Görüntüle
+834:        </h3>
+835:        <button class="modal-close-btn" (click)="showPdfModal = false">
+836:          <i class="fas fa-times"></i>
+837:        </button>
+838:      </div>
+839:      
+840:      <!-- Modal Body -->
+841:      <div class="modern-modal-body">
+842:        <p>Modal içeriği buraya gelecek...</p>
+843:        <p>PDF görüntüleme, sınav detayları, form düzenleme vs.</p>
+844:      </div>
+845:      
+846:      <!-- Modal Footer -->
+847:      <div class="modern-modal-footer">
+848:        <button class="modern-btn modern-btn-secondary" (click)="showPdfModal = false">
+849:          <i class="fas fa-times"></i>
+850:          İptal
+851:        </button>
+852:        <button class="modern-btn modern-btn-primary">
+853:          <i class="fas fa-check"></i>
+854:          Tamam
+855:        </button>
+856:      </div>
+857:    </div>
+858:  </div>
+859:
+860:  <hr class="my-5">
+861:
+862:  <!-- ============================================
+863:       BUTTON EXAMPLES
+864:       ============================================ -->
+865:
+866:  <h2 class="section-title mb-4">
+867:    <i class="fas fa-hand-pointer"></i>
+868:    Modern Buton Örnekleri
+869:  </h2>
+870:
+871:  <div class="mb-3">
+872:    <button class="modern-btn modern-btn-primary me-2">
+873:      <i class="fas fa-check"></i>
+874:      Primary Button
+875:    </button>
+876:    <button class="modern-btn modern-btn-secondary me-2">
+877:      <i class="fas fa-times"></i>
+878:      Secondary Button
+879:    </button>
+880:    <button class="modern-btn modern-btn-success me-2">
+881:      <i class="fas fa-check-circle"></i>
+882:      Success Button
+883:    </button>
+884:    <button class="modern-btn modern-btn-danger me-2">
+885:      <i class="fas fa-trash"></i>
+886:      Danger Button
+887:    </button>
+888:    <button class="modern-btn modern-btn-warning">
+889:      <i class="fas fa-exclamation-triangle"></i>
+890:      Warning Button
+891:    </button>
+892:  </div>
+893:
+894:  <hr class="my-5">
+895:
+896:  <!-- ============================================
+897:       BADGE EXAMPLES
+898:       ============================================ -->
+899:
+900:  <h2 class="section-title mb-4">
+901:    <i class="fas fa-tags"></i>
+902:    Badge (Etiket) Örnekleri
+903:  </h2>
+904:
+905:  <div class="mb-3">
+906:    <span class="table-badge badge-success me-2">Başarılı</span>
+907:    <span class="table-badge badge-danger me-2">Hata</span>
+908:    <span class="table-badge badge-warning me-2">Uyarı</span>
+909:    <span class="table-badge badge-info me-2">Bilgi</span>
+910:    <span class="table-badge badge-primary">Birincil</span>
+911:  </div>
+912:
+913:  <!-- ============================================
+914:       DROPDOWN (AÇILIR MENÜ) EXAMPLES
+915:       ============================================ -->
+916:
+917:  <h2 class="section-title mb-4">
+918:    <i class="fas fa-chevron-down"></i>
+919:    Dropdown (Açılır Menü) Sistemi
+920:  </h2>
+921:
+922:  <!-- Dropdown Example 1 - Basic Dropdown -->
+923:  <div class="mb-4">
+924:    <div class="modern-dropdown">
+925:      <button class="modern-dropdown-btn" (click)="toggleDropdown('dropdown1')">
+926:        <i class="fas fa-cog"></i>
+927:        İşlemler
+928:        <i class="fas fa-chevron-down" [class.active]="activeDropdown === 'dropdown1'"></i>
+929:      </button>
+930:      <div class="modern-dropdown-menu" [class.hidden]="activeDropdown !== 'dropdown1'">
+931:        <div class="dropdown-header">Dosya İşlemleri</div>
+932:        <a href="#" class="dropdown-item">
+933:          <i class="fas fa-download"></i>
+934:          İndir
+935:        </a>
+936:        <a href="#" class="dropdown-item">
+937:          <i class="fas fa-upload"></i>
+938:          Yükle
+939:        </a>
+940:        <div class="dropdown-divider"></div>
+941:        <div class="dropdown-header">Düzenleme</div>
+942:        <a href="#" class="dropdown-item">
+943:          <i class="fas fa-edit"></i>
+944:          Düzenle
+945:        </a>
+946:        <a href="#" class="dropdown-item">
+947:          <i class="fas fa-trash"></i>
+948:          Sil
+949:        </a>
+950:      </div>
+951:    </div>
+952:  </div>
+953:
+954:  <!-- Dropdown Example 2 - User Menu (Right Aligned) -->
+955:  <div class="mb-4">
+956:    <div class="modern-dropdown">
+957:      <button class="modern-dropdown-btn" (click)="toggleDropdown('dropdown2')">
+958:        <i class="fas fa-user-circle"></i>
+959:        Ahmet Yılmaz
+960:        <i class="fas fa-chevron-down" [class.active]="activeDropdown === 'dropdown2'"></i>
+961:      </button>
+962:      <div class="modern-dropdown-menu dropdown-right" [class.hidden]="activeDropdown !== 'dropdown2'">
+963:        <a href="#" class="dropdown-item">
+964:          <i class="fas fa-user"></i>
+965:          Profilim
+966:        </a>
+967:        <a href="#" class="dropdown-item">
+968:          <i class="fas fa-cog"></i>
+969:          Ayarlar
+970:        </a>
+971:        <a href="#" class="dropdown-item">
+972:          <i class="fas fa-bell"></i>
+973:          Bildirimler
+974:        </a>
+975:        <div class="dropdown-divider"></div>
+976:        <a href="#" class="dropdown-item">
+977:          <i class="fas fa-sign-out-alt"></i>
+978:          Çıkış Yap
+979:        </a>
+980:      </div>
+981:    </div>
+982:  </div>
+983:
+984:  <!-- Dropdown Example 3 - Filter Dropdown -->
+985:  <div class="mb-4">
+986:    <div class="modern-dropdown">
+987:      <button class="modern-dropdown-btn" (click)="toggleDropdown('dropdown3')">
+988:        <i class="fas fa-filter"></i>
+989:        Filtrele
+990:        <i class="fas fa-chevron-down" [class.active]="activeDropdown === 'dropdown3'"></i>
+991:      </button>
+992:      <div class="modern-dropdown-menu" [class.hidden]="activeDropdown !== 'dropdown3'">
+993:        <a href="#" class="dropdown-item">
+994:          <i class="fas fa-check-circle"></i>
+995:          Tüm Sonuçlar
+996:        </a>
+997:        <a href="#" class="dropdown-item">
+998:          <i class="fas fa-graduation-cap"></i>
+999:          TYT Sınavları
+1000:        </a>
+1001:        <a href="#" class="dropdown-item">
+1002:          <i class="fas fa-book"></i>
+1003:          AYT Sınavları
+1004:        </a>
+1005:        <a href="#" class="dropdown-item">
+1006:          <i class="fas fa-clipboard-list"></i>
+1007:          Testler
+1008:        </a>
+1009:      </div>
+1010:    </div>
+1011:  </div>
+1012:
+1013:  <hr class="my-5">
+1014:
+1015:  <!-- ============================================
+1016:       ACCORDION (KATLANABİLİR) EXAMPLES
+1017:       ============================================ -->
+1018:
+1019:  <h2 class="section-title mb-4">
+1020:    <i class="fas fa-bars"></i>
+1021:    Accordion (Katlanabilir Bölümler) Sistemi
+1022:  </h2>
+1023:
+1024:  <!-- Accordion Example 1 - Basic Accordion -->
+1025:  <div class="modern-accordion mb-4">
+1026:    <div class="accordion-item">
+1027:      <div class="accordion-header" [class.active]="activeAccordion === 'acc1'" (click)="toggleAccordion('acc1')">
+1028:        <h4 class="accordion-title">
+1029:          <i class="fas fa-question-circle"></i>
+1030:          Sınav sistemini nasıl kullanabilirim?
+1031:        </h4>
+1032:        <div class="accordion-icon">
+1033:          <i class="fas fa-chevron-down"></i>
+1034:        </div>
+1035:      </div>
+1036:      <div class="accordion-content" [class.active]="activeAccordion === 'acc1'">
+1037:        <div class="accordion-body">
+1038:          Sınav sistemini kullanmak için önce "Sınavlarım" bölümüne gidin. Ardından yeni sınav ekle butonuna tıklayarak 
+1039:          sınav bilgilerinizi girin. Sınav tamamlandıktan sonra optik okutma yapabilir veya manuel olarak cevapları girebilirsiniz.
+1040:        </div>
+1041:      </div>
+1042:    </div>
+1043:
+1044:    <div class="accordion-item">
+1045:      <div class="accordion-header" [class.active]="activeAccordion === 'acc2'" (click)="toggleAccordion('acc2')">
+1046:        <h4 class="accordion-title">
+1047:          <i class="fas fa-file-pdf"></i>
+1048:          PDF dokümanlarını nasıl görüntüleyebilirim?
+1049:        </h4>
+1050:        <div class="accordion-icon">
+1051:          <i class="fas fa-chevron-down"></i>
+1052:        </div>
+1053:      </div>
+1054:      <div class="accordion-content" [class.active]="activeAccordion === 'acc2'">
+1055:        <div class="accordion-body">
+1056:          PDF dokümanlarını görüntülemek için "İşlenen Konular" veya "Ders Notları" bölümüne gidin. 
+1057:          İlgili PDF'in üzerine tıklayarak modal pencerede açabilir veya yeni sekmede görüntüleyebilirsiniz.
+1058:        </div>
+1059:      </div>
+1060:    </div>
+1061:
+1062:    <div class="accordion-item">
+1063:      <div class="accordion-header" [class.active]="activeAccordion === 'acc3'" (click)="toggleAccordion('acc3')">
+1064:        <h4 class="accordion-title">
+1065:          <i class="fas fa-chart-line"></i>
+1066:          Performans analizimi nasıl görebilirim?
+1067:        </h4>
+1068:        <div class="accordion-icon">
+1069:          <i class="fas fa-chevron-down"></i>
+1070:        </div>
+1071:      </div>
+1072:      <div class="accordion-content" [class.active]="activeAccordion === 'acc3'">
+1073:        <div class="accordion-body">
+1074:          Performans analizinizi görmek için "Konu Analizi" sayfasına gidin. Burada tüm sınavlarınızın detaylı analizi, 
+1075:          konu bazlı başarı oranlarınız ve gelişim grafiklerinizi görebilirsiniz.
+1076:        </div>
+1077:      </div>
+1078:    </div>
+1079:  </div>
+1080:
+1081:  <!-- Accordion Example 2 - Gradient Accordion -->
+1082:  <div class="modern-accordion accordion-gradient mb-4">
+1083:    <div class="accordion-item">
+1084:      <div class="accordion-header" [class.active]="activeAccordion === 'grad1'" (click)="toggleAccordion('grad1')">
+1085:        <h4 class="accordion-title">
+1086:          <i class="fas fa-graduation-cap"></i>
+1087:          TYT Sınavı Nedir?
+1088:        </h4>
+1089:        <div class="accordion-icon">
+1090:          <i class="fas fa-chevron-down"></i>
+1091:        </div>
+1092:      </div>
+1093:      <div class="accordion-content" [class.active]="activeAccordion === 'grad1'">
+1094:        <div class="accordion-body">
+1095:          TYT (Temel Yeterlilik Testi) tüm adayların girdiği temel sınavdır. Türkçe, Matematik, Fen Bilimleri 
+1096:          ve Sosyal Bilimler alanlarından sorular içerir.
+1097:        </div>
+1098:      </div>
+1099:    </div>
+1100:
+1101:    <div class="accordion-item">
+1102:      <div class="accordion-header" [class.active]="activeAccordion === 'grad2'" (click)="toggleAccordion('grad2')">
+1103:        <h4 class="accordion-title">
+1104:          <i class="fas fa-book"></i>
+1105:          AYT Sınavı Nedir?
+1106:        </h4>
+1107:        <div class="accordion-icon">
+1108:          <i class="fas fa-chevron-down"></i>
+1109:        </div>
+1110:      </div>
+1111:      <div class="accordion-content" [class.active]="activeAccordion === 'grad2'">
+1112:        <div class="accordion-body">
+1113:          AYT (Alan Yeterlilik Testi) seçtiğiniz alana göre farklı derslerden sorular içeren sınavdır. 
+1114:          Sayısal, Sözel veya Eşit Ağırlık alanlarından birine girebilirsiniz.
+1115:        </div>
+1116:      </div>
+1117:    </div>
+1118:  </div>
+1119:
+1120:  <!-- Accordion Example 3 - Bordered Accordion -->
+1121:  <div class="modern-accordion accordion-bordered mb-4">
+1122:    <div class="accordion-item">
+1123:      <div class="accordion-header" [class.active]="activeAccordion === 'bord1'" (click)="toggleAccordion('bord1')">
+1124:        <h4 class="accordion-title">
+1125:          <i class="fas fa-credit-card"></i>
+1126:          Ödeme Nasıl Yapılır?
+1127:        </h4>
+1128:        <div class="accordion-icon">
+1129:          <i class="fas fa-chevron-down"></i>
+1130:        </div>
+1131:      </div>
+1132:      <div class="accordion-content" [class.active]="activeAccordion === 'bord1'">
+1133:        <div class="accordion-body">
+1134:          Ödeme yapmak için "Ücret Bilgileri" sayfasına gidin. Banka havalesi, EFT veya kredi kartı ile ödeme yapabilirsiniz. 
+1135:          Dekont yükledikten sonra ödemeniz onaylanacaktır.
+1136:        </div>
+1137:      </div>
+1138:    </div>
+1139:
+1140:    <div class="accordion-item">
+1141:      <div class="accordion-header" [class.active]="activeAccordion === 'bord2'" (click)="toggleAccordion('bord2')">
+1142:        <h4 class="accordion-title">
+1143:          <i class="fas fa-calendar-alt"></i>
+1144:          Ders Programım Nerede?
+1145:        </h4>
+1146:        <div class="accordion-icon">
+1147:          <i class="fas fa-chevron-down"></i>
+1148:        </div>
+1149:      </div>
+1150:      <div class="accordion-content" [class.active]="activeAccordion === 'bord2'">
+1151:        <div class="accordion-body">
+1152:          Haftalık ders programınızı ana sayfada görebilirsiniz. Ayrıca "Ders Programı" sayfasından detaylı program 
+1153:          ve değişiklikleri takip edebilirsiniz.
+1154:        </div>
+1155:      </div>
+1156:    </div>
+1157:  </div>
+1158:
+1159:  <hr class="my-5">
+1160:
+1161:  <!-- ============================================
+1162:       BUTTON EXAMPLES
+1163:       ============================================ -->
+1164:
+1165:  <h2 class="section-title mb-4">
+1166:    <i class="fas fa-hand-pointer"></i>
+1167:    Modern Buton Örnekleri
+1168:  </h2>
+1169:
+1170:  <div class="mb-3">
+1171:    <button class="modern-btn modern-btn-primary me-2">
+1172:      <i class="fas fa-check"></i>
+1173:      Primary Button
+1174:    </button>
+1175:    <button class="modern-btn modern-btn-secondary me-2">
+1176:      <i class="fas fa-times"></i>
+1177:      Secondary Button
+1178:    </button>
+1179:    <button class="modern-btn modern-btn-success me-2">
+1180:      <i class="fas fa-check-circle"></i>
+1181:      Success Button
+1182:    </button>
+1183:    <button class="modern-btn modern-btn-danger me-2">
+1184:      <i class="fas fa-trash"></i>
+1185:      Danger Button
+1186:    </button>
+1187:    <button class="modern-btn modern-btn-warning">
+1188:      <i class="fas fa-exclamation-triangle"></i>
+1189:      Warning Button
+1190:    </button>
+1191:  </div>
+1192:
+1193:</div>
+1194:
