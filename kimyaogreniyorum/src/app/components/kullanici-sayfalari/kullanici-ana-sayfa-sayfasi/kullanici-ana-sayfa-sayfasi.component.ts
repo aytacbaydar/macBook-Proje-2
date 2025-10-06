@@ -24,6 +24,14 @@ export class KullaniciAnaSayfaSayfasiComponent implements OnInit {
   emptyStateType: 'no-data' | 'no-results' | 'error' | 'success' = 'no-data';
   emptyStateTitle = 'Henüz Veri Yok';
   emptyStateMessage = 'Görünüşe göre henüz hiç kayıt bulunmuyor.';
+  
+  // Filter & Search kontrolleri
+  searchTerm = '';
+  selectedSinavTuru = '';
+  selectedDurum = '';
+  selectedKonu = '';
+  selectedQuickFilter = 'ALL';
+  activeFilters: ActiveFilter[] = [];
 
   constructor() { }
 
@@ -129,4 +137,10 @@ interface Alert {
   type: 'success' | 'error' | 'warning' | 'info';
   title: string;
   message: string;
+}
+
+interface ActiveFilter {
+  key: string;
+  label: string;
+  value: string;
 }
