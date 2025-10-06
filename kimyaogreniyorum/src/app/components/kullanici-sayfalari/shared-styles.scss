@@ -1,6 +1,237 @@
 
 /* Kullanıcı Sayfaları - Ortak Stiller */
 
+/* Modern Card System */
+.modern-card-system {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+
+  &:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+  }
+}
+
+.card-header-modern {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  
+  .card-title-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    
+    i {
+      font-size: 20px;
+    }
+  }
+  
+  .card-settings-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    .settings-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 16px;
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: rotate(90deg);
+      }
+      
+      &:active {
+        transform: scale(0.95) rotate(90deg);
+      }
+    }
+  }
+}
+
+.card-contents-modern {
+  padding: 24px;
+  background: white;
+  
+  &.no-padding {
+    padding: 0;
+  }
+  
+  &.small-padding {
+    padding: 16px;
+  }
+  
+  &.large-padding {
+    padding: 32px;
+  }
+}
+
+/* Card Variants */
+.modern-card-system {
+  &.card-gradient-blue {
+    .card-header-modern {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+    }
+  }
+  
+  &.card-gradient-green {
+    .card-header-modern {
+      background: linear-gradient(135deg, #10b981, #059669);
+    }
+  }
+  
+  &.card-gradient-orange {
+    .card-header-modern {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+    }
+  }
+  
+  &.card-gradient-red {
+    .card-header-modern {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+    }
+  }
+  
+  &.card-gradient-purple {
+    .card-header-modern {
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    }
+  }
+  
+  &.card-gradient-pink {
+    .card-header-modern {
+      background: linear-gradient(135deg, #ec4899, #db2777);
+    }
+  }
+}
+
+/* Tablet Responsive (768px - 1024px) */
+@media (max-width: 1024px) {
+  .card-header-modern {
+    padding: 14px 18px;
+    
+    .card-title-left {
+      font-size: 16px;
+      
+      i {
+        font-size: 18px;
+      }
+    }
+    
+    .card-settings-right .settings-icon {
+      width: 34px;
+      height: 34px;
+      font-size: 15px;
+    }
+  }
+  
+  .card-contents-modern {
+    padding: 20px;
+    
+    &.small-padding {
+      padding: 14px;
+    }
+    
+    &.large-padding {
+      padding: 28px;
+    }
+  }
+}
+
+/* Mobile Responsive (max 767px) */
+@media (max-width: 767px) {
+  .modern-card-system {
+    margin-bottom: 16px;
+    border-radius: 10px;
+  }
+  
+  .card-header-modern {
+    padding: 12px 16px;
+    
+    .card-title-left {
+      font-size: 15px;
+      gap: 8px;
+      
+      i {
+        font-size: 16px;
+      }
+    }
+    
+    .card-settings-right .settings-icon {
+      width: 32px;
+      height: 32px;
+      font-size: 14px;
+    }
+  }
+  
+  .card-contents-modern {
+    padding: 16px;
+    
+    &.small-padding {
+      padding: 12px;
+    }
+    
+    &.large-padding {
+      padding: 20px;
+    }
+  }
+}
+
+/* Extra Small Mobile (max 480px) */
+@media (max-width: 480px) {
+  .card-header-modern {
+    padding: 10px 14px;
+    
+    .card-title-left {
+      font-size: 14px;
+      gap: 6px;
+      
+      i {
+        font-size: 15px;
+      }
+    }
+    
+    .card-settings-right .settings-icon {
+      width: 30px;
+      height: 30px;
+      font-size: 13px;
+    }
+  }
+  
+  .card-contents-modern {
+    padding: 14px;
+    
+    &.small-padding {
+      padding: 10px;
+    }
+    
+    &.large-padding {
+      padding: 18px;
+    }
+  }
+}
+
 /* Modern Controls Section */
 .modern-controls-section {
   background: white;
