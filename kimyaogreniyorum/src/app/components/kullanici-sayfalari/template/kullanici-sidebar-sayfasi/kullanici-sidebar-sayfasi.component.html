@@ -27,59 +27,50 @@
 
   <!-- Navigation Menu -->
   <nav class="sidebar-nav">
-    <div class="nav-section">
-      <h4 class="section-title" *ngIf="!isCollapsed">ANA MENÜ</h4>
-      
-      <a routerLink="/kullanici/anasayfa" routerLinkActive="active" class="nav-item">
-        <i class="fas fa-home"></i>
-        <span *ngIf="!isCollapsed">Ana Sayfa</span>
-      </a>
-
-      <a routerLink="/kullanici/profil" routerLinkActive="active" class="nav-item">
-        <i class="fas fa-user"></i>
-        <span *ngIf="!isCollapsed">Profilim</span>
-      </a>
-
-      <a routerLink="/kullanici/ayarlar" routerLinkActive="active" class="nav-item">
-        <i class="fas fa-cog"></i>
-        <span *ngIf="!isCollapsed">Ayarlar</span>
-      </a>
-    </div>
-
-    <div class="nav-section">
-      <h4 class="section-title" *ngIf="!isCollapsed">AKADEMİK</h4>
-      
-      <a routerLink="/kullanici/dersler" routerLinkActive="active" class="nav-item">
-        <i class="fas fa-book"></i>
-        <span *ngIf="!isCollapsed">Derslerim</span>
-      </a>
-
-      <a routerLink="/kullanici/sinavlar" routerLinkActive="active" class="nav-item">
-        <i class="fas fa-clipboard-list"></i>
-        <span *ngIf="!isCollapsed">Sınavlar</span>
-      </a>
-
-      <a routerLink="/kullanici/odevler" routerLinkActive="active" class="nav-item">
-        <i class="fas fa-tasks"></i>
-        <span *ngIf="!isCollapsed">Ödevler</span>
-      </a>
-    </div>
-
-    <div class="nav-section">
-      <h4 class="section-title" *ngIf="!isCollapsed">DİĞER</h4>
-      
-      <a routerLink="/kullanici/bildirimler" routerLinkActive="active" class="nav-item">
-        <i class="fas fa-bell"></i>
-        <span *ngIf="!isCollapsed">Bildirimler</span>
-        <span class="badge" *ngIf="!isCollapsed && notificationCount > 0">{{ notificationCount }}</span>
-      </a>
-
-      <a routerLink="/kullanici/mesajlar" routerLinkActive="active" class="nav-item">
-        <i class="fas fa-envelope"></i>
-        <span *ngIf="!isCollapsed">Mesajlar</span>
-      </a>
-    </div>
+    <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+      <i class="fas fa-home"></i>
+      <span *ngIf="!isCollapsed">Ana Sayfa</span>
+    </a>
+    
+    <a routerLink="/profile" routerLinkActive="active" class="nav-item">
+      <i class="fas fa-user"></i>
+      <span *ngIf="!isCollapsed">Profil</span>
+    </a>
+    
+    <a routerLink="/courses" routerLinkActive="active" class="nav-item">
+      <i class="fas fa-book"></i>
+      <span *ngIf="!isCollapsed">Dersler</span>
+    </a>
+    
+    <a routerLink="/exams" routerLinkActive="active" class="nav-item">
+      <i class="fas fa-file-alt"></i>
+      <span *ngIf="!isCollapsed">Sınavlar</span>
+    </a>
+    
+    <a routerLink="/assignments" routerLinkActive="active" class="nav-item">
+      <i class="fas fa-tasks"></i>
+      <span *ngIf="!isCollapsed">Ödevler</span>
+    </a>
+    
+    <a routerLink="/statistics" routerLinkActive="active" class="nav-item">
+      <i class="fas fa-chart-bar"></i>
+      <span *ngIf="!isCollapsed">İstatistikler</span>
+    </a>
+    
+    <a routerLink="/settings" routerLinkActive="active" class="nav-item">
+      <i class="fas fa-cog"></i>
+      <span *ngIf="!isCollapsed">Ayarlar</span>
+    </a>
   </nav>
+
+  <!-- Notifications Badge -->
+  <div class="notifications-section" *ngIf="!isCollapsed && notificationCount > 0">
+    <div class="notification-badge">
+      <i class="fas fa-bell"></i>
+      <span class="badge-count">{{ notificationCount }}</span>
+      <span class="notification-text">Yeni Bildirim</span>
+    </div>
+  </div>
 
   <!-- Logout Button -->
   <div class="sidebar-footer">
