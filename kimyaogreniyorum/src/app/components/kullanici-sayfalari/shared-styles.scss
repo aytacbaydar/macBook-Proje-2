@@ -791,7 +791,291 @@
   }
 }
 
-/* Responsive Design */
+/* ============================================
+   MODAL SYSTEM
+   ============================================ */
+
+/* Modal Overlay */
+.modern-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal Container */
+.modern-modal-container {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modal Header */
+.modern-modal-header {
+  padding: 24px 28px;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+  h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    
+    i {
+      font-size: 22px;
+    }
+  }
+  
+  .modal-close-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 18px;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: rotate(90deg);
+    }
+  }
+}
+
+/* Modal Body */
+.modern-modal-body {
+  padding: 28px;
+  overflow-y: auto;
+  flex: 1;
+  
+  &.no-padding {
+    padding: 0;
+  }
+  
+  &.small-padding {
+    padding: 16px;
+  }
+}
+
+/* Modal Footer */
+.modern-modal-footer {
+  padding: 20px 28px;
+  background: #f8f9fa;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  
+  .modern-btn {
+    flex: 0 0 auto;
+    min-width: 100px;
+  }
+}
+
+/* Modal Sizes */
+.modern-modal-container {
+  &.modal-sm {
+    max-width: 400px;
+  }
+  
+  &.modal-md {
+    max-width: 600px;
+  }
+  
+  &.modal-lg {
+    max-width: 900px;
+  }
+  
+  &.modal-xl {
+    max-width: 1200px;
+  }
+  
+  &.modal-full {
+    max-width: 95vw;
+    max-height: 95vh;
+  }
+}
+
+/* ============================================
+   ALERT/NOTIFICATION SYSTEM
+   ============================================ */
+
+/* Alert Container */
+.modern-alert-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 400px;
+  width: 100%;
+}
+
+/* Alert Item */
+.modern-alert {
+  background: white;
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  animation: slideInRight 0.3s ease;
+  border-left: 4px solid #4f46e5;
+  
+  &.alert-success {
+    border-left-color: #10b981;
+    
+    .alert-icon {
+      color: #10b981;
+      background: rgba(16, 185, 129, 0.1);
+    }
+  }
+  
+  &.alert-error {
+    border-left-color: #ef4444;
+    
+    .alert-icon {
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+    }
+  }
+  
+  &.alert-warning {
+    border-left-color: #f59e0b;
+    
+    .alert-icon {
+      color: #f59e0b;
+      background: rgba(245, 158, 11, 0.1);
+    }
+  }
+  
+  &.alert-info {
+    border-left-color: #3b82f6;
+    
+    .alert-icon {
+      color: #3b82f6;
+      background: rgba(59, 130, 246, 0.1);
+    }
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Alert Icon */
+.alert-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 18px;
+}
+
+/* Alert Content */
+.alert-content {
+  flex: 1;
+  
+  .alert-title {
+    margin: 0 0 4px 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1f2937;
+  }
+  
+  .alert-message {
+    margin: 0;
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.4;
+  }
+}
+
+/* Alert Close Button */
+.alert-close {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: #f3f4f6;
+  border: none;
+  color: #9ca3af;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  
+  &:hover {
+    background: #e5e7eb;
+    color: #6b7280;
+  }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
 @media (max-width: 768px) {
   /* Hide desktop table, show mobile cards */
   .modern-table {
@@ -826,6 +1110,57 @@
   .modern-btn {
     justify-content: center;
   }
+  
+  /* Modal Responsive */
+  .modern-modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+  
+  .modern-modal-container {
+    border-radius: 16px 16px 0 0;
+    max-height: 85vh;
+    
+    &.modal-full {
+      max-width: 100vw;
+      border-radius: 0;
+      max-height: 100vh;
+    }
+  }
+  
+  .modern-modal-header {
+    padding: 20px;
+    
+    h3 {
+      font-size: 18px;
+    }
+  }
+  
+  .modern-modal-body {
+    padding: 20px;
+  }
+  
+  .modern-modal-footer {
+    padding: 16px 20px;
+    flex-direction: column-reverse;
+    
+    .modern-btn {
+      width: 100%;
+      min-width: auto;
+    }
+  }
+  
+  /* Alert Responsive */
+  .modern-alert-container {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
+  
+  .modern-alert {
+    padding: 14px 16px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -855,5 +1190,31 @@
   
   .mobile-card-value {
     font-size: 13px;
+  }
+  
+  /* Modal Extra Small */
+  .modern-modal-header h3 {
+    font-size: 16px;
+  }
+  
+  .modern-modal-body {
+    padding: 16px;
+  }
+  
+  /* Alert Extra Small */
+  .alert-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+  
+  .alert-content {
+    .alert-title {
+      font-size: 14px;
+    }
+    
+    .alert-message {
+      font-size: 13px;
+    }
   }
 }
