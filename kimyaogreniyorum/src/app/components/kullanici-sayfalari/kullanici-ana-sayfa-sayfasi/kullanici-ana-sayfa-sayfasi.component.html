@@ -1,714 +1,913 @@
-
-<div class="container-fluid p-4">
-  
-  <!-- ============================================
-       BREADCRUMB (İÇERİK YOLU) EXAMPLES
-       ============================================ -->
-  
-  <!-- Breadcrumb Example 1 - Basic -->
-  <nav class="modern-breadcrumb">
-    <ul class="breadcrumb-list">
-      <li class="breadcrumb-item">
-        <a href="#">
-          <i class="fas fa-home"></i>
-          Ana Sayfa
-        </a>
-      </li>
-      <li class="breadcrumb-item">
-        <a href="#">
-          <i class="fas fa-book"></i>
-          Sınavlar
-        </a>
-      </li>
-      <li class="breadcrumb-item active">
-        <span>
-          <i class="fas fa-file-alt"></i>
-          Sınav Sonuçları
-        </span>
-      </li>
-    </ul>
-  </nav>
-
-  <!-- Breadcrumb Example 2 - With Gradient Background -->
-  <nav class="modern-breadcrumb breadcrumb-gradient-blue">
-    <ul class="breadcrumb-list">
-      <li class="breadcrumb-item">
-        <a href="#">
-          <a class="breadcrumb-home-icon">
-            <i class="fas fa-home"></i>
-          </a>
-        </a>
-      </li>
-      <li class="breadcrumb-item">
-        <a href="#">
-          <i class="fas fa-folder"></i>
-          Belgeler
-        </a>
-      </li>
-      <li class="breadcrumb-item">
-        <a href="#">
-          <i class="fas fa-book"></i>
-          Konular
-        </a>
-      </li>
-      <li class="breadcrumb-item active">
-        <span>
-          <i class="fas fa-file-pdf"></i>
-          Organik Kimya
-        </span>
-      </li>
-    </ul>
-  </nav>
-
-  <!-- Breadcrumb Example 3 - Compact Version -->
-  <nav class="modern-breadcrumb modern-breadcrumb-compact breadcrumb-gradient-green">
-    <ul class="breadcrumb-list">
-      <li class="breadcrumb-item">
-        <a href="#"><i class="fas fa-home"></i></a>
-      </li>
-      <li class="breadcrumb-item">
-        <a href="#">Öğrenci İşleri</a>
-      </li>
-      <li class="breadcrumb-item">
-        <a href="#">Öğrenci Listesi</a>
-      </li>
-      <li class="breadcrumb-item active">
-        <span>Ahmet Yılmaz</span>
-      </li>
-    </ul>
-  </nav>
-
-  <!-- Breadcrumb Example 4 - Purple Gradient -->
-  <nav class="modern-breadcrumb breadcrumb-gradient-purple">
-    <ul class="breadcrumb-list">
-      <li class="breadcrumb-item">
-        <a href="#">
-          <i class="fas fa-home"></i>
-          Ana Sayfa
-        </a>
-      </li>
-      <li class="breadcrumb-item">
-        <a href="#">
-          <i class="fas fa-clipboard-list"></i>
-          Testler
-        </a>
-      </li>
-      <li class="breadcrumb-item">
-        <a href="#">
-          <i class="fas fa-flask"></i>
-          Kimya Testleri
-        </a>
-      </li>
-      <li class="breadcrumb-item active">
-        <span>
-          <i class="fas fa-vial"></i>
-          Asit-Baz Dengesi
-        </span>
-      </li>
-    </ul>
-  </nav>
-  
-  <!-- ============================================
-       FILTER & SEARCH BAR EXAMPLES
-       ============================================ -->
-  
-  <!-- Search Bar Example -->
-  <div class="modern-search-bar">
-    <div class="search-bar-wrapper">
-      <div class="modern-search-input-group">
-        <i class="fas fa-search search-input-icon"></i>
-        <input 
-          type="text" 
-          class="modern-search-field" 
-          placeholder="Sınav ara..."
-          [(ngModel)]="searchTerm">
-        <button class="clear-search-btn" *ngIf="searchTerm">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <button class="modern-btn modern-btn-primary">
-        <i class="fas fa-search"></i>
-        Ara
-      </button>
-    </div>
-  </div>
-
-  <!-- Filter Section Example -->
-  <div class="modern-filter-section">
-    <div class="filter-header">
-      <h4>
-        <i class="fas fa-filter"></i>
-        Filtreler
-      </h4>
-      <button class="clear-filters-btn">
-        <i class="fas fa-times"></i>
-        Filtreleri Temizle
-      </button>
-    </div>
-    
-    <!-- Quick Filters -->
-    <div class="quick-filters">
-      <button class="quick-filter-btn active">
-        <i class="fas fa-list"></i>
-        Tümü
-        <span class="count">45</span>
-      </button>
-      <button class="quick-filter-btn">
-        <i class="fas fa-graduation-cap"></i>
-        TYT
-        <span class="count">20</span>
-      </button>
-      <button class="quick-filter-btn">
-        <i class="fas fa-book"></i>
-        AYT
-        <span class="count">15</span>
-      </button>
-      <button class="quick-filter-btn">
-        <i class="fas fa-clipboard-list"></i>
-        Test
-        <span class="count">10</span>
-      </button>
-    </div>
-    
-    <!-- Filter Grid -->
-    <div class="filter-grid">
-      <div class="filter-group">
-        <label>Sınav Türü</label>
-        <select>
-          <option value="">Tümü</option>
-          <option value="TYT">TYT</option>
-          <option value="AYT">AYT</option>
-          <option value="TEST">Test</option>
-        </select>
-      </div>
-      
-      <div class="filter-group">
-        <label>Tarih Aralığı</label>
-        <input type="date">
-      </div>
-      
-      <div class="filter-group">
-        <label>Durum</label>
-        <select>
-          <option value="">Tümü</option>
-          <option value="passed">Geçti</option>
-          <option value="failed">Kaldı</option>
-        </select>
-      </div>
-      
-      <div class="filter-group">
-        <label>Konu</label>
-        <select>
-          <option value="">Tümü</option>
-          <option value="organik">Organik Kimya</option>
-          <option value="anorganik">Anorganik Kimya</option>
-        </select>
-      </div>
-    </div>
-    
-    <!-- Active Filters -->
-    <div class="active-filters">
-      <div class="filter-tag">
-        <span class="tag-label">Sınav Türü:</span>
-        <span>TYT</span>
-        <button class="remove-tag-btn">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div class="filter-tag">
-        <span class="tag-label">Durum:</span>
-        <span>Geçti</span>
-        <button class="remove-tag-btn">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-    </div>
-  </div>
-  
-  <!-- ============================================
-       LOADING SPINNER EXAMPLES
-       ============================================ -->
-  
-  <!-- Loading Spinner Example 1 - Default Spinner -->
-  <div class="modern-loading-container">
-    <div class="modern-spinner"></div>
-    <div class="loading-text">
-      <h4>Yükleniyor...</h4>
-      <p>Veriler getiriliyor, lütfen bekleyin.</p>
-    </div>
-  </div>
-
-  <!-- Loading Spinner Example 2 - Pulse Dots -->
-  <div class="modern-loading-container">
-    <div class="modern-pulse-spinner">
-      <div class="pulse-dot"></div>
-      <div class="pulse-dot"></div>
-      <div class="pulse-dot"></div>
-    </div>
-    <div class="loading-text">
-      <h4>İşlem Yapılıyor...</h4>
-      <p>Sınav sonuçları hesaplanıyor.</p>
-    </div>
-  </div>
-
-  <!-- ============================================
-       EMPTY STATE EXAMPLES
-       ============================================ -->
-
-  <!-- Empty State Example 1 - No Data -->
-  <div class="modern-empty-state empty-no-data">
-    <div class="empty-state-icon">
-      <i class="fas fa-inbox"></i>
-    </div>
-    <div class="empty-state-content">
-      <h3>Henüz Veri Yok</h3>
-      <p>Görünüşe göre henüz hiç sınav sonucu bulunmuyor. İlk sınavınızı ekleyerek başlayabilirsiniz.</p>
-    </div>
-    <div class="empty-state-action">
-      <button class="modern-btn modern-btn-primary">
-        <i class="fas fa-plus"></i>
-        Yeni Sınav Ekle
-      </button>
-    </div>
-  </div>
-
-  <!-- Empty State Example 2 - No Search Results -->
-  <div class="modern-empty-state empty-no-results">
-    <div class="empty-state-icon">
-      <i class="fas fa-search"></i>
-    </div>
-    <div class="empty-state-content">
-      <h3>Sonuç Bulunamadı</h3>
-      <p>Aradığınız kriterlere uygun hiçbir kayıt bulunamadı. Lütfen farklı arama terimleri deneyin.</p>
-    </div>
-    <div class="empty-state-action">
-      <button class="modern-btn modern-btn-warning">
-        <i class="fas fa-redo"></i>
-        Aramayı Temizle
-      </button>
-    </div>
-  </div>
-
-  <!-- Empty State Example 3 - Success (All Done) -->
-  <div class="modern-empty-state empty-success">
-    <div class="empty-state-icon">
-      <i class="fas fa-check-circle"></i>
-    </div>
-    <div class="empty-state-content">
-      <h3>Tebrikler!</h3>
-      <p>Tüm ödevlerinizi tamamladınız. Harika bir iş çıkardınız!</p>
-    </div>
-  </div>
-
-  <!-- Empty State Example 4 - Error State -->
-  <div class="modern-empty-state empty-error">
-    <div class="empty-state-icon">
-      <i class="fas fa-exclamation-triangle"></i>
-    </div>
-    <div class="empty-state-content">
-      <h3>Bir Hata Oluştu</h3>
-      <p>Veriler yüklenirken bir sorun oluştu. Lütfen sayfayı yenileyin veya daha sonra tekrar deneyin.</p>
-    </div>
-    <div class="empty-state-action">
-      <button class="modern-btn modern-btn-danger">
-        <i class="fas fa-sync-alt"></i>
-        Tekrar Dene
-      </button>
-    </div>
-  </div>
-
-  <!-- Alert Container (Fixed Position) -->
-  <div class="modern-alert-container">
-    <!-- Success Alert Example -->
-    <div class="modern-alert alert-success">
-      <div class="alert-icon">
-        <i class="fas fa-check-circle"></i>
-      </div>
-      <div class="alert-content">
-        <h4 class="alert-title">Başarılı!</h4>
-        <p class="alert-message">İşlem başarıyla tamamlandı.</p>
-      </div>
-      <button class="alert-close">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-    
-    <!-- Error Alert Example -->
-    <div class="modern-alert alert-error">
-      <div class="alert-icon">
-        <i class="fas fa-exclamation-circle"></i>
-      </div>
-      <div class="alert-content">
-        <h4 class="alert-title">Hata!</h4>
-        <p class="alert-message">Bir hata oluştu, lütfen tekrar deneyin.</p>
-      </div>
-      <button class="alert-close">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-  </div>
-
-  <!-- Modal Example -->
-  <div class="modern-modal-overlay">
-    <div class="modern-modal-container modal-md">
-      <!-- Modal Header -->
-      <div class="modern-modal-header">
-        <h3>
-          <i class="fas fa-file-pdf"></i>
-          PDF Görüntüle
-        </h3>
-        <button class="modal-close-btn">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      
-      <!-- Modal Body -->
-      <div class="modern-modal-body">
-        <p>Modal içeriği buraya gelecek...</p>
-        <p>PDF görüntüleme, sınav detayları, form düzenleme vs.</p>
-      </div>
-      
-      <!-- Modal Footer -->
-      <div class="modern-modal-footer">
-        <button class="modern-btn modern-btn-secondary">
-          <i class="fas fa-times"></i>
-          İptal
-        </button>
-        <button class="modern-btn modern-btn-primary">
-          <i class="fas fa-check"></i>
-          Tamam
-        </button>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Responsive Table Example 1 - Öğrenci Listesi -->
-  <div class="modern-table-container">
-    <div class="modern-table-header">
-      <h3>
-        <i class="fas fa-users"></i>
-        Öğrenci Listesi
-      </h3>
-      <div class="table-actions">
-        <button class="modern-btn primary">
-          <i class="fas fa-plus"></i>
-          Yeni Ekle
-        </button>
-      </div>
-    </div>
-    
-    <!-- Desktop Table View -->
-    <table class="modern-table">
-      <thead>
-        <tr>
-          <th>Öğrenci Adı</th>
-          <th>Sınıf</th>
-          <th>Telefon</th>
-          <th>Durum</th>
-          <th>İşlemler</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Ahmet Yılmaz</td>
-          <td>10. Sınıf</td>
-          <td>0532 123 45 67</td>
-          <td><span class="table-badge badge-success">Aktif</span></td>
-          <td>
-            <button class="table-action-btn btn-view">
-              <i class="fas fa-eye"></i>
-              Görüntüle
-            </button>
-            <button class="table-action-btn btn-edit">
-              <i class="fas fa-edit"></i>
-              Düzenle
-            </button>
-            <button class="table-action-btn btn-delete">
-              <i class="fas fa-trash"></i>
-              Sil
-            </button>
-          </td>
-        </tr>
-        <tr>
-          <td>Ayşe Kaya</td>
-          <td>11. Sınıf</td>
-          <td>0533 234 56 78</td>
-          <td><span class="table-badge badge-success">Aktif</span></td>
-          <td>
-            <button class="table-action-btn btn-view">
-              <i class="fas fa-eye"></i>
-              Görüntüle
-            </button>
-            <button class="table-action-btn btn-edit">
-              <i class="fas fa-edit"></i>
-              Düzenle
-            </button>
-            <button class="table-action-btn btn-delete">
-              <i class="fas fa-trash"></i>
-              Sil
-            </button>
-          </td>
-        </tr>
-        <tr>
-          <td>Mehmet Demir</td>
-          <td>12. Sınıf</td>
-          <td>0534 345 67 89</td>
-          <td><span class="table-badge badge-warning">Pasif</span></td>
-          <td>
-            <button class="table-action-btn btn-view">
-              <i class="fas fa-eye"></i>
-              Görüntüle
-            </button>
-            <button class="table-action-btn btn-edit">
-              <i class="fas fa-edit"></i>
-              Düzenle
-            </button>
-            <button class="table-action-btn btn-delete">
-              <i class="fas fa-trash"></i>
-              Sil
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    
-    <!-- Mobile Card View -->
-    <div class="mobile-table-cards">
-      <div class="mobile-card-item">
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">Öğrenci Adı</span>
-          <span class="mobile-card-value">Ahmet Yılmaz</span>
-        </div>
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">Sınıf</span>
-          <span class="mobile-card-value">10. Sınıf</span>
-        </div>
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">Telefon</span>
-          <span class="mobile-card-value">0532 123 45 67</span>
-        </div>
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">Durum</span>
-          <span class="mobile-card-value">
-            <span class="table-badge badge-success">Aktif</span>
-          </span>
-        </div>
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">İşlemler</span>
-          <span class="mobile-card-value">
-            <button class="table-action-btn btn-view">
-              <i class="fas fa-eye"></i>
-            </button>
-            <button class="table-action-btn btn-edit">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button class="table-action-btn btn-delete">
-              <i class="fas fa-trash"></i>
-            </button>
-          </span>
-        </div>
-      </div>
-      
-      <div class="mobile-card-item">
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">Öğrenci Adı</span>
-          <span class="mobile-card-value">Ayşe Kaya</span>
-        </div>
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">Sınıf</span>
-          <span class="mobile-card-value">11. Sınıf</span>
-        </div>
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">Telefon</span>
-          <span class="mobile-card-value">0533 234 56 78</span>
-        </div>
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">Durum</span>
-          <span class="mobile-card-value">
-            <span class="table-badge badge-success">Aktif</span>
-          </span>
-        </div>
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">İşlemler</span>
-          <span class="mobile-card-value">
-            <button class="table-action-btn btn-view">
-              <i class="fas fa-eye"></i>
-            </button>
-            <button class="table-action-btn btn-edit">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button class="table-action-btn btn-delete">
-              <i class="fas fa-trash"></i>
-            </button>
-          </span>
-        </div>
-      </div>
-      
-      <div class="mobile-card-item">
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">Öğrenci Adı</span>
-          <span class="mobile-card-value">Mehmet Demir</span>
-        </div>
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">Sınıf</span>
-          <span class="mobile-card-value">12. Sınıf</span>
-        </div>
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">Telefon</span>
-          <span class="mobile-card-value">0534 345 67 89</span>
-        </div>
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">Durum</span>
-          <span class="mobile-card-value">
-            <span class="table-badge badge-warning">Pasif</span>
-          </span>
-        </div>
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">İşlemler</span>
-          <span class="mobile-card-value">
-            <button class="table-action-btn btn-view">
-              <i class="fas fa-eye"></i>
-            </button>
-            <button class="table-action-btn btn-edit">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button class="table-action-btn btn-delete">
-              <i class="fas fa-trash"></i>
-            </button>
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Responsive Table Example 2 - Ücret Tablosu -->
-  <div class="modern-table-container">
-    <div class="modern-table-header card-gradient-green">
-      <h3>
-        <i class="fas fa-money-bill-wave"></i>
-        Ödeme Geçmişi
-      </h3>
-      <div class="table-actions">
-        <button class="modern-btn primary">
-          <i class="fas fa-download"></i>
-          Dışa Aktar
-        </button>
-      </div>
-    </div>
-    
-    <!-- Desktop Table View -->
-    <table class="modern-table">
-      <thead>
-        <tr>
-          <th>Tarih</th>
-          <th>Öğrenci</th>
-          <th>Tutar</th>
-          <th>Açıklama</th>
-          <th>Durum</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>15.01.2025</td>
-          <td>Ahmet Yılmaz</td>
-          <td>500 TL</td>
-          <td>Ocak Ayı Ücreti</td>
-          <td><span class="table-badge badge-success">Ödendi</span></td>
-        </tr>
-        <tr>
-          <td>10.01.2025</td>
-          <td>Ayşe Kaya</td>
-          <td>600 TL</td>
-          <td>Ocak Ayı Ücreti</td>
-          <td><span class="table-badge badge-success">Ödendi</span></td>
-        </tr>
-        <tr>
-          <td>05.01.2025</td>
-          <td>Mehmet Demir</td>
-          <td>550 TL</td>
-          <td>Ocak Ayı Ücreti</td>
-          <td><span class="table-badge badge-danger">Bekliyor</span></td>
-        </tr>
-      </tbody>
-    </table>
-    
-    <!-- Mobile Card View -->
-    <div class="mobile-table-cards">
-      <div class="mobile-card-item">
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">Tarih</span>
-          <span class="mobile-card-value">15.01.2025</span>
-        </div>
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">Öğrenci</span>
-          <span class="mobile-card-value">Ahmet Yılmaz</span>
-        </div>
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">Tutar</span>
-          <span class="mobile-card-value">500 TL</span>
-        </div>
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">Açıklama</span>
-          <span class="mobile-card-value">Ocak Ayı Ücreti</span>
-        </div>
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">Durum</span>
-          <span class="mobile-card-value">
-            <span class="table-badge badge-success">Ödendi</span>
-          </span>
-        </div>
-      </div>
-      
-      <div class="mobile-card-item">
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">Tarih</span>
-          <span class="mobile-card-value">10.01.2025</span>
-        </div>
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">Öğrenci</span>
-          <span class="mobile-card-value">Ayşe Kaya</span>
-        </div>
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">Tutar</span>
-          <span class="mobile-card-value">600 TL</span>
-        </div>
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">Açıklama</span>
-          <span class="mobile-card-value">Ocak Ayı Ücreti</span>
-        </div>
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">Durum</span>
-          <span class="mobile-card-value">
-            <span class="table-badge badge-success">Ödendi</span>
-          </span>
-        </div>
-      </div>
-      
-      <div class="mobile-card-item">
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">Tarih</span>
-          <span class="mobile-card-value">05.01.2025</span>
-        </div>
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">Öğrenci</span>
-          <span class="mobile-card-value">Mehmet Demir</span>
-        </div>
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">Tutar</span>
-          <span class="mobile-card-value">550 TL</span>
-        </div>
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">Açıklama</span>
-          <span class="mobile-card-value">Ocak Ayı Ücreti</span>
-        </div>
-        <div class="mobile-card-row">
-          <span class="mobile-card-label">Durum</span>
-          <span class="mobile-card-value">
-            <span class="table-badge badge-danger">Bekliyor</span>
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</div>
+1:
+2:<div class="container-fluid p-4">
+3:  
+4:  <!-- ============================================
+5:       MODERN CARD SYSTEM EXAMPLES
+6:       ============================================ -->
+7:
+8:  <h2 class="section-title mb-4">
+9:    <i class="fas fa-layer-group"></i>
+10:    Modern Card Sistemi
+11:  </h2>
+12:
+13:  <!-- Card Example 1 - Default Purple Gradient -->
+14:  <div class="modern-card-system">
+15:    <div class="card-header-modern">
+16:      <h3 class="card-title-left">
+17:        <i class="fas fa-user-graduate"></i>
+18:        Öğrenci Bilgileri
+19:      </h3>
+20:      <div class="card-settings-right">
+21:        <button class="settings-icon">
+22:          <i class="fas fa-cog"></i>
+23:        </button>
+24:      </div>
+25:    </div>
+26:    <div class="card-contents-modern">
+27:      <p>Bu bir örnek card içeriğidir. Buraya istediğiniz içeriği ekleyebilirsiniz.</p>
+28:    </div>
+29:  </div>
+30:
+31:  <!-- Card Example 2 - Blue Gradient -->
+32:  <div class="modern-card-system card-gradient-blue">
+33:    <div class="card-header-modern">
+34:      <h3 class="card-title-left">
+35:        <i class="fas fa-chart-line"></i>
+36:        İstatistikler
+37:      </h3>
+38:      <div class="card-settings-right">
+39:        <button class="settings-icon">
+40:          <i class="fas fa-ellipsis-v"></i>
+41:        </button>
+42:      </div>
+43:    </div>
+44:    <div class="card-contents-modern small-padding">
+45:      <p>Mavi gradient card örneği - Small padding ile</p>
+46:    </div>
+47:  </div>
+48:
+49:  <!-- Card Example 3 - Green Gradient -->
+50:  <div class="modern-card-system card-gradient-green">
+51:    <div class="card-header-modern">
+52:      <h3 class="card-title-left">
+53:        <i class="fas fa-check-circle"></i>
+54:        Başarılar
+55:      </h3>
+56:    </div>
+57:    <div class="card-contents-modern no-padding">
+58:      <div style="padding: 20px;">No-padding card - İçerik padding'i manuel kontrol edilebilir</div>
+59:    </div>
+60:  </div>
+61:
+62:  <hr class="my-5">
+63:
+64:  <!-- ============================================
+65:       BREADCRUMB (İÇERİK YOLU) EXAMPLES
+66:       ============================================ -->
+67:
+68:  <h2 class="section-title mb-4">
+69:    <i class="fas fa-route"></i>
+70:    Breadcrumb (İçerik Yolu) Sistemi
+71:  </h2>
+72:
+73:  <!-- Breadcrumb Example 1 - Basic -->
+74:  <nav class="modern-breadcrumb">
+75:    <ul class="breadcrumb-list">
+76:      <li class="breadcrumb-item">
+77:        <a href="#">
+78:          <i class="fas fa-home"></i>
+79:          Ana Sayfa
+80:        </a>
+81:      </li>
+82:      <li class="breadcrumb-item">
+83:        <a href="#">
+84:          <i class="fas fa-book"></i>
+85:          Sınavlar
+86:        </a>
+87:      </li>
+88:      <li class="breadcrumb-item active">
+89:        <span>
+90:          <i class="fas fa-file-alt"></i>
+91:          Sınav Sonuçları
+92:        </span>
+93:      </li>
+94:    </ul>
+95:  </nav>
+96:
+97:  <!-- Breadcrumb Example 2 - With Gradient Background -->
+98:  <nav class="modern-breadcrumb breadcrumb-gradient-blue">
+99:    <ul class="breadcrumb-list">
+100:      <li class="breadcrumb-item">
+101:        <a href="#">
+102:          <a class="breadcrumb-home-icon">
+103:            <i class="fas fa-home"></i>
+104:          </a>
+105:        </a>
+106:      </li>
+107:      <li class="breadcrumb-item">
+108:        <a href="#">
+109:          <i class="fas fa-folder"></i>
+110:          Belgeler
+111:        </a>
+112:      </li>
+113:      <li class="breadcrumb-item">
+114:        <a href="#">
+115:          <i class="fas fa-book"></i>
+116:          Konular
+117:        </a>
+118:      </li>
+119:      <li class="breadcrumb-item active">
+120:        <span>
+121:          <i class="fas fa-file-pdf"></i>
+122:          Organik Kimya
+123:        </span>
+124:      </li>
+125:    </ul>
+126:  </nav>
+127:
+128:  <!-- Breadcrumb Example 3 - Compact Version -->
+129:  <nav class="modern-breadcrumb modern-breadcrumb-compact breadcrumb-gradient-green">
+130:    <ul class="breadcrumb-list">
+131:      <li class="breadcrumb-item">
+132:        <a href="#"><i class="fas fa-home"></i></a>
+133:      </li>
+134:      <li class="breadcrumb-item">
+135:        <a href="#">Öğrenci İşleri</a>
+136:      </li>
+137:      <li class="breadcrumb-item">
+138:        <a href="#">Öğrenci Listesi</a>
+139:      </li>
+140:      <li class="breadcrumb-item active">
+141:        <span>Ahmet Yılmaz</span>
+142:      </li>
+143:    </ul>
+144:  </nav>
+145:
+146:  <!-- Breadcrumb Example 4 - Purple Gradient -->
+147:  <nav class="modern-breadcrumb breadcrumb-gradient-purple">
+148:    <ul class="breadcrumb-list">
+149:      <li class="breadcrumb-item">
+150:        <a href="#">
+151:          <i class="fas fa-home"></i>
+152:          Ana Sayfa
+153:        </a>
+154:      </li>
+155:      <li class="breadcrumb-item">
+156:        <a href="#">
+157:          <i class="fas fa-clipboard-list"></i>
+158:          Testler
+159:        </a>
+160:      </li>
+161:      <li class="breadcrumb-item">
+162:        <a href="#">
+163:          <i class="fas fa-flask"></i>
+164:          Kimya Testleri
+165:        </a>
+166:      </li>
+167:      <li class="breadcrumb-item active">
+168:        <span>
+169:          <i class="fas fa-vial"></i>
+170:          Asit-Baz Dengesi
+171:        </span>
+172:      </li>
+173:    </ul>
+174:  </nav>
+175:
+176:  <hr class="my-5">
+177:
+178:  <!-- ============================================
+179:       FILTER & SEARCH BAR EXAMPLES
+180:       ============================================ -->
+181:
+182:  <h2 class="section-title mb-4">
+183:    <i class="fas fa-search"></i>
+184:    Arama ve Filtreleme Sistemi
+185:  </h2>
+186:
+187:  <!-- Search Bar Example -->
+188:  <div class="modern-search-bar">
+189:    <div class="search-bar-wrapper">
+190:      <div class="modern-search-input-group">
+191:        <i class="fas fa-search search-input-icon"></i>
+192:        <input 
+193:          type="text" 
+194:          class="modern-search-field" 
+195:          placeholder="Sınav ara..."
+196:          [(ngModel)]="searchTerm">
+197:        <button class="clear-search-btn" *ngIf="searchTerm">
+198:          <i class="fas fa-times"></i>
+199:        </button>
+200:      </div>
+201:      <button class="modern-btn modern-btn-primary">
+202:        <i class="fas fa-search"></i>
+203:        Ara
+204:      </button>
+205:    </div>
+206:  </div>
+207:
+208:  <!-- Filter Section Example -->
+209:  <div class="modern-filter-section">
+210:    <div class="filter-header">
+211:      <h4>
+212:        <i class="fas fa-filter"></i>
+213:        Filtreler
+214:      </h4>
+215:      <button class="clear-filters-btn">
+216:        <i class="fas fa-times"></i>
+217:        Filtreleri Temizle
+218:      </button>
+219:    </div>
+220:    
+221:    <!-- Quick Filters -->
+222:    <div class="quick-filters">
+223:      <button class="quick-filter-btn active">
+224:        <i class="fas fa-list"></i>
+225:        Tümü
+226:        <span class="count">45</span>
+227:      </button>
+228:      <button class="quick-filter-btn">
+229:        <i class="fas fa-graduation-cap"></i>
+230:        TYT
+231:        <span class="count">20</span>
+232:      </button>
+233:      <button class="quick-filter-btn">
+234:        <i class="fas fa-book"></i>
+235:        AYT
+236:        <span class="count">15</span>
+237:      </button>
+238:      <button class="quick-filter-btn">
+239:        <i class="fas fa-clipboard-list"></i>
+240:        Test
+241:        <span class="count">10</span>
+242:      </button>
+243:    </div>
+244:    
+245:    <!-- Filter Grid -->
+246:    <div class="filter-grid">
+247:      <div class="filter-group">
+248:        <label>Sınav Türü</label>
+249:        <select>
+250:          <option value="">Tümü</option>
+251:          <option value="TYT">TYT</option>
+252:          <option value="AYT">AYT</option>
+253:          <option value="TEST">Test</option>
+254:        </select>
+255:      </div>
+256:      
+257:      <div class="filter-group">
+258:        <label>Tarih Aralığı</label>
+259:        <input type="date">
+260:      </div>
+261:      
+262:      <div class="filter-group">
+263:        <label>Durum</label>
+264:        <select>
+265:          <option value="">Tümü</option>
+266:          <option value="passed">Geçti</option>
+267:          <option value="failed">Kaldı</option>
+268:        </select>
+269:      </div>
+270:      
+271:      <div class="filter-group">
+272:        <label>Konu</label>
+273:        <select>
+274:          <option value="">Tümü</option>
+275:          <option value="organik">Organik Kimya</option>
+276:          <option value="anorganik">Anorganik Kimya</option>
+277:        </select>
+278:      </div>
+279:    </div>
+280:    
+281:    <!-- Active Filters -->
+282:    <div class="active-filters">
+283:      <div class="filter-tag">
+284:        <span class="tag-label">Sınav Türü:</span>
+285:        <span>TYT</span>
+286:        <button class="remove-tag-btn">
+287:          <i class="fas fa-times"></i>
+288:        </button>
+289:      </div>
+290:      <div class="filter-tag">
+291:        <span class="tag-label">Durum:</span>
+292:        <span>Geçti</span>
+293:        <button class="remove-tag-btn">
+294:          <i class="fas fa-times"></i>
+295:        </button>
+296:      </div>
+297:    </div>
+298:  </div>
+299:  
+300:  <hr class="my-5">
+301:
+302:  <!-- ============================================
+303:       LOADING SPINNER EXAMPLES
+304:       ============================================ -->
+305:  
+306:  <h2 class="section-title mb-4">
+307:    <i class="fas fa-spinner"></i>
+308:    Loading Spinner Sistemi
+309:  </h2>
+310:
+311:  <!-- Loading Spinner Example 1 - Default Spinner -->
+312:  <div class="modern-loading-container">
+313:    <div class="modern-spinner"></div>
+314:    <div class="loading-text">
+315:      <h4>Yükleniyor...</h4>
+316:      <p>Veriler getiriliyor, lütfen bekleyin.</p>
+317:    </div>
+318:  </div>
+319:
+320:  <!-- Loading Spinner Example 2 - Pulse Dots -->
+321:  <div class="modern-loading-container">
+322:    <div class="modern-pulse-spinner">
+323:      <div class="pulse-dot"></div>
+324:      <div class="pulse-dot"></div>
+325:      <div class="pulse-dot"></div>
+326:    </div>
+327:    <div class="loading-text">
+328:      <h4>İşlem Yapılıyor...</h4>
+329:      <p>Sınav sonuçları hesaplanıyor.</p>
+330:    </div>
+331:  </div>
+332:
+333:  <hr class="my-5">
+334:
+335:  <!-- ============================================
+336:       EMPTY STATE EXAMPLES
+337:       ============================================ -->
+338:
+339:  <h2 class="section-title mb-4">
+340:    <i class="fas fa-inbox"></i>
+341:    Empty State Sistemi
+342:  </h2>
+343:
+344:  <!-- Empty State Example 1 - No Data -->
+345:  <div class="modern-empty-state empty-no-data">
+346:    <div class="empty-state-icon">
+347:      <i class="fas fa-inbox"></i>
+348:    </div>
+349:    <div class="empty-state-content">
+350:      <h3>Henüz Veri Yok</h3>
+351:      <p>Görünüşe göre henüz hiç sınav sonucu bulunmuyor. İlk sınavınızı ekleyerek başlayabilirsiniz.</p>
+352:    </div>
+353:    <div class="empty-state-action">
+354:      <button class="modern-btn modern-btn-primary">
+355:        <i class="fas fa-plus"></i>
+356:        Yeni Sınav Ekle
+357:      </button>
+358:    </div>
+359:  </div>
+360:
+361:  <!-- Empty State Example 2 - No Search Results -->
+362:  <div class="modern-empty-state empty-no-results">
+363:    <div class="empty-state-icon">
+364:      <i class="fas fa-search"></i>
+365:    </div>
+366:    <div class="empty-state-content">
+367:      <h3>Sonuç Bulunamadı</h3>
+368:      <p>Aradığınız kriterlere uygun hiçbir kayıt bulunamadı. Lütfen farklı arama terimleri deneyin.</p>
+369:    </div>
+370:    <div class="empty-state-action">
+371:      <button class="modern-btn modern-btn-warning">
+372:        <i class="fas fa-redo"></i>
+373:        Aramayı Temizle
+374:      </button>
+375:    </div>
+376:  </div>
+377:
+378:  <!-- Empty State Example 3 - Success (All Done) -->
+379:  <div class="modern-empty-state empty-success">
+380:    <div class="empty-state-icon">
+381:      <i class="fas fa-check-circle"></i>
+382:    </div>
+383:    <div class="empty-state-content">
+384:      <h3>Tebrikler!</h3>
+385:      <p>Tüm ödevlerinizi tamamladınız. Harika bir iş çıkardınız!</p>
+386:    </div>
+387:  </div>
+388:
+389:  <!-- Empty State Example 4 - Error State -->
+390:  <div class="modern-empty-state empty-error">
+391:    <div class="empty-state-icon">
+392:      <i class="fas fa-exclamation-triangle"></i>
+393:    </div>
+394:    <div class="empty-state-content">
+395:      <h3>Bir Hata Oluştu</h3>
+396:      <p>Veriler yüklenirken bir sorun oluştu. Lütfen sayfayı yenileyin veya daha sonra tekrar deneyin.</p>
+397:    </div>
+398:    <div class="empty-state-action">
+399:      <button class="modern-btn modern-btn-danger">
+400:        <i class="fas fa-sync-alt"></i>
+401:        Tekrar Dene
+402:      </button>
+403:    </div>
+404:  </div>
+405:
+406:  <hr class="my-5">
+407:
+408:  <!-- ============================================
+409:       ALERT/NOTIFICATION EXAMPLES
+410:       ============================================ -->
+411:
+412:  <h2 class="section-title mb-4">
+413:    <i class="fas fa-bell"></i>
+414:    Alert/Bildirim Sistemi
+415:  </h2>
+416:
+417:  <div class="mb-3">
+418:    <button class="modern-btn modern-btn-success me-2" (click)="testSuccessAlert()">
+419:      <i class="fas fa-check"></i>
+420:      Başarı Alert
+421:    </button>
+422:    <button class="modern-btn modern-btn-danger me-2" (click)="testErrorAlert()">
+423:      <i class="fas fa-times"></i>
+424:      Hata Alert
+425:    </button>
+426:    <button class="modern-btn modern-btn-warning me-2" (click)="testWarningAlert()">
+427:      <i class="fas fa-exclamation"></i>
+428:      Uyarı Alert
+429:    </button>
+430:    <button class="modern-btn modern-btn-primary" (click)="testInfoAlert()">
+431:      <i class="fas fa-info"></i>
+432:      Bilgi Alert
+433:    </button>
+434:  </div>
+435:
+436:  <!-- Alert Container (Fixed Position) -->
+437:  <div class="modern-alert-container">
+438:    <!-- Success Alert Example -->
+439:    <div class="modern-alert alert-success">
+440:      <div class="alert-icon">
+441:        <i class="fas fa-check-circle"></i>
+442:      </div>
+443:      <div class="alert-content">
+444:        <h4 class="alert-title">Başarılı!</h4>
+445:        <p class="alert-message">İşlem başarıyla tamamlandı.</p>
+446:      </div>
+447:      <button class="alert-close">
+448:        <i class="fas fa-times"></i>
+449:      </button>
+450:    </div>
+451:    
+452:    <!-- Error Alert Example -->
+453:    <div class="modern-alert alert-error">
+454:      <div class="alert-icon">
+455:        <i class="fas fa-exclamation-circle"></i>
+456:      </div>
+457:      <div class="alert-content">
+458:        <h4 class="alert-title">Hata!</h4>
+459:        <p class="alert-message">Bir hata oluştu, lütfen tekrar deneyin.</p>
+460:      </div>
+461:      <button class="alert-close">
+462:        <i class="fas fa-times"></i>
+463:      </button>
+464:    </div>
+465:  </div>
+466:
+467:  <hr class="my-5">
+468:
+469:  <!-- ============================================
+470:       RESPONSIVE TABLE EXAMPLES
+471:       ============================================ -->
+472:
+473:  <h2 class="section-title mb-4">
+474:    <i class="fas fa-table"></i>
+475:    Responsive Tablo Sistemi
+476:  </h2>
+477:
+478:  <!-- Responsive Table Example 1 - Öğrenci Listesi -->
+479:  <div class="modern-table-container">
+480:    <div class="modern-table-header">
+481:      <h3>
+482:        <i class="fas fa-users"></i>
+483:        Öğrenci Listesi
+484:      </h3>
+485:      <div class="table-actions">
+486:        <button class="modern-btn primary">
+487:          <i class="fas fa-plus"></i>
+488:          Yeni Ekle
+489:        </button>
+490:      </div>
+491:    </div>
+492:    
+493:    <!-- Desktop Table View -->
+494:    <table class="modern-table">
+495:      <thead>
+496:        <tr>
+497:          <th>Öğrenci Adı</th>
+498:          <th>Sınıf</th>
+499:          <th>Telefon</th>
+500:          <th>Durum</th>
+501:          <th>İşlemler</th>
+502:        </tr>
+503:      </thead>
+504:      <tbody>
+505:        <tr>
+506:          <td>Ahmet Yılmaz</td>
+507:          <td>10. Sınıf</td>
+508:          <td>0532 123 45 67</td>
+509:          <td><span class="table-badge badge-success">Aktif</span></td>
+510:          <td>
+511:            <button class="table-action-btn btn-view">
+512:              <i class="fas fa-eye"></i>
+513:              Görüntüle
+514:            </button>
+515:            <button class="table-action-btn btn-edit">
+516:              <i class="fas fa-edit"></i>
+517:              Düzenle
+518:            </button>
+519:            <button class="table-action-btn btn-delete">
+520:              <i class="fas fa-trash"></i>
+521:              Sil
+522:            </button>
+523:          </td>
+524:        </tr>
+525:        <tr>
+526:          <td>Ayşe Kaya</td>
+527:          <td>11. Sınıf</td>
+528:          <td>0533 234 56 78</td>
+529:          <td><span class="table-badge badge-success">Aktif</span></td>
+530:          <td>
+531:            <button class="table-action-btn btn-view">
+532:              <i class="fas fa-eye"></i>
+533:              Görüntüle
+534:            </button>
+535:            <button class="table-action-btn btn-edit">
+536:              <i class="fas fa-edit"></i>
+537:              Düzenle
+538:            </button>
+539:            <button class="table-action-btn btn-delete">
+540:              <i class="fas fa-trash"></i>
+541:              Sil
+542:            </button>
+543:          </td>
+544:        </tr>
+545:        <tr>
+546:          <td>Mehmet Demir</td>
+547:          <td>12. Sınıf</td>
+548:          <td>0534 345 67 89</td>
+549:          <td><span class="table-badge badge-warning">Pasif</span></td>
+550:          <td>
+551:            <button class="table-action-btn btn-view">
+552:              <i class="fas fa-eye"></i>
+553:              Görüntüle
+554:            </button>
+555:            <button class="table-action-btn btn-edit">
+556:              <i class="fas fa-edit"></i>
+557:              Düzenle
+558:            </button>
+559:            <button class="table-action-btn btn-delete">
+560:              <i class="fas fa-trash"></i>
+561:              Sil
+562:            </button>
+563:          </td>
+564:        </tr>
+565:      </tbody>
+566:    </table>
+567:    
+568:    <!-- Mobile Card View -->
+569:    <div class="mobile-table-cards">
+570:      <div class="mobile-card-item">
+571:        <div class="mobile-card-row">
+572:          <span class="mobile-card-label">Öğrenci Adı</span>
+573:          <span class="mobile-card-value">Ahmet Yılmaz</span>
+574:        </div>
+575:        <div class="mobile-card-row">
+576:          <span class="mobile-card-label">Sınıf</span>
+577:          <span class="mobile-card-value">10. Sınıf</span>
+578:        </div>
+579:        <div class="mobile-card-row">
+580:          <span class="mobile-card-label">Telefon</span>
+581:          <span class="mobile-card-value">0532 123 45 67</span>
+582:        </div>
+583:        <div class="mobile-card-row">
+584:          <span class="mobile-card-label">Durum</span>
+585:          <span class="mobile-card-value">
+586:            <span class="table-badge badge-success">Aktif</span>
+587:          </span>
+588:        </div>
+589:        <div class="mobile-card-row">
+590:          <span class="mobile-card-label">İşlemler</span>
+591:          <span class="mobile-card-value">
+592:            <button class="table-action-btn btn-view">
+593:              <i class="fas fa-eye"></i>
+594:            </button>
+595:            <button class="table-action-btn btn-edit">
+596:              <i class="fas fa-edit"></i>
+597:            </button>
+598:            <button class="table-action-btn btn-delete">
+599:              <i class="fas fa-trash"></i>
+600:            </button>
+601:          </span>
+602:        </div>
+603:      </div>
+604:      
+605:      <div class="mobile-card-item">
+606:        <div class="mobile-card-row">
+607:          <span class="mobile-card-label">Öğrenci Adı</span>
+608:          <span class="mobile-card-value">Ayşe Kaya</span>
+609:        </div>
+610:        <div class="mobile-card-row">
+611:          <span class="mobile-card-label">Sınıf</span>
+612:          <span class="mobile-card-value">11. Sınıf</span>
+613:        </div>
+614:        <div class="mobile-card-row">
+615:          <span class="mobile-card-label">Telefon</span>
+616:          <span class="mobile-card-value">0533 234 56 78</span>
+617:        </div>
+618:        <div class="mobile-card-row">
+619:          <span class="mobile-card-label">Durum</span>
+620:          <span class="mobile-card-value">
+621:            <span class="table-badge badge-success">Aktif</span>
+622:          </span>
+623:        </div>
+624:        <div class="mobile-card-row">
+625:          <span class="mobile-card-label">İşlemler</span>
+626:          <span class="mobile-card-value">
+627:            <button class="table-action-btn btn-view">
+628:              <i class="fas fa-eye"></i>
+629:            </button>
+630:            <button class="table-action-btn btn-edit">
+631:              <i class="fas fa-edit"></i>
+632:            </button>
+633:            <button class="table-action-btn btn-delete">
+634:              <i class="fas fa-trash"></i>
+635:            </button>
+636:          </span>
+637:        </div>
+638:      </div>
+639:      
+640:      <div class="mobile-card-item">
+641:        <div class="mobile-card-row">
+642:          <span class="mobile-card-label">Öğrenci Adı</span>
+643:          <span class="mobile-card-value">Mehmet Demir</span>
+644:        </div>
+645:        <div class="mobile-card-row">
+646:          <span class="mobile-card-label">Sınıf</span>
+647:          <span class="mobile-card-value">12. Sınıf</span>
+648:        </div>
+649:        <div class="mobile-card-row">
+650:          <span class="mobile-card-label">Telefon</span>
+651:          <span class="mobile-card-value">0534 345 67 89</span>
+652:        </div>
+653:        <div class="mobile-card-row">
+654:          <span class="mobile-card-label">Durum</span>
+655:          <span class="mobile-card-value">
+656:            <span class="table-badge badge-warning">Pasif</span>
+657:          </span>
+658:        </div>
+659:        <div class="mobile-card-row">
+660:          <span class="mobile-card-label">İşlemler</span>
+661:          <span class="mobile-card-value">
+662:            <button class="table-action-btn btn-view">
+663:              <i class="fas fa-eye"></i>
+664:            </button>
+665:            <button class="table-action-btn btn-edit">
+666:              <i class="fas fa-edit"></i>
+667:            </button>
+668:            <button class="table-action-btn btn-delete">
+669:              <i class="fas fa-trash"></i>
+670:            </button>
+671:          </span>
+672:        </div>
+673:      </div>
+674:    </div>
+675:  </div>
+676:
+677:  <!-- Responsive Table Example 2 - Ücret Tablosu -->
+678:  <div class="modern-table-container">
+679:    <div class="modern-table-header card-gradient-green">
+680:      <h3>
+681:        <i class="fas fa-money-bill-wave"></i>
+682:        Ödeme Geçmişi
+683:      </h3>
+684:      <div class="table-actions">
+685:        <button class="modern-btn primary">
+686:          <i class="fas fa-download"></i>
+687:          Dışa Aktar
+688:        </button>
+689:      </div>
+690:    </div>
+691:    
+692:    <!-- Desktop Table View -->
+693:    <table class="modern-table">
+694:      <thead>
+695:        <tr>
+696:          <th>Tarih</th>
+697:          <th>Öğrenci</th>
+698:          <th>Tutar</th>
+699:          <th>Açıklama</th>
+700:          <th>Durum</th>
+701:        </tr>
+702:      </thead>
+703:      <tbody>
+704:        <tr>
+705:          <td>15.01.2025</td>
+706:          <td>Ahmet Yılmaz</td>
+707:          <td>500 TL</td>
+708:          <td>Ocak Ayı Ücreti</td>
+709:          <td><span class="table-badge badge-success">Ödendi</span></td>
+710:        </tr>
+711:        <tr>
+712:          <td>10.01.2025</td>
+713:          <td>Ayşe Kaya</td>
+714:          <td>600 TL</td>
+715:          <td>Ocak Ayı Ücreti</td>
+716:          <td><span class="table-badge badge-success">Ödendi</span></td>
+717:        </tr>
+718:        <tr>
+719:          <td>05.01.2025</td>
+720:          <td>Mehmet Demir</td>
+721:          <td>550 TL</td>
+722:          <td>Ocak Ayı Ücreti</td>
+723:          <td><span class="table-badge badge-danger">Bekliyor</span></td>
+724:        </tr>
+725:      </tbody>
+726:    </table>
+727:    
+728:    <!-- Mobile Card View -->
+729:    <div class="mobile-table-cards">
+730:      <div class="mobile-card-item">
+731:        <div class="mobile-card-row">
+732:          <span class="mobile-card-label">Tarih</span>
+733:          <span class="mobile-card-value">15.01.2025</span>
+734:        </div>
+735:        <div class="mobile-card-row">
+736:          <span class="mobile-card-label">Öğrenci</span>
+737:          <span class="mobile-card-value">Ahmet Yılmaz</span>
+738:        </div>
+739:        <div class="mobile-card-row">
+740:          <span class="mobile-card-label">Tutar</span>
+741:          <span class="mobile-card-value">500 TL</span>
+742:        </div>
+743:        <div class="mobile-card-row">
+744:          <span class="mobile-card-label">Açıklama</span>
+745:          <span class="mobile-card-value">Ocak Ayı Ücreti</span>
+746:        </div>
+747:        <div class="mobile-card-row">
+748:          <span class="mobile-card-label">Durum</span>
+749:          <span class="mobile-card-value">
+750:            <span class="table-badge badge-success">Ödendi</span>
+751:          </span>
+752:        </div>
+753:      </div>
+754:      
+755:      <div class="mobile-card-item">
+756:        <div class="mobile-card-row">
+757:          <span class="mobile-card-label">Tarih</span>
+758:          <span class="mobile-card-value">10.01.2025</span>
+759:        </div>
+760:        <div class="mobile-card-row">
+761:          <span class="mobile-card-label">Öğrenci</span>
+762:          <span class="mobile-card-value">Ayşe Kaya</span>
+763:        </div>
+764:        <div class="mobile-card-row">
+765:          <span class="mobile-card-label">Tutar</span>
+766:          <span class="mobile-card-value">600 TL</span>
+767:        </div>
+768:        <div class="mobile-card-row">
+769:          <span class="mobile-card-label">Açıklama</span>
+770:          <span class="mobile-card-value">Ocak Ayı Ücreti</span>
+771:        </div>
+772:        <div class="mobile-card-row">
+773:          <span class="mobile-card-label">Durum</span>
+774:          <span class="mobile-card-value">
+775:            <span class="table-badge badge-success">Ödendi</span>
+776:          </span>
+777:        </div>
+778:      </div>
+779:      
+780:      <div class="mobile-card-item">
+781:        <div class="mobile-card-row">
+782:          <span class="mobile-card-label">Tarih</span>
+783:          <span class="mobile-card-value">05.01.2025</span>
+784:        </div>
+785:        <div class="mobile-card-row">
+786:          <span class="mobile-card-label">Öğrenci</span>
+787:          <span class="mobile-card-value">Mehmet Demir</span>
+788:        </div>
+789:        <div class="mobile-card-row">
+790:          <span class="mobile-card-label">Tutar</span>
+791:          <span class="mobile-card-value">550 TL</span>
+792:        </div>
+793:        <div class="mobile-card-row">
+794:          <span class="mobile-card-label">Açıklama</span>
+795:          <span class="mobile-card-value">Ocak Ayı Ücreti</span>
+796:        </div>
+797:        <div class="mobile-card-row">
+798:          <span class="mobile-card-label">Durum</span>
+799:          <span class="mobile-card-value">
+800:            <span class="table-badge badge-danger">Bekliyor</span>
+801:          </span>
+802:        </div>
+803:      </div>
+804:    </div>
+805:  </div>
+806:
+807:  <hr class="my-5">
+808:
+809:  <!-- ============================================
+810:       MODAL EXAMPLES
+811:       ============================================ -->
+812:
+813:  <h2 class="section-title mb-4">
+814:    <i class="fas fa-window-maximize"></i>
+815:    Modal Sistemi
+816:  </h2>
+817:
+818:  <div class="mb-3">
+819:    <button class="modern-btn modern-btn-primary" (click)="showPdfModal = true">
+820:      <i class="fas fa-eye"></i>
+821:      Modal Aç
+822:    </button>
+823:  </div>
+824:
+825:  <!-- Modal Example -->
+826:  <div class="modern-modal-overlay" *ngIf="showPdfModal">
+827:    <div class="modern-modal-container modal-md">
+828:      <!-- Modal Header -->
+829:      <div class="modern-modal-header">
+830:        <h3>
+831:          <i class="fas fa-file-pdf"></i>
+832:          PDF Görüntüle
+833:        </h3>
+834:        <button class="modal-close-btn" (click)="showPdfModal = false">
+835:          <i class="fas fa-times"></i>
+836:        </button>
+837:      </div>
+838:      
+839:      <!-- Modal Body -->
+840:      <div class="modern-modal-body">
+841:        <p>Modal içeriği buraya gelecek...</p>
+842:        <p>PDF görüntüleme, sınav detayları, form düzenleme vs.</p>
+843:      </div>
+844:      
+845:      <!-- Modal Footer -->
+846:      <div class="modern-modal-footer">
+847:        <button class="modern-btn modern-btn-secondary" (click)="showPdfModal = false">
+848:          <i class="fas fa-times"></i>
+849:          İptal
+850:        </button>
+851:        <button class="modern-btn modern-btn-primary">
+852:          <i class="fas fa-check"></i>
+853:          Tamam
+854:        </button>
+855:      </div>
+856:    </div>
+857:  </div>
+858:
+859:  <hr class="my-5">
+860:
+861:  <!-- ============================================
+862:       BUTTON EXAMPLES
+863:       ============================================ -->
+864:
+865:  <h2 class="section-title mb-4">
+866:    <i class="fas fa-hand-pointer"></i>
+867:    Modern Buton Örnekleri
+868:  </h2>
+869:
+870:  <div class="mb-3">
+871:    <button class="modern-btn modern-btn-primary me-2">
+872:      <i class="fas fa-check"></i>
+873:      Primary Button
+874:    </button>
+875:    <button class="modern-btn modern-btn-secondary me-2">
+876:      <i class="fas fa-times"></i>
+877:      Secondary Button
+878:    </button>
+879:    <button class="modern-btn modern-btn-success me-2">
+880:      <i class="fas fa-check-circle"></i>
+881:      Success Button
+882:    </button>
+883:    <button class="modern-btn modern-btn-danger me-2">
+884:      <i class="fas fa-trash"></i>
+885:      Danger Button
+886:    </button>
+887:    <button class="modern-btn modern-btn-warning">
+888:      <i class="fas fa-exclamation-triangle"></i>
+889:      Warning Button
+890:    </button>
+891:  </div>
+892:
+893:  <hr class="my-5">
+894:
+895:  <!-- ============================================
+896:       BADGE EXAMPLES
+897:       ============================================ -->
+898:
+899:  <h2 class="section-title mb-4">
+900:    <i class="fas fa-tags"></i>
+901:    Badge (Etiket) Örnekleri
+902:  </h2>
+903:
+904:  <div class="mb-3">
+905:    <span class="table-badge badge-success me-2">Başarılı</span>
+906:    <span class="table-badge badge-danger me-2">Hata</span>
+907:    <span class="table-badge badge-warning me-2">Uyarı</span>
+908:    <span class="table-badge badge-info me-2">Bilgi</span>
+909:    <span class="table-badge badge-primary">Birincil</span>
+910:  </div>
+911:
+912:</div>
+913:
