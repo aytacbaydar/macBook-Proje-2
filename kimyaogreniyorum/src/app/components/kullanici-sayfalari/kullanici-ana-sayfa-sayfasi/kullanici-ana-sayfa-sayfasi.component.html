@@ -1,104 +1,333 @@
 
 <div class="container-fluid p-4">
-  <!-- Örnek Card 1 - Varsayılan -->
-  <div class="modern-card-system">
-    <div class="card-header-modern">
-      <h3 class="card-title-left">
-        <i class="fas fa-chart-line"></i>
-        İstatistikler
-      </h3>
-      <div class="card-settings-right">
-        <button class="settings-icon" title="Ayarlar">
-          <i class="fas fa-cog"></i>
-        </button>
-      </div>
-    </div>
-    <div class="card-contents-modern">
-      <p>Buraya istediğiniz içeriği ekleyebilirsiniz.</p>
-      <p>Card sistemi responsive olarak tasarlandı.</p>
-    </div>
-  </div>
-
-  <!-- Örnek Card 2 - Mavi Gradient -->
-  <div class="modern-card-system card-gradient-blue">
-    <div class="card-header-modern">
-      <h3 class="card-title-left">
+  
+  <!-- Responsive Table Example 1 - Öğrenci Listesi -->
+  <div class="modern-table-container">
+    <div class="modern-table-header">
+      <h3>
         <i class="fas fa-users"></i>
         Öğrenci Listesi
       </h3>
-      <div class="card-settings-right">
-        <button class="settings-icon" title="Filtrele">
-          <i class="fas fa-filter"></i>
+      <div class="table-actions">
+        <button class="modern-btn primary">
+          <i class="fas fa-plus"></i>
+          Yeni Ekle
         </button>
-        <button class="settings-icon" title="Ayarlar">
-          <i class="fas fa-cog"></i>
-        </button>
-      </div>
-    </div>
-    <div class="card-contents-modern">
-      <p>Mavi gradient başlıklı card örneği.</p>
-    </div>
-  </div>
-
-  <!-- Örnek Card 3 - Yeşil Gradient & Küçük Padding -->
-  <div class="modern-card-system card-gradient-green">
-    <div class="card-header-modern">
-      <h3 class="card-title-left">
-        <i class="fas fa-check-circle"></i>
-        Tamamlanan Görevler
-      </h3>
-      <div class="card-settings-right">
-        <button class="settings-icon" title="Dışa Aktar">
-          <i class="fas fa-download"></i>
-        </button>
-        <button class="settings-icon" title="Ayarlar">
-          <i class="fas fa-cog"></i>
-        </button>
-      </div>
-    </div>
-    <div class="card-contents-modern small-padding">
-      <p>Küçük padding kullanım örneği.</p>
-    </div>
-  </div>
-
-  <!-- Grid Layout İçinde Kullanım -->
-  <div class="row">
-    <div class="col-md-6">
-      <div class="modern-card-system card-gradient-orange">
-        <div class="card-header-modern">
-          <h3 class="card-title-left">
-            <i class="fas fa-book"></i>
-            Dersler
-          </h3>
-          <div class="card-settings-right">
-            <button class="settings-icon">
-              <i class="fas fa-ellipsis-v"></i>
-            </button>
-          </div>
-        </div>
-        <div class="card-contents-modern">
-          <p>Sol kolon card</p>
-        </div>
       </div>
     </div>
     
-    <div class="col-md-6">
-      <div class="modern-card-system card-gradient-purple">
-        <div class="card-header-modern">
-          <h3 class="card-title-left">
-            <i class="fas fa-calendar"></i>
-            Takvim
-          </h3>
-          <div class="card-settings-right">
-            <button class="settings-icon">
-              <i class="fas fa-cog"></i>
+    <!-- Desktop Table View -->
+    <table class="modern-table">
+      <thead>
+        <tr>
+          <th>Öğrenci Adı</th>
+          <th>Sınıf</th>
+          <th>Telefon</th>
+          <th>Durum</th>
+          <th>İşlemler</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Ahmet Yılmaz</td>
+          <td>10. Sınıf</td>
+          <td>0532 123 45 67</td>
+          <td><span class="table-badge badge-success">Aktif</span></td>
+          <td>
+            <button class="table-action-btn btn-view">
+              <i class="fas fa-eye"></i>
+              Görüntüle
             </button>
-          </div>
+            <button class="table-action-btn btn-edit">
+              <i class="fas fa-edit"></i>
+              Düzenle
+            </button>
+            <button class="table-action-btn btn-delete">
+              <i class="fas fa-trash"></i>
+              Sil
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td>Ayşe Kaya</td>
+          <td>11. Sınıf</td>
+          <td>0533 234 56 78</td>
+          <td><span class="table-badge badge-success">Aktif</span></td>
+          <td>
+            <button class="table-action-btn btn-view">
+              <i class="fas fa-eye"></i>
+              Görüntüle
+            </button>
+            <button class="table-action-btn btn-edit">
+              <i class="fas fa-edit"></i>
+              Düzenle
+            </button>
+            <button class="table-action-btn btn-delete">
+              <i class="fas fa-trash"></i>
+              Sil
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td>Mehmet Demir</td>
+          <td>12. Sınıf</td>
+          <td>0534 345 67 89</td>
+          <td><span class="table-badge badge-warning">Pasif</span></td>
+          <td>
+            <button class="table-action-btn btn-view">
+              <i class="fas fa-eye"></i>
+              Görüntüle
+            </button>
+            <button class="table-action-btn btn-edit">
+              <i class="fas fa-edit"></i>
+              Düzenle
+            </button>
+            <button class="table-action-btn btn-delete">
+              <i class="fas fa-trash"></i>
+              Sil
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <!-- Mobile Card View -->
+    <div class="mobile-table-cards">
+      <div class="mobile-card-item">
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">Öğrenci Adı</span>
+          <span class="mobile-card-value">Ahmet Yılmaz</span>
         </div>
-        <div class="card-contents-modern">
-          <p>Sağ kolon card</p>
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">Sınıf</span>
+          <span class="mobile-card-value">10. Sınıf</span>
+        </div>
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">Telefon</span>
+          <span class="mobile-card-value">0532 123 45 67</span>
+        </div>
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">Durum</span>
+          <span class="mobile-card-value">
+            <span class="table-badge badge-success">Aktif</span>
+          </span>
+        </div>
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">İşlemler</span>
+          <span class="mobile-card-value">
+            <button class="table-action-btn btn-view">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button class="table-action-btn btn-edit">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="table-action-btn btn-delete">
+              <i class="fas fa-trash"></i>
+            </button>
+          </span>
+        </div>
+      </div>
+      
+      <div class="mobile-card-item">
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">Öğrenci Adı</span>
+          <span class="mobile-card-value">Ayşe Kaya</span>
+        </div>
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">Sınıf</span>
+          <span class="mobile-card-value">11. Sınıf</span>
+        </div>
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">Telefon</span>
+          <span class="mobile-card-value">0533 234 56 78</span>
+        </div>
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">Durum</span>
+          <span class="mobile-card-value">
+            <span class="table-badge badge-success">Aktif</span>
+          </span>
+        </div>
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">İşlemler</span>
+          <span class="mobile-card-value">
+            <button class="table-action-btn btn-view">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button class="table-action-btn btn-edit">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="table-action-btn btn-delete">
+              <i class="fas fa-trash"></i>
+            </button>
+          </span>
+        </div>
+      </div>
+      
+      <div class="mobile-card-item">
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">Öğrenci Adı</span>
+          <span class="mobile-card-value">Mehmet Demir</span>
+        </div>
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">Sınıf</span>
+          <span class="mobile-card-value">12. Sınıf</span>
+        </div>
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">Telefon</span>
+          <span class="mobile-card-value">0534 345 67 89</span>
+        </div>
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">Durum</span>
+          <span class="mobile-card-value">
+            <span class="table-badge badge-warning">Pasif</span>
+          </span>
+        </div>
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">İşlemler</span>
+          <span class="mobile-card-value">
+            <button class="table-action-btn btn-view">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button class="table-action-btn btn-edit">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="table-action-btn btn-delete">
+              <i class="fas fa-trash"></i>
+            </button>
+          </span>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Responsive Table Example 2 - Ücret Tablosu -->
+  <div class="modern-table-container">
+    <div class="modern-table-header card-gradient-green">
+      <h3>
+        <i class="fas fa-money-bill-wave"></i>
+        Ödeme Geçmişi
+      </h3>
+      <div class="table-actions">
+        <button class="modern-btn primary">
+          <i class="fas fa-download"></i>
+          Dışa Aktar
+        </button>
+      </div>
+    </div>
+    
+    <!-- Desktop Table View -->
+    <table class="modern-table">
+      <thead>
+        <tr>
+          <th>Tarih</th>
+          <th>Öğrenci</th>
+          <th>Tutar</th>
+          <th>Açıklama</th>
+          <th>Durum</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>15.01.2025</td>
+          <td>Ahmet Yılmaz</td>
+          <td>500 TL</td>
+          <td>Ocak Ayı Ücreti</td>
+          <td><span class="table-badge badge-success">Ödendi</span></td>
+        </tr>
+        <tr>
+          <td>10.01.2025</td>
+          <td>Ayşe Kaya</td>
+          <td>600 TL</td>
+          <td>Ocak Ayı Ücreti</td>
+          <td><span class="table-badge badge-success">Ödendi</span></td>
+        </tr>
+        <tr>
+          <td>05.01.2025</td>
+          <td>Mehmet Demir</td>
+          <td>550 TL</td>
+          <td>Ocak Ayı Ücreti</td>
+          <td><span class="table-badge badge-danger">Bekliyor</span></td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <!-- Mobile Card View -->
+    <div class="mobile-table-cards">
+      <div class="mobile-card-item">
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">Tarih</span>
+          <span class="mobile-card-value">15.01.2025</span>
+        </div>
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">Öğrenci</span>
+          <span class="mobile-card-value">Ahmet Yılmaz</span>
+        </div>
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">Tutar</span>
+          <span class="mobile-card-value">500 TL</span>
+        </div>
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">Açıklama</span>
+          <span class="mobile-card-value">Ocak Ayı Ücreti</span>
+        </div>
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">Durum</span>
+          <span class="mobile-card-value">
+            <span class="table-badge badge-success">Ödendi</span>
+          </span>
+        </div>
+      </div>
+      
+      <div class="mobile-card-item">
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">Tarih</span>
+          <span class="mobile-card-value">10.01.2025</span>
+        </div>
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">Öğrenci</span>
+          <span class="mobile-card-value">Ayşe Kaya</span>
+        </div>
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">Tutar</span>
+          <span class="mobile-card-value">600 TL</span>
+        </div>
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">Açıklama</span>
+          <span class="mobile-card-value">Ocak Ayı Ücreti</span>
+        </div>
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">Durum</span>
+          <span class="mobile-card-value">
+            <span class="table-badge badge-success">Ödendi</span>
+          </span>
+        </div>
+      </div>
+      
+      <div class="mobile-card-item">
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">Tarih</span>
+          <span class="mobile-card-value">05.01.2025</span>
+        </div>
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">Öğrenci</span>
+          <span class="mobile-card-value">Mehmet Demir</span>
+        </div>
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">Tutar</span>
+          <span class="mobile-card-value">550 TL</span>
+        </div>
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">Açıklama</span>
+          <span class="mobile-card-value">Ocak Ayı Ücreti</span>
+        </div>
+        <div class="mobile-card-row">
+          <span class="mobile-card-label">Durum</span>
+          <span class="mobile-card-value">
+            <span class="table-badge badge-danger">Bekliyor</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>

@@ -560,8 +560,256 @@
   }
 }
 
+/* Modern Responsive Table System */
+.modern-table-container {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 24px;
+}
+
+.modern-table-header {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  padding: 20px 24px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+  h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    
+    i {
+      font-size: 20px;
+    }
+  }
+  
+  .table-actions {
+    display: flex;
+    gap: 8px;
+  }
+}
+
+/* Desktop Table View */
+.modern-table {
+  width: 100%;
+  border-collapse: collapse;
+  
+  thead {
+    background: #f8f9fa;
+    
+    tr {
+      border-bottom: 2px solid #e5e7eb;
+    }
+    
+    th {
+      padding: 16px 20px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 14px;
+      color: #374151;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      
+      &:first-child {
+        padding-left: 24px;
+      }
+      
+      &:last-child {
+        padding-right: 24px;
+        text-align: right;
+      }
+    }
+  }
+  
+  tbody {
+    tr {
+      border-bottom: 1px solid #e5e7eb;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background: #f9fafb;
+      }
+      
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+    
+    td {
+      padding: 16px 20px;
+      font-size: 14px;
+      color: #6b7280;
+      
+      &:first-child {
+        padding-left: 24px;
+        font-weight: 500;
+        color: #374151;
+      }
+      
+      &:last-child {
+        padding-right: 24px;
+        text-align: right;
+      }
+    }
+  }
+}
+
+/* Mobile Card View */
+.mobile-table-cards {
+  display: none;
+  padding: 16px;
+  gap: 16px;
+}
+
+.mobile-card-item {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }
+}
+
+.mobile-card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f3f4f6;
+  
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  
+  &:first-child {
+    padding-top: 0;
+  }
+}
+
+.mobile-card-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mobile-card-value {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  text-align: right;
+}
+
+/* Table Badges */
+.table-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  
+  &.badge-success {
+    background: #d1fae5;
+    color: #065f46;
+  }
+  
+  &.badge-warning {
+    background: #fef3c7;
+    color: #92400e;
+  }
+  
+  &.badge-danger {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+  
+  &.badge-info {
+    background: #dbeafe;
+    color: #1e40af;
+  }
+  
+  &.badge-primary {
+    background: #e0e7ff;
+    color: #3730a3;
+  }
+}
+
+/* Table Action Buttons */
+.table-action-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 2px;
+  
+  &.btn-view {
+    background: #dbeafe;
+    color: #1e40af;
+    
+    &:hover {
+      background: #bfdbfe;
+    }
+  }
+  
+  &.btn-edit {
+    background: #fef3c7;
+    color: #92400e;
+    
+    &:hover {
+      background: #fde68a;
+    }
+  }
+  
+  &.btn-delete {
+    background: #fee2e2;
+    color: #991b1b;
+    
+    &:hover {
+      background: #fecaca;
+    }
+  }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
+  /* Hide desktop table, show mobile cards */
+  .modern-table {
+    display: none;
+  }
+  
+  .mobile-table-cards {
+    display: block;
+  }
+  
+  .modern-table-header {
+    padding: 16px;
+    
+    h3 {
+      font-size: 16px;
+    }
+  }
+  
   .modern-grid {
     grid-template-columns: 1fr;
     padding: 16px;
@@ -591,5 +839,21 @@
 
   .modern-grid {
     padding: 12px;
+  }
+  
+  .mobile-card-item {
+    padding: 12px;
+  }
+  
+  .mobile-card-row {
+    padding: 10px 0;
+  }
+  
+  .mobile-card-label {
+    font-size: 11px;
+  }
+  
+  .mobile-card-value {
+    font-size: 13px;
   }
 }
