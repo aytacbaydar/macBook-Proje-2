@@ -2423,10 +2423,540 @@
 }
 
 /* ============================================
+   TIMELINE (ZAMAN ÇİZELGESİ) SYSTEM
+   ============================================ */
+
+/* Timeline Container */
+.modern-timeline {
+  position: relative;
+  padding: 40px 0;
+  margin: 20px 0;
+}
+
+/* Timeline Line (Vertical) */
+.modern-timeline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(180deg, #e5e7eb 0%, #9ca3af 50%, #e5e7eb 100%);
+}
+
+/* Timeline Item */
+.timeline-item {
+  position: relative;
+  margin-bottom: 50px;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Timeline Content Card */
+  .timeline-content {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 45%;
+    position: relative;
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      transform: translateY(-3px);
+    }
+
+    /* Arrow pointing to center */
+    &::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 100%;
+      width: 0;
+      height: 0;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      border-left: 15px solid white;
+    }
+
+    .timeline-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #f3f4f6;
+
+      .timeline-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #374151;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        i {
+          font-size: 18px;
+          color: #4f46e5;
+        }
+      }
+
+      .timeline-date {
+        font-size: 12px;
+        color: #9ca3af;
+        font-weight: 500;
+      }
+    }
+
+    .timeline-body {
+      color: #6b7280;
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .timeline-footer {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #f3f4f6;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+  }
+
+  /* Timeline Icon (Center) */
+  .timeline-icon {
+    position: absolute;
+    left: 50%;
+    top: 15px;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    box-shadow: 0 0 0 4px white, 0 0 0 6px #e5e7eb;
+    z-index: 2;
+  }
+
+  /* Alternate Items (Right Side) */
+  &:nth-child(even) {
+    justify-content: flex-start;
+
+    .timeline-content {
+      &::before {
+        left: auto;
+        right: 100%;
+        border-left: none;
+        border-right: 15px solid white;
+      }
+    }
+  }
+}
+
+/* Timeline Variants */
+.modern-timeline {
+  /* Success Timeline (Green) */
+  &.timeline-success {
+    .timeline-item .timeline-icon {
+      background: linear-gradient(135deg, #10b981, #059669);
+    }
+
+    .timeline-content .timeline-header .timeline-title i {
+      color: #10b981;
+    }
+  }
+
+  /* Warning Timeline (Orange) */
+  &.timeline-warning {
+    .timeline-item .timeline-icon {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+    }
+
+    .timeline-content .timeline-header .timeline-title i {
+      color: #f59e0b;
+    }
+  }
+
+  /* Danger Timeline (Red) */
+  &.timeline-danger {
+    .timeline-item .timeline-icon {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+    }
+
+    .timeline-content .timeline-header .timeline-title i {
+      color: #ef4444;
+    }
+  }
+
+  /* Info Timeline (Blue) */
+  &.timeline-info {
+    .timeline-item .timeline-icon {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+    }
+
+    .timeline-content .timeline-header .timeline-title i {
+      color: #3b82f6;
+    }
+  }
+}
+
+/* Compact Timeline */
+.modern-timeline-compact {
+  .timeline-item {
+    margin-bottom: 30px;
+
+    .timeline-content {
+      padding: 16px;
+    }
+
+    .timeline-icon {
+      width: 40px;
+      height: 40px;
+      font-size: 16px;
+    }
+  }
+}
+
+/* ============================================
+   STEPPER (ADIM GÖSTERGESİ) SYSTEM
+   ============================================ */
+
+/* Stepper Container */
+.modern-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30px 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 24px;
+  position: relative;
+}
+
+/* Stepper Line (Background) */
+.modern-stepper::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 60px;
+  right: 60px;
+  height: 3px;
+  background: #e5e7eb;
+  transform: translateY(-50%);
+  z-index: 0;
+}
+
+/* Stepper Step */
+.stepper-step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+  flex: 1;
+
+  /* Step Circle */
+  .step-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 600;
+    color: #9ca3af;
+    transition: all 0.3s ease;
+    margin-bottom: 12px;
+  }
+
+  /* Step Label */
+  .step-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #9ca3af;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  /* Active Step */
+  &.active {
+    .step-circle {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      border-color: #4f46e5;
+      color: white;
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    .step-label {
+      color: #4f46e5;
+      font-weight: 600;
+    }
+  }
+
+  /* Completed Step */
+  &.completed {
+    .step-circle {
+      background: #10b981;
+      border-color: #10b981;
+      color: white;
+
+      i {
+        font-size: 20px;
+      }
+    }
+
+    .step-label {
+      color: #10b981;
+    }
+  }
+
+  /* Disabled Step */
+  &.disabled {
+    .step-circle {
+      background: #f3f4f6;
+      border-color: #e5e7eb;
+      color: #d1d5db;
+    }
+
+    .step-label {
+      color: #d1d5db;
+    }
+  }
+}
+
+/* Vertical Stepper */
+.modern-stepper-vertical {
+  flex-direction: column;
+  align-items: stretch;
+  padding: 20px;
+
+  &::before {
+    top: 50px;
+    bottom: 50px;
+    left: 45px;
+    right: auto;
+    width: 3px;
+    height: auto;
+  }
+
+  .stepper-step {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 30px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .step-circle {
+      margin-bottom: 0;
+      margin-right: 20px;
+    }
+
+    .step-label {
+      text-align: left;
+      flex: 1;
+    }
+  }
+}
+
+/* ============================================
+   RATING SYSTEM (YILDIZ DEĞERLENDİRME)
+   ============================================ */
+
+/* Rating Container */
+.modern-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Rating Star */
+.rating-star {
+  font-size: 24px;
+  color: #d1d5db;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &.filled {
+    color: #fbbf24;
+  }
+
+  &:hover {
+    transform: scale(1.2);
+  }
+}
+
+/* Rating with Number */
+.rating-with-number {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .rating-score {
+    font-size: 18px;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  .rating-count {
+    font-size: 14px;
+    color: #9ca3af;
+  }
+}
+
+/* Rating Sizes */
+.modern-rating {
+  &.rating-sm .rating-star {
+    font-size: 18px;
+  }
+
+  &.rating-md .rating-star {
+    font-size: 24px;
+  }
+
+  &.rating-lg .rating-star {
+    font-size: 32px;
+  }
+}
+
+/* Rating Card */
+.rating-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  text-align: center;
+
+  .rating-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 12px;
+  }
+
+  .rating-description {
+    font-size: 14px;
+    color: #6b7280;
+    margin-top: 8px;
+  }
+}
+
+/* ============================================
    RESPONSIVE DESIGN
    ============================================ */
 
 @media (max-width: 768px) {
+  /* Stepper Responsive */
+  .modern-stepper {
+    padding: 20px 10px;
+
+    &::before {
+      left: 30px;
+      right: 30px;
+    }
+
+    .stepper-step {
+      .step-circle {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+        margin-bottom: 8px;
+      }
+
+      .step-label {
+        font-size: 11px;
+      }
+    }
+  }
+
+  .modern-stepper-vertical::before {
+    left: 35px;
+  }
+
+  /* Rating Responsive */
+  .rating-star {
+    font-size: 20px;
+  }
+
+  .rating-with-number {
+    gap: 8px;
+
+    .rating-score {
+      font-size: 16px;
+    }
+
+    .rating-count {
+      font-size: 12px;
+    }
+  }
+
+  /* Timeline Responsive */
+  .modern-timeline {
+    padding: 20px 0;
+
+    &::before {
+      left: 20px;
+      transform: none;
+    }
+
+    .timeline-item {
+      justify-content: flex-start;
+      padding-left: 60px;
+      margin-bottom: 30px;
+
+      .timeline-content {
+        width: 100%;
+
+        &::before {
+          left: -15px;
+          right: auto;
+          border-left: 15px solid white;
+          border-right: none;
+        }
+      }
+
+      .timeline-icon {
+        left: 20px;
+        transform: none;
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+      }
+
+      &:nth-child(even) {
+        justify-content: flex-start;
+        padding-left: 60px;
+
+        .timeline-content::before {
+          left: -15px;
+          right: auto;
+          border-left: 15px solid white;
+          border-right: none;
+        }
+      }
+    }
+  }
+
   /* Breadcrumb Responsive */
   .modern-breadcrumb {
     padding: 12px 16px;
