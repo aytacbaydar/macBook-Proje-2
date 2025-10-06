@@ -46,6 +46,206 @@ export class KullaniciAnaSayfaSayfasiComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    // Grafikleri yükle
+    setTimeout(() => {
+      this.initExamPerformanceChart();
+      this.initComparisonChart();
+    }, 500);
+  }
+
+  // Sınav Performans Grafiği
+  initExamPerformanceChart(): void {
+    const canvas = document.getElementById('examPerformanceChart') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Chart.js kütüphanesinin yüklü olduğundan emin olun
+    if (typeof (window as any).Chart === 'undefined') {
+      console.warn('Chart.js kütüphanesi yüklenmemiş');
+      return;
+    }
+
+    const Chart = (window as any).Chart;
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Deneme 1', 'Deneme 2', 'Deneme 3', 'Deneme 4', 'Deneme 5'],
+        datasets: [
+          {
+            label: 'TYT Başarı Oranı',
+            data: [75, 78, 82, 85, 88],
+            borderColor: '#667eea',
+            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4,
+            pointRadius: 6,
+            pointHoverRadius: 8
+          },
+          {
+            label: 'AYT Başarı Oranı',
+            data: [70, 73, 76, 79, 83],
+            borderColor: '#f6ad55',
+            backgroundColor: 'rgba(246, 173, 85, 0.1)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4,
+            pointRadius: 6,
+            pointHoverRadius: 8
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top',
+            labels: {
+              font: {
+                size: 14,
+                weight: 'bold'
+              },
+              padding: 15,
+              usePointStyle: true
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            padding: 12,
+            titleFont: {
+              size: 14,
+              weight: 'bold'
+            },
+            bodyFont: {
+              size: 13
+            },
+            callbacks: {
+              label: (context: any) => {
+                return context.dataset.label + ': ' + context.parsed.y + '%';
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            ticks: {
+              callback: (value: any) => value + '%',
+              font: {
+                size: 12
+              }
+            },
+            grid: {
+              color: 'rgba(0, 0, 0, 0.05)'
+            }
+          },
+          x: {
+            ticks: {
+              font: {
+                size: 12
+              }
+            },
+            grid: {
+              display: false
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // Karşılaştırma Grafiği
+  initComparisonChart(): void {
+    const canvas = document.getElementById('comparisonChart') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    if (typeof (window as any).Chart === 'undefined') {
+      console.warn('Chart.js kütüphanesi yüklenmemiş');
+      return;
+    }
+
+    const Chart = (window as any).Chart;
+
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs'],
+        datasets: [
+          {
+            label: 'Ortalama Net',
+            data: [65, 70, 75, 78, 82],
+            backgroundColor: [
+              'rgba(102, 126, 234, 0.8)',
+              'rgba(246, 173, 85, 0.8)',
+              'rgba(72, 187, 120, 0.8)',
+              'rgba(237, 100, 166, 0.8)',
+              'rgba(99, 102, 241, 0.8)'
+            ],
+            borderColor: [
+              '#667eea',
+              '#f6ad55',
+              '#48bb78',
+              '#ed64a6',
+              '#6366f1'
+            ],
+            borderWidth: 2,
+            borderRadius: 8
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            padding: 12,
+            titleFont: {
+              size: 14,
+              weight: 'bold'
+            },
+            bodyFont: {
+              size: 13
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              font: {
+                size: 12
+              }
+            },
+            grid: {
+              color: 'rgba(0, 0, 0, 0.05)'
+            }
+          },
+          x: {
+            ticks: {
+              font: {
+                size: 12
+              }
+            },
+            grid: {
+              display: false
+            }
+          }
+        }
+      }
+    });
   }
 
   // Modal metodları
