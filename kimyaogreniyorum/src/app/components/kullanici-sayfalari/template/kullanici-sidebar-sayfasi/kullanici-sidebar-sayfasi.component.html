@@ -1,82 +1,47 @@
-
-<div class="modern-sidebar" [class.collapsed]="isCollapsed">
-  <!-- Sidebar Header -->
+<aside class="modern-sidebar">
   <div class="sidebar-header">
     <div class="logo-container">
-      <div class="logo-icon">
-        <i class="fas fa-graduation-cap"></i>
-      </div>
-      <span class="logo-text" *ngIf="!isCollapsed">KimyaÖğreniyorum</span>
-    </div>
-    <button class="toggle-btn" (click)="toggleSidebar()">
-      <i class="fas" [class.fa-bars]="isCollapsed" [class.fa-times]="!isCollapsed"></i>
-    </button>
-  </div>
-
-  <!-- User Profile Section -->
-  <div class="user-profile" *ngIf="!isCollapsed">
-    <div class="avatar-container">
-      <img [src]="userAvatar || 'assets/default-avatar.png'" alt="User Avatar" class="user-avatar">
-      <div class="status-indicator"></div>
-    </div>
-    <div class="user-info">
-      <h3 class="user-name">{{ userName }}</h3>
-      <p class="user-role">{{ userRole }}</p>
+      <i class="fas fa-graduation-cap"></i>
+      <span class="logo-text">Kimya Panel</span>
     </div>
   </div>
 
-  <!-- Navigation Menu -->
   <nav class="sidebar-nav">
-    <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+    <a routerLink="/ana-sayfa" routerLinkActive="active" class="nav-item">
       <i class="fas fa-home"></i>
-      <span *ngIf="!isCollapsed">Ana Sayfa</span>
+      <span>Ana Sayfa</span>
     </a>
-    
-    <a routerLink="/profile" routerLinkActive="active" class="nav-item">
+
+    <a routerLink="/profil" routerLinkActive="active" class="nav-item">
       <i class="fas fa-user"></i>
-      <span *ngIf="!isCollapsed">Profil</span>
+      <span>Profil</span>
     </a>
-    
-    <a routerLink="/courses" routerLinkActive="active" class="nav-item">
+
+    <a routerLink="/sinavlar" routerLinkActive="active" class="nav-item">
+      <i class="fas fa-clipboard-list"></i>
+      <span>Sınavlar</span>
+    </a>
+
+    <a routerLink="/konular" routerLinkActive="active" class="nav-item">
       <i class="fas fa-book"></i>
-      <span *ngIf="!isCollapsed">Dersler</span>
+      <span>Konular</span>
     </a>
-    
-    <a routerLink="/exams" routerLinkActive="active" class="nav-item">
-      <i class="fas fa-file-alt"></i>
-      <span *ngIf="!isCollapsed">Sınavlar</span>
+
+    <a routerLink="/istatistikler" routerLinkActive="active" class="nav-item">
+      <i class="fas fa-chart-line"></i>
+      <span>İstatistikler</span>
     </a>
-    
-    <a routerLink="/assignments" routerLinkActive="active" class="nav-item">
-      <i class="fas fa-tasks"></i>
-      <span *ngIf="!isCollapsed">Ödevler</span>
-    </a>
-    
-    <a routerLink="/statistics" routerLinkActive="active" class="nav-item">
-      <i class="fas fa-chart-bar"></i>
-      <span *ngIf="!isCollapsed">İstatistikler</span>
-    </a>
-    
-    <a routerLink="/settings" routerLinkActive="active" class="nav-item">
+
+    <a routerLink="/ayarlar" routerLinkActive="active" class="nav-item">
       <i class="fas fa-cog"></i>
-      <span *ngIf="!isCollapsed">Ayarlar</span>
+      <span>Ayarlar</span>
     </a>
   </nav>
 
-  <!-- Notifications Badge -->
-  <div class="notifications-section" *ngIf="!isCollapsed && notificationCount > 0">
-    <div class="notification-badge">
-      <i class="fas fa-bell"></i>
-      <span class="badge-count">{{ notificationCount }}</span>
-      <span class="notification-text">Yeni Bildirim</span>
-    </div>
-  </div>
-
-  <!-- Logout Button -->
   <div class="sidebar-footer">
     <button class="logout-btn" (click)="logout()">
       <i class="fas fa-sign-out-alt"></i>
-      <span *ngIf="!isCollapsed">Çıkış Yap</span>
+      <span>Çıkış Yap</span>
     </button>
   </div>
-</div>
+</aside>
