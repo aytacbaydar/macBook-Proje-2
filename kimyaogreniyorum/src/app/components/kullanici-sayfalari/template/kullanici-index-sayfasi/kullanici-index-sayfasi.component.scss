@@ -6,15 +6,13 @@
   .main-sayfasi {
     width: 100%;
     height: auto;
-    margin-top: 60px;
     margin-bottom: 100px;
     background-color: rgb(231, 201, 3);
-  }
+    padding-top: 60px; }
 
   .sayfalar{
     width: calc(100% - 40px); /* Sidebar genişliğini çıkar */
     margin-left: 40px; /* Sidebar genişliği kadar boşluk bırak */
-    background-color: rgb(231, 3, 231);
   }
 
   .sidebar {
