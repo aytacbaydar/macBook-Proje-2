@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
@@ -9,6 +9,8 @@ import { Router } from '@angular/router';
   styleUrl: './kullanici-navbar-sayfasi.component.scss'
 })
 export class KullaniciNavbarSayfasiComponent implements OnInit {
+  @Output() sidebarToggle = new EventEmitter<void>();
+  
   userName: string = 'Kullanıcı';
   userAvatar: string = 'https://ui-avatars.com/api/?name=Kullanici&background=ff6600&color=fff';
   isBottomSheetOpen: boolean = false;
@@ -138,5 +140,8 @@ export class KullaniciNavbarSayfasiComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
+  toggleSidebar(): void {
+    this.sidebarToggle.emit();
+  }
 
 }

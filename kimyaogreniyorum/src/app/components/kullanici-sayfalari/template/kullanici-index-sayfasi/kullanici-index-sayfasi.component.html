@@ -1,9 +1,9 @@
 <div class="ana-icerik">
-  <app-kullanici-navbar-sayfasi></app-kullanici-navbar-sayfasi>
+  <app-kullanici-navbar-sayfasi (sidebarToggle)="onSidebarToggle()"></app-kullanici-navbar-sayfasi>
   <main class="main-sayfasi">
   <!-- Sidebar-->
   <div class="sidebar">
-    <app-kullanici-sidebar-sayfasi></app-kullanici-sidebar-sayfasi>
+    <app-kullanici-sidebar-sayfasi #sidebar></app-kullanici-sidebar-sayfasi>
   </div>
   <!-- Sidebar Son-->
   <!-- Ana İçerik -->
