@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 })
 export class KullaniciNavbarSayfasiComponent implements OnInit {
   @Output() sidebarToggle = new EventEmitter<void>();
-  
+
   userName: string = 'Kullanıcı';
   userAvatar: string = 'https://ui-avatars.com/api/?name=Kullanici&background=ff6600&color=fff';
   isBottomSheetOpen: boolean = false;
@@ -33,7 +33,7 @@ export class KullaniciNavbarSayfasiComponent implements OnInit {
   nextLesson: string = '';
 
 
- 
+
 
   constructor(private http: HttpClient, private router: Router) {}
 
