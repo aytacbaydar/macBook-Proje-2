@@ -39,6 +39,11 @@ a{
             font-size: 24px;
             color: #ff6600;
         }
+        @media screen and (max-width: 768px) {
+            i {
+                display: none;
+            }
+        }
     }
 
     .profil-button {
