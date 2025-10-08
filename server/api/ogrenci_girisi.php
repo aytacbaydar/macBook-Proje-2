@@ -22,7 +22,7 @@ try {
     $stmt = $conn->prepare("
         SELECT o.id, o.adi_soyadi, o.email, o.sifre, o.rutbe, o.avatar, o.ogretmeni,
              ob.sinifi,ob.kategori,
-             COALESCE(ob.ders_adi, 'Kimya') as ders_adi, 
+             COALESCE(ob.ders_adi, 'Kimya') as ders_adi,
              ob.grubu
         FROM ogrenciler o
         LEFT JOIN ogrenci_bilgileri ob ON o.id = ob.ogrenci_id
@@ -51,6 +51,21 @@ try {
     error_log("Login - User ID: " . $user['id'] . ", Email: " . $user['email']);
     error_log("Login - Generated Token: " . $token);
     error_log("Login - Aktif durumu: " . $user['aktif']);
+
+    // Öğrenci detaylı bilgilerini de getir
+    if ($user['rutbe'] === 'ogrenci') {
+        $detailStmt = $conn->prepare("
+            SELECT okulu, sinifi, grubu, ders_adi, ders_gunu, ders_saati, ucret, veli_adi, veli_cep
+            FROM ogrenci_bilgileri
+            WHERE ogrenci_id = :ogrenci_id
+        ");
+        $detailStmt->execute([':ogrenci_id' => $user['id']]);
+        $details = $detailStmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($details) {
+            $user = array_merge($user, $details);
+        }
+    }
 
     // Kullanıcı bilgilerini döndür (şifre hariç)
     unset($user['sifre']);

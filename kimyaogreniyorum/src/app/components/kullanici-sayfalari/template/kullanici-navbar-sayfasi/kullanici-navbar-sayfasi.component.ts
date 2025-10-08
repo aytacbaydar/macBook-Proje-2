@@ -53,17 +53,26 @@ export class KullaniciNavbarSayfasiComponent implements OnInit {
     if (userStr) {
       try {
         const user = JSON.parse(userStr);
+        
+        console.log('Ham kullanıcı verisi:', user);
 
-        // Kullanıcı bilgilerini al (API'den gelen response.data formatına uygun)
+        // Kullanıcı bilgilerini al
         this.studentName = user.adi_soyadi || 'Öğrenci';
-        this.studentClass = user.sinifi || 'Sınıf Bilgisi Yok';
-        this.studentTeacher = user.ogretmeni || 'Öğretmen Bilgisi Yok';
-        this.studentKategori = user.kategori || 'kategori bilgisi yok';
-        this.studentGrup = user.grubu || 'grup bilgisi yok';
+        
+        // Detaylı bilgiler için önce direkt user objesinden, yoksa ogrenci_bilgileri'nden al
+        this.studentClass = user.sinifi || user.sinif || 'Sınıf Bilgisi Yok';
+        this.studentTeacher = user.ogretmeni || user.ogretmen || 'Öğretmen Bilgisi Yok';
+        this.studentKategori = user.kategori || 'Kategori Bilgisi Yok';
+        this.studentGrup = user.grubu || user.grup || 'Grup Bilgisi Yok';
 
         // Avatar kontrolü - API'den gelen avatar alanını kullan
         if (user.avatar && user.avatar.trim() !== '') {
-          this.studentAvatar = user.avatar;
+          // Avatar yolu server path içeriyorsa tam URL yap
+          if (!user.avatar.startsWith('http')) {
+            this.studentAvatar = `https://www.kimyaogreniyorum.com/${user.avatar}`;
+          } else {
+            this.studentAvatar = user.avatar;
+          }
         } else {
           // Avatar yoksa UI Avatars ile dinamik oluştur
           this.studentAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(
@@ -79,7 +88,8 @@ export class KullaniciNavbarSayfasiComponent implements OnInit {
           avatar: this.studentAvatar,
           kategori: this.studentKategori,
           userRole: user.rutbe,
-          grup: this.studentGrup
+          grup: this.studentGrup,
+          rawUser: user
         });
       } catch (error) {
         console.error('Kullanıcı bilgileri ayrıştırılırken hata:', error);
