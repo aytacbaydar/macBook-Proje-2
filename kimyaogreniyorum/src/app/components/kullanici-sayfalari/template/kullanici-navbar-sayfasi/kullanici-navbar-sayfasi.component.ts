@@ -59,7 +59,7 @@ export class KullaniciNavbarSayfasiComponent implements OnInit {
         // Kullanıcı bilgilerini al
         this.studentName = user.adi_soyadi || 'Öğrenci';
         
-        // Detaylı bilgiler için önce direkt user objesinden, yoksa ogrenci_bilgileri'nden al
+        // Detaylı bilgiler için önce direkt user objesinden al
         this.studentClass = user.sinifi || user.sinif || 'Sınıf Bilgisi Yok';
         this.studentTeacher = user.ogretmeni || user.ogretmen || 'Öğretmen Bilgisi Yok';
         this.studentKategori = user.kategori || 'Kategori Bilgisi Yok';
