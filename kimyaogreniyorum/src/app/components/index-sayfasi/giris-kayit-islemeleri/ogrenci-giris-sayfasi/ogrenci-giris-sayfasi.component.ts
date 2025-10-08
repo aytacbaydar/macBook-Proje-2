@@ -10,6 +10,7 @@ interface Teacher {
   adi_soyadi: string;
   email: string;
   brans: string;
+  katogori: string;
   aktif: boolean;
 }
 

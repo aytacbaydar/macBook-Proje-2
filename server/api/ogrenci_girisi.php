@@ -21,7 +21,7 @@ try {
     // Kullanıcı bilgilerini kontrol et (detay bilgileriyle birlikte)
     $stmt = $conn->prepare("
         SELECT o.id, o.adi_soyadi, o.email, o.sifre, o.rutbe, o.avatar, o.ogretmeni,
-             ob.sinifi,
+             ob.sinifi,ob.kategori,
              COALESCE(ob.ders_adi, 'Kimya') as ders_adi, 
              ob.grubu
         FROM ogrenciler o

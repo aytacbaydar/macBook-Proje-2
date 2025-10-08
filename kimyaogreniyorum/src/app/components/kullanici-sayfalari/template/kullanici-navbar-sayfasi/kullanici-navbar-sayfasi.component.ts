@@ -20,7 +20,9 @@ export class KullaniciNavbarSayfasiComponent implements OnInit {
   studentName: string = '';
   studentAvatar: string = '';
   studentClass: string = '';
+  studentGrup: string = '';
   studentTeacher: string = '';
+  studentKategori: string = '';
 
   // Dashboard statistics
   totalAttendance: number = 0;
@@ -56,6 +58,8 @@ export class KullaniciNavbarSayfasiComponent implements OnInit {
         this.studentName = user.adi_soyadi || 'Öğrenci';
         this.studentClass = user.sinifi || 'Sınıf Bilgisi Yok';
         this.studentTeacher = user.ogretmeni || 'Öğretmen Bilgisi Yok';
+        this.studentKategori = user.kategori || 'kategori bilgisi yok';
+        this.studentGrup = user.grubu || 'grup bilgisi yok';
 
         // Avatar kontrolü - API'den gelen avatar alanını kullan
         if (user.avatar && user.avatar.trim() !== '') {
@@ -73,7 +77,9 @@ export class KullaniciNavbarSayfasiComponent implements OnInit {
           class: this.studentClass,
           teacher: this.studentTeacher,
           avatar: this.studentAvatar,
+          kategori: this.studentKategori,
           userRole: user.rutbe,
+          grup: this.studentGrup
         });
       } catch (error) {
         console.error('Kullanıcı bilgileri ayrıştırılırken hata:', error);
