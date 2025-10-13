@@ -1,4 +1,17 @@
 // Shared styles import
 @import '../shared-styles.scss';
 
+@media screen and (max-width: 768px) {
+  .table {
+    display: none;
+  }
+  .sinav-card {
+    border-radius: 8px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    text-align: center;
+    padding: 15px;
+    background-color: #ffffff;
+    
+  }
+}
 /* Bu sayfaya özel ekstra stiller buraya eklenebilir */

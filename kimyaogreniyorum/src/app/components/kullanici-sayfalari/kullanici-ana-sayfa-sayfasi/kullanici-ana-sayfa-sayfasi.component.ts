@@ -25,7 +25,7 @@ interface SinavSonucu {
 })
 export class KullaniciAnaSayfaSayfasiComponent implements OnInit, AfterViewInit {
   // Sidebar state
-  isSidebarOpen: boolean = true;
+  isSidebarOpen: boolean = false;
 
   // Student information
   studentName: string = '';
@@ -224,7 +224,7 @@ export class KullaniciAnaSayfaSayfasiComponent implements OnInit, AfterViewInit 
     const sinavAdlari = this.sinavSonuclari.map(sinav => {
       // Sınav adını kısalt (çok uzunsa)
       const ad = sinav.sinav_adi;
-      return ad.length > 15 ? ad.substring(0, 12) + '...' : ad;
+      return ad.length > 5 ? ad.substring(0, 12) + '' : ad;
     });
 
     const basariOranlari = this.sinavSonuclari.map(sinav => this.getSuccessPercentage(sinav));
