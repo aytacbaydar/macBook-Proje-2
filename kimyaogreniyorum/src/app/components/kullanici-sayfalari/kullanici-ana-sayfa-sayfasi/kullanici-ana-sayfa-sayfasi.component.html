@@ -1,9 +1,25 @@
 <div class="container-fluid">
+  <!-- Kullanıcı Karşılama Mesajı -->
+  <div class="modern-card-system card-gradient-organe mb-4">
+    <div class="card-header-modern">
+      <h3 class="card-title-left">
+        <i class="fas fa-user-circle"></i>
+        Hoş Geldiniz, {{ studentName }}!
+      </h3>
+      <div class="card-settings-right">
+        <button class="settings-icon">
+          <i class="bi bi-gear-fill"></i>
+        </button>
+      </div>
+    </div>
+    <div class="card-contents-modern">
+      <h1>{{ getTotalCorrect() }}</h1>
+      <p class="mb-0">
+        Bugün harika bir gün! Yeni sınavlara katılarak bilginizi test edin ve gelişiminizi takip edin.</p>
+    </div>
+  </div>
 
-  <!-- ============================================
-       MODERN CARD SYSTEM EXAMPLES
-       ============================================ -->
-  <!-- Card Example 1 - Default Purple Gradient -->
+  <!-- Sınavlar -->
   <div class="modern-card-system">
     <div class="card-header-modern">
       <h3 class="card-title-left">

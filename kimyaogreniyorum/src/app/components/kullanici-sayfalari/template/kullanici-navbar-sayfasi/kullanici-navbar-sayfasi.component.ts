@@ -80,17 +80,6 @@ export class KullaniciNavbarSayfasiComponent implements OnInit {
           )}&background=28a745&color=fff&size=40&font-size=0.6&rounded=true`;
         }
 
-        console.log('Öğrenci bilgileri yüklendi:', {
-          id: user.id,
-          name: this.studentName,
-          class: this.studentClass,
-          teacher: this.studentTeacher,
-          avatar: this.studentAvatar,
-          kategori: this.studentKategori,
-          userRole: user.rutbe,
-          grup: this.studentGrup,
-          rawUser: user
-        });
       } catch (error) {
         console.error('Kullanıcı bilgileri ayrıştırılırken hata:', error);
         this.setDefaultStudentInfo();

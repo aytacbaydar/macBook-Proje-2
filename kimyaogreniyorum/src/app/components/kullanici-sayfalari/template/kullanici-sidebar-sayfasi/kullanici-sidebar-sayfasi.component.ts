@@ -8,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrl: './kullanici-sidebar-sayfasi.component.scss'
 })
 export class KullaniciSidebarSayfasiComponent implements OnInit {
-  isCollapsed = false;
+  isCollapsed = true;
   userName = 'Kullanıcı Adı';
   userRole = 'Öğrenci';
   userAvatar = '';

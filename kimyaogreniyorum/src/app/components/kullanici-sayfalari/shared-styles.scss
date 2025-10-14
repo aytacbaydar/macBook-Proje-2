@@ -93,6 +93,11 @@
       background: linear-gradient(135deg, #3b82f6, #2563eb);
     }
   }
+  &.card-gradient-organe {
+    .card-header-modern {
+      background: linear-gradient(135deg, #ff660070, #ff6600);
+    }
+  }
 
   &.card-gradient-green {
     .card-header-modern {

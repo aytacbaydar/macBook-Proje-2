@@ -568,4 +568,12 @@ export class KullaniciAnaSayfaSayfasiComponent implements OnInit, AfterViewInit 
     const hideTime = new Date().getTime() + (24 * 60 * 60 * 1000);
     localStorage.setItem('apk-section-hidden', hideTime.toString());
   }
+
+  getTotalQuestions(): number {
+    return this.konuAnalizi.reduce((sum, konu) => sum + konu.toplam_soru, 0);
+  }
+
+  getTotalCorrect(): number {
+    return this.konuAnalizi.reduce((sum, konu) => sum + konu.dogru_sayisi, 0);
+  }
 }
