@@ -1,201 +1,108 @@
-<div class="randevu-container">
-  <div class="randevu-header">
-    <h1 class="page-title">
-      <i class="fas fa-calendar-alt"></i>
-      RANDEVU AL
-    </h1>
-    <p class="page-subtitle">
-      Profesyonel dövme hizmeti için randevunuzu hemen alın
-    </p>
-  </div>
+<div class="randevu-container p-4">
+  
 
-  <div class="randevu-content">
-    <!-- Randevu Form -->
-    <form [formGroup]="randevuForm" (ngSubmit)="onSubmit()" class="randevu-form">
-      <div class="form-grid">
-        <!-- Personal Information -->
-        <div class="form-section">
-          <h3 class="section-title">
-            <i class="fas fa-user"></i>
-            Kişisel Bilgiler
-          </h3>
+  <form [formGroup]="randevuForm" (ngSubmit)="onSubmit()" class="randevu-form">
+    <div class="form-grid">
+      <!-- 🔹 Kişisel Bilgiler -->
+      <div class="form-section">
+        <h3 class="section-title"><i class="fas fa-user"></i> Kişisel Bilgiler</h3>
 
-          <div class="form-row">
-            <div class="form-group">
-              <label for="ad">Ad *</label>
-              <input
-                type="text"
-                id="ad"
-                formControlName="ad"
-                placeholder="Adınızı giriniz"
-                [class.error]="isFieldInvalid('ad')"
-              >
-              <div class="error-message" *ngIf="isFieldInvalid('ad')">
-                {{ getFieldError('ad') }}
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="soyad">Soyad *</label>
-              <input
-                type="text"
-                id="soyad"
-                formControlName="soyad"
-                placeholder="Soyadınızı giriniz"
-                [class.error]="isFieldInvalid('soyad')"
-              >
-              <div class="error-message" *ngIf="isFieldInvalid('soyad')">
-                {{ getFieldError('soyad') }}
-              </div>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="telefon">Telefon *</label>
-              <input
-                type="tel"
-                id="telefon"
-                formControlName="telefon"
-                placeholder="05551234567"
-                [class.error]="isFieldInvalid('telefon')"
-              >
-              <div class="error-message" *ngIf="isFieldInvalid('telefon')">
-                {{ getFieldError('telefon') }}
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="email">E-mail *</label>
-              <input
-                type="email"
-                id="email"
-                formControlName="email"
-                placeholder="ornek@email.com"
-                [class.error]="isFieldInvalid('email')"
-              >
-              <div class="error-message" *ngIf="isFieldInvalid('email')">
-                {{ getFieldError('email') }}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Appointment Details -->
-        <div class="form-section">
-          <h3 class="section-title">
-            <i class="fas fa-clock"></i>
-            Randevu Detayları
-          </h3>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="tarih">Tarih *</label>
-              <input
-                type="date"
-                id="tarih"
-                formControlName="tarih"
-                [min]="minDate"
-                [class.error]="isFieldInvalid('tarih')"
-              >
-              <div class="error-message" *ngIf="isFieldInvalid('tarih')">
-                {{ getFieldError('tarih') }}
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="saat">Saat *</label>
-              <select
-                id="saat"
-                formControlName="saat"
-                [class.error]="isFieldInvalid('saat')"
-              >
-                <option value="">Saat seçiniz</option>
-                <option value="09:00">09:00</option>
-                <option value="10:00">10:00</option>
-                <option value="11:00">11:00</option>
-                <option value="12:00">12:00</option>
-                <option value="14:00">14:00</option>
-                <option value="15:00">15:00</option>
-                <option value="16:00">16:00</option>
-                <option value="17:00">17:00</option>
-                <option value="18:00">18:00</option>
-              </select>
-              <div class="error-message" *ngIf="isFieldInvalid('saat')">
-                {{ getFieldError('saat') }}
-              </div>
-            </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Ad *</label>
+            <input type="text" formControlName="ad" placeholder="Adınızı giriniz" />
+            <div class="error-message" *ngIf="isFieldInvalid('ad')">{{ getFieldError('ad') }}</div>
           </div>
 
           <div class="form-group">
-            <label for="dovmeTuru">Dövme Türü *</label>
-            <select
-              id="dovmeTuru"
-              formControlName="dovmeTuru"
-              [class.error]="isFieldInvalid('dovmeTuru')"
-            >
-              <option value="">Dövme türünü seçiniz</option>
-              <option value="small">Küçük Dövme (5-10 cm)</option>
-              <option value="medium">Orta Dövme (10-20 cm)</option>
-              <option value="large">Büyük Dövme (20+ cm)</option>
-              <option value="tribal">Tribal Dövme</option>
-              <option value="portrait">Portre Dövme</option>
-              <option value="cover">Kapatma Dövmesi</option>
-              <option value="other">Diğer</option>
+            <label>Soyad *</label>
+            <input type="text" formControlName="soyad" placeholder="Soyadınızı giriniz" />
+            <div class="error-message" *ngIf="isFieldInvalid('soyad')">{{ getFieldError('soyad') }}</div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Telefon *</label>
+            <input type="tel" formControlName="telefon" placeholder="05551234567" />
+            <div class="error-message" *ngIf="isFieldInvalid('telefon')">{{ getFieldError('telefon') }}</div>
+          </div>
+
+          <div class="form-group">
+            <label>E-mail *</label>
+            <input type="email" formControlName="email" placeholder="ornek@email.com" />
+            <div class="error-message" *ngIf="isFieldInvalid('email')">{{ getFieldError('email') }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 🔹 Randevu Detayları -->
+      <div class="form-section">
+        <h3 class="section-title"><i class="fas fa-clock"></i> Randevu Detayları</h3>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tarih *</label>
+            <input type="date" formControlName="tarih" [min]="minDate" />
+            <div class="error-message" *ngIf="isFieldInvalid('tarih')">{{ getFieldError('tarih') }}</div>
+          </div>
+
+          <div class="form-group">
+            <label>Saat *</label>
+            <select formControlName="saat">
+              <option value="">Saat seçiniz</option>
+              <option *ngFor="let s of ['09:00','10:00','11:00','12:00','14:00','15:00','16:00','17:00','18:00']" [value]="s">{{ s }}</option>
             </select>
-            <div class="error-message" *ngIf="isFieldInvalid('dovmeTuru')">
-              {{ getFieldError('dovmeTuru') }}
+            <div class="error-message" *ngIf="isFieldInvalid('saat')">{{ getFieldError('saat') }}</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Dövme Türü *</label>
+          <select formControlName="dovmeTuru">
+            <option value="">Dövme türünü seçiniz</option>
+            <option *ngFor="let t of dovmeTurleri" [value]="t.name">{{ t.name }}</option>
+          </select>
+          <div class="error-message" *ngIf="isFieldInvalid('dovmeTuru')">{{ getFieldError('dovmeTuru') }}</div>
+        </div>
+
+        <!-- 🔹 Hesaplama Alanı -->
+        <div class="price-area">
+          <h4><i class="fas fa-calculator"></i> Fiyat Hesaplama</h4>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Genişlik (cm)</label>
+              <input type="number" formControlName="genislik" step="0.1" min="0.1" />
+            </div>
+            <div class="form-group">
+              <label>Yükseklik (cm)</label>
+              <input type="number" formControlName="yukseklik" step="0.1" min="0.1" />
+            </div>
+            <div class="form-group">
+              <label>Adet</label>
+              <input type="number" formControlName="adet" min="1" />
             </div>
           </div>
 
           <div class="form-group">
-            <label for="aciklama">Açıklama & İstekler *</label>
-            <textarea
-              id="aciklama"
-              formControlName="aciklama"
-              rows="4"
-              placeholder="Dövme hakkında detayları, boyutu, yerini ve özel isteklerinizi yazınız..."
-              [class.error]="isFieldInvalid('aciklama')"
-            ></textarea>
-            <div class="error-message" *ngIf="isFieldInvalid('aciklama')">
-              {{ getFieldError('aciklama') }}
-            </div>
+            <label>Toplam Fiyat (₺)</label>
+            <input type="number" formControlName="toplamFiyat" readonly />
           </div>
         </div>
-      </div>
 
-      <!-- Submit Button -->
-      <div class="form-actions">
-        <button
-          type="submit"
-          class="btn-submit"
-          [disabled]="isSubmitting"
-        >
-          <i class="fas fa-calendar-check" *ngIf="!isSubmitting"></i>
-          <i class="fas fa-spinner fa-spin" *ngIf="isSubmitting"></i>
-          <span *ngIf="!isSubmitting">RANDEVU AL</span>
-          <span *ngIf="isSubmitting">GÖNDERİLİYOR...</span>
-        </button>
-      </div>
-    </form>
-
-    <!-- Contact Info -->
-    <div class="contact-info">
-      <h3>İletişim Bilgileri</h3>
-      <div class="contact-items">
-        <div class="contact-item">
-          <i class="fas fa-phone"></i>
-          <span>+90 534 325 63 91</span>
-        </div>
-        <div class="contact-item">
-          <i class="fas fa-envelope"></i>
-          <span>info@xtremetattoo.com</span>
-        </div>
-        <div class="contact-item">
-          <i class="fas fa-map-marker-alt"></i>
-          <span>Eskişehir, Türkiye</span>
+        <div class="form-group">
+          <label>Açıklama & İstekler *</label>
+          <textarea rows="3" formControlName="aciklama" placeholder="Dövme hakkında detaylar, boyut, yer, istekler..."></textarea>
+          <div class="error-message" *ngIf="isFieldInvalid('aciklama')">{{ getFieldError('aciklama') }}</div>
         </div>
       </div>
     </div>
-  </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-submit" [disabled]="isSubmitting">
+        <i class="fas" [ngClass]="isSubmitting ? 'fa-spinner fa-spin' : 'fa-calendar-check'"></i>
+        <span>{{ isSubmitting ? 'GÖNDERİLİYOR...' : 'RANDEVU AL' }}</span>
+      </button>
+    </div>
+  </form>
 </div>

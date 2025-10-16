@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+interface DovmeTuru {
+  name: string;
+  unitPrice: number;
+}
+
 @Component({
   selector: 'app-dovme-randevu-sayfasi',
   templateUrl: './dovme-randevu-sayfasi.component.html',
@@ -8,75 +13,81 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   standalone: false
 })
 export class DovmeRandevuSayfasiComponent implements OnInit {
-  randevuForm: FormGroup;
+  randevuForm!: FormGroup;
   isSubmitting = false;
-  minDate: string = '';
+  minDate: string = new Date().toISOString().split('T')[0];
 
-  constructor(private fb: FormBuilder) {
+  dovmeTurleri: DovmeTuru[] = [
+    { name: 'Portre Dövme', unitPrice: 600 },
+    { name: 'Tribal Dövme', unitPrice: 450 },
+    { name: 'Kapatma Dövmesi', unitPrice: 300 }
+  ];
+
+  constructor(private fb: FormBuilder) {}
+
+  ngOnInit(): void {
     this.randevuForm = this.fb.group({
-      ad: ['', [Validators.required, Validators.minLength(2)]],
-      soyad: ['', [Validators.required, Validators.minLength(2)]],
-      telefon: ['', [Validators.required, Validators.pattern(/^[0-9]{10,11}$/)]],
+      ad: ['', Validators.required],
+      soyad: ['', Validators.required],
+      telefon: ['', [Validators.required, Validators.pattern('^[0-9]{10,11}$')]],
       email: ['', [Validators.required, Validators.email]],
       tarih: ['', Validators.required],
       saat: ['', Validators.required],
       dovmeTuru: ['', Validators.required],
-      aciklama: ['', [Validators.required, Validators.minLength(10)]]
+      genislik: [1, [Validators.required, Validators.min(0.1)]],
+      yukseklik: [1, [Validators.required, Validators.min(0.1)]],
+      adet: [1, [Validators.required, Validators.min(1)]],
+      toplamFiyat: [{ value: 0, disabled: true }],
+      aciklama: ['', Validators.required],
     });
+
+    // Herhangi bir alan değişince toplam fiyatı güncelle
+    this.randevuForm.valueChanges.subscribe(() => this.hesaplaToplam());
   }
 
-  ngOnInit(): void {
-    // Set minimum date to today (local timezone)
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    this.minDate = `${year}-${month}-${day}`;
-  }
-
-  onSubmit(): void {
-    if (this.randevuForm.valid) {
-      this.isSubmitting = true;
-      
-      // Simulate API call
-      setTimeout(() => {
-        console.log('Randevu Bilgileri:', this.randevuForm.value);
-        this.isSubmitting = false;
-        this.randevuForm.reset();
-      }, 1500);
-    } else {
-      this.markFormGroupTouched();
+  hesaplaToplam() {
+    const { dovmeTuru, genislik, yukseklik, adet } = this.randevuForm.value;
+    const secilen = this.dovmeTurleri.find(t => t.name === dovmeTuru);
+    if (!secilen) {
+      this.randevuForm.get('toplamFiyat')?.setValue(0);
+      return;
     }
+    const alan = (genislik || 0) * (yukseklik || 0);
+    const toplam = secilen.unitPrice * alan * (adet || 1);
+    this.randevuForm.get('toplamFiyat')?.setValue(toplam);
   }
 
-  private markFormGroupTouched(): void {
-    Object.keys(this.randevuForm.controls).forEach(key => {
-      const control = this.randevuForm.get(key);
-      control?.markAsTouched();
-    });
-  }
-
-  isFieldInvalid(fieldName: string): boolean {
-    const field = this.randevuForm.get(fieldName);
-    return field ? field.invalid && field.touched : false;
-  }
-
-  getFieldError(fieldName: string): string {
-    const field = this.randevuForm.get(fieldName);
-    if (field && field.errors && field.touched) {
-      if (field.errors['required']) {
-        return 'Bu alan zorunludur';
-      }
-      if (field.errors['minlength']) {
-        return `En az ${field.errors['minlength'].requiredLength} karakter olmalıdır`;
-      }
-      if (field.errors['email']) {
-        return 'Geçerli bir email adresi giriniz';
-      }
-      if (field.errors['pattern']) {
-        return 'Geçerli bir telefon numarası giriniz';
-      }
+  onSubmit() {
+    if (this.randevuForm.invalid) {
+      this.randevuForm.markAllAsTouched();
+      return;
     }
+
+    const data = this.randevuForm.getRawValue(); // disabled alanlar dahil
+    this.isSubmitting = true;
+
+    setTimeout(() => {
+      this.isSubmitting = false;
+      alert('Randevunuz başarıyla oluşturuldu!\\n\\n' + JSON.stringify(data, null, 2));
+      this.randevuForm.reset({
+        genislik: 1,
+        yukseklik: 1,
+        adet: 1,
+        toplamFiyat: 0
+      });
+    }, 1000);
+  }
+
+  isFieldInvalid(field: string): boolean {
+    const c = this.randevuForm.get(field);
+    return !!(c && c.invalid && c.touched);
+  }
+
+  getFieldError(field: string): string {
+    const c = this.randevuForm.get(field);
+    if (c?.hasError('required')) return 'Bu alan zorunludur';
+    if (c?.hasError('email')) return 'Geçerli bir e-posta giriniz';
+    if (c?.hasError('pattern')) return 'Geçerli bir telefon giriniz';
     return '';
   }
 }
