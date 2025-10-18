@@ -1,24 +1,147 @@
-<div class="pdf-yukleme-paneli">
-  <label class="pdf-secici">
-    <span>PDF Sec</span>
-    <input type="file" accept="application/pdf" (change)="onPdfSec($event)" hidden>
-  </label>
+<nav class="pdf-toolbar pdf-toolbar--sticky">
+  <div class="pdf-toolbar__left">
+    <label class="pdf-secici">
+      <span>&#128196;</span>
+      <span>PDF Sec</span>
+      <input type="file" accept="application/pdf" (change)="onPdfSec($event)" hidden>
+    </label>
 
-  <div *ngIf="pdfYukleniyor" class="durum">PDF yukleniyor...</div>
-  <div *ngIf="pdfHataMesaji" class="durum hata">{{ pdfHataMesaji }}</div>
+    <button type="button" class="btn-ikonlu" (click)="yeniSayfaEkle()" [disabled]="!isBlankDocument || exportInProgress">
+      <i class="ikon">&#10133;</i>
+      <span>Sayfa Ekle</span>
+    </button>
+  </div>
+
+  <div class="pdf-toolbar__middle">
+    <div class="pdf-toolbar__group">
+      <span class="toolbar-label">Renkler</span>
+      <button
+        type="button"
+        class="renk-ikon-btn"
+        *ngFor="let renk of penColorOptions"
+        (click)="setPenColor(renk)"
+        [style.backgroundColor]="renk"
+        [class.aktif]="penColor === renk"
+        [attr.aria-label]="'Kalem rengi ' + renk"
+      ></button>
+    </div>
+
+    <div class="pdf-toolbar__group">
+      <span class="toolbar-label">Araclar</span>
+      <button
+        type="button"
+        class="btn-ikonlu"
+        (click)="setTool('pen')"
+        [class.aktif]="currentTool === 'pen'"
+        aria-label="Kalem"
+      >
+        <i class="ikon">&#9998;</i>
+      </button>
+      <button
+        type="button"
+        class="btn-ikonlu"
+        (click)="setTool('highlighter')"
+        [class.aktif]="currentTool === 'highlighter'"
+        aria-label="Fosforlu Kalem"
+      >
+        <i class="ikon">&#128396;</i>
+      </button>
+      <button
+        type="button"
+        class="btn-ikonlu"
+        (click)="setTool('eraser')"
+        [class.aktif]="currentTool === 'eraser'"
+        aria-label="Silgi"
+      >
+        <i class="ikon">&#129708;</i>
+      </button>
+    </div>
+
+    <div class="pdf-toolbar__group">
+      <span class="toolbar-label">Kalinlik</span>
+      <select
+        class="stroke-select"
+        name="strokeSize"
+        [ngModelOptions]="{ standalone: true }"
+        [(ngModel)]="strokeSize"
+      >
+        <option *ngFor="let size of strokeSizeOptions" [value]="size">{{ size }} px</option>
+      </select>
+    </div>
+
+    <div class="pdf-toolbar__group pdf-toolbar__group--background">
+      <span class="toolbar-label">Arka Plan</span>
+      <button
+        type="button"
+        class="btn-ikonlu"
+        (click)="setBackground('plain')"
+        [class.aktif]="backgroundMode === 'plain'"
+        [disabled]="!isBlankDocument"
+        aria-label="Duz arka plan"
+      >
+        <i class="ikon">&#9633;</i>
+      </button>
+      <button
+        type="button"
+        class="btn-ikonlu"
+        (click)="setBackground('grid')"
+        [class.aktif]="backgroundMode === 'grid'"
+        [disabled]="!isBlankDocument"
+        aria-label="Kareli arka plan"
+      >
+        <i class="ikon">#</i>
+      </button>
+      <button
+        type="button"
+        class="btn-ikonlu"
+        (click)="setBackground('lined')"
+        [class.aktif]="backgroundMode === 'lined'"
+        [disabled]="!isBlankDocument"
+        aria-label="Cizgili arka plan"
+      >
+        <i class="ikon">&#8801;</i>
+      </button>
+    </div>
+
+    <div class="pdf-toolbar__group">
+      <button type="button" class="btn-ikonlu btn-temizle" (click)="clearCurrentAnnotations()" [disabled]="!currentPage">
+        <i class="ikon">&#128465;</i>
+        <span>Temizle</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="pdf-toolbar__right">
+    <button type="button" class="btn-ikonlu btn-indir" (click)="downloadPdf()" [disabled]="pdfYukleniyor || exportInProgress">
+      <i class="ikon">&#128229;</i>
+      <span>PDF Indir</span>
+    </button>
+  </div>
+</nav>
+
+<div *ngIf="pdfYukleniyor" class="durum durum--ust">PDF yukleniyor...</div>
+<div *ngIf="pdfHataMesaji" class="durum hata durum--ust">{{ pdfHataMesaji }}</div>
+
+<div class="pdf-gorunumu" #pdfContainer>
+  <canvas #pdfCanvas class="pdf-canvas" aria-label="PDF gorunumu"></canvas>
+  <canvas
+    #annotationCanvas
+    class="annotation-canvas"
+    aria-label="Cizim alani"
+    (pointerdown)="onPointerDown($event)"
+    (pointermove)="onPointerMove($event)"
+    (pointerup)="onPointerUp($event)"
+    (pointerleave)="onPointerUp($event)"
+    (pointercancel)="onPointerCancel($event)"
+  ></canvas>
 </div>
 
-<div *ngIf="totalPages > 0" class="pdf-kontrol">
-  <button type="button" (click)="oncekiSayfa()" [disabled]="currentPage <= 1 || pdfYukleniyor">
-    Onceki
-  </button>
-  <span class="pdf-kontrol__durum">
-    Sayfa {{ currentPage }} / {{ totalPages }}
-  </span>
+<div *ngIf="totalPages > 0" class="pdf-sayfa-alt-kontrol">
+  <button type="button" (click)="ilkSayfa()" [disabled]="currentPage <= 1 || pdfYukleniyor">Ilk</button>
+  <button type="button" (click)="oncekiSayfa()" [disabled]="currentPage <= 1 || pdfYukleniyor">Onceki</button>
+  <span>Sayfa {{ currentPage }} / {{ totalPages }}</span>
   <button type="button" (click)="sonrakiSayfa()" [disabled]="currentPage >= totalPages || pdfYukleniyor">
     Sonraki
   </button>
+  <button type="button" (click)="sonSayfa()" [disabled]="currentPage >= totalPages || pdfYukleniyor">Son</button>
 </div>
-
-<canvas #pdfCanvas class="pdf-canvas" aria-label="PDF gorunumu"></canvas>
-
