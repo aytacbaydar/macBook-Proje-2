@@ -31,6 +31,15 @@
       <button
         type="button"
         class="btn-ikonlu"
+        (click)="setTool('select')"
+        [class.aktif]="currentTool === 'select'"
+        aria-label="Sec ve Tas"
+      >
+        <i class="ikon">&#128433;</i>
+      </button>
+      <button
+        type="button"
+        class="btn-ikonlu"
         (click)="setTool('pen')"
         [class.aktif]="currentTool === 'pen'"
         aria-label="Kalem"
@@ -64,6 +73,7 @@
         name="strokeSize"
         [ngModelOptions]="{ standalone: true }"
         [(ngModel)]="strokeSize"
+        (ngModelChange)="onStrokeSizeChange($event)"
       >
         <option *ngFor="let size of strokeSizeOptions" [value]="size">{{ size }} px</option>
       </select>
@@ -128,11 +138,6 @@
     #annotationCanvas
     class="annotation-canvas"
     aria-label="Cizim alani"
-    (pointerdown)="onPointerDown($event)"
-    (pointermove)="onPointerMove($event)"
-    (pointerup)="onPointerUp($event)"
-    (pointerleave)="onPointerUp($event)"
-    (pointercancel)="onPointerCancel($event)"
   ></canvas>
 </div>
 

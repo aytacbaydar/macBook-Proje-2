@@ -1,10 +1,12 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import * as pdfjsLib from 'pdfjs-dist/webpack';
 import { PDFDocument } from 'pdf-lib';
+import * as fabric from 'fabric';
 import type { DocumentInitParameters, PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api';
 
-type PdfTool = 'pen' | 'highlighter' | 'eraser';
+type PdfTool = 'select' | 'pen' | 'highlighter' | 'eraser';
 type BackgroundMode = 'plain' | 'grid' | 'lined';
+type FabricCanvasJSON = ReturnType<fabric.Canvas['toJSON']>;
 
 @Component({
   selector: 'app-ders-anlatim-tahtasi',
@@ -44,9 +46,8 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
 
   private renderInProgress = false;
   private pendingPage?: number;
-  private isDrawing = false;
-  private activePointerId?: number;
-  private annotationStates = new Map<number, ImageData>();
+  private fabricCanvas?: fabric.Canvas;
+  private annotationStates = new Map<number, FabricCanvasJSON>();
   private pageBackgrounds = new Map<number, BackgroundMode>();
   private pageMetrics = new Map<number, { canvasWidth: number; canvasHeight: number; pdfWidth?: number; pdfHeight?: number }>();
   exportInProgress = false;
@@ -56,6 +57,7 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.initializeFabricCanvas();
     this.initializeBlankDocument();
   }
 
@@ -71,6 +73,10 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
       this.workerInstance.terminate();
       this.workerInstance = undefined;
       pdfjsLib.GlobalWorkerOptions.workerPort = undefined as unknown as Worker;
+    }
+    if (this.fabricCanvas) {
+      this.fabricCanvas.dispose();
+      this.fabricCanvas = undefined;
     }
     this.pdfDoc = undefined;
     this.annotationStates.clear();
@@ -189,11 +195,22 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
   setTool(tool: PdfTool): void {
     this.currentTool = tool;
     console.info('[PDF::setTool] Active tool', tool);
+    this.configureFabricBrush();
   }
 
   setPenColor(color: string): void {
     this.penColor = color;
     console.info('[PDF::setPenColor] Selected color', color);
+    if (this.currentTool === 'pen') {
+      this.configureFabricBrush();
+    }
+  }
+
+  onStrokeSizeChange(size: number): void {
+    this.strokeSize = Number(size);
+    if (this.currentTool !== 'select') {
+      this.configureFabricBrush();
+    }
   }
 
   async setBackground(mode: BackgroundMode): Promise<void> {
@@ -211,71 +228,25 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
 
   clearCurrentAnnotations(): void {
     const page = this.currentPage;
-    const ann = this.annotationCanvas?.nativeElement;
-    const ctx = ann?.getContext('2d');
-    if (!ann || !ctx) {
+    if (!this.fabricCanvas) {
       return;
     }
-    ctx.clearRect(0, 0, ann.width, ann.height);
+    this.fabricCanvas.discardActiveObject();
+    this.fabricCanvas
+      .getObjects()
+      .slice()
+      .forEach((obj: fabric.Object) => this.fabricCanvas?.remove(obj));
+    this.fabricCanvas.requestRenderAll();
+    if (this.currentTool !== 'select') {
+      this.updateObjectInteractivity(false);
+    } else {
+      this.updateObjectInteractivity(true);
+    }
     if (page) {
       this.annotationStates.delete(page);
     }
+    this.saveCurrentAnnotations();
     console.info('[PDF::clearCurrentAnnotations] Cleared page', page);
-  }
-
-  onPointerDown(event: PointerEvent): void {
-    if (event.button !== 0 && event.pointerType !== 'pen' && event.pointerType !== 'touch') {
-      return;
-    }
-    const ann = this.annotationCanvas?.nativeElement;
-    const ctx = ann?.getContext('2d');
-    if (!ann || !ctx) {
-      return;
-    }
-    if (!this.currentPage) {
-      return;
-    }
-    try {
-      ann.setPointerCapture(event.pointerId);
-    } catch (err) {
-      console.warn('[PDF::onPointerDown] setPointerCapture failed', err);
-    }
-    const { x, y } = this.getCanvasPoint(event, ann);
-    this.isDrawing = true;
-    this.activePointerId = event.pointerId;
-    this.configureStroke(ctx);
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-    event.preventDefault();
-  }
-
-  onPointerMove(event: PointerEvent): void {
-    if (!this.isDrawing || this.activePointerId !== event.pointerId) {
-      return;
-    }
-    const ann = this.annotationCanvas?.nativeElement;
-    const ctx = ann?.getContext('2d');
-    if (!ann || !ctx) {
-      return;
-    }
-    const { x, y } = this.getCanvasPoint(event, ann);
-    ctx.lineTo(x, y);
-    ctx.stroke();
-    event.preventDefault();
-  }
-
-  onPointerUp(event: PointerEvent): void {
-    if (this.activePointerId !== event.pointerId) {
-      return;
-    }
-    this.finishStroke(event);
-  }
-
-  onPointerCancel(event: PointerEvent): void {
-    if (this.activePointerId !== event.pointerId) {
-      return;
-    }
-    this.finishStroke(event);
   }
 
   private async renderPage(pageNumber: number): Promise<void> {
@@ -286,8 +257,7 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
     }
 
     const pdfCanvasEl = this.pdfCanvas?.nativeElement;
-    const annCanvasEl = this.annotationCanvas?.nativeElement;
-    if (!pdfCanvasEl || !annCanvasEl) {
+    if (!pdfCanvasEl || !this.annotationCanvas?.nativeElement) {
       this.pdfHataMesaji = 'Canvas elementi bulunamadı.';
       console.error('[PDF::renderPage] Canvas not found');
       return;
@@ -310,28 +280,30 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
         return;
       }
 
-        if (!this.blankDocument && this.pdfDoc) {
-          const page = await this.pdfDoc.getPage(pageNumber);
-          const viewport = page.getViewport({ scale: this.renderScale });
-          pdfCanvasEl.width = viewport.width;
-          pdfCanvasEl.height = viewport.height;
-          this.pageMetrics.set(pageNumber, {
-            canvasWidth: pdfCanvasEl.width,
-            canvasHeight: pdfCanvasEl.height,
-            pdfWidth: viewport.width / this.renderScale,
-            pdfHeight: viewport.height / this.renderScale,
-          });
-          this.prepareAnnotationCanvas(viewport.width, viewport.height);
+      if (!this.blankDocument && this.pdfDoc) {
+        const page = await this.pdfDoc.getPage(pageNumber);
+        const viewport = page.getViewport({ scale: this.renderScale });
+        pdfCanvasEl.width = viewport.width;
+        pdfCanvasEl.height = viewport.height;
+        pdfCtx.clearRect(0, 0, pdfCanvasEl.width, pdfCanvasEl.height);
+        this.pageMetrics.set(pageNumber, {
+          canvasWidth: pdfCanvasEl.width,
+          canvasHeight: pdfCanvasEl.height,
+          pdfWidth: viewport.width / this.renderScale,
+          pdfHeight: viewport.height / this.renderScale,
+        });
+        this.prepareAnnotationCanvas(viewport.width, viewport.height);
 
-          const renderTask = page.render({ canvasContext: pdfCtx, viewport, canvas: pdfCanvasEl });
-          await renderTask.promise;
-        } else {
+        const renderTask = page.render({ canvasContext: pdfCtx, viewport, canvas: pdfCanvasEl });
+        await renderTask.promise;
+      } else {
         this.blankDocument = true;
         this.drawBlankBackground(pageNumber, pdfCanvasEl, pdfCtx);
       }
 
       this.currentPage = pageNumber;
-      this.restoreAnnotations(pageNumber);
+      await this.restoreAnnotations(pageNumber);
+      this.configureFabricBrush();
       console.info('[PDF::renderPage] Rendering complete', pageNumber);
     } catch (error: any) {
       if (error?.name === 'RenderingCancelledException') {
@@ -429,48 +401,104 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
     return this.workerInitPromise;
   }
 
-  private configureStroke(ctx: CanvasRenderingContext2D): void {
-    const size = Math.max(1, Number(this.strokeSize) || 1);
-    ctx.lineWidth = size;
-    ctx.lineJoin = 'round';
-    ctx.lineCap = 'round';
-    ctx.globalAlpha = 1;
-    ctx.globalCompositeOperation = 'source-over';
-
-    switch (this.currentTool) {
-      case 'pen':
-        ctx.strokeStyle = this.penColor;
-        break;
-      case 'highlighter':
-        ctx.strokeStyle = this.highlighterColor;
-        ctx.globalAlpha = this.highlighterOpacity;
-        break;
-      case 'eraser':
-        ctx.strokeStyle = '#000000';
-        ctx.globalCompositeOperation = 'destination-out';
-        break;
+  private initializeFabricCanvas(): void {
+    const ann = this.annotationCanvas?.nativeElement;
+    if (!ann) {
+      console.warn('[PDF::initFabric] Annotation canvas not found');
+      return;
     }
+
+    this.fabricCanvas = new fabric.Canvas(ann, {
+      selection: false,
+      isDrawingMode: true,
+      preserveObjectStacking: true,
+    });
+    this.fabricCanvas.perPixelTargetFind = true;
+    this.fabricCanvas.defaultCursor = 'crosshair';
+    this.fabricCanvas.hoverCursor = 'move';
+    this.fabricCanvas.setBackgroundColor('transparent', undefined);
+    this.fabricCanvas.freeDrawingBrush = new fabric.PencilBrush(this.fabricCanvas);
+    this.configureFabricBrush();
+
+    const saveState = () => this.saveCurrentAnnotations();
+    this.fabricCanvas.on('path:created', () => {
+      if (this.currentTool !== 'select') {
+        this.updateObjectInteractivity(false);
+      }
+      saveState();
+    });
+    this.fabricCanvas.on('object:modified', saveState);
+    this.fabricCanvas.on('object:removed', saveState);
+    this.fabricCanvas.on('object:added', (event: fabric.TPointerEventInfo) => {
+      if (!event.target) {
+        return;
+      }
+      if (this.currentTool !== 'select') {
+        event.target.selectable = false;
+        event.target.evented = false;
+      }
+    });
   }
 
-  private finishStroke(event: PointerEvent): void {
-    const ann = this.annotationCanvas?.nativeElement;
-    const ctx = ann?.getContext('2d');
-    if (ann && ctx) {
-      ctx.closePath();
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.globalAlpha = 1;
-      if (ann.hasPointerCapture?.(event.pointerId)) {
-        try {
-          ann.releasePointerCapture(event.pointerId);
-        } catch (err) {
-          console.warn('[PDF::finishStroke] releasePointerCapture failed', err);
-        }
-      }
+  private configureFabricBrush(): void {
+    if (!this.fabricCanvas) {
+      return;
     }
-    this.isDrawing = false;
-    this.activePointerId = undefined;
-    this.saveCurrentAnnotations();
-    event.preventDefault();
+
+    if (this.currentTool === 'select') {
+      this.fabricCanvas.isDrawingMode = false;
+      this.fabricCanvas.selection = true;
+      this.fabricCanvas.defaultCursor = 'default';
+      this.fabricCanvas.hoverCursor = 'move';
+      this.updateObjectInteractivity(true);
+      this.fabricCanvas.requestRenderAll();
+      return;
+    }
+
+    this.fabricCanvas.isDrawingMode = true;
+    this.fabricCanvas.selection = false;
+    this.fabricCanvas.defaultCursor = 'crosshair';
+    this.fabricCanvas.hoverCursor = 'crosshair';
+    this.fabricCanvas.discardActiveObject();
+    this.updateObjectInteractivity(false);
+
+    const width = Math.max(1, Number(this.strokeSize) || 1);
+
+    const fabricAny = fabric as any;
+    if (this.currentTool === 'eraser' && fabricAny.EraserBrush) {
+      const eraserBrush = new fabricAny.EraserBrush(this.fabricCanvas);
+      eraserBrush.width = width;
+      this.fabricCanvas.freeDrawingBrush = eraserBrush;
+    } else {
+      const pencilBrush = new fabric.PencilBrush(this.fabricCanvas);
+      pencilBrush.width = width;
+      pencilBrush.color =
+        this.currentTool === 'highlighter'
+          ? this.hexToRgba(this.highlighterColor, this.highlighterOpacity)
+          : this.penColor;
+      this.fabricCanvas.freeDrawingBrush = pencilBrush;
+    }
+
+    this.fabricCanvas.requestRenderAll();
+  }
+
+  private updateObjectInteractivity(selectable: boolean): void {
+    if (!this.fabricCanvas) {
+      return;
+    }
+    this.fabricCanvas.forEachObject((obj: fabric.Object) => {
+      obj.selectable = selectable;
+      obj.evented = selectable;
+    });
+  }
+
+  private hexToRgba(hex: string, alpha: number): string {
+    const normalized = hex.replace('#', '');
+    const bigint = parseInt(normalized, 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   }
 
   async downloadPdf(): Promise<void> {
@@ -482,7 +510,7 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
     const previousPage = this.currentPage;
     this.pdfHataMesaji = '';
     try {
-      await this.saveCurrentAnnotations();
+      this.saveCurrentAnnotations();
       const pageImages: Array<{ page: number; dataUrl: string; width: number; height: number }> = [];
 
       for (let page = 1; page <= this.totalPages; page++) {
@@ -540,13 +568,21 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
 
   private prepareAnnotationCanvas(width: number, height: number): void {
     const ann = this.annotationCanvas?.nativeElement;
-    const ctx = ann?.getContext('2d');
-    if (!ann || !ctx) {
+    if (!ann) {
       return;
     }
     ann.width = width;
     ann.height = height;
-    ctx.clearRect(0, 0, width, height);
+    if (this.fabricCanvas) {
+      this.fabricCanvas.setDimensions({ width, height });
+      this.fabricCanvas.calcOffset();
+      if (this.currentTool !== 'select') {
+        this.updateObjectInteractivity(false);
+      } else {
+        this.updateObjectInteractivity(true);
+      }
+      this.fabricCanvas.renderAll();
+    }
   }
 
   private drawBlankBackground(
@@ -612,54 +648,74 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
     }
 
   private saveCurrentAnnotations(): void {
-    const page = this.currentPage;
-    const ann = this.annotationCanvas?.nativeElement;
-    const ctx = ann?.getContext('2d');
-    if (!page || !ann || !ctx) {
+    if (!this.fabricCanvas || !this.currentPage) {
       return;
     }
-    try {
-      const data = ctx.getImageData(0, 0, ann.width, ann.height);
-      this.annotationStates.set(page, data);
-      console.info('[PDF::saveCurrentAnnotations] Saved page', page);
-    } catch (error) {
-      console.error('[PDF::saveCurrentAnnotations] Failed to capture annotations', error);
+    const objects = this.fabricCanvas.getObjects();
+    if (!objects.length) {
+      this.annotationStates.delete(this.currentPage);
+      return;
     }
+    const json = this.fabricCanvas.toJSON(['eraser']);
+    this.annotationStates.set(this.currentPage, json);
+    console.info('[PDF::saveCurrentAnnotations] Saved page', this.currentPage);
   }
 
-  private restoreAnnotations(pageNumber: number): void {
-    const ann = this.annotationCanvas?.nativeElement;
-    const ctx = ann?.getContext('2d');
-    if (!ann || !ctx) {
+  private async restoreAnnotations(pageNumber: number): Promise<void> {
+    if (!this.fabricCanvas) {
       return;
     }
-    ctx.clearRect(0, 0, ann.width, ann.height);
-    const saved = this.annotationStates.get(pageNumber);
-    if (saved && saved.width === ann.width && saved.height === ann.height) {
-      ctx.putImageData(saved, 0, 0);
-      console.info('[PDF::restoreAnnotations] Restored page', pageNumber);
-    } else {
+    this.fabricCanvas.discardActiveObject();
+    this.fabricCanvas
+      .getObjects()
+      .slice()
+      .forEach((obj: fabric.Object) => this.fabricCanvas?.remove(obj));
+
+    const json = this.annotationStates.get(pageNumber);
+    if (!json) {
+      if (this.currentTool !== 'select') {
+        this.updateObjectInteractivity(false);
+      } else {
+        this.updateObjectInteractivity(true);
+      }
+      this.fabricCanvas.renderAll();
       console.info('[PDF::restoreAnnotations] No saved annotations for page', pageNumber);
+      return;
     }
+
+    await new Promise<void>((resolve) => {
+      this.fabricCanvas!.loadFromJSON(json, () => {
+        if (this.currentTool !== 'select') {
+          this.updateObjectInteractivity(false);
+        } else {
+          this.updateObjectInteractivity(true);
+        }
+        this.fabricCanvas!.renderAll();
+        console.info('[PDF::restoreAnnotations] Restored page', pageNumber);
+        resolve();
+      });
+    });
   }
 
   private clearAnnotationCanvas(): void {
-    const ann = this.annotationCanvas?.nativeElement;
-    const ctx = ann?.getContext('2d');
-    if (!ann || !ctx) {
+    if (!this.fabricCanvas) {
+      const ann = this.annotationCanvas?.nativeElement;
+      const ctx = ann?.getContext('2d');
+      if (ann && ctx) {
+        ctx.clearRect(0, 0, ann.width, ann.height);
+      }
       return;
     }
-    ctx.clearRect(0, 0, ann.width, ann.height);
-  }
-
-  private getCanvasPoint(event: PointerEvent, canvas: HTMLCanvasElement): { x: number; y: number } {
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    return {
-      x: (event.clientX - rect.left) * scaleX,
-      y: (event.clientY - rect.top) * scaleY,
-    };
+    this.fabricCanvas.discardActiveObject();
+    this.fabricCanvas.getObjects()
+      .slice()
+      .forEach((obj: fabric.Object) => this.fabricCanvas?.remove(obj));
+    this.fabricCanvas.renderAll();
+    if (this.currentTool !== 'select') {
+      this.updateObjectInteractivity(false);
+    } else {
+      this.updateObjectInteractivity(true);
+    }
   }
 
   private combineCurrentPageToDataUrl(): { dataUrl: string; width: number; height: number } | null {
@@ -667,6 +723,8 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
     if (!pdfCanvasEl || !pdfCanvasEl.width || !pdfCanvasEl.height) {
       return null;
     }
+    this.fabricCanvas?.discardActiveObject();
+    this.fabricCanvas?.renderAll();
     const out = document.createElement('canvas');
     out.width = pdfCanvasEl.width;
     out.height = pdfCanvasEl.height;
@@ -694,10 +752,9 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
   }
 
   private triggerFileDownload(bytes: Uint8Array, fileName: string): void {
-    const buffer = ArrayBuffer.isView(bytes)
-      ? bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength)
-      : bytes;
-    const blob = new Blob([buffer as ArrayBuffer], { type: 'application/pdf' });
+    const copy = new Uint8Array(bytes.length);
+    copy.set(bytes);
+    const blob = new Blob([copy.buffer], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
