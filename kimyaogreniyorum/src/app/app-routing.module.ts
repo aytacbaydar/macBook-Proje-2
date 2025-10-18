@@ -62,6 +62,7 @@ import { DovmeSayfasiHeaderSayfasiComponent } from './components/dovme-sayfasi/t
 import { DovmeGaleriSayfasiComponent } from './components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component';
 import { KullaniciIndexSayfasiComponent } from './components/kullanici-sayfalari/template/kullanici-index-sayfasi/kullanici-index-sayfasi.component';
 import { KullaniciAnaSayfaSayfasiComponent } from './components/kullanici-sayfalari/kullanici-ana-sayfa-sayfasi/kullanici-ana-sayfa-sayfasi.component';
+import { DersAnlatimTahasiComponent } from './components/ogretmen-sayfalari/ders-anlatim-tahasi/ders-anlatim-tahasi.component';
 
 const routes: Routes = [
   {
@@ -203,6 +204,10 @@ const routes: Routes = [
       {
         path: 'ogretmen-ogrenci-listesi-sayfasi',
         component: OgretmenOgrenciListesiSayfasiComponent,
+      },
+      {
+        path: 'tahta-sayfasi',
+        component: DersAnlatimTahasiComponent,
       },
       {
         path: 'ogretmen-testlerin-cevaplari-sayfasi',

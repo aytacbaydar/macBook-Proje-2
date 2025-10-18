@@ -1,56 +1,40 @@
-.tahta-container {
+.pdf-yukleme-paneli {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 12px;
-  font-family: "Poppins", Arial, sans-serif;
+  margin-bottom: 16px;
+}
 
-  .ust-panel {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #f6f7fb;
-    border-radius: 12px;
-    padding: 10px 14px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+.pdf-secici {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #ffffff;
+  transition: background-color 0.2s ease;
 
-    button {
-      background: white;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      padding: 6px 10px;
-      cursor: pointer;
-      transition: 0.2s;
-      &:hover { background: #eaf1ff; }
-    }
-
-    select {
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      padding: 4px 8px;
-    }
-
-    .pdf-yukle {
-      background: white;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      padding: 6px 10px;
-      cursor: pointer;
-      &:hover { background: #eaf1ff; }
-    }
+  &:hover {
+    background-color: #f4f6ff;
   }
+}
 
-  .canvas-alani {
-    background: white;
-    border-radius: 10px;
-    padding: 12px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-    display: flex;
-    justify-content: center;
+.durum {
+  font-size: 14px;
+  color: #555555;
 
-    canvas {
-      border-radius: 8px;
-      background: #fff;
-      border: 1px solid #eee;
-    }
+  &.hata {
+    color: #c0392b;
   }
+}
+
+.pdf-canvas {
+  width: 100%;
+  max-width: 900px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }

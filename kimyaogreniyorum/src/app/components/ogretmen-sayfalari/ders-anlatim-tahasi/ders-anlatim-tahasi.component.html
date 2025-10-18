@@ -1,35 +1,11 @@
-<div class="tahta-container">
-  <div class="ust-panel">
-    <div class="sol-araclar">
-      <button (click)="kalemRengi='#000'; applyBrush()">✏️</button>
-      <button (click)="silgiModu=!silgiModu; applyBrush()">🧽</button>
-      <button (click)="fosforluKalemModu=!fosforluKalemModu; applyBrush()">🖍️</button>
-      <select [(ngModel)]="kalemKalinligi" (change)="applyBrush()">
-        <option *ngFor="let k of [2,4,8,12,16]" [value]="k">{{k}} px</option>
-      </select>
-    </div>
+<div class="pdf-yukleme-paneli">
+  <label class="pdf-secici">
+    <span>📄 PDF Seç</span>
+    <input type="file" accept="application/pdf" (change)="onPdfSec($event)" hidden>
+  </label>
 
-    <div class="orta-araclar">
-      <label>Zemin:</label>
-      <select [(ngModel)]="currentBackground" (change)="setBackground(currentBackground)">
-        <option value="bos">Boş</option>
-        <option value="cizgili">Çizgili</option>
-        <option value="kareli">Kareli</option>
-      </select>
-      <label class="pdf-yukle">
-        📄 PDF Yükle
-        <input type="file" accept="application/pdf" (change)="pdfYukle($event)" hidden>
-      </label>
-    </div>
-
-    <div class="sag-araclar">
-      <button (click)="downloadPNG()">🖼 PNG</button>
-      <button (click)="indirPDF()">📥 PDF</button>
-    </div>
-  </div>
-
-  <div class="canvas-alani">
-    <canvas id="canvas-1" width="1200" height="700"></canvas>
-  </div>
+  <div *ngIf="pdfYukleniyor" class="durum">PDF yükleniyor...</div>
+  <div *ngIf="pdfHataMesaji" class="durum hata">{{ pdfHataMesaji }}</div>
 </div>
 
+<canvas #pdfCanvas class="pdf-canvas"></canvas>

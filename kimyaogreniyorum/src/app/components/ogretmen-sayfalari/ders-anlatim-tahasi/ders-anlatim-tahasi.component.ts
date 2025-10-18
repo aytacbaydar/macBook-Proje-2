@@ -1,184 +1,68 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { jsPDF } from 'jspdf';
-import * as pdfjsLib from 'pdfjs-dist';
-import * as fabric from 'fabric';
-import { SocketService } from '../../../services/socket.service';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import * as pdfjsLib from 'pdfjs-dist/webpack';
 
 @Component({
-  selector: 'app-ders-anlatma-tahtasi',
+  selector: 'app-ders-anlatim-tahtasi',
   templateUrl: './ders-anlatim-tahasi.component.html',
   styleUrls: ['./ders-anlatim-tahasi.component.scss'],
   standalone: false,
 })
-export class DersAnlatimTahasiComponent implements OnInit, AfterViewInit, OnDestroy {
-  canvasInstances: fabric.Canvas[] = [];
-  pagesJson: any[] = [];
-  currentPage: number = 1;
-  totalPages: number = 1;
-
-  kalemRengi = '#000000';
-  kalemKalinligi = 4;
-  cizilebilir = true;
-  silgiModu = false;
-  fosforluKalemModu = false;
-  secilenFosforluRenk = '#ffff0080';
-  currentBackground: 'bos' | 'cizgili' | 'kareli' = 'bos';
+export class DersAnlatimTahasiComponent {
+  @ViewChild('pdfCanvas', { static: false }) pdfCanvas?: ElementRef<HTMLCanvasElement>;
 
   pdfYukleniyor = false;
-  kaydetmeIsleminde = false;
+  pdfHataMesaji = '';
+  private readonly pdfWorkerSrc = '/build/pdf.worker.min.mjs';
 
-  dersId = 'kimya-11a';
-  userRole: 'ogretmen' | 'ogrenci' = 'ogretmen';
-
-  constructor(private http: HttpClient, private socket: SocketService) {
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  constructor() {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = this.pdfWorkerSrc;
+    console.info('[PDF] Worker yolu ayarlandı:', pdfjsLib.GlobalWorkerOptions.workerSrc);
   }
 
-  ngOnInit(): void {
-    this.socket.connect(this.userRole, this.dersId);
-    this.socket.listen<string>('canvas:update').subscribe((json) => {
-      // öğrenciler güncelleme alır
-      if (this.userRole === 'ogrenci') {
-        const canvas = this.canvasInstances[this.currentPage - 1];
-        if (canvas) {
-          canvas.loadFromJSON(json, () => canvas.renderAll());
-        }
-      }
-    });
-  }
-
-  ngAfterViewInit(): void {
-    setTimeout(() => this.ensureCanvas(this.currentPage), 300);
-  }
-
-  private ensureCanvas(pageNo: number) {
-    if (this.canvasInstances[pageNo - 1]) return;
-    const canvasEl = document.getElementById(`canvas-${pageNo}`) as HTMLCanvasElement;
-    const width = Math.min(window.innerWidth - 40, 1200);
-    const height = Math.round(width * 1.414);
-    const canvas = new fabric.Canvas(canvasEl, {
-      isDrawingMode: true,
-      backgroundColor: '#ffffff',
-      width,
-      height,
-    });
-    this.canvasInstances[pageNo - 1] = canvas;
-    this.applyBrush();
-    this.setBackground(this.currentBackground);
-    canvas.on('path:created', () => this.emitCanvasUpdate());
-  }
-
-  private applyBrush() {
-    const c = this.canvasInstances[this.currentPage - 1];
-    if (!c) return;
-    if (this.silgiModu) {
-      try {
-        const Eraser = (fabric as any).EraserBrush;
-        c.freeDrawingBrush = new Eraser(c);
-      } catch {
-        const brush = new (fabric as any).PencilBrush(c);
-        // @ts-ignore
-        brush.globalCompositeOperation = 'destination-out';
-        c.freeDrawingBrush = brush;
-      }
-      c.freeDrawingBrush.width = this.kalemKalinligi * 2;
-    } else if (this.fosforluKalemModu) {
-      const brush = new (fabric as any).PencilBrush(c);
-      brush.color = this.secilenFosforluRenk;
-      brush.width = this.kalemKalinligi * 3;
-      c.freeDrawingBrush = brush;
-    } else {
-      const brush = new (fabric as any).PencilBrush(c);
-      brush.color = this.kalemRengi;
-      brush.width = this.kalemKalinligi;
-      c.freeDrawingBrush = brush;
-    }
-  }
-
-  private emitCanvasUpdate() {
-    if (this.userRole === 'ogretmen') {
-      const c = this.canvasInstances[this.currentPage - 1];
-      if (c) this.socket.emit('canvas:update', JSON.stringify(c));
-    }
-  }
-
-  // === ZEMİN (defter görünümü) ===
-  setBackground(type: 'bos' | 'cizgili' | 'kareli') {
-    const c = this.canvasInstances[this.currentPage - 1];
-    if (!c) return;
-    const patternCanvas = document.createElement('canvas');
-    const pctx = patternCanvas.getContext('2d')!;
-    const size = 30;
-    if (type === 'cizgili') {
-      patternCanvas.width = c.getWidth();
-      patternCanvas.height = size;
-      pctx.strokeStyle = '#d0d0d0';
-      pctx.beginPath();
-      pctx.moveTo(0, size - 1);
-      pctx.lineTo(patternCanvas.width, size - 1);
-      pctx.stroke();
-    } else if (type === 'kareli') {
-      patternCanvas.width = size;
-      patternCanvas.height = size;
-      pctx.strokeStyle = '#d0d0d0';
-      pctx.strokeRect(0, 0, size, size);
-    } else {
-      c.setBackgroundColor('#fff', c.renderAll.bind(c));
+  async onPdfSec(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) {
       return;
     }
-    const pattern = new fabric.Pattern({ source: patternCanvas, repeat: 'repeat' });
-    c.setBackgroundColor(pattern, c.renderAll.bind(c));
-  }
 
-  async pdfYukle(event: Event) {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (!file) return;
-    this.pdfYukleniyor = true;
-    const buffer = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i);
-      const canvas = this.canvasInstances[this.currentPage - 1];
-      const viewport = page.getViewport({ scale: 1.5 });
-      const tmp = document.createElement('canvas');
-      tmp.width = viewport.width;
-      tmp.height = viewport.height;
-      const ctx = tmp.getContext('2d')!;
-      await page.render({ canvasContext: ctx, viewport }).promise;
-      const img = tmp.toDataURL('image/png');
-      canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
-        scaleX: canvas.width! / viewport.width,
-        scaleY: canvas.height! / viewport.height,
-      });
-      this.emitCanvasUpdate();
+    if (!this.pdfCanvas) {
+      this.pdfHataMesaji = 'Canvas elementi bulunamadı.';
+      console.error('[PDF] Canvas referansı alınamadı.');
+      return;
     }
-    this.pdfYukleniyor = false;
-  }
 
-  downloadPNG() {
-    const c = this.canvasInstances[this.currentPage - 1];
-    const data = c.toDataURL({ format: 'png', multiplier: 2 });
-    const link = document.createElement('a');
-    link.href = data;
-    link.download = `tahta-${this.currentPage}.png`;
-    link.click();
-  }
+    this.pdfYukleniyor = true;
+    this.pdfHataMesaji = '';
+    const canvasEl = this.pdfCanvas.nativeElement;
+    const ctx = canvasEl.getContext('2d');
 
-  indirPDF() {
-    const pdf = new jsPDF({ unit: 'mm', format: 'a4' });
-    const c = this.canvasInstances[this.currentPage - 1];
-    const data = c.toDataURL('image/jpeg', 0.8);
-    pdf.addImage(data, 'JPEG', 10, 10, 190, 270);
-    pdf.save('tahta.pdf');
-  }
+    if (!ctx) {
+      this.pdfYukleniyor = false;
+      this.pdfHataMesaji = 'Canvas bağlamı oluşturulamadı.';
+      console.error('[PDF] Canvas 2D context alınamadı.');
+      return;
+    }
 
-  ngOnDestroy(): void {
-    this.socket.disconnect();
-  }
+    try {
+      console.info('[PDF] Yükleme başladı:', file.name);
+      const buffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
+      console.info('[PDF] Belge okundu. Sayfa sayısı:', pdf.numPages);
 
-  @HostListener('window:resize')
-  resize() {
-    this.canvasInstances.forEach((c) => c?.renderAll());
+      const page = await pdf.getPage(1);
+      const viewport = page.getViewport({ scale: 1.5 });
+
+      canvasEl.width = viewport.width;
+      canvasEl.height = viewport.height;
+
+      await page.render({ canvasContext: ctx, viewport, canvas: canvasEl }).promise;
+      console.info('[PDF] İlk sayfa canvas üzerine çizildi.');
+    } catch (error) {
+      console.error('[PDF] Yükleme sırasında hata oluştu:', error);
+      this.pdfHataMesaji = 'PDF yüklenirken bir hata oluştu.';
+    } finally {
+      this.pdfYukleniyor = false;
+    }
   }
 }

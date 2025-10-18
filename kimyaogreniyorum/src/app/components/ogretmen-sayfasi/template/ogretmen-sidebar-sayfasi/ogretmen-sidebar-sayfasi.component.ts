@@ -34,6 +34,11 @@ export class OgretmenSidebarSayfasiComponent implements OnInit, OnDestroy {
       link: 'ogretmen-sayfasi/ogretmen-ders-anlatma-tahtasi-sayfasi',
     },
     {
+      icon: 'bi-easel-fill',
+      label: 'Ders Anlatımı',
+      link: 'ogretmen-sayfasi/tahta-sayfasi',
+    },
+    {
       icon: 'bi-people-fill',
       label: 'Gruplar',
       link: 'ogretmen-sayfasi/ogretmen-gruplar-sayfasi',
