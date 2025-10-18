@@ -18,10 +18,11 @@ import { SharedModule } from './shared/shared.module';
 import { DovmeSayfasiModule } from './components/dovme-sayfasi/dovme-sayfasi.module';
 import { KullaniciSayfalariModule } from './components/kullanici-sayfalari/kullanici-sayfalari.module';
 import { OgretmenSayfalariModule } from './components/ogretmen-sayfalari/ogretmen-sayfalari.module';
+import { DersAnlatimSayfasiComponent } from './ders-anlatim-sayfasi/ders-anlatim-sayfasi.component';
 // import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, DersAnlatimSayfasiComponent,],
   imports: [
     BrowserModule,
     RouterModule,

@@ -2,7 +2,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
 }
 
 .pdf-secici {
@@ -18,6 +19,37 @@
 
   &:hover {
     background-color: #f4f6ff;
+  }
+}
+
+.pdf-kontrol {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+
+  button {
+    padding: 6px 14px;
+    border: 1px solid #d0d0d0;
+    border-radius: 6px;
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+
+    &:hover:not(:disabled) {
+      background-color: #eef2ff;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+
+  &__durum {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333333;
   }
 }
 
@@ -38,3 +70,4 @@
   background-color: #ffffff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
+

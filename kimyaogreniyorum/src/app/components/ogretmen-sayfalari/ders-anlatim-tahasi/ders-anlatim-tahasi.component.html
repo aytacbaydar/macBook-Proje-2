@@ -1,11 +1,24 @@
 <div class="pdf-yukleme-paneli">
   <label class="pdf-secici">
-    <span>📄 PDF Seç</span>
+    <span>PDF Sec</span>
     <input type="file" accept="application/pdf" (change)="onPdfSec($event)" hidden>
   </label>
 
-  <div *ngIf="pdfYukleniyor" class="durum">PDF yükleniyor...</div>
+  <div *ngIf="pdfYukleniyor" class="durum">PDF yukleniyor...</div>
   <div *ngIf="pdfHataMesaji" class="durum hata">{{ pdfHataMesaji }}</div>
 </div>
 
-<canvas #pdfCanvas class="pdf-canvas"></canvas>
+<div *ngIf="totalPages > 0" class="pdf-kontrol">
+  <button type="button" (click)="oncekiSayfa()" [disabled]="currentPage <= 1 || pdfYukleniyor">
+    Onceki
+  </button>
+  <span class="pdf-kontrol__durum">
+    Sayfa {{ currentPage }} / {{ totalPages }}
+  </span>
+  <button type="button" (click)="sonrakiSayfa()" [disabled]="currentPage >= totalPages || pdfYukleniyor">
+    Sonraki
+  </button>
+</div>
+
+<canvas #pdfCanvas class="pdf-canvas" aria-label="PDF gorunumu"></canvas>
+
