@@ -6,7 +6,7 @@ import * as fabric from 'fabric';
 import { SocketService } from '../../../services/socket.service';
 
 @Component({
-  selector: 'app-ogretmen-ders-anlatma-tahtasi',
+  selector: 'app-ders-anlatma-tahtasi',
   templateUrl: './ders-anlatim-tahasi.component.html',
   styleUrls: ['./ders-anlatim-tahasi.component.scss'],
   standalone: false,
