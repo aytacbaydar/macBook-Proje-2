@@ -1180,124 +1180,91 @@ export class OgretmenDersAnlatmaTahtasiComponent
   }
 
   // PDF'i oluştur ve indir
-  indirPDF(): void {
+  async indirPDF(): Promise<void> {
+    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true });
+    const originalPage = this.currentPage;
     this.kaydetmeIsleminde = true;
 
     try {
-      // PDF oluştur
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4',
-        compress: true, // PDF sıkıştırmasını etkinleştir
-      });
+      this.canvasInstances.forEach((canvas) => canvas?.discardActiveObject());
+      const exportableCanvases = this.canvasInstances.filter(
+        (canvas): canvas is fabric.Canvas => !!canvas,
+      );
 
-      const processNextPage = async (page: number) => {
-        if (page > this.totalPages) {
-          // Tüm sayfalar tamamlandı, PDF'i indir
-          const bugun = new Date();
-          const tarihKodu = `${bugun.getFullYear()}${(bugun.getMonth() + 1)
-            .toString()
-            .padStart(2, '0')}${bugun.getDate().toString().padStart(2, '0')}`;
+      for (let index = 0; index < exportableCanvases.length; index++) {
+        const canvas = exportableCanvases[index];
 
-          const dosyaAdi = this.secilenGrup
-            ? `${this.secilenGrup.replace(/\s+/g, '_')}_${tarihKodu}.pdf`
-            : `ders_notu_${tarihKodu}.pdf`;
+        await new Promise((resolve) => setTimeout(resolve, 50));
 
-          pdf.save(dosyaAdi);
-          this.kaydetmeIsleminde = false;
-          return;
+        const previousBg = canvas.backgroundColor;
+        canvas.backgroundColor = '#ffffff';
+        canvas.renderAll();
+
+        const dataURL = canvas.toDataURL({
+          format: 'jpeg',
+          quality: 0.9,
+          multiplier: 1,
+        });
+
+        canvas.backgroundColor = previousBg || 'transparent';
+        canvas.renderAll();
+
+        if (index > 0) {
+          pdf.addPage();
         }
 
-        // Geçerli sayfayı görünür yap ve canvas'ı al
-        this.sayfayaGit(page);
+        const pageWidth = 210;
+        const pageHeight = 297;
+        const margin = 8;
+        const availableWidth = pageWidth - margin * 2;
+        const availableHeight = pageHeight - margin * 2 - 10;
 
-        setTimeout(async () => {
-          const canvas = this.canvasInstances[page - 1];
-          if (canvas) {
-            // Canvas background'ını beyaz yap
-            canvas.backgroundColor = '#ffffff';
-            canvas.renderAll();
+        const canvasWidth = canvas.getWidth() || 1200;
+        const canvasHeight = canvas.getHeight() || 600;
+        const canvasRatio = canvasWidth / canvasHeight;
+        const pageRatio = availableWidth / availableHeight;
 
-            // Canvas'ı düşük kalitede al - dosya boyutunu minimize et
-            canvas.backgroundColor = '#ffffff';
-            canvas.renderAll();
-            const dataURL = canvas.toDataURL({
-              format: 'jpeg',
-              quality: 0.8, // Yüksek kalite - daha iyi görüntü için
-              multiplier: 1.0, // Tam çözünürlük
-            });
+        let imgWidth = availableWidth;
+        let imgHeight = availableHeight;
 
-            // Canvas'ın gerçek boyutlarını al
-            const canvasWidth = canvas.width || 1200;
-            const canvasHeight = canvas.height || 600;
-            const canvasRatio = canvasWidth / canvasHeight;
+        if (canvasRatio > pageRatio) {
+          imgHeight = imgWidth / canvasRatio;
+        } else {
+          imgWidth = imgHeight * canvasRatio;
+        }
 
-            // İlk sayfa değilse yeni sayfa ekle
-            if (page > 1) {
-              pdf.addPage();
-            }
+        const x = margin + (availableWidth - imgWidth) / 2;
+        const y = margin + 8 + (availableHeight - imgHeight) / 2;
 
-            // A4 sayfasına uygun boyutları hesapla (kenar boşluklarıyla)
-            const pageWidth = 210; // A4 genişliği (mm)
-            const pageHeight = 297; // A4 yüksekliği (mm)
-            const margin = 8; // Kenar boşluğu (mm) - başlık için biraz daha fazla
-            const availableWidth = pageWidth - (margin * 2);
-            const availableHeight = pageHeight - (margin * 2) - 10; // Başlık ve alt bilgi için alan
+        pdf.addImage(dataURL, 'JPEG', x, y, imgWidth, imgHeight, undefined, 'MEDIUM');
+        pdf.setTextColor(0, 0, 0);
+        pdf.setFontSize(11);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('Aytaç Baydar || Kimya Öğretmeni', margin, margin + 5);
+        pdf.setLineWidth(0.4);
+        pdf.line(margin, margin + 7, pageWidth - margin, margin + 7);
+        pdf.setFontSize(10);
+        pdf.setFont('helvetica', 'normal');
+        const sayfaNumarasi = `${index + 1} / ${exportableCanvases.length}`;
+        const textWidth = pdf.getTextWidth(sayfaNumarasi);
+        pdf.text(sayfaNumarasi, (pageWidth - textWidth) / 2, pageHeight - 5);
+      }
 
-            let imgWidth, imgHeight;
+      const bugun = new Date();
+      const tarihKodu = `${bugun.getFullYear()}${(bugun.getMonth() + 1).toString().padStart(2, '0')}${bugun
+        .getDate()
+        .toString()
+        .padStart(2, '0')}`;
+      const dosyaAdi = this.secilenGrup
+        ? `${this.secilenGrup.replace(/\s+/g, '_')}_${tarihKodu}.pdf`
+        : `ders_notu_${tarihKodu}.pdf`;
 
-            // Canvas oranına göre PDF'e sığacak boyutları hesapla
-            if (canvasRatio > (availableWidth / availableHeight)) {
-              // Canvas daha geniş, genişlik sınırı kullan
-              imgWidth = availableWidth;
-              imgHeight = availableWidth / canvasRatio;
-            } else {
-              // Canvas daha uzun, yükseklik sınırı kullan
-              imgHeight = availableHeight;
-              imgWidth = availableHeight * canvasRatio;
-            }
-
-            // Ortalanmış pozisyon hesapla (başlık için aşağı kaydır)
-            const x = margin + (availableWidth - imgWidth) / 2;
-            const y = margin + 8 + (availableHeight - imgHeight) / 2; // Başlık için 15mm boşluk
-
-            // Filigran artık CSS ile ekleniyor, PDF'te ayrı filigran gerekmez
-
-            // Canvas görselini ekle
-            pdf.addImage(dataURL, 'JPEG', x, y, imgWidth, imgHeight, undefined, 'MEDIUM');
-
-            // Başlık ekle (sol üst)
-            pdf.setTextColor(0, 0, 0); // Siyah renk
-            pdf.setFontSize(11);
-            pdf.setFont('helvetica', 'bold');
-            pdf.text('Aytaç Baydar || Kimya Ögretmeni', margin, margin + 5);
-
-            // Başlık altına çizgi ekle - sayfa genişliğinde
-            pdf.setLineWidth(0.4);
-            pdf.line(margin, margin + 7, pageWidth - margin, margin + 7);
-
-            // Sayfa numarası ekle (alt ortası)
-            pdf.setFontSize(10);
-            pdf.setFont('helvetica', 'normal');
-            const sayfaNumarasi = `${page} / ${this.totalPages}`;
-            const textWidth = pdf.getTextWidth(sayfaNumarasi);
-            pdf.text(sayfaNumarasi, (pageWidth - textWidth) / 2, pageHeight - 5);
-
-            // Sonraki sayfaya geç
-            processNextPage(page + 1);
-          } else {
-            console.error(`Canvas ${page} bulunamadı`);
-            processNextPage(page + 1);
-          }
-        }, 200);
-      };
-
-      // İlk sayfadan başla
-      processNextPage(1);
+      pdf.save(dosyaAdi);
     } catch (error) {
       console.error('PDF oluşturma hatası:', error);
       void this.alertService.error('PDF oluşturulurken bir hata oluştu. Lütfen tekrar deneyin.', 'PDF Oluşturma Hatası');
+    } finally {
+      this.sayfayaGit(originalPage);
       this.kaydetmeIsleminde = false;
     }
   }

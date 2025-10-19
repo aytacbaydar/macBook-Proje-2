@@ -662,6 +662,8 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
 
       for (let page = 1; page <= this.totalPages; page++) {
         await this.renderPage(page);
+        await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+        await new Promise<void>((resolve) => setTimeout(resolve, 60));
         const combined = this.combineCurrentPageToDataUrl();
         if (combined) {
           pageImages.push({ page, ...combined });
@@ -889,9 +891,15 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
       return null;
     }
     ctx.drawImage(pdfCanvasEl, 0, 0);
-    const ann = this.annotationCanvas?.nativeElement;
-    if (ann) {
-      ctx.drawImage(ann, 0, 0);
+    const lower = this.fabricCanvas?.lowerCanvasEl;
+    const upper = this.fabricCanvas?.upperCanvasEl;
+    if (lower) {
+      ctx.drawImage(lower, 0, 0);
+    }
+    if (upper) {
+      ctx.drawImage(upper, 0, 0);
+    } else if (this.annotationCanvas?.nativeElement) {
+      ctx.drawImage(this.annotationCanvas.nativeElement, 0, 0);
     }
     return { dataUrl: out.toDataURL('image/png'), width: out.width, height: out.height };
   }

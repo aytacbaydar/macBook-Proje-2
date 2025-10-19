@@ -35,7 +35,7 @@
         [class.aktif]="currentTool === 'select'"
         aria-label="Sec ve Tas"
       >
-        <i class="ikon">&#128433;</i>
+        <i class="ikon">🖱️</i>
       </button>
       <button
         type="button"
@@ -44,7 +44,7 @@
         [class.aktif]="currentTool === 'pen'"
         aria-label="Kalem"
       >
-        <i class="ikon">&#9998;</i>
+        <i class="ikon">✒️</i>
       </button>
       <button
         type="button"
@@ -53,7 +53,7 @@
         [class.aktif]="currentTool === 'highlighter'"
         aria-label="Fosforlu Kalem"
       >
-        <i class="ikon">&#128396;</i>
+        <i class="ikon">🖍️</i>
       </button>
       <button
         type="button"
@@ -62,7 +62,7 @@
         [class.aktif]="currentTool === 'eraser'"
         aria-label="Silgi"
       >
-        <i class="ikon">&#129708;</i>
+        <i class="ikon">🧽</i>
       </button>
     </div>
 
@@ -88,7 +88,7 @@
         [disabled]="!hasSelection || currentTool !== 'select'"
         aria-label="Seçili öğeyi kopyala"
       >
-        <i class="ikon">&#128260;</i>
+        <i class="ikon">📑</i>
         <span>Kopyala</span>
       </button>
       <button
@@ -98,7 +98,7 @@
         [disabled]="!clipboardObject"
         aria-label="Panodaki öğeyi yapıştır"
       >
-        <i class="ikon">&#128203;</i>
+        <i class="ikon">📋</i>
         <span>Yapıştır</span>
       </button>
     </div>
@@ -106,7 +106,7 @@
     <div class="pdf-toolbar__group">
       <span class="toolbar-label">Medya</span>
       <button type="button" class="btn-ikonlu" (click)="triggerImageUpload()" aria-label="Görsel ekle">
-        <i class="ikon">&#128247;</i>
+        <i class="ikon">🖼️</i>
         <span>Görsel Yükle</span>
       </button>
       <input
@@ -128,7 +128,7 @@
         [disabled]="!isBlankDocument"
         aria-label="Duz arka plan"
       >
-        <i class="ikon">&#9633;</i>
+        <i class="ikon">⬜️</i>
       </button>
       <button
         type="button"
@@ -138,7 +138,7 @@
         [disabled]="!isBlankDocument"
         aria-label="Kareli arka plan"
       >
-        <i class="ikon">#</i>
+        <i class="ikon">🧱</i>
       </button>
       <button
         type="button"
@@ -148,13 +148,13 @@
         [disabled]="!isBlankDocument"
         aria-label="Cizgili arka plan"
       >
-        <i class="ikon">&#8801;</i>
+        <i class="ikon">📏</i>
       </button>
     </div>
 
     <div class="pdf-toolbar__group">
       <button type="button" class="btn-ikonlu btn-temizle" (click)="clearCurrentAnnotations()" [disabled]="!currentPage">
-        <i class="ikon">&#128465;</i>
+        <i class="ikon">🧹</i>
         <span>Temizle</span>
       </button>
     </div>
@@ -162,7 +162,7 @@
 
   <div class="pdf-toolbar__right">
     <button type="button" class="btn-ikonlu btn-indir" (click)="downloadPdf()" [disabled]="pdfYukleniyor || exportInProgress">
-      <i class="ikon">&#128229;</i>
+      <i class="ikon">📥</i>
       <span>PDF Indir</span>
     </button>
   </div>
@@ -187,11 +187,11 @@
   >
     <ng-container *ngIf="selectionMenu.showCropActions; else selectionActions">
       <button type="button" class="selection-menu__button primary" (click)="confirmCrop()">
-        <i class="ikon">&#10003;</i>
+        <i class="ikon">✅</i>
         <span>Kırpmayı Onayla</span>
       </button>
       <button type="button" class="selection-menu__button" (click)="cancelCrop()">
-        <i class="ikon">&#10005;</i>
+        <i class="ikon">❌</i>
         <span>İptal</span>
       </button>
     </ng-container>
@@ -202,19 +202,19 @@
         (click)="startCrop()"
         *ngIf="selectionMenu.showCrop"
       >
-        <i class="ikon">&#128295;</i>
+        <i class="ikon">🪚</i>
         <span>Kırp</span>
       </button>
       <button type="button" class="selection-menu__button" (click)="duplicateSelection()">
-        <i class="ikon">&#128260;</i>
+        <i class="ikon">📑</i>
         <span>Kopyala</span>
       </button>
       <button type="button" class="selection-menu__button" (click)="cutSelection()">
-        <i class="ikon">&#9986;</i>
+        <i class="ikon">✂️</i>
         <span>Kes</span>
       </button>
       <button type="button" class="selection-menu__button danger" (click)="deleteSelection()">
-        <i class="ikon">&#128465;</i>
+        <i class="ikon">🗑️</i>
         <span>Sil</span>
       </button>
       <button
@@ -223,7 +223,7 @@
         *ngIf="selectionMenu.showPaste"
         (click)="pasteSelection()"
       >
-        <i class="ikon">&#128203;</i>
+        <i class="ikon">📋</i>
         <span>Yapıştır</span>
       </button>
     </ng-template>
