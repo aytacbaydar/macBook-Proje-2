@@ -57,6 +57,18 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
   private suppressUnsavedTracking = false;
   hasSelection = false;
   private allowSelectableForNextObject = false;
+  isCropping = false;
+  private cropRect?: fabric.Rect;
+  private cropTarget?: fabric.Image;
+  selectionMenu = {
+    visible: false,
+    left: 0,
+    top: 0,
+    showCropActions: false,
+    showCrop: false,
+    showPaste: false,
+  };
+  clipboardObject?: fabric.Object;
 
   constructor(private readonly alertService: AlertService) {
     console.info('[PDF::ctor] Component created');
@@ -488,13 +500,15 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
       saveState();
       handleChange();
       const hasActiveObjects = !!this.fabricCanvas && this.fabricCanvas.getActiveObjects().length > 0;
-      this.updateSelectionState(hasActiveObjects);
+      const active = this.fabricCanvas?.getActiveObject() ?? null;
+      this.updateSelectionState(hasActiveObjects, active ?? undefined);
     });
     this.fabricCanvas.on('object:removed', () => {
       saveState();
       handleChange();
       const hasActiveObjects = !!this.fabricCanvas && this.fabricCanvas.getActiveObjects().length > 0;
-      this.updateSelectionState(hasActiveObjects);
+      const active = this.fabricCanvas?.getActiveObject() ?? null;
+      this.updateSelectionState(hasActiveObjects, active ?? undefined);
     });
     this.fabricCanvas.on('object:added', ({ target }) => {
       if (!target) {
@@ -512,10 +526,16 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
         handleChange();
       }
       const hasActiveObjects = !!this.fabricCanvas && this.fabricCanvas.getActiveObjects().length > 0;
-      this.updateSelectionState(hasActiveObjects);
+      this.updateSelectionState(hasActiveObjects, target);
     });
-    this.fabricCanvas.on('selection:created', () => this.updateSelectionState(true));
-    this.fabricCanvas.on('selection:updated', () => this.updateSelectionState(true));
+    this.fabricCanvas.on('selection:created', () => {
+      const active = this.fabricCanvas?.getActiveObject() ?? null;
+      this.updateSelectionState(true, active ?? undefined);
+    });
+    this.fabricCanvas.on('selection:updated', () => {
+      const active = this.fabricCanvas?.getActiveObject() ?? null;
+      this.updateSelectionState(true, active ?? undefined);
+    });
     this.fabricCanvas.on('selection:cleared', () => this.updateSelectionState(false));
   }
 
@@ -902,45 +922,240 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
 
   async duplicateSelection(): Promise<void> {
     const canvas = this.fabricCanvas;
-    if (!canvas) {
-      return;
-    }
-    const activeObjects = canvas.getActiveObjects();
-    if (!activeObjects.length) {
+    const active = canvas?.getActiveObject();
+    if (!canvas || !active) {
       return;
     }
 
-    const clones = await Promise.all(
-      activeObjects.map((obj) => obj.clone() as Promise<fabric.Object>),
-    );
-
-    if (!this.fabricCanvas) {
-      return;
-    }
-
-    const offset = 20;
-    clones.forEach((clone) => {
-      clone.set({
-        left: (clone.left ?? 0) + offset,
-        top: (clone.top ?? 0) + offset,
-        evented: true,
-        selectable: true,
-      });
-      clone.setCoords();
-      this.fabricCanvas!.add(clone);
+    const clone = await active.clone();
+    this.clipboardObject = await active.clone();
+    this.clipboardObject.set({
+      left: active.left ?? 0,
+      top: active.top ?? 0,
     });
-
-    if (clones.length === 1) {
-      this.fabricCanvas.setActiveObject(clones[0]);
-    } else {
-      const selection = new fabric.ActiveSelection(clones, {
-        canvas: this.fabricCanvas,
-      });
-      this.fabricCanvas.setActiveObject(selection);
-    }
-    this.fabricCanvas.requestRenderAll();
-    this.updateSelectionState(true);
+    clone.set({
+      left: active.left ?? 0,
+      top: active.top ?? 0,
+      evented: true,
+      selectable: true,
+    });
+    clone.setCoords();
+    canvas.add(clone);
+    canvas.setActiveObject(clone);
+    canvas.requestRenderAll();
+    this.updateSelectionState(true, clone);
     this.markUnsavedChange();
+    this.alertService.success('Öğe kopyalandı.', 'Kopyalandı');
+  }
+
+  async cutSelection(): Promise<void> {
+    const canvas = this.fabricCanvas;
+    const active = canvas?.getActiveObject();
+    if (!canvas || !active) {
+      return;
+    }
+    this.clipboardObject = await active.clone();
+    this.clipboardObject.set({
+      left: active.left ?? 0,
+      top: active.top ?? 0,
+    });
+    this.selectionMenu.visible = false;
+    this.hasSelection = false;
+    canvas.remove(active);
+    canvas.discardActiveObject();
+    canvas.requestRenderAll();
+    this.updateSelectionState(false);
+    this.markUnsavedChange();
+    this.alertService.info('Seçim panoya kesildi. Yapıştırmak için Yapıştır seçeneğini kullanın.', 'Kesildi');
+  }
+
+  async pasteSelection(): Promise<void> {
+    const canvas = this.fabricCanvas;
+    if (!canvas || !this.clipboardObject) {
+      this.alertService.warning('Panoda yapıştırılacak öğe bulunamadı.', 'Panoya Erişim');
+      return;
+    }
+    const clone = await this.clipboardObject.clone();
+    const left = this.clipboardObject.left ?? 0;
+    const top = this.clipboardObject.top ?? 0;
+    clone.set({
+      left,
+      top,
+      evented: true,
+      selectable: true,
+    });
+    clone.setCoords();
+    canvas.add(clone);
+    canvas.setActiveObject(clone);
+    canvas.requestRenderAll();
+    this.updateSelectionState(true, clone);
+    this.markUnsavedChange();
+    this.alertService.success('Öğe yapıştırıldı.', 'Yapıştırıldı');
+  }
+
+  deleteSelection(): void {
+    const canvas = this.fabricCanvas;
+    const active = canvas?.getActiveObject();
+    if (!canvas || !active) {
+      return;
+    }
+    if (active instanceof fabric.ActiveSelection) {
+      active.getObjects().forEach((obj) => canvas.remove(obj));
+    } else {
+      canvas.remove(active);
+    }
+    canvas.discardActiveObject();
+    canvas.requestRenderAll();
+    this.updateSelectionState(false);
+    this.markUnsavedChange();
+    this.alertService.info('Seçili öğe silindi.', 'Silindi');
+  }
+
+  startCrop(): void {
+    if (this.isCropping) {
+      return;
+    }
+    const canvas = this.fabricCanvas;
+    const active = canvas?.getActiveObject();
+    if (!canvas || !active || !(active instanceof fabric.Image)) {
+      this.alertService.warning('Kırpma için bir görsel seçin.', 'Görsel Seçilmedi');
+      return;
+    }
+    if (Math.abs(active.angle ?? 0) > 0.001) {
+      this.alertService.warning('Döndürülmüş görsellerde kırpma desteklenmiyor.', 'Kırpma Desteklenmiyor');
+      return;
+    }
+    active.setCoords();
+    const bounds = active.getBoundingRect();
+    const rect = new fabric.Rect({
+      left: bounds.left,
+      top: bounds.top,
+      width: bounds.width,
+      height: bounds.height,
+      fill: 'rgba(37, 99, 235, 0.15)',
+      stroke: '#2563eb',
+      strokeDashArray: [6, 4],
+      strokeWidth: 1.5,
+      originX: 'left',
+      originY: 'top',
+      transparentCorners: false,
+      cornerColor: '#2563eb',
+      borderColor: '#2563eb',
+      hasRotatingPoint: false,
+      selectable: true,
+      evented: true,
+    });
+    rect.lockRotation = true;
+    rect.on('moving', () => this.updateCropMenuPosition());
+    rect.on('scaling', () => this.updateCropMenuPosition());
+    rect.on('modified', () => this.updateCropMenuPosition());
+
+    this.isCropping = true;
+    this.selectionMenu.visible = false;
+    this.hasSelection = false;
+    this.cropTarget = active;
+    this.cropRect = rect;
+    active.selectable = false;
+    active.evented = false;
+    canvas.add(rect);
+    canvas.setActiveObject(rect);
+    canvas.bringObjectToFront(rect);
+    this.updateCropMenuPosition();
+  }
+
+  cancelCrop(): void {
+    if (!this.isCropping) {
+      return;
+    }
+    if (this.cropRect && this.fabricCanvas) {
+      this.fabricCanvas.remove(this.cropRect);
+    }
+    if (this.cropTarget) {
+      this.cropTarget.selectable = true;
+      this.cropTarget.evented = true;
+      this.fabricCanvas?.setActiveObject(this.cropTarget);
+      this.updateSelectionState(true, this.cropTarget);
+    } else {
+      this.updateSelectionState(false);
+    }
+    this.cropRect = undefined;
+    this.cropTarget = undefined;
+    this.isCropping = false;
+    this.fabricCanvas?.requestRenderAll();
+  }
+
+  async confirmCrop(): Promise<void> {
+    if (!this.isCropping || !this.cropRect || !this.cropTarget || !this.fabricCanvas) {
+      return;
+    }
+    const canvas = this.fabricCanvas;
+    const rect = this.cropRect;
+    const target = this.cropTarget;
+    target.setCoords();
+    rect.setCoords();
+    const targetBounds = target.getBoundingRect();
+    const rectBounds = rect.getBoundingRect();
+
+    const scaleX = target.getScaledWidth() / (target.width ?? 1);
+    const scaleY = target.getScaledHeight() / (target.height ?? 1);
+    let sourceX = (rectBounds.left - targetBounds.left) / scaleX + (target.cropX ?? 0);
+    let sourceY = (rectBounds.top - targetBounds.top) / scaleY + (target.cropY ?? 0);
+    let sourceWidth = rectBounds.width / scaleX;
+    let sourceHeight = rectBounds.height / scaleY;
+
+    sourceX = Math.max(0, sourceX);
+    sourceY = Math.max(0, sourceY);
+    sourceWidth = Math.max(1, Math.min(sourceWidth, (target.width ?? 0) - sourceX));
+    sourceHeight = Math.max(1, Math.min(sourceHeight, (target.height ?? 0) - sourceY));
+
+    const element = target.getElement();
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = Math.round(sourceWidth);
+    tempCanvas.height = Math.round(sourceHeight);
+    const ctx = tempCanvas.getContext('2d');
+    if (!ctx) {
+      this.alertService.error('Kırpma işlemi başlatılamadı.', 'Kırpma Hatası');
+      return;
+    }
+    ctx.drawImage(
+      element,
+      sourceX,
+      sourceY,
+      sourceWidth,
+      sourceHeight,
+      0,
+      0,
+      tempCanvas.width,
+      tempCanvas.height,
+    );
+    const dataUrl = tempCanvas.toDataURL();
+    const insertionIndex = canvas.getObjects().indexOf(target);
+
+    canvas.remove(rect);
+    canvas.remove(target);
+    this.cropRect = undefined;
+    this.cropTarget = undefined;
+    this.isCropping = false;
+    this.selectionMenu.visible = false;
+    this.hasSelection = false;
+
+    this.allowSelectableForNextObject = true;
+    const cropped = await fabric.Image.fromURL(dataUrl);
+    cropped.set({
+      left: rectBounds.left,
+      top: rectBounds.top,
+      originX: 'left',
+      originY: 'top',
+      selectable: true,
+      evented: true,
+    });
+    const insertIndex = insertionIndex >= 0 ? insertionIndex : canvas.getObjects().length;
+    canvas.insertAt(insertIndex, cropped);
+    canvas.setActiveObject(cropped);
+    canvas.requestRenderAll();
+    this.updateSelectionState(true, cropped);
+    this.markUnsavedChange();
+    this.alertService.success('Görsel kırpıldı.', 'Kırpma Tamam');
   }
 
   triggerImageUpload(): void {
@@ -991,7 +1206,7 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
       canvas.add(img);
       canvas.setActiveObject(img);
       canvas.requestRenderAll();
-      this.updateSelectionState(true);
+      this.updateSelectionState(true, img);
       if (this.currentTool !== 'select') {
         this.setTool('select');
       }
@@ -1005,7 +1220,67 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
     }
   }
 
-  private updateSelectionState(state: boolean): void {
+  private updateSelectionState(state: boolean, target?: fabric.Object | null): void {
+    if (this.isCropping) {
+      this.updateCropMenuPosition();
+      return;
+    }
     this.hasSelection = state;
+    if (!state || !this.fabricCanvas) {
+      this.selectionMenu.visible = false;
+      return;
+    }
+    const active = target ?? this.fabricCanvas.getActiveObject();
+    if (!active) {
+      this.selectionMenu.visible = false;
+      return;
+    }
+    this.updateSelectionMenuPosition(active);
+  }
+
+  private updateSelectionMenuPosition(target: fabric.Object): void {
+    const containerRect = this.pdfContainer?.nativeElement.getBoundingClientRect();
+    const annotationRect = this.annotationCanvas?.nativeElement.getBoundingClientRect();
+    if (!containerRect || !annotationRect) {
+      this.selectionMenu.visible = false;
+      return;
+    }
+    target.setCoords();
+    const bounds = target.getBoundingRect();
+    const relativeLeft = bounds.left + annotationRect.left - containerRect.left;
+    const relativeTop = bounds.top + annotationRect.top - containerRect.top;
+    this.selectionMenu = {
+      visible: true,
+      left: Math.max(8, Math.min(containerRect.width - 180, relativeLeft)),
+      top: Math.max(8, relativeTop - 48),
+      showCropActions: false,
+      showCrop: target instanceof fabric.Image,
+      showPaste: !!this.clipboardObject,
+    };
+  }
+
+  private updateCropMenuPosition(): void {
+    if (!this.isCropping || !this.cropRect) {
+      this.selectionMenu.visible = false;
+      return;
+    }
+    const containerRect = this.pdfContainer?.nativeElement.getBoundingClientRect();
+    const annotationRect = this.annotationCanvas?.nativeElement.getBoundingClientRect();
+    if (!containerRect || !annotationRect) {
+      this.selectionMenu.visible = false;
+      return;
+    }
+    this.cropRect.setCoords();
+    const bounds = this.cropRect.getBoundingRect();
+    const relativeLeft = bounds.left + annotationRect.left - containerRect.left;
+    const relativeTop = bounds.top + annotationRect.top - containerRect.top;
+    this.selectionMenu = {
+      visible: true,
+      left: Math.max(8, Math.min(containerRect.width - 220, relativeLeft)),
+      top: Math.max(8, relativeTop - 48),
+      showCropActions: true,
+      showCrop: false,
+      showPaste: false,
+    };
   }
 }

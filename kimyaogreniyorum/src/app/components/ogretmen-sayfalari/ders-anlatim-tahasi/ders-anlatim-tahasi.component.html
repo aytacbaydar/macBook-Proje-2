@@ -91,6 +91,16 @@
         <i class="ikon">&#128260;</i>
         <span>Kopyala</span>
       </button>
+      <button
+        type="button"
+        class="btn-ikonlu"
+        (click)="pasteSelection()"
+        [disabled]="!clipboardObject"
+        aria-label="Panodaki öğeyi yapıştır"
+      >
+        <i class="ikon">&#128203;</i>
+        <span>Yapıştır</span>
+      </button>
     </div>
 
     <div class="pdf-toolbar__group">
@@ -168,6 +178,56 @@
     class="annotation-canvas"
     aria-label="Cizim alani"
   ></canvas>
+
+  <div
+    class="selection-menu"
+    *ngIf="selectionMenu.visible"
+    [style.left.px]="selectionMenu.left"
+    [style.top.px]="selectionMenu.top"
+  >
+    <ng-container *ngIf="selectionMenu.showCropActions; else selectionActions">
+      <button type="button" class="selection-menu__button primary" (click)="confirmCrop()">
+        <i class="ikon">&#10003;</i>
+        <span>Kırpmayı Onayla</span>
+      </button>
+      <button type="button" class="selection-menu__button" (click)="cancelCrop()">
+        <i class="ikon">&#10005;</i>
+        <span>İptal</span>
+      </button>
+    </ng-container>
+    <ng-template #selectionActions>
+      <button
+        type="button"
+        class="selection-menu__button"
+        (click)="startCrop()"
+        *ngIf="selectionMenu.showCrop"
+      >
+        <i class="ikon">&#128295;</i>
+        <span>Kırp</span>
+      </button>
+      <button type="button" class="selection-menu__button" (click)="duplicateSelection()">
+        <i class="ikon">&#128260;</i>
+        <span>Kopyala</span>
+      </button>
+      <button type="button" class="selection-menu__button" (click)="cutSelection()">
+        <i class="ikon">&#9986;</i>
+        <span>Kes</span>
+      </button>
+      <button type="button" class="selection-menu__button danger" (click)="deleteSelection()">
+        <i class="ikon">&#128465;</i>
+        <span>Sil</span>
+      </button>
+      <button
+        type="button"
+        class="selection-menu__button"
+        *ngIf="selectionMenu.showPaste"
+        (click)="pasteSelection()"
+      >
+        <i class="ikon">&#128203;</i>
+        <span>Yapıştır</span>
+      </button>
+    </ng-template>
+  </div>
 </div>
 
 <div *ngIf="totalPages > 0" class="pdf-sayfa-alt-kontrol">
