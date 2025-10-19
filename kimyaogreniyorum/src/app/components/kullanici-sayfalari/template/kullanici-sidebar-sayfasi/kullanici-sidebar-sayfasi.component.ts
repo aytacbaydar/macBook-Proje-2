@@ -1,5 +1,6 @@
 
 import { Component, OnInit } from '@angular/core';
+import { AlertService } from '../../../../services/alert.service';
 
 @Component({
   selector: 'app-kullanici-sidebar-sayfasi',
@@ -13,6 +14,8 @@ export class KullaniciSidebarSayfasiComponent implements OnInit {
   userRole = 'Öğrenci';
   userAvatar = '';
   notificationCount = 5;
+
+  constructor(private readonly alertService: AlertService) {}
 
   ngOnInit(): void {
     // Kullanıcı bilgilerini yükle
@@ -33,11 +36,22 @@ export class KullaniciSidebarSayfasiComponent implements OnInit {
     this.isCollapsed = !this.isCollapsed;
   }
 
-  logout(): void {
-    if (confirm('Çıkış yapmak istediğinize emin misiniz?')) {
-      localStorage.clear();
-      sessionStorage.clear();
-      window.location.href = '/';
+  async logout(): Promise<void> {
+    const confirmed = await this.alertService.confirm({
+      title: 'Çıkış Yap',
+      text: 'Çıkış yapmak istediğinize emin misiniz?',
+      icon: 'question',
+      confirmButtonText: 'Evet, çıkış yap',
+      cancelButtonText: 'Vazgeç',
+      confirmButtonColor: '#dc2626',
+      cancelButtonColor: '#2563eb',
+      reverseButtons: true,
+    });
+    if (!confirmed) {
+      return;
     }
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.href = '/';
   }
 }

@@ -255,6 +255,8 @@ body.fosforlu-kalem-aktif .drawing-canvas {
   align-items: center;
   gap: 15px;
   padding: 15px 0;
+  pointer-events: auto;
+  touch-action: none;
 }
 
 .drawing-canvas {
@@ -266,6 +268,8 @@ body.fosforlu-kalem-aktif .drawing-canvas {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   margin: 0 auto 15px auto;
   display: block;
+  pointer-events: auto;
+  touch-action: none;
 }
 
 .sayfa-navigasyon {

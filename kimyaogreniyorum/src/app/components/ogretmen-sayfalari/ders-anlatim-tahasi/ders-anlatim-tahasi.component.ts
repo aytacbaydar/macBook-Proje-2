@@ -1,8 +1,9 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import * as pdfjsLib from 'pdfjs-dist/webpack';
 import { PDFDocument } from 'pdf-lib';
 import * as fabric from 'fabric';
 import type { DocumentInitParameters, PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api';
+import { AlertService } from '../../../services/alert.service';
 
 type PdfTool = 'select' | 'pen' | 'highlighter' | 'eraser';
 type BackgroundMode = 'plain' | 'grid' | 'lined';
@@ -18,6 +19,7 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
   @ViewChild('pdfCanvas', { static: false }) pdfCanvas?: ElementRef<HTMLCanvasElement>;
   @ViewChild('annotationCanvas', { static: false }) annotationCanvas?: ElementRef<HTMLCanvasElement>;
   @ViewChild('pdfContainer', { static: false }) pdfContainer?: ElementRef<HTMLDivElement>;
+  @ViewChild('imageUploadInput', { static: false }) imageUploadInput?: ElementRef<HTMLInputElement>;
 
   pdfYukleniyor = false;
   pdfHataMesaji = '';
@@ -51,9 +53,45 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
   private pageBackgrounds = new Map<number, BackgroundMode>();
   private pageMetrics = new Map<number, { canvasWidth: number; canvasHeight: number; pdfWidth?: number; pdfHeight?: number }>();
   exportInProgress = false;
+  private hasUnsavedChanges = false;
+  private suppressUnsavedTracking = false;
+  hasSelection = false;
+  private allowSelectableForNextObject = false;
 
-  constructor() {
+  constructor(private readonly alertService: AlertService) {
     console.info('[PDF::ctor] Component created');
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  handleBeforeUnload(event: BeforeUnloadEvent): void {
+    if (this.hasPendingChanges()) {
+      event.preventDefault();
+      event.returnValue = 'Çıkarsanız kaydedilmemiş çizimleriniz silinecek.';
+    }
+  }
+
+  hasPendingChanges(): boolean {
+    return this.hasUnsavedChanges && !this.exportInProgress;
+  }
+
+  private markUnsavedChange(): void {
+    if (!this.suppressUnsavedTracking) {
+      this.hasUnsavedChanges = true;
+    }
+  }
+
+  private clearUnsavedChanges(): void {
+    this.hasUnsavedChanges = false;
+  }
+
+  private runWithoutUnsavedTracking<T>(operation: () => T): T {
+    const previous = this.suppressUnsavedTracking;
+    this.suppressUnsavedTracking = true;
+    try {
+      return operation();
+    } finally {
+      this.suppressUnsavedTracking = previous;
+    }
   }
 
   ngAfterViewInit(): void {
@@ -82,6 +120,12 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
     this.annotationStates.clear();
     this.pageBackgrounds.clear();
     this.pageMetrics.clear();
+    this.clearUnsavedChanges();
+  }
+
+  private showError(message: string, title = 'Hata'): void {
+    this.pdfHataMesaji = message;
+    void this.alertService.error(message, title);
   }
 
   get isBlankDocument(): boolean {
@@ -101,6 +145,7 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
     this.annotationStates.clear();
     this.pageBackgrounds.clear();
     this.pageMetrics.clear();
+    this.clearUnsavedChanges();
     this.pdfDoc = undefined;
     this.blankDocument = false;
     this.originalPdfData = undefined;
@@ -136,7 +181,7 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
       await this.renderPage(1);
     } catch (error) {
       console.error('[PDF::onPdfSec] Error while loading PDF', error);
-      this.pdfHataMesaji = 'PDF yüklenirken bir hata oluştu.';
+      this.showError('PDF yüklenirken bir hata oluştu.', 'PDF Hatası');
       this.blankDocument = true;
       this.initializeBlankDocument();
     } finally {
@@ -190,6 +235,7 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
     this.pageBackgrounds.set(yeniSayfa, this.backgroundMode);
     console.info('[PDF::yeniSayfaEkle] Added blank page', yeniSayfa);
     await this.renderPage(yeniSayfa);
+    this.markUnsavedChange();
   }
 
   setTool(tool: PdfTool): void {
@@ -223,6 +269,7 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
     if (this.blankDocument) {
       this.saveCurrentAnnotations();
       await this.renderPage(this.currentPage);
+      this.markUnsavedChange();
     }
   }
 
@@ -242,10 +289,12 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
     } else {
       this.updateObjectInteractivity(true);
     }
+    this.updateSelectionState(false);
     if (page) {
       this.annotationStates.delete(page);
     }
     this.saveCurrentAnnotations();
+    this.markUnsavedChange();
     console.info('[PDF::clearCurrentAnnotations] Cleared page', page);
   }
 
@@ -258,7 +307,7 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
 
     const pdfCanvasEl = this.pdfCanvas?.nativeElement;
     if (!pdfCanvasEl || !this.annotationCanvas?.nativeElement) {
-      this.pdfHataMesaji = 'Canvas elementi bulunamadı.';
+      this.showError('Canvas elementi bulunamadı.', 'Teknik Hata');
       console.error('[PDF::renderPage] Canvas not found');
       return;
     }
@@ -275,7 +324,7 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
     try {
       const pdfCtx = pdfCanvasEl.getContext('2d');
       if (!pdfCtx) {
-        this.pdfHataMesaji = 'Canvas context oluşturulamadı.';
+        this.showError('Canvas context oluşturulamadı.', 'Teknik Hata');
         console.error('[PDF::renderPage] Canvas context not available');
         return;
       }
@@ -310,7 +359,7 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
         console.warn('[PDF::renderPage] Rendering cancelled', pageNumber);
       } else {
         console.error('[PDF::renderPage] Rendering error', error);
-        this.pdfHataMesaji = 'Sayfa çizilirken hata oluştu.';
+        this.showError('Sayfa çizilirken hata oluştu.', 'Çizim Hatası');
       }
     } finally {
       this.renderInProgress = false;
@@ -330,6 +379,7 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
     if (!this.blankDocument) {
       return;
     }
+    this.clearUnsavedChanges();
     this.originalPdfData = undefined;
     this.pageMetrics.clear();
     this.totalPages = Math.max(this.totalPages, 1);
@@ -416,28 +466,57 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
     this.fabricCanvas.perPixelTargetFind = true;
     this.fabricCanvas.defaultCursor = 'crosshair';
     this.fabricCanvas.hoverCursor = 'move';
-    this.fabricCanvas.setBackgroundColor('transparent', undefined);
+    this.fabricCanvas.backgroundColor = 'transparent';
+    this.applyFabricCanvasStyles();
     this.fabricCanvas.freeDrawingBrush = new fabric.PencilBrush(this.fabricCanvas);
     this.configureFabricBrush();
 
-    const saveState = () => this.saveCurrentAnnotations();
+    const saveState = () => {
+      this.saveCurrentAnnotations();
+    };
+    const handleChange = () => {
+      this.markUnsavedChange();
+    };
     this.fabricCanvas.on('path:created', () => {
       if (this.currentTool !== 'select') {
         this.updateObjectInteractivity(false);
       }
       saveState();
+      handleChange();
     });
-    this.fabricCanvas.on('object:modified', saveState);
-    this.fabricCanvas.on('object:removed', saveState);
-    this.fabricCanvas.on('object:added', (event: fabric.TPointerEventInfo) => {
-      if (!event.target) {
+    this.fabricCanvas.on('object:modified', () => {
+      saveState();
+      handleChange();
+      const hasActiveObjects = !!this.fabricCanvas && this.fabricCanvas.getActiveObjects().length > 0;
+      this.updateSelectionState(hasActiveObjects);
+    });
+    this.fabricCanvas.on('object:removed', () => {
+      saveState();
+      handleChange();
+      const hasActiveObjects = !!this.fabricCanvas && this.fabricCanvas.getActiveObjects().length > 0;
+      this.updateSelectionState(hasActiveObjects);
+    });
+    this.fabricCanvas.on('object:added', ({ target }) => {
+      if (!target) {
         return;
       }
-      if (this.currentTool !== 'select') {
-        event.target.selectable = false;
-        event.target.evented = false;
+      if (this.allowSelectableForNextObject) {
+        target.selectable = true;
+        target.evented = true;
+        this.allowSelectableForNextObject = false;
+      } else if (this.currentTool !== 'select') {
+        target.selectable = false;
+        target.evented = false;
       }
+      if (!this.suppressUnsavedTracking) {
+        handleChange();
+      }
+      const hasActiveObjects = !!this.fabricCanvas && this.fabricCanvas.getActiveObjects().length > 0;
+      this.updateSelectionState(hasActiveObjects);
     });
+    this.fabricCanvas.on('selection:created', () => this.updateSelectionState(true));
+    this.fabricCanvas.on('selection:updated', () => this.updateSelectionState(true));
+    this.fabricCanvas.on('selection:cleared', () => this.updateSelectionState(false));
   }
 
   private configureFabricBrush(): void {
@@ -445,20 +524,22 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
       return;
     }
 
-    if (this.currentTool === 'select') {
-      this.fabricCanvas.isDrawingMode = false;
-      this.fabricCanvas.selection = true;
-      this.fabricCanvas.defaultCursor = 'default';
-      this.fabricCanvas.hoverCursor = 'move';
+    const isDrawingTool = this.currentTool !== 'select';
+    this.fabricCanvas.isDrawingMode = isDrawingTool;
+    this.fabricCanvas.selection = !isDrawingTool;
+    this.fabricCanvas.defaultCursor = isDrawingTool ? 'crosshair' : 'default';
+    this.fabricCanvas.hoverCursor = isDrawingTool ? 'crosshair' : 'move';
+    this.fabricCanvas.freeDrawingCursor = 'crosshair';
+    if (this.fabricCanvas.upperCanvasEl) {
+      this.fabricCanvas.upperCanvasEl.style.cursor = isDrawingTool ? 'crosshair' : 'move';
+    }
+
+    if (!isDrawingTool) {
       this.updateObjectInteractivity(true);
       this.fabricCanvas.requestRenderAll();
       return;
     }
 
-    this.fabricCanvas.isDrawingMode = true;
-    this.fabricCanvas.selection = false;
-    this.fabricCanvas.defaultCursor = 'crosshair';
-    this.fabricCanvas.hoverCursor = 'crosshair';
     this.fabricCanvas.discardActiveObject();
     this.updateObjectInteractivity(false);
 
@@ -479,7 +560,53 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
       this.fabricCanvas.freeDrawingBrush = pencilBrush;
     }
 
+    if (this.fabricCanvas.freeDrawingBrush) {
+      this.fabricCanvas.freeDrawingBrush.width = width;
+      if (this.currentTool !== 'eraser') {
+        this.fabricCanvas.freeDrawingBrush.color =
+          this.currentTool === 'highlighter'
+            ? this.hexToRgba(this.highlighterColor, this.highlighterOpacity)
+            : this.penColor;
+      }
+    }
+
     this.fabricCanvas.requestRenderAll();
+  }
+
+  private applyFabricCanvasStyles(width?: number, height?: number): void {
+    if (!this.fabricCanvas) {
+      return;
+    }
+
+    const wrapper = this.fabricCanvas.wrapperEl as HTMLElement | undefined;
+    if (wrapper) {
+      wrapper.style.position = 'absolute';
+      wrapper.style.left = '0';
+      wrapper.style.top = '0';
+      wrapper.style.width = width ? `${width}px` : '100%';
+      wrapper.style.height = height ? `${height}px` : '100%';
+      wrapper.style.pointerEvents = 'auto';
+      wrapper.style.touchAction = 'none';
+      wrapper.style.background = 'transparent';
+      wrapper.style.zIndex = '2';
+    }
+
+    const upper = this.fabricCanvas.upperCanvasEl as HTMLCanvasElement | undefined;
+    if (upper) {
+      upper.style.pointerEvents = 'auto';
+      upper.style.touchAction = 'none';
+      upper.style.backgroundColor = 'transparent';
+      upper.style.width = width ? `${width}px` : '100%';
+      upper.style.height = height ? `${height}px` : '100%';
+    }
+
+    const lower = this.fabricCanvas.lowerCanvasEl as HTMLCanvasElement | undefined;
+    if (lower) {
+      lower.style.pointerEvents = 'none';
+      lower.style.backgroundColor = 'transparent';
+      lower.style.width = width ? `${width}px` : '100%';
+      lower.style.height = height ? `${height}px` : '100%';
+    }
   }
 
   private updateObjectInteractivity(selectable: boolean): void {
@@ -554,10 +681,12 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
 
       const fileName = `ders-anlatim-${new Date().toISOString().replace(/[:.]/g, '-')}.pdf`;
       this.triggerFileDownload(pdfBytes, fileName);
+      void this.alertService.success('PDF başarıyla indirildi.', 'İndirme Hazır');
+      this.clearUnsavedChanges();
       console.info('[PDF::downloadPdf] PDF indirildi', fileName);
     } catch (error) {
       console.error('[PDF::downloadPdf] PDF aktariminda hata olustu', error);
-      this.pdfHataMesaji = 'PDF indirirken hata olustu.';
+      this.showError('PDF indirirken hata oluştu.', 'PDF Hatası');
     } finally {
       if (previousPage !== this.currentPage) {
         await this.renderPage(previousPage);
@@ -576,6 +705,7 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
     if (this.fabricCanvas) {
       this.fabricCanvas.setDimensions({ width, height });
       this.fabricCanvas.calcOffset();
+      this.applyFabricCanvasStyles(width, height);
       if (this.currentTool !== 'select') {
         this.updateObjectInteractivity(false);
       } else {
@@ -656,7 +786,7 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
       this.annotationStates.delete(this.currentPage);
       return;
     }
-    const json = this.fabricCanvas.toJSON(['eraser']);
+    const json = this.fabricCanvas.toJSON();
     this.annotationStates.set(this.currentPage, json);
     console.info('[PDF::saveCurrentAnnotations] Saved page', this.currentPage);
   }
@@ -665,34 +795,36 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
     if (!this.fabricCanvas) {
       return;
     }
-    this.fabricCanvas.discardActiveObject();
-    this.fabricCanvas
-      .getObjects()
-      .slice()
-      .forEach((obj: fabric.Object) => this.fabricCanvas?.remove(obj));
+    await this.runWithoutUnsavedTracking(async () => {
+      this.fabricCanvas!.discardActiveObject();
+      this.fabricCanvas!
+        .getObjects()
+        .slice()
+        .forEach((obj: fabric.Object) => this.fabricCanvas?.remove(obj));
 
-    const json = this.annotationStates.get(pageNumber);
-    if (!json) {
-      if (this.currentTool !== 'select') {
-        this.updateObjectInteractivity(false);
-      } else {
-        this.updateObjectInteractivity(true);
-      }
-      this.fabricCanvas.renderAll();
-      console.info('[PDF::restoreAnnotations] No saved annotations for page', pageNumber);
-      return;
-    }
-
-    await new Promise<void>((resolve) => {
-      this.fabricCanvas!.loadFromJSON(json, () => {
+      const json = this.annotationStates.get(pageNumber);
+      if (!json) {
         if (this.currentTool !== 'select') {
           this.updateObjectInteractivity(false);
         } else {
           this.updateObjectInteractivity(true);
         }
         this.fabricCanvas!.renderAll();
-        console.info('[PDF::restoreAnnotations] Restored page', pageNumber);
-        resolve();
+        console.info('[PDF::restoreAnnotations] No saved annotations for page', pageNumber);
+        return;
+      }
+
+      await new Promise<void>((resolve) => {
+        this.fabricCanvas!.loadFromJSON(json, () => {
+          if (this.currentTool !== 'select') {
+            this.updateObjectInteractivity(false);
+          } else {
+            this.updateObjectInteractivity(true);
+          }
+          this.fabricCanvas!.renderAll();
+          console.info('[PDF::restoreAnnotations] Restored page', pageNumber);
+          resolve();
+        });
       });
     });
   }
@@ -706,16 +838,20 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
       }
       return;
     }
-    this.fabricCanvas.discardActiveObject();
-    this.fabricCanvas.getObjects()
-      .slice()
-      .forEach((obj: fabric.Object) => this.fabricCanvas?.remove(obj));
-    this.fabricCanvas.renderAll();
-    if (this.currentTool !== 'select') {
-      this.updateObjectInteractivity(false);
-    } else {
-      this.updateObjectInteractivity(true);
-    }
+    this.runWithoutUnsavedTracking(() => {
+      this.fabricCanvas!.discardActiveObject();
+      this.fabricCanvas!
+        .getObjects()
+        .slice()
+        .forEach((obj: fabric.Object) => this.fabricCanvas?.remove(obj));
+      this.fabricCanvas!.renderAll();
+      if (this.currentTool !== 'select') {
+        this.updateObjectInteractivity(false);
+      } else {
+        this.updateObjectInteractivity(true);
+      }
+      this.updateSelectionState(false);
+    });
   }
 
   private combineCurrentPageToDataUrl(): { dataUrl: string; width: number; height: number } | null {
@@ -762,5 +898,114 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
     link.click();
     link.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  async duplicateSelection(): Promise<void> {
+    const canvas = this.fabricCanvas;
+    if (!canvas) {
+      return;
+    }
+    const activeObjects = canvas.getActiveObjects();
+    if (!activeObjects.length) {
+      return;
+    }
+
+    const clones = await Promise.all(
+      activeObjects.map((obj) => obj.clone() as Promise<fabric.Object>),
+    );
+
+    if (!this.fabricCanvas) {
+      return;
+    }
+
+    const offset = 20;
+    clones.forEach((clone) => {
+      clone.set({
+        left: (clone.left ?? 0) + offset,
+        top: (clone.top ?? 0) + offset,
+        evented: true,
+        selectable: true,
+      });
+      clone.setCoords();
+      this.fabricCanvas!.add(clone);
+    });
+
+    if (clones.length === 1) {
+      this.fabricCanvas.setActiveObject(clones[0]);
+    } else {
+      const selection = new fabric.ActiveSelection(clones, {
+        canvas: this.fabricCanvas,
+      });
+      this.fabricCanvas.setActiveObject(selection);
+    }
+    this.fabricCanvas.requestRenderAll();
+    this.updateSelectionState(true);
+    this.markUnsavedChange();
+  }
+
+  triggerImageUpload(): void {
+    this.imageUploadInput?.nativeElement.click();
+  }
+
+  onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) {
+      return;
+    }
+    if (!file.type.startsWith('image/')) {
+      this.alertService.warning('Lütfen geçerli bir görsel dosyası seçin.', 'Geçersiz Dosya');
+      input.value = '';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result as string;
+      void this.addImageToCanvas(dataUrl);
+    };
+    reader.readAsDataURL(file);
+    input.value = '';
+  }
+
+  private async addImageToCanvas(dataUrl: string): Promise<void> {
+    if (!this.fabricCanvas) {
+      return;
+    }
+    this.allowSelectableForNextObject = true;
+    try {
+      const img = await fabric.Image.fromURL(dataUrl, { crossOrigin: 'anonymous' });
+      const canvas = this.fabricCanvas!;
+      const canvasWidth = canvas.getWidth();
+      const canvasHeight = canvas.getHeight();
+      const maxWidth = canvasWidth * 0.6;
+      const maxHeight = canvasHeight * 0.6;
+      const scale = Math.min(maxWidth / img.width!, maxHeight / img.height!, 1);
+      img.scale(scale);
+      img.set({
+        left: (canvasWidth - img.getScaledWidth()) / 2,
+        top: (canvasHeight - img.getScaledHeight()) / 2,
+        selectable: true,
+        evented: true,
+      });
+      canvas.add(img);
+      canvas.setActiveObject(img);
+      canvas.requestRenderAll();
+      this.updateSelectionState(true);
+      if (this.currentTool !== 'select') {
+        this.setTool('select');
+      }
+      this.markUnsavedChange();
+      this.alertService.success('Görsel tahtaya eklendi.', 'Görsel Hazır');
+    } catch (error) {
+      console.error('[PDF::addImageToCanvas] Görsel eklenemedi', error);
+      this.alertService.error('Görsel yüklenirken bir hata oluştu.', 'Görsel Hatası');
+    } finally {
+      this.allowSelectableForNextObject = false;
+    }
+  }
+
+  private updateSelectionState(state: boolean): void {
+    this.hasSelection = state;
   }
 }

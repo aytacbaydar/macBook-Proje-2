@@ -79,6 +79,35 @@
       </select>
     </div>
 
+    <div class="pdf-toolbar__group">
+      <span class="toolbar-label">Düzenle</span>
+      <button
+        type="button"
+        class="btn-ikonlu"
+        (click)="duplicateSelection()"
+        [disabled]="!hasSelection || currentTool !== 'select'"
+        aria-label="Seçili öğeyi kopyala"
+      >
+        <i class="ikon">&#128260;</i>
+        <span>Kopyala</span>
+      </button>
+    </div>
+
+    <div class="pdf-toolbar__group">
+      <span class="toolbar-label">Medya</span>
+      <button type="button" class="btn-ikonlu" (click)="triggerImageUpload()" aria-label="Görsel ekle">
+        <i class="ikon">&#128247;</i>
+        <span>Görsel Yükle</span>
+      </button>
+      <input
+        #imageUploadInput
+        type="file"
+        accept="image/*"
+        (change)="onImageSelected($event)"
+        hidden
+      >
+    </div>
+
     <div class="pdf-toolbar__group pdf-toolbar__group--background">
       <span class="toolbar-label">Arka Plan</span>
       <button

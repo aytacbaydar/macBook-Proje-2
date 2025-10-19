@@ -63,6 +63,7 @@ import { DovmeGaleriSayfasiComponent } from './components/dovme-sayfasi/dovme-ga
 import { KullaniciIndexSayfasiComponent } from './components/kullanici-sayfalari/template/kullanici-index-sayfasi/kullanici-index-sayfasi.component';
 import { KullaniciAnaSayfaSayfasiComponent } from './components/kullanici-sayfalari/kullanici-ana-sayfa-sayfasi/kullanici-ana-sayfa-sayfasi.component';
 import { DersAnlatimTahasiComponent } from './components/ogretmen-sayfalari/ders-anlatim-tahasi/ders-anlatim-tahasi.component';
+import { DersAnlatimTahasiDeactivateGuard } from './guards/ders-anlatim-tahasi-deactivate.guard';
 
 const routes: Routes = [
   {
@@ -208,6 +209,7 @@ const routes: Routes = [
       {
         path: 'tahta-sayfasi',
         component: DersAnlatimTahasiComponent,
+        canDeactivate: [DersAnlatimTahasiDeactivateGuard],
       },
       {
         path: 'ogretmen-testlerin-cevaplari-sayfasi',

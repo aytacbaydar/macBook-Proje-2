@@ -5,6 +5,7 @@ import { NgIf, NgFor } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { jsPDF } from 'jspdf';
 import * as pdfjsLib from 'pdfjs-dist';
+import { AlertService } from '../../../services/alert.service';
 
 @Component({
   selector: 'app-ogretmen-ders-anlatma-tahtasi',
@@ -61,7 +62,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
   pdfSayfaSayisi: number = 0;
   seciliPdfSayfasi: number = 1;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private readonly alertService: AlertService) {
     // PDF.js worker'ı ayarla
     pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
   }
@@ -179,14 +180,14 @@ export class OgretmenDersAnlatmaTahtasiComponent
       // Dosya boyutu kontrolü (25MB limit)
       const maxSize = 25 * 1024 * 1024; // 25MB
       if (file.size > maxSize) {
-        alert('PDF dosyası çok büyük! Maksimum 25MB olmalı.');
+        void this.alertService.warning('PDF dosyası çok büyük! Maksimum 25MB olmalı.', 'Dosya Boyutu Aşıldı');
         this.pdfYukleniyor = false;
         input.value = '';
         return;
       }
 
       if (file.type !== 'application/pdf') {
-        alert('Lütfen sadece PDF dosyası seçin!');
+        void this.alertService.warning('Lütfen yalnızca PDF dosyası seçin.', 'Geçersiz Dosya Türü');
         this.pdfYukleniyor = false;
         input.value = '';
         return;
@@ -213,14 +214,14 @@ export class OgretmenDersAnlatmaTahtasiComponent
           this.pdfYukleniyor = false;
         } catch (error) {
           console.error('PDF yükleme hatası:', error);
-          alert('PDF dosyası yüklenemedi! Dosya bozuk olabilir.');
+          void this.alertService.error('PDF dosyası yüklenemedi! Dosya bozuk olabilir.', 'PDF Yükleme Başarısız');
           this.pdfYukleniyor = false;
         }
       };
 
       reader.onerror = () => {
         console.error('PDF okuma hatası');
-        alert('PDF dosyası okunamadı!');
+        void this.alertService.error('PDF dosyası okunamadı. Lütfen dosyayı kontrol edin.', 'PDF Okuma Hatası');
         this.pdfYukleniyor = false;
       };
 
@@ -291,7 +292,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
       this.seciliPdfSayfasi = sayfaNo;
     } catch (error) {
       console.error('PDF sayfa yükleme hatası:', error);
-      alert('PDF sayfası yüklenemedi!');
+      void this.alertService.error('PDF sayfası yüklenemedi. Lütfen tekrar deneyin.', 'PDF Yükleme Hatası');
     }
   }
 
@@ -710,6 +711,8 @@ export class OgretmenDersAnlatmaTahtasiComponent
         this.canvasInstances[sayfaNo - 1] = canvas;
       }
 
+      this.konumlandirFabricCanvas(canvas, canvasWidth, canvasHeight);
+
       // Brush'ı hemen oluştur ve ayarla
       canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
       canvas.freeDrawingBrush.color = this.kalemRengi;
@@ -740,9 +743,9 @@ export class OgretmenDersAnlatmaTahtasiComponent
       const newCanvasHeight = newCanvasWidth * 1.414;
       
       // Canvas boyutlarını güncelle
-      canvas.setDimensions({ 
-        width: newCanvasWidth, 
-        height: newCanvasHeight 
+      canvas.setDimensions({
+        width: newCanvasWidth,
+        height: newCanvasHeight
       });
       
       // HTML canvas elementini de güncelle
@@ -751,7 +754,8 @@ export class OgretmenDersAnlatmaTahtasiComponent
         canvasEl.width = newCanvasWidth;
         canvasEl.height = newCanvasHeight;
       }
-      
+
+      this.konumlandirFabricCanvas(canvas, newCanvasWidth, newCanvasHeight);
       canvas.renderAll();
     } catch (error) {
       console.error(`Canvas ${sayfaNo} boyutlandırma hatası:`, error);
@@ -843,6 +847,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
       canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
       canvas.freeDrawingBrush.color = this.kalemRengi;
       canvas.freeDrawingBrush.width = this.kalemKalinligi;
+      this.konumlandirFabricCanvas(canvas);
       canvas.renderAll();
     }
   }
@@ -929,10 +934,42 @@ export class OgretmenDersAnlatmaTahtasiComponent
     canvas.freeDrawingBrush.color = this.kalemRengi;
     canvas.freeDrawingBrush.width = this.kalemKalinligi;
 
+    this.konumlandirFabricCanvas(canvas);
+
     // Canvas'ı yeniden render et
     canvas.renderAll();
 
     console.log(`Canvas ${pageNo} kalem ayarları güncellendi - Renk: ${this.kalemRengi}, Kalınlık: ${this.kalemKalinligi}, Çizim Modu: ${canvas.isDrawingMode}`);
+  }
+
+  private konumlandirFabricCanvas(canvas: fabric.Canvas, width?: number, height?: number): void {
+    const wrapper = canvas.wrapperEl as HTMLElement | undefined;
+    if (wrapper) {
+      wrapper.style.position = 'relative';
+      wrapper.style.width = width ? `${width}px` : `${canvas.getWidth()}px`;
+      wrapper.style.height = height ? `${height}px` : `${canvas.getHeight()}px`;
+      wrapper.style.pointerEvents = 'auto';
+      wrapper.style.touchAction = 'none';
+      wrapper.style.background = 'transparent';
+      wrapper.style.zIndex = '2';
+    }
+
+    const upper = canvas.upperCanvasEl as HTMLCanvasElement | undefined;
+    if (upper) {
+      upper.style.pointerEvents = 'auto';
+      upper.style.touchAction = 'none';
+      upper.style.backgroundColor = 'transparent';
+      upper.style.width = width ? `${width}px` : `${canvas.getWidth()}px`;
+      upper.style.height = height ? `${height}px` : `${canvas.getHeight()}px`;
+    }
+
+    const lower = canvas.lowerCanvasEl as HTMLCanvasElement | undefined;
+    if (lower) {
+      lower.style.pointerEvents = 'none';
+      lower.style.backgroundColor = 'transparent';
+      lower.style.width = width ? `${width}px` : `${canvas.getWidth()}px`;
+      lower.style.height = height ? `${height}px` : `${canvas.getHeight()}px`;
+    }
   }
 
   silgiModunuAc(): void {
@@ -1260,7 +1297,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
       processNextPage(1);
     } catch (error) {
       console.error('PDF oluşturma hatası:', error);
-      alert('PDF oluşturulurken bir hata oluştu!');
+      void this.alertService.error('PDF oluşturulurken bir hata oluştu. Lütfen tekrar deneyin.', 'PDF Oluşturma Hatası');
       this.kaydetmeIsleminde = false;
     }
   }
@@ -1269,7 +1306,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
   veritabaninaKaydet(): void {
     // ADIM 1: Öğrenci grubu kontrolü
     if (!this.secilenGrup) {
-      alert('Lütfen bir öğrenci grubu seçin!');
+      void this.alertService.warning('Lütfen bir öğrenci grubu seçin.', 'Öğrenci Grubu Gerekli');
       return;
     }
 
@@ -1411,7 +1448,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
         console.log('PDF blob boyutu:', pdfOutput.size, 'bytes', `(${pdfSizeMB.toFixed(2)} MB)`);
 
         if (!pdfOutput || pdfOutput.size <= 0) {
-          alert('PDF oluşturulamadı! PDF boyutu sıfır.');
+          void this.alertService.error('PDF oluşturulamadı! PDF boyutu sıfır görünüyor.', 'PDF Oluşturma Başarısız');
           this.kaydetmeIsleminde = false;
           return;
         }
@@ -1419,7 +1456,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
         // PDF boyut kontrolü - 10MB limit (veritabanı limiti için)
         const maxSizeMB = 10;
         if (pdfSizeMB > maxSizeMB) {
-          alert(`PDF dosyası çok büyük! Boyut: ${pdfSizeMB.toFixed(2)} MB. Maksimum izin verilen: ${maxSizeMB} MB. Lütfen daha az sayfa çizin veya çizimlerinizi basitleştirin.`);
+          void this.alertService.warning(`PDF dosyası çok büyük! Boyut: ${pdfSizeMB.toFixed(2)} MB. Maksimum izin verilen: ${maxSizeMB} MB. Lütfen daha az sayfa çizin veya çizimlerinizi basitleştirin.`, 'PDF Boyutu Çok Büyük');
           this.kaydetmeIsleminde = false;
           return;
         }
@@ -1433,14 +1470,14 @@ export class OgretmenDersAnlatmaTahtasiComponent
 
         // PDF adı kontrolü
         if (!dosyaAdi || dosyaAdi.trim() === '') {
-          alert('PDF adı boş olamaz!');
+          void this.alertService.warning('PDF adı boş olamaz.', 'Eksik Bilgi');
           this.kaydetmeIsleminde = false;
           return;
         }
 
         // Öğrenci grubu kontrolü
         if (!this.secilenGrup || this.secilenGrup.trim() === '') {
-          alert('Öğrenci grubu seçilmelidir!');
+          void this.alertService.warning('Öğrenci grubu seçilmelidir!', 'Eksik Bilgi');
           this.kaydetmeIsleminde = false;
           return;
         }
@@ -1464,7 +1501,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
 
         // Dosya geçerlilik kontrolü
         if (!pdfFile || pdfFile.size <= 0) {
-          alert('PDF dosyası oluşturulamadı veya boş!');
+          void this.alertService.error('PDF dosyası oluşturulamadı veya boş!', 'PDF Oluşturma Başarısız');
           this.kaydetmeIsleminde = false;
           return;
         }
@@ -1533,25 +1570,25 @@ export class OgretmenDersAnlatmaTahtasiComponent
         });
 
         if (formDataEmpty) {
-          alert('FormData boş! Hiçbir veri eklenemedi.');
+          void this.alertService.error('Form verileri boş görünüyor, hiçbir veri eklenemedi.', 'Form Hatası');
           this.kaydetmeIsleminde = false;
           return;
         }
 
         if (!hasPdfFile) {
-          alert("PDF dosyası FormData'ya eklenemedi!");
+          void this.alertService.error("PDF dosyası FormData'ya eklenemedi!", 'Form Hatası');
           this.kaydetmeIsleminde = false;
           return;
         }
 
         if (!hasGroup) {
-          alert("Öğrenci grubu FormData'ya eklenemedi!");
+          void this.alertService.error("Öğrenci grubu FormData'ya eklenemedi!", 'Form Hatası');
           this.kaydetmeIsleminde = false;
           return;
         }
 
         if (!hasPdfName) {
-          alert("PDF adı FormData'ya eklenemedi!");
+          void this.alertService.error("PDF adı FormData'ya eklenemedi!", 'Form Hatası');
           this.kaydetmeIsleminde = false;
           return;
         }
@@ -1626,19 +1663,21 @@ export class OgretmenDersAnlatmaTahtasiComponent
 
                   if (jsonResponse && jsonResponse.success === true) {
                     console.log('İşlem başarılı:', jsonResponse);
-                    alert(
-                      `Konu anlatımı "${this.secilenGrup}" için başarıyla kaydedildi!`
+                    void this.alertService.success(
+                      `Konu anlatımı "${this.secilenGrup}" için başarıyla kaydedildi!`,
+                      'Kaydetme Başarılı'
                     );
                   } else {
                     console.warn('Sunucu hatası:', jsonResponse);
                     const errorMessage = jsonResponse?.error || 'Sunucu yanıtı beklenmeyen formatta';
-                    alert(`Kaydetme hatası: ${errorMessage}`);
+                    void this.alertService.error(`Kaydetme hatası: ${errorMessage}`, 'Kaydetme Başarısız');
                   }
                 } catch (e) {
                   console.error('Yanıt işleme hatası:', e);
                   console.log('Ham yanıt:', event.body);
-                  alert(
-                    'Kaydetme işlemi sırasında bir hata oluştu. Sunucu yanıtı işlenemedi.'
+                  void this.alertService.error(
+                    'Kaydetme işlemi sırasında bir hata oluştu. Sunucu yanıtı işlenemedi.',
+                    'Kaydetme Başarısız'
                   );
                 }
 
@@ -1695,7 +1734,7 @@ export class OgretmenDersAnlatmaTahtasiComponent
                 errorMsg += `Bilinmeyen bir hata oluştu. Durum kodu: ${error.status}`;
               }
 
-              alert(errorMsg);
+              void this.alertService.error(errorMsg, 'Kaydetme Başarısız');
               console.log('Tam hata detayları:', error);
               this.kaydetmeIsleminde = false;
             },
@@ -1710,9 +1749,10 @@ export class OgretmenDersAnlatmaTahtasiComponent
       processAllPages();
     } catch (error) {
       console.error('Beklenmeyen hata:', error);
-      alert(
+      void this.alertService.error(
         'İşlem sırasında beklenmeyen bir hata oluştu: ' +
-          (error instanceof Error ? error.message : String(error))
+          (error instanceof Error ? error.message : String(error)),
+        'Beklenmeyen Hata'
       );
       this.kaydetmeIsleminde = false;
     }

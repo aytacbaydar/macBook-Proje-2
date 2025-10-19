@@ -169,6 +169,8 @@
 
 .pdf-canvas {
   display: block;
+  position: relative;
+  z-index: 1;
   width: 100%;
   height: auto;
 }
@@ -181,6 +183,23 @@
   background: transparent;
   cursor: crosshair;
   touch-action: none;
+}
+
+.pdf-gorunumu .canvas-container {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: auto !important;
+  touch-action: none !important;
+  background: transparent !important;
+  z-index: 2 !important;
+}
+
+.pdf-gorunumu .canvas-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+  background: transparent !important;
 }
 
 .pdf-sayfa-alt-kontrol {
