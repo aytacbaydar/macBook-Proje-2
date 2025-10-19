@@ -55,6 +55,7 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
   exportInProgress = false;
   private hasUnsavedChanges = false;
   private suppressUnsavedTracking = false;
+  private isRestoringAnnotations = false;
   hasSelection = false;
   private allowSelectableForNextObject = false;
   isCropping = false;
@@ -800,6 +801,9 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
     }
 
   private saveCurrentAnnotations(): void {
+    if (this.isRestoringAnnotations) {
+      return;
+    }
     if (!this.fabricCanvas || !this.currentPage) {
       return;
     }
@@ -817,38 +821,43 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit {
     if (!this.fabricCanvas) {
       return;
     }
-    await this.runWithoutUnsavedTracking(async () => {
-      this.fabricCanvas!.discardActiveObject();
-      this.fabricCanvas!
-        .getObjects()
-        .slice()
-        .forEach((obj: fabric.Object) => this.fabricCanvas?.remove(obj));
+    this.isRestoringAnnotations = true;
+    try {
+      await this.runWithoutUnsavedTracking(async () => {
+        this.fabricCanvas!.discardActiveObject();
+        this.fabricCanvas!
+          .getObjects()
+          .slice()
+          .forEach((obj: fabric.Object) => this.fabricCanvas?.remove(obj));
 
-      const json = this.annotationStates.get(pageNumber);
-      if (!json) {
-        if (this.currentTool !== 'select') {
-          this.updateObjectInteractivity(false);
-        } else {
-          this.updateObjectInteractivity(true);
-        }
-        this.fabricCanvas!.renderAll();
-        console.info('[PDF::restoreAnnotations] No saved annotations for page', pageNumber);
-        return;
-      }
-
-      await new Promise<void>((resolve) => {
-        this.fabricCanvas!.loadFromJSON(json, () => {
+        const json = this.annotationStates.get(pageNumber);
+        if (!json) {
           if (this.currentTool !== 'select') {
             this.updateObjectInteractivity(false);
           } else {
             this.updateObjectInteractivity(true);
           }
           this.fabricCanvas!.renderAll();
-          console.info('[PDF::restoreAnnotations] Restored page', pageNumber);
-          resolve();
+          console.info('[PDF::restoreAnnotations] No saved annotations for page', pageNumber);
+          return;
+        }
+
+        await new Promise<void>((resolve) => {
+          this.fabricCanvas!.loadFromJSON(json, () => {
+            if (this.currentTool !== 'select') {
+              this.updateObjectInteractivity(false);
+            } else {
+              this.updateObjectInteractivity(true);
+            }
+            this.fabricCanvas!.renderAll();
+            console.info('[PDF::restoreAnnotations] Restored page', pageNumber);
+            resolve();
+          });
         });
       });
-    });
+    } finally {
+      this.isRestoringAnnotations = false;
+    }
   }
 
   private clearAnnotationCanvas(): void {
