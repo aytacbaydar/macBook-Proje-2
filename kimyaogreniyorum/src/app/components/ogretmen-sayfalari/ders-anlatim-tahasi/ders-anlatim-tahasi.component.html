@@ -1,182 +1,342 @@
-<nav class="pdf-toolbar pdf-toolbar--sticky">
-  <div class="pdf-toolbar__left">
-    <label class="pdf-secici">
-      <span>&#128196;</span>
-      <span>PDF Sec</span>
-      <input type="file" accept="application/pdf" (change)="onPdfSec($event)" hidden>
-    </label>
-
-    <button type="button" class="btn-ikonlu" (click)="yeniSayfaEkle()" [disabled]="!isBlankDocument || exportInProgress">
-      <i class="ikon">&#10133;</i>
-      <span>Sayfa Ekle</span>
+﻿<div class="pdf-toolbar pdf-toolbar--sticky">
+  <nav class="pdf-toolbar__nav" aria-label="PDF ara&#231; sekmeleri">
+    <button
+      type="button"
+      class="toolbar-tab"
+      *ngFor="let tab of toolbarTabs"
+      (click)="setActiveTab(tab.id)"
+      [class.aktif]="isActiveTab(tab.id)"
+    >
+      {{ tab.label }}
     </button>
-  </div>
+  </nav>
 
-  <div class="pdf-toolbar__middle">
-    <div class="pdf-toolbar__group">
-      <span class="toolbar-label">Renkler</span>
-      <button
-        type="button"
-        class="renk-ikon-btn"
-        *ngFor="let renk of penColorOptions"
-        (click)="setPenColor(renk)"
-        [style.backgroundColor]="renk"
-        [class.aktif]="penColor === renk"
-        [attr.aria-label]="'Kalem rengi ' + renk"
-      ></button>
-    </div>
+  <header class="pdf-toolbar__panel" aria-live="polite">
+    <ng-container [ngSwitch]="activeToolbarTab">
+      <ng-container *ngSwitchCase="'dosya'">
+        <div class="pdf-toolbar__group">
+          <button
+            type="button"
+            class="btn-ikonlu"
+            (click)="yeniSayfaEkle()"
+            [disabled]="!isBlankDocument || exportInProgress"
+          >
+            <span class="ikon" aria-hidden="true">&#x2795;</span>
+            <span>Sayfa Ekle</span>
+          </button>
+          <button
+            type="button"
+            class="btn-ikonlu"
+            (click)="pdfUploadInput.click()"
+            [disabled]="pdfYukleniyor"
+          >
+            <span class="ikon" aria-hidden="true">&#128196;</span>
+            <span>PDF Ekle</span>
+          </button>
+          <input
+            #pdfUploadInput
+            type="file"
+            accept="application/pdf"
+            (change)="onPdfSec($event)"
+            hidden
+          >
+          <button
+            type="button"
+            class="btn-ikonlu"
+            (click)="triggerImageUpload()"
+            [disabled]="pdfYukleniyor"
+          >
+            <span class="ikon" aria-hidden="true">&#128247;</span>
+            <span>Fotoğraf Ekle</span>
+          </button>
+          <input
+            #imageUploadInput
+            type="file"
+            accept="image/*"
+            (change)="onImageSelected($event)"
+            hidden
+          >
+        </div>
+      </ng-container>
 
-    <div class="pdf-toolbar__group">
-      <span class="toolbar-label">Araclar</span>
-      <button
-        type="button"
-        class="btn-ikonlu"
-        (click)="setTool('select')"
-        [class.aktif]="currentTool === 'select'"
-        aria-label="Sec ve Tas"
-      >
-        <i class="ikon">🖱️</i>
-      </button>
-      <button
-        type="button"
-        class="btn-ikonlu"
-        (click)="setTool('pen')"
-        [class.aktif]="currentTool === 'pen'"
-        aria-label="Kalem"
-      >
-        <i class="ikon">✒️</i>
-      </button>
-      <button
-        type="button"
-        class="btn-ikonlu"
-        (click)="setTool('highlighter')"
-        [class.aktif]="currentTool === 'highlighter'"
-        aria-label="Fosforlu Kalem"
-      >
-        <i class="ikon">🖍️</i>
-      </button>
-      <button
-        type="button"
-        class="btn-ikonlu"
-        (click)="setTool('eraser')"
-        [class.aktif]="currentTool === 'eraser'"
-        aria-label="Silgi"
-      >
-        <i class="ikon">🧽</i>
-      </button>
-    </div>
+      <ng-container *ngSwitchCase="'kaydet'">
+        <div class="toolbar-form">
+          <div class="toolbar-field">
+            <label class="toolbar-label" for="kaydetGrup">Grup</label>
+            <select
+              id="kaydetGrup"
+              class="toolbar-select"
+              [(ngModel)]="secilenGrup"
+              [ngModelOptions]="{ standalone: true }"
+              [disabled]="ogrenciGruplariYukleniyor"
+              (ngModelChange)="onGrupChange()"
+            >
+              <option value="">Grup se&#231;in</option>
+              <option *ngFor="let grup of ogrenciGruplari" [value]="grup">{{ grup }}</option>
+            </select>
+          </div>
 
-    <div class="pdf-toolbar__group">
-      <span class="toolbar-label">Kalinlik</span>
-      <select
-        class="stroke-select"
-        name="strokeSize"
-        [ngModelOptions]="{ standalone: true }"
-        [(ngModel)]="strokeSize"
-        (ngModelChange)="onStrokeSizeChange($event)"
-      >
-        <option *ngFor="let size of strokeSizeOptions" [value]="size">{{ size }} px</option>
-      </select>
-    </div>
+          <div class="toolbar-field">
+            <label class="toolbar-label" for="kaydetKonu">Konu</label>
+            <select
+              id="kaydetKonu"
+              class="toolbar-select"
+              [(ngModel)]="secilenKonu"
+              (ngModelChange)="onKonuChange($event)"
+              [disabled]="konularYukleniyor || !konuBasliklari.length"
+              [ngModelOptions]="{ standalone: true }"
+            >
+              <option value="">Konu seçin</option>
+              <option *ngFor="let konu of konuBasliklari" [value]="konu">{{ konu }}</option>
+            </select>
+          </div>
 
-    <div class="pdf-toolbar__group">
-      <span class="toolbar-label">Düzenle</span>
-      <button
-        type="button"
-        class="btn-ikonlu"
-        (click)="duplicateSelection()"
-        [disabled]="!hasSelection || currentTool !== 'select'"
-        aria-label="Seçili öğeyi kopyala"
-      >
-        <i class="ikon">📑</i>
-        <span>Kopyala</span>
-      </button>
-      <button
-        type="button"
-        class="btn-ikonlu"
-        (click)="pasteSelection()"
-        [disabled]="!clipboardObject"
-        aria-label="Panodaki öğeyi yapıştır"
-      >
-        <i class="ikon">📋</i>
-        <span>Yapıştır</span>
-      </button>
-    </div>
+          <div class="toolbar-field">
+            <label class="toolbar-label" for="kaydetAltKonu">Alt konu / kazanım</label>
+            <select
+              id="kaydetAltKonu"
+              class="toolbar-select"
+              [(ngModel)]="secilenAltKonu"
+              [disabled]="!altKonuSecenekleri.length"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="onAltKonuChange()"
+            >
+              <option value="">Alt konu seçin</option>
+              <option *ngFor="let alt of altKonuSecenekleri" [value]="alt">{{ alt }}</option>
+            </select>
+          </div>
 
-    <div class="pdf-toolbar__group">
-      <span class="toolbar-label">Medya</span>
-      <button type="button" class="btn-ikonlu" (click)="triggerImageUpload()" aria-label="Görsel ekle">
-        <i class="ikon">🖼️</i>
-        <span>Görsel Yükle</span>
-      </button>
-      <input
-        #imageUploadInput
-        type="file"
-        accept="image/*"
-        (change)="onImageSelected($event)"
-        hidden
-      >
-    </div>
+          <button
+            type="button"
+            class="btn-ikonlu btn-primary"
+            (click)="saveLessonRecord()"
+            [disabled]="lessonSaveInProgress || pdfYukleniyor || exportInProgress || !canSaveLesson"
+          >
+            <span class="ikon" aria-hidden="true">&#128190;</span>
+            <span>{{ lessonSaveInProgress ? 'Kaydediliyor...' : 'Kaydet' }}</span>
+          </button>
 
-    <div class="pdf-toolbar__group pdf-toolbar__group--background">
-      <span class="toolbar-label">Arka Plan</span>
-      <button
-        type="button"
-        class="btn-ikonlu"
-        (click)="setBackground('plain')"
-        [class.aktif]="backgroundMode === 'plain'"
-        [disabled]="!isBlankDocument"
-        aria-label="Duz arka plan"
-      >
-        <i class="ikon">⬜️</i>
-      </button>
-      <button
-        type="button"
-        class="btn-ikonlu"
-        (click)="setBackground('grid')"
-        [class.aktif]="backgroundMode === 'grid'"
-        [disabled]="!isBlankDocument"
-        aria-label="Kareli arka plan"
-      >
-        <i class="ikon">🧱</i>
-      </button>
-      <button
-        type="button"
-        class="btn-ikonlu"
-        (click)="setBackground('lined')"
-        [class.aktif]="backgroundMode === 'lined'"
-        [disabled]="!isBlankDocument"
-        aria-label="Cizgili arka plan"
-      >
-        <i class="ikon">📏</i>
-      </button>
-    </div>
+          <button
+            type="button"
+            class="btn-ikonlu"
+            (click)="downloadPdf()"
+            [disabled]="pdfYukleniyor || exportInProgress"
+          >
+            <span class="ikon" aria-hidden="true">&#128229;</span>
+            <span>PDF indir</span>
+          </button>
+        </div>
 
-    <div class="pdf-toolbar__group">
-      <button type="button" class="btn-ikonlu btn-temizle" (click)="clearCurrentAnnotations()" [disabled]="!currentPage">
-        <i class="ikon">🧹</i>
-        <span>Temizle</span>
-      </button>
-    </div>
-  </div>
+        <div class="toolbar-status" *ngIf="ogrenciGruplariYukleniyor || konularYukleniyor">
+          <span *ngIf="ogrenciGruplariYukleniyor">Gruplar yükleniyor...</span>
+          <span *ngIf="konularYukleniyor">Konular yükleniyor...</span>
+        </div>
+        <div class="toolbar-status toolbar-status--error" *ngIf="konularHataMesaji && !konularYukleniyor">
+          {{ konularHataMesaji }}
+        </div>
+        <div class="toolbar-status toolbar-status--error" *ngIf="kaydetErrorMessage">
+          {{ kaydetErrorMessage }}
+        </div>
+        <div class="toolbar-status toolbar-status--success" *ngIf="kaydetSuccessMessage">
+          {{ kaydetSuccessMessage }}
+        </div>
+      </ng-container>
 
-  <div class="pdf-toolbar__right">
-    <button type="button" class="btn-ikonlu btn-indir" (click)="downloadPdf()" [disabled]="pdfYukleniyor || exportInProgress">
-      <i class="ikon">📥</i>
-      <span>PDF Indir</span>
-    </button>
-  </div>
-</nav>
+      <ng-container *ngSwitchCase="'duzenle'">
+        <div class="pdf-toolbar__group">
+          <button
+            type="button"
+            class="btn-ikonlu"
+            (click)="setTool('select')"
+            [class.aktif]="currentTool === 'select'"
+          >
+            <span class="ikon" aria-hidden="true">&#x270B;</span>
+            <span>Seç &amp; Taşı</span>
+          </button>
+          <button
+            type="button"
+            class="btn-ikonlu"
+            (click)="duplicateSelection()"
+            [disabled]="!hasSelection || currentTool !== 'select'"
+          >
+            <span class="ikon" aria-hidden="true">&#x239C;</span>
+            <span>Kopyala</span>
+          </button>
+          <button
+            type="button"
+            class="btn-ikonlu"
+            (click)="pasteSelection()"
+            [disabled]="!clipboardObject"
+          >
+            <span class="ikon" aria-hidden="true">&#x239F;</span>
+            <span>Yapıştır</span>
+          </button>
+          <button
+            type="button"
+            class="btn-ikonlu"
+            (click)="cutSelection()"
+            [disabled]="!hasSelection || currentTool !== 'select'"
+          >
+            <span class="ikon" aria-hidden="true">&#9986;</span>
+            <span>Kes</span>
+          </button>
+          <button
+            type="button"
+            class="btn-ikonlu"
+            (click)="deleteSelection()"
+            [disabled]="!hasSelection || currentTool !== 'select'"
+          >
+            <span class="ikon" aria-hidden="true">&#x1F5D1;</span>
+            <span>Sil</span>
+          </button>
+          <button
+            type="button"
+            class="btn-ikonlu"
+            (click)="startCrop()"
+            [disabled]="!hasSelection || isCropping"
+          >
+            <span class="ikon" aria-hidden="true">&#x2702;</span>
+            <span>Kırp</span>
+          </button>
+          <button
+            type="button"
+            class="btn-ikonlu btn-temizle"
+            (click)="clearCurrentAnnotations()"
+            [disabled]="!currentPage"
+          >
+            <span class="ikon" aria-hidden="true">&#x1F9F9;</span>
+            <span>Temizle</span>
+          </button>
+        </div>
 
-<div *ngIf="pdfYukleniyor" class="durum durum--ust">PDF yukleniyor...</div>
+        <div class="pdf-toolbar__group pdf-toolbar__group--background">
+          <span class="toolbar-label">Arka Plan</span>
+          <button
+            type="button"
+            class="btn-ikonlu"
+            (click)="setBackground('plain')"
+            [class.aktif]="backgroundMode === 'plain'"
+            [disabled]="!isBlankDocument"
+          >
+            <span class="ikon" aria-hidden="true">&#9633;</span>
+            <span>Düz</span>
+          </button>
+          <button
+            type="button"
+            class="btn-ikonlu"
+            (click)="setBackground('grid')"
+            [class.aktif]="backgroundMode === 'grid'"
+            [disabled]="!isBlankDocument"
+          >
+            <span class="ikon" aria-hidden="true">&#x1F4C2;</span>
+            <span>Kareli</span>
+          </button>
+          <button
+            type="button"
+            class="btn-ikonlu"
+            (click)="setBackground('lined')"
+            [class.aktif]="backgroundMode === 'lined'"
+            [disabled]="!isBlankDocument"
+          >
+            <span class="ikon" aria-hidden="true">&#x1F4C4;</span>
+            <span>Çizgili</span>
+          </button>
+        </div>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'sekiller'">
+        <div class="pdf-toolbar__group">
+          <button type="button" class="btn-ikonlu" (click)="addShape('rectangle')">
+            <span class="ikon" aria-hidden="true">&#9634;</span>
+            <span>Dikdörtgen</span>
+          </button>
+          <button type="button" class="btn-ikonlu" (click)="addShape('circle')">
+            <span class="ikon" aria-hidden="true">&#9711;</span>
+            <span>Daire</span>
+          </button>
+          <button type="button" class="btn-ikonlu" (click)="addShape('triangle')">
+            <span class="ikon" aria-hidden="true">&#9651;</span>
+            <span>Üçgen</span>
+          </button>
+          <button type="button" class="btn-ikonlu" (click)="addArrow()">
+            <span class="ikon" aria-hidden="true">&#10148;</span>
+            <span>Ok</span>
+          </button>
+        </div>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'cizgiler'">
+        <div class="pdf-toolbar__group">
+          <button
+            type="button"
+            class="btn-ikonlu"
+            (click)="setTool('pen')"
+            [class.aktif]="currentTool === 'pen'"
+          >
+            <span class="ikon" aria-hidden="true">&#9998;</span>
+            <span>Kalem</span>
+          </button>
+          <button
+            type="button"
+            class="btn-ikonlu"
+            (click)="setTool('highlighter')"
+            [class.aktif]="currentTool === 'highlighter'"
+          >
+            <span class="ikon" aria-hidden="true">&#x1F58D;</span>
+            <span>Fosforlu</span>
+          </button>
+          <button
+            type="button"
+            class="btn-ikonlu"
+            (click)="setTool('eraser')"
+            [class.aktif]="currentTool === 'eraser'"
+          >
+            <span class="ikon" aria-hidden="true">&#9003;</span>
+            <span>Silgi</span>
+          </button>
+        </div>
+
+        <div class="pdf-toolbar__group">
+          <span class="toolbar-label">Kalem Rengi</span>
+          <button
+            type="button"
+            class="renk-ikon-btn"
+            *ngFor="let renk of penColorOptions"
+            (click)="setPenColor(renk)"
+            [style.backgroundColor]="renk"
+            [class.aktif]="penColor === renk"
+            [attr.aria-label]="'Kalem rengi ' + renk"
+          ></button>
+        </div>
+
+        <div class="pdf-toolbar__group">
+          <label class="toolbar-label" for="strokeSelect">Kalınlık</label>
+          <select
+            id="strokeSelect"
+            class="stroke-select"
+            name="strokeSize"
+            [ngModelOptions]="{ standalone: true }"
+            [(ngModel)]="strokeSize"
+            (ngModelChange)="onStrokeSizeChange($event)"
+          >
+            <option *ngFor="let size of strokeSizeOptions" [value]="size">{{ size }} px</option>
+          </select>
+        </div>
+      </ng-container>
+    </ng-container>
+  </header>
+</div>
+
+
+<div *ngIf="pdfYukleniyor" class="durum durum--ust">PDF yükleniyor...</div>
 <div *ngIf="pdfHataMesaji" class="durum hata durum--ust">{{ pdfHataMesaji }}</div>
 
 <div class="pdf-gorunumu" #pdfContainer>
-  <canvas #pdfCanvas class="pdf-canvas" aria-label="PDF gorunumu"></canvas>
+  <canvas #pdfCanvas class="pdf-canvas" aria-label="PDF görünümü"></canvas>
   <canvas
     #annotationCanvas
     class="annotation-canvas"
-    aria-label="Cizim alani"
+    aria-label="Çizim alanı"
   ></canvas>
 
   <div
@@ -187,11 +347,11 @@
   >
     <ng-container *ngIf="selectionMenu.showCropActions; else selectionActions">
       <button type="button" class="selection-menu__button primary" (click)="confirmCrop()">
-        <i class="ikon">✅</i>
+        <i class="fa-solid fa-crop-simple"></i>
         <span>Kırpmayı Onayla</span>
       </button>
       <button type="button" class="selection-menu__button" (click)="cancelCrop()">
-        <i class="ikon">❌</i>
+        <i class="fa-solid fa-xmark"></i>
         <span>İptal</span>
       </button>
     </ng-container>
@@ -202,19 +362,19 @@
         (click)="startCrop()"
         *ngIf="selectionMenu.showCrop"
       >
-        <i class="ikon">🪚</i>
+        <i class="fa-solid fa-crop-simple"></i>
         <span>Kırp</span>
       </button>
       <button type="button" class="selection-menu__button" (click)="duplicateSelection()">
-        <i class="ikon">📑</i>
+        <i class="fa-solid fa-copy"></i>
         <span>Kopyala</span>
       </button>
       <button type="button" class="selection-menu__button" (click)="cutSelection()">
-        <i class="ikon">✂️</i>
+        <i class="fa-solid fa-copy"></i>
         <span>Kes</span>
       </button>
       <button type="button" class="selection-menu__button danger" (click)="deleteSelection()">
-        <i class="ikon">🗑️</i>
+        <i class="fa-solid fa-copy"></i>
         <span>Sil</span>
       </button>
       <button
@@ -223,7 +383,7 @@
         *ngIf="selectionMenu.showPaste"
         (click)="pasteSelection()"
       >
-        <i class="ikon">📋</i>
+        <i class="fa-solid fa-clipboard"></i>
         <span>Yapıştır</span>
       </button>
     </ng-template>
@@ -231,11 +391,16 @@
 </div>
 
 <div *ngIf="totalPages > 0" class="pdf-sayfa-alt-kontrol">
-  <button type="button" (click)="ilkSayfa()" [disabled]="currentPage <= 1 || pdfYukleniyor">Ilk</button>
-  <button type="button" (click)="oncekiSayfa()" [disabled]="currentPage <= 1 || pdfYukleniyor">Onceki</button>
+  <button type="button" (click)="ilkSayfa()" [disabled]="currentPage <= 1 || pdfYukleniyor">İlk</button>
+  <button type="button" (click)="oncekiSayfa()" [disabled]="currentPage <= 1 || pdfYukleniyor">Önceki</button>
   <span>Sayfa {{ currentPage }} / {{ totalPages }}</span>
   <button type="button" (click)="sonrakiSayfa()" [disabled]="currentPage >= totalPages || pdfYukleniyor">
     Sonraki
   </button>
   <button type="button" (click)="sonSayfa()" [disabled]="currentPage >= totalPages || pdfYukleniyor">Son</button>
 </div>
+
+ 
+
+
+
