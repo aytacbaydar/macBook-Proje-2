@@ -27,11 +27,17 @@ interface DersKonuKaydi {
   styleUrls: ['./ders-anlatim-tahasi.component.scss'],
   standalone: false,
 })
-export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnInit {
-  @ViewChild('pdfCanvas', { static: false }) pdfCanvas?: ElementRef<HTMLCanvasElement>;
-  @ViewChild('annotationCanvas', { static: false }) annotationCanvas?: ElementRef<HTMLCanvasElement>;
-  @ViewChild('pdfContainer', { static: false }) pdfContainer?: ElementRef<HTMLDivElement>;
-  @ViewChild('imageUploadInput', { static: false }) imageUploadInput?: ElementRef<HTMLInputElement>;
+export class DersAnlatimTahasiComponent
+  implements OnDestroy, AfterViewInit, OnInit
+{
+  @ViewChild('pdfCanvas', { static: false })
+  pdfCanvas?: ElementRef<HTMLCanvasElement>;
+  @ViewChild('annotationCanvas', { static: false })
+  annotationCanvas?: ElementRef<HTMLCanvasElement>;
+  @ViewChild('pdfContainer', { static: false })
+  pdfContainer?: ElementRef<HTMLDivElement>;
+  @ViewChild('imageUploadInput', { static: false })
+  imageUploadInput?: ElementRef<HTMLInputElement>;
 
   pdfYukleniyor = false;
   pdfHataMesaji = '';
@@ -85,7 +91,15 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
   private fabricCanvas?: fabric.Canvas;
   private annotationStates = new Map<number, FabricCanvasJSON>();
   private pageBackgrounds = new Map<number, BackgroundMode>();
-  private pageMetrics = new Map<number, { canvasWidth: number; canvasHeight: number; pdfWidth?: number; pdfHeight?: number }>();
+  private pageMetrics = new Map<
+    number,
+    {
+      canvasWidth: number;
+      canvasHeight: number;
+      pdfWidth?: number;
+      pdfHeight?: number;
+    }
+  >();
   exportInProgress = false;
   private hasUnsavedChanges = false;
   private suppressUnsavedTracking = false;
@@ -105,7 +119,10 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
   };
   clipboardObject?: fabric.Object;
 
-  constructor(private readonly alertService: AlertService, private readonly http: HttpClient) {
+  constructor(
+    private readonly alertService: AlertService,
+    private readonly http: HttpClient
+  ) {
     console.info('[PDF::ctor] Component created');
   }
 
@@ -168,7 +185,8 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
   }
 
   private getAuthToken(): string {
-    const storedUser = localStorage.getItem('user') ?? sessionStorage.getItem('user');
+    const storedUser =
+      localStorage.getItem('user') ?? sessionStorage.getItem('user');
     if (!storedUser) {
       return '';
     }
@@ -183,7 +201,9 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
 
   private buildAuthHeaders(): HttpHeaders {
     const token = this.getAuthToken();
-    return token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : new HttpHeaders();
+    return token
+      ? new HttpHeaders({ Authorization: `Bearer ${token}` })
+      : new HttpHeaders();
   }
 
   private loadKonular(): void {
@@ -208,18 +228,21 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
               id: (item as DersKonuKaydi)?.id,
               konu_adi: String(item?.konu_adi ?? '').trim(),
               alt_konu: item?.alt_konu ? String(item.alt_konu).trim() : null,
-              kazanim_adi: item?.kazanim_adi ? String(item.kazanim_adi).trim() : null,
+              kazanim_adi: item?.kazanim_adi
+                ? String(item.kazanim_adi).trim()
+                : null,
             }))
             .filter((item) => item.konu_adi.length > 0);
 
           if (!this.konular.length) {
             this.konularHataMesaji =
-              response?.message ?? 'Konu listesi alınamadı. Lütfen daha sonra tekrar deneyin.';
+              response?.message ??
+              'Konu listesi alınamadı. Lütfen daha sonra tekrar deneyin.';
           }
 
-          this.konuBasliklari = Array.from(new Set(this.konular.map((item) => item.konu_adi))).sort(
-            (a, b) => a.localeCompare(b, 'tr', { sensitivity: 'base' }),
-          );
+          this.konuBasliklari = Array.from(
+            new Set(this.konular.map((item) => item.konu_adi))
+          ).sort((a, b) => a.localeCompare(b, 'tr', { sensitivity: 'base' }));
 
           this.refreshAltKonuSecenekleri();
         },
@@ -267,7 +290,7 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
       .filter((value) => value.length > 0);
 
     this.altKonuSecenekleri = Array.from(new Set(altlar)).sort((a, b) =>
-      a.localeCompare(b, 'tr', { sensitivity: 'base' }),
+      a.localeCompare(b, 'tr', { sensitivity: 'base' })
     );
 
     if (!this.altKonuSecenekleri.includes(this.secilenAltKonu)) {
@@ -280,17 +303,24 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
     const endpoint = `${this.dersAnlatimApiBase}/ogrenci-gruplari.php`;
 
     this.http
-      .get<OgrenciGruplariResponse>(endpoint, { headers: this.buildAuthHeaders() })
+      .get<OgrenciGruplariResponse>(endpoint, {
+        headers: this.buildAuthHeaders(),
+      })
       .subscribe({
         next: (response) => {
           if (!response?.success || !Array.isArray(response.data)) {
-            console.warn('[PDF::loadOgrenciGruplari] Beklenmeyen yanıt', response);
+            console.warn(
+              '[PDF::loadOgrenciGruplari] Beklenmeyen yanıt',
+              response
+            );
             this.ogrenciGruplari = [];
             return;
           }
 
           const temizGruplar = response.data
-            .map((grup) => (typeof grup === 'string' ? grup.trim() : String(grup ?? '').trim()))
+            .map((grup) =>
+              typeof grup === 'string' ? grup.trim() : String(grup ?? '').trim()
+            )
             .filter((grup) => grup.length > 0);
 
           const benzersizGruplar = Array.from(new Set<string>(temizGruplar));
@@ -323,7 +353,10 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
   ngOnDestroy(): void {
     console.info('[PDF::ngOnDestroy] Component destroyed');
     if (this.workerObjectUrl) {
-      console.info('[PDF::ngOnDestroy] Revoking worker blob URL', this.workerObjectUrl);
+      console.info(
+        '[PDF::ngOnDestroy] Revoking worker blob URL',
+        this.workerObjectUrl
+      );
       URL.revokeObjectURL(this.workerObjectUrl);
       this.workerObjectUrl = undefined;
     }
@@ -355,7 +388,10 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
 
   async onPdfSec(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;
-    console.info('[PDF::onPdfSec] File selection event', input.files?.[0]?.name);
+    console.info(
+      '[PDF::onPdfSec] File selection event',
+      input.files?.[0]?.name
+    );
     const file = input.files?.[0];
 
     if (!file) {
@@ -379,7 +415,10 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
 
     try {
       const workerReady = await this.ensureWorker();
-      console.info('[PDF::onPdfSec] Worker status', { workerReady, fallback: this.fallbackToMainThread });
+      console.info('[PDF::onPdfSec] Worker status', {
+        workerReady,
+        fallback: this.fallbackToMainThread,
+      });
 
       const buffer = await file.arrayBuffer();
       console.info('[PDF::onPdfSec] File buffer length', buffer.byteLength);
@@ -491,7 +530,12 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
       return;
     }
     this.pageBackgrounds.set(this.currentPage, mode);
-    console.info('[PDF::setBackground] Mode changed', mode, 'page', this.currentPage);
+    console.info(
+      '[PDF::setBackground] Mode changed',
+      mode,
+      'page',
+      this.currentPage
+    );
     if (this.blankDocument) {
       this.saveCurrentAnnotations();
       await this.renderPage(this.currentPage);
@@ -594,7 +638,11 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
       if (!target) {
         return;
       }
-      if (!this.allowSelectableForNextObject && this.currentTool !== 'select' && !this.isCropping) {
+      if (
+        !this.allowSelectableForNextObject &&
+        this.currentTool !== 'select' &&
+        !this.isCropping
+      ) {
         target.selectable = false;
         target.evented = false;
       }
@@ -603,7 +651,8 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
 
     canvas.on('object:modified', (event) => {
       this.markUnsavedChange();
-      const target = (event as { target?: fabric.FabricObject | null }).target ?? null;
+      const target =
+        (event as { target?: fabric.FabricObject | null }).target ?? null;
       this.updateSelectionState(true, target);
     });
 
@@ -653,8 +702,11 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
 
     canvas.upperCanvasEl.style.cursor = 'crosshair';
 
-    const FabricEraserBrush = (fabric as unknown as { EraserBrush?: new (canvas: fabric.Canvas) => fabric.BaseBrush })
-      .EraserBrush;
+    const FabricEraserBrush = (
+      fabric as unknown as {
+        EraserBrush?: new (canvas: fabric.Canvas) => fabric.BaseBrush;
+      }
+    ).EraserBrush;
 
     if (this.currentTool === 'eraser' && FabricEraserBrush) {
       const eraserBrush = new FabricEraserBrush(canvas);
@@ -665,12 +717,17 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
 
     const brush = new fabric.PencilBrush(canvas);
     const isHighlighter = this.currentTool === 'highlighter';
-    const isEraserFallback = this.currentTool === 'eraser' && !FabricEraserBrush;
+    const isEraserFallback =
+      this.currentTool === 'eraser' && !FabricEraserBrush;
 
-    brush.width = isHighlighter ? this.strokeSize * 2 : Math.max(2, this.strokeSize);
+    brush.width = isHighlighter
+      ? this.strokeSize * 2
+      : Math.max(2, this.strokeSize);
     brush.color = isHighlighter ? this.highlighterColor : this.penColor;
     (brush as any).opacity = isHighlighter ? this.highlighterOpacity : 1;
-    (brush as any).globalCompositeOperation = isEraserFallback ? 'destination-out' : 'source-over';
+    (brush as any).globalCompositeOperation = isEraserFallback
+      ? 'destination-out'
+      : 'source-over';
 
     if (isEraserFallback) {
       brush.color = '#ffffff';
@@ -690,7 +747,10 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
 
     canvas.selection = enableSelection;
     canvas.getObjects().forEach((obj) => {
-      if (this.isCropping && (obj === this.cropRect || obj === this.cropTarget)) {
+      if (
+        this.isCropping &&
+        (obj === this.cropRect || obj === this.cropTarget)
+      ) {
         obj.selectable = true;
         obj.evented = true;
         return;
@@ -763,7 +823,10 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
   private async renderPage(pageNumber: number): Promise<void> {
     if (this.renderInProgress) {
       this.pendingPage = pageNumber;
-      console.info('[PDF::renderPage] Render in progress, queued page', pageNumber);
+      console.info(
+        '[PDF::renderPage] Render in progress, queued page',
+        pageNumber
+      );
       return;
     }
 
@@ -781,7 +844,12 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
     this.renderInProgress = true;
     const isPdfRender = !this.blankDocument && !!this.pdfDoc;
     this.pdfYukleniyor = isPdfRender;
-    console.info('[PDF::renderPage] Rendering page start', pageNumber, 'pdfRender', isPdfRender);
+    console.info(
+      '[PDF::renderPage] Rendering page start',
+      pageNumber,
+      'pdfRender',
+      isPdfRender
+    );
 
     try {
       const pdfCtx = pdfCanvasEl.getContext('2d');
@@ -805,7 +873,11 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
         });
         this.prepareAnnotationCanvas(viewport.width, viewport.height);
 
-        const renderTask = page.render({ canvasContext: pdfCtx, viewport, canvas: pdfCanvasEl });
+        const renderTask = page.render({
+          canvasContext: pdfCtx,
+          viewport,
+          canvas: pdfCanvasEl,
+        });
         await renderTask.promise;
       } else {
         this.blankDocument = true;
@@ -871,12 +943,15 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
           console.info('[PDF::ensureWorker] Fetching worker', workerUrl);
           const response = await fetch(workerUrl);
           if (!response.ok) {
-            throw new Error(`Worker fetch failed: ${response.status} ${response.statusText}`);
+            throw new Error(
+              `Worker fetch failed: ${response.status} ${response.statusText}`
+            );
           }
 
           const originalBlob = await response.blob();
           const blob =
-            originalBlob.type === 'application/javascript' || originalBlob.type === 'text/javascript'
+            originalBlob.type === 'application/javascript' ||
+            originalBlob.type === 'text/javascript'
               ? originalBlob
               : new Blob([originalBlob], { type: 'text/javascript' });
           if (this.workerObjectUrl) {
@@ -890,7 +965,10 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
           console.info('[PDF::ensureWorker] Worker ready');
           return true;
         } catch (error) {
-          console.error('[PDF::ensureWorker] Worker initialisation failed', error);
+          console.error(
+            '[PDF::ensureWorker] Worker initialisation failed',
+            error
+          );
           this.fallbackToMainThread = true;
           if (this.workerObjectUrl) {
             URL.revokeObjectURL(this.workerObjectUrl);
@@ -900,7 +978,8 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
             this.workerInstance.terminate();
             this.workerInstance = undefined;
           }
-          pdfjsLib.GlobalWorkerOptions.workerPort = undefined as unknown as Worker;
+          pdfjsLib.GlobalWorkerOptions.workerPort =
+            undefined as unknown as Worker;
           return false;
         }
       })();
@@ -937,12 +1016,16 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
         throw new Error('PDF oluşturulamadı.');
       }
 
-      const fileName = this.buildExportFileName(this.secilenKonu, this.secilenAltKonu);
+      const fileName = this.buildExportFileName(
+        this.secilenKonu,
+        this.secilenAltKonu
+      );
       this.triggerFileDownload(pdfBytes, fileName);
       void this.alertService.success('PDF indirildi.', 'PDF Hazır');
       console.info('[PDF::downloadPdf] PDF downloaded', fileName);
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'PDF indirirken hata oluştu.';
+      const message =
+        error instanceof Error ? error.message : 'PDF indirirken hata oluştu.';
       console.error('[PDF::downloadPdf] Export failed', error);
       this.showError(message, 'PDF Hatası');
     } finally {
@@ -963,7 +1046,10 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
     }
 
     if (!this.canSaveLesson) {
-      void this.alertService.warning('Lütfen grup, konu ve alt konuyu seçin.', 'Eksik Bilgi');
+      void this.alertService.warning(
+        'Lütfen grup, konu ve alt konuyu seçin.',
+        'Eksik Bilgi'
+      );
       return;
     }
 
@@ -985,12 +1071,18 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
         throw new Error('PDF oluşturulamadı.');
       }
 
-      const fileName = this.buildExportFileName(this.secilenKonu, this.secilenAltKonu);
+      const fileName = this.buildExportFileName(
+        this.secilenKonu,
+        this.secilenAltKonu
+      );
       const arrayBuffer = new ArrayBuffer(pdfBytes.byteLength);
       const arrayView = new Uint8Array(arrayBuffer);
       arrayView.set(pdfBytes);
       const pdfBlob = new Blob([arrayBuffer], { type: 'application/pdf' });
-      const pdfFile = new File([pdfBlob], fileName, { type: 'application/pdf', lastModified: Date.now() });
+      const pdfFile = new File([pdfBlob], fileName, {
+        type: 'application/pdf',
+        lastModified: Date.now(),
+      });
 
       const annotationsJson = this.buildAnnotationPayload();
 
@@ -1006,21 +1098,31 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
       const endpoint = `${this.dersAnlatimApiBase}/kaydet.php`;
 
       const response = await firstValueFrom(
-        this.http.post<{ success: boolean; message?: string }>(endpoint, formData, {
-          headers: this.buildAuthHeaders(),
-        }),
+        this.http.post<{ success: boolean; message?: string }>(
+          endpoint,
+          formData,
+          {
+            headers: this.buildAuthHeaders(),
+          }
+        )
       );
 
       if (!response?.success) {
         throw new Error(response?.message ?? 'Kayıt işlemi başarısız oldu.');
       }
 
-      this.kaydetSuccessMessage = response.message ?? 'Konu anlatım kaydı oluşturuldu.';
-      void this.alertService.success(this.kaydetSuccessMessage, 'Kayıt Tamamlandı');
+      this.kaydetSuccessMessage =
+        response.message ?? 'Konu anlatım kaydı oluşturuldu.';
+      void this.alertService.success(
+        this.kaydetSuccessMessage,
+        'Kayıt Tamamlandı'
+      );
       this.clearUnsavedChanges();
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : 'Kaydetme sırasında beklenmedik bir hata oluştu.';
+        error instanceof Error
+          ? error.message
+          : 'Kaydetme sırasında beklenmedik bir hata oluştu.';
       this.kaydetErrorMessage = message;
       console.error('[PDF::saveLessonRecord] Save failed', error);
       this.alertService.error(message, 'Kaydetme Hatası');
@@ -1064,7 +1166,9 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
     return images;
   }
 
-  private async buildPdfFromImages(pageImages: PageImage[]): Promise<Uint8Array> {
+  private async buildPdfFromImages(
+    pageImages: PageImage[]
+  ): Promise<Uint8Array> {
     if (!pageImages.length) {
       return new Uint8Array();
     }
@@ -1086,52 +1190,66 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
     return await pdfDoc.save();
   }
 
+  // pdf adı oluşturma
   private buildExportFileName(konu: string, altKonu: string): string {
-    const slugify = (value: string): string =>
+    // Her kelimenin ilk harfini büyük yapar (Türkçe uyumlu)
+    const capitalizeWords = (value: string): string =>
       value
         .normalize('NFKD')
         .replace(/[\u0300-\u036f]/g, '')
-        .replace(/[^a-zA-Z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '')
-        .toLowerCase();
-    const parts = ['ders-anlatim'];
-    if (this.secilenGrup) {
-      parts.push(this.secilenGrup);
-    }
-    if (konu) {
-      parts.push(konu);
-    }
-    if (altKonu) {
-      parts.push(altKonu);
-    }
-    const base =
-      parts
-        .map((part) => slugify(part))
-        .filter((part) => part.length > 0)
-        .join('-') || 'ders-anlatim';
+        .trim()
+        .split(/\s+/)
+        .map(
+          (word) =>
+            word.charAt(0).toLocaleUpperCase('tr-TR') +
+            word.slice(1).toLocaleLowerCase('tr-TR')
+        )
+        .join(' ');
+
+    // Tarih formatı: 21.10.2025
     const now = new Date();
-    const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(
-      now.getDate(),
-    ).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(
-      2,
-      '0',
-    )}`;
-    return `${base}-${timestamp}.pdf`;
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const year = now.getFullYear();
+    const tarih = `${day}.${month}.${year}`;
+
+    // Grup adı
+    const grup = this.secilenGrup ? this.secilenGrup.trim() : '';
+
+    // Alt konu
+    const alt = altKonu ? capitalizeWords(altKonu) : '';
+
+    // Dosya adı biçimi: GRUP - AltKonu - Tarih.pdf
+    const fileNameParts = [];
+    if (grup) fileNameParts.push(grup);
+    if (alt) fileNameParts.push(alt);
+    fileNameParts.push(tarih);
+
+    return `${fileNameParts.join(' - ')}.pdf`;
   }
 
+
+
+  
   private buildAnnotationPayload(): string {
-    const annotations = Array.from(this.annotationStates.entries()).map(([page, json]) => ({
-      page,
-      data: json,
-    }));
-    const backgrounds = Array.from(this.pageBackgrounds.entries()).map(([page, mode]) => ({
-      page,
-      mode,
-    }));
-    const metrics = Array.from(this.pageMetrics.entries()).map(([page, info]) => ({
-      page,
-      ...info,
-    }));
+    const annotations = Array.from(this.annotationStates.entries()).map(
+      ([page, json]) => ({
+        page,
+        data: json,
+      })
+    );
+    const backgrounds = Array.from(this.pageBackgrounds.entries()).map(
+      ([page, mode]) => ({
+        page,
+        mode,
+      })
+    );
+    const metrics = Array.from(this.pageMetrics.entries()).map(
+      ([page, info]) => ({
+        page,
+        ...info,
+      })
+    );
     const payload = {
       version: 1,
       exportedAt: new Date().toISOString(),
@@ -1169,7 +1287,7 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
   private drawBlankBackground(
     pageNumber: number,
     pdfCanvasEl: HTMLCanvasElement,
-    pdfCtx: CanvasRenderingContext2D,
+    pdfCtx: CanvasRenderingContext2D
   ): void {
     const containerWidth =
       this.pdfContainer?.nativeElement.clientWidth ??
@@ -1185,7 +1303,8 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
     pdfCtx.fillStyle = '#ffffff';
     pdfCtx.fillRect(0, 0, width, height);
 
-    const background = this.pageBackgrounds.get(pageNumber) ?? this.backgroundMode;
+    const background =
+      this.pageBackgrounds.get(pageNumber) ?? this.backgroundMode;
     this.pageBackgrounds.set(pageNumber, background);
 
     pdfCtx.save();
@@ -1216,17 +1335,17 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
         pdfCtx.lineTo(width, y);
         pdfCtx.stroke();
       }
-      }
-
-      pdfCtx.restore();
-      this.pageMetrics.set(pageNumber, {
-        canvasWidth: width,
-        canvasHeight: height,
-        pdfWidth: width,
-        pdfHeight: height,
-      });
-      this.prepareAnnotationCanvas(width, height);
     }
+
+    pdfCtx.restore();
+    this.pageMetrics.set(pageNumber, {
+      canvasWidth: width,
+      canvasHeight: height,
+      pdfWidth: width,
+      pdfHeight: height,
+    });
+    this.prepareAnnotationCanvas(width, height);
+  }
 
   private saveCurrentAnnotations(): void {
     if (this.isRestoringAnnotations) {
@@ -1253,8 +1372,7 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
     try {
       await this.runWithoutUnsavedTracking(async () => {
         this.fabricCanvas!.discardActiveObject();
-        this.fabricCanvas!
-          .getObjects()
+        this.fabricCanvas!.getObjects()
           .slice()
           .forEach((obj: fabric.Object) => this.fabricCanvas?.remove(obj));
         this.fabricCanvas!.renderAll();
@@ -1269,7 +1387,10 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
           }
           this.fabricCanvas!.renderAll();
           this.fabricCanvas!.requestRenderAll();
-          console.info('[PDF::restoreAnnotations] No saved annotations for page', pageNumber);
+          console.info(
+            '[PDF::restoreAnnotations] No saved annotations for page',
+            pageNumber
+          );
           return;
         }
 
@@ -1303,8 +1424,7 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
     }
     this.runWithoutUnsavedTracking(() => {
       this.fabricCanvas!.discardActiveObject();
-      this.fabricCanvas!
-        .getObjects()
+      this.fabricCanvas!.getObjects()
         .slice()
         .forEach((obj: fabric.Object) => this.fabricCanvas?.remove(obj));
       this.fabricCanvas!.renderAll();
@@ -1332,7 +1452,11 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
     });
   }
 
-  private async combineCurrentPageToDataUrl(): Promise<{ dataUrl: string; width: number; height: number } | null> {
+  private async combineCurrentPageToDataUrl(): Promise<{
+    dataUrl: string;
+    width: number;
+    height: number;
+  } | null> {
     const pdfCanvasEl = this.pdfCanvas?.nativeElement;
     if (!pdfCanvasEl || !pdfCanvasEl.width || !pdfCanvasEl.height) {
       return null;
@@ -1358,7 +1482,11 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
     } else if (this.annotationCanvas?.nativeElement) {
       ctx.drawImage(this.annotationCanvas.nativeElement, 0, 0);
     }
-    return { dataUrl: out.toDataURL('image/png'), width: out.width, height: out.height };
+    return {
+      dataUrl: out.toDataURL('image/png'),
+      width: out.width,
+      height: out.height,
+    };
   }
 
   private dataUrlToUint8Array(dataUrl: string): Uint8Array {
@@ -1431,7 +1559,10 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
     canvas.requestRenderAll();
     this.updateSelectionState(false);
     this.markUnsavedChange();
-    this.alertService.info('Seçim panoya kesildi. Yapıştırmak için Yapıştır seçeneğini kullanın.', 'Kesildi');
+    this.alertService.info(
+      'Seçim panoya kesildi. Yapıştırmak için Yapıştır seçeneğini kullanın.',
+      'Kesildi'
+    );
   }
 
   async pasteSelection(): Promise<void> {
@@ -1559,7 +1690,12 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
   }
 
   async confirmCrop(): Promise<void> {
-    if (!this.isCropping || !this.cropRect || !this.cropTarget || !this.fabricCanvas) {
+    if (
+      !this.isCropping ||
+      !this.cropRect ||
+      !this.cropTarget ||
+      !this.fabricCanvas
+    ) {
       return;
     }
     const canvas = this.fabricCanvas;
@@ -1572,15 +1708,23 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
 
     const scaleX = target.getScaledWidth() / (target.width ?? 1);
     const scaleY = target.getScaledHeight() / (target.height ?? 1);
-    let sourceX = (rectBounds.left - targetBounds.left) / scaleX + (target.cropX ?? 0);
-    let sourceY = (rectBounds.top - targetBounds.top) / scaleY + (target.cropY ?? 0);
+    let sourceX =
+      (rectBounds.left - targetBounds.left) / scaleX + (target.cropX ?? 0);
+    let sourceY =
+      (rectBounds.top - targetBounds.top) / scaleY + (target.cropY ?? 0);
     let sourceWidth = rectBounds.width / scaleX;
     let sourceHeight = rectBounds.height / scaleY;
 
     sourceX = Math.max(0, sourceX);
     sourceY = Math.max(0, sourceY);
-    sourceWidth = Math.max(1, Math.min(sourceWidth, (target.width ?? 0) - sourceX));
-    sourceHeight = Math.max(1, Math.min(sourceHeight, (target.height ?? 0) - sourceY));
+    sourceWidth = Math.max(
+      1,
+      Math.min(sourceWidth, (target.width ?? 0) - sourceX)
+    );
+    sourceHeight = Math.max(
+      1,
+      Math.min(sourceHeight, (target.height ?? 0) - sourceY)
+    );
 
     const element = target.getElement();
     const tempCanvas = document.createElement('canvas');
@@ -1600,7 +1744,7 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
       0,
       0,
       tempCanvas.width,
-      tempCanvas.height,
+      tempCanvas.height
     );
     const dataUrl = tempCanvas.toDataURL();
     const insertionIndex = canvas.getObjects().indexOf(target);
@@ -1623,7 +1767,8 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
       selectable: true,
       evented: true,
     });
-    const insertIndex = insertionIndex >= 0 ? insertionIndex : canvas.getObjects().length;
+    const insertIndex =
+      insertionIndex >= 0 ? insertionIndex : canvas.getObjects().length;
     canvas.insertAt(insertIndex, cropped);
     canvas.setActiveObject(cropped);
     canvas.requestRenderAll();
@@ -1694,7 +1839,10 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
           });
           break;
         case 'circle': {
-          const radius = Math.max(60, Math.min(canvasWidth, canvasHeight) * 0.18);
+          const radius = Math.max(
+            60,
+            Math.min(canvasWidth, canvasHeight) * 0.18
+          );
           shapeObject = new fabric.Circle({
             radius,
             fill: fillColor,
@@ -1796,7 +1944,9 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
     }
     this.allowSelectableForNextObject = true;
     try {
-      const img = await fabric.Image.fromURL(dataUrl, { crossOrigin: 'anonymous' });
+      const img = await fabric.Image.fromURL(dataUrl, {
+        crossOrigin: 'anonymous',
+      });
       const canvas = this.fabricCanvas!;
       const canvasWidth = canvas.getWidth();
       const canvasHeight = canvas.getHeight();
@@ -1821,13 +1971,19 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
       this.alertService.success('Görsel tahtaya eklendi.', 'Görsel Hazır');
     } catch (error) {
       console.error('[PDF::addImageToCanvas] G├Ârsel eklenemedi', error);
-      this.alertService.error('Görsel yüklenirken bir hata oluştu.', 'Görsel Hatası');
+      this.alertService.error(
+        'Görsel yüklenirken bir hata oluştu.',
+        'Görsel Hatası'
+      );
     } finally {
       this.allowSelectableForNextObject = false;
     }
   }
 
-  private updateSelectionState(state: boolean, target?: fabric.Object | null): void {
+  private updateSelectionState(
+    state: boolean,
+    target?: fabric.Object | null
+  ): void {
     if (this.isCropping) {
       this.updateCropMenuPosition();
       return;
@@ -1846,8 +2002,10 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
   }
 
   private updateSelectionMenuPosition(target: fabric.Object): void {
-    const containerRect = this.pdfContainer?.nativeElement.getBoundingClientRect();
-    const annotationRect = this.annotationCanvas?.nativeElement.getBoundingClientRect();
+    const containerRect =
+      this.pdfContainer?.nativeElement.getBoundingClientRect();
+    const annotationRect =
+      this.annotationCanvas?.nativeElement.getBoundingClientRect();
     if (!containerRect || !annotationRect) {
       this.selectionMenu.visible = false;
       return;
@@ -1871,8 +2029,10 @@ export class DersAnlatimTahasiComponent implements OnDestroy, AfterViewInit, OnI
       this.selectionMenu.visible = false;
       return;
     }
-    const containerRect = this.pdfContainer?.nativeElement.getBoundingClientRect();
-    const annotationRect = this.annotationCanvas?.nativeElement.getBoundingClientRect();
+    const containerRect =
+      this.pdfContainer?.nativeElement.getBoundingClientRect();
+    const annotationRect =
+      this.annotationCanvas?.nativeElement.getBoundingClientRect();
     if (!containerRect || !annotationRect) {
       this.selectionMenu.visible = false;
       return;

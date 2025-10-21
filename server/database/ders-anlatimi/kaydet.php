@@ -54,8 +54,8 @@ if ($mimeType !== 'application/pdf') {
     errorResponse('Sadece PDF dosyaları kabul edilir.', 400);
 }
 
-$pdfDirectory = __DIR__ . '/../../dosyalar/ders-anlatim/pdf/';
-$annotationDirectory = __DIR__ . '/../../dosyalar/ders-anlatim/annotations/';
+$pdfDirectory = __DIR__ . '/../../../dosyalar/pdf/';
+$annotationDirectory = __DIR__ . '/../../../dosyalar/annotations/';
 
 if (!is_dir($pdfDirectory) && !mkdir($pdfDirectory, 0777, true) && !is_dir($pdfDirectory)) {
     errorResponse('PDF dizini oluşturulamadı.', 500);
@@ -80,10 +80,10 @@ if ($annotationJson !== null && trim($annotationJson) !== '') {
     if (file_put_contents($annotationFilePath, $annotationJson) === false) {
         errorResponse('Çizim verisi kaydedilemedi.', 500);
     }
-    $annotationRelativePath = 'dosyalar/ders-anlatim/annotations/' . $annotationFileName;
+    $annotationRelativePath = '' . $annotationFileName;
 }
 
-$relativePdfPath = 'dosyalar/ders-anlatim/pdf/' . $pdfFileName;
+$relativePdfPath = '' . $pdfFileName;
 
 try {
     $conn = getConnection();
