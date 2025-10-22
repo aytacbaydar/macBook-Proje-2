@@ -568,120 +568,80 @@ export class DersAnlatimTahasiComponent
     console.info('[PDF::clearCurrentAnnotations] Cleared page', page);
   }
 
+  // Fabric.js canvas ayarları
   private initializeFabricCanvas(): void {
-    const canvasElement = this.annotationCanvas?.nativeElement;
-    if (!canvasElement) {
-      console.warn('[PDF::initializeFabricCanvas] Annotation canvas not found');
-      return;
-    }
-
-    if (this.fabricCanvas) {
-      this.fabricCanvas.dispose();
-      this.fabricCanvas = undefined;
-    }
-
-    const pdfCanvasElement = this.pdfCanvas?.nativeElement;
-    const width =
-      pdfCanvasElement?.width ??
-      canvasElement.width ??
-      canvasElement.clientWidth ??
-      1024;
-    const height =
-      pdfCanvasElement?.height ??
-      canvasElement.height ??
-      canvasElement.clientHeight ??
-      Math.round(width * 1.414);
-
-    canvasElement.width = width;
-    canvasElement.height = height;
-
-    const canvas = new fabric.Canvas(canvasElement, {
-      isDrawingMode: this.currentTool !== 'select',
-      selection: this.currentTool === 'select',
-      preserveObjectStacking: true,
-    });
-
-    canvas.setDimensions({ width, height });
-    this.fabricCanvas = canvas;
-
-    this.applyFabricCanvasStyles(width, height);
-    this.configureFabricBrush();
-
-    canvas.on('path:created', (event) => {
-      const path = (event as { path?: fabric.Path }).path;
-      if (!path) {
-        return;
-      }
-
-      if (this.currentTool === 'highlighter') {
-        path.set({
-          stroke: this.highlighterColor,
-          fill: '',
-          opacity: this.highlighterOpacity,
-        });
-        path.globalCompositeOperation = 'multiply';
-      } else if (this.currentTool === 'eraser') {
-        path.globalCompositeOperation = 'destination-out';
-        path.set({ stroke: '#ffffff', opacity: 1 });
-      } else {
-        path.set({ stroke: this.penColor, opacity: 1 });
-        path.globalCompositeOperation = 'source-over';
-      }
-
-      path.selectable = false;
-      path.evented = false;
-      this.markUnsavedChange();
-    });
-
-    canvas.on('object:added', (event) => {
-      const target = (event as { target?: fabric.FabricObject }).target;
-      if (!target) {
-        return;
-      }
-      if (
-        !this.allowSelectableForNextObject &&
-        this.currentTool !== 'select' &&
-        !this.isCropping
-      ) {
-        target.selectable = false;
-        target.evented = false;
-      }
-      this.markUnsavedChange();
-    });
-
-    canvas.on('object:modified', (event) => {
-      this.markUnsavedChange();
-      const target =
-        (event as { target?: fabric.FabricObject | null }).target ?? null;
-      this.updateSelectionState(true, target);
-    });
-
-    canvas.on('object:removed', () => {
-      this.markUnsavedChange();
-      this.updateSelectionState(false);
-    });
-
-    const handleSelection = (event: unknown) => {
-      const selection = event as {
-        selected?: fabric.FabricObject[];
-        target?: fabric.FabricObject | null;
-      };
-      const target = selection.selected?.[0] ?? selection.target ?? null;
-      this.updateSelectionState(true, target);
-    };
-
-    canvas.on('selection:created', handleSelection);
-    canvas.on('selection:updated', handleSelection);
-    canvas.on('selection:cleared', () => this.updateSelectionState(false));
-
-    canvas.on('mouse:down', () => {
-      if (this.currentTool !== 'select' && !this.isCropping) {
-        this.selectionMenu.visible = false;
-      }
-    });
-
-    canvas.upperCanvasEl.style.touchAction = 'none';
+  const canvasElement = this.annotationCanvas?.nativeElement;
+  if (!canvasElement) {
+    console.warn('[PDF::initializeFabricCanvas] Annotation canvas not found');
+    return;
   }
+
+  if (this.fabricCanvas) {
+    this.fabricCanvas.dispose();
+    this.fabricCanvas = undefined;
+  }
+
+  const pdfCanvasElement = this.pdfCanvas?.nativeElement;
+
+  // 📏 Ekrandaki görünür alanı al
+  const displayWidth = pdfCanvasElement?.clientWidth ?? window.innerWidth ?? 1024;
+  const displayHeight = pdfCanvasElement?.clientHeight ?? Math.round(displayWidth * 1.414);
+
+  // 📸 Gerçek çözünürlük: 2 kat artır (yüksek DPI için)
+  const scaleFactor = window.devicePixelRatio > 1 ? window.devicePixelRatio : 2;
+  const width = displayWidth * scaleFactor;
+  const height = displayHeight * scaleFactor;
+
+  // Canvas boyutunu güncelle
+  canvasElement.width = width;
+  canvasElement.height = height;
+
+  const canvas = new fabric.Canvas(canvasElement, {
+    isDrawingMode: this.currentTool !== 'select',
+    selection: this.currentTool === 'select',
+    preserveObjectStacking: true,
+  });
+
+  // Ölçekleme ayarları (görsel ve çizim eşleşsin)
+  canvas.setDimensions({ width: displayWidth, height: displayHeight });
+  canvas.setZoom(scaleFactor);
+
+  this.fabricCanvas = canvas;
+
+  this.applyFabricCanvasStyles(displayWidth, displayHeight);
+  this.configureFabricBrush();
+
+  // 👇 Tüm eventler aynı kalabilir (sadece aşağıya kadar koru)
+  canvas.on('path:created', (event) => {
+    const path = (event as { path?: fabric.Path }).path;
+    if (!path) return;
+
+    if (this.currentTool === 'highlighter') {
+      path.set({
+        stroke: this.highlighterColor,
+        fill: '',
+        opacity: this.highlighterOpacity,
+      });
+      path.globalCompositeOperation = 'multiply';
+    } else if (this.currentTool === 'eraser') {
+      path.globalCompositeOperation = 'destination-out';
+      path.set({ stroke: '#ffffff', opacity: 1 });
+    } else {
+      path.set({ stroke: this.penColor, opacity: 1 });
+      path.globalCompositeOperation = 'source-over';
+    }
+
+    path.selectable = false;
+    path.evented = false;
+    this.markUnsavedChange();
+  });
+
+  // Diğer eventler aynı kalabilir
+  canvas.upperCanvasEl.style.touchAction = 'none';
+}
+
+  // Fabric.js canvas ayarları son
+
 
   private configureFabricBrush(): void {
     const canvas = this.fabricCanvas;
@@ -1166,30 +1126,51 @@ export class DersAnlatimTahasiComponent
     return images;
   }
 
-  private async buildPdfFromImages(
-    pageImages: PageImage[]
-  ): Promise<Uint8Array> {
-    if (!pageImages.length) {
-      return new Uint8Array();
-    }
 
-    const pdfDoc = await PDFDocument.create();
+  // pdf oluşturma
 
-    for (const image of pageImages) {
-      const imageBytes = this.dataUrlToUint8Array(image.dataUrl);
-      const embedded = await pdfDoc.embedPng(imageBytes);
-      const page = pdfDoc.addPage([embedded.width, embedded.height]);
-      page.drawImage(embedded, {
-        x: 0,
-        y: 0,
-        width: embedded.width,
-        height: embedded.height,
-      });
-    }
-
-    return await pdfDoc.save();
+private async buildPdfFromImages(pageImages: PageImage[]): Promise<Uint8Array> {
+  if (!pageImages.length) {
+    return new Uint8Array();
   }
 
+  const pdfDoc = await PDFDocument.create();
+
+  // 📄 A4 boyutu (point)
+  const A4_WIDTH_PT = 595;
+  const A4_HEIGHT_PT = 842;
+
+  for (const image of pageImages) {
+    const imageBytes = this.dataUrlToUint8Array(image.dataUrl);
+    const embedded = await pdfDoc.embedPng(imageBytes);
+
+    // Canvas boyutlarını doğrudan al
+    const imgWidth = image.width;
+    const imgHeight = image.height;
+
+    // Görseli A4'e sığacak şekilde ölçekle
+    const scale = Math.min(A4_WIDTH_PT / imgWidth, A4_HEIGHT_PT / imgHeight);
+
+    const drawWidth = imgWidth * scale;
+    const drawHeight = imgHeight * scale;
+
+    // 📍 Sol üst hizalama
+    const x = 0;
+    const y = A4_HEIGHT_PT - drawHeight;
+
+    const page = pdfDoc.addPage([A4_WIDTH_PT, A4_HEIGHT_PT]);
+    page.drawImage(embedded, {
+      x,
+      y,
+      width: drawWidth,
+      height: drawHeight,
+    });
+  }
+
+  return await pdfDoc.save();
+}
+
+ // pdf oluşturma son
   // pdf adı oluşturma
   private buildExportFileName(konu: string, altKonu: string): string {
     // Her kelimenin ilk harfini büyük yapar (Türkçe uyumlu)
