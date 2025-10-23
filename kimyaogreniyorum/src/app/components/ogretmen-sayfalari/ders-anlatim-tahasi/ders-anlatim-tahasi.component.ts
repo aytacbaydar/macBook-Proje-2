@@ -569,32 +569,21 @@ export class DersAnlatimTahasiComponent
   }
 
   // Fabric.js canvas ayarları
-  private initializeFabricCanvas(): void {
+private initializeFabricCanvas(): void {
   const canvasElement = this.annotationCanvas?.nativeElement;
-  if (!canvasElement) {
-    console.warn('[PDF::initializeFabricCanvas] Annotation canvas not found');
-    return;
-  }
+  if (!canvasElement) return;
 
   if (this.fabricCanvas) {
     this.fabricCanvas.dispose();
     this.fabricCanvas = undefined;
   }
 
-  const pdfCanvasElement = this.pdfCanvas?.nativeElement;
+  // 📏 Yüksek çözünürlüklü A4 boyutunda canvas
+  const A4_WIDTH_PX = 2480; // 210mm @ 300DPI
+  const A4_HEIGHT_PX = 3508; // 297mm @ 300DPI
 
-  // 📏 Ekrandaki görünür alanı al
-  const displayWidth = pdfCanvasElement?.clientWidth ?? window.innerWidth ?? 1024;
-  const displayHeight = pdfCanvasElement?.clientHeight ?? Math.round(displayWidth * 1.414);
-
-  // 📸 Gerçek çözünürlük: 2 kat artır (yüksek DPI için)
-  const scaleFactor = window.devicePixelRatio > 1 ? window.devicePixelRatio : 2;
-  const width = displayWidth * scaleFactor;
-  const height = displayHeight * scaleFactor;
-
-  // Canvas boyutunu güncelle
-  canvasElement.width = width;
-  canvasElement.height = height;
+  canvasElement.width = A4_WIDTH_PX;
+  canvasElement.height = A4_HEIGHT_PX;
 
   const canvas = new fabric.Canvas(canvasElement, {
     isDrawingMode: this.currentTool !== 'select',
@@ -602,45 +591,19 @@ export class DersAnlatimTahasiComponent
     preserveObjectStacking: true,
   });
 
-  // Ölçekleme ayarları (görsel ve çizim eşleşsin)
-  canvas.setDimensions({ width: displayWidth, height: displayHeight });
-  canvas.setZoom(scaleFactor);
-
+  canvas.setDimensions({ width: A4_WIDTH_PX, height: A4_HEIGHT_PX });
   this.fabricCanvas = canvas;
 
-  this.applyFabricCanvasStyles(displayWidth, displayHeight);
+  this.applyFabricCanvasStyles(A4_WIDTH_PX, A4_HEIGHT_PX);
   this.configureFabricBrush();
 
-  // 👇 Tüm eventler aynı kalabilir (sadece aşağıya kadar koru)
-  canvas.on('path:created', (event) => {
-    const path = (event as { path?: fabric.Path }).path;
-    if (!path) return;
-
-    if (this.currentTool === 'highlighter') {
-      path.set({
-        stroke: this.highlighterColor,
-        fill: '',
-        opacity: this.highlighterOpacity,
-      });
-      path.globalCompositeOperation = 'multiply';
-    } else if (this.currentTool === 'eraser') {
-      path.globalCompositeOperation = 'destination-out';
-      path.set({ stroke: '#ffffff', opacity: 1 });
-    } else {
-      path.set({ stroke: this.penColor, opacity: 1 });
-      path.globalCompositeOperation = 'source-over';
-    }
-
-    path.selectable = false;
-    path.evented = false;
-    this.markUnsavedChange();
-  });
-
-  // Diğer eventler aynı kalabilir
-  canvas.upperCanvasEl.style.touchAction = 'none';
+  canvas.on('path:created', () => this.markUnsavedChange());
+  canvas.on('object:added', () => this.markUnsavedChange());
+  canvas.on('object:modified', () => this.markUnsavedChange());
+  canvas.on('object:removed', () => this.markUnsavedChange());
 }
 
-  // Fabric.js canvas ayarları son
+// Fabric.js canvas ayarları son
 
 
   private configureFabricBrush(): void {
@@ -780,94 +743,93 @@ export class DersAnlatimTahasiComponent
     }
   }
 
-  private async renderPage(pageNumber: number): Promise<void> {
-    if (this.renderInProgress) {
-      this.pendingPage = pageNumber;
-      console.info(
-        '[PDF::renderPage] Render in progress, queued page',
-        pageNumber
-      );
-      return;
+
+  // PDF sayfasını render etme
+  @HostListener('window:resize')
+onWindowResize() {
+  if (this.currentPage) this.renderPage(this.currentPage);
+}
+
+private async renderPage(pageNumber: number): Promise<void> {
+  if (this.renderInProgress) {
+    this.pendingPage = pageNumber;
+    return;
+  }
+
+  const pdfCanvasEl = this.pdfCanvas?.nativeElement;
+  if (!pdfCanvasEl || !this.annotationCanvas?.nativeElement) return;
+
+  this.saveCurrentAnnotations();
+  this.renderInProgress = true;
+
+  const isPdfRender = !this.blankDocument && !!this.pdfDoc;
+  this.pdfYukleniyor = isPdfRender;
+
+  try {
+    const pdfCtx = pdfCanvasEl.getContext('2d');
+    if (!pdfCtx) return;
+
+    if (!this.blankDocument && this.pdfDoc) {
+      const page = await this.pdfDoc.getPage(pageNumber);
+
+      const deviceScale = Math.max(window.devicePixelRatio, 2);
+      const baseScale = this.renderScale * deviceScale;
+      const viewport = page.getViewport({ scale: baseScale });
+
+      // 🎯 Tam çözünürlükte PDF canvas boyutu
+      pdfCanvasEl.width = viewport.width;
+      pdfCanvasEl.height = viewport.height;
+
+      // 📱 Ekranda tam genişlikte, orantılı yükseklik
+      const screenWidth = window.innerWidth * 0.98;
+      const screenHeight = (viewport.height / viewport.width) * screenWidth;
+      pdfCanvasEl.style.width = `${screenWidth}px`;
+      pdfCanvasEl.style.height = `${screenHeight}px`;
+
+      const renderContext = {
+        canvasContext: pdfCtx,
+        viewport,
+        canvas: pdfCanvasEl,
+        transform: [1, 0, 0, 1, 0, 0],
+      };
+
+      pdfCtx.setTransform(1, 0, 0, 1, 0, 0);
+      pdfCtx.clearRect(0, 0, pdfCanvasEl.width, pdfCanvasEl.height);
+
+      await page.render(renderContext).promise;
+
+      // 🎨 Çizim tuvali PDF ile aynı boyutta olsun
+      this.prepareAnnotationCanvas(viewport.width, viewport.height);
+    } else {
+      this.blankDocument = true;
+      const pdfCtx2 = pdfCanvasEl.getContext('2d');
+      if (pdfCtx2) this.drawBlankBackground(pageNumber, pdfCanvasEl, pdfCtx2);
     }
 
-    const pdfCanvasEl = this.pdfCanvas?.nativeElement;
-    if (!pdfCanvasEl || !this.annotationCanvas?.nativeElement) {
-      this.showError('Canvas elementi bulunamadı.', 'Teknik Hata');
-      console.error('[PDF::renderPage] Canvas not found');
-      return;
-    }
-
-    if (this.currentPage) {
-      this.saveCurrentAnnotations();
-    }
-
-    this.renderInProgress = true;
-    const isPdfRender = !this.blankDocument && !!this.pdfDoc;
-    this.pdfYukleniyor = isPdfRender;
-    console.info(
-      '[PDF::renderPage] Rendering page start',
-      pageNumber,
-      'pdfRender',
-      isPdfRender
-    );
-
-    try {
-      const pdfCtx = pdfCanvasEl.getContext('2d');
-      if (!pdfCtx) {
-        this.showError('Canvas context oluşturulamadı.', 'Teknik Hata');
-        console.error('[PDF::renderPage] Canvas context not available');
-        return;
-      }
-
-      if (!this.blankDocument && this.pdfDoc) {
-        const page = await this.pdfDoc.getPage(pageNumber);
-        const viewport = page.getViewport({ scale: this.renderScale });
-        pdfCanvasEl.width = viewport.width;
-        pdfCanvasEl.height = viewport.height;
-        pdfCtx.clearRect(0, 0, pdfCanvasEl.width, pdfCanvasEl.height);
-        this.pageMetrics.set(pageNumber, {
-          canvasWidth: pdfCanvasEl.width,
-          canvasHeight: pdfCanvasEl.height,
-          pdfWidth: viewport.width / this.renderScale,
-          pdfHeight: viewport.height / this.renderScale,
-        });
-        this.prepareAnnotationCanvas(viewport.width, viewport.height);
-
-        const renderTask = page.render({
-          canvasContext: pdfCtx,
-          viewport,
-          canvas: pdfCanvasEl,
-        });
-        await renderTask.promise;
-      } else {
-        this.blankDocument = true;
-        this.drawBlankBackground(pageNumber, pdfCanvasEl, pdfCtx);
-      }
-
-      this.currentPage = pageNumber;
-      await this.restoreAnnotations(pageNumber);
-      this.configureFabricBrush();
-      console.info('[PDF::renderPage] Rendering complete', pageNumber);
-    } catch (error: any) {
-      if (error?.name === 'RenderingCancelledException') {
-        console.warn('[PDF::renderPage] Rendering cancelled', pageNumber);
-      } else {
-        console.error('[PDF::renderPage] Rendering error', error);
-        this.showError('Sayfa çizilirken hata oluştu.', 'Çizim Hatası');
-      }
-    } finally {
-      this.renderInProgress = false;
-      this.pdfYukleniyor = false;
-      if (this.pendingPage && this.pendingPage !== pageNumber) {
-        const nextPage = this.pendingPage;
-        this.pendingPage = undefined;
-        console.info('[PDF::renderPage] Triggering queued page', nextPage);
-        await this.renderPage(nextPage);
-      } else {
-        this.pendingPage = undefined;
-      }
+    this.currentPage = pageNumber;
+    await this.restoreAnnotations(pageNumber);
+    this.configureFabricBrush();
+  } catch (error) {
+    console.error('[PDF::renderPage] Error:', error);
+    this.showError('Sayfa çizilirken hata oluştu.', 'Çizim Hatası');
+  } finally {
+    this.renderInProgress = false;
+    this.pdfYukleniyor = false;
+    if (this.pendingPage && this.pendingPage !== pageNumber) {
+      const next = this.pendingPage;
+      this.pendingPage = undefined;
+      await this.renderPage(next);
+    } else {
+      this.pendingPage = undefined;
     }
   }
+}
+
+
+  // PDF sayfasını render etme son
+
+
+
 
   private initializeBlankDocument(): void {
     if (!this.blankDocument) {
@@ -1128,50 +1090,57 @@ export class DersAnlatimTahasiComponent
 
 
   // pdf oluşturma
-
 private async buildPdfFromImages(pageImages: PageImage[]): Promise<Uint8Array> {
-  if (!pageImages.length) {
-    return new Uint8Array();
-  }
+  if (!pageImages.length) return new Uint8Array();
 
   const pdfDoc = await PDFDocument.create();
 
-  // 📄 A4 boyutu (point)
+  // A4 ölçüleri (point)
   const A4_WIDTH_PT = 595;
   const A4_HEIGHT_PT = 842;
+
+  // Ekran tuvali (300 DPI)
+  const CANVAS_WIDTH_PX = 2480;
+  const CANVAS_HEIGHT_PX = 3508;
+
+  // Pikselden point dönüşüm oranı
+  const PX_TO_PT = 72 / 300;
+
+  // Ölçek ve ofset düzeltmesi
+  const SCALE_X = A4_WIDTH_PT / (CANVAS_WIDTH_PX * PX_TO_PT);
+  const SCALE_Y = A4_HEIGHT_PT / (CANVAS_HEIGHT_PX * PX_TO_PT);
+  const SCALE = Math.min(SCALE_X, SCALE_Y);
 
   for (const image of pageImages) {
     const imageBytes = this.dataUrlToUint8Array(image.dataUrl);
     const embedded = await pdfDoc.embedPng(imageBytes);
 
-    // Canvas boyutlarını doğrudan al
-    const imgWidth = image.width;
-    const imgHeight = image.height;
+    // Görüntü boyutlarını hesapla
+    const imgWidthPt = CANVAS_WIDTH_PX * PX_TO_PT * SCALE;
+    const imgHeightPt = CANVAS_HEIGHT_PX * PX_TO_PT * SCALE;
 
-    // Görseli A4'e sığacak şekilde ölçekle
-    const scale = Math.min(A4_WIDTH_PT / imgWidth, A4_HEIGHT_PT / imgHeight);
-
-    const drawWidth = imgWidth * scale;
-    const drawHeight = imgHeight * scale;
-
-    // 📍 Sol üst hizalama
+    // ✨ 0,0’dan başla → hiçbir offset yok
     const x = 0;
-    const y = A4_HEIGHT_PT - drawHeight;
+    const y = 0;
 
+    // Sayfa oluştur ve birebir yerleştir
     const page = pdfDoc.addPage([A4_WIDTH_PT, A4_HEIGHT_PT]);
     page.drawImage(embedded, {
       x,
       y,
-      width: drawWidth,
-      height: drawHeight,
+      width: imgWidthPt,
+      height: imgHeightPt,
     });
   }
 
   return await pdfDoc.save();
 }
 
+
  // pdf oluşturma son
-  // pdf adı oluşturma
+
+
+ // pdf adı oluşturma
   private buildExportFileName(konu: string, altKonu: string): string {
     // Her kelimenin ilk harfini büyük yapar (Türkçe uyumlu)
     const capitalizeWords = (value: string): string =>
