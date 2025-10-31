@@ -8,6 +8,8 @@ import {
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 interface Student {
   id: number;
@@ -37,7 +39,8 @@ interface AttendanceRecord {
 
 @Component({
   selector: 'app-ogretmen-devamsizlik-sayfasi',
-  standalone: false,
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './ogretmen-devamsizlik-sayfasi.component.html',
   styleUrl: './ogretmen-devamsizlik-sayfasi.component.scss',
 })

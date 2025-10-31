@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+﻿import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import * as pdfjsLib from 'pdfjs-dist/webpack';
@@ -38,6 +38,8 @@ export class DersAnlatimTahasiComponent
   pdfContainer?: ElementRef<HTMLDivElement>;
   @ViewChild('imageUploadInput', { static: false })
   imageUploadInput?: ElementRef<HTMLInputElement>;
+  @ViewChild('toolbarRoot', { static: false })
+  toolbarRoot?: ElementRef<HTMLDivElement>;
 
   pdfYukleniyor = false;
   pdfHataMesaji = '';
@@ -49,20 +51,26 @@ export class DersAnlatimTahasiComponent
   backgroundMode: BackgroundMode = 'plain';
   penColor = '#000000';
   highlighterColor = '#ffff00';
-  strokeSize = 8;
+  penSize = 4;
+  eraserSize = 12;
   highlighterOpacity = 0.35;
   readonly penColorOptions = ['#000000', '#0000FF', '#FF0000', '#008000'];
-  readonly strokeSizeOptions = [2, 4, 6, 8, 10, 12, 16, 20];
+  readonly penSizeOptions = [2, 3, 4, 5, 6, 8, 10, 12, 14, 16];
+  readonly eraserSizeOptions = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32];
   ogrenciGruplari: string[] = [];
   secilenGrup = '';
   readonly toolbarTabs: Array<{ id: ToolbarTabId; label: string }> = [
     { id: 'dosya', label: 'Dosya' },
     { id: 'kaydet', label: 'Kaydet' },
-    { id: 'duzenle', label: 'Duzenle' },
-    { id: 'sekiller', label: 'Sekiller' },
-    { id: 'cizgiler', label: 'Cizgiler' },
+    { id: 'duzenle', label: 'Düzenle' },
+    { id: 'sekiller', label: 'Şekiller' },
+    { id: 'cizgiler', label: 'Çizgiler' },
   ];
   kaydetPanelMode: 'lesson' | 'attendance' = 'lesson';
+  attendanceModalOpen = false;
+  toolbarCollapsed = false;
+  toolbarPosition = { top: 16, left: 16 };
+  toolbarMenuOpen = false;
   activeToolbarTab: ToolbarTabId = 'dosya';
   readonly dersAnlatimApiBase = './server/database/ders-anlatimi';
   ogrenciGruplariYukleniyor = false;
@@ -119,6 +127,24 @@ export class DersAnlatimTahasiComponent
     showPaste: false,
   };
   clipboardObject?: fabric.Object;
+  private toolbarSize = { width: 0, height: 0 };
+  private readonly toolbarMargin = 12;
+  toolbarDrag = {
+    active: false,
+    offsetX: 0,
+    offsetY: 0,
+    pointerId: null as number | null,
+    element: null as HTMLElement | null,
+  };
+  isShiftPressed = false;
+  private straightLineStart: fabric.Point | null = null;
+  private straightLinePreview?: fabric.Line;
+  private readonly canvasMouseDownHandler = (event: fabric.TPointerEventInfo<fabric.TPointerEvent>) =>
+    this.handleCanvasMouseDown(event);
+  private readonly canvasMouseMoveHandler = (event: fabric.TPointerEventInfo<fabric.TPointerEvent>) =>
+    this.handleCanvasMouseMove(event);
+  private readonly canvasMouseUpHandler = (event: fabric.TPointerEventInfo<fabric.TPointerEvent>) =>
+    this.handleCanvasMouseUp(event);
 
   constructor(
     private readonly alertService: AlertService,
@@ -131,7 +157,7 @@ export class DersAnlatimTahasiComponent
   handleBeforeUnload(event: BeforeUnloadEvent): void {
     if (this.hasPendingChanges()) {
       event.preventDefault();
-      event.returnValue = 'Çalışmanız kaydedilmemiş, çizimleriniz silinecek.';
+      event.returnValue = 'Ã‡alÄ±ÅŸmanÄ±z kaydedilmemiÅŸ, Ã§izimleriniz silinecek.';
     }
   }
 
@@ -159,6 +185,315 @@ export class DersAnlatimTahasiComponent
     }
   }
 
+  toggleToolbarCollapsed(): void {
+    this.toolbarCollapsed = !this.toolbarCollapsed;
+    if (this.toolbarCollapsed) {
+      this.toolbarMenuOpen = false;
+    }
+    setTimeout(() => this.refreshToolbarMetrics(), 0);
+  }
+
+  toggleToolbarMenu(event?: Event): void {
+    event?.stopPropagation();
+    this.toolbarMenuOpen = !this.toolbarMenuOpen;
+    setTimeout(() => this.refreshToolbarMetrics(), 0);
+  }
+
+  selectToolbarTab(tabId: ToolbarTabId, event?: Event): void {
+    event?.stopPropagation();
+    this.setActiveTab(tabId);
+    this.toolbarMenuOpen = false;
+    setTimeout(() => this.refreshToolbarMetrics(), 0);
+  }
+
+  getActiveTabLabel(): string {
+    const active = this.toolbarTabs.find((tab) => tab.id === this.activeToolbarTab);
+    return active?.label ?? 'SeÃ§enekler';
+  }
+
+  onToolbarDragStart(event: PointerEvent): void {
+    if (event.button !== undefined && event.button !== 0) {
+      return;
+    }
+    event.preventDefault();
+    this.toolbarMenuOpen = false;
+    const el = this.toolbarRoot?.nativeElement;
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      this.toolbarSize = {
+        width: rect.width,
+        height: rect.height,
+      };
+    }
+    this.toolbarDrag.active = true;
+    this.toolbarDrag.offsetX = event.clientX - this.toolbarPosition.left;
+    this.toolbarDrag.offsetY = event.clientY - this.toolbarPosition.top;
+    this.toolbarDrag.pointerId = event.pointerId;
+    this.toolbarDrag.element = (event.currentTarget as HTMLElement) ?? null;
+    if (this.toolbarDrag.element?.setPointerCapture) {
+      try {
+        this.toolbarDrag.element.setPointerCapture(event.pointerId);
+      } catch {
+        /* noop */
+      }
+    }
+  }
+
+  @HostListener('window:pointermove', ['$event'])
+  onWindowPointerMove(event: PointerEvent): void {
+    if (!this.toolbarDrag.active || this.toolbarDrag.pointerId !== event.pointerId) {
+      return;
+    }
+    event.preventDefault();
+    this.updateToolbarPosition(
+      event.clientX - this.toolbarDrag.offsetX,
+      event.clientY - this.toolbarDrag.offsetY
+    );
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  handleGlobalKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Shift') {
+      this.isShiftPressed = true;
+      if (this.currentTool !== 'select' && this.fabricCanvas) {
+        this.fabricCanvas.isDrawingMode = !this.isShiftPressed;
+      }
+    }
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  handleGlobalKeyUp(event: KeyboardEvent): void {
+    if (event.key === 'Shift') {
+      this.isShiftPressed = false;
+      this.cleanupStraightLinePreview();
+      if (this.fabricCanvas && this.currentTool !== 'select') {
+        this.fabricCanvas.isDrawingMode = true;
+      }
+    }
+  }
+
+  @HostListener('window:pointerup', ['$event'])
+  onWindowPointerUp(event: PointerEvent): void {
+    if (!this.toolbarDrag.active || this.toolbarDrag.pointerId !== event.pointerId) {
+      return;
+    }
+    this.finishToolbarDrag();
+  }
+
+  @HostListener('window:pointercancel', ['$event'])
+  onWindowPointerCancel(event: PointerEvent): void {
+    if (!this.toolbarDrag.active || this.toolbarDrag.pointerId !== event.pointerId) {
+      return;
+    }
+    this.finishToolbarDrag();
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.toolbarMenuOpen) {
+      return;
+    }
+    const root = this.toolbarRoot?.nativeElement;
+    if (root && event.target instanceof Node && root.contains(event.target)) {
+      return;
+    }
+    this.toolbarMenuOpen = false;
+  }
+
+  private updateToolbarPosition(left: number, top: number): void {
+    if (typeof window === 'undefined') {
+      this.toolbarPosition.left = left;
+      this.toolbarPosition.top = top;
+      return;
+    }
+    const margin = this.toolbarMargin;
+    const width = this.toolbarSize.width || 1;
+    const height = this.toolbarSize.height || 1;
+    const maxLeft = Math.max(margin, window.innerWidth - width - margin);
+    const maxTop = Math.max(margin, window.innerHeight - height - margin);
+    this.toolbarPosition.left = this.clamp(left, margin, maxLeft);
+    this.toolbarPosition.top = this.clamp(top, margin, maxTop);
+  }
+
+  private refreshToolbarMetrics(): void {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    const update = () => {
+      const el = this.toolbarRoot?.nativeElement;
+      if (!el) {
+        return;
+      }
+      const rect = el.getBoundingClientRect();
+      this.toolbarSize = {
+        width: rect.width,
+        height: rect.height,
+      };
+      this.clampToolbarWithinViewport();
+    };
+    if ('requestAnimationFrame' in window) {
+      window.requestAnimationFrame(update);
+    } else {
+      setTimeout(update, 0);
+    }
+  }
+
+  private clampToolbarWithinViewport(): void {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    const margin = this.toolbarMargin;
+    const width = this.toolbarSize.width || 1;
+    const height = this.toolbarSize.height || 1;
+    const maxLeft = Math.max(margin, window.innerWidth - width - margin);
+    const maxTop = Math.max(margin, window.innerHeight - height - margin);
+    this.toolbarPosition.left = this.clamp(this.toolbarPosition.left, margin, maxLeft);
+    this.toolbarPosition.top = this.clamp(this.toolbarPosition.top, margin, maxTop);
+  }
+
+  private finishToolbarDrag(): void {
+    if (!this.toolbarDrag.active) {
+      return;
+    }
+    const { element, pointerId } = this.toolbarDrag;
+    if (pointerId !== null && element?.releasePointerCapture) {
+      try {
+        element.releasePointerCapture(pointerId);
+      } catch {
+        /* noop */
+      }
+    }
+    this.toolbarDrag.active = false;
+    this.toolbarDrag.pointerId = null;
+    this.toolbarDrag.element = null;
+    this.refreshToolbarMetrics();
+  }
+
+  private cleanupStraightLinePreview(): void {
+    if (this.straightLinePreview && this.fabricCanvas) {
+      this.fabricCanvas.remove(this.straightLinePreview);
+      this.fabricCanvas.requestRenderAll();
+    }
+    this.straightLinePreview = undefined;
+    this.straightLineStart = null;
+  }
+
+  @HostListener('document:keydown.escape', ['$event'])
+  handleEscapeKey(event: KeyboardEvent): void {
+    if (!this.attendanceModalOpen) {
+      return;
+    }
+    event.preventDefault();
+    this.closeAttendanceModal();
+  }
+
+  private handleCanvasMouseDown(event: fabric.TPointerEventInfo<fabric.TPointerEvent>): void {
+    if (!this.fabricCanvas) {
+      return;
+    }
+    if (this.currentTool !== 'pen' || !this.isShiftPressed) {
+      return;
+    }
+    const canvas = this.fabricCanvas;
+    const pointer = canvas.getPointer(event.e as fabric.TPointerEvent);
+    this.cleanupStraightLinePreview();
+    this.straightLineStart = new fabric.Point(pointer.x, pointer.y);
+    this.straightLinePreview = new fabric.Line(
+      [pointer.x, pointer.y, pointer.x, pointer.y],
+      {
+        stroke: this.penColor,
+        strokeWidth: Math.max(1, this.penSize),
+        selectable: false,
+        evented: false,
+        strokeLineCap: 'round',
+        strokeLineJoin: 'round',
+      }
+    );
+    canvas.isDrawingMode = false;
+    canvas.add(this.straightLinePreview);
+    canvas.requestRenderAll();
+    const originalEvent = event.e as unknown as {
+      preventDefault?: () => void;
+      stopPropagation?: () => void;
+    };
+    originalEvent?.preventDefault?.();
+    originalEvent?.stopPropagation?.();
+  }
+
+  private handleCanvasMouseMove(event: fabric.TPointerEventInfo<fabric.TPointerEvent>): void {
+    if (!this.fabricCanvas || !this.straightLineStart || !this.straightLinePreview) {
+      return;
+    }
+    const canvas = this.fabricCanvas;
+    const pointer = canvas.getPointer(event.e as fabric.TPointerEvent);
+    let endX = pointer.x;
+    let endY = pointer.y;
+    const dx = endX - this.straightLineStart.x;
+    const dy = endY - this.straightLineStart.y;
+    if (Math.abs(dx) > Math.abs(dy)) {
+      endY = this.straightLineStart.y;
+    } else {
+      endX = this.straightLineStart.x;
+    }
+    this.straightLinePreview.set({
+      x1: this.straightLineStart.x,
+      y1: this.straightLineStart.y,
+      x2: endX,
+      y2: endY,
+    });
+    this.straightLinePreview.setCoords();
+    canvas.requestRenderAll();
+  }
+
+  private handleCanvasMouseUp(event: fabric.TPointerEventInfo<fabric.TPointerEvent>): void {
+    if (!this.fabricCanvas || !this.straightLineStart) {
+      return;
+    }
+    const canvas = this.fabricCanvas;
+    if (!this.straightLinePreview) {
+      this.straightLineStart = null;
+      return;
+    }
+    const pointer = canvas.getPointer(event.e as fabric.TPointerEvent);
+    let endX = pointer.x;
+    let endY = pointer.y;
+    const dx = endX - this.straightLineStart.x;
+    const dy = endY - this.straightLineStart.y;
+    if (Math.abs(dx) > Math.abs(dy)) {
+      endY = this.straightLineStart.y;
+    } else {
+      endX = this.straightLineStart.x;
+    }
+    this.straightLinePreview.set({
+      x1: this.straightLineStart.x,
+      y1: this.straightLineStart.y,
+      x2: endX,
+      y2: endY,
+      stroke: this.penColor,
+      strokeWidth: Math.max(1, this.penSize),
+      selectable: this.currentTool === 'select',
+      evented: this.currentTool === 'select',
+    });
+    this.straightLinePreview.setCoords();
+    canvas.requestRenderAll();
+    this.markUnsavedChange();
+    this.straightLinePreview = undefined;
+    this.straightLineStart = null;
+    if (!this.isShiftPressed && this.currentTool !== 'select') {
+      canvas.isDrawingMode = true;
+    }
+  }
+
+  private clamp(value: number, min: number, max: number): number {
+    if (value < min) {
+      return min;
+    }
+    if (value > max) {
+      return max;
+    }
+    return value;
+  }
+
   ngOnInit(): void {
     this.loadOgrenciGruplari();
     this.loadKonular();
@@ -167,10 +502,12 @@ export class DersAnlatimTahasiComponent
   ngAfterViewInit(): void {
     this.initializeFabricCanvas();
     this.initializeBlankDocument();
+    this.refreshToolbarMetrics();
   }
 
   setActiveTab(tabId: ToolbarTabId): void {
     this.activeToolbarTab = tabId;
+    this.toolbarMenuOpen = false;
     if (tabId === 'kaydet') {
       if (!this.konular.length && !this.konularYukleniyor) {
         this.loadKonular();
@@ -180,11 +517,33 @@ export class DersAnlatimTahasiComponent
       }
     } else {
       this.kaydetPanelMode = 'lesson';
+      this.closeAttendanceModal();
     }
+    setTimeout(() => this.refreshToolbarMetrics(), 0);
   }
 
   setKaydetPanelMode(mode: 'lesson' | 'attendance'): void {
     this.kaydetPanelMode = mode;
+    if (mode === 'attendance') {
+      this.attendanceModalOpen = true;
+    } else {
+      this.closeAttendanceModal();
+    }
+    setTimeout(() => this.refreshToolbarMetrics(), 0);
+  }
+
+  openAttendanceModal(): void {
+    if (this.attendanceModalOpen) {
+      return;
+    }
+    this.attendanceModalOpen = true;
+  }
+
+  closeAttendanceModal(): void {
+    if (!this.attendanceModalOpen) {
+      return;
+    }
+    this.attendanceModalOpen = false;
   }
 
   isActiveTab(tabId: ToolbarTabId): boolean {
@@ -201,7 +560,7 @@ export class DersAnlatimTahasiComponent
       const parsed = JSON.parse(storedUser);
       return typeof parsed?.token === 'string' ? parsed.token : '';
     } catch (error) {
-      console.warn('[PDF::getAuthToken] Kullanıcı verisi çözümlenemedi', error);
+      console.warn('[PDF::getAuthToken] KullanÄ±cÄ± verisi Ã§Ã¶zÃ¼mlenemedi', error);
       return '';
     }
   }
@@ -244,7 +603,7 @@ export class DersAnlatimTahasiComponent
           if (!this.konular.length) {
             this.konularHataMesaji =
               response?.message ??
-              'Konu listesi alınamadı. Lütfen daha sonra tekrar deneyin.';
+              'Konu listesi alÄ±namadÄ±. LÃ¼tfen daha sonra tekrar deneyin.';
           }
 
           this.konuBasliklari = Array.from(
@@ -254,10 +613,10 @@ export class DersAnlatimTahasiComponent
           this.refreshAltKonuSecenekleri();
         },
         error: (error) => {
-          console.error('[PDF::loadKonular] Konular alınamadı', error);
+          console.error('[PDF::loadKonular] Konular alÄ±namadÄ±', error);
           this.konular = [];
           this.konuBasliklari = [];
-          this.konularHataMesaji = 'Konular alınırken bir hata oluştu.';
+          this.konularHataMesaji = 'Konular alÄ±nÄ±rken bir hata oluÅŸtu.';
           this.konularYukleniyor = false;
         },
         complete: () => {
@@ -317,7 +676,7 @@ export class DersAnlatimTahasiComponent
         next: (response) => {
           if (!response?.success || !Array.isArray(response.data)) {
             console.warn(
-              '[PDF::loadOgrenciGruplari] Beklenmeyen yanıt',
+              '[PDF::loadOgrenciGruplari] Beklenmeyen yanÄ±t',
               response
             );
             this.ogrenciGruplari = [];
@@ -346,9 +705,9 @@ export class DersAnlatimTahasiComponent
           });
         },
         error: (error) => {
-          console.error('[PDF::loadOgrenciGruplari] Gruplar alınamadı', error);
+          console.error('[PDF::loadOgrenciGruplari] Gruplar alÄ±namadÄ±', error);
           this.ogrenciGruplari = [];
-          this.alertService.error('Öğrenci grupları alınamadı.', 'Grup Hatası');
+          this.alertService.error('Ã–ÄŸrenci gruplarÄ± alÄ±namadÄ±.', 'Grup HatasÄ±');
           this.ogrenciGruplariYukleniyor = false;
         },
         complete: () => {
@@ -448,7 +807,7 @@ export class DersAnlatimTahasiComponent
       await this.renderPage(1);
     } catch (error) {
       console.error('[PDF::onPdfSec] Error while loading PDF', error);
-      this.showError('PDF yüklenirken bir hata oluştu.', 'PDF Hatası');
+      this.showError('PDF yÃ¼klenirken bir hata oluÅŸtu.', 'PDF HatasÄ±');
       this.blankDocument = true;
       this.initializeBlankDocument();
     } finally {
@@ -513,6 +872,7 @@ export class DersAnlatimTahasiComponent
       this.updateSelectionState(false);
     }
     this.configureFabricBrush();
+    this.cleanupStraightLinePreview();
     this.fabricCanvas?.requestRenderAll();
   }
 
@@ -524,9 +884,16 @@ export class DersAnlatimTahasiComponent
     }
   }
 
-  onStrokeSizeChange(size: number): void {
-    this.strokeSize = Number(size);
-    if (this.currentTool !== 'select') {
+  onPenSizeChange(size: number): void {
+    this.penSize = Number(size);
+    if (this.currentTool === 'pen' || this.currentTool === 'highlighter') {
+      this.configureFabricBrush();
+    }
+  }
+
+  onEraserSizeChange(size: number): void {
+    this.eraserSize = Number(size);
+    if (this.currentTool === 'eraser') {
       this.configureFabricBrush();
     }
   }
@@ -575,7 +942,7 @@ export class DersAnlatimTahasiComponent
     console.info('[PDF::clearCurrentAnnotations] Cleared page', page);
   }
 
-  // Fabric.js canvas ayarları
+  // Fabric.js canvas ayarlarÄ±
 private initializeFabricCanvas(): void {
   const canvasElement = this.annotationCanvas?.nativeElement;
   if (!canvasElement) return;
@@ -585,7 +952,7 @@ private initializeFabricCanvas(): void {
     this.fabricCanvas = undefined;
   }
 
-  // 📏 Yüksek çözünürlüklü A4 boyutunda canvas
+  // ğŸ“ YÃ¼ksek Ã§Ã¶zÃ¼nÃ¼rlÃ¼klÃ¼ A4 boyutunda canvas
   const A4_WIDTH_PX = 2480; // 210mm @ 300DPI
   const A4_HEIGHT_PX = 3508; // 297mm @ 300DPI
 
@@ -603,6 +970,7 @@ private initializeFabricCanvas(): void {
 
   this.applyFabricCanvasStyles(A4_WIDTH_PX, A4_HEIGHT_PX);
   this.configureFabricBrush();
+  this.attachStraightLineHandlers();
 
   canvas.on('path:created', () => this.markUnsavedChange());
   canvas.on('object:added', () => this.markUnsavedChange());
@@ -610,7 +978,7 @@ private initializeFabricCanvas(): void {
   canvas.on('object:removed', () => this.markUnsavedChange());
 }
 
-// Fabric.js canvas ayarları son
+// Fabric.js canvas ayarlarÄ± son
 
 
   private configureFabricBrush(): void {
@@ -640,7 +1008,7 @@ private initializeFabricCanvas(): void {
 
     if (this.currentTool === 'eraser' && FabricEraserBrush) {
       const eraserBrush = new FabricEraserBrush(canvas);
-      eraserBrush.width = Math.max(8, this.strokeSize * 1.5);
+      eraserBrush.width = Math.max(2, this.eraserSize);
       canvas.freeDrawingBrush = eraserBrush;
       return;
     }
@@ -650,9 +1018,10 @@ private initializeFabricCanvas(): void {
     const isEraserFallback =
       this.currentTool === 'eraser' && !FabricEraserBrush;
 
+    const basePenSize = Math.max(1, this.penSize);
     brush.width = isHighlighter
-      ? this.strokeSize * 2
-      : Math.max(2, this.strokeSize);
+      ? Math.max(2, basePenSize * 1.8)
+      : basePenSize;
     brush.color = isHighlighter ? this.highlighterColor : this.penColor;
     (brush as any).opacity = isHighlighter ? this.highlighterOpacity : 1;
     (brush as any).globalCompositeOperation = isEraserFallback
@@ -662,11 +1031,25 @@ private initializeFabricCanvas(): void {
     if (isEraserFallback) {
       brush.color = '#ffffff';
       (brush as any).opacity = 1;
+      brush.width = Math.max(2, this.eraserSize);
     }
 
     canvas.freeDrawingBrush = brush;
     canvas.isDrawingMode = true;
     canvas.selection = false;
+  }
+
+  private attachStraightLineHandlers(): void {
+    const canvas = this.fabricCanvas;
+    if (!canvas) {
+      return;
+    }
+    canvas.off('mouse:down', this.canvasMouseDownHandler);
+    canvas.off('mouse:move', this.canvasMouseMoveHandler);
+    canvas.off('mouse:up', this.canvasMouseUpHandler);
+    canvas.on('mouse:down', this.canvasMouseDownHandler);
+    canvas.on('mouse:move', this.canvasMouseMoveHandler);
+    canvas.on('mouse:up', this.canvasMouseUpHandler);
   }
 
   private updateObjectInteractivity(enableSelection: boolean): void {
@@ -751,11 +1134,14 @@ private initializeFabricCanvas(): void {
   }
 
 
-  // PDF sayfasını render etme
+  // PDF sayfasÄ±nÄ± render etme
   @HostListener('window:resize')
-onWindowResize() {
-  if (this.currentPage) this.renderPage(this.currentPage);
-}
+  onWindowResize(): void {
+    this.refreshToolbarMetrics();
+    if (this.currentPage) {
+      void this.renderPage(this.currentPage);
+    }
+  }
 
 private async renderPage(pageNumber: number): Promise<void> {
   if (this.renderInProgress) {
@@ -783,11 +1169,11 @@ private async renderPage(pageNumber: number): Promise<void> {
       const baseScale = this.renderScale * deviceScale;
       const viewport = page.getViewport({ scale: baseScale });
 
-      // 🎯 Tam çözünürlükte PDF canvas boyutu
+      // ğŸ¯ Tam Ã§Ã¶zÃ¼nÃ¼rlÃ¼kte PDF canvas boyutu
       pdfCanvasEl.width = viewport.width;
       pdfCanvasEl.height = viewport.height;
 
-      // 📱 Ekranda tam genişlikte, orantılı yükseklik
+      // ğŸ“± Ekranda tam geniÅŸlikte, orantÄ±lÄ± yÃ¼kseklik
       const screenWidth = window.innerWidth * 0.98;
       const screenHeight = (viewport.height / viewport.width) * screenWidth;
       pdfCanvasEl.style.width = `${screenWidth}px`;
@@ -805,7 +1191,7 @@ private async renderPage(pageNumber: number): Promise<void> {
 
       await page.render(renderContext).promise;
 
-      // 🎨 Çizim tuvali PDF ile aynı boyutta olsun
+      // ğŸ¨ Ã‡izim tuvali PDF ile aynÄ± boyutta olsun
       this.prepareAnnotationCanvas(viewport.width, viewport.height);
     } else {
       this.blankDocument = true;
@@ -818,7 +1204,7 @@ private async renderPage(pageNumber: number): Promise<void> {
     this.configureFabricBrush();
   } catch (error) {
     console.error('[PDF::renderPage] Error:', error);
-    this.showError('Sayfa çizilirken hata oluştu.', 'Çizim Hatası');
+    this.showError('Sayfa Ã§izilirken hata oluÅŸtu.', 'Ã‡izim HatasÄ±');
   } finally {
     this.renderInProgress = false;
     this.pdfYukleniyor = false;
@@ -833,7 +1219,7 @@ private async renderPage(pageNumber: number): Promise<void> {
 }
 
 
-  // PDF sayfasını render etme son
+  // PDF sayfasÄ±nÄ± render etme son
 
 
 
@@ -937,12 +1323,12 @@ private async renderPage(pageNumber: number): Promise<void> {
     try {
       const pageImages = await this.collectPageImages();
       if (!pageImages.length) {
-        throw new Error('Dışarı aktarılacak sayfa bulunamadı.');
+        throw new Error('DÄ±ÅŸarÄ± aktarÄ±lacak sayfa bulunamadÄ±.');
       }
 
       const pdfBytes = await this.buildPdfFromImages(pageImages);
       if (!pdfBytes.length) {
-        throw new Error('PDF oluşturulamadı.');
+        throw new Error('PDF oluÅŸturulamadÄ±.');
       }
 
       const fileName = this.buildExportFileName(
@@ -950,13 +1336,13 @@ private async renderPage(pageNumber: number): Promise<void> {
         this.secilenAltKonu
       );
       this.triggerFileDownload(pdfBytes, fileName);
-      void this.alertService.success('PDF indirildi.', 'PDF Hazır');
+      void this.alertService.success('PDF indirildi.', 'PDF HazÄ±r');
       console.info('[PDF::downloadPdf] PDF downloaded', fileName);
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : 'PDF indirirken hata oluştu.';
+        error instanceof Error ? error.message : 'PDF indirirken hata oluÅŸtu.';
       console.error('[PDF::downloadPdf] Export failed', error);
-      this.showError(message, 'PDF Hatası');
+      this.showError(message, 'PDF HatasÄ±');
     } finally {
       if (previousPage !== this.currentPage) {
         await this.renderPage(previousPage);
@@ -976,7 +1362,7 @@ private async renderPage(pageNumber: number): Promise<void> {
 
     if (!this.canSaveLesson) {
       void this.alertService.warning(
-        'Lütfen grup, konu ve alt konuyu seçin.',
+        'LÃ¼tfen grup, konu ve alt konuyu seÃ§in.',
         'Eksik Bilgi'
       );
       return;
@@ -992,12 +1378,12 @@ private async renderPage(pageNumber: number): Promise<void> {
     try {
       const pageImages = await this.collectPageImages();
       if (!pageImages.length) {
-        throw new Error('Kaydedilecek sayfa bulunamadı.');
+        throw new Error('Kaydedilecek sayfa bulunamadÄ±.');
       }
 
       const pdfBytes = await this.buildPdfFromImages(pageImages);
       if (!pdfBytes.length) {
-        throw new Error('PDF oluşturulamadı.');
+        throw new Error('PDF oluÅŸturulamadÄ±.');
       }
 
       const fileName = this.buildExportFileName(
@@ -1037,24 +1423,24 @@ private async renderPage(pageNumber: number): Promise<void> {
       );
 
       if (!response?.success) {
-        throw new Error(response?.message ?? 'Kayıt işlemi başarısız oldu.');
+        throw new Error(response?.message ?? 'KayÄ±t iÅŸlemi baÅŸarÄ±sÄ±z oldu.');
       }
 
       this.kaydetSuccessMessage =
-        response.message ?? 'Konu anlatım kaydı oluşturuldu.';
+        response.message ?? 'Konu anlatÄ±m kaydÄ± oluÅŸturuldu.';
       void this.alertService.success(
         this.kaydetSuccessMessage,
-        'Kayıt Tamamlandı'
+        'KayÄ±t TamamlandÄ±'
       );
       this.clearUnsavedChanges();
     } catch (error) {
       const message =
         error instanceof Error
           ? error.message
-          : 'Kaydetme sırasında beklenmedik bir hata oluştu.';
+          : 'Kaydetme sÄ±rasÄ±nda beklenmedik bir hata oluÅŸtu.';
       this.kaydetErrorMessage = message;
       console.error('[PDF::saveLessonRecord] Save failed', error);
-      this.alertService.error(message, 'Kaydetme Hatası');
+      this.alertService.error(message, 'Kaydetme HatasÄ±');
     } finally {
       if (previousPage !== this.currentPage) {
         await this.renderPage(previousPage);
@@ -1096,47 +1482,43 @@ private async renderPage(pageNumber: number): Promise<void> {
   }
 
 
-  // pdf oluşturma
-private async buildPdfFromImages(pageImages: PageImage[]): Promise<Uint8Array> {
+  // pdf oluÅŸturma
+  private async buildPdfFromImages(pageImages: PageImage[]): Promise<Uint8Array> {
   if (!pageImages.length) return new Uint8Array();
 
   const pdfDoc = await PDFDocument.create();
 
-  // A4 ölçüleri (point)
-  const A4_WIDTH_PT = 595;
-  const A4_HEIGHT_PT = 842;
-
-  // Ekran tuvali (300 DPI)
-  const CANVAS_WIDTH_PX = 2480;
-  const CANVAS_HEIGHT_PX = 3508;
-
-  // Pikselden point dönüşüm oranı
-  const PX_TO_PT = 72 / 300;
-
-  // Ölçek ve ofset düzeltmesi
-  const SCALE_X = A4_WIDTH_PT / (CANVAS_WIDTH_PX * PX_TO_PT);
-  const SCALE_Y = A4_HEIGHT_PT / (CANVAS_HEIGHT_PX * PX_TO_PT);
-  const SCALE = Math.min(SCALE_X, SCALE_Y);
+  // A4 olcileri (point)
+  const A4_WIDTH_PT = 595.28;
+  const A4_HEIGHT_PT = 841.89;
+  const SAFE_MARGIN_PT = 24;
+  const MAX_DRAW_WIDTH = A4_WIDTH_PT - SAFE_MARGIN_PT * 2;
+  const MAX_DRAW_HEIGHT = A4_HEIGHT_PT - SAFE_MARGIN_PT * 2;
 
   for (const image of pageImages) {
     const imageBytes = this.dataUrlToUint8Array(image.dataUrl);
     const embedded = await pdfDoc.embedPng(imageBytes);
 
-    // Görüntü boyutlarını hesapla
-    const imgWidthPt = CANVAS_WIDTH_PX * PX_TO_PT * SCALE;
-    const imgHeightPt = CANVAS_HEIGHT_PX * PX_TO_PT * SCALE;
+    const sourceWidth = image.width || embedded.width;
+    const sourceHeight = image.height || embedded.height;
 
-    // ✨ 0,0’dan başla → hiçbir offset yok
-    const x = 0;
-    const y = 0;
+    const scale = Math.min(
+      MAX_DRAW_WIDTH / sourceWidth,
+      MAX_DRAW_HEIGHT / sourceHeight,
+      1
+    );
 
-    // Sayfa oluştur ve birebir yerleştir
+    const drawWidth = sourceWidth * scale;
+    const drawHeight = sourceHeight * scale;
+    const x = (A4_WIDTH_PT - drawWidth) / 2;
+    const y = (A4_HEIGHT_PT - drawHeight) / 2;
+
     const page = pdfDoc.addPage([A4_WIDTH_PT, A4_HEIGHT_PT]);
     page.drawImage(embedded, {
       x,
       y,
-      width: imgWidthPt,
-      height: imgHeightPt,
+      width: drawWidth,
+      height: drawHeight,
     });
   }
 
@@ -1144,12 +1526,12 @@ private async buildPdfFromImages(pageImages: PageImage[]): Promise<Uint8Array> {
 }
 
 
- // pdf oluşturma son
+ // pdf oluÅŸturma son
 
 
- // pdf adı oluşturma
+ // pdf adÄ± oluÅŸturma
   private buildExportFileName(konu: string, altKonu: string): string {
-    // Her kelimenin ilk harfini büyük yapar (Türkçe uyumlu)
+    // Her kelimenin ilk harfini bÃ¼yÃ¼k yapar (TÃ¼rkÃ§e uyumlu)
     const capitalizeWords = (value: string): string =>
       value
         .normalize('NFKD')
@@ -1163,20 +1545,20 @@ private async buildPdfFromImages(pageImages: PageImage[]): Promise<Uint8Array> {
         )
         .join(' ');
 
-    // Tarih formatı: 21.10.2025
+    // Tarih formatÄ±: 21.10.2025
     const now = new Date();
     const day = String(now.getDate()).padStart(2, '0');
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const year = now.getFullYear();
     const tarih = `${day}.${month}.${year}`;
 
-    // Grup adı
+    // Grup adÄ±
     const grup = this.secilenGrup ? this.secilenGrup.trim() : '';
 
     // Alt konu
     const alt = altKonu ? capitalizeWords(altKonu) : '';
 
-    // Dosya adı biçimi: GRUP - AltKonu - Tarih.pdf
+    // Dosya adÄ± biÃ§imi: GRUP - AltKonu - Tarih.pdf
     const fileNameParts = [];
     if (grup) fileNameParts.push(grup);
     if (alt) fileNameParts.push(alt);
@@ -1252,7 +1634,7 @@ private async buildPdfFromImages(pageImages: PageImage[]): Promise<Uint8Array> {
       window.innerWidth ??
       900;
     const width = Math.max(720, Math.round(containerWidth));
-    const height = Math.round(width * 1.414); // A4 oran─▒
+    const height = Math.round(width * 1.414); // A4 oranâ”€â–’
 
     pdfCanvasEl.width = width;
     pdfCanvasEl.height = height;
@@ -1495,7 +1877,7 @@ private async buildPdfFromImages(pageImages: PageImage[]): Promise<Uint8Array> {
     canvas.requestRenderAll();
     this.updateSelectionState(true, clone);
     this.markUnsavedChange();
-    this.alertService.success('Öğe kopyalandı.', 'Kopyalandı');
+    this.alertService.success('Ã–ÄŸe kopyalandÄ±.', 'KopyalandÄ±');
   }
 
   async cutSelection(): Promise<void> {
@@ -1517,7 +1899,7 @@ private async buildPdfFromImages(pageImages: PageImage[]): Promise<Uint8Array> {
     this.updateSelectionState(false);
     this.markUnsavedChange();
     this.alertService.info(
-      'Seçim panoya kesildi. Yapıştırmak için Yapıştır seçeneğini kullanın.',
+      'SeÃ§im panoya kesildi. YapÄ±ÅŸtÄ±rmak iÃ§in YapÄ±ÅŸtÄ±r seÃ§eneÄŸini kullanÄ±n.',
       'Kesildi'
     );
   }
@@ -1526,8 +1908,8 @@ private async buildPdfFromImages(pageImages: PageImage[]): Promise<Uint8Array> {
     const canvas = this.fabricCanvas;
     if (!canvas || !this.clipboardObject) {
       this.alertService.warning(
-        'Panoda yapıştırılacak öğe bulunamadı.',
-        'Panoya Erişim'
+        'Panoda yapÄ±ÅŸtÄ±rÄ±lacak Ã¶ÄŸe bulunamadÄ±.',
+        'Panoya EriÅŸim'
       );
       return;
     }
@@ -1546,7 +1928,7 @@ private async buildPdfFromImages(pageImages: PageImage[]): Promise<Uint8Array> {
     canvas.requestRenderAll();
     this.updateSelectionState(true, clone);
     this.markUnsavedChange();
-    this.alertService.success('Öğe yapıştırıldı.', 'Yapıştırıldı');
+    this.alertService.success('Ã–ÄŸe yapÄ±ÅŸtÄ±rÄ±ldÄ±.', 'YapÄ±ÅŸtÄ±rÄ±ldÄ±');
   }
 
   deleteSelection(): void {
@@ -1564,7 +1946,7 @@ private async buildPdfFromImages(pageImages: PageImage[]): Promise<Uint8Array> {
     canvas.requestRenderAll();
     this.updateSelectionState(false);
     this.markUnsavedChange();
-    this.alertService.info('Seçili öğe silindi.', 'Silindi');
+    this.alertService.info('SeÃ§ili Ã¶ÄŸe silindi.', 'Silindi');
   }
 
   startCrop(): void {
@@ -1575,15 +1957,15 @@ private async buildPdfFromImages(pageImages: PageImage[]): Promise<Uint8Array> {
     const active = canvas?.getActiveObject();
     if (!canvas || !active || !(active instanceof fabric.Image)) {
       this.alertService.warning(
-        'Kırpma için bir görsel seçin.',
-        'Görsel Seçilmedi'
+        'KÄ±rpma iÃ§in bir gÃ¶rsel seÃ§in.',
+        'GÃ¶rsel SeÃ§ilmedi'
       );
       return;
     }
     if (Math.abs(active.angle ?? 0) > 0.001) {
       this.alertService.warning(
-        'Döndürülmüş görsellerde kırpma desteklenmiyor.',
-        'Kırpma Desteklenmiyor'
+        'DÃ¶ndÃ¼rÃ¼lmÃ¼ÅŸ gÃ¶rsellerde kÄ±rpma desteklenmiyor.',
+        'KÄ±rpma Desteklenmiyor'
       );
       return;
     }
@@ -1689,7 +2071,7 @@ private async buildPdfFromImages(pageImages: PageImage[]): Promise<Uint8Array> {
     tempCanvas.height = Math.round(sourceHeight);
     const ctx = tempCanvas.getContext('2d');
     if (!ctx) {
-      this.alertService.error('Kırpma işlemi başlatılamadı.', 'Kırpma Hatası');
+      this.alertService.error('KÄ±rpma iÅŸlemi baÅŸlatÄ±lamadÄ±.', 'KÄ±rpma HatasÄ±');
       return;
     }
     ctx.drawImage(
@@ -1731,7 +2113,7 @@ private async buildPdfFromImages(pageImages: PageImage[]): Promise<Uint8Array> {
     canvas.requestRenderAll();
     this.updateSelectionState(true, cropped);
     this.markUnsavedChange();
-    this.alertService.success('Görsel kırpıldı.', 'Kırpma Tamam');
+    this.alertService.success('GÃ¶rsel kÄ±rpÄ±ldÄ±.', 'KÄ±rpma Tamam');
   }
 
   triggerImageUpload(): void {
@@ -1746,8 +2128,8 @@ private async buildPdfFromImages(pageImages: PageImage[]): Promise<Uint8Array> {
     }
     if (!file.type.startsWith('image/')) {
       this.alertService.warning(
-        'Lütfen geçerli bir görsel dosyası seçin.',
-        'Geçersiz Dosya'
+        'LÃ¼tfen geÃ§erli bir gÃ¶rsel dosyasÄ± seÃ§in.',
+        'GeÃ§ersiz Dosya'
       );
       input.value = '';
       return;
@@ -1765,7 +2147,7 @@ private async buildPdfFromImages(pageImages: PageImage[]): Promise<Uint8Array> {
   addShape(shape: 'rectangle' | 'circle' | 'triangle'): void {
     const canvas = this.fabricCanvas;
     if (!canvas) {
-      this.alertService.warning('Çizim alanı hazır değil.', 'Şekil Eklenemedi');
+      this.alertService.warning('Ã‡izim alanÄ± hazÄ±r deÄŸil.', 'Åekil Eklenemedi');
       return;
     }
 
@@ -1843,7 +2225,7 @@ private async buildPdfFromImages(pageImages: PageImage[]): Promise<Uint8Array> {
   addArrow(): void {
     const canvas = this.fabricCanvas;
     if (!canvas) {
-      this.alertService.warning('Çizim alanı hazır değil.', 'Şekil Eklenemedi');
+      this.alertService.warning('Ã‡izim alanÄ± hazÄ±r deÄŸil.', 'Åekil Eklenemedi');
       return;
     }
 
@@ -1925,12 +2307,12 @@ private async buildPdfFromImages(pageImages: PageImage[]): Promise<Uint8Array> {
         this.setTool('select');
       }
       this.markUnsavedChange();
-      this.alertService.success('Görsel tahtaya eklendi.', 'Görsel Hazır');
+      this.alertService.success('GÃ¶rsel tahtaya eklendi.', 'GÃ¶rsel HazÄ±r');
     } catch (error) {
-      console.error('[PDF::addImageToCanvas] G├Ârsel eklenemedi', error);
+      console.error('[PDF::addImageToCanvas] Gâ”œÃ‚rsel eklenemedi', error);
       this.alertService.error(
-        'Görsel yüklenirken bir hata oluştu.',
-        'Görsel Hatası'
+        'GÃ¶rsel yÃ¼klenirken bir hata oluÅŸtu.',
+        'GÃ¶rsel HatasÄ±'
       );
     } finally {
       this.allowSelectableForNextObject = false;
@@ -2008,4 +2390,6 @@ private async buildPdfFromImages(pageImages: PageImage[]): Promise<Uint8Array> {
     };
   }
 }
+
+
 

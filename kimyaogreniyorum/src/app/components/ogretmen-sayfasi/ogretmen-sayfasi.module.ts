@@ -43,7 +43,6 @@ import { OgretmenKonuAnaliziSayfasiComponent } from './ogretmen-konu-analizi-say
     OgretmenOgrenciListesiSayfasiComponent,
     OgretmenAnaSayfasiComponent,
     OgretmenGruplarSayfasiComponent,
-    OgretmenDevamsizlikSayfasiComponent,
     OgretmenGruplarDetaySayfasiComponent,
     OgretmenOgrenciDetaySayfasiComponent,
     OgretmenSiniftaKimlerVarSayfasiComponent,

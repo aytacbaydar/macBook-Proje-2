@@ -23,16 +23,19 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 8px 12px;
+  gap: 0;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  padding: 8px;
   border: 1px solid #cfcfff;
-  border-radius: 8px;
+  border-radius: 10px;
   background-color: #ffffff;
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
-  min-width: 44px;
 
-  .ikon {
+  i,
+  svg {
     font-size: 18px;
     line-height: 1;
   }
@@ -55,24 +58,104 @@
 }
 
 .pdf-toolbar {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 40;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  align-items: stretch;
-  padding: 12px 16px;
-  margin-bottom: 16px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  background-color: #ffffff;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
-  z-index: 9;
-  position: sticky;
-  top: 0;
-  margin-bottom: 16px;
+  width: min(320px, 90vw);
+  max-height: calc(100vh - 32px);
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.38);
+  background-color: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.24);
+  backdrop-filter: blur(12px);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 
-  &--sticky {
-    position: sticky;
-    top: 0;
+  &--dragging {
+    box-shadow: 0 22px 48px rgba(15, 23, 42, 0.32);
+  }
+
+  &--collapsed {
+    max-height: none;
+    width: auto;
+  }
+
+  &__drag-handle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 12px;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.28);
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.12),
+      rgba(59, 130, 246, 0.04)
+    );
+  }
+
+  &__drag-handle:active {
+    cursor: grabbing;
+  }
+
+  &__handle-grip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4f46e5;
+    font-size: 18px;
+  }
+
+  &__handle-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex: 1;
+  }
+
+  &__handle-title {
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    color: #1f2937;
+  }
+
+  &__collapse-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    border: 1px solid rgba(79, 70, 229, 0.32);
+    background: rgba(79, 70, 229, 0.08);
+    color: #4338ca;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+
+    &:hover {
+      background: rgba(79, 70, 229, 0.16);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 10px 14px 14px;
+    overflow: auto;
+    max-height: calc(100vh - 92px);
   }
 
   &__nav {
@@ -90,16 +173,136 @@
   &__group {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
     flex-wrap: wrap;
 
     &--background {
       span {
         font-weight: 500;
         color: #1f2937;
+        margin-right: 4px;
+        white-space: nowrap;
       }
     }
   }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.toolbar-menu {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.toolbar-menu__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(209, 213, 219, 1);
+  background-color: #f9fafb;
+  color: #1f2937;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    transform 0.1s ease;
+
+  &:hover {
+    background-color: #eef2ff;
+    border-color: #c7d2fe;
+    transform: translateY(-1px);
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgba(99, 102, 241, 0.35);
+    outline-offset: 2px;
+  }
+}
+
+.toolbar-menu__label {
+  min-width: 96px;
+  text-align: left;
+}
+
+.toolbar-menu__dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 208px;
+  padding: 8px;
+  border-radius: 14px;
+  border: 1px solid rgba(191, 219, 254, 0.65);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 18px 38px rgba(15, 23, 42, 0.18);
+  backdrop-filter: blur(12px);
+}
+
+.toolbar-menu__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: #1f2937;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.1s ease;
+
+  &:hover {
+    background: rgba(59, 130, 246, 0.12);
+    transform: translateX(2px);
+  }
+
+  &.aktif {
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.92), #4338ca);
+    color: #f8fafc;
+    box-shadow: 0 10px 24px rgba(79, 70, 229, 0.35);
+  }
+}
+
+.size-controls {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.size-control {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 140px;
 }
 
 .toolbar-tab {
@@ -203,7 +406,8 @@
   }
 }
 
-.stroke-select {
+.stroke-select,
+.size-select {
   padding: 6px 10px;
   border: 1px solid #cfcfff;
   border-radius: 6px;
@@ -459,4 +663,129 @@
 .kaydet-devamsizlik-wrapper::-webkit-scrollbar-track {
   background-color: rgba(148, 163, 184, 0.25);
   border-radius: 8px;
+}
+
+.kaydet-attendance-intro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px dashed rgba(79, 70, 229, 0.35);
+  background-color: rgba(79, 70, 229, 0.06);
+
+  &__text {
+    flex: 1 1 240px;
+    margin: 0;
+    font-size: 15px;
+    color: #1f2937;
+  }
+}
+
+.btn-attendance-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid #4f46e5;
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.16), rgba(79, 70, 229, 0.08));
+  color: #312e81;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+
+  i {
+    font-size: 18px;
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px rgba(79, 70, 229, 0.25);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+}
+
+.attendance-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(3px);
+}
+
+.attendance-modal {
+  width: min(1040px, 94vw);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  border-radius: 18px;
+  background-color: #ffffff;
+  border: 1px solid rgba(148, 163, 184, 0.38);
+  box-shadow: 0 30px 60px rgba(15, 23, 42, 0.35);
+  overflow: hidden;
+}
+
+.attendance-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.28);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.16), rgba(59, 130, 246, 0.05));
+
+  h2 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #111827;
+  }
+}
+
+.attendance-modal__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  background: rgba(255, 255, 255, 0.9);
+  color: #1e3a8a;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+
+  &:hover {
+    background: rgba(59, 130, 246, 0.12);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.attendance-modal__body {
+  flex: 1;
+  padding: 16px;
+  background-color: #f9fafb;
+  overflow: auto;
+}
+
+.attendance-modal__body app-ogretmen-devamsizlik-sayfasi {
+  display: block;
+  min-width: 100%;
 }
