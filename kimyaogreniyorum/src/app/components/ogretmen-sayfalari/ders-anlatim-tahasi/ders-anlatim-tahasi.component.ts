@@ -1,4 +1,4 @@
-﻿import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import * as pdfjsLib from 'pdfjs-dist/webpack';
@@ -57,6 +57,10 @@ export class DersAnlatimTahasiComponent
   readonly penColorOptions = ['#000000', '#0000FF', '#FF0000', '#008000'];
   readonly penSizeOptions = [2, 3, 4, 5, 6, 8, 10, 12, 14, 16];
   readonly eraserSizeOptions = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32];
+  zoomLevel = 1;
+  readonly minZoom = 0.5;
+  readonly maxZoom = 3;
+  readonly zoomStep = 0.1;
   ogrenciGruplari: string[] = [];
   secilenGrup = '';
   readonly toolbarTabs: Array<{ id: ToolbarTabId; label: string }> = [
@@ -127,6 +131,7 @@ export class DersAnlatimTahasiComponent
     showPaste: false,
   };
   clipboardObject?: fabric.Object;
+  private baseDisplaySize = { width: 0, height: 0 };
   private toolbarSize = { width: 0, height: 0 };
   private readonly toolbarMargin = 12;
   toolbarDrag = {
@@ -898,6 +903,96 @@ export class DersAnlatimTahasiComponent
     }
   }
 
+  get zoomPercent(): number {
+    return Math.round(this.zoomLevel * 100);
+  }
+
+  zoomIn(): void {
+    this.setZoom(this.zoomLevel + this.zoomStep);
+  }
+
+  zoomOut(): void {
+    this.setZoom(this.zoomLevel - this.zoomStep);
+  }
+
+  resetZoom(): void {
+    this.setZoom(1);
+  }
+
+  setZoom(level: number): void {
+    const next = this.clamp(Number(level), this.minZoom, this.maxZoom);
+    if (!Number.isFinite(next)) {
+      return;
+    }
+    const normalized = Number(next.toFixed(2));
+    if (Math.abs(normalized - this.zoomLevel) < 0.001) {
+      return;
+    }
+    this.zoomLevel = normalized;
+    this.applyZoom();
+  }
+
+  private setBaseDisplaySize(width: number, height: number): void {
+    if (
+      !Number.isFinite(width) ||
+      !Number.isFinite(height) ||
+      width <= 0 ||
+      height <= 0
+    ) {
+      return;
+    }
+    this.baseDisplaySize = {
+      width,
+      height,
+    };
+    this.applyZoom();
+  }
+
+  private applyZoom(): void {
+    const baseWidth = this.baseDisplaySize.width;
+    const baseHeight = this.baseDisplaySize.height;
+    if (!baseWidth || !baseHeight) {
+      return;
+    }
+    const displayWidth = baseWidth * this.zoomLevel;
+    const displayHeight = baseHeight * this.zoomLevel;
+    this.updateCanvasDisplaySize(displayWidth, displayHeight);
+  }
+
+  private updateCanvasDisplaySize(width: number, height: number): void {
+    const pdfCanvasEl = this.pdfCanvas?.nativeElement;
+    if (pdfCanvasEl) {
+      pdfCanvasEl.style.width = `${width}px`;
+      pdfCanvasEl.style.height = `${height}px`;
+      pdfCanvasEl.style.maxWidth = 'none';
+      pdfCanvasEl.style.maxHeight = 'none';
+    }
+
+    const annotationEl = this.annotationCanvas?.nativeElement;
+    if (annotationEl) {
+      annotationEl.style.width = `${width}px`;
+      annotationEl.style.height = `${height}px`;
+      annotationEl.style.maxWidth = 'none';
+      annotationEl.style.maxHeight = 'none';
+    }
+
+    if (this.fabricCanvas) {
+      const wrapper = this.fabricCanvas.wrapperEl;
+      const lower = this.fabricCanvas.lowerCanvasEl;
+      const upper = this.fabricCanvas.upperCanvasEl;
+      [wrapper, lower, upper].forEach((el) => {
+        if (el) {
+          el.style.width = `${width}px`;
+          el.style.height = `${height}px`;
+          el.style.maxWidth = 'none';
+          el.style.maxHeight = 'none';
+        }
+      });
+      this.fabricCanvas.calcOffset();
+      this.fabricCanvas.requestRenderAll();
+    }
+  }
+
   async setBackground(mode: BackgroundMode): Promise<void> {
     this.backgroundMode = mode;
     if (!this.currentPage) {
@@ -1169,15 +1264,17 @@ private async renderPage(pageNumber: number): Promise<void> {
       const baseScale = this.renderScale * deviceScale;
       const viewport = page.getViewport({ scale: baseScale });
 
-      // ğŸ¯ Tam Ã§Ã¶zÃ¼nÃ¼rlÃ¼kte PDF canvas boyutu
       pdfCanvasEl.width = viewport.width;
       pdfCanvasEl.height = viewport.height;
 
-      // ğŸ“± Ekranda tam geniÅŸlikte, orantÄ±lÄ± yÃ¼kseklik
-      const screenWidth = window.innerWidth * 0.98;
-      const screenHeight = (viewport.height / viewport.width) * screenWidth;
-      pdfCanvasEl.style.width = `${screenWidth}px`;
-      pdfCanvasEl.style.height = `${screenHeight}px`;
+      const cssWidth = viewport.width / deviceScale;
+      const cssHeight = viewport.height / deviceScale;
+      const containerWidth =
+        this.pdfContainer?.nativeElement.clientWidth ?? cssWidth;
+      const fitScale =
+        containerWidth > 0 ? containerWidth / cssWidth : 1;
+      const baseDisplayWidth = cssWidth * fitScale;
+      const baseDisplayHeight = cssHeight * fitScale;
 
       const renderContext = {
         canvasContext: pdfCtx,
@@ -1191,8 +1288,14 @@ private async renderPage(pageNumber: number): Promise<void> {
 
       await page.render(renderContext).promise;
 
-      // ğŸ¨ Ã‡izim tuvali PDF ile aynÄ± boyutta olsun
       this.prepareAnnotationCanvas(viewport.width, viewport.height);
+      this.pageMetrics.set(pageNumber, {
+        canvasWidth: viewport.width,
+        canvasHeight: viewport.height,
+        pdfWidth: baseDisplayWidth,
+        pdfHeight: baseDisplayHeight,
+      });
+      this.setBaseDisplaySize(baseDisplayWidth, baseDisplayHeight);
     } else {
       this.blankDocument = true;
       const pdfCtx2 = pdfCanvasEl.getContext('2d');
@@ -1684,6 +1787,7 @@ private async renderPage(pageNumber: number): Promise<void> {
       pdfHeight: height,
     });
     this.prepareAnnotationCanvas(width, height);
+    this.setBaseDisplaySize(width, height);
   }
 
   private saveCurrentAnnotations(): void {
@@ -2390,6 +2494,3 @@ private async renderPage(pageNumber: number): Promise<void> {
     };
   }
 }
-
-
-
