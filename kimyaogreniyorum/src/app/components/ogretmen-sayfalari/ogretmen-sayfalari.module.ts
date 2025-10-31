@@ -16,7 +16,7 @@ import { DersAnlatimTahasiComponent } from './ders-anlatim-tahasi/ders-anlatim-t
     ReactiveFormsModule,
     FormsModule,
     RouterModule,
-    SharedModule,
+    SharedModule, 
   ]
 })
 export class OgretmenSayfalariModule { }

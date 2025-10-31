@@ -58,10 +58,11 @@ export class DersAnlatimTahasiComponent
   readonly toolbarTabs: Array<{ id: ToolbarTabId; label: string }> = [
     { id: 'dosya', label: 'Dosya' },
     { id: 'kaydet', label: 'Kaydet' },
-    { id: 'duzenle', label: 'Düzenle' },
-    { id: 'sekiller', label: 'Şekiller' },
-    { id: 'cizgiler', label: 'Çizgiler' },
+    { id: 'duzenle', label: 'Duzenle' },
+    { id: 'sekiller', label: 'Sekiller' },
+    { id: 'cizgiler', label: 'Cizgiler' },
   ];
+  kaydetPanelMode: 'lesson' | 'attendance' = 'lesson';
   activeToolbarTab: ToolbarTabId = 'dosya';
   readonly dersAnlatimApiBase = './server/database/ders-anlatimi';
   ogrenciGruplariYukleniyor = false;
@@ -177,7 +178,13 @@ export class DersAnlatimTahasiComponent
       if (!this.ogrenciGruplari.length && !this.ogrenciGruplariYukleniyor) {
         this.loadOgrenciGruplari();
       }
+    } else {
+      this.kaydetPanelMode = 'lesson';
     }
+  }
+
+  setKaydetPanelMode(mode: 'lesson' | 'attendance'): void {
+    this.kaydetPanelMode = mode;
   }
 
   isActiveTab(tabId: ToolbarTabId): boolean {

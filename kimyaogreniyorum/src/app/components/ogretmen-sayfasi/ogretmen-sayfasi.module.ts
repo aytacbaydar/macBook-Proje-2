@@ -76,6 +76,7 @@ import { OgretmenKonuAnaliziSayfasiComponent } from './ogretmen-konu-analizi-say
     FormsModule,
     RouterModule,
     SharedModule,
+    OgretmenDevamsizlikSayfasiComponent,
   ],
 })
 export class OgretmenSayfasiModule {}

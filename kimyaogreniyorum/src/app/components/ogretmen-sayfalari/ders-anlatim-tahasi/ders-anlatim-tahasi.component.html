@@ -1,4 +1,4 @@
-﻿<div class="pdf-toolbar pdf-toolbar--sticky">
+<div class="pdf-toolbar pdf-toolbar--sticky">
   <nav class="pdf-toolbar__nav" aria-label="PDF ara&#231; sekmeleri">
     <button
       type="button"
@@ -10,6 +10,8 @@
       {{ tab.label }}
     </button>
   </nav>
+
+      
 
   <header class="pdf-toolbar__panel" aria-live="polite">
     <ng-container [ngSwitch]="activeToolbarTab">
@@ -47,7 +49,7 @@
             [disabled]="pdfYukleniyor"
           >
             <span class="ikon" aria-hidden="true">&#128247;</span>
-            <span>Fotoğraf Ekle</span>
+            <span>Fotograf Ekle</span>
           </button>
           <input
             #imageUploadInput
@@ -58,87 +60,121 @@
           >
         </div>
       </ng-container>
-
       <ng-container *ngSwitchCase="'kaydet'">
-        <div class="toolbar-form">
-          <div class="toolbar-field">
-            <label class="toolbar-label" for="kaydetGrup">Grup</label>
-            <select
-              id="kaydetGrup"
-              class="toolbar-select"
-              [(ngModel)]="secilenGrup"
-              [ngModelOptions]="{ standalone: true }"
-              [disabled]="ogrenciGruplariYukleniyor"
-              (ngModelChange)="onGrupChange()"
-            >
-              <option value="">Grup se&#231;in</option>
-              <option *ngFor="let grup of ogrenciGruplari" [value]="grup">{{ grup }}</option>
-            </select>
-          </div>
-
-          <div class="toolbar-field">
-            <label class="toolbar-label" for="kaydetKonu">Konu</label>
-            <select
-              id="kaydetKonu"
-              class="toolbar-select"
-              [(ngModel)]="secilenKonu"
-              (ngModelChange)="onKonuChange($event)"
-              [disabled]="konularYukleniyor || !konuBasliklari.length"
-              [ngModelOptions]="{ standalone: true }"
-            >
-              <option value="">Konu seçin</option>
-              <option *ngFor="let konu of konuBasliklari" [value]="konu">{{ konu }}</option>
-            </select>
-          </div>
-
-          <div class="toolbar-field">
-            <label class="toolbar-label" for="kaydetAltKonu">Alt konu / kazanım</label>
-            <select
-              id="kaydetAltKonu"
-              class="toolbar-select"
-              [(ngModel)]="secilenAltKonu"
-              [disabled]="!altKonuSecenekleri.length"
-              [ngModelOptions]="{ standalone: true }"
-              (ngModelChange)="onAltKonuChange()"
-            >
-              <option value="">Alt konu seçin</option>
-              <option *ngFor="let alt of altKonuSecenekleri" [value]="alt">{{ alt }}</option>
-            </select>
-          </div>
-
-          <button
-            type="button"
-            class="btn-ikonlu btn-primary"
-            (click)="saveLessonRecord()"
-            [disabled]="lessonSaveInProgress || pdfYukleniyor || exportInProgress || !canSaveLesson"
+        <div class="kaydet-panel">
+          <div
+            class="kaydet-panel__nav"
+            role="tablist"
+            aria-label="Kaydet secenekleri"
           >
-            <span class="ikon" aria-hidden="true">&#128190;</span>
-            <span>{{ lessonSaveInProgress ? 'Kaydediliyor...' : 'Kaydet' }}</span>
-          </button>
+            <button
+              type="button"
+              class="kaydet-panel__tab"
+              (click)="setKaydetPanelMode('lesson')"
+              [class.aktif]="kaydetPanelMode === 'lesson'"
+              [attr.aria-pressed]="kaydetPanelMode === 'lesson'"
+            >
+              <span>Ders Kaydi</span>
+            </button>
+            <button
+              type="button"
+              class="kaydet-panel__tab"
+              (click)="setKaydetPanelMode('attendance')"
+              [class.aktif]="kaydetPanelMode === 'attendance'"
+              [attr.aria-pressed]="kaydetPanelMode === 'attendance'"
+            >
+              <span>Devamsizlik</span>
+            </button>
+          </div>
 
-          <button
-            type="button"
-            class="btn-ikonlu"
-            (click)="downloadPdf()"
-            [disabled]="pdfYukleniyor || exportInProgress"
-          >
-            <span class="ikon" aria-hidden="true">&#128229;</span>
-            <span>PDF indir</span>
-          </button>
-        </div>
+          <div class="kaydet-panel__content" *ngIf="kaydetPanelMode === 'lesson'">
+            <div class="toolbar-form">
+              <div class="toolbar-field">
+                <label class="toolbar-label" for="kaydetGrup">Grup</label>
+                <select
+                  id="kaydetGrup"
+                  class="toolbar-select"
+                  [(ngModel)]="secilenGrup"
+                  [ngModelOptions]="{ standalone: true }"
+                  [disabled]="ogrenciGruplariYukleniyor"
+                  (ngModelChange)="onGrupChange()"
+                >
+                  <option value="">Grup secin</option>
+                  <option *ngFor="let grup of ogrenciGruplari" [value]="grup">{{ grup }}</option>
+                </select>
+              </div>
 
-        <div class="toolbar-status" *ngIf="ogrenciGruplariYukleniyor || konularYukleniyor">
-          <span *ngIf="ogrenciGruplariYukleniyor">Gruplar yükleniyor...</span>
-          <span *ngIf="konularYukleniyor">Konular yükleniyor...</span>
-        </div>
-        <div class="toolbar-status toolbar-status--error" *ngIf="konularHataMesaji && !konularYukleniyor">
-          {{ konularHataMesaji }}
-        </div>
-        <div class="toolbar-status toolbar-status--error" *ngIf="kaydetErrorMessage">
-          {{ kaydetErrorMessage }}
-        </div>
-        <div class="toolbar-status toolbar-status--success" *ngIf="kaydetSuccessMessage">
-          {{ kaydetSuccessMessage }}
+              <div class="toolbar-field">
+                <label class="toolbar-label" for="kaydetKonu">Konu</label>
+                <select
+                  id="kaydetKonu"
+                  class="toolbar-select"
+                  [(ngModel)]="secilenKonu"
+                  (ngModelChange)="onKonuChange($event)"
+                  [disabled]="konularYukleniyor || !konuBasliklari.length"
+                  [ngModelOptions]="{ standalone: true }"
+                >
+                  <option value="">Konu secin</option>
+                  <option *ngFor="let konu of konuBasliklari" [value]="konu">{{ konu }}</option>
+                </select>
+              </div>
+
+              <div class="toolbar-field">
+                <label class="toolbar-label" for="kaydetAltKonu">Alt konu / kazan�m</label>
+                <select
+                  id="kaydetAltKonu"
+                  class="toolbar-select"
+                  [(ngModel)]="secilenAltKonu"
+                  [disabled]="!altKonuSecenekleri.length"
+                  [ngModelOptions]="{ standalone: true }"
+                  (ngModelChange)="onAltKonuChange()"
+                >
+                  <option value="">Alt konu secin</option>
+                  <option *ngFor="let alt of altKonuSecenekleri" [value]="alt">{{ alt }}</option>
+                </select>
+              </div>
+
+              <button
+                type="button"
+                class="btn-ikonlu btn-primary"
+                (click)="saveLessonRecord()"
+                [disabled]="lessonSaveInProgress || pdfYukleniyor || exportInProgress || !canSaveLesson"
+              >
+                <span class="ikon" aria-hidden="true">&#128190;</span>
+                <span>{{ lessonSaveInProgress ? 'Kaydediliyor...' : 'Kaydet' }}</span>
+              </button>
+
+              <button
+                type="button"
+                class="btn-ikonlu"
+                (click)="downloadPdf()"
+                [disabled]="pdfYukleniyor || exportInProgress"
+              >
+                <span class="ikon" aria-hidden="true">&#128229;</span>
+                <span>PDF indir</span>
+              </button>
+            </div>
+
+            <div class="toolbar-status" *ngIf="ogrenciGruplariYukleniyor || konularYukleniyor">
+              <span *ngIf="ogrenciGruplariYukleniyor">Gruplar yukleniyor...</span>
+              <span *ngIf="konularYukleniyor">Konular yukleniyor...</span>
+            </div>
+            <div class="toolbar-status toolbar-status--error" *ngIf="konularHataMesaji && !konularYukleniyor">
+              {{ konularHataMesaji }}
+            </div>
+            <div class="toolbar-status toolbar-status--error" *ngIf="kaydetErrorMessage">
+              {{ kaydetErrorMessage }}
+            </div>
+            <div class="toolbar-status toolbar-status--success" *ngIf="kaydetSuccessMessage">
+              {{ kaydetSuccessMessage }}
+            </div>
+          </div>
+
+          <div class="kaydet-panel__content" *ngIf="kaydetPanelMode === 'attendance'">
+            <div class="kaydet-devamsizlik-wrapper">
+              <app-ogretmen-devamsizlik-sayfasi></app-ogretmen-devamsizlik-sayfasi>
+            </div>
+          </div>
         </div>
       </ng-container>
 
@@ -151,7 +187,7 @@
             [class.aktif]="currentTool === 'select'"
           >
             <span class="ikon" aria-hidden="true">&#x270B;</span>
-            <span>Seç &amp; Taşı</span>
+            <span>Se� &amp; Ta��</span>
           </button>
           <button
             type="button"
@@ -169,7 +205,7 @@
             [disabled]="!clipboardObject"
           >
             <span class="ikon" aria-hidden="true">&#x239F;</span>
-            <span>Yapıştır</span>
+            <span>Yap��t�r</span>
           </button>
           <button
             type="button"
@@ -196,7 +232,7 @@
             [disabled]="!hasSelection || isCropping"
           >
             <span class="ikon" aria-hidden="true">&#x2702;</span>
-            <span>Kırp</span>
+            <span>K�rp</span>
           </button>
           <button
             type="button"
@@ -219,7 +255,7 @@
             [disabled]="!isBlankDocument"
           >
             <span class="ikon" aria-hidden="true">&#9633;</span>
-            <span>Düz</span>
+            <span>D�z</span>
           </button>
           <button
             type="button"
@@ -239,7 +275,7 @@
             [disabled]="!isBlankDocument"
           >
             <span class="ikon" aria-hidden="true">&#x1F4C4;</span>
-            <span>Çizgili</span>
+            <span>�izgili</span>
           </button>
         </div>
       </ng-container>
@@ -248,7 +284,7 @@
         <div class="pdf-toolbar__group">
           <button type="button" class="btn-ikonlu" (click)="addShape('rectangle')">
             <span class="ikon" aria-hidden="true">&#9634;</span>
-            <span>Dikdörtgen</span>
+            <span>Dikd�rtgen</span>
           </button>
           <button type="button" class="btn-ikonlu" (click)="addShape('circle')">
             <span class="ikon" aria-hidden="true">&#9711;</span>
@@ -256,7 +292,7 @@
           </button>
           <button type="button" class="btn-ikonlu" (click)="addShape('triangle')">
             <span class="ikon" aria-hidden="true">&#9651;</span>
-            <span>Üçgen</span>
+            <span>��gen</span>
           </button>
           <button type="button" class="btn-ikonlu" (click)="addArrow()">
             <span class="ikon" aria-hidden="true">&#10148;</span>
@@ -310,7 +346,7 @@
         </div>
 
         <div class="pdf-toolbar__group">
-          <label class="toolbar-label" for="strokeSelect">Kalınlık</label>
+          <label class="toolbar-label" for="strokeSelect">Kal�nl�k</label>
           <select
             id="strokeSelect"
             class="stroke-select"
@@ -328,15 +364,15 @@
 </div>
 
 
-<div *ngIf="pdfYukleniyor" class="durum durum--ust">PDF yükleniyor...</div>
+<div *ngIf="pdfYukleniyor" class="durum durum--ust">PDF y�kleniyor...</div>
 <div *ngIf="pdfHataMesaji" class="durum hata durum--ust">{{ pdfHataMesaji }}</div>
 
 <div class="pdf-gorunumu" #pdfContainer>
-  <canvas #pdfCanvas class="pdf-canvas" aria-label="PDF görünümü"></canvas>
+  <canvas #pdfCanvas class="pdf-canvas" aria-label="PDF g�r�n�m�"></canvas>
   <canvas
     #annotationCanvas
     class="annotation-canvas"
-    aria-label="Çizim alanı"
+    aria-label="�izim alan�"
   ></canvas>
 
   <div
@@ -348,11 +384,11 @@
     <ng-container *ngIf="selectionMenu.showCropActions; else selectionActions">
       <button type="button" class="selection-menu__button primary" (click)="confirmCrop()">
         <i class="fa-solid fa-crop-simple"></i>
-        <span>Kırpmayı Onayla</span>
+        <span>K�rpmay� Onayla</span>
       </button>
       <button type="button" class="selection-menu__button" (click)="cancelCrop()">
         <i class="fa-solid fa-xmark"></i>
-        <span>İptal</span>
+        <span>�ptal</span>
       </button>
     </ng-container>
     <ng-template #selectionActions>
@@ -363,7 +399,7 @@
         *ngIf="selectionMenu.showCrop"
       >
         <i class="fa-solid fa-crop-simple"></i>
-        <span>Kırp</span>
+        <span>K�rp</span>
       </button>
       <button type="button" class="selection-menu__button" (click)="duplicateSelection()">
         <i class="fa-solid fa-copy"></i>
@@ -384,15 +420,15 @@
         (click)="pasteSelection()"
       >
         <i class="fa-solid fa-clipboard"></i>
-        <span>Yapıştır</span>
+        <span>Yap��t�r</span>
       </button>
     </ng-template>
   </div>
 </div>
 
 <div *ngIf="totalPages > 0" class="pdf-sayfa-alt-kontrol">
-  <button type="button" (click)="ilkSayfa()" [disabled]="currentPage <= 1 || pdfYukleniyor">İlk</button>
-  <button type="button" (click)="oncekiSayfa()" [disabled]="currentPage <= 1 || pdfYukleniyor">Önceki</button>
+    <button type="button" (click)="ilkSayfa()" [disabled]="currentPage <= 1 || pdfYukleniyor">Ilk</button>
+    <button type="button" (click)="oncekiSayfa()" [disabled]="currentPage <= 1 || pdfYukleniyor">Onceki</button>
   <span>Sayfa {{ currentPage }} / {{ totalPages }}</span>
   <button type="button" (click)="sonrakiSayfa()" [disabled]="currentPage >= totalPages || pdfYukleniyor">
     Sonraki
@@ -401,6 +437,8 @@
 </div>
 
  
+
+
 
 
 
