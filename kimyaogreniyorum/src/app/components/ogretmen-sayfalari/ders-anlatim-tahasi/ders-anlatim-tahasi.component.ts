@@ -70,6 +70,14 @@ export class DersAnlatimTahasiComponent
     { id: 'sekiller', label: 'Şekiller' },
     { id: 'cizgiler', label: 'Çizgiler' },
   ];
+
+  readonly toolbarTabIcons: Record<ToolbarTabId, string> = {
+    dosya: 'bi-folder2-open',
+    kaydet: 'bi-cloud-arrow-down',
+    duzenle: 'bi-sliders',
+    sekiller: 'bi-shapes',
+    cizgiler: 'bi-brush',
+  };
   kaydetPanelMode: 'lesson' | 'attendance' = 'lesson';
   attendanceModalOpen = false;
   toolbarCollapsed = false;
@@ -130,6 +138,11 @@ export class DersAnlatimTahasiComponent
     showCrop: false,
     showPaste: false,
   };
+  private brandingLogoImage?: HTMLImageElement | null;
+  private brandingLogoPromise?: Promise<HTMLImageElement | null>;
+  private readonly brandingHeaderText = 'Ayta\u00E7 Baydar || Kimya \u00D6\u011Fretmeni';
+  private readonly brandingLogoSrc = 'assets/images/aytac-baydar-logo.svg';
+
   clipboardObject?: fabric.Object;
   private clipboardBasePosition: { left: number; top: number } | null = null;
   private clipboardNextOffset = { x: 32, y: 32 };
@@ -218,6 +231,10 @@ export class DersAnlatimTahasiComponent
   getActiveTabLabel(): string {
     const active = this.toolbarTabs.find((tab) => tab.id === this.activeToolbarTab);
     return active?.label ?? 'SeÃ§enekler';
+  }
+
+  getToolbarTabIcon(tabId: ToolbarTabId): string {
+    return this.toolbarTabIcons[tabId] ?? 'bi-circle';
   }
 
   onToolbarDragStart(event: PointerEvent): void {
@@ -1975,6 +1992,7 @@ private async renderPage(pageNumber: number): Promise<void> {
     } else if (this.annotationCanvas?.nativeElement) {
       ctx.drawImage(this.annotationCanvas.nativeElement, 0, 0);
     }
+    await this.drawBrandingOverlay(ctx, out.width, out.height);
     return {
       dataUrl: out.toDataURL('image/png'),
       width: out.width,
@@ -1991,6 +2009,85 @@ private async renderPage(pageNumber: number): Promise<void> {
       bytes[i] = binary.charCodeAt(i);
     }
     return bytes;
+  }
+
+  private async drawBrandingOverlay(
+    ctx: CanvasRenderingContext2D,
+    width: number,
+    height: number
+  ): Promise<void> {
+    const padding = Math.max(16, Math.round(width * 0.02));
+    const fontSize = 10;
+    const capsulePadding = 8;
+
+    ctx.save();
+    ctx.font = `600 ${fontSize}px "Segoe UI", "Helvetica Neue", Arial, sans-serif`;
+    const metrics = ctx.measureText(this.brandingHeaderText);
+    const textWidth = metrics.width;
+    const backgroundWidth = textWidth + capsulePadding * 2;
+    const backgroundHeight = fontSize + capsulePadding + 2;
+    const headerX = width - padding - backgroundWidth;
+    const headerY = padding;
+
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
+    ctx.fillRect(headerX, headerY, backgroundWidth, backgroundHeight);
+    ctx.fillStyle = '#f97316';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(
+      this.brandingHeaderText,
+      width - padding - capsulePadding,
+      headerY + backgroundHeight / 2
+    );
+    ctx.restore();
+
+    const logo = await this.loadBrandingLogo();
+    if (!logo) {
+      return;
+    }
+
+    const maxLogoWidth = Math.min(width * 0.18, 160);
+    const maxLogoHeight = Math.min(height * 0.18, 160);
+    const logoScale = Math.min(maxLogoWidth / logo.width, maxLogoHeight / logo.height, 1);
+    const drawWidth = logo.width * logoScale;
+    const drawHeight = logo.height * logoScale;
+    const logoX = width - padding - drawWidth;
+    const logoY = headerY + backgroundHeight + 8;
+
+    ctx.save();
+    ctx.globalAlpha = 0.25;
+    ctx.drawImage(logo, logoX, logoY, drawWidth, drawHeight);
+    ctx.restore();
+  }
+
+  private async loadBrandingLogo(): Promise<HTMLImageElement | null> {
+    if (this.brandingLogoImage) {
+      return this.brandingLogoImage;
+    }
+
+    if (this.brandingLogoImage === null) {
+      return null;
+    }
+
+    if (!this.brandingLogoPromise) {
+      this.brandingLogoPromise = new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+          this.brandingLogoImage = img;
+          resolve(img);
+        };
+        img.onerror = () => {
+          console.error('[PDF::loadBrandingLogo] Logo could not be loaded');
+          this.brandingLogoImage = null;
+          resolve(null);
+        };
+        img.src = this.brandingLogoSrc;
+      });
+    }
+
+    await this.brandingLogoPromise;
+    return this.brandingLogoImage ?? null;
   }
 
   private triggerFileDownload(bytes: Uint8Array, fileName: string): void {
@@ -2598,3 +2695,25 @@ private async renderPage(pageNumber: number): Promise<void> {
     };
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

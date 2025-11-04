@@ -117,6 +117,7 @@
     justify-content: space-between;
     gap: 12px;
     flex: 1;
+    flex-wrap: wrap;
   }
 
   &__handle-title {
@@ -124,6 +125,21 @@
     font-size: 14px;
     letter-spacing: 0.02em;
     color: #1f2937;
+  }
+
+  &__tab-buttons {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 8px;
+    min-width: 0;
+
+    .btn-ikonlu {
+      width: 36px;
+      height: 36px;
+      flex: 0 0 36px;
+    }
   }
 
   &__collapse-btn {
@@ -459,6 +475,56 @@
   background: transparent;
   cursor: crosshair;
   touch-action: none;
+}
+.pdf-branding {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  padding: 12px 16px;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.pdf-branding__header {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #ea580c;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-align: right;
+  font-size: 16px;
+  line-height: 1.2;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);
+}
+
+.pdf-branding__logo {
+  width: 120px;
+  max-width: 28%;
+  opacity: 0.85;
+  filter: drop-shadow(0 10px 22px rgba(15, 23, 42, 0.18));
+}
+
+@media (max-width: 768px) {
+  .pdf-branding {
+    gap: 8px;
+    padding: 10px 12px;
+  }
+
+  .pdf-branding__header {
+    font-size: 9px;
+    padding: 4px 10px;
+  }
+
+  .pdf-branding__logo {
+    width: 96px;
+  }
 }
 
 .pdf-gorunumu .canvas-container {
@@ -814,6 +880,3 @@
   font-size: 14px;
   text-align: center;
 }
-
-
-

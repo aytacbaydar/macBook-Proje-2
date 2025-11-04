@@ -1,0 +1,39 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <path id="leaf" d="M8 0c12 -26 40 -26 52 0c-12 26 -40 26 -52 0z" />
+  </defs>
+  <circle cx="256" cy="256" r="248" fill="#f5821f" />
+  <circle cx="256" cy="256" r="214" fill="#ffffff" stroke="#f5821f" stroke-width="18" />
+  <g fill="#f5821f" transform="translate(256 292)">
+    <g transform="translate(-124 -24)">
+      <use href="#leaf" transform="rotate(-70) translate(-18 -160) rotate(28)" />
+      <use href="#leaf" transform="rotate(-54) translate(-12 -148) rotate(20)" />
+      <use href="#leaf" transform="rotate(-38) translate(-6 -136) rotate(12)" />
+      <use href="#leaf" transform="rotate(-20) translate(0 -124) rotate(6)" />
+      <use href="#leaf" transform="rotate(-2) translate(6 -110) rotate(-4)" />
+      <use href="#leaf" transform="rotate(16) translate(12 -96) rotate(-12)" />
+      <use href="#leaf" transform="rotate(32) translate(18 -80) rotate(-18)" />
+      <use href="#leaf" transform="rotate(46) translate(22 -64) rotate(-22)" />
+    </g>
+    <g transform="scale(-1 1) translate(-124 -24)">
+      <use href="#leaf" transform="rotate(-70) translate(-18 -160) rotate(28)" />
+      <use href="#leaf" transform="rotate(-54) translate(-12 -148) rotate(20)" />
+      <use href="#leaf" transform="rotate(-38) translate(-6 -136) rotate(12)" />
+      <use href="#leaf" transform="rotate(-20) translate(0 -124) rotate(6)" />
+      <use href="#leaf" transform="rotate(-2) translate(6 -110) rotate(-4)" />
+      <use href="#leaf" transform="rotate(16) translate(12 -96) rotate(-12)" />
+      <use href="#leaf" transform="rotate(32) translate(18 -80) rotate(-18)" />
+      <use href="#leaf" transform="rotate(46) translate(22 -64) rotate(-22)" />
+    </g>
+  </g>
+  <text x="256" y="120" text-anchor="middle" font-family="'Segoe UI', 'Gill Sans', Arial, sans-serif" font-weight="600" font-size="38" fill="#ffffff" letter-spacing="4">
+    Ayta&#xE7; Baydar
+  </text>
+  <text x="256" y="392" text-anchor="middle" font-family="'Segoe UI', 'Gill Sans', Arial, sans-serif" font-weight="600" font-size="34" fill="#ffffff" letter-spacing="3">
+    Kimya &#xD6;&#x11F;retmeni
+  </text>
+  <circle cx="256" cy="258" r="92" fill="#ffffff" stroke="#f5821f" stroke-width="10" />
+  <text x="256" y="286" text-anchor="middle" font-family="'Segoe UI', 'Gill Sans', Arial, sans-serif" font-weight="700" font-size="96" fill="#f5821f" stroke="#ffffff" stroke-width="6" paint-order="stroke">
+    AB
+  </text>
+</svg>
