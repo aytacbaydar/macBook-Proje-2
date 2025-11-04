@@ -141,7 +141,7 @@ export class DersAnlatimTahasiComponent
   private brandingLogoImage?: HTMLImageElement | null;
   private brandingLogoPromise?: Promise<HTMLImageElement | null>;
   private readonly brandingHeaderText = 'Ayta\u00E7 Baydar || Kimya \u00D6\u011Fretmeni';
-  private readonly brandingLogoSrc = 'assets/images/aytac-baydar-logo.svg';
+  private readonly brandingLogoSrc = 'assets/images/logo-turuncu.png';
 
   clipboardObject?: fabric.Object;
   private clipboardBasePosition: { left: number; top: number } | null = null;
@@ -2046,16 +2046,14 @@ private async renderPage(pageNumber: number): Promise<void> {
       return;
     }
 
-    const maxLogoWidth = Math.min(width * 0.18, 160);
-    const maxLogoHeight = Math.min(height * 0.18, 160);
-    const logoScale = Math.min(maxLogoWidth / logo.width, maxLogoHeight / logo.height, 1);
-    const drawWidth = logo.width * logoScale;
-    const drawHeight = logo.height * logoScale;
-    const logoX = width - padding - drawWidth;
-    const logoY = headerY + backgroundHeight + 8;
+    const logoSize = 200;
+    const drawWidth = logoSize;
+    const drawHeight = logoSize;
+    const logoX = (width - drawWidth) / 2;
+    const logoY = (height - drawHeight) / 2;
 
     ctx.save();
-    ctx.globalAlpha = 0.25;
+    ctx.globalAlpha = 0.9;
     ctx.drawImage(logo, logoX, logoY, drawWidth, drawHeight);
     ctx.restore();
   }

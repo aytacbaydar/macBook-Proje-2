@@ -30,7 +30,7 @@
         class="pdf-toolbar__collapse-btn"
         (click)="toggleToolbarCollapsed()"
         (pointerdown)="$event.stopPropagation()"
-        [attr.aria-label]="toolbarCollapsed ? 'Paneli genişlet' : 'Paneli daralt'"
+        [attr.aria-label]="toolbarCollapsed ? 'Paneli geni�let' : 'Paneli daralt'"
       >
         <i class="bi" [ngClass]="toolbarCollapsed ? 'bi-arrows-angle-expand' : 'bi-dash-lg'"></i>
       </button>
@@ -72,12 +72,12 @@
               <button
                 type="button"
                 class="btn-ikonlu"
-                title="FotoÄŸraf Ekle"
+                title="Fotoğraf Ekle"
                 (click)="triggerImageUpload()"
                 [disabled]="pdfYukleniyor"
               >
                 <i class="bi bi-image" aria-hidden="true"></i>
-                <span class="sr-only">FotoÄŸraf Ekle</span>
+                <span class="sr-only">Fotoğraf Ekle</span>
               </button>
               <input
                 #imageUploadInput
@@ -126,7 +126,7 @@
               <div
                 class="kaydet-panel__nav"
                 role="tablist"
-                aria-label="Kaydet seÃ§enekleri"
+                aria-label="Kaydet seçenekleri"
               >
                 <button
                   type="button"
@@ -160,7 +160,7 @@
                       [disabled]="ogrenciGruplariYukleniyor"
                       (ngModelChange)="onGrupChange()"
                     >
-                      <option value="">Grup seçin</option>
+                      <option value="">Grup se�in</option>
                       <option *ngFor="let grup of ogrenciGruplari" [value]="grup">{{ grup }}</option>
                     </select>
                   </div>
@@ -175,13 +175,13 @@
                       [disabled]="konularYukleniyor || !konuBasliklari.length"
                       [ngModelOptions]="{ standalone: true }"
                     >
-                      <option value="">Konu seçin</option>
+                      <option value="">Konu se�in</option>
                       <option *ngFor="let konu of konuBasliklari" [value]="konu">{{ konu }}</option>
                     </select>
                   </div>
     
                   <div class="toolbar-field">
-                    <label class="toolbar-label" for="kaydetAltKonu">Alt konu / kazanÄ±m</label>
+                    <label class="toolbar-label" for="kaydetAltKonu">Alt konu / kazanım</label>
                     <select
                       id="kaydetAltKonu"
                       class="toolbar-select"
@@ -190,7 +190,7 @@
                       [ngModelOptions]="{ standalone: true }"
                       (ngModelChange)="onAltKonuChange()"
                     >
-                      <option value="">Alt konu seÃ§in</option>
+                      <option value="">Alt konu seçin</option>
                       <option *ngFor="let alt of altKonuSecenekleri" [value]="alt">{{ alt }}</option>
                     </select>
                   </div>
@@ -219,8 +219,8 @@
                 </div>
     
                 <div class="toolbar-status" *ngIf="ogrenciGruplariYukleniyor || konularYukleniyor">
-                  <span *ngIf="ogrenciGruplariYukleniyor">Gruplar yÃ¼kleniyor...</span>
-                  <span *ngIf="konularYukleniyor">Konular yÃ¼kleniyor...</span>
+                  <span *ngIf="ogrenciGruplariYukleniyor">Gruplar yükleniyor...</span>
+                  <span *ngIf="konularYukleniyor">Konular yükleniyor...</span>
                 </div>
                 <div class="toolbar-status toolbar-status--error" *ngIf="konularHataMesaji && !konularYukleniyor">
                   {{ konularHataMesaji }}
@@ -259,10 +259,10 @@
                 class="btn-ikonlu"
                 (click)="setTool('select')"
                 [class.aktif]="currentTool === 'select'"
-                title="Seç ve taşı"
+                title="Se� ve ta��"
               >
                 <i class="bi bi-arrows-move" aria-hidden="true"></i>
-                <span class="sr-only">Seç ve taşı</span>
+                <span class="sr-only">Se� ve ta��</span>
               </button>
               <button
                 type="button"
@@ -279,10 +279,10 @@
                 class="btn-ikonlu"
                 (click)="pasteSelection()"
                 [disabled]="!clipboardObject"
-                title="YapÄ±ÅŸtÄ±r"
+                title="Yapıştır"
               >
                 <i class="bi bi-clipboard2-plus" aria-hidden="true"></i>
-                <span class="sr-only">Yapıştır</span>
+                <span class="sr-only">Yap��t�r</span>
               </button>
               <button
                 type="button"
@@ -309,10 +309,10 @@
                 class="btn-ikonlu"
                 (click)="startCrop()"
                 [disabled]="!hasSelection || isCropping"
-                title="KÄ±rp"
+                title="Kırp"
               >
                 <i class="bi bi-crop" aria-hidden="true"></i>
-                <span class="sr-only">Kırp</span>
+                <span class="sr-only">K�rp</span>
               </button>
               <button
                 type="button"
@@ -334,10 +334,10 @@
                 (click)="setBackground('plain')"
                 [class.aktif]="backgroundMode === 'plain'"
                 [disabled]="!isBlankDocument"
-                title="DÃ¼z"
+                title="Düz"
               >
                 <i class="bi bi-square" aria-hidden="true"></i>
-                <span class="sr-only">Düz</span>
+                <span class="sr-only">D�z</span>
               </button>
               <button
                 type="button"
@@ -356,26 +356,26 @@
                 (click)="setBackground('lined')"
                 [class.aktif]="backgroundMode === 'lined'"
                 [disabled]="!isBlankDocument"
-                title="Çizgili"
+                title="�izgili"
               >
                 <i class="bi bi-journal-text" aria-hidden="true"></i>
-                <span class="sr-only">Çizgili</span>
+                <span class="sr-only">�izgili</span>
               </button>
             </div>
           </ng-container>
           <ng-container *ngSwitchCase="'sekiller'">
             <div class="pdf-toolbar__group">
-              <button type="button" class="btn-ikonlu" (click)="addShape('rectangle')" title="DikdÃ¶rtgen">
+              <button type="button" class="btn-ikonlu" (click)="addShape('rectangle')" title="Dikdörtgen">
                 <i class="bi bi-square" aria-hidden="true"></i>
-                <span class="sr-only">DikdÃ¶rtgen</span>
+                <span class="sr-only">Dikdörtgen</span>
               </button>
               <button type="button" class="btn-ikonlu" (click)="addShape('circle')" title="Daire">
                 <i class="bi bi-circle" aria-hidden="true"></i>
                 <span class="sr-only">Daire</span>
               </button>
-              <button type="button" class="btn-ikonlu" (click)="addShape('triangle')" title="ÃœÃ§gen">
+              <button type="button" class="btn-ikonlu" (click)="addShape('triangle')" title="Üçgen">
                 <i class="bi bi-triangle" aria-hidden="true"></i>
-                <span class="sr-only">Üçgen</span>
+                <span class="sr-only">��gen</span>
               </button>
               <button type="button" class="btn-ikonlu" (click)="addArrow()" title="Ok">
                 <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
@@ -432,7 +432,7 @@
 
             <div class="pdf-toolbar__group size-controls">
               <div class="size-control">
-                <label class="toolbar-label" for="penSizeSelect">Kalem Kalınlığı</label>
+                <label class="toolbar-label" for="penSizeSelect">Kalem Kal�nl���</label>
                 <select
                   id="penSizeSelect"
                   class="size-select"
@@ -464,7 +464,7 @@
 </div>
 
 
-<div *ngIf="pdfYukleniyor" class="durum durum--ust">PDF yükleniyor...</div>
+<div *ngIf="pdfYukleniyor" class="durum durum--ust">PDF y�kleniyor...</div>
 <div *ngIf="pdfHataMesaji" class="durum hata durum--ust">{{ pdfHataMesaji }}</div>
 
 <div class="pdf-gorunumu" #pdfContainer>
@@ -491,11 +491,11 @@
     <ng-container *ngIf="selectionMenu.showCropActions; else selectionActions">
       <button type="button" class="selection-menu__button primary" (click)="confirmCrop()">
         <i class="fa-solid fa-crop-simple"></i>
-        <span>KÄ±rpmayÄ± Onayla</span>
+        <span>Kırpmayı Onayla</span>
       </button>
       <button type="button" class="selection-menu__button" (click)="cancelCrop()">
         <i class="fa-solid fa-xmark"></i>
-        <span>Ä°ptal</span>
+        <span>İptal</span>
       </button>
     </ng-container>
     <ng-template #selectionActions>
@@ -506,7 +506,7 @@
         *ngIf="selectionMenu.showCrop"
       >
         <i class="fa-solid fa-crop-simple"></i>
-        <span>KÄ±rp</span>
+        <span>Kırp</span>
       </button>
       <button type="button" class="selection-menu__button" (click)="duplicateSelection()">
         <i class="fa-solid fa-copy"></i>
@@ -527,15 +527,15 @@
         (click)="pasteSelection()"
       >
         <i class="fa-solid fa-clipboard"></i>
-        <span>YapÄ±ÅŸtÄ±r</span>
+        <span>Yapıştır</span>
       </button>
     </ng-template>
   </div>
 </div>
 
 <div *ngIf="totalPages > 0" class="pdf-sayfa-alt-kontrol">
-    <button type="button" (click)="ilkSayfa()" [disabled]="currentPage <= 1 || pdfYukleniyor">Ä°lk</button>
-    <button type="button" (click)="oncekiSayfa()" [disabled]="currentPage <= 1 || pdfYukleniyor">Ã–nceki</button>
+    <button type="button" (click)="ilkSayfa()" [disabled]="currentPage <= 1 || pdfYukleniyor">İlk</button>
+    <button type="button" (click)="oncekiSayfa()" [disabled]="currentPage <= 1 || pdfYukleniyor">Önceki</button>
   <span>Sayfa {{ currentPage }} / {{ totalPages }}</span>
   <button type="button" (click)="sonrakiSayfa()" [disabled]="currentPage >= totalPages || pdfYukleniyor">
     Sonraki
@@ -576,6 +576,8 @@
     </div>
   </div>
 </div>
+
+
 
 
 

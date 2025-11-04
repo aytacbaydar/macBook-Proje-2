@@ -478,18 +478,15 @@
 }
 .pdf-branding {
   position: absolute;
-  top: 0;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 10px;
-  padding: 12px 16px;
+  inset: 0;
   pointer-events: none;
   z-index: 3;
 }
 
 .pdf-branding__header {
+  position: absolute;
+  top: 12px;
+  right: 16px;
   display: inline-flex;
   align-items: center;
   padding: 4px 12px;
@@ -505,25 +502,28 @@
 }
 
 .pdf-branding__logo {
-  width: 120px;
-  max-width: 28%;
-  opacity: 0.85;
-  filter: drop-shadow(0 10px 22px rgba(15, 23, 42, 0.18));
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 500px;
+  height: 500px;
+  transform: translate(-50%, -50%);
+  opacity: 0.5;
+  filter: drop-shadow(0 14px 32px rgba(15, 23, 42, 0.18));
+  object-fit: contain;
 }
 
 @media (max-width: 768px) {
-  .pdf-branding {
-    gap: 8px;
-    padding: 10px 12px;
-  }
-
   .pdf-branding__header {
-    font-size: 9px;
+    top: 10px;
+    right: 12px;
+    font-size: 12px;
     padding: 4px 10px;
   }
 
   .pdf-branding__logo {
-    width: 96px;
+    width: 180px;
+    height: 180px;
   }
 }
 
