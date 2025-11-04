@@ -72,6 +72,10 @@ const routes: Routes = [
     children: [
       { path: '', component: AnasayafaSayfasiComponent },
       {
+        path: 'sinav-sonuclari-sayfasi',
+        component: OgrenciSinavIslemleriSayfasiComponent,
+      },
+      {
         path: 'ogrenci-iletisim-sayfasi',
         component: IndexIletisimSayfasiComponent,
       },
@@ -83,9 +87,11 @@ const routes: Routes = [
 
   //kullanicilar Sayfalari
 
-  { path: 'yonetici-sayfasi', component: KullaniciIndexSayfasiComponent, children: [
-    {path: '', component: KullaniciAnaSayfaSayfasiComponent},
-  ]},
+  {
+    path: 'yonetici-sayfasi',
+    component: KullaniciIndexSayfasiComponent,
+    children: [{ path: '', component: KullaniciAnaSayfaSayfasiComponent }],
+  },
 
   //yönetici sayfaları
   {
@@ -126,8 +132,6 @@ const routes: Routes = [
       },
     ],
   },
-
-
 
   //öğrenci sayfaları
   {
@@ -306,7 +310,6 @@ const routes: Routes = [
     ],
   },
 
-
   //dovme sayfaları
   {
     path: 'dovme-sayfasi',
@@ -324,10 +327,8 @@ const routes: Routes = [
         path: 'galeri',
         component: DovmeGaleriSayfasiComponent,
       },
-      
     ],
   },
-
 ];
 
 @NgModule({
