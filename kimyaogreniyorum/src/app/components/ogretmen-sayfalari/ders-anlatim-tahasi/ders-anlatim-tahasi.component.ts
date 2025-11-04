@@ -131,6 +131,10 @@ export class DersAnlatimTahasiComponent
     showPaste: false,
   };
   clipboardObject?: fabric.Object;
+  private clipboardBasePosition: { left: number; top: number } | null = null;
+  private clipboardNextOffset = { x: 32, y: 32 };
+  private readonly clipboardOffsetStep = 32;
+  private readonly clipboardOffsetMax = 160;
   private baseDisplaySize = { width: 0, height: 0 };
   private toolbarSize = { width: 0, height: 0 };
   private readonly toolbarMargin = 12;
@@ -991,6 +995,52 @@ export class DersAnlatimTahasiComponent
       this.fabricCanvas.calcOffset();
       this.fabricCanvas.requestRenderAll();
     }
+  }
+
+  private resetClipboardOffset(): void {
+    this.clipboardNextOffset = {
+      x: this.clipboardOffsetStep,
+      y: this.clipboardOffsetStep,
+    };
+  }
+
+  private getNextClipboardOffset(): { x: number; y: number } {
+    const offset = { ...this.clipboardNextOffset };
+    const nextX = offset.x + this.clipboardOffsetStep;
+    const nextY = offset.y + this.clipboardOffsetStep;
+    if (nextX > this.clipboardOffsetMax || nextY > this.clipboardOffsetMax) {
+      this.resetClipboardOffset();
+    } else {
+      this.clipboardNextOffset = { x: nextX, y: nextY };
+    }
+    return offset;
+  }
+
+  private ensureObjectWithinCanvas(target: fabric.Object): void {
+    const canvas = this.fabricCanvas;
+    if (!canvas) {
+      return;
+    }
+    target.setCoords();
+    const bounds = target.getBoundingRect();
+    const canvasWidth = canvas.getWidth();
+    const canvasHeight = canvas.getHeight();
+    let left = target.left ?? 0;
+    let top = target.top ?? 0;
+    if (bounds.left < 0) {
+      left -= bounds.left;
+    }
+    if (bounds.top < 0) {
+      top -= bounds.top;
+    }
+    if (bounds.left + bounds.width > canvasWidth) {
+      left -= bounds.left + bounds.width - canvasWidth;
+    }
+    if (bounds.top + bounds.height > canvasHeight) {
+      top -= bounds.top + bounds.height - canvasHeight;
+    }
+    target.set({ left, top });
+    target.setCoords();
   }
 
   async setBackground(mode: BackgroundMode): Promise<void> {
@@ -1963,25 +2013,45 @@ private async renderPage(pageNumber: number): Promise<void> {
       return;
     }
 
+    this.clipboardBasePosition = {
+      left: active.left ?? 0,
+      top: active.top ?? 0,
+    };
+    this.resetClipboardOffset();
+
+    const offset = this.getNextClipboardOffset();
+    const targetLeft = this.clipboardBasePosition.left + offset.x;
+    const targetTop = this.clipboardBasePosition.top + offset.y;
+
     const clone = await active.clone();
-    this.clipboardObject = await active.clone();
-    this.clipboardObject.set({
-      left: active.left ?? 0,
-      top: active.top ?? 0,
-    });
     clone.set({
-      left: active.left ?? 0,
-      top: active.top ?? 0,
+      left: targetLeft,
+      top: targetTop,
       evented: true,
       selectable: true,
     });
     clone.setCoords();
     canvas.add(clone);
+    this.ensureObjectWithinCanvas(clone);
     canvas.setActiveObject(clone);
     canvas.requestRenderAll();
     this.updateSelectionState(true, clone);
     this.markUnsavedChange();
-    this.alertService.success('Ã–ÄŸe kopyalandÄ±.', 'KopyalandÄ±');
+
+    this.clipboardBasePosition = {
+      left: clone.left ?? targetLeft,
+      top: clone.top ?? targetTop,
+    };
+    this.clipboardObject = await clone.clone();
+    this.clipboardObject.set({
+      left: this.clipboardBasePosition.left,
+      top: this.clipboardBasePosition.top,
+      evented: true,
+      selectable: true,
+    });
+    this.resetClipboardOffset();
+
+    this.alertService.success('Kopya olusturuldu.', 'Kopyalandi');
   }
 
   async cutSelection(): Promise<void> {
@@ -1994,7 +2064,14 @@ private async renderPage(pageNumber: number): Promise<void> {
     this.clipboardObject.set({
       left: active.left ?? 0,
       top: active.top ?? 0,
+      evented: true,
+      selectable: true,
     });
+    this.clipboardBasePosition = {
+      left: active.left ?? 0,
+      top: active.top ?? 0,
+    };
+    this.resetClipboardOffset();
     this.selectionMenu.visible = false;
     this.hasSelection = false;
     canvas.remove(active);
@@ -2003,7 +2080,7 @@ private async renderPage(pageNumber: number): Promise<void> {
     this.updateSelectionState(false);
     this.markUnsavedChange();
     this.alertService.info(
-      'SeÃ§im panoya kesildi. YapÄ±ÅŸtÄ±rmak iÃ§in YapÄ±ÅŸtÄ±r seÃ§eneÄŸini kullanÄ±n.',
+      'Secim panoya kesildi. Yapistir secenegini kullanin.',
       'Kesildi'
     );
   }
@@ -2012,27 +2089,54 @@ private async renderPage(pageNumber: number): Promise<void> {
     const canvas = this.fabricCanvas;
     if (!canvas || !this.clipboardObject) {
       this.alertService.warning(
-        'Panoda yapÄ±ÅŸtÄ±rÄ±lacak Ã¶ÄŸe bulunamadÄ±.',
-        'Panoya EriÅŸim'
+        'Panoda yapistirilacak oge bulunamadi.',
+        'Panoya Erisim'
       );
       return;
     }
+
+    if (!this.clipboardBasePosition) {
+      this.clipboardBasePosition = {
+        left: this.clipboardObject.left ?? 0,
+        top: this.clipboardObject.top ?? 0,
+      };
+      this.resetClipboardOffset();
+    }
+
+    const offset = this.getNextClipboardOffset();
+    const base = this.clipboardBasePosition;
+    const targetLeft = base.left + offset.x;
+    const targetTop = base.top + offset.y;
+
     const clone = await this.clipboardObject.clone();
-    const left = this.clipboardObject.left ?? 0;
-    const top = this.clipboardObject.top ?? 0;
     clone.set({
-      left,
-      top,
+      left: targetLeft,
+      top: targetTop,
       evented: true,
       selectable: true,
     });
     clone.setCoords();
     canvas.add(clone);
+    this.ensureObjectWithinCanvas(clone);
     canvas.setActiveObject(clone);
     canvas.requestRenderAll();
     this.updateSelectionState(true, clone);
     this.markUnsavedChange();
-    this.alertService.success('Ã–ÄŸe yapÄ±ÅŸtÄ±rÄ±ldÄ±.', 'YapÄ±ÅŸtÄ±rÄ±ldÄ±');
+
+    this.clipboardBasePosition = {
+      left: clone.left ?? targetLeft,
+      top: clone.top ?? targetTop,
+    };
+    this.clipboardObject = await clone.clone();
+    this.clipboardObject.set({
+      left: this.clipboardBasePosition.left,
+      top: this.clipboardBasePosition.top,
+      evented: true,
+      selectable: true,
+    });
+    this.resetClipboardOffset();
+
+    this.alertService.success('Yapistirma tamamlandi.', 'Yapistirildi');
   }
 
   deleteSelection(): void {
