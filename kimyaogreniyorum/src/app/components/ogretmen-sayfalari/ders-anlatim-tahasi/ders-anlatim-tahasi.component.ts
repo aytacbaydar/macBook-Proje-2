@@ -145,27 +145,15 @@ export class DersAnlatimTahasiComponent
     showCrop: false,
     showPaste: false,
   };
-  private brandingLogoImage?: HTMLImageElement | null;
-  private brandingLogoPromise?: Promise<HTMLImageElement | null>;
-  readonly brandingTeacherName = 'Ayta\u00E7 Baydar';
-  readonly brandingTeacherRole = 'Kimya \u00D6\u011Fretmeni';
-  private readonly brandingLogoSrc = 'assets/images/logo-turuncu.png';
+  private brandingTextureImage?: HTMLImageElement | null;
+  private brandingTexturePromise?: Promise<HTMLImageElement | null>;
+  private readonly brandingTextureSrc = 'assets/images/kagit.png';
 
   clipboardObject?: fabric.FabricObject;
   private clipboardBasePosition: { left: number; top: number } | null = null;
   private clipboardNextOffset = { x: 32, y: 32 };
   private readonly clipboardOffsetStep = 32;
   private readonly clipboardOffsetMax = 160;
-
-  get brandingSubjectText(): string {
-    return this.getHeaderSubjectText();
-  }
-
-  get brandingPageLabel(): string {
-    const totalPages = this.totalPages > 0 ? this.totalPages : 1;
-    const currentPage = this.totalPages > 0 ? Math.min(Math.max(this.currentPage, 1), totalPages) : 1;
-    return `Sayfa ${currentPage} / ${totalPages}`;
-  }
 
   private baseDisplaySize = { width: 0, height: 0 };
   private toolbarSize = { width: 0, height: 0 };
@@ -2185,9 +2173,6 @@ private async renderPage(pageNumber: number): Promise<void> {
     } else if (this.annotationCanvas?.nativeElement) {
       drawScaledCanvas(this.annotationCanvas.nativeElement);
     }
-    if (shouldRenderBranding) {
-      this.drawBrandingOverlay(ctx, out.width, out.height, pageNumber, totalPages);
-    }
     return {
       dataUrl: out.toDataURL('image/png'),
       width: out.width,
@@ -2211,264 +2196,45 @@ private async renderPage(pageNumber: number): Promise<void> {
     width: number,
     height: number
   ): Promise<void> {
-    const logo = await this.loadBrandingLogo();
-    if (!logo) {
+    const texture = await this.loadBrandingTexture();
+    if (!texture) {
       return;
     }
 
-    const desiredSize = 300;
-    const drawSize = Math.min(desiredSize, width, height);
-    const logoX = (width - drawSize) / 2;
-    const logoY = (height - drawSize) / 2;
-
     ctx.save();
-    ctx.globalAlpha = 0.32;
-    ctx.drawImage(logo, logoX, logoY, drawSize, drawSize);
+    ctx.globalAlpha = 1;
+    ctx.drawImage(texture, 0, 0, texture.width, texture.height, 0, 0, width, height);
     ctx.restore();
   }
 
-  private getHeaderSubjectText(): string {
-    const konu = (this.secilenKonu ?? '').trim();
-    const alt = (this.secilenAltKonu ?? '').trim();
-    const parts: string[] = [];
-    if (konu) {
-      parts.push(konu);
-    }
-    if (alt) {
-      const konuLower = konu ? konu.toLocaleLowerCase('tr-TR') : '';
-      const altLower = alt.toLocaleLowerCase('tr-TR');
-      if (!konuLower || altLower !== konuLower) {
-        parts.push(alt);
-      }
-    }
-    const label = parts.join(' / ');
-    if (label) {
-      return label.toLocaleUpperCase('tr-TR');
-    }
-    return 'KONU BELIRTILMEDI';
-  }
-
-  private drawBrandingOverlay(
-    ctx: CanvasRenderingContext2D,
-    width: number,
-    height: number,
-    pageNumber: number,
-    totalPages: number
-  ): void {
-    const pxPerMm = height / 297;
-    const horizontalMargin = Math.round(pxPerMm * 12);
-    const topMargin = Math.round(pxPerMm * 18);
-    const elementGap = Math.max(20, Math.round(pxPerMm * 4));
-    const subjectText = this.getHeaderSubjectText();
-    const subjectLabelText = 'DERS KONUSU';
-
-    const outlineWidth = Math.max(1, Math.round(pxPerMm * 0.35));
-    const subjectPaddingX = Math.max(16, Math.round(pxPerMm * 6));
-    const subjectPaddingY = Math.max(12, Math.round(pxPerMm * 4));
-    const subjectInnerGap = Math.max(8, Math.round(pxPerMm * 2.2));
-    const teacherPaddingX = Math.max(18, Math.round(pxPerMm * 6.4));
-    const teacherPaddingY = Math.max(14, Math.round(pxPerMm * 4.4));
-    const teacherInnerGap = Math.max(6, Math.round(pxPerMm * 1.8));
-    const footerFontSize = Math.max(12, Math.round(pxPerMm * 3.6));
-
-    const drawRoundedRect = (
-      x: number,
-      y: number,
-      w: number,
-      h: number,
-      radius: number,
-      fill: CanvasGradient | string,
-      stroke: string,
-      strokeWidth: number,
-      shadow?: string
-    ) => {
-      const resolvedRadius = Math.min(radius, w / 2, h / 2);
-      ctx.save();
-      if (shadow) {
-        ctx.shadowColor = shadow;
-        ctx.shadowBlur = Math.round(Math.max(12, h * 0.45));
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = Math.round(Math.max(6, h * 0.24));
-      }
-      ctx.beginPath();
-      ctx.moveTo(x + resolvedRadius, y);
-      ctx.arcTo(x + w, y, x + w, y + h, resolvedRadius);
-      ctx.arcTo(x + w, y + h, x, y + h, resolvedRadius);
-      ctx.arcTo(x, y + h, x, y, resolvedRadius);
-      ctx.arcTo(x, y, x + w, y, resolvedRadius);
-      ctx.closePath();
-      if (fill && fill !== 'transparent') {
-        ctx.fillStyle = fill;
-        ctx.fill();
-      }
-      if (strokeWidth > 0) {
-        ctx.lineWidth = strokeWidth;
-        ctx.strokeStyle = stroke;
-        ctx.stroke();
-      }
-      ctx.restore();
-    };
-
-    // Subject card
-    const subjectLabelFont = Math.max(11, Math.round(pxPerMm * 3.2));
-    const subjectValueFont = Math.max(16, Math.round(pxPerMm * 5.1));
-    ctx.save();
-    ctx.font = `600 ${subjectLabelFont}px "Segoe UI", "Helvetica Neue", Arial, sans-serif`;
-    const subjectLabelWidth = ctx.measureText(subjectLabelText).width;
-    ctx.font = `700 ${subjectValueFont}px "Segoe UI", "Helvetica Neue", Arial, sans-serif`;
-    const subjectValueWidth = ctx.measureText(subjectText).width;
-    const subjectCardWidth =
-      Math.max(subjectLabelWidth, subjectValueWidth) + subjectPaddingX * 2;
-    const subjectCardHeight =
-      subjectLabelFont + subjectValueFont + subjectInnerGap + subjectPaddingY * 2;
-    const subjectX = horizontalMargin;
-    const subjectY = topMargin;
-    drawRoundedRect(
-      subjectX,
-      subjectY,
-      subjectCardWidth,
-      subjectCardHeight,
-      Math.min(32, subjectCardHeight / 2),
-      'rgba(15, 23, 42, 0.92)',
-      'rgba(148, 163, 184, 0.25)',
-      outlineWidth,
-      'rgba(15, 23, 42, 0.38)'
-    );
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'top';
-    ctx.font = `600 ${subjectLabelFont}px "Segoe UI", "Helvetica Neue", Arial, sans-serif`;
-    ctx.fillStyle = 'rgba(226, 232, 240, 0.72)';
-    ctx.fillText(
-      subjectLabelText,
-      subjectX + subjectPaddingX,
-      subjectY + subjectPaddingY
-    );
-    ctx.font = `700 ${subjectValueFont}px "Segoe UI", "Helvetica Neue", Arial, sans-serif`;
-    ctx.fillStyle = '#f8fafc';
-    ctx.fillText(
-      subjectText,
-      subjectX + subjectPaddingX,
-      subjectY + subjectPaddingY + subjectLabelFont + subjectInnerGap
-    );
-    ctx.restore();
-
-    // Teacher card
-    const teacherNameFont = Math.max(18, Math.round(pxPerMm * 5.8));
-    const teacherRoleFont = Math.max(12, Math.round(pxPerMm * 3.6));
-    const teacherRoleText = this.brandingTeacherRole.toLocaleUpperCase('tr-TR');
-    ctx.save();
-    ctx.font = `700 ${teacherNameFont}px "Segoe UI", "Helvetica Neue", Arial, sans-serif`;
-    const teacherNameWidth = ctx.measureText(this.brandingTeacherName).width;
-    ctx.font = `600 ${teacherRoleFont}px "Segoe UI", "Helvetica Neue", Arial, sans-serif`;
-    const teacherRoleWidth = ctx.measureText(teacherRoleText).width;
-    const teacherCardWidth =
-      Math.max(teacherNameWidth, teacherRoleWidth) + teacherPaddingX * 2;
-    const teacherCardHeight =
-      teacherNameFont + teacherRoleFont + teacherInnerGap + teacherPaddingY * 2;
-    const teacherX = width - horizontalMargin - teacherCardWidth;
-    let teacherY = topMargin;
-    if (subjectX + subjectCardWidth + elementGap > teacherX) {
-      teacherY = subjectY + subjectCardHeight + elementGap;
-    }
-    const teacherGradient = ctx.createLinearGradient(
-      teacherX,
-      teacherY,
-      teacherX + teacherCardWidth,
-      teacherY + teacherCardHeight
-    );
-    teacherGradient.addColorStop(0, '#ff8a05');
-    teacherGradient.addColorStop(1, '#ff512f');
-    drawRoundedRect(
-      teacherX,
-      teacherY,
-      teacherCardWidth,
-      teacherCardHeight,
-      Math.min(34, teacherCardHeight / 2),
-      teacherGradient,
-      'rgba(255, 255, 255, 0.18)',
-      outlineWidth,
-      'rgba(255, 81, 47, 0.28)'
-    );
-    ctx.textAlign = 'right';
-    ctx.textBaseline = 'top';
-    const teacherTextX = teacherX + teacherCardWidth - teacherPaddingX;
-    const teacherTextY = teacherY + teacherPaddingY;
-    ctx.font = `700 ${teacherNameFont}px "Segoe UI", "Helvetica Neue", Arial, sans-serif`;
-    ctx.fillStyle = '#ffffff';
-    ctx.fillText(this.brandingTeacherName, teacherTextX, teacherTextY);
-    ctx.font = `600 ${teacherRoleFont}px "Segoe UI", "Helvetica Neue", Arial, sans-serif`;
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.82)';
-    ctx.fillText(
-      teacherRoleText,
-      teacherTextX,
-      teacherTextY + teacherNameFont + teacherInnerGap
-    );
-    ctx.restore();
-
-    const pageLabel =
-      totalPages && totalPages > 0
-        ? `Sayfa ${pageNumber} / ${totalPages}`
-        : `Sayfa ${pageNumber}`;
-
-    ctx.save();
-    ctx.font = `700 ${footerFontSize}px "Segoe UI", "Helvetica Neue", Arial, sans-serif`;
-    const pageTextMetrics = ctx.measureText(pageLabel);
-    const pagePaddingX = Math.max(18, Math.round(pxPerMm * 6));
-    const pagePaddingY = Math.max(8, Math.round(pxPerMm * 2.6));
-    const pageWidth = pageTextMetrics.width + pagePaddingX * 2;
-    const pageHeight = footerFontSize + pagePaddingY * 2;
-    const pageX = (width - pageWidth) / 2;
-    const bottomMargin = Math.round(pxPerMm * 26);
-    const pageY = height - bottomMargin - pageHeight;
-    const pageGradient = ctx.createLinearGradient(pageX, pageY, pageX + pageWidth, pageY + pageHeight);
-    pageGradient.addColorStop(0, 'rgba(255, 138, 5, 0.18)');
-    pageGradient.addColorStop(1, 'rgba(255, 81, 47, 0.28)');
-    drawRoundedRect(
-      pageX,
-      pageY,
-      pageWidth,
-      pageHeight,
-      Math.min(pageHeight, 999),
-      pageGradient,
-      'rgba(255, 102, 0, 0.45)',
-      Math.max(1, Math.round(pxPerMm * 0.4)),
-      'rgba(255, 81, 47, 0.2)'
-    );
-    ctx.fillStyle = '#ff5c28';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(pageLabel, pageX + pageWidth / 2, pageY + pageHeight / 2);
-    ctx.restore();
-  }
-
-  private async loadBrandingLogo(): Promise<HTMLImageElement | null> {
-    if (this.brandingLogoImage) {
-      return this.brandingLogoImage;
+  private async loadBrandingTexture(): Promise<HTMLImageElement | null> {
+    if (this.brandingTextureImage) {
+      return this.brandingTextureImage;
     }
 
-    if (this.brandingLogoImage === null) {
+    if (this.brandingTextureImage === null) {
       return null;
     }
 
-    if (!this.brandingLogoPromise) {
-      this.brandingLogoPromise = new Promise((resolve) => {
+    if (!this.brandingTexturePromise) {
+      this.brandingTexturePromise = new Promise((resolve) => {
         const img = new Image();
         img.crossOrigin = 'anonymous';
         img.onload = () => {
-          this.brandingLogoImage = img;
+          this.brandingTextureImage = img;
           resolve(img);
         };
         img.onerror = () => {
-          console.error('[PDF::loadBrandingLogo] Logo could not be loaded');
-          this.brandingLogoImage = null;
+          console.error('[PDF::loadBrandingTexture] Texture could not be loaded');
+          this.brandingTextureImage = null;
           resolve(null);
         };
-        img.src = this.brandingLogoSrc;
+        img.src = this.brandingTextureSrc;
       });
     }
 
-    await this.brandingLogoPromise;
-    return this.brandingLogoImage ?? null;
+    await this.brandingTexturePromise;
+    return this.brandingTextureImage ?? null;
   }
 
   private triggerFileDownload(bytes: Uint8Array, fileName: string): void {
