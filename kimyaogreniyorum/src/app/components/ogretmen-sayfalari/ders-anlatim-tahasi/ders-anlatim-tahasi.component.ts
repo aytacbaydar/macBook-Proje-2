@@ -1823,9 +1823,8 @@ private async renderPage(pageNumber: number): Promise<void> {
   // A4 olcileri (point)
   const A4_WIDTH_PT = 595.28;
   const A4_HEIGHT_PT = 841.89;
-  const SAFE_MARGIN_PT = 24;
-  const MAX_DRAW_WIDTH = A4_WIDTH_PT - SAFE_MARGIN_PT * 2;
-  const MAX_DRAW_HEIGHT = A4_HEIGHT_PT - SAFE_MARGIN_PT * 2;
+  const MAX_DRAW_WIDTH = A4_WIDTH_PT;
+  const MAX_DRAW_HEIGHT = A4_HEIGHT_PT;
 
   for (const image of pageImages) {
     const imageBytes = this.dataUrlToUint8Array(image.dataUrl);
@@ -1842,10 +1841,9 @@ private async renderPage(pageNumber: number): Promise<void> {
 
     const drawWidth = sourceWidth * scale;
     const drawHeight = sourceHeight * scale;
-    const x = (A4_WIDTH_PT - drawWidth) / 2;
-    const y = (A4_HEIGHT_PT - drawHeight) / 2;
-
     const page = pdfDoc.addPage([A4_WIDTH_PT, A4_HEIGHT_PT]);
+    const x = Math.max(0, (A4_WIDTH_PT - drawWidth) / 2);
+    const y = Math.max(0, (A4_HEIGHT_PT - drawHeight) / 2);
     page.drawImage(embedded, {
       x,
       y,
@@ -2121,7 +2119,7 @@ private async renderPage(pageNumber: number): Promise<void> {
 
   private async combineCurrentPageToDataUrl(
     pageNumber: number,
-    totalPages: number
+    _totalPages: number
   ): Promise<{
     dataUrl: string;
     width: number;
@@ -2173,6 +2171,9 @@ private async renderPage(pageNumber: number): Promise<void> {
     } else if (this.annotationCanvas?.nativeElement) {
       drawScaledCanvas(this.annotationCanvas.nativeElement);
     }
+    if (shouldRenderBranding) {
+      this.drawBrandingOverlay(ctx, out.width, out.height, pageNumber);
+    }
     return {
       dataUrl: out.toDataURL('image/png'),
       width: out.width,
@@ -2204,6 +2205,30 @@ private async renderPage(pageNumber: number): Promise<void> {
     ctx.save();
     ctx.globalAlpha = 1;
     ctx.drawImage(texture, 0, 0, texture.width, texture.height, 0, 0, width, height);
+    ctx.restore();
+  }
+
+  private drawBrandingOverlay(
+    ctx: CanvasRenderingContext2D,
+    width: number,
+    height: number,
+    pageNumber: number
+  ): void {
+    const pxPerMm = height / 297;
+    const bottomMargin = Math.round(pxPerMm * 5);
+    const fontSize = Math.max(16, Math.round(pxPerMm * 4.8));
+    const positionY = height - bottomMargin;
+
+    ctx.save();
+    ctx.font = `700 ${fontSize}px "Segoe UI", "Helvetica Neue", Arial, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = 'rgba(17, 24, 39, 0.45)';
+    ctx.shadowBlur = Math.round(Math.max(6, fontSize * 0.35));
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = Math.round(Math.max(2, fontSize * 0.12));
+    ctx.fillText(String(pageNumber), width / 2, positionY);
     ctx.restore();
   }
 
