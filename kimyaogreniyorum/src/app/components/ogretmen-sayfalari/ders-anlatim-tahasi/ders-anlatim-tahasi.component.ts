@@ -82,6 +82,7 @@ export class DersAnlatimTahasiComponent
   attendanceModalOpen = false;
   toolbarCollapsed = false;
   toolbarPosition = { top: 16, left: 16 };
+  private toolbarPositionInitialized = false;
   toolbarMenuOpen = false;
   activeToolbarTab: ToolbarTabId = 'dosya';
   readonly dersAnlatimApiBase = './server/database/ders-anlatimi';
@@ -355,7 +356,12 @@ export class DersAnlatimTahasiComponent
         width: rect.width,
         height: rect.height,
       };
-      this.clampToolbarWithinViewport();
+      if (!this.toolbarPositionInitialized) {
+        this.positionToolbarAtCenter();
+        this.toolbarPositionInitialized = true;
+      } else {
+        this.clampToolbarWithinViewport();
+      }
     };
     if ('requestAnimationFrame' in window) {
       window.requestAnimationFrame(update);
@@ -375,6 +381,23 @@ export class DersAnlatimTahasiComponent
     const maxTop = Math.max(margin, window.innerHeight - height - margin);
     this.toolbarPosition.left = this.clamp(this.toolbarPosition.left, margin, maxLeft);
     this.toolbarPosition.top = this.clamp(this.toolbarPosition.top, margin, maxTop);
+  }
+
+  private positionToolbarAtCenter(): void {
+    if (typeof window === 'undefined') {
+      this.toolbarPosition.left = 0;
+      this.toolbarPosition.top = 0;
+      return;
+    }
+    const margin = this.toolbarMargin;
+    const width = this.toolbarSize.width || 1;
+    const height = this.toolbarSize.height || 1;
+    const maxLeft = Math.max(margin, window.innerWidth - width - margin);
+    const maxTop = Math.max(margin, window.innerHeight - height - margin);
+    const desiredLeft = (window.innerWidth - width) / 2;
+    const desiredTop = (window.innerHeight - height) / 2;
+    this.toolbarPosition.left = this.clamp(desiredLeft, margin, maxLeft);
+    this.toolbarPosition.top = this.clamp(desiredTop, margin, maxTop);
   }
 
   private finishToolbarDrag(): void {
@@ -2071,7 +2094,7 @@ private async renderPage(pageNumber: number): Promise<void> {
   ): void {
     const pxPerMm = height / 297;
     const horizontalMargin = Math.round(pxPerMm * 10);
-    const headerTop = Math.round(pxPerMm * 15);
+    const headerTextTop = Math.round(pxPerMm * 15);
     const teacherFontSize = 30;
     const subjectFontSize = Math.max(18, Math.round(teacherFontSize * 0.65));
     const footerFontSize = Math.max(12, Math.round(pxPerMm * 4.2));
@@ -2124,7 +2147,7 @@ private async renderPage(pageNumber: number): Promise<void> {
     const subjectCapsuleWidth = subjectMetrics.width + subjectPaddingX * 2;
     const subjectCapsuleHeight = subjectFontSize + subjectPaddingY * 2;
     const subjectX = horizontalMargin;
-    const subjectY = headerTop;
+    const subjectY = Math.max(0, headerTextTop - subjectPaddingY);
     drawCapsule(
       subjectX,
       subjectY,
@@ -2136,12 +2159,12 @@ private async renderPage(pageNumber: number): Promise<void> {
       'rgba(15, 23, 42, 0.25)'
     );
     ctx.fillStyle = '#f8fafc';
-    ctx.textBaseline = 'middle';
+    ctx.textBaseline = 'top';
     ctx.textAlign = 'left';
     ctx.fillText(
       subjectText,
       subjectX + subjectPaddingX,
-      subjectY + subjectCapsuleHeight / 2
+      subjectY + subjectPaddingY
     );
 
     ctx.font = `700 ${teacherFontSize}px "Segoe UI", "Helvetica Neue", Arial, sans-serif`;
@@ -2149,7 +2172,7 @@ private async renderPage(pageNumber: number): Promise<void> {
     const teacherCapsuleWidth = teacherMetrics.width + teacherPaddingX * 2;
     const teacherCapsuleHeight = teacherFontSize + teacherPaddingY * 2;
     const teacherX = width - horizontalMargin - teacherCapsuleWidth;
-    const teacherY = headerTop;
+    const teacherY = Math.max(0, headerTextTop - teacherPaddingY);
     drawCapsule(
       teacherX,
       teacherY,
@@ -2162,10 +2185,11 @@ private async renderPage(pageNumber: number): Promise<void> {
     );
     ctx.fillStyle = '#ff6600';
     ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
     ctx.fillText(
       this.brandingHeaderText,
       teacherX + teacherPaddingX,
-      teacherY + teacherCapsuleHeight / 2
+      teacherY + teacherPaddingY
     );
     ctx.restore();
 
@@ -2852,8 +2876,6 @@ private async renderPage(pageNumber: number): Promise<void> {
     };
   }
 }
-
-
 
 
 
