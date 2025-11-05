@@ -57,6 +57,7 @@ export class DersAnlatimTahasiComponent
   readonly penColorOptions = ['#000000', '#0000FF', '#FF0000', '#008000'];
   readonly penSizeOptions = [2, 3, 4, 5, 6, 8, 10, 12, 14, 16];
   readonly eraserSizeOptions = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32];
+  private readonly defaultDisplaySize = { width: 794, height: 1123 }; // A4 portrait at ~96 DPI
   zoomLevel = 1;
   readonly minZoom = 0.5;
   readonly maxZoom = 3;
@@ -977,17 +978,19 @@ export class DersAnlatimTahasiComponent
   }
 
   private setBaseDisplaySize(width: number, height: number): void {
-    if (
-      !Number.isFinite(width) ||
-      !Number.isFinite(height) ||
-      width <= 0 ||
-      height <= 0
-    ) {
+    if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) {
+      this.baseDisplaySize = { ...this.defaultDisplaySize };
+      this.applyZoom();
       return;
     }
+
+    const targetWidth = this.defaultDisplaySize.width;
+    const targetHeight = this.defaultDisplaySize.height;
+    const scale = Math.min(targetWidth / width, targetHeight / height) || 1;
+
     this.baseDisplaySize = {
-      width,
-      height,
+      width: Math.round(width * scale),
+      height: Math.round(height * scale),
     };
     this.applyZoom();
   }
@@ -1018,6 +1021,14 @@ export class DersAnlatimTahasiComponent
       annotationEl.style.height = `${height}px`;
       annotationEl.style.maxWidth = 'none';
       annotationEl.style.maxHeight = 'none';
+    }
+
+    const containerEl = this.pdfContainer?.nativeElement;
+    if (containerEl) {
+      containerEl.style.width = `${width}px`;
+      containerEl.style.height = `${height}px`;
+      containerEl.style.maxWidth = 'none';
+      containerEl.style.maxHeight = 'none';
     }
 
     if (this.fabricCanvas) {
@@ -1359,12 +1370,12 @@ private async renderPage(pageNumber: number): Promise<void> {
 
       const cssWidth = viewport.width / deviceScale;
       const cssHeight = viewport.height / deviceScale;
-      const containerWidth =
-        this.pdfContainer?.nativeElement.clientWidth ?? cssWidth;
-      const fitScale =
-        containerWidth > 0 ? containerWidth / cssWidth : 1;
-      const baseDisplayWidth = cssWidth * fitScale;
-      const baseDisplayHeight = cssHeight * fitScale;
+      const targetWidth = this.defaultDisplaySize.width;
+      const targetHeight = this.defaultDisplaySize.height;
+      const scaleToTarget =
+        Math.min(targetWidth / cssWidth, targetHeight / cssHeight) || 1;
+      const baseDisplayWidth = Math.round(cssWidth * scaleToTarget);
+      const baseDisplayHeight = Math.round(cssHeight * scaleToTarget);
 
       const renderContext = {
         canvasContext: pdfCtx,
@@ -1821,13 +1832,8 @@ private async renderPage(pageNumber: number): Promise<void> {
     pdfCanvasEl: HTMLCanvasElement,
     pdfCtx: CanvasRenderingContext2D
   ): void {
-    const containerWidth =
-      this.pdfContainer?.nativeElement.clientWidth ??
-      pdfCanvasEl.parentElement?.clientWidth ??
-      window.innerWidth ??
-      900;
-    const width = Math.max(720, Math.round(containerWidth));
-    const height = Math.round(width * 1.414); // A4 oranâ”€â–’
+    const width = this.defaultDisplaySize.width;
+    const height = this.defaultDisplaySize.height;
 
     pdfCanvasEl.width = width;
     pdfCanvasEl.height = height;
@@ -2894,11 +2900,6 @@ private async renderPage(pageNumber: number): Promise<void> {
     };
   }
 }
-
-
-
-
-
 
 
 
