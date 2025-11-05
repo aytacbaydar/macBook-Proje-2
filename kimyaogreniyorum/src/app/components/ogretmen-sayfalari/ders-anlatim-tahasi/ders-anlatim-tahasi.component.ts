@@ -2031,7 +2031,7 @@ private async renderPage(pageNumber: number): Promise<void> {
     const logoY = (height - drawSize) / 2;
 
     ctx.save();
-    ctx.globalAlpha = 0.9;
+    ctx.globalAlpha = 0.5;
     ctx.drawImage(logo, logoX, logoY, drawSize, drawSize);
     ctx.restore();
   }
@@ -2066,42 +2066,117 @@ private async renderPage(pageNumber: number): Promise<void> {
   ): void {
     const pxPerMm = height / 297;
     const margin = Math.round(pxPerMm * 10);
+    const headerTopOffset = Math.max(Math.round(pxPerMm * 4), margin - Math.round(pxPerMm * 3));
     const teacherFontSize = 30;
     const subjectFontSize = Math.max(18, Math.round(teacherFontSize * 0.65));
     const footerFontSize = Math.max(12, Math.round(pxPerMm * 4.2));
     const headerGap = Math.max(12, Math.round(pxPerMm * 2));
-    const footerGap = Math.max(8, Math.round(pxPerMm * 1.2));
     const subjectText = this.getHeaderSubjectText();
 
-    const headerTop = margin;
-    const headerTextHeight = Math.max(teacherFontSize, subjectFontSize);
-    const headerLineY = headerTop + headerTextHeight + headerGap;
+    const headerTop = headerTopOffset;
+    const subjectPaddingX = Math.max(16, Math.round(pxPerMm * 4));
+    const subjectPaddingY = Math.max(10, Math.round(pxPerMm * 2.4));
+    const teacherPaddingX = Math.max(20, Math.round(pxPerMm * 4.8));
+    const teacherPaddingY = Math.max(12, Math.round(pxPerMm * 3));
+
+    const drawCapsule = (
+      x: number,
+      y: number,
+      w: number,
+      h: number,
+      fill: string,
+      stroke: string,
+      strokeWidth: number,
+      shadow?: string
+    ) => {
+      const radius = Math.min(Math.max(16, h / 2), Math.min(w / 2, h / 2));
+      ctx.save();
+      if (shadow) {
+        ctx.shadowColor = shadow;
+        ctx.shadowBlur = Math.round(Math.max(12, h * 0.4));
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = Math.round(Math.max(6, h * 0.2));
+      }
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.arcTo(x + w, y, x + w, y + h, radius);
+      ctx.arcTo(x + w, y + h, x, y + h, radius);
+      ctx.arcTo(x, y + h, x, y, radius);
+      ctx.arcTo(x, y, x + w, y, radius);
+      ctx.closePath();
+      ctx.fillStyle = fill;
+      ctx.fill();
+      if (strokeWidth > 0) {
+        ctx.lineWidth = strokeWidth;
+        ctx.strokeStyle = stroke;
+        ctx.stroke();
+      }
+      ctx.restore();
+    };
 
     ctx.save();
     ctx.font = `600 ${subjectFontSize}px "Segoe UI", "Helvetica Neue", Arial, sans-serif`;
-    ctx.textBaseline = 'top';
+    const subjectMetrics = ctx.measureText(subjectText);
+    const subjectCapsuleWidth = subjectMetrics.width + subjectPaddingX * 2;
+    const subjectCapsuleHeight = subjectFontSize + subjectPaddingY * 2;
+    const subjectX = margin;
+    const subjectY = headerTop;
+    drawCapsule(
+      subjectX,
+      subjectY,
+      subjectCapsuleWidth,
+      subjectCapsuleHeight,
+      'rgba(15, 23, 42, 0.92)',
+      'transparent',
+      0,
+      'rgba(15, 23, 42, 0.25)'
+    );
+    ctx.fillStyle = '#f8fafc';
+    ctx.textBaseline = 'middle';
     ctx.textAlign = 'left';
-    ctx.fillStyle = '#0f172a';
-    ctx.fillText(subjectText, margin, headerTop);
+    ctx.fillText(
+      subjectText,
+      subjectX + subjectPaddingX,
+      subjectY + subjectCapsuleHeight / 2
+    );
 
     ctx.font = `700 ${teacherFontSize}px "Segoe UI", "Helvetica Neue", Arial, sans-serif`;
-    ctx.textAlign = 'right';
-    ctx.fillStyle = '#f97316';
-    ctx.fillText(this.brandingHeaderText, width - margin, headerTop);
+    const teacherMetrics = ctx.measureText(this.brandingHeaderText);
+    const teacherCapsuleWidth = teacherMetrics.width + teacherPaddingX * 2;
+    const teacherCapsuleHeight = teacherFontSize + teacherPaddingY * 2;
+    const teacherX = width - margin - teacherCapsuleWidth;
+    const teacherY = headerTop;
+    drawCapsule(
+      teacherX,
+      teacherY,
+      teacherCapsuleWidth,
+      teacherCapsuleHeight,
+      'rgba(255, 102, 0, 0.12)',
+      '#ff6600',
+      Math.max(2, Math.round(pxPerMm * 0.6)),
+      'rgba(255, 102, 0, 0.25)'
+    );
+    ctx.fillStyle = '#ff6600';
+    ctx.textAlign = 'left';
+    ctx.fillText(
+      this.brandingHeaderText,
+      teacherX + teacherPaddingX,
+      teacherY + teacherCapsuleHeight / 2
+    );
     ctx.restore();
 
     ctx.save();
     ctx.strokeStyle = 'rgba(148, 163, 184, 0.35)';
     ctx.lineWidth = 1;
     ctx.beginPath();
+    const headerLineY =
+      Math.max(subjectY + subjectCapsuleHeight, teacherY + teacherCapsuleHeight) + headerGap;
     ctx.moveTo(margin, headerLineY);
     ctx.lineTo(width - margin, headerLineY);
     ctx.stroke();
     ctx.restore();
 
-    const footerBaseline = height - margin;
-    const footerLineY = footerBaseline;
-    const footerTextBaseline = footerBaseline - footerGap;
+    const footerLineY = height - margin;
     const pageLabel =
       totalPages && totalPages > 0
         ? `Sayfa ${pageNumber} / ${totalPages}`
@@ -2115,11 +2190,30 @@ private async renderPage(pageNumber: number): Promise<void> {
     ctx.lineTo(width - margin, footerLineY);
     ctx.stroke();
 
-    ctx.font = `500 ${footerFontSize}px "Segoe UI", "Helvetica Neue", Arial, sans-serif`;
+    ctx.font = `600 ${footerFontSize}px "Segoe UI", "Helvetica Neue", Arial, sans-serif`;
+    const pageTextMetrics = ctx.measureText(pageLabel);
+    const pagePaddingX = Math.max(14, Math.round(pxPerMm * 3.5));
+    const pagePaddingY = Math.max(8, Math.round(pxPerMm * 2));
+    const pageCapsuleWidth = pageTextMetrics.width + pagePaddingX * 2;
+    const pageCapsuleHeight = footerFontSize + pagePaddingY * 2;
+    const bottomSafeOffset = Math.max(Math.round(pxPerMm * 6), Math.ceil(pageCapsuleHeight / 2) + 4);
+    const pageCapsuleX = (width - pageCapsuleWidth) / 2;
+    const pageCapsuleY = height - bottomSafeOffset - pageCapsuleHeight;
+
+    drawCapsule(
+      pageCapsuleX,
+      pageCapsuleY,
+      pageCapsuleWidth,
+      pageCapsuleHeight,
+      'rgba(255, 102, 0, 0.12)',
+      '#ff6600',
+      Math.max(2, Math.round(pxPerMm * 0.6))
+    );
+
+    ctx.fillStyle = '#ff6600';
     ctx.textAlign = 'center';
-    ctx.textBaseline = 'bottom';
-    ctx.fillStyle = '#475569';
-    ctx.fillText(pageLabel, width / 2, footerTextBaseline);
+    ctx.textBaseline = 'middle';
+    ctx.fillText(pageLabel, width / 2, pageCapsuleY + pageCapsuleHeight / 2);
     ctx.restore();
   }
 
@@ -2758,8 +2852,6 @@ private async renderPage(pageNumber: number): Promise<void> {
     };
   }
 }
-
-
 
 
 
