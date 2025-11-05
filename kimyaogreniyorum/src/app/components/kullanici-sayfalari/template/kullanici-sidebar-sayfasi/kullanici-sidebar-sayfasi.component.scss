@@ -4,16 +4,16 @@
   top: 0;
   height: 100vh;
   width: 220px;
-  background: #29303c;
+  background: #ffffff;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.15);
   z-index: 1000;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 
   &.collapsed {
-    width: 50px;
+    width: 55px;
 
     .logo-text,
     .user-info,
@@ -186,7 +186,9 @@
   gap: 15px;
   padding: 14px 16px;
   margin-bottom: 6px;
-  color: rgba(255, 255, 255, 0.7);
+  margin-right: 6px;
+  margin-left: 6px;
+  color: rgba(24, 32, 40, 0.7);
   text-decoration: none;
   border-radius: 10px;
   transition: all 0.3s ease;
@@ -208,9 +210,9 @@
   }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    transform: translateX(4px);
+    background: rgba(190, 190, 190, 0.929);
+    color: rgb(27, 43, 62);
+    // transform: translateX(4px);
   }
 
   &.active {
@@ -292,9 +294,9 @@
   justify-content: center;
   gap: 12px;
   padding: 14px 16px;
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #fca5a5;
+  background: #ff6600;
+  border: 1px solid rgba(30, 47, 61, 0.789);
+  color: #ffffff;
   border-radius: 10px;
   cursor: pointer;
   font-size: 15px;
@@ -302,11 +304,11 @@
   transition: all 0.3s ease;
 
   &:hover {
-    background: rgba(239, 68, 68, 0.2);
-    border-color: rgba(239, 68, 68, 0.5);
+    background: rgb(31, 31, 44);
+    border-color: rgb(27, 29, 48);
     color: #fef2f2;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    box-shadow: 0 4px 12px rgba(161, 161, 161, 0.3);
   }
 
   i {
