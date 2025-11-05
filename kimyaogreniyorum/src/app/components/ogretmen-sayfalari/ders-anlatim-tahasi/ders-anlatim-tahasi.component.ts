@@ -11,7 +11,7 @@ type PdfTool = 'select' | 'pen' | 'highlighter' | 'eraser';
 type BackgroundMode = 'plain' | 'grid' | 'lined';
 type FabricCanvasJSON = ReturnType<fabric.Canvas['toJSON']>;
 type OgrenciGruplariResponse = { success: boolean; data?: unknown; message?: string };
-type ToolbarTabId = 'dosya' | 'kaydet' | 'duzenle' | 'sekiller' | 'cizgiler';
+type ToolbarTabId = 'dosya' | 'kaydet' | 'duzenle' | 'sekiller';
 type PageImage = { page: number; dataUrl: string; width: number; height: number };
 type FabricPathCreatedEvent = fabric.TEvent<fabric.TPointerEvent> & { path?: fabric.FabricObject };
 type FabricSelectionEvent = fabric.TEvent<fabric.TPointerEvent> & {
@@ -76,7 +76,6 @@ export class DersAnlatimTahasiComponent
     { id: 'kaydet', label: 'Kaydet' },
     { id: 'duzenle', label: 'Düzenle' },
     { id: 'sekiller', label: 'Şekiller' },
-    { id: 'cizgiler', label: 'Çizgiler' },
   ];
 
   readonly toolbarTabIcons: Record<ToolbarTabId, string> = {
@@ -84,7 +83,6 @@ export class DersAnlatimTahasiComponent
     kaydet: 'bi-cloud-arrow-down',
     duzenle: 'bi-sliders',
     sekiller: 'bi-shapes',
-    cizgiler: 'bi-brush',
   };
   kaydetPanelMode: 'lesson' | 'attendance' = 'lesson';
   attendanceModalOpen = false;

@@ -326,64 +326,6 @@
               </button>
             </div>
 
-            <div class="pdf-toolbar__group pdf-toolbar__group--background">
-              <span class="toolbar-label">Arka plan</span>
-              <button
-                type="button"
-                class="btn-ikonlu"
-                (click)="setBackground('plain')"
-                [class.aktif]="backgroundMode === 'plain'"
-                [disabled]="!isBlankDocument"
-                title="Düz"
-              >
-                <i class="bi bi-square" aria-hidden="true"></i>
-                <span class="sr-only">D�z</span>
-              </button>
-              <button
-                type="button"
-                class="btn-ikonlu"
-                (click)="setBackground('grid')"
-                [class.aktif]="backgroundMode === 'grid'"
-                [disabled]="!isBlankDocument"
-                title="Kareli"
-              >
-                <i class="bi bi-grid-3x3-gap" aria-hidden="true"></i>
-                <span class="sr-only">Kareli</span>
-              </button>
-              <button
-                type="button"
-                class="btn-ikonlu"
-                (click)="setBackground('lined')"
-                [class.aktif]="backgroundMode === 'lined'"
-                [disabled]="!isBlankDocument"
-                title="�izgili"
-              >
-                <i class="bi bi-journal-text" aria-hidden="true"></i>
-                <span class="sr-only">�izgili</span>
-              </button>
-            </div>
-          </ng-container>
-          <ng-container *ngSwitchCase="'sekiller'">
-            <div class="pdf-toolbar__group">
-              <button type="button" class="btn-ikonlu" (click)="addShape('rectangle')" title="Dikdörtgen">
-                <i class="bi bi-square" aria-hidden="true"></i>
-                <span class="sr-only">Dikdörtgen</span>
-              </button>
-              <button type="button" class="btn-ikonlu" (click)="addShape('circle')" title="Daire">
-                <i class="bi bi-circle" aria-hidden="true"></i>
-                <span class="sr-only">Daire</span>
-              </button>
-              <button type="button" class="btn-ikonlu" (click)="addShape('triangle')" title="Üçgen">
-                <i class="bi bi-triangle" aria-hidden="true"></i>
-                <span class="sr-only">��gen</span>
-              </button>
-              <button type="button" class="btn-ikonlu" (click)="addArrow()" title="Ok">
-                <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
-                <span class="sr-only">Ok</span>
-              </button>
-            </div>
-          </ng-container>
-          <ng-container *ngSwitchCase="'cizgiler'">
             <div class="pdf-toolbar__group">
               <button
                 type="button"
@@ -455,6 +397,62 @@
                   <option *ngFor="let size of eraserSizeOptions" [value]="size">{{ size }} px</option>
                 </select>
               </div>
+            </div>
+            <div class="pdf-toolbar__group pdf-toolbar__group--background">
+              <span class="toolbar-label">Arka plan</span>
+              <button
+                type="button"
+                class="btn-ikonlu"
+                (click)="setBackground('plain')"
+                [class.aktif]="backgroundMode === 'plain'"
+                [disabled]="!isBlankDocument"
+                title="Düz"
+              >
+                <i class="bi bi-square" aria-hidden="true"></i>
+                <span class="sr-only">D�z</span>
+              </button>
+              <button
+                type="button"
+                class="btn-ikonlu"
+                (click)="setBackground('grid')"
+                [class.aktif]="backgroundMode === 'grid'"
+                [disabled]="!isBlankDocument"
+                title="Kareli"
+              >
+                <i class="bi bi-grid-3x3-gap" aria-hidden="true"></i>
+                <span class="sr-only">Kareli</span>
+              </button>
+              <button
+                type="button"
+                class="btn-ikonlu"
+                (click)="setBackground('lined')"
+                [class.aktif]="backgroundMode === 'lined'"
+                [disabled]="!isBlankDocument"
+                title="�izgili"
+              >
+                <i class="bi bi-journal-text" aria-hidden="true"></i>
+                <span class="sr-only">�izgili</span>
+              </button>
+            </div>
+          </ng-container>
+          <ng-container *ngSwitchCase="'sekiller'">
+            <div class="pdf-toolbar__group">
+              <button type="button" class="btn-ikonlu" (click)="addShape('rectangle')" title="Dikdörtgen">
+                <i class="bi bi-square" aria-hidden="true"></i>
+                <span class="sr-only">Dikdörtgen</span>
+              </button>
+              <button type="button" class="btn-ikonlu" (click)="addShape('circle')" title="Daire">
+                <i class="bi bi-circle" aria-hidden="true"></i>
+                <span class="sr-only">Daire</span>
+              </button>
+              <button type="button" class="btn-ikonlu" (click)="addShape('triangle')" title="Üçgen">
+                <i class="bi bi-triangle" aria-hidden="true"></i>
+                <span class="sr-only">��gen</span>
+              </button>
+              <button type="button" class="btn-ikonlu" (click)="addArrow()" title="Ok">
+                <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
+                <span class="sr-only">Ok</span>
+              </button>
             </div>
           </ng-container>
 
