@@ -1985,7 +1985,10 @@ private async renderPage(pageNumber: number): Promise<void> {
       return null;
     }
     ctx.drawImage(pdfCanvasEl, 0, 0);
-    await this.drawBrandingWatermark(ctx, out.width, out.height);
+    const shouldRenderBranding = this.blankDocument;
+    if (shouldRenderBranding) {
+      await this.drawBrandingWatermark(ctx, out.width, out.height);
+    }
     const lower = this.fabricCanvas?.lowerCanvasEl;
     const upper = this.fabricCanvas?.upperCanvasEl;
     if (lower) {
@@ -1996,7 +1999,9 @@ private async renderPage(pageNumber: number): Promise<void> {
     } else if (this.annotationCanvas?.nativeElement) {
       ctx.drawImage(this.annotationCanvas.nativeElement, 0, 0);
     }
-    this.drawBrandingOverlay(ctx, out.width, out.height, pageNumber, totalPages);
+    if (shouldRenderBranding) {
+      this.drawBrandingOverlay(ctx, out.width, out.height, pageNumber, totalPages);
+    }
     return {
       dataUrl: out.toDataURL('image/png'),
       width: out.width,
@@ -2065,15 +2070,14 @@ private async renderPage(pageNumber: number): Promise<void> {
     totalPages: number
   ): void {
     const pxPerMm = height / 297;
-    const margin = Math.round(pxPerMm * 10);
-    const headerTopOffset = Math.max(Math.round(pxPerMm * 4), margin - Math.round(pxPerMm * 3));
+    const horizontalMargin = Math.round(pxPerMm * 10);
+    const headerTop = Math.round(pxPerMm * 15);
     const teacherFontSize = 30;
     const subjectFontSize = Math.max(18, Math.round(teacherFontSize * 0.65));
     const footerFontSize = Math.max(12, Math.round(pxPerMm * 4.2));
     const headerGap = Math.max(12, Math.round(pxPerMm * 2));
     const subjectText = this.getHeaderSubjectText();
 
-    const headerTop = headerTopOffset;
     const subjectPaddingX = Math.max(16, Math.round(pxPerMm * 4));
     const subjectPaddingY = Math.max(10, Math.round(pxPerMm * 2.4));
     const teacherPaddingX = Math.max(20, Math.round(pxPerMm * 4.8));
@@ -2089,7 +2093,7 @@ private async renderPage(pageNumber: number): Promise<void> {
       strokeWidth: number,
       shadow?: string
     ) => {
-      const radius = Math.min(Math.max(16, h / 2), Math.min(w / 2, h / 2));
+      const radius = Math.min(Math.max(16, h / 2), w / 2);
       ctx.save();
       if (shadow) {
         ctx.shadowColor = shadow;
@@ -2119,7 +2123,7 @@ private async renderPage(pageNumber: number): Promise<void> {
     const subjectMetrics = ctx.measureText(subjectText);
     const subjectCapsuleWidth = subjectMetrics.width + subjectPaddingX * 2;
     const subjectCapsuleHeight = subjectFontSize + subjectPaddingY * 2;
-    const subjectX = margin;
+    const subjectX = horizontalMargin;
     const subjectY = headerTop;
     drawCapsule(
       subjectX,
@@ -2144,7 +2148,7 @@ private async renderPage(pageNumber: number): Promise<void> {
     const teacherMetrics = ctx.measureText(this.brandingHeaderText);
     const teacherCapsuleWidth = teacherMetrics.width + teacherPaddingX * 2;
     const teacherCapsuleHeight = teacherFontSize + teacherPaddingY * 2;
-    const teacherX = width - margin - teacherCapsuleWidth;
+    const teacherX = width - horizontalMargin - teacherCapsuleWidth;
     const teacherY = headerTop;
     drawCapsule(
       teacherX,
@@ -2165,40 +2169,36 @@ private async renderPage(pageNumber: number): Promise<void> {
     );
     ctx.restore();
 
+    const headerLineY =
+      Math.max(subjectY + subjectCapsuleHeight, teacherY + teacherCapsuleHeight) + headerGap;
+
     ctx.save();
     ctx.strokeStyle = 'rgba(148, 163, 184, 0.35)';
     ctx.lineWidth = 1;
     ctx.beginPath();
-    const headerLineY =
-      Math.max(subjectY + subjectCapsuleHeight, teacherY + teacherCapsuleHeight) + headerGap;
-    ctx.moveTo(margin, headerLineY);
-    ctx.lineTo(width - margin, headerLineY);
+    ctx.moveTo(horizontalMargin, headerLineY);
+    ctx.lineTo(width - horizontalMargin, headerLineY);
     ctx.stroke();
     ctx.restore();
 
-    const footerLineY = height - margin;
     const pageLabel =
       totalPages && totalPages > 0
         ? `Sayfa ${pageNumber} / ${totalPages}`
         : `Sayfa ${pageNumber}`;
 
     ctx.save();
-    ctx.strokeStyle = 'rgba(148, 163, 184, 0.35)';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(margin, footerLineY);
-    ctx.lineTo(width - margin, footerLineY);
-    ctx.stroke();
-
     ctx.font = `600 ${footerFontSize}px "Segoe UI", "Helvetica Neue", Arial, sans-serif`;
     const pageTextMetrics = ctx.measureText(pageLabel);
     const pagePaddingX = Math.max(14, Math.round(pxPerMm * 3.5));
     const pagePaddingY = Math.max(8, Math.round(pxPerMm * 2));
     const pageCapsuleWidth = pageTextMetrics.width + pagePaddingX * 2;
     const pageCapsuleHeight = footerFontSize + pagePaddingY * 2;
-    const bottomSafeOffset = Math.max(Math.round(pxPerMm * 6), Math.ceil(pageCapsuleHeight / 2) + 4);
     const pageCapsuleX = (width - pageCapsuleWidth) / 2;
-    const pageCapsuleY = height - bottomSafeOffset - pageCapsuleHeight;
+    const targetCenterY = Math.round(pxPerMm * 287);
+    const minPageY = headerLineY + headerGap;
+    const maxPageY = height - pageCapsuleHeight - Math.round(pxPerMm * 5);
+    let pageCapsuleY = Math.round(targetCenterY - pageCapsuleHeight / 2);
+    pageCapsuleY = Math.max(minPageY, Math.min(maxPageY, pageCapsuleY));
 
     drawCapsule(
       pageCapsuleX,
@@ -2852,8 +2852,6 @@ private async renderPage(pageNumber: number): Promise<void> {
     };
   }
 }
-
-
 
 
 
