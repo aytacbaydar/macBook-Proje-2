@@ -462,16 +462,16 @@
 </div>
 
 
-<div *ngIf="pdfYukleniyor" class="durum durum--ust">PDF y�kleniyor...</div>
+<div *ngIf="pdfYukleniyor" class="durum durum--ust">PDF yükleniyor...</div>
 <div *ngIf="pdfHataMesaji" class="durum hata durum--ust">{{ pdfHataMesaji }}</div>
 
 <div class="pdf-gorunumu" #pdfContainer>
   <div class="pdf-branding" *ngIf="isBlankDocument">
-    <span class="pdf-branding__header">Ayta&ccedil; Baydar || Kimya &Ouml;&#287;retmeni</span>
+    <span class="pdf-branding__header">Aytaç Baydar || Kimya Öğretmeni</span>
     <img
       class="pdf-branding__logo"
       src="/assets/images/logo-turuncu.png"
-      alt="Ayta&ccedil; Baydar logosu"
+      alt="Aytaç Baydar logosu"
     />
   </div>
 
@@ -563,14 +563,14 @@
     (click)="$event.stopPropagation()"
   >
     <header class="attendance-modal__header">
-      <h2 id="attendanceModalTitle">Devams&#305;zl&#305;k Paneli</h2>
+      <h2 id="attendanceModalTitle">Devamsızlık Paneli</h2>
       <button
         type="button"
         class="attendance-modal__close"
         (click)="closeAttendanceModal()"
       >
         <i class="bi bi-x-lg" aria-hidden="true"></i>
-        <span class="sr-only">Devams&#305;zl&#305;k panelini kapat</span>
+        <span class="sr-only">Devamsızlık panelini kapat</span>
       </button>
     </header>
     <div class="attendance-modal__body">
