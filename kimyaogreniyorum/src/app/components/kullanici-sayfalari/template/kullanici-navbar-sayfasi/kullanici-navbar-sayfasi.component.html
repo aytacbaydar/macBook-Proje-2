@@ -41,7 +41,12 @@
     <div class="footer-menu-items">
 
       <!-- Anasayfa -->
-      <a routerLink="/kullanici-sayfasi/" class="footer-menu-item" [routerLinkActive]="'active'">
+      <a
+        routerLink="/kullanici-sayfasi/"
+        class="footer-menu-item"
+        [routerLinkActive]="'active'"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
         <div class="footer-menu-icon">
           <i class="bi bi-house"></i>
         </div>
@@ -49,7 +54,12 @@
       </a>
 
       <!-- Sınavlar -->
-      <a routerLink="/kullanici-sayfasi/sinav-isleri-sayfasi" class="footer-menu-item" [routerLinkActive]="'active'">
+      <a
+        routerLink="/kullanici-sayfasi/sinav-sonuclari-sayfasi"
+        class="footer-menu-item"
+        [routerLinkActive]="'active'"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
         <div class="footer-menu-icon">
           <i class="bi bi-clipboard-check"></i>
         </div>
@@ -64,7 +74,12 @@
       </div>
 
       <!-- Konular -->
-      <a routerLink="/kullanici-sayfasi/islene-konularin-pdf-sayfasi" class="footer-menu-item" [routerLinkActive]="'active'">
+      <a
+        routerLink="/kullanici-sayfasi/islene-konularin-pdf-sayfasi"
+        class="footer-menu-item"
+        [routerLinkActive]="'active'"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
         <div class="footer-menu-icon">
           <i class="bi bi-book"></i>
         </div>
@@ -72,7 +87,12 @@
       </a>
 
       <!-- Profil -->
-      <a routerLink="/kullanici-sayfasi/profil-sayfasi" class="footer-menu-item" [routerLinkActive]="'active'">
+      <a
+        routerLink="/kullanici-sayfasi/profil-sayfasi"
+        class="footer-menu-item"
+        [routerLinkActive]="'active'"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
         <div class="footer-menu-icon">
           <i class="bi bi-person"></i>
         </div>
@@ -104,7 +124,7 @@
         <span class="menu-card-text">Konu Analizlerim</span>
       </a>
       
-      <a routerLink="/kullanici-sayfasi/sinav-isleri-sayfasi" class="menu-card logout-card" (click)="closeBottomSheet()">
+      <a routerLink="/kullanici-sayfasi/sinav-sonuclari-sayfasi" class="menu-card logout-card" (click)="closeBottomSheet()">
         <div class="menu-card-icon" style="background: linear-gradient(135deg, #ff660070 0%, #ff6600 100%);">
           <i class="bi bi-clipboard-check"></i>
         </div>

@@ -184,9 +184,16 @@ export class KullaniciSinavIsleriSayfasiComponent implements OnInit {
 
   viewExamResults(): void {
     this.closeExamAlreadyTakenModal();
-    this.router.navigate([
-      '/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi',
-    ]);
+    const hedefSinavId =
+      this.examResult?.sinav_id ??
+      this.examResult?.sinavId ??
+      this.examResult?.sinavID ??
+      null;
+
+    this.router.navigate(
+      ['/kullanici-sayfasi/sinav-sonuclari-sayfasi'],
+      hedefSinavId ? { queryParams: { sinavId: hedefSinavId } } : undefined
+    );
   }
 
   calculateNet(sonuc: any): number {

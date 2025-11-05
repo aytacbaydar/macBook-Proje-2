@@ -1,0 +1,232 @@
+<div class="sinav-sonuclari-container">
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <i class="bi bi-trophy"></i>
+        Sınav Sonuçlarım
+      </h1>
+      <p class="page-subtitle d-none d-md-block">Geçmiş sınav performansınızı inceleyin</p>
+    </div>
+    <button class="btn btn-outline-primary" (click)="goToExams()">
+      <i class="bi bi-arrow-left me-1"></i>
+      Sınavlara Git
+    </button>
+  </div>
+
+  <div class="comparison-chart-container page-header">
+    <canvas id="comparisonChart"></canvas>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Sınav sonuçları yükleniyor...</p>
+    </div>
+  </div>
+
+  <div *ngIf="error && !loading" class="error-container">
+    <div class="error-card">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      <h3>Hata Oluştu</h3>
+      <p>{{ error }}</p>
+      <button class="btn btn-primary" (click)="loadAllSinavSonuclari()">
+        <i class="bi bi-arrow-clockwise me-1"></i>
+        Tekrar Dene
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && !error && sinavSonuclari.length > 0" class="exam-results-grid">
+    <div
+      class="exam-card"
+      *ngFor="let sinav of sinavSonuclari; let i = index"
+      (click)="selectSinav(sinav)"
+    >
+      <div class="exam-card-header" [style.background]="getSinavTuruColor(sinav.sinav_turu)">
+        <div class="exam-type-badge">{{ getSinavTuruLabel(sinav.sinav_turu) }}</div>
+      </div>
+
+      <div class="exam-card-body">
+        <h3 class="exam-title">{{ sinav.sinav_adi }}</h3>
+
+        <div class="exam-stats">
+          <div class="stat-item success">
+            <span class="stat-number">{{ sinav.dogru_sayisi }}</span>
+            <span class="stat-label">Doğru</span>
+          </div>
+          <div class="stat-item error">
+            <span class="stat-number">{{ sinav.yanlis_sayisi }}</span>
+            <span class="stat-label">Yanlış</span>
+          </div>
+          <div class="stat-item empty">
+            <span class="stat-number">{{ sinav.bos_sayisi }}</span>
+            <span class="stat-label">Boş</span>
+          </div>
+        </div>
+
+        <div class="mini-chart-container">
+          <canvas [id]="'miniChart-' + i" width="200" height="100"></canvas>
+        </div>
+
+        <div class="exam-success-rate">
+          <div class="success-percentage">{{ getSuccessPercentage(sinav) }}%</div>
+          <div class="success-label">Başarı Oranı</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade show d-block"
+    *ngIf="selectedSinav"
+    tabindex="-1"
+    role="dialog"
+    style="background-color: rgba(0, 0, 0, 0.5);"
+    (click)="closeModal()"
+  >
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document" (click)="$event.stopPropagation()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            <i class="bi bi-clipboard-data me-2"></i>
+            {{ selectedSinav.sinav_adi }} - Detaylı Sonuç
+          </h5>
+        </div>
+
+        <div class="modal-body">
+          <div *ngIf="loadingDetails" class="loading-section text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Yükleniyor...</span>
+            </div>
+            <p class="mt-3">Detaylı sonuçlar yükleniyor...</p>
+          </div>
+
+          <div *ngIf="!loadingDetails && selectedSinavDetails">
+            <div class="row g-3 mb-2 mt-2">
+              <div class="col-6 col-md-3">
+                <div class="stat-card correct">
+                  <div class="stat-icon correct">
+                    <i class="bi bi-emoji-smile"></i>
+                  </div>
+                  <div class="stat-info">
+                    <div class="stat-number">{{ selectedSinavDetails.dogru_sayisi }}</div>
+                    <div class="stat-label">Doğru</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6 col-md-3">
+                <div class="stat-card incorrect">
+                  <div class="stat-icon incorrect">
+                    <i class="bi bi-emoji-frown"></i>
+                  </div>
+                  <div class="stat-info">
+                    <div class="stat-number">{{ selectedSinavDetails.yanlis_sayisi }}</div>
+                    <div class="stat-label">Yanlış</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6 col-md-3">
+                <div class="stat-card empty">
+                  <div class="stat-icon empty">
+                    <i class="bi bi-emoji-surprise"></i>
+                  </div>
+                  <div class="stat-info">
+                    <div class="stat-number">{{ selectedSinavDetails.bos_sayisi }}</div>
+                    <div class="stat-label">Boş</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6 col-md-3">
+                <div class="stat-card total">
+                  <div class="stat-icon total">
+                    <i class="bi bi-percent"></i>
+                  </div>
+                  <div class="stat-info">
+                    <div class="stat-number">{{ getSuccessPercentage(selectedSinav) }}%</div>
+                    <div class="stat-label">Başarı</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="question-details">
+              <div class="questions-table-container">
+                <table class="table table-striped table-hover">
+                  <thead class="table-primary">
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Doğru Cevap</th>
+                      <th scope="col">Verilen Cevap</th>
+                      <th scope="col">Durum</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let soru of selectedSinavDetails.sorular">
+                      <td class="fw-bold">{{ soru.soru_numarasi || soru.soru_no }}</td>
+                      <td>
+                        <span class="badge bg-success fs-6">{{ soru.dogru_cevap }}</span>
+                      </td>
+                      <td>
+                        <span
+                          class="badge fs-6"
+                          [ngClass]="{
+                            'bg-success': soru.ogrenci_cevabi === soru.dogru_cevap,
+                            'bg-danger': soru.ogrenci_cevabi && soru.ogrenci_cevabi !== soru.dogru_cevap,
+                            'bg-warning text-dark': !soru.ogrenci_cevabi
+                          }"
+                        >
+                          {{ soru.ogrenci_cevabi || 'Boş' }}
+                        </span>
+                      </td>
+                      <td>
+                        <span
+                          class="badge fs-6"
+                          [ngClass]="{
+                            'bg-success': soru.ogrenci_cevabi === soru.dogru_cevap,
+                            'bg-danger': soru.ogrenci_cevabi && soru.ogrenci_cevabi !== soru.dogru_cevap,
+                            'bg-warning text-dark': !soru.ogrenci_cevabi
+                          }"
+                        >
+                          <i
+                            class="bi me-1"
+                            [ngClass]="{
+                              'bi-check-circle-fill': soru.ogrenci_cevabi === soru.dogru_cevap,
+                              'bi-x-circle-fill': soru.ogrenci_cevabi && soru.ogrenci_cevabi !== soru.dogru_cevap,
+                              'bi-dash-circle-fill': !soru.ogrenci_cevabi
+                            }"
+                          ></i>
+                          {{ getQuestionStatus(soru) }}
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" (click)="closeModal()">
+            <i class="bi bi-x-lg me-1"></i>
+            Kapat
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && !error && sinavSonuclari.length === 0" class="empty-state">
+    <div class="empty-content">
+      <div class="empty-icon">
+        <i class="bi bi-clipboard-x"></i>
+      </div>
+      <h3>Henüz Sınav Sonucunuz Yok</h3>
+      <p>Sınav çözmeye başladığınızda sonuçlarınız burada görünecektir.</p>
+      <button class="btn btn-primary" (click)="goToExams()">
+        <i class="bi bi-pencil-square me-1"></i>
+        Sınava Başla
+      </button>
+    </div>
+  </div>
+</div>
