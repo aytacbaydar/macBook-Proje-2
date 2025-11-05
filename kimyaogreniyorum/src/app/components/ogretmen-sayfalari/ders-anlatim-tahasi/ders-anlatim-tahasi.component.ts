@@ -2094,7 +2094,7 @@ private async renderPage(pageNumber: number): Promise<void> {
   ): void {
     const pxPerMm = height / 297;
     const horizontalMargin = Math.round(pxPerMm * 10);
-    const headerTextTop = Math.round(pxPerMm * 15);
+    const headerTextTop = Math.max(0, Math.round(pxPerMm * (15 - 15)));
     const teacherFontSize = 30;
     const subjectFontSize = Math.max(18, Math.round(teacherFontSize * 0.65));
     const footerFontSize = Math.max(12, Math.round(pxPerMm * 4.2));
@@ -2876,7 +2876,6 @@ private async renderPage(pageNumber: number): Promise<void> {
     };
   }
 }
-
 
 
 
