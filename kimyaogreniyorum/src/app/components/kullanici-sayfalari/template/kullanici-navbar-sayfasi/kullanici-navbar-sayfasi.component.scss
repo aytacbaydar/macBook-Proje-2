@@ -7,52 +7,23 @@
   background: rgba(41, 48, 60, 0.92);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  z-index: 1000;
-  padding: 0 clamp(16px, 4vw, 32px);
+  z-index: 9999;
+  padding: 0 10px;
 }
 
 .navbar-container {
-  max-width: 1280px;
-  margin: 0 auto;
+  width: 100%;
   height: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 
 .navbar-left {
   display: flex;
   align-items: center;
-  gap: 16px;
-}
-
-.menu-toggle {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.08);
-  color: #ff6600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  i {
-    font-size: 18px;
-  }
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.15);
-    transform: translateY(-1px);
-  }
-
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.25);
-  }
+  gap: 8px;
 }
 
 .brand {
@@ -60,6 +31,7 @@
   align-items: baseline;
   gap: 6px;
   font-family: 'Poppins', 'Segoe UI', sans-serif;
+  cursor: pointer;
 }
 
 .brand-title {
@@ -129,9 +101,9 @@
 
 .user-meta {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 2px;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
   min-width: 0;
 }
 
@@ -152,6 +124,10 @@
   color: rgba(255, 255, 255, 0.6);
   text-transform: uppercase;
   letter-spacing: 0.6px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 .chevron-icon {
@@ -185,11 +161,6 @@
   .kullanici-navbar {
     height: 60px;
     padding: 0 16px;
-  }
-
-  .menu-toggle {
-    width: 38px;
-    height: 38px;
   }
 
   .navbar-right .user-info {
@@ -511,6 +482,7 @@ Bottom Sheet
     overflow-y: auto;
     max-height: calc(80vh - 70px);
     background: #ffffff;
+    margin-bottom: 70px;
 
     .menu-grid {
       display: grid;
