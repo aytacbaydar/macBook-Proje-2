@@ -2140,7 +2140,7 @@ private async renderPage(pageNumber: number): Promise<void> {
       strokeWidth: number,
       shadow?: string
     ) => {
-      const radius = Math.min(Math.max(12, h / 2), w / 2);
+      const radius = Math.min(Math.max(6, h / 2), w / 2);
       ctx.save();
       if (shadow) {
         ctx.shadowColor = shadow;
@@ -2219,15 +2219,6 @@ private async renderPage(pageNumber: number): Promise<void> {
 
     const headerLineY =
       Math.max(subjectY + subjectCapsuleHeight, teacherY + teacherCapsuleHeight) + headerGap;
-
-    ctx.save();
-    ctx.strokeStyle = 'rgba(148, 163, 184, 0.35)';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(horizontalMargin, headerLineY);
-    ctx.lineTo(width - horizontalMargin, headerLineY);
-    ctx.stroke();
-    ctx.restore();
 
     const pageLabel =
       totalPages && totalPages > 0
