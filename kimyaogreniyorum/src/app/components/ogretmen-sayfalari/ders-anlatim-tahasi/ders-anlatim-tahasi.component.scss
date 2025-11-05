@@ -829,53 +829,26 @@
   z-index: 4;
 }
 
-.pdf-branding__topline {
+.pdf-branding__header {
   position: absolute;
-  top: 15mm;
+  top: 12mm;
   left: 32px;
-  right: 32px;
-  display: flex;
-  align-items: center;
-  gap: 24px;
+  font-size: clamp(16px, 1.8vw, 22px);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #ff6600;
 }
 
-.pdf-branding__topline::before {
-  content: '';
+.pdf-branding__logo {
   position: absolute;
-  left: 0;
-  right: 0;
   top: 50%;
-  transform: translateY(-50%);
-  height: 2px;
-  background: rgba(234, 88, 12, 0.35);
-  z-index: 0;
-}
-
-.pdf-branding__subject,
-.pdf-branding__teacher {
-  position: relative;
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.95);
-  color: #ea580c;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  padding: 6px 18px;
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
-  white-space: nowrap;
-}
-
-.pdf-branding__subject {
-  font-size: 30px;
-  text-transform: none;
-}
-
-.pdf-branding__teacher {
-  margin-left: auto;
-  font-size: 22px;
-  letter-spacing: 0.03em;
+  left: 50%;
+  width: min(500px, 80vw);
+  height: min(500px, 80vw);
+  transform: translate(-50%, -50%);
+  opacity: 0.5;
+  object-fit: contain;
+  pointer-events: none;
 }
 
 .pdf-watermark {
@@ -919,47 +892,39 @@
 .pdf-footer__page-box {
   position: absolute;
   left: 50%;
-  top: 0;
-  transform: translate(-50%, 38%);
-  width: 74px;
-  height: 74px;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.95);
-  border: 2px solid #ea580c;
+  top: 15mm;
+  transform: translate(-50%, 0);
+  width: 48px;
+  height: 48px;
+  border-radius: 0;
+  background: transparent;
+  border: 1px solid #ea580c;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #ea580c;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 16px;
   letter-spacing: 0.04em;
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+  box-shadow: none;
 }
 
 @media (max-width: 1280px) {
-  .pdf-branding__subject {
-    font-size: 26px;
-  }
-
-  .pdf-branding__teacher {
-    font-size: 20px;
+  .pdf-branding__header {
+    left: 28px;
+    font-size: clamp(15px, 1.7vw, 20px);
   }
 }
 
 @media (max-width: 1024px) {
-  .pdf-branding__topline {
+  .pdf-branding__header {
     left: 24px;
-    right: 24px;
-    gap: 18px;
-  }
-  .pdf-branding__subject {
-    font-size: 24px;
-    padding: 6px 16px;
+    font-size: 18px;
   }
 
-  .pdf-branding__teacher {
-    font-size: 19px;
-    padding: 6px 14px;
+  .pdf-branding__logo {
+    width: min(420px, 70vw);
+    height: min(420px, 70vw);
   }
 
   .pdf-watermark__logo {
@@ -974,26 +939,21 @@
   }
 
   .pdf-footer__page-box {
-    width: 64px;
-    height: 64px;
-    font-size: 18px;
+    width: 44px;
+    height: 44px;
+    font-size: 15px;
   }
 }
 
 @media (max-width: 768px) {
-  .pdf-branding__topline {
+  .pdf-branding__header {
     left: 18px;
-    right: 18px;
-    gap: 12px;
-  }
-  .pdf-branding__subject {
-    font-size: 20px;
-    padding: 5px 12px;
+    font-size: 16px;
   }
 
-  .pdf-branding__teacher {
-    font-size: 17px;
-    padding: 5px 12px;
+  .pdf-branding__logo {
+    width: min(320px, 70vw);
+    height: min(320px, 70vw);
   }
 
   .pdf-watermark__logo {
@@ -1008,12 +968,8 @@
   }
 
   .pdf-footer__page-box {
-    width: 56px;
-    height: 56px;
-    font-size: 16px;
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
   }
 }
-
-
-
-
