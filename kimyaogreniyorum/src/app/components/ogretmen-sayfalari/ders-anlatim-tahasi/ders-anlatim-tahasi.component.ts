@@ -1637,7 +1637,7 @@ private async renderPage(pageNumber: number): Promise<void> {
       await this.renderPage(page);
       await this.restoreAnnotations(page);
       await this.waitForFabricRender();
-      const combined = await this.combineCurrentPageToDataUrl();
+      const combined = await this.combineCurrentPageToDataUrl(page, total);
       if (combined) {
         images.push({
           page,
@@ -1962,7 +1962,10 @@ private async renderPage(pageNumber: number): Promise<void> {
     });
   }
 
-  private async combineCurrentPageToDataUrl(): Promise<{
+  private async combineCurrentPageToDataUrl(
+    pageNumber: number,
+    totalPages: number
+  ): Promise<{
     dataUrl: string;
     width: number;
     height: number;
@@ -1982,6 +1985,7 @@ private async renderPage(pageNumber: number): Promise<void> {
       return null;
     }
     ctx.drawImage(pdfCanvasEl, 0, 0);
+    await this.drawBrandingWatermark(ctx, out.width, out.height);
     const lower = this.fabricCanvas?.lowerCanvasEl;
     const upper = this.fabricCanvas?.upperCanvasEl;
     if (lower) {
@@ -1992,7 +1996,7 @@ private async renderPage(pageNumber: number): Promise<void> {
     } else if (this.annotationCanvas?.nativeElement) {
       ctx.drawImage(this.annotationCanvas.nativeElement, 0, 0);
     }
-    await this.drawBrandingOverlay(ctx, out.width, out.height);
+    this.drawBrandingOverlay(ctx, out.width, out.height, pageNumber, totalPages);
     return {
       dataUrl: out.toDataURL('image/png'),
       width: out.width,
@@ -2011,50 +2015,111 @@ private async renderPage(pageNumber: number): Promise<void> {
     return bytes;
   }
 
-  private async drawBrandingOverlay(
+  private async drawBrandingWatermark(
     ctx: CanvasRenderingContext2D,
     width: number,
     height: number
   ): Promise<void> {
-    const padding = Math.max(16, Math.round(width * 0.02));
-    const fontSize = 10;
-    const capsulePadding = 8;
-
-    ctx.save();
-    ctx.font = `600 ${fontSize}px "Segoe UI", "Helvetica Neue", Arial, sans-serif`;
-    const metrics = ctx.measureText(this.brandingHeaderText);
-    const textWidth = metrics.width;
-    const backgroundWidth = textWidth + capsulePadding * 2;
-    const backgroundHeight = fontSize + capsulePadding + 2;
-    const headerX = width - padding - backgroundWidth;
-    const headerY = padding;
-
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
-    ctx.fillRect(headerX, headerY, backgroundWidth, backgroundHeight);
-    ctx.fillStyle = '#f97316';
-    ctx.textAlign = 'right';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(
-      this.brandingHeaderText,
-      width - padding - capsulePadding,
-      headerY + backgroundHeight / 2
-    );
-    ctx.restore();
-
     const logo = await this.loadBrandingLogo();
     if (!logo) {
       return;
     }
 
-    const logoSize = 200;
-    const drawWidth = logoSize;
-    const drawHeight = logoSize;
-    const logoX = (width - drawWidth) / 2;
-    const logoY = (height - drawHeight) / 2;
+    const desiredSize = 500;
+    const drawSize = Math.min(desiredSize, width, height);
+    const logoX = (width - drawSize) / 2;
+    const logoY = (height - drawSize) / 2;
 
     ctx.save();
     ctx.globalAlpha = 0.9;
-    ctx.drawImage(logo, logoX, logoY, drawWidth, drawHeight);
+    ctx.drawImage(logo, logoX, logoY, drawSize, drawSize);
+    ctx.restore();
+  }
+
+  private getHeaderSubjectText(): string {
+    const konu = (this.secilenKonu ?? '').trim();
+    const alt = (this.secilenAltKonu ?? '').trim();
+    const parts: string[] = [];
+    if (konu) {
+      parts.push(konu);
+    }
+    if (alt) {
+      const konuLower = konu ? konu.toLocaleLowerCase('tr-TR') : '';
+      const altLower = alt.toLocaleLowerCase('tr-TR');
+      if (!konuLower || altLower !== konuLower) {
+        parts.push(alt);
+      }
+    }
+    const label = parts.join(' / ');
+    if (label) {
+      return label.toLocaleUpperCase('tr-TR');
+    }
+    return 'KONU BELIRTILMEDI';
+  }
+
+  private drawBrandingOverlay(
+    ctx: CanvasRenderingContext2D,
+    width: number,
+    height: number,
+    pageNumber: number,
+    totalPages: number
+  ): void {
+    const pxPerMm = height / 297;
+    const margin = Math.round(pxPerMm * 10);
+    const teacherFontSize = 30;
+    const subjectFontSize = Math.max(18, Math.round(teacherFontSize * 0.65));
+    const footerFontSize = Math.max(12, Math.round(pxPerMm * 4.2));
+    const headerGap = Math.max(12, Math.round(pxPerMm * 2));
+    const footerGap = Math.max(8, Math.round(pxPerMm * 1.2));
+    const subjectText = this.getHeaderSubjectText();
+
+    const headerTop = margin;
+    const headerTextHeight = Math.max(teacherFontSize, subjectFontSize);
+    const headerLineY = headerTop + headerTextHeight + headerGap;
+
+    ctx.save();
+    ctx.font = `600 ${subjectFontSize}px "Segoe UI", "Helvetica Neue", Arial, sans-serif`;
+    ctx.textBaseline = 'top';
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#0f172a';
+    ctx.fillText(subjectText, margin, headerTop);
+
+    ctx.font = `700 ${teacherFontSize}px "Segoe UI", "Helvetica Neue", Arial, sans-serif`;
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#f97316';
+    ctx.fillText(this.brandingHeaderText, width - margin, headerTop);
+    ctx.restore();
+
+    ctx.save();
+    ctx.strokeStyle = 'rgba(148, 163, 184, 0.35)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(margin, headerLineY);
+    ctx.lineTo(width - margin, headerLineY);
+    ctx.stroke();
+    ctx.restore();
+
+    const footerBaseline = height - margin;
+    const footerLineY = footerBaseline;
+    const footerTextBaseline = footerBaseline - footerGap;
+    const pageLabel =
+      totalPages && totalPages > 0
+        ? `Sayfa ${pageNumber} / ${totalPages}`
+        : `Sayfa ${pageNumber}`;
+
+    ctx.save();
+    ctx.strokeStyle = 'rgba(148, 163, 184, 0.35)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(margin, footerLineY);
+    ctx.lineTo(width - margin, footerLineY);
+    ctx.stroke();
+
+    ctx.font = `500 ${footerFontSize}px "Segoe UI", "Helvetica Neue", Arial, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom';
+    ctx.fillStyle = '#475569';
+    ctx.fillText(pageLabel, width / 2, footerTextBaseline);
     ctx.restore();
   }
 
@@ -2693,9 +2758,6 @@ private async renderPage(pageNumber: number): Promise<void> {
     };
   }
 }
-
-
-
 
 
 
