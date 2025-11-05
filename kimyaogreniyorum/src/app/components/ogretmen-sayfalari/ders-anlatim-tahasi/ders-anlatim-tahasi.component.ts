@@ -2007,7 +2007,24 @@ private async renderPage(pageNumber: number): Promise<void> {
     if (!ctx) {
       return null;
     }
-    ctx.drawImage(pdfCanvasEl, 0, 0);
+    const drawScaledCanvas = (source?: HTMLCanvasElement | null) => {
+      if (!source || !source.width || !source.height) {
+        return;
+      }
+      ctx.drawImage(
+        source,
+        0,
+        0,
+        source.width,
+        source.height,
+        0,
+        0,
+        out.width,
+        out.height
+      );
+    };
+
+    drawScaledCanvas(pdfCanvasEl);
     const shouldRenderBranding = this.blankDocument;
     if (shouldRenderBranding) {
       await this.drawBrandingWatermark(ctx, out.width, out.height);
@@ -2015,12 +2032,12 @@ private async renderPage(pageNumber: number): Promise<void> {
     const lower = this.fabricCanvas?.lowerCanvasEl;
     const upper = this.fabricCanvas?.upperCanvasEl;
     if (lower) {
-      ctx.drawImage(lower, 0, 0);
+      drawScaledCanvas(lower);
     }
     if (upper) {
-      ctx.drawImage(upper, 0, 0);
+      drawScaledCanvas(upper);
     } else if (this.annotationCanvas?.nativeElement) {
-      ctx.drawImage(this.annotationCanvas.nativeElement, 0, 0);
+      drawScaledCanvas(this.annotationCanvas.nativeElement);
     }
     if (shouldRenderBranding) {
       this.drawBrandingOverlay(ctx, out.width, out.height, pageNumber, totalPages);
@@ -2876,7 +2893,6 @@ private async renderPage(pageNumber: number): Promise<void> {
     };
   }
 }
-
 
 
 
