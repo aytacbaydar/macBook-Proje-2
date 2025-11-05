@@ -1,0 +1,163 @@
+<div class="main-content">
+<div class="main-content">
+  <div class="container-full">
+    <div class="row">
+      <div class="col-12 mt-1">
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="loading-container">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Yükleniyor...</span>
+        </div>
+        <p class="mt-2 text-muted">Ders notları yükleniyor...</p>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="error && !isLoading" class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle"></i> {{ error }}
+        <button class="btn btn-sm btn-outline-danger ms-2" (click)="loadDersKayitlari()">
+          Tekrar Dene
+        </button>
+      </div>
+
+      <!-- Card State -->
+      <div class="card-ana bg-green">
+        <div class="card-ana-header">
+          <h4><i class="bi bi-collection-fill me-2"></i>Ders Notları ve Dokümanlar</h4>
+          <button *ngIf="dersKayitlari.length > 0">{{ dersKayitlari.length }} Döküman</button>
+        </div>
+        <div class="card-ana-body" *ngIf="!isLoading && !error">
+          <!--İçerik-->
+          <div *ngIf="dersKayitlari.length === 0" class="empty-state">
+            <i class="bi bi-file-earmark-pdf fs-1 text-muted"></i>
+            <h4>Henüz Ders Notu Bulunmuyor</h4>
+            <p class="text-muted">Bu grup için henüz hiç ders notu yüklenmemiş.</p>
+          </div>
+
+          <div *ngIf="dersKayitlari.length > 0" class="lessons-grid">
+            <div *ngFor="let ders of dersKayitlari" class="lesson-card">
+              <div class="lesson-header">
+                <div class="lesson-icon">
+                  <i class="bi bi-file-earmark-pdf-fill"></i>
+                </div>
+                <div class="lesson-title">
+                  <h3>{{ ders.pdf_adi }}</h3>
+                  <span class="lesson-type">PDF Dokümanı</span>
+                </div>
+              </div>
+
+              <div class="lesson-info">
+                <div class="info-item">
+                  <span class="label">
+                    <i class="bi bi-calendar3 me-1"></i>
+                    Tarih:
+                  </span>
+                  <span class="value">{{ formatDate(ders.olusturma_zamani) }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">
+                    <i class="bi bi-file-text me-1"></i>
+                    Sayfa Sayısı:
+                  </span>
+                  <span class="value">{{ ders.sayfa_sayisi }} sayfa</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">
+                    <i class="bi bi-person-badge me-1"></i>
+                    Öğretmen:
+                  </span>
+                  <span class="value">{{ ders.ogretmen_adi || 'Belirtilmemiş' }}</span>
+                </div>
+              </div>
+
+              <div class="lesson-actions">
+                <button class="action-btn view-btn" (click)="viewLessonPdf(ders.pdf_dosya_yolu)"
+                  [disabled]="!ders.pdf_dosya_yolu">
+                  <i class="bi bi-eye-fill"></i>
+                  PDF Görüntüle
+                </button>
+              </div>
+            </div>
+          </div>
+          <!--İçerik Son-->
+        </div>
+      </div>
+
+      <!-- ÖdevlerState -->
+      <div class="card-ana bg-orange mt-4">
+        <div class="card-ana-header">
+          <h4><i class="bi bi-collection-fill me-2"></i>Ödevler</h4>
+          <button *ngIf="dersKayitlari.length > 0">Ödevler</button>
+        </div>
+        <div class="card-ana-body" *ngIf="!isLoading && !error">
+          <!--İçerik-->
+          <app-kullanici-odevler-sayfasi></app-kullanici-odevler-sayfasi>
+          <!--İçerik Son-->
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<div class="modal fade" id="pdfViewerModal" tabindex="-1" aria-labelledby="pdfViewerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="pdfViewerModalLabel">PDF Görüntüleyici</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="pdf-viewer">
+      <div class="pdf-fallback" *ngIf="isIOSDevice()">
+        <div class="fallback-content">
+          <i class="fas fa-file-pdf pdf-icon"></i>
+          <h4>PDF Görüntüleyici</h4>
+          <p>iPhone/iPad'de PDF'i görüntülemek için aşağıdaki butona tıklayın:</p>
+          <div class="pdf-actions">
+            <button class="pdf-action-btn primary" (click)="viewPdf()">
+              <i class="fas fa-eye"></i>
+              PDF'i Aç
+            </button>
+            <button class="pdf-action-btn secondary" (click)="downloadPdf()">
+              <i class="fas fa-download"></i>
+              <span *ngIf="isIOSDevice()">Safari'de Aç</span>
+              <span *ngIf="!isIOSDevice()">İndir</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="pdf-fallback" *ngIf="!isIOSDevice() && !pdfLoaded">
+        <div class="fallback-content">
+          <i class="fas fa-file-pdf pdf-icon"></i>
+          <h4>PDF Görüntüleyici</h4>
+          <p>PDF dosyasını görüntülemek için aşağıdaki seçenekleri kullanın:</p>
+          <div class="pdf-actions">
+            <button class="pdf-action-btn primary" (click)="viewPdf()">
+              <i class="fas fa-eye"></i>
+              Yeni Sekmede Görüntüle
+            </button>
+            <button class="pdf-action-btn secondary" (click)="downloadPdf()">
+              <i class="fas fa-download"></i>
+              <span *ngIf="isIOSDevice()">Safari'de Aç</span>
+              <span *ngIf="!isIOSDevice()">İndir</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <iframe 
+        [src]="selectedPdf + '#toolbar=1'" 
+        width="100%" 
+        height="600px"
+        style="border: none;"
+        (load)="onPdfLoad()"
+        (error)="onPdfLoadError($event)"
+        *ngIf="!isIOSDevice() && selectedPdf">
+      </iframe>
+    </div>
+      </div>
+    </div>
+  </div>
+</div>

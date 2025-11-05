@@ -68,6 +68,7 @@ import { KullaniciAnaSayfaSayfasiComponent } from './components/kullanici-sayfal
 import { KullaniciSinavIsleriSayfasiComponent } from './components/kullanici-sayfalari/sinav-isleri-sayfasi/kullanici-sinav-isleri-sayfasi.component';
 import { DersAnlatimTahasiComponent } from './components/ogretmen-sayfalari/ders-anlatim-tahasi/ders-anlatim-tahasi.component';
 import { DersAnlatimTahasiDeactivateGuard } from './guards/ders-anlatim-tahasi-deactivate.guard';
+import { KullaniciIsleneKonularPdfSayfasiComponent } from './components/kullanici-sayfalari/islene-konular-sayfasi/kullanici-islene-konular-pdf-sayfasi/kullanici-islene-konular-pdf-sayfasi.component';
 
 const routes: Routes = [
   {
@@ -106,6 +107,10 @@ const routes: Routes = [
       {
         path: 'islene-konular-sayfasi',
         component: KullaniciIsleneKonularSayfasiComponent,
+      },
+      {
+        path: 'islene-konular-pdf-sayfasi',
+        component: KullaniciIsleneKonularPdfSayfasiComponent,
       },
       {
         path: 'optik',

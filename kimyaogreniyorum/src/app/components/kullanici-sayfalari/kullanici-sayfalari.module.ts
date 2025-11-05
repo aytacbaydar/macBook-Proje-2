@@ -12,6 +12,8 @@ import { KullaniciSinavIsleriSayfasiComponent } from './sinav-isleri-sayfasi/kul
 import { KullaniciIsleneKonularSayfasiComponent } from './islene-konular-sayfasi/kullanici-islene-konular-sayfasi.component';
 import { KullaniciSinavSonuclariSayfasiComponent } from './sinav-isleri-sayfasi/kullanici-sinav-sonuclari-sayfasi.component';
 import { KullaniciOptikSayfasiComponent } from './sinav-isleri-sayfasi/kullanici-optik-sayfasi/kullanici-optik-sayfasi.component';
+import { KullaniciIsleneKonularPdfSayfasiComponent } from './islene-konular-sayfasi/kullanici-islene-konular-pdf-sayfasi/kullanici-islene-konular-pdf-sayfasi.component';
+import { KullaniciOdevlerSayfasiComponent } from './islene-konular-sayfasi/kullanici-odevler-sayfasi/kullanici-odevler-sayfasi.component';
 
 
 
@@ -25,6 +27,8 @@ import { KullaniciOptikSayfasiComponent } from './sinav-isleri-sayfasi/kullanici
     KullaniciSinavIsleriSayfasiComponent,
     KullaniciSinavSonuclariSayfasiComponent,
     KullaniciIsleneKonularSayfasiComponent,
+    KullaniciIsleneKonularPdfSayfasiComponent,
+    KullaniciOdevlerSayfasiComponent,
     KullaniciOptikSayfasiComponent
   ],
   imports: [
