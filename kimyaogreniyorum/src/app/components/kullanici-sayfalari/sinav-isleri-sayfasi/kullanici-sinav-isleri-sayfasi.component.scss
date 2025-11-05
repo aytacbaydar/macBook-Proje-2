@@ -1,0 +1,425 @@
+.sinav-container {
+  height: 100%;
+  position: relative;
+  overflow-x: hidden;
+  padding: 20px;
+  border-radius: 8px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .sinav-container {
+    padding: 5px;
+  }
+}
+
+.main-header {
+  padding: 2rem 1.5rem;
+  border-radius: 8px;
+  position: relative;
+  z-index: 2;
+  box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0, rgba(60, 64, 67, 0.15) 0 1px 3px 1px;
+
+  .header-content {
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      text-align: center;
+      gap: 1.5rem;
+    }
+  }
+
+  .title-section {
+    .main-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #157ff8;
+      margin: 0 0 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+      i {
+        font-size: 2rem;
+        color: #157ff8;
+      }
+
+      @media (max-width: 768px) {
+        font-size: 2rem;
+        justify-content: center;
+      }
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #1c1c1c;
+      margin: 0;
+      font-weight: 500;
+    }
+  }
+
+  .stats-cards {
+    display: flex;
+    gap: 1rem;
+
+    .stat-card {
+      padding: 1.5rem;
+      border-radius: 8px;
+      text-align: center;
+      min-width: 120px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0, rgba(60, 64, 67, 0.15) 0 1px 3px 1px;
+
+      .stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1c1c1c;
+        line-height: 1;
+        margin-bottom: 0.25rem;
+      }
+
+      .stat-label {
+        font-size: 0.875rem;
+        color: #1c1c1c;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.content-area {
+  width: 100%;
+  position: relative;
+  z-index: 2;
+  margin-top: 20px;
+  padding: 0 !important;
+  background-color: #fff;
+}
+
+.filter-section {
+  margin-bottom: 2rem;
+
+  .filter-tabs {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+    overflow-x: auto;
+    box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0, rgba(60, 64, 67, 0.15) 0 1px 3px 1px;
+
+    .filter-tab {
+      background: transparent;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      color: #1c1c1c;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      --tab-color: #667eea;
+
+      i {
+        font-size: 1rem;
+      }
+
+      .count {
+        padding: 0.125rem 0.5rem;
+        border-radius: 10px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0, rgba(60, 64, 67, 0.15) 0 1px 3px 1px;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #1c1c1c;
+      }
+
+      &.active {
+        background: var(--tab-color, #667eea);
+        color: #1c1c1c;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+
+        .count {
+          background: rgba(255, 255, 255, 0.3);
+        }
+      }
+    }
+  }
+}
+
+.exams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+.exam-item {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --exam-color: #667eea;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .exam-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem 0.75rem;
+
+    .exam-type-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.05);
+      color: var(--exam-color);
+    }
+
+    .exam-date {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: #6b7280;
+      font-weight: 500;
+    }
+  }
+
+  .exam-visual {
+    position: relative;
+    padding: 0 1.5rem;
+
+    .exam-cover {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .exam-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 180px;
+      color: var(--exam-color);
+      background: rgba(0, 0, 0, 0.04);
+      border-radius: 12px;
+      font-size: 3rem;
+    }
+  }
+
+  .exam-info {
+    padding: 1.25rem 1.5rem 1rem;
+
+    .exam-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #1f2937;
+    }
+
+    .exam-details {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      margin-bottom: 1rem;
+      color: #4b5563;
+
+      .detail-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-weight: 500;
+      }
+    }
+
+    .difficulty-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+
+      .difficulty-label {
+        font-weight: 600;
+        color: #4b5563;
+      }
+
+      .difficulty-bars {
+        display: flex;
+        gap: 0.3rem;
+
+        .bar {
+          width: 26px;
+          height: 8px;
+          border-radius: 4px;
+          background: rgba(0, 0, 0, 0.08);
+          transition: all 0.3s ease;
+
+          &.active {
+            background: var(--exam-color);
+          }
+        }
+      }
+    }
+  }
+
+  .exam-action {
+    padding: 0 1.5rem 1.5rem;
+
+    .start-exam-btn {
+      position: relative;
+      width: 100%;
+      border: none;
+      color: #fff;
+      font-weight: 600;
+      overflow: hidden;
+      cursor: pointer;
+      border-radius: 10px;
+      padding: 0.9rem 1.4rem;
+      background: linear-gradient(135deg, var(--exam-color), #1e293b);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+      .btn-content {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        position: relative;
+        z-index: 2;
+      }
+
+      .btn-shine {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.4), transparent 55%);
+        transform: translateX(-100%);
+        transition: transform 0.4s ease;
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+
+        .btn-shine {
+          transform: translateX(0);
+        }
+      }
+    }
+  }
+}
+
+.loading-state,
+.error-state,
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  text-align: center;
+  padding: 4rem 2rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0, rgba(60, 64, 67, 0.15) 0 1px 3px 1px;
+}
+
+.loading-animation {
+  display: flex;
+  gap: 1rem;
+
+  .pulse-ring {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #157ff8;
+    animation: pulse 1.2s infinite ease-in-out;
+
+    &:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    &:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+  }
+}
+
+@keyframes pulse {
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+
+.retry-button,
+.refresh-btn,
+.clear-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  background: #157ff8;
+  color: #fff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 16px rgba(21, 127, 248, 0.25);
+  }
+}
+
+.modal.show {
+  display: block;
+}
+
+.modal-backdrop {
+  &.show {
+    opacity: 0.5;
+  }
+}

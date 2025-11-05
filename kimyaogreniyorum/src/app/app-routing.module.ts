@@ -62,6 +62,7 @@ import { DovmeSayfasiHeaderSayfasiComponent } from './components/dovme-sayfasi/t
 import { DovmeGaleriSayfasiComponent } from './components/dovme-sayfasi/dovme-galeri-sayfasi/dovme-galeri-sayfasi.component';
 import { KullaniciIndexSayfasiComponent } from './components/kullanici-sayfalari/template/kullanici-index-sayfasi/kullanici-index-sayfasi.component';
 import { KullaniciAnaSayfaSayfasiComponent } from './components/kullanici-sayfalari/kullanici-ana-sayfa-sayfasi/kullanici-ana-sayfa-sayfasi.component';
+import { KullaniciSinavIsleriSayfasiComponent } from './components/kullanici-sayfalari/sinav-isleri-sayfasi/kullanici-sinav-isleri-sayfasi.component';
 import { DersAnlatimTahasiComponent } from './components/ogretmen-sayfalari/ders-anlatim-tahasi/ders-anlatim-tahasi.component';
 import { DersAnlatimTahasiDeactivateGuard } from './guards/ders-anlatim-tahasi-deactivate.guard';
 
@@ -86,6 +87,17 @@ const routes: Routes = [
   { path: 'onay-sayfasi', component: OgrenciOnaySayfasiComponent },
 
   //kullanicilar Sayfalari
+  {
+    path: 'kullanici-sayfasi',
+    component: KullaniciIndexSayfasiComponent,
+    children: [
+      { path: '', component: KullaniciAnaSayfaSayfasiComponent },
+      {
+        path: 'sinav-isleri-sayfasi',
+        component: KullaniciSinavIsleriSayfasiComponent,
+      },
+    ],
+  },
 
   {
     path: 'yonetici-sayfasi',

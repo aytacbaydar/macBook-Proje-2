@@ -8,6 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { KullaniciSidebarSayfasiComponent } from './template/kullanici-sidebar-sayfasi/kullanici-sidebar-sayfasi.component';
+import { KullaniciSinavIsleriSayfasiComponent } from './sinav-isleri-sayfasi/kullanici-sinav-isleri-sayfasi.component';
 
 
 
@@ -17,7 +18,8 @@ import { KullaniciSidebarSayfasiComponent } from './template/kullanici-sidebar-s
     KullaniciHeaderSayfasiComponent,
     KullaniciIndexSayfasiComponent,
     KullaniciAnaSayfaSayfasiComponent,
-    KullaniciSidebarSayfasiComponent
+    KullaniciSidebarSayfasiComponent,
+    KullaniciSinavIsleriSayfasiComponent
   ],
   imports: [
     CommonModule,

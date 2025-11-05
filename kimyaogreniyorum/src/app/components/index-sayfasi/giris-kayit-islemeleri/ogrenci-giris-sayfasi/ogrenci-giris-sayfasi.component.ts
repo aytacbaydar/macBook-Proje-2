@@ -159,7 +159,7 @@ export class OgrenciGirisSayfasiComponent implements OnInit {
               } else if (rutbe === 'ogretmen') {
                 this.router.navigate(['/ogretmen-sayfasi']);
               } else if (rutbe === 'ogrenci') {
-                this.router.navigate(['/ogrenci-sayfasi']);
+                this.router.navigate(['/yonetici-sayfasi']);
               } else {
                 console.log('Rutbe tanımsız veya bilinmeyen, onay sayfasına yönlendiriliyor');
                 this.router.navigate(['/onay-sayfasi']);
