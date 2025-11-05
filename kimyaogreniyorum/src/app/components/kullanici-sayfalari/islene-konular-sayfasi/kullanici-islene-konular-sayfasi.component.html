@@ -1,0 +1,150 @@
+<div class="student-processed-topics-page">
+  <div *ngIf="isLoading" class="loading-section">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Yükleniyor...</span>
+    </div>
+    <p class="mt-3 text-muted">Konular yükleniyor...</p>
+  </div>
+
+  <div *ngIf="error && !isLoading" class="alert alert-danger">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    {{ error }}
+    <button class="btn btn-sm btn-outline-danger ms-3" (click)="loadData()">
+      <i class="bi bi-arrow-clockwise me-1"></i>
+      Tekrar Dene
+    </button>
+  </div>
+
+  <div *ngIf="!isLoading && !error">
+    <div class="summary-stats" *ngIf="getUnitesByGroup().length > 0">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon bg-blue">
+            <i class="bi bi-bookmark-check-fill"></i>
+          </div>
+          <div class="stat-content">
+            <h4>{{ getTotalProcessedTopics() }}</h4>
+            <p>İşlenen Konu</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon bg-green">
+            <i class="bi bi-journal-text"></i>
+          </div>
+          <div class="stat-content">
+            <h4>{{ getTotalTopics() }}</h4>
+            <p>Toplam Konu</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon bg-red">
+            <i class="bi bi-graph-up"></i>
+          </div>
+          <div class="stat-content">
+            <h4>{{ getOverallProgress() }}%</h4>
+            <p>İlerleme</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon bg-orange">
+            <i class="bi bi-folder-check"></i>
+          </div>
+          <div class="stat-content">
+            <h4>{{ getUnitesByGroup().length }}</h4>
+            <p>Ünite</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topics-container" *ngIf="getUnitesByGroup().length > 0">
+      <div class="unit-section" *ngFor="let unit of getUnitesByGroup(); let unitIndex = index">
+        <div class="unit-header">
+          <div class="unit-title">
+            <div class="unit-icon">
+              <i class="bi bi-folder-fill"></i>
+            </div>
+            <div class="unit-info">
+              <h4>{{ unitIndex + 1 }}. {{ unit.unite_adi }}</h4>
+            </div>
+          </div>
+          <div class="unit-stats">
+            <div class="stat-item">
+              <span class="stat-number">{{ getProcessedTopicsInUnit(unit) }}</span>
+              <span class="stat-label">İşlenen</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">{{ unit.konular.length }}</span>
+              <span class="stat-label">Toplam</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-percentage">{{ getUnitProgress(unit) }}%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="unit-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="getUnitProgress(unit)"></div>
+          </div>
+        </div>
+
+        <div class="topics-list">
+          <div
+            class="topic-item"
+            *ngFor="let konu of unit.konular; let topicIndex = index"
+            [class.completed]="konuIslendi(konu.id)"
+          >
+            <div class="topic-status">
+              <i
+                class="bi"
+                [class.bi-check-circle-fill]="konuIslendi(konu.id)"
+                [class.bi-circle]="!konuIslendi(konu.id)"
+                [class.text-success]="konuIslendi(konu.id)"
+                [class.text-muted]="!konuIslendi(konu.id)"
+              ></i>
+            </div>
+
+            <div class="topic-content">
+              <div class="topic-header">
+                <h5 class="topic-title">
+                  {{ topicIndex + 1 }}. {{ konu.konu_adi }}
+                </h5>
+                <span class="topic-class-badge">{{ konu.sinif_seviyesi }}</span>
+              </div>
+
+              <p class="topic-description" *ngIf="konu.aciklama">
+                {{ konu.aciklama }}
+              </p>
+
+              <div class="topic-meta" *ngIf="konuIslendi(konu.id)">
+                <small class="processed-date">
+                  <i class="bi bi-calendar-check me-1"></i>
+                  {{ formatDate(getKonuIslemeTarihi(konu.id)!) }}
+                </small>
+              </div>
+            </div>
+
+            <div class="topic-actions" *ngIf="konuIslendi(konu.id)">
+              <span class="completed-badge">
+                <i class="bi bi-check-lg me-1"></i>
+                Tamamlandı
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!isLoading && !error && getUnitesByGroup().length === 0" class="empty-state">
+      <div class="empty-content">
+        <i class="bi bi-journal-x"></i>
+        <h3>Henüz İşlenen Konu Yok</h3>
+        <p>Öğretmeniniz konuları işledikçe burada görünecek. Sabırlı ol! 📚</p>
+      </div>
+    </div>
+  </div>
+</div>

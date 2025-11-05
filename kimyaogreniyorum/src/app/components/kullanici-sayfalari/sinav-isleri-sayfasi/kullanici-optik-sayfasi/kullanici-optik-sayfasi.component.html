@@ -1,0 +1,103 @@
+
+<div class="optik-container">
+  <!-- Header -->
+  <div class="exam-header" [style.background]="'linear-gradient(135deg, ' + getSinavTuruColor() + ' 0%, ' + getSinavTuruColor() + 'aa 100%)'">
+    <div class="header-content">
+      <h1>{{ sinavAdi }}</h1>
+      <div class="exam-info">
+        <span class="exam-type">{{ sinavTuru }}</span>
+        <span class="question-count">{{ soruSayisi }} Soru</span>
+      </div>
+    </div>
+    <button class="back-btn" (click)="goBack()">
+      <i class="bi bi-arrow-left"></i>
+      Geri Dön
+    </button>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="progress-section">
+    <div class="progress-stats">
+      <div class="stat answered">
+        <span class="number">{{ getAnsweredCount() }}</span>
+        <span class="label">Cevaplanan</span>
+      </div>
+      <div class="stat unanswered">
+        <span class="number">{{ getUnansweredCount() }}</span>
+        <span class="label">Boş</span>
+      </div>
+      <div class="stat total">
+        <span class="number">{{ soruSayisi }}</span>
+        <span class="label">Toplam</span>
+      </div>
+    </div>
+    <div class="progress-bar-container">
+      <div class="progress-bar" [style.width.%]="(getAnsweredCount() / soruSayisi) * 100"></div>
+    </div>
+    <div class="progress-text">
+      %{{ getCompletionPercent() }} Tamamlandı
+    </div>
+  </div>
+
+  <!-- Error/Success Messages -->
+  <div *ngIf="error" class="alert alert-error">
+    <i class="bi bi-exclamation-triangle-fill"></i>
+    {{ error }}
+  </div>
+
+  <div *ngIf="successMessage" class="alert alert-success">
+    <i class="bi bi-check-circle-fill"></i>
+    {{ successMessage }}
+  </div>
+
+  <!-- Optical Form -->
+  <div class="optik-form">
+    <div class="questions-grid">
+      <div class="question-row" *ngFor="let soruNo of sorular">
+        <div class="question-number">
+          <button 
+            *ngIf="cevaplar['soru' + soruNo]" 
+            class="clear-btn" 
+            (click)="clearAnswer(soruNo)"
+            title="Cevabı Temizle">
+            <i class="bi bi-x"></i>
+          </button>
+        </div>
+        
+        <div class="answer-options">
+          <span class="number">{{ soruNo }}</span>
+          <button 
+            *ngFor="let sik of siklar"
+            class="option-btn"
+            [class.selected]="isSelected(soruNo, sik)"
+            (click)="selectAnswer(soruNo, sik)">
+            {{ sik }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submit Section -->
+  <div class="submit-section">
+    <div class="submit-info">
+      <p *ngIf="getUnansweredCount() > 0" class="warning">
+        <i class="bi bi-exclamation-triangle"></i>
+        {{ getUnansweredCount() }} soru boş kaldı
+      </p>
+      <p *ngIf="getUnansweredCount() === 0" class="success">
+        <i class="bi bi-check-circle"></i>
+        Tüm sorular cevaplandı
+      </p>
+    </div>
+    
+    <button 
+      class="submit-btn"
+      [disabled]="submitting"
+      (click)="submitAnswers()">
+      <i class="bi" [class.bi-hourglass-split]="submitting" [class.bi-check-lg]="!submitting"></i>
+      <span *ngIf="!submitting">Sınavı Bitir</span>
+      <span *ngIf="submitting">Kaydediliyor...</span>
+    </button>
+  </div>
+</div>

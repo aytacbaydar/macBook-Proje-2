@@ -162,7 +162,7 @@ export class KullaniciSinavIsleriSayfasiComponent implements OnInit {
             return;
           }
 
-          this.router.navigate(['/ogrenci-sayfasi/optik'], {
+          this.router.navigate(['/kullanici-sayfasi/optik'], {
             queryParams: {
               sinavId: sinav.id,
               sinavAdi: sinav.sinav_adi,

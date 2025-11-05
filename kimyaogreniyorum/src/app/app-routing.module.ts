@@ -35,6 +35,8 @@ import { OgrenciSinavIslemleriSayfasiComponent } from './components/ogrenci-sayf
 import { OgrenciOptikSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-optik-sayfasi/ogrenci-optik-sayfasi.component';
 import { OgrenciSinavSonuclariSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-sinav-islemleri-sayfasi/ogrenci-sinav-sonuclari-sayfasi/ogrenci-sinav-sonuclari-sayfasi.component';
 import { KullaniciSinavSonuclariSayfasiComponent } from './components/kullanici-sayfalari/sinav-isleri-sayfasi/kullanici-sinav-sonuclari-sayfasi.component';
+import { KullaniciOptikSayfasiComponent } from './components/kullanici-sayfalari/sinav-isleri-sayfasi/kullanici-optik-sayfasi/kullanici-optik-sayfasi.component';
+import { KullaniciIsleneKonularSayfasiComponent } from './components/kullanici-sayfalari/islene-konular-sayfasi/kullanici-islene-konular-sayfasi.component';
 import { OgrenciKonuAnalizSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-konu-analiz-sayfasi/ogrenci-konu-analiz-sayfasi.component';
 import { OgrenciSoruCozumuSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-soru-cozumu-sayfasi/ogrenci-soru-cozumu-sayfasi.component';
 import { OgretmenSoruCozumuSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component';
@@ -100,6 +102,14 @@ const routes: Routes = [
       {
         path: 'sinav-sonuclari-sayfasi',
         component: KullaniciSinavSonuclariSayfasiComponent,
+      },
+      {
+        path: 'islene-konular-sayfasi',
+        component: KullaniciIsleneKonularSayfasiComponent,
+      },
+      {
+        path: 'optik',
+        component: KullaniciOptikSayfasiComponent,
       },
     ],
   },

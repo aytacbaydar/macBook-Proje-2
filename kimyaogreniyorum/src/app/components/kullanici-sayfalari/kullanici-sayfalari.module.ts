@@ -9,7 +9,9 @@ import { RouterModule } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { KullaniciSidebarSayfasiComponent } from './template/kullanici-sidebar-sayfasi/kullanici-sidebar-sayfasi.component';
 import { KullaniciSinavIsleriSayfasiComponent } from './sinav-isleri-sayfasi/kullanici-sinav-isleri-sayfasi.component';
+import { KullaniciIsleneKonularSayfasiComponent } from './islene-konular-sayfasi/kullanici-islene-konular-sayfasi.component';
 import { KullaniciSinavSonuclariSayfasiComponent } from './sinav-isleri-sayfasi/kullanici-sinav-sonuclari-sayfasi.component';
+import { KullaniciOptikSayfasiComponent } from './sinav-isleri-sayfasi/kullanici-optik-sayfasi/kullanici-optik-sayfasi.component';
 
 
 
@@ -21,7 +23,9 @@ import { KullaniciSinavSonuclariSayfasiComponent } from './sinav-isleri-sayfasi/
     KullaniciAnaSayfaSayfasiComponent,
     KullaniciSidebarSayfasiComponent,
     KullaniciSinavIsleriSayfasiComponent,
-    KullaniciSinavSonuclariSayfasiComponent
+    KullaniciSinavSonuclariSayfasiComponent,
+    KullaniciIsleneKonularSayfasiComponent,
+    KullaniciOptikSayfasiComponent
   ],
   imports: [
     CommonModule,
