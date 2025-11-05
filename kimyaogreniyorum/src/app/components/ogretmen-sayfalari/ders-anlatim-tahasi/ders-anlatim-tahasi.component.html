@@ -468,13 +468,6 @@
 <div *ngIf="pdfHataMesaji" class="durum hata durum--ust">{{ pdfHataMesaji }}</div>
 
 <div class="pdf-gorunumu" #pdfContainer>
-  <canvas #pdfCanvas class="pdf-canvas" aria-label="PDF gorunumu"></canvas>
-  <canvas
-    #annotationCanvas
-    class="annotation-canvas"
-    aria-label="Cizim alani"
-  ></canvas>
-  
   <div class="pdf-branding" *ngIf="isBlankDocument">
     <span class="pdf-branding__header">Ayta&ccedil; Baydar || Kimya &Ouml;&#287;retmeni</span>
     <img
@@ -482,6 +475,15 @@
       src="/assets/images/logo-turuncu.png"
       alt="Ayta&ccedil; Baydar logosu"
     />
+  </div>
+
+  <div class="pdf-canvas-stack">
+    <canvas #pdfCanvas class="pdf-canvas" aria-label="PDF gorunumu"></canvas>
+    <canvas
+      #annotationCanvas
+      class="annotation-canvas"
+      aria-label="Cizim alani"
+    ></canvas>
   </div>
   
   <div
@@ -578,7 +580,6 @@
     </div>
   </div>
 </div>
-
 
 
 
