@@ -13,6 +13,13 @@ type FabricCanvasJSON = ReturnType<fabric.Canvas['toJSON']>;
 type OgrenciGruplariResponse = { success: boolean; data?: unknown; message?: string };
 type ToolbarTabId = 'dosya' | 'kaydet' | 'duzenle' | 'sekiller' | 'cizgiler';
 type PageImage = { page: number; dataUrl: string; width: number; height: number };
+type FabricPathCreatedEvent = fabric.TEvent<fabric.TPointerEvent> & { path?: fabric.FabricObject };
+type FabricSelectionEvent = fabric.TEvent<fabric.TPointerEvent> & {
+  selected?: fabric.FabricObject[];
+  deselected?: fabric.FabricObject[];
+  target?: fabric.FabricObject;
+};
+
 type KonuListResponse = { success: boolean; data?: DersKonuKaydi[]; konular?: DersKonuKaydi[]; message?: string };
 interface DersKonuKaydi {
   id?: number;
@@ -145,7 +152,7 @@ export class DersAnlatimTahasiComponent
   private readonly brandingHeaderText = 'Ayta\u00E7 Baydar || Kimya \u00D6\u011Fretmeni';
   private readonly brandingLogoSrc = 'assets/images/logo-turuncu.png';
 
-  clipboardObject?: fabric.Object;
+  clipboardObject?: fabric.FabricObject;
   private clipboardBasePosition: { left: number; top: number } | null = null;
   private clipboardNextOffset = { x: 32, y: 32 };
   private readonly clipboardOffsetStep = 32;
@@ -169,6 +176,15 @@ export class DersAnlatimTahasiComponent
     this.handleCanvasMouseMove(event);
   private readonly canvasMouseUpHandler = (event: fabric.TPointerEventInfo<fabric.TPointerEvent>) =>
     this.handleCanvasMouseUp(event);
+
+  private readonly canvasPathCreatedHandler = (event: FabricPathCreatedEvent) =>
+    this.handleCanvasPathCreated(event);
+
+  private readonly canvasSelectionCreatedHandler = (event: FabricSelectionEvent) =>
+    this.handleSelectionChanged(true, event);
+  private readonly canvasSelectionUpdatedHandler = (event: FabricSelectionEvent) =>
+    this.handleSelectionChanged(true, event);
+  private readonly canvasSelectionClearedHandler = (_event?: FabricSelectionEvent) => this.updateSelectionState(false);
 
   constructor(
     private readonly alertService: AlertService,
@@ -1067,7 +1083,7 @@ export class DersAnlatimTahasiComponent
     return offset;
   }
 
-  private ensureObjectWithinCanvas(target: fabric.Object): void {
+  private ensureObjectWithinCanvas(target: fabric.FabricObject): void {
     const canvas = this.fabricCanvas;
     if (!canvas) {
       return;
@@ -1122,7 +1138,7 @@ export class DersAnlatimTahasiComponent
     this.fabricCanvas
       .getObjects()
       .slice()
-      .forEach((obj: fabric.Object) => this.fabricCanvas?.remove(obj));
+      .forEach((obj: fabric.FabricObject) => this.fabricCanvas?.remove(obj));
     this.fabricCanvas.requestRenderAll();
     if (this.currentTool !== 'select') {
       this.updateObjectInteractivity(false);
@@ -1161,6 +1177,8 @@ private initializeFabricCanvas(): void {
     preserveObjectStacking: true,
   });
 
+  canvas.backgroundColor = 'rgba(0, 0, 0, 0)';
+  canvas.renderAll();
   canvas.setDimensions({ width: A4_WIDTH_PX, height: A4_HEIGHT_PX });
   this.fabricCanvas = canvas;
 
@@ -1168,10 +1186,13 @@ private initializeFabricCanvas(): void {
   this.configureFabricBrush();
   this.attachStraightLineHandlers();
 
-  canvas.on('path:created', () => this.markUnsavedChange());
+  canvas.on('path:created', (evt) => this.canvasPathCreatedHandler(evt as FabricPathCreatedEvent));
   canvas.on('object:added', () => this.markUnsavedChange());
   canvas.on('object:modified', () => this.markUnsavedChange());
   canvas.on('object:removed', () => this.markUnsavedChange());
+  canvas.on('selection:created', (evt) => this.canvasSelectionCreatedHandler(evt as FabricSelectionEvent));
+  canvas.on('selection:updated', (evt) => this.canvasSelectionUpdatedHandler(evt as FabricSelectionEvent));
+  canvas.on('selection:cleared', (evt) => this.canvasSelectionClearedHandler(evt as FabricSelectionEvent));
 }
 
 // Fabric.js canvas ayarlarÄ± son
@@ -1225,7 +1246,7 @@ private initializeFabricCanvas(): void {
       : 'source-over';
 
     if (isEraserFallback) {
-      brush.color = '#ffffff';
+      brush.color = '#000000';
       (brush as any).opacity = 1;
       brush.width = Math.max(2, this.eraserSize);
     }
@@ -1233,6 +1254,48 @@ private initializeFabricCanvas(): void {
     canvas.freeDrawingBrush = brush;
     canvas.isDrawingMode = true;
     canvas.selection = false;
+  }
+
+  private handleCanvasPathCreated(event: FabricPathCreatedEvent): void {
+    this.markUnsavedChange();
+    const path = (event as any)?.path ?? (event as any)?.target ?? null;
+    if (!path) {
+      return;
+    }
+
+    if (this.currentTool === 'eraser') {
+      (path as any).globalCompositeOperation = 'destination-out';
+      (path as any).stroke = '#000000';
+      (path as any).fill = undefined;
+      (path as any).opacity = 1;
+      path.selectable = false;
+      path.evented = false;
+      this.fabricCanvas?.discardActiveObject();
+      this.updateSelectionState(false);
+    }
+
+    if (this.fabricCanvas) {
+      this.fabricCanvas.requestRenderAll();
+    }
+  }
+
+  private handleSelectionChanged(active: boolean, event: FabricSelectionEvent): void {
+    if (!active || this.currentTool !== 'select') {
+      this.updateSelectionState(false);
+      return;
+    }
+
+    const selected = (event as any)?.selected;
+    const target = Array.isArray(selected) && selected.length
+      ? selected[0]
+      : (event as any)?.target ?? null;
+
+    if (!target) {
+      this.updateSelectionState(false);
+      return;
+    }
+
+    this.updateSelectionState(true, target as fabric.FabricObject);
   }
 
   private attachStraightLineHandlers(): void {
@@ -1305,6 +1368,7 @@ private initializeFabricCanvas(): void {
         top: '0',
         zIndex: '3',
         pointerEvents: 'auto',
+        backgroundColor: 'transparent',
       });
     }
 
@@ -1315,6 +1379,7 @@ private initializeFabricCanvas(): void {
         top: '0',
         zIndex: '3',
         pointerEvents: 'auto',
+        backgroundColor: 'transparent',
       });
     }
 
@@ -1325,6 +1390,7 @@ private initializeFabricCanvas(): void {
         top: '0',
         zIndex: '4',
         pointerEvents: 'auto',
+        backgroundColor: 'transparent',
       });
     }
   }
@@ -1913,7 +1979,7 @@ private async renderPage(pageNumber: number): Promise<void> {
         this.fabricCanvas!.discardActiveObject();
         this.fabricCanvas!.getObjects()
           .slice()
-          .forEach((obj: fabric.Object) => this.fabricCanvas?.remove(obj));
+          .forEach((obj: fabric.FabricObject) => this.fabricCanvas?.remove(obj));
         this.fabricCanvas!.renderAll();
         this.fabricCanvas!.requestRenderAll();
 
@@ -1965,7 +2031,7 @@ private async renderPage(pageNumber: number): Promise<void> {
       this.fabricCanvas!.discardActiveObject();
       this.fabricCanvas!.getObjects()
         .slice()
-        .forEach((obj: fabric.Object) => this.fabricCanvas?.remove(obj));
+        .forEach((obj: fabric.FabricObject) => this.fabricCanvas?.remove(obj));
       this.fabricCanvas!.renderAll();
       if (this.currentTool !== 'select') {
         this.updateObjectInteractivity(false);
@@ -2661,7 +2727,7 @@ private async renderPage(pageNumber: number): Promise<void> {
       return;
     }
 
-    let shapeObject: fabric.Object;
+    let shapeObject: fabric.FabricObject;
     this.allowSelectableForNextObject = true;
     try {
       switch (shape) {
@@ -2822,7 +2888,7 @@ private async renderPage(pageNumber: number): Promise<void> {
 
   private updateSelectionState(
     state: boolean,
-    target?: fabric.Object | null
+    target?: fabric.FabricObject | null
   ): void {
     if (this.isCropping) {
       this.updateCropMenuPosition();
@@ -2841,7 +2907,7 @@ private async renderPage(pageNumber: number): Promise<void> {
     this.updateSelectionMenuPosition(active);
   }
 
-  private updateSelectionMenuPosition(target: fabric.Object): void {
+  private updateSelectionMenuPosition(target: fabric.FabricObject): void {
     const containerRect =
       this.pdfContainer?.nativeElement.getBoundingClientRect();
     const annotationRect =
