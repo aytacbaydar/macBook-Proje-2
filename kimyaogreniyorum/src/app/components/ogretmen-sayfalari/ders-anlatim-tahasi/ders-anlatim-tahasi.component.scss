@@ -457,7 +457,7 @@
   border-radius: 14px;
   background-color: #ffffff;
   box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
-  overflow: auto;
+  overflow: hidden;
   margin: 24px auto 0;
 }
 
@@ -832,19 +832,21 @@
 .pdf-branding__header {
   position: absolute;
   top: 12mm;
-  left: 32px;
-  font-size: clamp(16px, 1.8vw, 22px);
+  right: 24px;
+  left: auto;
+  font-size: clamp(12px, 1vw, 16px);
   font-weight: 700;
   letter-spacing: 0.02em;
   color: #ff6600;
+  text-align: right;
 }
 
 .pdf-branding__logo {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: min(500px, 80vw);
-  height: min(500px, 80vw);
+  width: min(300px, 50vw);
+  height: min(300px, 50vw);
   transform: translate(-50%, -50%);
   opacity: 0.5;
   object-fit: contain;
@@ -911,20 +913,22 @@
 
 @media (max-width: 1280px) {
   .pdf-branding__header {
-    left: 28px;
-    font-size: clamp(15px, 1.7vw, 20px);
+    right: 20px;
+    left: auto;
+    font-size: clamp(12px, 1.1vw, 15px);
   }
 }
 
 @media (max-width: 1024px) {
   .pdf-branding__header {
-    left: 24px;
-    font-size: 18px;
+    right: 16px;
+    left: auto;
+    font-size: 13px;
   }
 
   .pdf-branding__logo {
-    width: min(420px, 70vw);
-    height: min(420px, 70vw);
+    width: min(260px, 55vw);
+    height: min(260px, 55vw);
   }
 
   .pdf-watermark__logo {
@@ -947,13 +951,14 @@
 
 @media (max-width: 768px) {
   .pdf-branding__header {
-    left: 18px;
-    font-size: 16px;
+    right: 12px;
+    left: auto;
+    font-size: 12px;
   }
 
   .pdf-branding__logo {
-    width: min(320px, 70vw);
-    height: min(320px, 70vw);
+    width: min(220px, 50vw);
+    height: min(220px, 50vw);
   }
 
   .pdf-watermark__logo {
