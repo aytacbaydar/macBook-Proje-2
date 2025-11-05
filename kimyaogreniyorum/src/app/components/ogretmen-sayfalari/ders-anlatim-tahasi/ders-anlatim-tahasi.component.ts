@@ -2076,7 +2076,7 @@ private async renderPage(pageNumber: number): Promise<void> {
       return;
     }
 
-    const desiredSize = 500;
+    const desiredSize = 300;
     const drawSize = Math.min(desiredSize, width, height);
     const logoX = (width - drawSize) / 2;
     const logoY = (height - drawSize) / 2;
@@ -2118,8 +2118,8 @@ private async renderPage(pageNumber: number): Promise<void> {
     const pxPerMm = height / 297;
     const horizontalMargin = Math.round(pxPerMm * 10);
     const headerTextTop = Math.max(0, Math.round(pxPerMm * (15 - 15)));
-    const teacherFontSize = 24;
-    const subjectFontSize = Math.max(14, Math.round(teacherFontSize * 0.6));
+    const teacherFontSize = 16;
+    const subjectFontSize = Math.max(12, Math.round(teacherFontSize * 0.6));
     const footerFontSize = Math.max(11, Math.round(pxPerMm * 3.6));
     const headerGap = Math.max(10, Math.round(pxPerMm * 1.6));
     const subjectText = this.getHeaderSubjectText();
@@ -2900,7 +2900,6 @@ private async renderPage(pageNumber: number): Promise<void> {
     };
   }
 }
-
 
 
 
