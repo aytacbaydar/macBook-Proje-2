@@ -372,12 +372,12 @@
               ></button>
             </div>
 
-            <div class="pdf-toolbar__group size-controls">
-              <div class="size-control">
-                <label class="toolbar-label" for="penSizeSelect">Kalem Kal�nl���</label>
+            <div class="pdf-toolbar__group size-controls size-controls--compact">
+              <div class="size-control size-control--compact">
+                <label class="toolbar-label" for="penSizeSelect">Kalem Kal&#305;nl&#305;&#287;&#305;</label>
                 <select
                   id="penSizeSelect"
-                  class="size-select"
+                  class="size-select size-select--compact"
                   [ngModelOptions]="{ standalone: true }"
                   [(ngModel)]="penSize"
                   (ngModelChange)="onPenSizeChange($event)"
@@ -385,11 +385,11 @@
                   <option *ngFor="let size of penSizeOptions" [value]="size">{{ size }} px</option>
                 </select>
               </div>
-              <div class="size-control">
+              <div class="size-control size-control--compact">
                 <label class="toolbar-label" for="eraserSizeSelect">Silgi boyutu</label>
                 <select
                   id="eraserSizeSelect"
-                  class="size-select"
+                  class="size-select size-select--compact"
                   [ngModelOptions]="{ standalone: true }"
                   [(ngModel)]="eraserSize"
                   (ngModelChange)="onEraserSizeChange($event)"
@@ -578,7 +578,6 @@
     </div>
   </div>
 </div>
-
 
 
 

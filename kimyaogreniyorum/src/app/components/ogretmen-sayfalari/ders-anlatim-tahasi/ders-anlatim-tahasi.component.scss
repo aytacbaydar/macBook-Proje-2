@@ -322,6 +322,30 @@
   min-width: 140px;
 }
 
+.size-controls--compact {
+  gap: 10px;
+  align-items: center;
+}
+
+.size-control--compact {
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  min-width: auto;
+}
+
+.size-control--compact .toolbar-label {
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.size-select--compact {
+  padding: 4px 8px;
+  min-width: 88px;
+  font-size: 13px;
+  height: 30px;
+}
+
 .toolbar-tab {
   padding: 8px 16px;
   border-radius: 20px;

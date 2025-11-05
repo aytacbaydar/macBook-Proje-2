@@ -1104,8 +1104,72 @@ export class DersAnlatimTahasiComponent
     if (bounds.top + bounds.height > canvasHeight) {
       top -= bounds.top + bounds.height - canvasHeight;
     }
+
+    const deltaX = left - (target.left ?? 0);
+    const deltaY = top - (target.top ?? 0);
+
+    if (deltaX === 0 && deltaY === 0) {
+      target.setCoords();
+      return;
+    }
+
     target.set({ left, top });
+
+    if (target instanceof fabric.ActiveSelection) {
+      target.forEachObject((obj) => {
+        obj.set({
+          left: (obj.left ?? 0) + deltaX,
+          top: (obj.top ?? 0) + deltaY,
+        });
+        obj.setCoords();
+      });
+    }
+
     target.setCoords();
+  }
+
+  private placeClonedObjectOnCanvas(
+    clone: fabric.FabricObject,
+    targetLeft: number,
+    targetTop: number
+  ): fabric.FabricObject | null {
+    const canvas = this.fabricCanvas;
+    if (!canvas) {
+      return null;
+    }
+
+    clone.set({
+      left: targetLeft,
+      top: targetTop,
+      evented: true,
+      selectable: true,
+    });
+    clone.setCoords();
+
+    canvas.discardActiveObject();
+
+    if (clone instanceof fabric.ActiveSelection) {
+      clone.canvas = canvas;
+      this.ensureObjectWithinCanvas(clone);
+      clone.forEachObject((obj) => {
+        obj.set({
+          evented: true,
+          selectable: true,
+        });
+        obj.setCoords();
+        canvas.add(obj);
+      });
+      clone.setCoords();
+      canvas.setActiveObject(clone);
+      canvas.requestRenderAll();
+      return clone;
+    }
+
+    this.ensureObjectWithinCanvas(clone);
+    canvas.add(clone);
+    canvas.setActiveObject(clone);
+    canvas.requestRenderAll();
+    return clone;
   }
 
   async setBackground(mode: BackgroundMode): Promise<void> {
@@ -2381,25 +2445,19 @@ private async renderPage(pageNumber: number): Promise<void> {
     const targetTop = this.clipboardBasePosition.top + offset.y;
 
     const clone = await active.clone();
-    clone.set({
-      left: targetLeft,
-      top: targetTop,
-      evented: true,
-      selectable: true,
-    });
-    clone.setCoords();
-    canvas.add(clone);
-    this.ensureObjectWithinCanvas(clone);
-    canvas.setActiveObject(clone);
-    canvas.requestRenderAll();
-    this.updateSelectionState(true, clone);
+    const placed = this.placeClonedObjectOnCanvas(clone, targetLeft, targetTop);
+    if (!placed) {
+      return;
+    }
+
+    this.updateSelectionState(true, placed);
     this.markUnsavedChange();
 
     this.clipboardBasePosition = {
-      left: clone.left ?? targetLeft,
-      top: clone.top ?? targetTop,
+      left: placed.left ?? targetLeft,
+      top: placed.top ?? targetTop,
     };
-    this.clipboardObject = await clone.clone();
+    this.clipboardObject = await placed.clone();
     this.clipboardObject.set({
       left: this.clipboardBasePosition.left,
       top: this.clipboardBasePosition.top,
@@ -2466,25 +2524,19 @@ private async renderPage(pageNumber: number): Promise<void> {
     const targetTop = base.top + offset.y;
 
     const clone = await this.clipboardObject.clone();
-    clone.set({
-      left: targetLeft,
-      top: targetTop,
-      evented: true,
-      selectable: true,
-    });
-    clone.setCoords();
-    canvas.add(clone);
-    this.ensureObjectWithinCanvas(clone);
-    canvas.setActiveObject(clone);
-    canvas.requestRenderAll();
-    this.updateSelectionState(true, clone);
+    const placed = this.placeClonedObjectOnCanvas(clone, targetLeft, targetTop);
+    if (!placed) {
+      return;
+    }
+
+    this.updateSelectionState(true, placed);
     this.markUnsavedChange();
 
     this.clipboardBasePosition = {
-      left: clone.left ?? targetLeft,
-      top: clone.top ?? targetTop,
+      left: placed.left ?? targetLeft,
+      top: placed.top ?? targetTop,
     };
-    this.clipboardObject = await clone.clone();
+    this.clipboardObject = await placed.clone();
     this.clipboardObject.set({
       left: this.clipboardBasePosition.left,
       top: this.clipboardBasePosition.top,
@@ -2955,6 +3007,3 @@ private async renderPage(pageNumber: number): Promise<void> {
     };
   }
 }
-
-
-
