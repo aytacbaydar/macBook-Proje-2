@@ -2112,16 +2112,17 @@ private async renderPage(pageNumber: number): Promise<void> {
     const pxPerMm = height / 297;
     const horizontalMargin = Math.round(pxPerMm * 10);
     const headerTextTop = Math.max(0, Math.round(pxPerMm * (15 - 15)));
-    const teacherFontSize = 30;
-    const subjectFontSize = Math.max(18, Math.round(teacherFontSize * 0.65));
-    const footerFontSize = Math.max(12, Math.round(pxPerMm * 4.2));
-    const headerGap = Math.max(12, Math.round(pxPerMm * 2));
+    const teacherFontSize = 24;
+    const subjectFontSize = Math.max(14, Math.round(teacherFontSize * 0.6));
+    const footerFontSize = Math.max(11, Math.round(pxPerMm * 3.6));
+    const headerGap = Math.max(10, Math.round(pxPerMm * 1.6));
     const subjectText = this.getHeaderSubjectText();
 
-    const subjectPaddingX = Math.max(16, Math.round(pxPerMm * 4));
-    const subjectPaddingY = Math.max(10, Math.round(pxPerMm * 2.4));
-    const teacherPaddingX = Math.max(20, Math.round(pxPerMm * 4.8));
-    const teacherPaddingY = Math.max(12, Math.round(pxPerMm * 3));
+    const outlineWidth = Math.max(1, Math.round(pxPerMm * 0.35));
+    const subjectPaddingX = Math.max(12, Math.round(pxPerMm * 3.2));
+    const subjectPaddingY = Math.max(8, Math.round(pxPerMm * 1.8));
+    const teacherPaddingX = Math.max(14, Math.round(pxPerMm * 3.6));
+    const teacherPaddingY = Math.max(10, Math.round(pxPerMm * 2.2));
 
     const drawCapsule = (
       x: number,
@@ -2133,7 +2134,7 @@ private async renderPage(pageNumber: number): Promise<void> {
       strokeWidth: number,
       shadow?: string
     ) => {
-      const radius = Math.min(Math.max(16, h / 2), w / 2);
+      const radius = Math.min(Math.max(12, h / 2), w / 2);
       ctx.save();
       if (shadow) {
         ctx.shadowColor = shadow;
@@ -2148,8 +2149,10 @@ private async renderPage(pageNumber: number): Promise<void> {
       ctx.arcTo(x, y + h, x, y, radius);
       ctx.arcTo(x, y, x + w, y, radius);
       ctx.closePath();
-      ctx.fillStyle = fill;
-      ctx.fill();
+      if (fill && fill !== 'transparent') {
+        ctx.fillStyle = fill;
+        ctx.fill();
+      }
       if (strokeWidth > 0) {
         ctx.lineWidth = strokeWidth;
         ctx.strokeStyle = stroke;
@@ -2170,12 +2173,11 @@ private async renderPage(pageNumber: number): Promise<void> {
       subjectY,
       subjectCapsuleWidth,
       subjectCapsuleHeight,
-      'rgba(15, 23, 42, 0.92)',
       'transparent',
-      0,
-      'rgba(15, 23, 42, 0.25)'
+      '#0f172a',
+      outlineWidth
     );
-    ctx.fillStyle = '#f8fafc';
+    ctx.fillStyle = '#0f172a';
     ctx.textBaseline = 'top';
     ctx.textAlign = 'left';
     ctx.fillText(
@@ -2195,10 +2197,9 @@ private async renderPage(pageNumber: number): Promise<void> {
       teacherY,
       teacherCapsuleWidth,
       teacherCapsuleHeight,
-      'rgba(255, 102, 0, 0.12)',
+      'transparent',
       '#ff6600',
-      Math.max(2, Math.round(pxPerMm * 0.6)),
-      'rgba(255, 102, 0, 0.25)'
+      outlineWidth
     );
     ctx.fillStyle = '#ff6600';
     ctx.textAlign = 'left';
@@ -2230,8 +2231,8 @@ private async renderPage(pageNumber: number): Promise<void> {
     ctx.save();
     ctx.font = `600 ${footerFontSize}px "Segoe UI", "Helvetica Neue", Arial, sans-serif`;
     const pageTextMetrics = ctx.measureText(pageLabel);
-    const pagePaddingX = Math.max(14, Math.round(pxPerMm * 3.5));
-    const pagePaddingY = Math.max(8, Math.round(pxPerMm * 2));
+    const pagePaddingX = Math.max(12, Math.round(pxPerMm * 2.8));
+    const pagePaddingY = Math.max(6, Math.round(pxPerMm * 1.6));
     const pageCapsuleWidth = pageTextMetrics.width + pagePaddingX * 2;
     const pageCapsuleHeight = footerFontSize + pagePaddingY * 2;
     const pageCapsuleX = (width - pageCapsuleWidth) / 2;
@@ -2246,9 +2247,9 @@ private async renderPage(pageNumber: number): Promise<void> {
       pageCapsuleY,
       pageCapsuleWidth,
       pageCapsuleHeight,
-      'rgba(255, 102, 0, 0.12)',
+      'transparent',
       '#ff6600',
-      Math.max(2, Math.round(pxPerMm * 0.6))
+      outlineWidth
     );
 
     ctx.fillStyle = '#ff6600';
@@ -2893,8 +2894,6 @@ private async renderPage(pageNumber: number): Promise<void> {
     };
   }
 }
-
-
 
 
 
