@@ -483,6 +483,23 @@
   box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
   overflow: hidden;
   margin: 24px auto 0;
+
+  &--blank {
+    background-color: #fefefe;
+    background-image: url('/assets/images/kagit.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    .pdf-canvas,
+    .annotation-canvas,
+    .canvas-container canvas {
+      background-image: url('/assets/images/kagit.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+  }
 }
 
 .pdf-canvas-stack {
@@ -858,30 +875,116 @@
   inset: 0;
   pointer-events: none;
   z-index: 1;
-}
 
-.pdf-branding__header {
-  position: absolute;
-  top: 12mm;
-  right: 24px;
-  left: auto;
-  font-size: clamp(12px, 1vw, 16px);
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: #ff6600;
-  text-align: right;
-}
+  &__top {
+    position: absolute;
+    top: clamp(20px, 5vh, 80px);
+    left: clamp(18px, 5vw, 80px);
+    right: clamp(18px, 5vw, 80px);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: clamp(18px, 3vw, 40px);
+  }
 
-.pdf-branding__logo {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: min(300px, 50vw);
-  height: min(300px, 50vw);
-  transform: translate(-50%, -50%);
-  opacity: 0.5;
-  object-fit: contain;
-  pointer-events: none;
+  &__subject {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: clamp(12px, 2.5vh, 20px) clamp(16px, 3vw, 28px);
+    border-radius: 24px;
+    background: rgba(15, 23, 42, 0.92);
+    box-shadow: 0 22px 40px rgba(15, 23, 42, 0.24);
+    max-width: min(420px, 48vw);
+  }
+
+  &__subject-label {
+    font-size: clamp(11px, 0.95vw, 13px);
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: rgba(226, 232, 240, 0.72);
+  }
+
+  &__subject-value {
+    font-size: clamp(16px, 1.8vw, 22px);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #f8fafc;
+    text-transform: uppercase;
+    line-height: 1.4;
+    word-break: break-word;
+  }
+
+  &__teacher {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    padding: clamp(14px, 2.8vh, 22px) clamp(18px, 3.2vw, 32px);
+    border-radius: 26px;
+    background: linear-gradient(135deg, #ff8a05, #ff512f);
+    box-shadow: 0 24px 48px rgba(255, 81, 47, 0.32);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    min-width: clamp(200px, 24vw, 320px);
+  }
+
+  &__teacher-name {
+    font-size: clamp(18px, 2.4vw, 26px);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #ffffff;
+  }
+
+  &__teacher-role {
+    font-size: clamp(12px, 1.2vw, 14px);
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  &__watermark {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__logo {
+    width: min(320px, 52vw);
+    height: min(320px, 52vw);
+    object-fit: contain;
+    opacity: 0.32;
+    filter: drop-shadow(0 32px 45px rgba(15, 23, 42, 0.22));
+    transform: translateY(0);
+  }
+
+  &__page {
+    position: absolute;
+    left: 50%;
+    bottom: clamp(24px, 7vh, 84px);
+    transform: translateX(-50%);
+  }
+
+  &__page-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(8px, 2vh, 14px) clamp(18px, 4vw, 32px);
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(255, 138, 5, 0.18), rgba(255, 81, 47, 0.28));
+    border: 1px solid rgba(255, 102, 0, 0.45);
+    color: #ff5c28;
+    font-size: clamp(13px, 1.4vw, 16px);
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    box-shadow: 0 18px 36px rgba(255, 81, 47, 0.22);
+    backdrop-filter: blur(6px);
+  }
 }
 
 .pdf-watermark {
@@ -942,59 +1045,58 @@
   box-shadow: none;
 }
 
-@media (max-width: 1280px) {
-  .pdf-branding__header {
-    right: 20px;
-    left: auto;
-    font-size: clamp(12px, 1.1vw, 15px);
+@media (max-width: 1200px) {
+  .pdf-branding {
+    &__top {
+      top: clamp(24px, 6vh, 72px);
+      gap: 24px;
+    }
+
+    &__subject {
+      max-width: min(420px, 55vw);
+    }
+
+    &__teacher {
+      min-width: clamp(200px, 32vw, 320px);
+    }
+
+    &__logo {
+      width: min(280px, 60vw);
+      height: min(280px, 60vw);
+    }
   }
 }
 
-@media (max-width: 1024px) {
-  .pdf-branding__header {
-    right: 16px;
-    left: auto;
-    font-size: 13px;
-  }
+@media (max-width: 900px) {
+  .pdf-branding {
+    &__top {
+      flex-direction: column;
+      align-items: stretch;
+    }
 
-  .pdf-branding__logo {
-    width: min(260px, 55vw);
-    height: min(260px, 55vw);
-  }
-
-  .pdf-watermark__logo {
-    width: 360px;
-    height: 360px;
-  }
-
-  .pdf-footer {
-    left: 24px;
-    right: 24px;
-    bottom: 10mm;
-  }
-
-  .pdf-footer__page-box {
-    width: 44px;
-    height: 44px;
-    font-size: 15px;
+    &__teacher {
+      align-items: flex-start;
+      text-align: left;
+    }
   }
 }
 
 @media (max-width: 768px) {
-  .pdf-branding__header {
-    right: 12px;
-    left: auto;
-    font-size: 12px;
-  }
+  .pdf-branding {
+    &__logo {
+      width: min(220px, 62vw);
+      height: min(220px, 62vw);
+      opacity: 0.38;
+    }
 
-  .pdf-branding__logo {
-    width: min(220px, 50vw);
-    height: min(220px, 50vw);
+    &__page {
+      bottom: clamp(18px, 6vh, 60px);
+    }
   }
 
   .pdf-watermark__logo {
-    width: 260px;
-    height: 260px;
+    width: 280px;
+    height: 280px;
   }
 
   .pdf-footer {
@@ -1004,8 +1106,8 @@
   }
 
   .pdf-footer__page-box {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
     font-size: 14px;
   }
 }

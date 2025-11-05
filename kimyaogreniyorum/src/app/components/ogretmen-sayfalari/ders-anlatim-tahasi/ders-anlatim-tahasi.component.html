@@ -465,14 +465,30 @@
 <div *ngIf="pdfYukleniyor" class="durum durum--ust">PDF yükleniyor...</div>
 <div *ngIf="pdfHataMesaji" class="durum hata durum--ust">{{ pdfHataMesaji }}</div>
 
-<div class="pdf-gorunumu" #pdfContainer>
+<div class="pdf-gorunumu" #pdfContainer [ngClass]="{ 'pdf-gorunumu--blank': isBlankDocument }">
   <div class="pdf-branding" *ngIf="isBlankDocument">
-    <span class="pdf-branding__header">Aytaç Baydar || Kimya Öğretmeni</span>
-    <img
-      class="pdf-branding__logo"
-      src="/assets/images/logo-turuncu.png"
-      alt="Aytaç Baydar logosu"
-    />
+    <div class="pdf-branding__top">
+      <div class="pdf-branding__subject">
+        <span class="pdf-branding__subject-label">Ders Konusu</span>
+        <span class="pdf-branding__subject-value">{{ brandingSubjectText }}</span>
+      </div>
+      <div class="pdf-branding__teacher">
+        <span class="pdf-branding__teacher-name">{{ brandingTeacherName }}</span>
+        <span class="pdf-branding__teacher-role">{{ brandingTeacherRole }}</span>
+      </div>
+    </div>
+
+    <div class="pdf-branding__watermark">
+      <img
+        class="pdf-branding__logo"
+        src="/assets/images/logo-turuncu.png"
+        alt="Aytaç Baydar logosu"
+      />
+    </div>
+
+    <div class="pdf-branding__page">
+      <span class="pdf-branding__page-label">{{ brandingPageLabel }}</span>
+    </div>
   </div>
 
   <div class="pdf-canvas-stack">
@@ -578,8 +594,6 @@
     </div>
   </div>
 </div>
-
-
 
 
 
