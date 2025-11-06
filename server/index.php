@@ -102,7 +102,7 @@ if (strpos($requestUri, $basePath) === 0) {
             break;
 
         case 'kullanici_ucret_bilgileri':
-            require_once 'api/database/ucret_islemleri/kullanici_ucret_bilgileri.php';
+            require_once 'database/ucret_islemleri/kullanici_ucret_bilgileri.php';
             break;
 
         case 'sinav_cevaplari_kaydet':

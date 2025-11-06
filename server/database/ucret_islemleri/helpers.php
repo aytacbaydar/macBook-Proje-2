@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=1);
 
-function ensureUcretIslemleriTables(\PDO $conn): void
+function ensureUcretIslemleriTables(PDO $conn)
 {
     $conn->exec(<<<'SQL'
 CREATE TABLE IF NOT EXISTS kullanici_ucret_islemleri (
@@ -45,11 +44,11 @@ SQL
     ensureUcretIslemleriColumn($conn, 'kullanici_ucret_islemleri', 'ekleyen_id');
 }
 
-function ensureUcretIslemleriColumn(\PDO $conn, string $table, string $column): void
+function ensureUcretIslemleriColumn(PDO $conn, $table, $column)
 {
     $stmt = $conn->prepare('SHOW COLUMNS FROM ' . $table . ' LIKE :column');
-    $stmt->execute([':column' => $column]);
-    if ($stmt->fetch(\PDO::FETCH_ASSOC) !== false) {
+    $stmt->execute(array(':column' => $column));
+    if ($stmt->fetch(PDO::FETCH_ASSOC) !== false) {
         return;
     }
 
@@ -61,26 +60,166 @@ function ensureUcretIslemleriColumn(\PDO $conn, string $table, string $column): 
     }
 }
 
-function fetchUcretIslemleri(\PDO $conn, int $kullaniciId, array $filters = []): array
+function normalizeDateFilter($value, $endOfDay)
+{
+    if ($value === null) {
+        return null;
+    }
+
+    $trimmed = trim((string)$value);
+    if ($trimmed === '') {
+        return null;
+    }
+
+    try {
+        $date = new DateTime($trimmed);
+    } catch (Exception $e) {
+        return null;
+    }
+
+    if ($endOfDay) {
+        $date->setTime(23, 59, 59);
+    } else {
+        $date->setTime(0, 0, 0);
+    }
+
+    return $date->format('Y-m-d H:i:s');
+}
+
+function normalizeDateTimeValue($value)
+{
+    if ($value === null) {
+        return date('Y-m-d H:i:s');
+    }
+
+    $trimmed = trim((string)$value);
+    if ($trimmed === '') {
+        return date('Y-m-d H:i:s');
+    }
+
+    try {
+        $date = new DateTime($trimmed);
+    } catch (Exception $e) {
+        throw new InvalidArgumentException('Geçersiz odeme_tarihi değeri.');
+    }
+
+    return $date->format('Y-m-d H:i:s');
+}
+
+function groupAttendanceRecords($records)
+{
+    $grouped = array();
+
+    foreach ($records as $record) {
+        $dateKey = $record['tarih'];
+        if (!isset($grouped[$dateKey])) {
+            $grouped[$dateKey] = array(
+                'tarih' => $dateKey,
+                'kayitlar' => array(),
+                'katilan_sayisi' => 0,
+                'katilmayan_sayisi' => 0,
+            );
+        }
+
+        $grouped[$dateKey]['kayitlar'][] = $record;
+
+        if ($record['durum'] === 'present') {
+            $grouped[$dateKey]['katilan_sayisi']++;
+        } elseif ($record['durum'] === 'absent') {
+            $grouped[$dateKey]['katilmayan_sayisi']++;
+        }
+    }
+
+    usort($grouped, function ($a, $b) {
+        return strcmp($b['tarih'], $a['tarih']);
+    });
+
+    return $grouped;
+}
+
+function buildPaymentItems($payments)
+{
+    $items = array();
+
+    foreach ($payments as $payment) {
+        $items[] = array(
+            'id' => (int)$payment['id'],
+            'kullanici_id' => (int)$payment['ogrenci_id'],
+            'islem_tipi' => 'Ödeme',
+            'tutar' => (float)$payment['tutar'],
+            'para_birimi' => 'TRY',
+            'odeme_tarihi' => $payment['odeme_tarihi'],
+            'aciklama' => isset($payment['aciklama']) ? $payment['aciklama'] : null,
+            'durum' => 'odendi',
+            'etiketi' => sprintf('%02d/%04d', (int)$payment['ay'], (int)$payment['yil']),
+            'created_at' => $payment['odeme_tarihi'],
+            'updated_at' => $payment['odeme_tarihi'],
+            'ekleyen' => array(
+                'id' => null,
+                'adi_soyadi' => null,
+            ),
+            'notlar' => array(),
+        );
+    }
+
+    return $items;
+}
+
+function filterPaymentItems($items, $durum)
+{
+    if ($durum === null) {
+        return $items;
+    }
+
+    $needle = strtolower(trim((string)$durum));
+    if ($needle === '' || $needle === 'tum') {
+        return $items;
+    }
+
+    $filtered = array();
+    foreach ($items as $item) {
+        $status = isset($item['durum']) ? strtolower($item['durum']) : '';
+        if ($status === $needle) {
+            $filtered[] = $item;
+        }
+    }
+
+    return array_values($filtered);
+}
+
+function fetchUcretIslemleri(PDO $conn, $kullaniciId, $filters = array())
 {
     ensureUcretIslemleriTables($conn);
 
-    $where = ['i.kullanici_id = :kullanici_id'];
-    $params = [':kullanici_id' => $kullaniciId];
-
-    if (isset($filters['durum']) && trim((string)$filters['durum']) !== '') {
-        $durum = strtolower((string)$filters['durum']);
-        $where[] = 'i.durum = :durum';
-        $params[':durum'] = $durum;
+    $kullaniciId = (int)$kullaniciId;
+    if ($kullaniciId <= 0) {
+        return array(
+            'kullanici' => null,
+            'items' => array(),
+            'stats' => array(),
+            'attendance' => array(),
+            'filters' => $filters,
+        );
     }
 
-    $baslangic = normalizeDateFilter($filters['baslangic'] ?? null, false);
+    $where = array('i.kullanici_id = :kullanici_id');
+    $params = array(':kullanici_id' => $kullaniciId);
+
+    if (isset($filters['durum'])) {
+        $durum = trim((string)$filters['durum']);
+        if ($durum !== '' && strtolower($durum) !== 'tum') {
+            $where[] = 'i.durum = :durum';
+            $params[':durum'] = strtolower($durum);
+        }
+    }
+
+    $baslangic = normalizeDateFilter(isset($filters['baslangic']) ? $filters['baslangic'] : null, false);
     if ($baslangic !== null) {
         $where[] = 'i.odeme_tarihi >= :baslangic';
         $params[':baslangic'] = $baslangic;
     }
 
-    $bitis = normalizeDateFilter($filters['bitis'] ?? null, true);
+    $bitis = normalizeDateFilter(isset($filters['bitis']) ? $filters['bitis'] : null, true);
     if ($bitis !== null) {
         $where[] = 'i.odeme_tarihi <= :bitis';
         $params[':bitis'] = $bitis;
@@ -89,13 +228,12 @@ function fetchUcretIslemleri(\PDO $conn, int $kullaniciId, array $filters = []):
     $whereSql = implode(' AND ', $where);
 
     $limitSql = '';
-    if (!empty($filters['limit']) && is_numeric($filters['limit'])) {
+    if (isset($filters['limit']) && is_numeric($filters['limit'])) {
         $limit = max(1, min(500, (int)$filters['limit']));
         $limitSql = ' LIMIT ' . $limit;
     }
 
-    $stmt = $conn->prepare(
-        'SELECT
+    $sql = 'SELECT
             i.id,
             i.kullanici_id,
             i.islem_tipi,
@@ -120,16 +258,17 @@ function fetchUcretIslemleri(\PDO $conn, int $kullaniciId, array $filters = []):
         LEFT JOIN kullanici_ucret_notlari n ON n.islem_id = i.id
         LEFT JOIN kullanicilar note_user ON note_user.id = n.ekleyen_id
         WHERE ' . $whereSql . '
-        ORDER BY i.odeme_tarihi DESC, i.id DESC, n.created_at ASC' . $limitSql
-    );
-    $stmt->execute($params);
-    $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        ORDER BY i.odeme_tarihi DESC, i.id DESC, n.created_at ASC' . $limitSql;
 
-    $items = [];
+    $stmt = $conn->prepare($sql);
+    $stmt->execute($params);
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $items = array();
     foreach ($rows as $row) {
         $id = (int)$row['id'];
         if (!isset($items[$id])) {
-            $items[$id] = [
+            $items[$id] = array(
                 'id' => $id,
                 'kullanici_id' => (int)$row['kullanici_id'],
                 'islem_tipi' => $row['islem_tipi'],
@@ -139,67 +278,70 @@ function fetchUcretIslemleri(\PDO $conn, int $kullaniciId, array $filters = []):
                 'aciklama' => $row['aciklama'],
                 'durum' => $row['durum'],
                 'etiketi' => $row['etiketi'],
-                'ekleyen' => [
+                'ekleyen' => array(
                     'id' => $row['ekleyen_id'] !== null ? (int)$row['ekleyen_id'] : null,
-                    'adi_soyadi' => $row['ekleyen_adi'] ?? null,
-                ],
+                    'adi_soyadi' => isset($row['ekleyen_adi']) ? $row['ekleyen_adi'] : null,
+                ),
                 'created_at' => $row['created_at'],
                 'updated_at' => $row['updated_at'],
-                'notlar' => [],
-            ];
+                'notlar' => array(),
+            );
         }
 
         if ($row['note_id'] !== null) {
-            $items[$id]['notlar'][] = [
+            $items[$id]['notlar'][] = array(
                 'id' => (int)$row['note_id'],
                 'baslik' => $row['note_baslik'],
                 'icerik' => $row['note_icerik'],
                 'created_at' => $row['note_created_at'],
-                'ekleyen' => [
+                'ekleyen' => array(
                     'id' => $row['note_ekleyen_id'] !== null ? (int)$row['note_ekleyen_id'] : null,
-                    'adi_soyadi' => $row['note_ekleyen_adi'] ?? null,
-                ],
-            ];
+                    'adi_soyadi' => isset($row['note_ekleyen_adi']) ? $row['note_ekleyen_adi'] : null,
+                ),
+            );
         }
     }
 
     $items = array_values($items);
 
-    $statStmt = $conn->prepare(
-        'SELECT
+    $statSql = 'SELECT
             COUNT(*) AS adet,
             COALESCE(SUM(CASE WHEN durum IN (\'tamamlandi\', \'odendi\') THEN tutar ELSE 0 END), 0) AS toplam_odenen,
             COALESCE(SUM(CASE WHEN durum IN (\'beklemede\', \'taslak\') THEN tutar ELSE 0 END), 0) AS toplam_bekleyen,
             COALESCE(SUM(CASE WHEN durum IN (\'iptal\', \'iade\') THEN tutar ELSE 0 END), 0) AS toplam_iptal
         FROM kullanici_ucret_islemleri i
-        WHERE ' . $whereSql
-    );
+        WHERE ' . $whereSql;
+
+    $statStmt = $conn->prepare($statSql);
     $statStmt->execute($params);
-    $statRow = $statStmt->fetch(\PDO::FETCH_ASSOC) ?: [];
+    $statRow = $statStmt->fetch(PDO::FETCH_ASSOC);
+    if (!$statRow) {
+        $statRow = array();
+    }
 
     $userStmt = $conn->prepare('SELECT id, adi_soyadi, email, rutbe FROM kullanicilar WHERE id = :id LIMIT 1');
-    $userStmt->execute([':id' => $kullaniciId]);
-    $kullanici = $userStmt->fetch(\PDO::FETCH_ASSOC) ?: null;
+    $userStmt->execute(array(':id' => $kullaniciId));
+    $kullanici = $userStmt->fetch(PDO::FETCH_ASSOC);
 
-    return [
-        'kullanici' => $kullanici,
+    return array(
+        'kullanici' => $kullanici ? $kullanici : null,
         'items' => $items,
-        'stats' => [
+        'stats' => array(
             'toplam_islem' => isset($statRow['adet']) ? (int)$statRow['adet'] : 0,
             'toplam_odenen' => isset($statRow['toplam_odenen']) ? (float)$statRow['toplam_odenen'] : 0.0,
             'toplam_bekleyen' => isset($statRow['toplam_bekleyen']) ? (float)$statRow['toplam_bekleyen'] : 0.0,
             'toplam_iptal' => isset($statRow['toplam_iptal']) ? (float)$statRow['toplam_iptal'] : 0.0,
-        ],
-        'applied_filters' => [
-            'durum' => $filters['durum'] ?? null,
+        ),
+        'filters' => array(
+            'durum' => isset($filters['durum']) ? $filters['durum'] : null,
             'baslangic' => $baslangic,
             'bitis' => $bitis,
-            'limit' => $filters['limit'] ?? null,
-        ],
-    ];
+            'limit' => isset($filters['limit']) ? $filters['limit'] : null,
+        ),
+    );
 }
 
-function fetchUcretIslemiById(\PDO $conn, int $id): ?array
+function fetchUcretIslemiById(PDO $conn, $id)
 {
     ensureUcretIslemleriTables($conn);
 
@@ -231,15 +373,15 @@ function fetchUcretIslemiById(\PDO $conn, int $id): ?array
         WHERE i.id = :id
         ORDER BY n.created_at ASC'
     );
-    $stmt->execute([':id' => $id]);
-    $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    $stmt->execute(array(':id' => (int)$id));
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if (!$rows) {
         return null;
     }
 
     $first = $rows[0];
-    $item = [
+    $item = array(
         'id' => (int)$first['id'],
         'kullanici_id' => (int)$first['kullanici_id'],
         'islem_tipi' => $first['islem_tipi'],
@@ -249,70 +391,72 @@ function fetchUcretIslemiById(\PDO $conn, int $id): ?array
         'aciklama' => $first['aciklama'],
         'durum' => $first['durum'],
         'etiketi' => $first['etiketi'],
-        'ekleyen' => [
+        'ekleyen' => array(
             'id' => $first['ekleyen_id'] !== null ? (int)$first['ekleyen_id'] : null,
-            'adi_soyadi' => $first['ekleyen_adi'] ?? null,
-        ],
+            'adi_soyadi' => isset($first['ekleyen_adi']) ? $first['ekleyen_adi'] : null,
+        ),
         'created_at' => $first['created_at'],
         'updated_at' => $first['updated_at'],
-        'notlar' => [],
-    ];
+        'notlar' => array(),
+    );
 
     foreach ($rows as $row) {
         if ($row['note_id'] !== null) {
-            $item['notlar'][] = [
+            $item['notlar'][] = array(
                 'id' => (int)$row['note_id'],
                 'baslik' => $row['note_baslik'],
                 'icerik' => $row['note_icerik'],
                 'created_at' => $row['note_created_at'],
-                'ekleyen' => [
+                'ekleyen' => array(
                     'id' => $row['note_ekleyen_id'] !== null ? (int)$row['note_ekleyen_id'] : null,
-                    'adi_soyadi' => $row['note_ekleyen_adi'] ?? null,
-                ],
-            ];
+                    'adi_soyadi' => isset($row['note_ekleyen_adi']) ? $row['note_ekleyen_adi'] : null,
+                ),
+            );
         }
     }
 
     return $item;
 }
 
-function createUcretIslemi(\PDO $conn, array $payload, int $kullaniciId, int $ekleyenId): array
+function createUcretIslemi(PDO $conn, $payload, $kullaniciId, $ekleyenId)
 {
     ensureUcretIslemleriTables($conn);
 
-    $islemTipi = trim((string)($payload['islem_tipi'] ?? ''));
+    $payload = is_array($payload) ? $payload : array();
+
+    $islemTipi = trim(isset($payload['islem_tipi']) ? $payload['islem_tipi'] : '');
     if ($islemTipi === '') {
-        throw new \InvalidArgumentException('islem_tipi alani zorunludur.');
+        throw new InvalidArgumentException('islem_tipi alanı zorunludur.');
     }
 
-    $tutar = (float)($payload['tutar'] ?? 0);
+    $tutar = (double)(isset($payload['tutar']) ? $payload['tutar'] : 0);
     if ($tutar <= 0) {
-        throw new \InvalidArgumentException('tutar alani 0 dan buyuk olmali.');
+        throw new InvalidArgumentException('tutar alanı 0 dan büyük olmalı.');
     }
 
-    $paraBirimiRaw = strtoupper(trim((string)($payload['para_birimi'] ?? 'TRY')));
-    $sanitizedCurrency = preg_replace('/[^A-Z]/', '', $paraBirimiRaw) ?: 'TRY';
+    $paraBirimiRaw = strtoupper(trim(isset($payload['para_birimi']) ? $payload['para_birimi'] : 'TRY'));
+    $sanitizedCurrency = preg_replace('/[^A-Z]/', '', $paraBirimiRaw);
+    if ($sanitizedCurrency === '') {
+        $sanitizedCurrency = 'TRY';
+    }
     $paraBirimi = substr($sanitizedCurrency, 0, 8);
-    if ($paraBirimi === '') {
-        $paraBirimi = 'TRY';
-    }
 
-    $odemeTarihi = normalizeDateTimeValue($payload['odeme_tarihi'] ?? null);
+    $odemeTarihi = normalizeDateTimeValue(isset($payload['odeme_tarihi']) ? $payload['odeme_tarihi'] : null);
 
-    $durumAllowed = ['beklemede', 'taslak', 'tamamlandi', 'odendi', 'iptal', 'iade'];
-    $durum = strtolower(trim((string)($payload['durum'] ?? 'beklemede')));
+    $durumAllowed = array('beklemede', 'taslak', 'tamamlandi', 'odendi', 'iptal', 'iade');
+    $durum = strtolower(trim(isset($payload['durum']) ? $payload['durum'] : 'beklemede'));
     if (!in_array($durum, $durumAllowed, true)) {
         $durum = 'beklemede';
     }
 
-    $etiket = trim((string)($payload['etiketi'] ?? ''));
+    $etiket = trim(isset($payload['etiketi']) ? $payload['etiketi'] : '');
     if ($etiket === '') {
         $etiket = null;
     } else {
         $etiket = substr($etiket, 0, 50);
     }
 
-    $aciklama = trim((string)($payload['aciklama'] ?? ''));
+    $aciklama = trim(isset($payload['aciklama']) ? $payload['aciklama'] : '');
     if ($aciklama === '') {
         $aciklama = null;
     }
@@ -324,8 +468,8 @@ function createUcretIslemi(\PDO $conn, array $payload, int $kullaniciId, int $ek
             (:kullanici_id, :islem_tipi, :tutar, :para_birimi, :odeme_tarihi, :aciklama, :durum, :etiketi, :ekleyen_id)'
     );
 
-    $stmt->execute([
-        ':kullanici_id' => $kullaniciId,
+    $stmt->execute(array(
+        ':kullanici_id' => (int)$kullaniciId,
         ':islem_tipi' => $islemTipi,
         ':tutar' => $tutar,
         ':para_birimi' => $paraBirimi,
@@ -333,76 +477,180 @@ function createUcretIslemi(\PDO $conn, array $payload, int $kullaniciId, int $ek
         ':aciklama' => $aciklama,
         ':durum' => $durum,
         ':etiketi' => $etiket,
-        ':ekleyen_id' => $ekleyenId > 0 ? $ekleyenId : null,
-    ]);
+        ':ekleyen_id' => $ekleyenId > 0 ? (int)$ekleyenId : null,
+    ));
 
     $islemId = (int)$conn->lastInsertId();
 
-    $noteBaslik = trim((string)($payload['not_baslik'] ?? ''));
-    $noteIcerik = trim((string)($payload['not_icerik'] ?? ''));
+    $noteBaslik = trim(isset($payload['not_baslik']) ? $payload['not_baslik'] : '');
+    $noteIcerik = trim(isset($payload['not_icerik']) ? $payload['not_icerik'] : '');
     if ($noteBaslik !== '' || $noteIcerik !== '') {
         $noteStmt = $conn->prepare(
             'INSERT INTO kullanici_ucret_notlari (islem_id, baslik, icerik, ekleyen_id)
              VALUES (:islem_id, :baslik, :icerik, :ekleyen_id)'
         );
-        $noteStmt->execute([
+        $noteStmt->execute(array(
             ':islem_id' => $islemId,
             ':baslik' => $noteBaslik !== '' ? $noteBaslik : null,
             ':icerik' => $noteIcerik !== '' ? $noteIcerik : null,
-            ':ekleyen_id' => $ekleyenId > 0 ? $ekleyenId : null,
-        ]);
+            ':ekleyen_id' => $ekleyenId > 0 ? (int)$ekleyenId : null,
+        ));
     }
 
     $item = fetchUcretIslemiById($conn, $islemId);
     if ($item === null) {
-        throw new \RuntimeException('Yeni ucret islemi okunamadi.');
+        throw new RuntimeException('Yeni ücret işlemi okunamadı.');
     }
 
     return $item;
 }
 
-function normalizeDateFilter($value, bool $endOfDay): ?string
+function getKullaniciUcretBilgileri(PDO $conn, $ogrenciId, $filters = array())
 {
-    if ($value === null) {
-        return null;
+    $ogrenciId = (int)$ogrenciId;
+    if ($ogrenciId <= 0) {
+        throw new RuntimeException('Geçersiz öğrenci kimliği.');
     }
 
-    $value = trim((string)$value);
-    if ($value === '') {
-        return null;
+    $studentStmt = $conn->prepare(
+        'SELECT o.id, o.adi_soyadi, o.email, o.avatar, o.rutbe,
+                ob.ucret, ob.grubu, ob.okulu, ob.sinifi, ob.ders_adi
+         FROM ogrenciler o
+         LEFT JOIN ogrenci_bilgileri ob ON o.id = ob.ogrenci_id
+         WHERE o.id = :id'
+    );
+    $studentStmt->execute(array(':id' => $ogrenciId));
+    $student = $studentStmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$student) {
+        throw new RuntimeException('Öğrenci bulunamadı.');
     }
 
-    try {
-        $date = new \DateTime($value);
-    } catch (\Exception $e) {
-        return null;
+    $attendanceStartDefault = date('Y-m-d H:i:s', strtotime('-3 months'));
+    $paymentsStartDefault = date('Y-m-d H:i:s', strtotime('-6 months'));
+    $nowDefault = date('Y-m-d H:i:s');
+
+    $attendanceStart = normalizeDateFilter(isset($filters['baslangic']) ? $filters['baslangic'] : null, false);
+    if ($attendanceStart === null) {
+        $attendanceStart = $attendanceStartDefault;
     }
 
-    if ($endOfDay) {
-        $date->setTime(23, 59, 59);
-    } else {
-        $date->setTime(0, 0, 0);
+    $attendanceEnd = normalizeDateFilter(isset($filters['bitis']) ? $filters['bitis'] : null, true);
+    if ($attendanceEnd === null) {
+        $attendanceEnd = $nowDefault;
     }
 
-    return $date->format('Y-m-d H:i:s');
-}
-
-function normalizeDateTimeValue($value): string
-{
-    if ($value === null) {
-        return (new \DateTime())->format('Y-m-d H:i:s');
+    $paymentsStart = normalizeDateFilter(isset($filters['baslangic']) ? $filters['baslangic'] : null, false);
+    if ($paymentsStart === null) {
+        $paymentsStart = $paymentsStartDefault;
     }
 
-    $value = trim((string)$value);
-    if ($value === '') {
-        return (new \DateTime())->format('Y-m-d H:i:s');
+    $paymentsEnd = normalizeDateFilter(isset($filters['bitis']) ? $filters['bitis'] : null, true);
+    if ($paymentsEnd === null) {
+        $paymentsEnd = $nowDefault;
     }
 
-    try {
-        $dateTime = new \DateTime($value);
-    } catch (\Exception $e) {
-        throw new \InvalidArgumentException('Gecersiz odeme_tarihi degeri.');
+    $attendanceStmt = $conn->prepare(
+        'SELECT id, ogrenci_id, tarih, durum, zaman, yontem, ders_tipi
+         FROM devamsizlik_kayitlari
+         WHERE ogrenci_id = :id AND tarih BETWEEN :start AND :end
+         ORDER BY tarih DESC, zaman DESC'
+    );
+    $attendanceStmt->execute(array(
+        ':id' => $ogrenciId,
+        ':start' => $attendanceStart,
+        ':end' => $attendanceEnd,
+    ));
+    $attendanceRecords = $attendanceStmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $limit = 200;
+    if (isset($filters['limit']) && is_numeric($filters['limit'])) {
+        $limit = max(10, min(500, (int)$filters['limit']));
     }
 
-    return $dateTime->format('Y-m-d H:i:s');
+    $paymentsStmt = $conn->prepare(
+        'SELECT id, ogrenci_id, tutar, odeme_tarihi, aciklama, ay, yil
+         FROM ogrenci_odemeler
+         WHERE ogrenci_id = :id AND odeme_tarihi BETWEEN :start AND :end
+         ORDER BY odeme_tarihi DESC, id DESC
+         LIMIT :limit'
+    );
+    $paymentsStmt->bindValue(':id', $ogrenciId, PDO::PARAM_INT);
+    $paymentsStmt->bindValue(':start', $paymentsStart);
+    $paymentsStmt->bindValue(':end', $paymentsEnd);
+    $paymentsStmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+    $paymentsStmt->execute();
+    $payments = $paymentsStmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $presentCount = 0;
+    $absentCount = 0;
+    foreach ($attendanceRecords as $record) {
+        if ($record['durum'] === 'present') {
+            $presentCount++;
+        } elseif ($record['durum'] === 'absent') {
+            $absentCount++;
+        }
+    }
+
+    $totalLessons = $presentCount + $absentCount;
+
+    $ucret = isset($student['ucret']) ? (float)$student['ucret'] : 0.0;
+    $ucretPerLesson = $ucret > 0 ? $ucret / 4 : 0.0;
+    $expectedTotalAmount = $presentCount * $ucretPerLesson;
+
+    $totalPaid = 0.0;
+    foreach ($payments as $payment) {
+        $totalPaid += isset($payment['tutar']) ? (float)$payment['tutar'] : 0.0;
+    }
+
+    $remainingDebt = $expectedTotalAmount - $totalPaid;
+    $lessonsUntilNextPayment = $presentCount > 0 ? 4 - ($presentCount % 4) : 4;
+    if ($lessonsUntilNextPayment === 4) {
+        $lessonsUntilNextPayment = 0;
+    }
+
+    $items = buildPaymentItems($payments);
+    $items = filterPaymentItems($items, isset($filters['durum']) ? $filters['durum'] : null);
+
+    return array(
+        'kullanici' => array(
+            'id' => (int)$student['id'],
+            'adi_soyadi' => isset($student['adi_soyadi']) ? $student['adi_soyadi'] : null,
+            'email' => isset($student['email']) ? $student['email'] : null,
+            'rutbe' => isset($student['rutbe']) ? $student['rutbe'] : null,
+            'grubu' => isset($student['grubu']) ? $student['grubu'] : null,
+            'sinifi' => isset($student['sinifi']) ? $student['sinifi'] : null,
+            'okulu' => isset($student['okulu']) ? $student['okulu'] : null,
+            'ucret' => $ucret,
+            'ucret_per_ders' => $ucretPerLesson,
+        ),
+        'items' => $items,
+        'stats' => array(
+            'toplam_islem' => count($items),
+            'toplam_odenen' => round($totalPaid, 2),
+            'toplam_bekleyen' => $remainingDebt > 0 ? round($remainingDebt, 2) : 0.0,
+            'toplam_iptal' => 0.0,
+            'beklenen_toplam' => round($expectedTotalAmount, 2),
+            'kalan_borc' => round($remainingDebt, 2),
+            'fazla_odeme' => $remainingDebt < 0 ? round(abs($remainingDebt), 2) : 0.0,
+            'ucret' => round($ucret, 2),
+            'ucret_per_ders' => round($ucretPerLesson, 2),
+            'katildigi_ders' => $presentCount,
+            'toplam_ders' => $totalLessons,
+            'sonraki_odemeye_kalan_ders' => $lessonsUntilNextPayment,
+        ),
+        'attendance' => array(
+            'records' => $attendanceRecords,
+            'grouped' => groupAttendanceRecords($attendanceRecords),
+            'present_count' => $presentCount,
+            'absent_count' => $absentCount,
+            'total_count' => $totalLessons,
+        ),
+        'filters' => array(
+            'durum' => isset($filters['durum']) ? $filters['durum'] : null,
+            'baslangic' => $attendanceStart,
+            'bitis' => $attendanceEnd,
+            'limit' => $limit,
+        ),
+    );
 }

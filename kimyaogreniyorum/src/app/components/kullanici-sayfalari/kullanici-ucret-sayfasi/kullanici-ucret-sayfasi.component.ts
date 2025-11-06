@@ -124,7 +124,7 @@ export class KullaniciUcretSayfasiComponent implements OnInit {
     }
 
     this.http
-      .get<any>('./server/api/database/ucret_islemleri/kullanici_ucret_bilgileri.php', {
+      .get<any>('./server/database/ucret_islemleri/kullanici_ucret_bilgileri.php', {
         headers,
         params,
       })
