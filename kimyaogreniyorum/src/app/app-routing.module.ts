@@ -37,6 +37,7 @@ import { OgrenciSinavSonuclariSayfasiComponent } from './components/ogrenci-sayf
 import { KullaniciSinavSonuclariSayfasiComponent } from './components/kullanici-sayfalari/sinav-isleri-sayfasi/kullanici-sinav-sonuclari-sayfasi.component';
 import { KullaniciOptikSayfasiComponent } from './components/kullanici-sayfalari/sinav-isleri-sayfasi/kullanici-optik-sayfasi/kullanici-optik-sayfasi.component';
 import { KullaniciIsleneKonularSayfasiComponent } from './components/kullanici-sayfalari/islene-konular-sayfasi/kullanici-islene-konular-sayfasi.component';
+import { KullaniciUcretSayfasiComponent } from './components/kullanici-sayfalari/kullanici-ucret-sayfasi/kullanici-ucret-sayfasi.component';
 import { OgrenciKonuAnalizSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-konu-analiz-sayfasi/ogrenci-konu-analiz-sayfasi.component';
 import { OgrenciSoruCozumuSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-soru-cozumu-sayfasi/ogrenci-soru-cozumu-sayfasi.component';
 import { OgretmenSoruCozumuSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component';
@@ -111,6 +112,10 @@ const routes: Routes = [
       {
         path: 'islene-konular-pdf-sayfasi',
         component: KullaniciIsleneKonularPdfSayfasiComponent,
+      },
+      {
+        path: 'ucret-islemleri-sayfasi',
+        component: KullaniciUcretSayfasiComponent,
       },
       {
         path: 'optik',

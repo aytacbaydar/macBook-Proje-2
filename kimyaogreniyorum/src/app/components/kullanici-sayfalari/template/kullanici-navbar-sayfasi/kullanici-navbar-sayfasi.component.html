@@ -4,18 +4,17 @@
     <div class="navbar-left">
       <div class="brand" (click)="toggleSidebar()">
         <span class="brand-title">Kimya</span>
-        <span class="brand-highlight">Öğreniyorum</span>
+        <span class="brand-highlight">Ogreniyorum</span>
       </div>
     </div>
 
     <div class="navbar-right dropdown">
-      
-        <span class="user-meta">
-          <span class="user-name" title="{{ studentName }}">{{ studentName }}</span>
-        </span>
-        <span class="avatar-wrapper">
-          <img [src]="studentAvatar" alt="Avatar" class="user-avatar">
-        </span>
+      <span class="user-meta">
+        <span class="user-name" title="{{ studentName }}">{{ studentName }}</span>
+      </span>
+      <span class="avatar-wrapper">
+        <img [src]="studentAvatar" alt="Avatar" class="user-avatar" />
+      </span>
     </div>
   </div>
 </div>
@@ -24,7 +23,6 @@
 <div class="mobile-footer-menu d-block d-lg-none">
   <div class="footer-menu-container">
     <div class="footer-menu-items">
-
       <!-- Anasayfa -->
       <a
         routerLink="/kullanici-sayfasi/"
@@ -38,7 +36,7 @@
         <span class="footer-menu-text">Anasayfa</span>
       </a>
 
-      <!-- Sınavlar -->
+      <!-- Sinavlar -->
       <a
         routerLink="/kullanici-sayfasi/sinav-sonuclari-sayfasi"
         class="footer-menu-item"
@@ -48,7 +46,7 @@
         <div class="footer-menu-icon">
           <i class="bi bi-clipboard-check"></i>
         </div>
-        <span class="footer-menu-text">Sınavlar</span>
+        <span class="footer-menu-text">Sinavlar</span>
       </a>
 
       <!-- Menu Butonu (Ortada) -->
@@ -56,7 +54,7 @@
         <div class="footer-menu-icon-center">
           <i class="bi bi-grid"></i>
         </div>
-        <span class="footer-menu-text">Menü</span>
+        <span class="footer-menu-text">Menu</span>
       </div>
 
       <!-- Konu PDF -->
@@ -84,7 +82,6 @@
         </div>
         <span class="footer-menu-text">Profil</span>
       </a>
-
     </div>
   </div>
 </div>
@@ -92,24 +89,15 @@
 <!-- Bottom Sheet Menu -->
 <div class="bottom-sheet-overlay" [class.active]="isBottomSheetOpen" (click)="closeBottomSheet()"></div>
 <div class="bottom-sheet" [class.active]="isBottomSheetOpen">
-  <!--
-  <div class="bottom-sheet-header">
-    <h3>Menü</h3>
-    <button class="close-btn" (click)="closeBottomSheet()">
-      <i class="bi bi-x-lg"></i>
-    </button>
-  </div>
-  -->
   <div class="bottom-sheet-content">
     <div class="menu-grid">
-
       <a routerLink="/kullanici-sayfasi/konu-analiz" class="menu-card logout-card" (click)="closeBottomSheet()">
         <div class="menu-card-icon" style="background: linear-gradient(135deg, #29303c70 0%, #29303c 100%);">
           <i class="bi bi-bar-chart"></i>
         </div>
         <span class="menu-card-text">Konu Analizlerim</span>
       </a>
-      
+
       <a routerLink="/kullanici-sayfasi/sinav-sonuclari-sayfasi" class="menu-card logout-card" (click)="closeBottomSheet()">
         <div class="menu-card-icon" style="background: linear-gradient(135deg, #ff660070 0%, #ff6600 100%);">
           <i class="bi bi-clipboard-check"></i>
@@ -121,7 +109,7 @@
         <div class="menu-card-icon" style="background: linear-gradient(135deg, #29303c70 0%, #29303c 100%);">
           <i class="bi bi-map"></i>
         </div>
-        <span class="menu-card-text">Yol Haritası</span>
+        <span class="menu-card-text">Yol Haritasi</span>
       </a>
 
       <a routerLink="/kullanici-sayfasi/islene-konular-pdf-sayfasi" class="menu-card logout-card" (click)="closeBottomSheet()">
@@ -135,38 +123,46 @@
         <div class="menu-card-icon" style="background: linear-gradient(135deg, #ff660070 0%, #ff6600 100%);">
           <i class="bi bi-key"></i>
         </div>
-        <span class="menu-card-text">Cevap Anahtarları</span>
+        <span class="menu-card-text">Cevap Anahtarlari</span>
       </a>
-      
-      <a routerLink="/kullanici-sayfasi/ucret-bilgileri" class="menu-card  logout-card" (click)="closeBottomSheet()" *ngIf="studentKategori === 'ucretli'">
+
+      <a
+        routerLink="/kullanici-sayfasi/ucret-islemleri-sayfasi"
+        class="menu-card logout-card"
+        (click)="closeBottomSheet()"
+        *ngIf="studentKategori === 'ucretli'"
+      >
         <div class="menu-card-icon" style="background: linear-gradient(135deg, #29303c70 0%, #29303c 100%);">
           <i class="bi bi-credit-card"></i>
         </div>
-        <span class="menu-card-text">Ücret Bilgilerim</span>
+        <span class="menu-card-text">Ucret Bilgilerim</span>
       </a>
 
-      <a routerLink="/kullanici-sayfasi/cevap-anahtarlari" class="menu-card logout-card" (click)="closeBottomSheet()" *ngIf="studentKategori === 'ucretli'">
+      <a
+        routerLink="/kullanici-sayfasi/mesajlar"
+        class="menu-card logout-card"
+        (click)="closeBottomSheet()"
+        *ngIf="studentKategori === 'ucretli'"
+      >
         <div class="menu-card-icon" style="background: linear-gradient(135deg, #ff660070 0%, #ff6600 100%);">
-          <i class="bi bi-key"></i>
+          <i class="bi bi-chat-dots"></i>
         </div>
-        <span class="menu-card-text">Mesajlarım</span>
+        <span class="menu-card-text">Mesajlarim</span>
       </a>
 
-      <a routerLink="/kullanici-sayfasi/ucret-bilgileri" class="menu-card  logout-card" (click)="closeBottomSheet()">
+      <a routerLink="/kullanici-sayfasi/duyurular" class="menu-card logout-card" (click)="closeBottomSheet()">
         <div class="menu-card-icon" style="background: linear-gradient(135deg, #29303c70 0%, #29303c 100%);">
-          <i class="bi bi-credit-card"></i>
+          <i class="bi bi-megaphone"></i>
         </div>
         <span class="menu-card-text">Duyurular</span>
       </a>
-      
 
       <div class="menu-card logout-card" (click)="logout()">
         <div class="menu-card-icon" style="background: linear-gradient(135deg, #ff660070 0%, #ff6600 100%);">
           <i class="bi bi-box-arrow-right"></i>
         </div>
-        <span class="menu-card-text">Çıkış Yap</span>
+        <span class="menu-card-text">Cikis Yap</span>
       </div>
-
     </div>
   </div>
 </div>

@@ -1,17 +1,17 @@
-<?php
-// Ana giriş noktası - API isteklerini uygun dosyalara yönlendirme
+﻿<?php
+// Ana giriÅŸ noktasÄ± - API isteklerini uygun dosyalara yÃ¶nlendirme
 require_once 'config.php';
 
-// URL'den endpoint'i çıkar
+// URL'den endpoint'i Ã§Ä±kar
 $requestUri = $_SERVER['REQUEST_URI'];
 $basePath = '/server/api/';
 
-// /server/api/ ile başlayan URL'leri işle
+// /server/api/ ile baÅŸlayan URL'leri iÅŸle
 if (strpos($requestUri, $basePath) === 0) {
     $endpoint = substr($requestUri, strlen($basePath));
-    $endpoint = strtok($endpoint, '?'); // Query parametrelerini kaldır
+    $endpoint = strtok($endpoint, '?'); // Query parametrelerini kaldÄ±r
 
-    // Endpoint'e göre yönlendirme
+    // Endpoint'e gÃ¶re yÃ¶nlendirme
     switch ($endpoint) {
         case 'ogrenci_kayit':
             require_once 'api/ogrenci_kayit.php';
@@ -101,6 +101,10 @@ if (strpos($requestUri, $basePath) === 0) {
             require_once 'api/ogrenci_ucret_bilgileri.php';
             break;
 
+        case 'kullanici_ucret_bilgileri':
+            require_once 'api/database/ucret_islemleri/kullanici_ucret_bilgileri.php';
+            break;
+
         case 'sinav_cevaplari_kaydet':
             require_once 'api/sinav_cevaplari_kaydet.php';
             break;
@@ -154,11 +158,11 @@ if (strpos($requestUri, $basePath) === 0) {
 
         default:
             http_response_code(404);
-            echo json_encode(['error' => 'API endpoint bulunamadı']);
+            echo json_encode(['error' => 'API endpoint bulunamadÄ±']);
             break;
     }
 } else {
-    // API dışındaki istekler için 404 dön
+    // API dÄ±ÅŸÄ±ndaki istekler iÃ§in 404 dÃ¶n
     http_response_code(404);
-    echo json_encode(['error' => 'Sayfa bulunamadı']);
+    echo json_encode(['error' => 'Sayfa bulunamadÄ±']);
 }

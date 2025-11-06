@@ -24,7 +24,7 @@
 
     <a routerLink="/sinavlar" routerLinkActive="active" class="nav-item">
       <i class="fas fa-clipboard-list"></i>
-      <span *ngIf="!isCollapsed">Sınavlar</span>
+      <span *ngIf="!isCollapsed">Sinavlar</span>
     </a>
 
     <a routerLink="/konular" routerLinkActive="active" class="nav-item">
@@ -34,7 +34,16 @@
 
     <a routerLink="/istatistikler" routerLinkActive="active" class="nav-item">
       <i class="fas fa-chart-line"></i>
-      <span *ngIf="!isCollapsed">İstatistikler</span>
+      <span *ngIf="!isCollapsed">Istatistikler</span>
+    </a>
+
+    <a
+      routerLink="/kullanici-sayfasi/ucret-islemleri-sayfasi"
+      routerLinkActive="active"
+      class="nav-item"
+    >
+      <i class="fas fa-wallet"></i>
+      <span *ngIf="!isCollapsed">Ucret Islemleri</span>
     </a>
 
     <a routerLink="/ayarlar" routerLinkActive="active" class="nav-item">
@@ -46,7 +55,7 @@
   <div class="sidebar-footer">
     <button class="logout-btn" (click)="logout()">
       <i class="fas fa-sign-out-alt"></i>
-      <span *ngIf="!isCollapsed">Çıkış Yap</span>
+      <span *ngIf="!isCollapsed">Cikis Yap</span>
     </button>
   </div>
 </aside>

@@ -14,8 +14,7 @@ import { KullaniciSinavSonuclariSayfasiComponent } from './sinav-isleri-sayfasi/
 import { KullaniciOptikSayfasiComponent } from './sinav-isleri-sayfasi/kullanici-optik-sayfasi/kullanici-optik-sayfasi.component';
 import { KullaniciIsleneKonularPdfSayfasiComponent } from './islene-konular-sayfasi/kullanici-islene-konular-pdf-sayfasi/kullanici-islene-konular-pdf-sayfasi.component';
 import { KullaniciOdevlerSayfasiComponent } from './islene-konular-sayfasi/kullanici-odevler-sayfasi/kullanici-odevler-sayfasi.component';
-
-
+import { KullaniciUcretSayfasiComponent } from './kullanici-ucret-sayfasi/kullanici-ucret-sayfasi.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +28,8 @@ import { KullaniciOdevlerSayfasiComponent } from './islene-konular-sayfasi/kulla
     KullaniciIsleneKonularSayfasiComponent,
     KullaniciIsleneKonularPdfSayfasiComponent,
     KullaniciOdevlerSayfasiComponent,
-    KullaniciOptikSayfasiComponent
+    KullaniciOptikSayfasiComponent,
+    KullaniciUcretSayfasiComponent
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,193 @@
+<div class="ucret-sayfasi" id="kullaniciUcretSayfasi">
+  <div class="page-header">
+    <div class="header-info">
+      <div class="icon-wrapper">
+        <i class="bi bi-wallet2"></i>
+      </div>
+      <div>
+        <h1>Ücret ve Ödeme İşlemlerim</h1>
+        <p *ngIf="currentUser" class="subtitle">
+          {{ currentUser?.adi_soyadi || currentUser?.email }} · {{ currentUser?.rutbe | titlecase }}
+        </p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn ghost" (click)="resetFilters()" [disabled]="isLoading">
+        <i class="bi bi-arrow-counterclockwise"></i>
+        Filtreleri Sıfırla
+      </button>
+      <button class="btn primary" (click)="pdfKaydet()" [disabled]="isLoading || !islemler.length">
+        <i class="bi bi-file-earmark-pdf"></i>
+        PDF İndir
+      </button>
+    </div>
+  </div>
+
+  <div class="filters">
+    <div class="filter-group">
+      <label for="durumFilter">Durum</label>
+      <select
+        id="durumFilter"
+        [(ngModel)]="durumFilter"
+        (change)="refresh()"
+        [disabled]="isLoading"
+      >
+        <option value="tum">Tümü</option>
+        <option value="beklemede">Beklemede</option>
+        <option value="taslak">Taslak</option>
+        <option value="odendi">Ödendi</option>
+        <option value="tamamlandi">Tamamlandı</option>
+        <option value="iptal">İptal</option>
+        <option value="iade">İade</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="tarihAraligi">Tarih Aralığı</label>
+      <select
+        id="tarihAraligi"
+        [(ngModel)]="tarihAraligi"
+        (change)="tarihAraligiDegisti()"
+        [disabled]="isLoading"
+      >
+        <option value="last30">Son 30 Gün</option>
+        <option value="last90">Son 90 Gün</option>
+        <option value="year">Yıl Başı - Bugün</option>
+        <option value="all">Tüm Kayıtlar</option>
+        <option value="custom">Özel Aralık</option>
+      </select>
+    </div>
+
+    <div class="filter-group limit">
+      <label for="limitInput">Kayıt Limiti</label>
+      <input
+        id="limitInput"
+        type="number"
+        min="10"
+        max="500"
+        step="10"
+        [(ngModel)]="sonucLimit"
+        (change)="refresh()"
+        [disabled]="isLoading"
+      />
+    </div>
+
+    <div class="filter-group custom-range" *ngIf="tarihAraligi === 'custom'">
+      <label>Özel Tarih Aralığı</label>
+      <div class="custom-range-inputs">
+        <input
+          type="date"
+          [(ngModel)]="customBaslangic"
+          [disabled]="isLoading"
+        />
+        <span>—</span>
+        <input
+          type="date"
+          [(ngModel)]="customBitis"
+          [disabled]="isLoading"
+        />
+        <button class="btn ghost" (click)="refresh()" [disabled]="isLoading">
+          Uygula
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>İşlemleriniz yükleniyor...</p>
+  </div>
+
+  <div class="error-banner" *ngIf="!isLoading && error">
+    <i class="bi bi-exclamation-triangle"></i>
+    {{ error }}
+  </div>
+
+  <div class="stats-grid" *ngIf="istatistikler">
+    <div class="stat-card primary">
+      <div class="stat-label">Beklenen Tutar</div>
+      <div class="stat-value">{{ formatCurrency(istatistikler?.beklenen_toplam || 0) }}</div>
+      <div class="stat-help">
+        {{ (istatistikler?.katildigi_ders || 0) }} ders × {{ formatCurrency(istatistikler?.ucret_per_ders || 0) }}
+      </div>
+    </div>
+    <div class="stat-card success">
+      <div class="stat-label">Ödenen Tutar</div>
+      <div class="stat-value">{{ formatCurrency(istatistikler?.toplam_odenen || 0) }}</div>
+      <div class="stat-help">Tamamlanan/ödendi durumundaki işlemler</div>
+    </div>
+    <div class="stat-card warning">
+      <div class="stat-label">Kalan Borç</div>
+      <div class="stat-value">{{ formatCurrency(Math.max(istatistikler?.kalan_borc || 0, 0)) }}</div>
+      <div class="stat-help">Bekleyen ödeme tutarı</div>
+    </div>
+    <div class="stat-card danger">
+      <div class="stat-label">Fazla Ödeme</div>
+      <div class="stat-value">{{ formatCurrency(istatistikler?.fazla_odeme || 0) }}</div>
+      <div class="stat-help">Ödenen toplamın beklenen tutarı aşan kısmı</div>
+    </div>
+  </div>
+
+  <section class="islem-listesi" *ngIf="!isLoading">
+    <ng-container *ngIf="islemler?.length; else emptyState">
+      <article class="islem-karti" *ngFor="let islem of islemler; trackBy: trackByIslemId">
+        <header class="islem-karti__ust">
+          <div>
+            <h3>{{ islem.islem_tipi }}</h3>
+            <p class="islem-tarih">{{ formatDate(islem.odeme_tarihi) }}</p>
+          </div>
+          <span [class]="getDurumClass(islem.durum)">{{ getDurumEtiketi(islem.durum) }}</span>
+        </header>
+
+        <div class="islem-karti__icerik">
+          <div class="tutar">
+            <span class="etiket">Tutar</span>
+            <strong>{{ formatCurrency(islem.tutar, islem.para_birimi) }}</strong>
+          </div>
+          <div class="detaylar">
+            <span *ngIf="islem.aciklama" class="row">
+              <i class="bi bi-chat-dots"></i>
+              {{ islem.aciklama }}
+            </span>
+            <span *ngIf="islem.etiketi" class="row">
+              <i class="bi bi-bookmark"></i>
+              {{ islem.etiketi }}
+            </span>
+            <span *ngIf="islem.ekleyen?.adi_soyadi" class="row">
+              <i class="bi bi-person"></i>
+              {{ islem.ekleyen?.adi_soyadi }} tarafından kaydedildi
+            </span>
+            <span class="row zaman">
+              <i class="bi bi-clock-history"></i>
+              Oluşturma: {{ formatDate(islem.created_at) }} · Güncelleme: {{ formatDate(islem.updated_at) }}
+            </span>
+          </div>
+        </div>
+
+        <div class="notlar" *ngIf="hasNotlar(islem)">
+          <h4>Notlar</h4>
+          <div class="not" *ngFor="let not of islem.notlar">
+            <div class="not-baslik">
+              <span>{{ not.baslik || 'Not' }}</span>
+              <small>{{ formatDate(not.created_at) }}</small>
+            </div>
+            <p>{{ not.icerik || 'Detay verisi bulunmuyor.' }}</p>
+            <span class="not-etiket" *ngIf="not.ekleyen?.adi_soyadi">
+              <i class="bi bi-person"></i>
+              {{ not.ekleyen?.adi_soyadi }}
+            </span>
+          </div>
+        </div>
+      </article>
+    </ng-container>
+
+    <ng-template #emptyState>
+      <div class="bos-icerik">
+        <i class="bi bi-inbox"></i>
+        <h3>Kayıt bulunamadı</h3>
+        <p>Filtreleri değiştirerek farklı işlem kayıtlarını görüntülemeyi deneyin.</p>
+        <button class="btn ghost" (click)="resetFilters()">Filtreleri sıfırla</button>
+      </div>
+    </ng-template>
+  </section>
+</div>
