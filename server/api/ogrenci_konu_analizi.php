@@ -1,7 +1,7 @@
 <?php
 // Hata raporlamayı etkinleştir
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 
 header('Content-Type: application/json; charset=utf-8');
@@ -14,6 +14,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 require_once '../config.php';
+
+/**
+ * Güvenli json_decode işlemi.
+ * @param string|null $value
+ * @param array|object $default
+ */
+function safe_json_decode(?string $value, $default = [], bool $assoc = true) {
+    if ($value === null || $value === '') {
+        return $default;
+    }
+
+    $decoded = json_decode($value, $assoc);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        return $default;
+    }
+
+    return $decoded;
+}
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     echo json_encode([
@@ -62,11 +80,11 @@ try {
 
     // Normal sınavları işle
     foreach ($sinavlar as $sinav) {
-        $ogrenci_cevaplar = json_decode($sinav['cevaplar'], true);
-        $soru_konulari = json_decode($sinav['soru_konulari'], true);
-        $dogru_cevaplar = json_decode($sinav['dogru_cevaplar'], true);
+        $ogrenci_cevaplar = safe_json_decode($sinav['cevaplar'], []);
+        $soru_konulari = safe_json_decode($sinav['soru_konulari'], []);
+        $dogru_cevaplar = safe_json_decode($sinav['dogru_cevaplar'], []);
 
-        if (!$soru_konulari || !$dogru_cevaplar) continue;
+        if (empty($soru_konulari) || empty($dogru_cevaplar)) continue;
 
         foreach ($soru_konulari as $soru_key => $konu_adi) {
             if (empty($konu_adi)) continue;
@@ -107,8 +125,8 @@ try {
 
     // Yapay zeka testlerini işle
     foreach ($yapay_zeka_testler as $test) {
-        $sorular = json_decode($test['sorular'], true);
-        $sonuc = json_decode($test['sonuc'], true);
+        $sorular = safe_json_decode($test['sorular'], []);
+        $sonuc = safe_json_decode($test['sonuc'], []);
         
         if (!$sorular || !$sonuc || !isset($sonuc['details'])) continue;
 

@@ -38,6 +38,7 @@ import { KullaniciSinavSonuclariSayfasiComponent } from './components/kullanici-
 import { KullaniciOptikSayfasiComponent } from './components/kullanici-sayfalari/sinav-isleri-sayfasi/kullanici-optik-sayfasi/kullanici-optik-sayfasi.component';
 import { KullaniciIsleneKonularSayfasiComponent } from './components/kullanici-sayfalari/islene-konular-sayfasi/kullanici-islene-konular-sayfasi.component';
 import { KullaniciUcretSayfasiComponent } from './components/kullanici-sayfalari/kullanici-ucret-sayfasi/kullanici-ucret-sayfasi.component';
+import { KullaniciAnalizSayfasiComponent } from './components/kullanici-sayfalari/kullanici-analiz-sayfasi/kullanici-analiz-sayfasi.component';
 import { OgrenciKonuAnalizSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-konu-analiz-sayfasi/ogrenci-konu-analiz-sayfasi.component';
 import { OgrenciSoruCozumuSayfasiComponent } from './components/ogrenci-sayfasi/ogrenci-soru-cozumu-sayfasi/ogrenci-soru-cozumu-sayfasi.component';
 import { OgretmenSoruCozumuSayfasiComponent } from './components/ogretmen-sayfasi/ogretmen-soru-cozumu-sayfasi/ogretmen-soru-cozumu-sayfasi.component';
@@ -120,6 +121,10 @@ const routes: Routes = [
       {
         path: 'optik',
         component: KullaniciOptikSayfasiComponent,
+      },
+      {
+        path: 'kullanici-analiz-sayfasi',
+        component: KullaniciAnalizSayfasiComponent,
       },
     ],
   },

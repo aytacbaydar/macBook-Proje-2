@@ -1,0 +1,142 @@
+<div class="kullanici-analiz-page">
+  <div *ngIf="loading" class="loading-wrap">
+    <div class="loading-spinner"></div>
+    <p class="loading-text">Analiz panosu hazırlanıyor...</p>
+  </div>
+
+  <div *ngIf="!loading && error" class="error-card">
+    <h4>Bir sorun oluştu</h4>
+    <p>{{ error }}</p>
+    <button class="btn-secondary" (click)="refreshAnaliz()">Tekrar dene</button>
+  </div>
+
+  <ng-container *ngIf="!loading && !error">
+    <section class="hero-card" *ngIf="kullaniciBilgi">
+      <div class="hero-details">
+        <p class="greeting">{{ kullaniciBilgi.rol }} profili</p>
+        <h1>{{ kullaniciBilgi.adi_soyadi }}</h1>
+        <p class="subtitle">
+          {{ trendMessage }}
+        </p>
+        <div class="hero-actions">
+          <span class="hero-badge">Ortalama {{ ortalamaBasari }}%</span>
+          <button class="btn-primary" (click)="refreshAnaliz()">Veriyi yenile</button>
+        </div>
+      </div>
+      <div class="hero-avatar">
+        <img [src]="kullaniciBilgi.avatar" alt="Kullanıcı avatar" />
+        <div class="hero-stats">
+          <strong>{{ completionRate }}%</strong>
+          <small>Tamamlanan sorular</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="metric-grid" *ngIf="konuAnaliz.length">
+      <article class="metric-card">
+        <p class="metric-label">Toplam Konu</p>
+        <h3>{{ konuAnaliz.length }}</h3>
+        <small>Analize dahil edilen konular</small>
+      </article>
+      <article class="metric-card">
+        <p class="metric-label">Çözülen Soru</p>
+        <h3>{{ answeredQuestions }}</h3>
+        <small>Doğru + yanlış</small>
+      </article>
+      <article class="metric-card">
+        <p class="metric-label">İlerle | oranı</p>
+        <h3>{{ completionRate }}%</h3>
+        <small>Tamamlama oranınız</small>
+      </article>
+      <article class="metric-card">
+        <p class="metric-label">Hedef baz</p>
+        <h3>{{ highlightTopics.length }}</h3>
+        <small>İyi performans konuları</small>
+      </article>
+    </section>
+
+    <section class="trend-section" *ngIf="konuAnaliz.length">
+      <div class="trend-left">
+        <h4>Odağını arttırman gereken konular</h4>
+        <p class="trend-note">
+          <i class="bi bi-lightbulb me-1"></i>Yüzdesi düşük konulara tekrar bak
+        </p>
+        <div class="trend-list">
+          <div class="trend-item" *ngFor="let topic of focusTopics">
+            <div class="trend-topic">
+              <h5>{{ topic.konu_adi }}</h5>
+              <small>{{ topic.dogru_sayisi }}/{{ topic.toplam_soru }} doğru</small>
+            </div>
+            <span class="trend-percent" [style.color]="getTrendColor(topic.basari_orani)">
+              {{ topic.basari_orani }}%
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="trend-right">
+        <h4>İyi giden konular</h4>
+        <p class="trend-note">
+          <i class="bi bi-graph-up me-1"></i>Hızla yükselen başarı
+        </p>
+        <div class="trend-card">
+          <div class="trend-topic" *ngFor="let topic of highlightTopics">
+            <div>
+              <h5>{{ topic.konu_adi }}</h5>
+              <small>{{ getTrendTag(topic.basari_orani) }}</small>
+            </div>
+            <div class="trend-progress">
+              <span>{{ topic.basari_orani }}%</span>
+              <div class="progress-pill" [style.background]="getTrendColor(topic.basari_orani)">
+                <span [style.width.%]="topic.basari_orani"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="topic-panel" *ngIf="konuAnaliz.length">
+      <header class="panel-header">
+        <div>
+          <h3>Konulara detaylı bakış</h3>
+          <p>Her konu için doğru/yanlış/boş sayıları ve başarı oranı</p>
+        </div>
+        <button class="btn-outline" (click)="refreshAnaliz()">Yenile</button>
+      </header>
+      <div class="topic-grid">
+        <article class="topic-card" *ngFor="let konu of orderedKonuAnaliz">
+          <div class="topic-top">
+            <div>
+              <h4>{{ konu.konu_adi }}</h4>
+              <p class="topic-level" [style.color]="getTrendColor(konu.basari_orani)">
+                {{ getTrendTag(konu.basari_orani) }}
+              </p>
+            </div>
+            <span class="topic-rate">{{ konu.basari_orani }}%</span>
+          </div>
+          <div class="topic-progress">
+            <div class="progress-bar">
+              <div
+                class="progress-fill"
+                [style.width.%]="konu.basari_orani"
+                [style.background]="getTrendColor(konu.basari_orani)"
+              ></div>
+            </div>
+            <div class="progress-detail">
+              <span>Doğru: {{ konu.dogru_sayisi }}</span>
+              <span>Yanlış: {{ konu.yanlis_sayisi }}</span>
+              <span>Boş: {{ konu.bos_sayisi }}</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="empty-state" *ngIf="!konuAnaliz.length">
+      <i class="bi bi-bar-chart-line"></i>
+      <h4>Veri yok</h4>
+      <p>Sınav çözdükçe analiz burada görünür.</p>
+      <button class="btn-primary" (click)="refreshAnaliz()">İlk sınavı çöz</button>
+    </section>
+  </ng-container>
+</div>

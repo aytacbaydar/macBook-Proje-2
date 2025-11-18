@@ -12,36 +12,32 @@
    Sidebar-header Son-->
 
   <nav class="sidebar-nav">
-    <a routerLink="/ana-sayfa" routerLinkActive="active" class="nav-item">
+    <a routerLink="/kullanici-sayfasi" routerLinkActive="active" class="nav-item">
       <i class="fas fa-home"></i>
       <span *ngIf="!isCollapsed">Ana Sayfa</span>
     </a>
 
-    <a routerLink="/profil" routerLinkActive="active" class="nav-item">
+    <a routerLink="/kullanici-sayfasi/profil" routerLinkActive="active" class="nav-item">
       <i class="fas fa-user"></i>
       <span *ngIf="!isCollapsed">Profil</span>
     </a>
 
-    <a routerLink="/sinavlar" routerLinkActive="active" class="nav-item">
+    <a routerLink="/kullanici-sayfasi/sinav-sonuclari-sayfasi" routerLinkActive="active" class="nav-item">
       <i class="fas fa-clipboard-list"></i>
       <span *ngIf="!isCollapsed">Sinavlar</span>
     </a>
 
-    <a routerLink="/konular" routerLinkActive="active" class="nav-item">
+    <a routerLink="/kullanici-sayfasi/islene-konular-pdf-sayfasi" routerLinkActive="active" class="nav-item">
       <i class="fas fa-book"></i>
       <span *ngIf="!isCollapsed">Konular</span>
     </a>
 
-    <a routerLink="/istatistikler" routerLinkActive="active" class="nav-item">
+    <a routerLink="/kullanici-sayfasi/kullanici-analiz-sayfasi" routerLinkActive="active" class="nav-item">
       <i class="fas fa-chart-line"></i>
       <span *ngIf="!isCollapsed">Istatistikler</span>
     </a>
 
-    <a
-      routerLink="/kullanici-sayfasi/ucret-islemleri-sayfasi"
-      routerLinkActive="active"
-      class="nav-item"
-    >
+    <a routerLink="/kullanici-sayfasi/ucret-islemleri-sayfasi" routerLinkActive="active" class="nav-item">
       <i class="fas fa-wallet"></i>
       <span *ngIf="!isCollapsed">Ucret Islemleri</span>
     </a>
