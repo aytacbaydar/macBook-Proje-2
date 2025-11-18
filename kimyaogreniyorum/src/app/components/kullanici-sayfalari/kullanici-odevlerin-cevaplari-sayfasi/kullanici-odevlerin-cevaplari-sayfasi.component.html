@@ -1,0 +1,104 @@
+<div class="homework-answers-page">
+  <header class="page-intro">
+    <div>
+      <p class="eyebrow">Konu Testleri</p>
+      <h1>Ödevlerinize ait konu testleri</h1>
+      <p class="intro-text">
+        Güncel konu testleri ve öğretmeninizin paylaştığı materyalleri burada görebilirsiniz.
+        Her kartta başlangıç/bitiş tarihi, kalan gün ve varsa PDF bağlantısı yer alır.
+      </p>
+    </div>
+    <div class="summary-stats">
+      <article>
+        <span class="stat-label">Toplam test</span>
+        <strong>{{ odevler.length }}</strong>
+        <small>Yüklendi</small>
+      </article>
+      <article>
+        <span class="stat-label">Aktif</span>
+        <strong>{{ activeCount }}</strong>
+        <small>Şu anda çözülebilir</small>
+      </article>
+      <article>
+        <span class="stat-label">Yaklaşan</span>
+        <strong>{{ upcomingCount }}</strong>
+        <small>Hazırlık aşaması</small>
+      </article>
+      <article>
+        <span class="stat-label">Süresi doldu</span>
+        <strong>{{ expiredCount }}</strong>
+        <small>Tekrar gözden geçir</small>
+      </article>
+    </div>
+  </header>
+
+  <div *ngIf="loading" class="state-card loading">
+    <div class="spinner"></div>
+    <p>Ödevler yükleniyor...</p>
+  </div>
+
+  <div *ngIf="!loading && error" class="state-card error">
+    <i class="bi bi-exclamation-circle"></i>
+    <p>{{ error }}</p>
+    <button class="outline-btn" (click)="refresh()">Tekrar Yükle</button>
+  </div>
+
+  <section *ngIf="!loading && !error && odevler.length === 0" class="state-card empty">
+    <i class="bi bi-clipboard-x"></i>
+    <h3>Henüz konu testi yok</h3>
+    <p>Yeni ödev yüklendiğinde burada görüntülenecektir.</p>
+    <button class="outline-btn" (click)="refresh()">Yenile</button>
+  </section>
+
+  <section *ngIf="!loading && !error && odevler.length > 0" class="assignments-grid">
+    <article class="assignment-card" *ngFor="let odev of odevler">
+      <div class="card-top">
+        <div>
+          <p class="label">Konu testi</p>
+          <p class="teacher" *ngIf="odev.ogretmen_adi">Öğretmen: {{ odev.ogretmen_adi }}</p>
+        </div>
+        <span class="status-chip" [style.background]="getStatusColor(odev.status)">
+          {{ getStatusText(odev.status) }}
+        </span>
+      </div>
+
+      <h3>{{ odev.konu }}</h3>
+      <p class="description" *ngIf="odev.aciklama">{{ odev.aciklama }}</p>
+
+      <div class="date-row">
+        <div>
+          <span>Başlangıç</span>
+          <strong>{{ formatDate(odev.baslangic_tarihi) }}</strong>
+        </div>
+        <div>
+          <span>Bitiş</span>
+          <strong>{{ formatDate(odev.bitis_tarihi) }}</strong>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <div class="remaining">
+          <span *ngIf="odev.status !== 'expired'">Çözmeniz için kalan gün</span>
+          <span *ngIf="odev.status === 'expired'">Bu test süresi doldu</span>
+          <strong>{{ odev.status === 'expired' ? 0 : odev.kalan_gun ?? 0 }}</strong>
+        </div>
+        <div class="actions">
+          <a
+            *ngIf="odev.pdf_exists && odev.pdf_url"
+            [href]="odev.pdf_url"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="primary-link"
+          >
+            <i class="bi bi-file-earmark-pdf"></i>
+            PDF Görüntüle
+          </a>
+          <span *ngIf="!odev.pdf_exists" class="muted">
+            <i class="bi bi-file-earmark-lock"></i>
+            PDF yok
+          </span>
+        </div>
+      </div>
+    </article>
+  </section>
+</div>

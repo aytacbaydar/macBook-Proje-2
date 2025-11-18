@@ -1,0 +1,246 @@
+.homework-answers-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.page-intro {
+  background: #0f172a;
+  color: #fff;
+  padding: 1.75rem;
+  border-radius: 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.page-intro h1 {
+  margin: 0.3rem 0;
+  font-size: 2rem;
+}
+
+.page-intro .intro-text {
+  max-width: 42ch;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.summary-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(120px, 1fr));
+  gap: 0.8rem;
+  width: 100%;
+}
+
+.summary-stats article {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 0.75rem;
+  padding: 0.9rem 1rem;
+  text-align: left;
+}
+
+.summary-stats strong {
+  font-size: 1.6rem;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+.summary-stats small {
+  display: block;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.75rem;
+  margin-top: 0.3rem;
+}
+
+.state-card {
+  background: #fff;
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 25px 45px rgba(15, 23, 42, 0.18);
+}
+
+.state-card.loading {
+  color: #0f172a;
+}
+
+.state-card.loading .spinner {
+  margin: 0 auto 1rem;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 5px solid rgba(99, 102, 241, 0.3);
+  border-top-color: #6366f1;
+  animation: spin 1s linear infinite;
+}
+
+.state-card.error i {
+  font-size: 2.25rem;
+  color: #ef4444;
+}
+
+.state-card.error p {
+  margin: 0.85rem 0;
+  font-weight: 600;
+}
+
+.outline-btn {
+  margin-top: 0.5rem;
+  border-radius: 999px;
+  padding: 0.55rem 1.25rem;
+  border: 1px solid #0f172a;
+  background: transparent;
+  font-weight: 600;
+}
+
+.assignments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.assignment-card {
+  background: #fff;
+  border-radius: 1.25rem;
+  padding: 1.4rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 15px 30px rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.assignment-card .card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.assignment-card h3 {
+  margin: 0;
+  font-size: 1.35rem;
+  color: #0f172a;
+}
+
+.assignment-card .description {
+  margin: 0;
+  color: #475569;
+  min-height: 48px;
+}
+
+.assignment-card .teacher {
+  margin: 0.2rem 0 0;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.status-chip {
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.date-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.75rem 0;
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+.date-row div span {
+  display: block;
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.date-row div strong {
+  display: block;
+  font-size: 1rem;
+  color: #0f172a;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.remaining {
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.remaining strong {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 1.2rem;
+  color: #0f172a;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.primary-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #2563eb;
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.45rem 1rem;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.muted {
+  display: inline-flex;
+  gap: 0.35rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .page-intro {
+    flex-direction: column;
+  }
+
+  .summary-stats {
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
+  }
+
+  .card-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
