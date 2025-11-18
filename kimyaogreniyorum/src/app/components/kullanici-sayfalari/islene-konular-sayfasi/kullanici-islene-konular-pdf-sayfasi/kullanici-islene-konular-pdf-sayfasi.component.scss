@@ -12,8 +12,7 @@
 .container-full {
   width: 100%;
   min-height: 100vh;
-  background: linear-gradient(180deg, #eef2ff 0%, #fdf2f8 70%);
-  padding: 2rem 1rem 3rem;
+  padding: 20px;
 }
 
 .card-ana {
@@ -120,6 +119,7 @@
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(255, 255, 255, 0));
   opacity: 0;
   transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
 .lesson-card:hover {
@@ -209,24 +209,27 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   flex: 1;
   justify-content: center;
+  text-decoration: none;
+  color: inherit;
 }
 
 .lesson-actions .view-btn {
-  background: linear-gradient(135deg, #f97316, #fb923c);
+  background: #ff6600;
   color: #fff;
-  box-shadow: 0 10px 20px rgba(249, 115, 22, 0.3);
+  box-shadow: 0 8px 20px rgba(255, 102, 0, 0.35);
+  transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
 }
 
-.lesson-actions .view-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 30px rgba(249, 115, 22, 0.25);
+.lesson-actions .view-btn:hover:not(.disabled) {
+  background: #29303c;
+  transform: translateY(-1px);
+  box-shadow: 0 15px 30px rgba(15, 20, 30, 0.45);
 }
 
-.lesson-actions .view-btn:disabled {
-  background: #e5e7eb;
-  color: #94a3b8;
+.lesson-actions .view-btn.disabled {
+  background: #d1d5db;
+  color: #6b7280;
   box-shadow: none;
-  cursor: not-allowed;
 }
 
 .empty-state {
